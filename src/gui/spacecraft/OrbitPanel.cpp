@@ -2473,11 +2473,11 @@ bool OrbitPanel::CheckSpherical(Rvector6 &outState, const wxString &stateType)
       MessageInterface::ShowMessage("labels[%d] = %s\n", i, labels[i].c_str());
    #endif
    
-   if (theScPanel->CheckReal(outState[0], mElementStrs[0], "RMAG", "Real Number"))
+   if (theScPanel->CheckReal(outState[0], mElementStrs[0], "RMagnitude", "Real Number"))
    {
       try
       {
-         StateConversionUtil::ValidateValue("RMAG", outState[0], errMsgFormat, gg->GetDataPrecision());
+         StateConversionUtil::ValidateValue("RMagnitude", outState[0], errMsgFormat, gg->GetDataPrecision());
       }
       catch (BaseException &ue)
       {
@@ -2527,11 +2527,11 @@ bool OrbitPanel::CheckSpherical(Rvector6 &outState, const wxString &stateType)
       retval = false;
    }
    
-   if (theScPanel->CheckReal(outState[3], mElementStrs[3], "VMAG", "Real Number"))
+   if (theScPanel->CheckReal(outState[3], mElementStrs[3], "VMagnitude", "Real Number"))
    {
       try
       {
-         StateConversionUtil::ValidateValue("VMAG", outState[3], errMsgFormat, gg->GetDataPrecision());
+         StateConversionUtil::ValidateValue("VMagnitude", outState[3], errMsgFormat, gg->GetDataPrecision());
       }
       catch (BaseException &ue)
       {

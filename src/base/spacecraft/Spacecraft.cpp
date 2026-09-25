@@ -383,10 +383,10 @@ const std::string Spacecraft::MULT_REP_STRINGS[EndMultipleReps - CART_X] =
    "RadPer",
    "RadApo",
    // Speherical AZFPA
-   "RMAG",
+   "RMagnitude",
    "RA",
    "DEC",
-   "VMAG",
+   "VMagnitude",
    "AZI",
    "FPA",
    // Spherical RADEC
@@ -11350,6 +11350,15 @@ bool Spacecraft::SetElement(const std::string &label, const Real &value)
          return true;
       }
    }
+//   else
+//   {
+//      SpaceObjectException se;
+//      se.SetDetails(errorMessageFormat.c_str(),
+//                       GmatStringUtil::ToString(value, GetDataPrecision()).c_str(),
+//                       label.c_str(), "Valid element type name");
+//      MessageInterface::ShowMessage(se.GetDetails().c_str());
+//      throw se;
+//   }
 
    #ifdef DEBUG_SPACECRAFT_SET_ELEMENT
    MessageInterface::ShowMessage("In SC::SetElement, returning FALSE\n");
@@ -12334,10 +12343,10 @@ void Spacecraft::BuildStateElementLabelsAndUnits()
    //-----------------------------------
    // SphericalAZFPA
    //-----------------------------------
-   elementLabels[0] = "RMAG";
+   elementLabels[0] = "RMagnitude";
    elementLabels[1] = "RA";
    elementLabels[2] = "DEC";
-   elementLabels[3] = "VMAG";
+   elementLabels[3] = "VMagnitude";
    elementLabels[4] = "AZI";
    elementLabels[5] = "FPA";
 
@@ -12351,20 +12360,20 @@ void Spacecraft::BuildStateElementLabelsAndUnits()
    stateElementLabelsMap["SphericalAZFPA"] = elementLabels;
    stateElementUnitsMap["SphericalAZFPA"] = elementUnits;
 
-   allElementLabelsMultiMap.insert(std::make_pair("RMAG", "SphericalAZFPA"));
+   allElementLabelsMultiMap.insert(std::make_pair("RMagnitude", "SphericalAZFPA"));
    allElementLabelsMultiMap.insert(std::make_pair("RA",   "SphericalAZFPA"));
    allElementLabelsMultiMap.insert(std::make_pair("DEC",  "SphericalAZFPA"));
-   allElementLabelsMultiMap.insert(std::make_pair("VMAG", "SphericalAZFPA"));
+   allElementLabelsMultiMap.insert(std::make_pair("VMagnitude", "SphericalAZFPA"));
    allElementLabelsMultiMap.insert(std::make_pair("AZI",  "SphericalAZFPA"));
    allElementLabelsMultiMap.insert(std::make_pair("FPA",  "SphericalAZFPA"));
 
    //-----------------------------------
    // SphericalRADEC
    //-----------------------------------
-   elementLabels[0] = "RMAG";
+   elementLabels[0] = "RMagnitude";
    elementLabels[1] = "RA";
    elementLabels[2] = "DEC";
-   elementLabels[3] = "VMAG";
+   elementLabels[3] = "VMagnitude";
    elementLabels[4] = "RAV";
    elementLabels[5] = "DECV";
 
@@ -12378,10 +12387,10 @@ void Spacecraft::BuildStateElementLabelsAndUnits()
    stateElementLabelsMap["SphericalRADEC"] = elementLabels;
    stateElementUnitsMap["SphericalRADEC"] = elementUnits;
 
-   allElementLabelsMultiMap.insert(std::make_pair("RMAG", "SphericalRADEC"));
+   allElementLabelsMultiMap.insert(std::make_pair("RMagnitude", "SphericalRADEC"));
    allElementLabelsMultiMap.insert(std::make_pair("RA",   "SphericalRADEC"));
    allElementLabelsMultiMap.insert(std::make_pair("DEC",  "SphericalRADEC"));
-   allElementLabelsMultiMap.insert(std::make_pair("VMAG", "SphericalRADEC"));
+   allElementLabelsMultiMap.insert(std::make_pair("VMagnitude", "SphericalRADEC"));
    allElementLabelsMultiMap.insert(std::make_pair("RAV",  "SphericalRADEC"));
    allElementLabelsMultiMap.insert(std::make_pair("DECV", "SphericalRADEC"));
 
@@ -12637,10 +12646,10 @@ void Spacecraft::BuildStateElementLabelsAndUnits()
    defaultStateTypeMap["MLONG"]        = "Equinoctial";
    defaultStateTypeMap["RA"]           = "SphericalAZFPA";
    defaultStateTypeMap["RAAN"]         = "Keplerian";
-   defaultStateTypeMap["RMAG"]         = "SphericalAZFPA";
+   defaultStateTypeMap["RMagnitude"]   = "SphericalAZFPA";
    defaultStateTypeMap["SMA"]          = "Keplerian";
    defaultStateTypeMap["TA"]           = "Keplerian";
-   defaultStateTypeMap["VMAG"]         = "SphericalAZFPA";
+   defaultStateTypeMap["VMagnitude"]         = "SphericalAZFPA";
 }
 
 

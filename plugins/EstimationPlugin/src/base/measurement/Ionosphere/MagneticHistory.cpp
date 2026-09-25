@@ -42,29 +42,29 @@
 
 // Load data from files
 //------------------------------------------------------------------------------
-// MagneticHistory::MagneticHistory(std::string data_path)
+// MagneticHistory::MagneticHistory(std::string ionosphereDir)
 //------------------------------------------------------------------------------
 /**
  * Standard constructor
- * @param data_path directory containing IonosphereData directory
+ * @param ionosphereDir directory containing ionosphere data
  */
 //------------------------------------------------------------------------------
-MagneticHistory::MagneticHistory(std::string data_path)
+MagneticHistory::MagneticHistory(std::string ionosphereDir)
 {
-    load_data(data_path + "/IonosphereData/dgrf45.dat", 1945);
-    load_data(data_path + "/IonosphereData/dgrf50.dat", 1950);
-    load_data(data_path + "/IonosphereData/dgrf55.dat", 1955);
-    load_data(data_path + "/IonosphereData/dgrf60.dat", 1960);
-    load_data(data_path + "/IonosphereData/dgrf65.dat", 1965);
-    load_data(data_path + "/IonosphereData/dgrf70.dat", 1970);
-    load_data(data_path + "/IonosphereData/dgrf75.dat", 1975);
-    load_data(data_path + "/IonosphereData/dgrf80.dat", 1980);
-    load_data(data_path + "/IonosphereData/dgrf85.dat", 1985);
-    load_data(data_path + "/IonosphereData/dgrf90.dat", 1990);
-    load_data(data_path + "/IonosphereData/dgrf95.dat", 1995);
-    load_data(data_path + "/IonosphereData/dgrf00.dat", 2000);
-    load_data(data_path + "/IonosphereData/igrf05.dat", 2005);
-    load_data_sv(data_path + "/IonosphereData/igrf05s.dat");
+    load_data(ionosphereDir + "/dgrf45.dat", 1945);
+    load_data(ionosphereDir + "/dgrf50.dat", 1950);
+    load_data(ionosphereDir + "/dgrf55.dat", 1955);
+    load_data(ionosphereDir + "/dgrf60.dat", 1960);
+    load_data(ionosphereDir + "/dgrf65.dat", 1965);
+    load_data(ionosphereDir + "/dgrf70.dat", 1970);
+    load_data(ionosphereDir + "/dgrf75.dat", 1975);
+    load_data(ionosphereDir + "/dgrf80.dat", 1980);
+    load_data(ionosphereDir + "/dgrf85.dat", 1985);
+    load_data(ionosphereDir + "/dgrf90.dat", 1990);
+    load_data(ionosphereDir + "/dgrf95.dat", 1995);
+    load_data(ionosphereDir + "/dgrf00.dat", 2000);
+    load_data(ionosphereDir + "/igrf05.dat", 2005);
+    load_data_sv(ionosphereDir + "/igrf05s.dat");
 }
 
 //------------------------------------------------------------------------------
@@ -95,14 +95,9 @@ void MagneticHistory::load_data(std::string file_path, Integer year)
     Real g, h;
     Integer _order, _degree;
 
-    try
-    {
-        fs.open(file_path.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("Error: " + file_path + " file does not exist or cannot open.\n");
-    }
+    fs.open(file_path.c_str(), std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("Error: " + file_path + " file does not exist or cannot open.\n");
 
     std::getline(fs, line); // name
     std::getline(fs, line);
@@ -148,14 +143,9 @@ void MagneticHistory::load_data_sv(std::string file_path)
     Real g, h;
     Integer _order, _degree;
 
-    try
-    {
-        fs.open(file_path.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("Error: " + file_path + " file does not exist or cannot open.\n");
-    }
+    fs.open(file_path.c_str(), std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("Error: " + file_path + " file does not exist or cannot open.\n");
 
     std::getline(fs, line); // name
     std::getline(fs, line);

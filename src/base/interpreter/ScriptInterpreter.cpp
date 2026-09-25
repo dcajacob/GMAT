@@ -2677,19 +2677,6 @@ bool ScriptInterpreter::ParseCommandBlock(const StringArray &chunks,
          }
       }
       
-      // check for .. in the command block
-      if (chunks[1].find("..") != currentBlock.npos)
-      {
-         // allow relative path using ..
-         if (chunks[1].find("../") == currentBlock.npos &&
-             chunks[1].find("..\\") == currentBlock.npos)
-         {
-            InterpreterException ex("Found invalid syntax \"..\" during command parsing");
-            HandleError(ex);
-            return false;
-         }
-      }
-      
       obj = (GmatBase*)CreateCommand(chunks[0], chunks[1], retval, inCmd);
    }
    
@@ -2748,24 +2735,6 @@ bool ScriptInterpreter::ParseAssignmentBlock(const StringArray &chunks,
    MessageInterface::ShowMessage
       ("   prefaceComment = '%s'\n   inlineComment='%s'\n", preStr.c_str(), inStr.c_str());
    #endif
-   
-   // check for .. in the command block
-   if (chunks[0].find("..") != chunks[0].npos ||
-       chunks[1].find("..") != chunks[1].npos)
-   {
-      // allow relative path using ..
-      if (chunks[1].find("../") == currentBlock.npos &&
-          chunks[1].find("..\\") == currentBlock.npos)
-      {
-         // Check if it is enclosed with quotes
-         if (!GmatStringUtil::IsEnclosedWith(chunks[1], "'"))
-         {
-            InterpreterException ex("Found invalid syntax \"..\" during assignment command parsing");
-            HandleError(ex);
-            return false;
-         }
-      }
-   }
    
    // check for missing RHS
    if (count < 2)

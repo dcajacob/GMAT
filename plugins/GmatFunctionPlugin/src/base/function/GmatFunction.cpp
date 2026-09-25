@@ -593,7 +593,7 @@ bool GmatFunction::Initialize(ObjectInitializer *objInit, bool reinitialize,
       
       // Commands are only validated and intiialized the first execution
       // of the function for runtime speed
-      if (fcsInitialized && !reinitialize)
+      if (fcsInitialized && !reinitialize && !current->IsOfType(Gmat::COMMAND))
       {
          #ifdef DEBUG_FUNCTION_INIT
          MessageInterface::ShowMessage

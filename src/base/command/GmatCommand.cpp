@@ -1736,6 +1736,23 @@ GmatCommand* GmatCommand::GetNext()
    return next;
 }
 
+//------------------------------------------------------------------------------
+//  GmatCommand* GetNextWhileExecuting()
+//------------------------------------------------------------------------------
+/**
+ * Accesses the next GmatCommand in the sequence regardless of execution state.
+ *
+ * BranchCommand::GetNext() intentionally returns its "this" pointer while the
+ * branch is executing so that the Sandbox re-enters the command.  Structural
+ * traversals of the command sequence (e.g. the walkers in GmatCommandUtil)
+ * must use this method instead, so that walking the sequence while a mission
+ * is running does not loop forever on the executing branch command.
+ */
+//------------------------------------------------------------------------------
+GmatCommand* GmatCommand::GetNextWhileExecuting()
+{
+   return next;
+}
 
 //------------------------------------------------------------------------------
 //  GmatCommand* GetPrevious()

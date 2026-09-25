@@ -696,8 +696,10 @@ bool Optimize::Execute()
 //------------------------------------------------------------------------------
 void Optimize::RunComplete()
 {
-   if (theSolver != NULL)
+   if (theSolver != NULL) {
+      theSolver->SetBooleanParameter(theSolver->GetParameterID("Nested"), false);
       theSolver->Finalize();
+   }
    
    // Free local data (LOJ: 2009.03.19)
    FreeLoopData();

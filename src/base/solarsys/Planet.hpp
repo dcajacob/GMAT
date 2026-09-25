@@ -125,6 +125,7 @@ protected:
    {
       NUTATION_UPDATE_INTERVAL = CelestialBodyParamCount,  // Earth only
       EOP_FILE_NAME,                                       // Earth only
+      IONOSPHERE_MODEL_DIR,                                // Earth only
       PlanetParamCount
    };
    
@@ -134,6 +135,7 @@ protected:
    
    Real        nutationUpdateInterval;
    std::string eopFileName;
+   std::string ionosphereModelDirectory;
 
    /// default values for the parameter(s)
    Real        default_nutationUpdateInterval;

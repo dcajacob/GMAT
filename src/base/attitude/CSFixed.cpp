@@ -179,7 +179,7 @@ void CSFixed::ComputeCosineMatrixAndAngularVelocity(Real atTime)
    // We know RBi, since it is computed on initialization
    // Get the rotation matrix from the reference coordinate system
    Rvector bogus(6,100.0,200.0,300.0,400.0,500.0,600.0);
-   Rvector bogus2 = refCS->FromBaseSystem(A1Mjd(atTime), bogus, true);  // @todo - do we need FromMJ2000Eq here?
+   Rvector bogus2 = refCS->FromBaseSystem(A1Mjd(atTime), bogus, true, true);  // @todo - do we need FromMJ2000Eq here?
    Rmatrix33 RiI  = (refCS->GetLastRotationMatrix()).Transpose();
    // compute/set current attitude matrix
    dcm              = RiI;

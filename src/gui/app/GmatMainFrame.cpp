@@ -3937,8 +3937,7 @@ void GmatMainFrame::OnPrint(wxCommandEvent &event)
 //------------------------------------------------------------------------------
 void GmatMainFrame::OnProjectExit(wxCommandEvent& WXUNUSED(event))
 {
-   // true is to force the frame to close
-   Close(true);
+   Close();
 }
 
 
@@ -6152,12 +6151,10 @@ void GmatMainFrame::UpdateAdvancedGuiMode(int status)
    // Update menu and tools depends on the status
    if (status == 1)
    {
-      gmatAppData->GetResourceTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHITE"));
-      gmatAppData->GetMissionTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHITE"));
-      gmatAppData->GetOutputTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHITE"));
+      const wxColour& back = wxTheColourDatabase->Find(!wxSystemSettings::GetAppearance().IsDark() ? "WHITE" : "BLACK");
+      gmatAppData->GetResourceTree()->SetBackgroundColour(back);
+      gmatAppData->GetMissionTree()->SetBackgroundColour(back);
+      gmatAppData->GetOutputTree()->SetBackgroundColour(back);
       gmatAppData->GetMissionTree()->EnableShowScript(true);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT, true);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT_AS, true);

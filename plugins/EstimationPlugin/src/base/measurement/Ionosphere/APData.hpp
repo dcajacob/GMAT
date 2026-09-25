@@ -34,7 +34,7 @@
 class APData
 {
 public:
-	APData(std::string data_path);
+	APData(std::string ionosphereDir);
 	APData(const APData& ap_data);
 
 	Real get_rap(Integer year, Integer month, Integer day, Integer hour);

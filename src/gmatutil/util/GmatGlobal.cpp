@@ -35,6 +35,8 @@
 #include "GmatGlobal.hpp"
 #include "MessageInterface.hpp"
 #include <algorithm>                    // Required for GCC 4.3
+#include <FileManager.hpp>
+#include <FileUtil.hpp>
 
 //---------------------------------
 // static members
@@ -933,6 +935,32 @@ void GmatGlobal::SetEopFile(EopFile *eop)
 void GmatGlobal::SetItrfCoefficientsFile(ItrfCoefficientsFile *itrf)
 {
    theItrfFile = itrf;
+}
+
+//------------------------------------------------------------------------------
+// std::string GetIonosphereDir()
+//------------------------------------------------------------------------------
+std::string GmatGlobal::GetIonosphereDir()
+{
+   FileManager* fm = FileManager::Instance();
+
+   if (ionosphereDir != "")
+   {
+      if (GmatFileUtil::IsPathAbsolute(ionosphereDir))
+         return ionosphereDir;
+      else
+         return fm->GetGmatWorkingDirectory() + "/" + ionosphereDir;
+   }
+   else
+      return fm->GetPathname("IONOSPHERE_PATH");
+}
+
+//------------------------------------------------------------------------------
+// void SetIonosphereDir(std::string ionosphereDir)
+//------------------------------------------------------------------------------
+void GmatGlobal::SetIonosphereDir(std::string ionosphereDir)
+{
+   this->ionosphereDir = ionosphereDir;
 }
 
 //------------------------------------------------------------------------------

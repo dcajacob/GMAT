@@ -2659,7 +2659,7 @@
             <entry><para>The magnitude of the orbital position vector
             expressed in the coordinate system chosen in the
             <guilabel>CoordinateSystem</guilabel> field. Unlike the
-            <guilabel>RMAG</guilabel> field,
+            <guilabel>RMagnitude</guilabel> field,
             <guilabel>PlanetodeticRMAG</guilabel> is associated with the
             <guilabel>Planetodetic</guilabel> state representation, which is
             only valid for coordinate systems with
@@ -2720,7 +2720,7 @@
             <entry><para>The magnitude of the orbital velocity vector
             expressed in the coordinate system chosen in the
             <guilabel>CoordinateSystem</guilabel> field. Unlike the
-            <guilabel>VMAG</guilabel> field,
+            <guilabel>VMagnitude</guilabel> field,
             <guilabel>PlanetodeticVMAG</guilabel> is associated with the
             <guilabel>Planetodetic</guilabel> state representation, which is
             only valid for coordinate systems with
@@ -3062,7 +3062,7 @@
           </row>
 
           <row>
-            <entry><guilabel>RMAG</guilabel></entry>
+            <entry><guilabel>RMagnitude</guilabel></entry>
 
             <entry><para> The magnitude of the orbital position vector
             expressed in the coordinate system chosen in the
@@ -3079,7 +3079,7 @@
                   <term>Allowed Values</term>
 
                   <listitem>
-                    <para><guilabel>RMAG</guilabel> ≥ 1e-10</para>
+                    <para><guilabel>RMagnitude</guilabel> ≥ 1e-10</para>
                   </listitem>
                 </varlistentry>
 
@@ -3346,7 +3346,7 @@
           </row>
 
           <row>
-            <entry><guilabel>VMAG</guilabel></entry>
+            <entry><guilabel>VMagnitude</guilabel></entry>
 
             <entry><para> The magnitude of the orbital velocity vector
             expressed in the coordinate system chosen in the
@@ -3363,7 +3363,7 @@
                   <term>Allowed Values</term>
 
                   <listitem>
-                    <para><guilabel>VMAG</guilabel> ≥ 1e-10</para>
+                    <para><guilabel>VMagnitude</guilabel> ≥ 1e-10</para>
                   </listitem>
                 </varlistentry>
 
@@ -4298,12 +4298,12 @@
       selected <guilabel>CoordinateSystem</guilabel>. The two spherical
       representations differ in how the velocity is defined. The
       <guilabel>SphericalRADEC</guilabel> state type is composed of the
-      following elements: <guilabel>RMAG</guilabel>, <guilabel>RA</guilabel>,
-      <guilabel>DEC</guilabel>, <guilabel>VMAG</guilabel>,
+      following elements: <guilabel>RMagnitude</guilabel>, <guilabel>RA</guilabel>,
+      <guilabel>DEC</guilabel>, <guilabel>VMagnitude</guilabel>,
       <guilabel>RAV</guilabel>, and <guilabel>DECV</guilabel>. The
       <guilabel>SphericalAZFPA</guilabel> state type is composed of the
-      following elements: <guilabel>RMAG</guilabel>, <guilabel>RA</guilabel>,
-      <guilabel>DEC</guilabel>, <guilabel>VMAG</guilabel>,
+      following elements: <guilabel>RMagnitude</guilabel>, <guilabel>RA</guilabel>,
+      <guilabel>DEC</guilabel>, <guilabel>VMagnitude</guilabel>,
       <guilabel>AZ</guilabel>I and <guilabel>FPA</guilabel>. The tables and
       figures below describe each spherical state element in detail including
       singularities.</para>
@@ -4328,7 +4328,7 @@
 
           <tbody>
             <row>
-              <entry><guilabel>RMAG</guilabel></entry>
+              <entry><guilabel>RMagnitude</guilabel></entry>
 
               <entry><para>The magnitude of the position
               vector.</para></entry>
@@ -4350,7 +4350,7 @@
             </row>
 
             <row>
-              <entry><guilabel>VMAG</guilabel></entry>
+              <entry><guilabel>VMagnitude</guilabel></entry>
 
               <entry><para>The magnitude of the velocity vector.
               </para></entry>
@@ -4422,22 +4422,22 @@
 
           <tbody>
             <row>
-              <entry><guilabel>RMAG = 0</guilabel></entry>
+              <entry><guilabel>RMagnitude = 0</guilabel></entry>
 
               <entry><para>Results in a singular conic section: declination
               and flight path angle are undefined. GMAT will not allow
-              transformations if <guilabel>RMAG</guilabel> &lt; 1e-10. For
-              <guilabel>RMAG</guilabel> values greater than, but near 1e-10,
+              transformations if <guilabel>RMagnitude</guilabel> &lt; 1e-10. For
+              <guilabel>RMagnitude</guilabel> values greater than, but near 1e-10,
               loss of precision may occur in transformations. </para></entry>
             </row>
 
             <row>
-              <entry><guilabel>VMAG = 0</guilabel></entry>
+              <entry><guilabel>VMagnitude = 0</guilabel></entry>
 
               <entry><para>Results in a singular conic section: velocity
               declination and flight path angle are undefined. GMAT will not
-              allow transformations if <guilabel>VMAG</guilabel> &lt;
-              1e-10.For <guilabel>VMAG</guilabel> values greater than, but
+              allow transformations if <guilabel>VMagnitude</guilabel> &lt;
+              1e-10. For <guilabel>VMagnitude</guilabel> values greater than, but
               near 1e-10, loss of precision may occur in transformations.
               </para></entry>
             </row>
@@ -5229,7 +5229,7 @@ VZ =  0.99953       </code>      </programlisting>
             </row>
 
             <row>
-              <entry>RMAG</entry>
+              <entry>RMagnitude</entry>
 
               <entry>SphericalAZFPA, SphericalRADEC</entry>
 
@@ -5254,7 +5254,7 @@ VZ =  0.99953       </code>      </programlisting>
             </row>
 
             <row>
-              <entry>VMAG</entry>
+              <entry>VMagnitude</entry>
 
               <entry>SphericalAZFPA, SphericalRADEC</entry>
 
@@ -5356,10 +5356,10 @@ Create Spacecraft aSpacecraft
 aSpacecraft.CoordinateSystem = EarthSunL1CS
 aSpacecraft.DateFormat = UTCGregorian
 aSpacecraft.Epoch = '09 Dec 2005 13:00:00.000'
-aSpacecraft.RMAG = 1520834.130720907
+aSpacecraft.RMagnitude = 1520834.130720907
 aSpacecraft.RA = -111.7450242065574
 aSpacecraft.DEC = -20.23326432189756
-aSpacecraft.VMAG = 0.2519453702907011
+aSpacecraft.VMagnitude = 0.2519453702907011
 aSpacecraft.AZI = 85.22478175803107
 aSpacecraft.FPA = 97.97050698644287        </code></programlisting>
     </informalexample>

@@ -194,6 +194,7 @@ MARINI_TROPO_FILE      = ATMOSPHERE_PATH/marini.dat
 EARTH_EXPONENTIAL_FILE = ATMOSPHERE_PATH/EarthExponentialAtmosphereData.txt
 MARS_ATMOSPHERE_PATH   = DATA_PATH/atmosphere/mars
 MARS_EXPONENTIAL_FILE  = MARS_ATMOSPHERE_PATH/MarsExponentialAtmosphereData.txt
+IONOSPHERE_PATH        = DATA_PATH/IonosphereData
 #-----------------------------------------------------------
 HELP_PATH              		= ROOT_PATH/docs/help
 HELP_HTML_USING_GMAT_FILE 	= HELP_PATH/html/UsingGmat.html

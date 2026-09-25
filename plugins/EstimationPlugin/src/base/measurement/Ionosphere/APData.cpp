@@ -35,29 +35,24 @@
 #include <cmath>
 
 //------------------------------------------------------------------------------
-// APData(std::string data_path)
+// APData(std::string ionosphereDir)
 //------------------------------------------------------------------------------
 /**
  * Standard constructor - load data from file
- * @param data_path directory containing IonosphereData directory
+ * @param ionosphereDir directory containing ionosphere data
  */
 //------------------------------------------------------------------------------
-APData::APData(std::string data_path)
+APData::APData(std::string ionosphereDir)
 {
     Integer year, month, day, julian_day;
 
     std::fstream fs;
     std::string line;
 
-    std::string file_path = data_path + "/IonosphereData/ap.dat";
-    try
-    {
-        fs.open(file_path.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("Error: " + file_path + " file does not exist or cannot open.\n");
-    }
+    std::string file_path = ionosphereDir + "/ap.dat";
+    fs.open(file_path, std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("Error: " + file_path + " file does not exist or cannot be opened.\n");
 
     base_julian_date = -1;
 

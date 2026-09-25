@@ -11285,159 +11285,180 @@ void Estimator::AddJsonObservationData(const MeasurementInfoType &measStat)
 }
 
 //------------------------------------------------------------------------------------------
-// void Estimator::AddJsonIterationData()
+// void Estimator::AddJsonIterationData(bool onError)
 //------------------------------------------------------------------------------------------
 /**
 * This function generates a JSON-formatted output string for an iteration, and adds it to
 * jsonIterData.
+*
+* onError : true if execution terminated with an error
 */
 //------------------------------------------------------------------------------------------
-void Estimator::AddJsonIterationData()
+void Estimator::AddJsonIterationData(bool onError)
 {
    const std::vector<ListItem*> *stateMap = esm.GetStateMap();
    std::string output, epoch, cartState, kepState, cartCov, cartCorr, kepCov, kepCorr, compMeas;
 
    output = "{\n";
 
-   // CartesianState
-   cartState = "        \"CartesianState\" : [";
-   kepState = "        \"KeplerianState\" : [";
-   for (Integer i = 0; i < stateMap->size(); i++)
+   if (onError)
    {
-      if (i == 0)
-      {
-         formatter << currentSolveForStateC[i];
-         cartState = cartState + formatter.str();
-         formatter.str("");
+      cartState = "        \"CartesianState\" : null,\n";
+      kepState = "        \"KeplerianState\" : null,\n";
+      output = output + cartState + kepState;
 
-         formatter << currentSolveForStateK[i];
-         kepState = kepState + formatter.str();
-         formatter.str("");
-      }
+      cartCov = "        \"CartesianCovariance\" : null,\n";
+      cartCorr = "        \"CartesianCorrelation\" : null,\n";
+      kepCov = "        \"KeplerianCovariance\" : null,\n";
+      kepCorr = "        \"KeplerianCorrelation\" : null,\n";
+
+      if (dataFileStyle == "Verbose")
+         output = output + cartCov + cartCorr + kepCov + kepCorr;
       else
-      {
-         formatter << currentSolveForStateC[i];
-         cartState = cartState + "," + formatter.str();
-         formatter.str("");
-
-         formatter << currentSolveForStateK[i];
-         kepState = kepState +"," + formatter.str();
-         formatter.str("");
-      }
+         output = output + cartCov + kepCov;
    }
-   cartState = cartState + "],\n";
-   kepState = kepState + "],\n";
-   output = output + cartState + kepState;
-
-   //Covariances & Correlations
-
-   // GTDS MathSpec Eq 8-45, 8-46a, and 8-46b
-   Rmatrix dX_dS = cart2SolvMatrix;                               // [dX/dS] matrix, where S is solve-for state. It could Cartesian or Keplerian
-   // GTDS MathSpec Eq 8-49
-   Rmatrix finalCovariance = dX_dS * informationInverse * dX_dS.Transpose(); // finalCovariance is in Cartesian state
-
-   // 2.3. Convert covariance matrix for Cr_Epsilon and Cd_Epsilon to covariance matrix for Cr and Cd
-   CovarianceEpsilonConversion(finalCovariance);
-
-   Rmatrix finalCorrelation(finalCovariance);
-   for (Integer i = 0; i < finalCovariance.GetNumRows(); ++i)
-      for (Integer j = 0; j < finalCovariance.GetNumColumns(); ++j)
-         finalCorrelation(i, j) /= sqrt(finalCovariance(i, i)*finalCovariance(j, j));
-
-   Rmatrix convmatrix = solv2KeplMatrix.Inverse();                            // GTDS MathSpec Eq 8-45, 8-46a, and 8-46b
-
-   // 4. Write final covariance and correlation matrix for Keplerian coordinate system:
-   // 4.1. Calculate covariance matrix w.r.t. Cr_Epsilon and Cd_Epsilon
-   Rmatrix finalKeplerCovariance = convmatrix * informationInverse * convmatrix.Transpose();          // Equation 8-49 GTDS MathSpec
-
-   // 4.2. Convert covariance matrix for Cr_Epsilon and Cd_Epsilon to covariance matrix for Cr and Cd
-   CovarianceEpsilonConversion(finalKeplerCovariance);
-
-   Rmatrix finalKeplerCorrelation(finalKeplerCovariance);
-   for (Integer i = 0; i < finalKeplerCovariance.GetNumRows(); ++i)
-      for (Integer j = 0; j < finalKeplerCovariance.GetNumColumns(); ++j)
-         finalKeplerCorrelation(i, j) /= sqrt(finalKeplerCovariance(i, i)*finalKeplerCovariance(j, j));
-
-   cartCov = "        \"CartesianCovariance\" : [[";
-   cartCorr = "        \"CartesianCorrelation\" : [[";
-   kepCov = "        \"KeplerianCovariance\" : [[";
-   kepCorr = "        \"KeplerianCorrelation\" : [[";
-
-
-   RealArray tempArray;
-   for (Integer i = 0; i < stateMap->size(); i++)
-   {
-      // CartesianCovariance
-      tempArray = finalCovariance.GetRow(i).GetRealArray();
-      for (Integer j = 0; j < tempArray.size(); j++)
-      {
-         formatter << tempArray[j];
-         cartCov = cartCov + formatter.str();
-         formatter.str("");
-         if (j != tempArray.size() - 1)
-            cartCov = cartCov + ",";
-      }
-      cartCov = cartCov + "]";
-      if (i != stateMap->size() - 1)
-         cartCov = cartCov + ",[";
-
-      if (dataFileStyle == "Verbose")
-      {
-         // CartesianCorrelation
-         tempArray = finalCorrelation.GetRow(i).GetRealArray();
-         for (Integer j = 0; j < tempArray.size(); j++)
-         {
-            formatter << tempArray[j];
-            cartCorr = cartCorr + formatter.str();
-            formatter.str("");
-            if (j != tempArray.size() - 1)
-               cartCorr = cartCorr + ",";
-         }
-         cartCorr = cartCorr + "]";
-         if (i != stateMap->size() - 1)
-            cartCorr = cartCorr + ",[";
-      }
-
-      // KeplerianCovariance
-      tempArray = finalKeplerCovariance.GetRow(i).GetRealArray();
-      for (Integer j = 0; j < tempArray.size(); j++)
-      {
-         formatter << tempArray[j];
-         kepCov = kepCov + formatter.str();
-         formatter.str("");
-         if (j != tempArray.size() - 1)
-            kepCov = kepCov + ",";
-      }
-      kepCov = kepCov + "]";
-      if (i != stateMap->size() - 1)
-         kepCov = kepCov + ",[";
-
-      if (dataFileStyle == "Verbose")
-      {
-         // KeplerianCorrelation
-         tempArray = finalKeplerCorrelation.GetRow(i).GetRealArray();
-         for (Integer j = 0; j < tempArray.size(); j++)
-         {
-            formatter << tempArray[j];
-            kepCorr = kepCorr + formatter.str();
-            formatter.str("");
-            if (j != tempArray.size() - 1)
-               kepCorr = kepCorr + ",";
-         }
-         kepCorr = kepCorr + "]";
-         if (i != stateMap->size() - 1)
-            kepCorr = kepCorr + ",[";
-      }
-   }
-   cartCov = cartCov + "],\n";
-   cartCorr = cartCorr + "],\n";
-   kepCov = kepCov + "],\n";
-   kepCorr = kepCorr + "],\n";
-
-   if (dataFileStyle == "Verbose")
-      output = output + cartCov + cartCorr + kepCov + kepCorr;
    else
-      output = output + cartCov + kepCov;
+   {
+      // CartesianState
+      cartState = "        \"CartesianState\" : [";
+      kepState = "        \"KeplerianState\" : [";
+      for (Integer i = 0; i < stateMap->size(); i++)
+      {
+         if (i == 0)
+         {
+            formatter << currentSolveForStateC[i];
+            cartState = cartState + formatter.str();
+            formatter.str("");
+
+            formatter << currentSolveForStateK[i];
+            kepState = kepState + formatter.str();
+            formatter.str("");
+         }
+         else
+         {
+            formatter << currentSolveForStateC[i];
+            cartState = cartState + "," + formatter.str();
+            formatter.str("");
+
+            formatter << currentSolveForStateK[i];
+            kepState = kepState + "," + formatter.str();
+            formatter.str("");
+         }
+      }
+      cartState = cartState + "],\n";
+      kepState = kepState + "],\n";
+      output = output + cartState + kepState;
+
+      //Covariances & Correlations
+
+      // GTDS MathSpec Eq 8-45, 8-46a, and 8-46b
+      Rmatrix dX_dS = cart2SolvMatrix;                               // [dX/dS] matrix, where S is solve-for state. It could Cartesian or Keplerian
+      // GTDS MathSpec Eq 8-49
+      Rmatrix finalCovariance = dX_dS * informationInverse * dX_dS.Transpose(); // finalCovariance is in Cartesian state
+
+      // 2.3. Convert covariance matrix for Cr_Epsilon and Cd_Epsilon to covariance matrix for Cr and Cd
+      CovarianceEpsilonConversion(finalCovariance);
+
+      Rmatrix finalCorrelation(finalCovariance);
+      for (Integer i = 0; i < finalCovariance.GetNumRows(); ++i)
+         for (Integer j = 0; j < finalCovariance.GetNumColumns(); ++j)
+            finalCorrelation(i, j) /= sqrt(finalCovariance(i, i) * finalCovariance(j, j));
+
+      Rmatrix convmatrix = solv2KeplMatrix.Inverse();                            // GTDS MathSpec Eq 8-45, 8-46a, and 8-46b
+
+      // 4. Write final covariance and correlation matrix for Keplerian coordinate system:
+      // 4.1. Calculate covariance matrix w.r.t. Cr_Epsilon and Cd_Epsilon
+      Rmatrix finalKeplerCovariance = convmatrix * informationInverse * convmatrix.Transpose();          // Equation 8-49 GTDS MathSpec
+
+      // 4.2. Convert covariance matrix for Cr_Epsilon and Cd_Epsilon to covariance matrix for Cr and Cd
+      CovarianceEpsilonConversion(finalKeplerCovariance);
+
+      Rmatrix finalKeplerCorrelation(finalKeplerCovariance);
+      for (Integer i = 0; i < finalKeplerCovariance.GetNumRows(); ++i)
+         for (Integer j = 0; j < finalKeplerCovariance.GetNumColumns(); ++j)
+            finalKeplerCorrelation(i, j) /= sqrt(finalKeplerCovariance(i, i) * finalKeplerCovariance(j, j));
+
+      cartCov = "        \"CartesianCovariance\" : [[";
+      cartCorr = "        \"CartesianCorrelation\" : [[";
+      kepCov = "        \"KeplerianCovariance\" : [[";
+      kepCorr = "        \"KeplerianCorrelation\" : [[";
+
+
+      RealArray tempArray;
+      for (Integer i = 0; i < stateMap->size(); i++)
+      {
+         // CartesianCovariance
+         tempArray = finalCovariance.GetRow(i).GetRealArray();
+         for (Integer j = 0; j < tempArray.size(); j++)
+         {
+            formatter << tempArray[j];
+            cartCov = cartCov + formatter.str();
+            formatter.str("");
+            if (j != tempArray.size() - 1)
+               cartCov = cartCov + ",";
+         }
+         cartCov = cartCov + "]";
+         if (i != stateMap->size() - 1)
+            cartCov = cartCov + ",[";
+
+         if (dataFileStyle == "Verbose")
+         {
+            // CartesianCorrelation
+            tempArray = finalCorrelation.GetRow(i).GetRealArray();
+            for (Integer j = 0; j < tempArray.size(); j++)
+            {
+               formatter << tempArray[j];
+               cartCorr = cartCorr + formatter.str();
+               formatter.str("");
+               if (j != tempArray.size() - 1)
+                  cartCorr = cartCorr + ",";
+            }
+            cartCorr = cartCorr + "]";
+            if (i != stateMap->size() - 1)
+               cartCorr = cartCorr + ",[";
+         }
+
+         // KeplerianCovariance
+         tempArray = finalKeplerCovariance.GetRow(i).GetRealArray();
+         for (Integer j = 0; j < tempArray.size(); j++)
+         {
+            formatter << tempArray[j];
+            kepCov = kepCov + formatter.str();
+            formatter.str("");
+            if (j != tempArray.size() - 1)
+               kepCov = kepCov + ",";
+         }
+         kepCov = kepCov + "]";
+         if (i != stateMap->size() - 1)
+            kepCov = kepCov + ",[";
+
+         if (dataFileStyle == "Verbose")
+         {
+            // KeplerianCorrelation
+            tempArray = finalKeplerCorrelation.GetRow(i).GetRealArray();
+            for (Integer j = 0; j < tempArray.size(); j++)
+            {
+               formatter << tempArray[j];
+               kepCorr = kepCorr + formatter.str();
+               formatter.str("");
+               if (j != tempArray.size() - 1)
+                  kepCorr = kepCorr + ",";
+            }
+            kepCorr = kepCorr + "]";
+            if (i != stateMap->size() - 1)
+               kepCorr = kepCorr + ",[";
+         }
+      }
+      cartCov = cartCov + "],\n";
+      cartCorr = cartCorr + "],\n";
+      kepCov = kepCov + "],\n";
+      kepCorr = kepCorr + "],\n";
+
+      if (dataFileStyle == "Verbose")
+         output = output + cartCov + cartCorr + kepCov + kepCorr;
+      else
+         output = output + cartCov + kepCov;
+   }
 
    // ComputedMeasurements
    if(jsonMeasData.size() == 0)
@@ -12062,6 +12083,19 @@ bool Estimator::DoesSatUseEphemerisPropagator(std::string satName)
    return false;
 }
 
+//------------------------------------------------------------------------------
+// void WriteJsonDataOnError()
+//------------------------------------------------------------------------------
+// Write JSON data when an error has occured
+//------------------------------------------------------------------------------
+void Estimator::WriteJsonDataOnError()
+{
+   if (!writeJsonFile)
+      return;
+
+   AddJsonIterationData(true);
+   WriteJsonData();
+}
 
 //------------------------------------------------------------------------------
 // void WriteStringArrayValue(Gmat::WriteMode mode, std::string &prefix,

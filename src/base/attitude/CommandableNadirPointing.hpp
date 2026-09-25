@@ -95,9 +95,9 @@ protected:
    };
    
    static const Real DENOMINATOR_TOLERANCE;
-   
-   // flag for first call to ComputeCosineMatrixAndAngularVelocity()
-   bool      hasComputedFirstDCM;
+
+   // Whether the first intialization has occured
+   bool firstInit;
 
    // this will ultimately be deleted
    Rmatrix33 TRIAD(Rvector3& V1, Rvector3& V2, Rvector3& W1, Rvector3& W2);
@@ -116,6 +116,9 @@ protected:
    virtual void ComputeCosineMatrixAndAngularVelocity(GmatTime &atTime);
    virtual std::vector<Rmatrix33> GetRotationMatrixDerivative
       (GmatTime &epochGT, CoordinateSystem *j2kCS);
+
+   // Check for whether we use user attitude or calculate nadir pointing
+   bool NeedToEvaluateAttitude(Real atTime);
 
 private:
    // Default constructor - not implemented

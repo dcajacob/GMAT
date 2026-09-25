@@ -190,6 +190,8 @@ public:
    void                   BuildSatPropMap();
 
    bool                   DoesSatUseEphemerisPropagator(std::string satName);
+
+   void WriteJsonDataOnError();
    
 protected:
 ///// TBD: Do we need to separate TS and MM like this going forward?
@@ -633,7 +635,7 @@ protected:
 
    virtual bool           WriteJsonData();
    virtual void           AddJsonObservationData(const MeasurementInfoType &measStat);
-   virtual void           AddJsonIterationData();
+   virtual void           AddJsonIterationData(bool onError=false);
    virtual void           AddJsonIterationData(const MeasurementInfoType &measStat);
 
    std::string            GetElementName(ListItem* infor, bool isInternalCS,

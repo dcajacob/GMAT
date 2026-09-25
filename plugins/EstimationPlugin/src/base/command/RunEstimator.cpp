@@ -1472,6 +1472,7 @@ bool RunEstimator::Execute()
    } catch (...)//(EstimatorException ex1)
    {
       Finalize();
+      theEstimator->WriteJsonDataOnError();
       throw; // ex1;
    }
 

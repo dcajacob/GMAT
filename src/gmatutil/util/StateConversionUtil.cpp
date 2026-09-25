@@ -1680,7 +1680,7 @@ Rvector6 StateConversionUtil::CartesianToSphericalAZFPA(const Rvector6& cartesia
       std::stringstream errmsg("");
       errmsg.precision(15);
       errmsg << "Error in conversion from Cartesian to SphericalAZFPA: ";
-      errmsg << "Spherical elements are undefined because RMAG (" << rMag;
+      errmsg << "Spherical elements are undefined because RMagnitude (" << rMag;
       errmsg << ") is less than 1e-10." << std::endl;
       throw UtilityException(errmsg.str());
    }
@@ -1696,7 +1696,7 @@ Rvector6 StateConversionUtil::CartesianToSphericalAZFPA(const Rvector6& cartesia
       std::stringstream errmsg("");
       errmsg.precision(15);
       errmsg << "Error in conversion from Cartesian to SphericalAZFPA: ";
-      errmsg << "Spherical elements are undefined because VMAG (" << vMag;
+      errmsg << "Spherical elements are undefined because VMagnitude (" << vMag;
       errmsg << ") is less than 1e-10." << std::endl;
       throw UtilityException(errmsg.str());
    }
@@ -1799,7 +1799,7 @@ Rvector6 StateConversionUtil::CartesianToSphericalRADEC(const Rvector6& cartesia
       std::stringstream errmsg("");
       errmsg.precision(15);
       errmsg << "Error in conversion from Cartesian to SphericalRADEC: ";
-      errmsg << "Spherical elements are undefined because RMAG (" << rMag;
+      errmsg << "Spherical elements are undefined because RMagnitude (" << rMag;
       errmsg << ") is less than 1e-10." << std::endl;
       throw UtilityException(errmsg.str());
    }
@@ -1815,7 +1815,7 @@ Rvector6 StateConversionUtil::CartesianToSphericalRADEC(const Rvector6& cartesia
       std::stringstream errmsg("");
       errmsg.precision(15);
       errmsg << "Error in conversion from Cartesian to SphericalRADEC: ";
-      errmsg << "Spherical elements are undefined because VMAG (" << vMag;
+      errmsg << "Spherical elements are undefined because VMagnitude (" << vMag;
       errmsg << ") is less than 1e-10." << std::endl;
       throw UtilityException(errmsg.str());
    }
@@ -2244,7 +2244,8 @@ Rvector6 StateConversionUtil::EquinoctialToCartesian(const Rvector6& equinoctial
 
    if (r <= 0.0)
    {
-      throw UtilityException("Error in conversion from Equinoctial to Cartesian elements: Cannot convert state because RMAG <= 0.\n");
+      throw UtilityException("Error in conversion from Equinoctial to Cartesian "
+            "elements: Cannot convert state because RMagnitude <= 0.\n");
    }
 
    // Calculate the cartesian components expressed in the equinoctial coordinate system
@@ -7183,8 +7184,8 @@ bool StateConversionUtil::ValidateValue(const std::string &label,       Real val
          throw ue;
       }
    }
-   else if (labelUpper == "RMAG" || label == "PlanetodeticRMAG" ||
-            labelUpper == "VMAG" || label == "PlanetodeticVMAG") // value >= 1.0e-10
+   else if (labelUpper == "RMagnitude" || label == "PlanetodeticRMAG" ||
+            labelUpper == "VMagnitude" || label == "PlanetodeticVMAG") // value >= 1.0e-10
    {
       if (value < 1.0e-10)
       {

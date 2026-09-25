@@ -219,14 +219,16 @@ bool Ionosphere::Initialize()
    MessageInterface::ShowMessage("Ionosphere::Initialize()\n");
 #endif
 
-   if (MediaCorrectionInterface::Initialize())
-   {
-      ap_data = new APData(dataPath);
-      magnetic_history = new MagneticHistory(dataPath);
-      ionosphere_coefficients_full = new IonosphereCoefficientsFull(dataPath);
+   if (!MediaCorrectionInterface::Initialize())
+      return false;
 
-      isInitialized = true;
-   }
+   std::string ionosphereDir = GmatGlobal::Instance()->GetIonosphereDir();
+
+   ap_data = new APData(ionosphereDir);
+   magnetic_history = new MagneticHistory(ionosphereDir);
+   ionosphere_coefficients_full = new IonosphereCoefficientsFull(ionosphereDir);
+
+   isInitialized = true;
 
    return true;
 }

@@ -36,7 +36,7 @@
 class IonosphereCoefficientsFull
 {
 public:
-	IonosphereCoefficientsFull(std::string data_path);
+	IonosphereCoefficientsFull(std::string ionosphereDir);
 	IonosphereCoefficientsFull(const IonosphereCoefficientsFull& ionosphere_coefficients_full);
 	IonosphereCoefficients* make_ionosphere_coefficients(const Integer year, const Integer month, const Integer day, const Real hours);
 

@@ -76,7 +76,7 @@ public:
    
    virtual GmatCommand*    GetNext();
    virtual GmatCommand*    GetChildCommand(Integer whichOne = 0);
-   GmatCommand*            GetNextWhileExecuting();
+   virtual GmatCommand*    GetNextWhileExecuting();
    virtual void            SetTransientForces(std::vector<PhysicalModel*> *tf);
 
    virtual bool            Initialize();

@@ -47,6 +47,7 @@
 #include "StringUtil.hpp"
 #include "Rmatrix66.hpp"
 #include "StateConversionUtil.hpp"
+#include "Propagator.hpp"
 
 #include <algorithm>
 #include <sstream>
@@ -1157,8 +1158,12 @@ void SeqEstimator::CompleteInitialization()
 
    // Create RIC frame
    PropSetup  *ps  = GetPropagator("");
-   ODEModel   *ode = ps->GetODEModel();
-   std::string cb = ode->GetStringParameter("CentralBody");
+   std::string cb;
+   if (ps->GetPropagator()->UsesODEModel())
+      cb = ps->GetODEModel()->GetBodyName();
+   else 
+      cb = ps->GetPropagator()->GetPropOriginName();
+
    SpacePoint *body = solarSystem->GetBody(cb);
 
    for (UnsignedInt i = 0; i < satArray.size(); ++i)

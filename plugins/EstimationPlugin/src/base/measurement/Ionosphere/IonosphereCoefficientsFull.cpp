@@ -36,29 +36,24 @@
 #include <cmath>
 
 //------------------------------------------------------------------------------
-// IonosphereCoefficientsFull(std::string data_path)
+// IonosphereCoefficientsFull(std::string ionosphereDir)
 //------------------------------------------------------------------------------
 /**
  * Standard constructor
- * @param data_path directory containing IonosphereData directory 
+ * @param ionosphereDir directory containing ionosphere data
  */
 //------------------------------------------------------------------------------
-IonosphereCoefficientsFull::IonosphereCoefficientsFull(std::string data_path)
+IonosphereCoefficientsFull::IonosphereCoefficientsFull(std::string ionosphereDir)
 {
     RealArray ig, rz;
 
     std::fstream fs;
     std::string line, segment;
-    std::string filename = data_path + "/IonosphereData/ig_rz.dat";
+    std::string filename = ionosphereDir + "/ig_rz.dat";
 
-    try
-    {
-        fs.open(filename.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("Error: " + filename + " file does not exist or cannot open.\n");
-    }
+    fs.open(filename.c_str(), std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("Error: " + filename + " file does not exist or cannot open.\n");
 
     std::getline(fs, segment, ','); // Publication date (not used)
     std::getline(fs, segment, ',');
@@ -122,18 +117,18 @@ IonosphereCoefficientsFull::IonosphereCoefficientsFull(std::string data_path)
             month_idx.second++;
     }
 
-    load_coeff_data(data_path + "/IonosphereData/ursi11.asc", data_path + "/IonosphereData/ccir11.asc", 1);
-    load_coeff_data(data_path + "/IonosphereData/ursi12.asc", data_path + "/IonosphereData/ccir12.asc", 2);
-    load_coeff_data(data_path + "/IonosphereData/ursi13.asc", data_path + "/IonosphereData/ccir13.asc", 3);
-    load_coeff_data(data_path + "/IonosphereData/ursi14.asc", data_path + "/IonosphereData/ccir14.asc", 4);
-    load_coeff_data(data_path + "/IonosphereData/ursi15.asc", data_path + "/IonosphereData/ccir15.asc", 5);
-    load_coeff_data(data_path + "/IonosphereData/ursi16.asc", data_path + "/IonosphereData/ccir16.asc", 6);
-    load_coeff_data(data_path + "/IonosphereData/ursi17.asc", data_path + "/IonosphereData/ccir17.asc", 7);
-    load_coeff_data(data_path + "/IonosphereData/ursi18.asc", data_path + "/IonosphereData/ccir18.asc", 8);
-    load_coeff_data(data_path + "/IonosphereData/ursi19.asc", data_path + "/IonosphereData/ccir19.asc", 9);
-    load_coeff_data(data_path + "/IonosphereData/ursi20.asc", data_path + "/IonosphereData/ccir20.asc", 10);
-    load_coeff_data(data_path + "/IonosphereData/ursi21.asc", data_path + "/IonosphereData/ccir21.asc", 11);
-    load_coeff_data(data_path + "/IonosphereData/ursi22.asc", data_path + "/IonosphereData/ccir22.asc", 12);
+    load_coeff_data(ionosphereDir + "/ursi11.asc", ionosphereDir + "/ccir11.asc", 1);
+    load_coeff_data(ionosphereDir + "/ursi12.asc", ionosphereDir + "/ccir12.asc", 2);
+    load_coeff_data(ionosphereDir + "/ursi13.asc", ionosphereDir + "/ccir13.asc", 3);
+    load_coeff_data(ionosphereDir + "/ursi14.asc", ionosphereDir + "/ccir14.asc", 4);
+    load_coeff_data(ionosphereDir + "/ursi15.asc", ionosphereDir + "/ccir15.asc", 5);
+    load_coeff_data(ionosphereDir + "/ursi16.asc", ionosphereDir + "/ccir16.asc", 6);
+    load_coeff_data(ionosphereDir + "/ursi17.asc", ionosphereDir + "/ccir17.asc", 7);
+    load_coeff_data(ionosphereDir + "/ursi18.asc", ionosphereDir + "/ccir18.asc", 8);
+    load_coeff_data(ionosphereDir + "/ursi19.asc", ionosphereDir + "/ccir19.asc", 9);
+    load_coeff_data(ionosphereDir + "/ursi20.asc", ionosphereDir + "/ccir20.asc", 10);
+    load_coeff_data(ionosphereDir + "/ursi21.asc", ionosphereDir + "/ccir21.asc", 11);
+    load_coeff_data(ionosphereDir + "/ursi22.asc", ionosphereDir + "/ccir22.asc", 12);
 }
 
 //------------------------------------------------------------------------------
@@ -375,14 +370,9 @@ void IonosphereCoefficientsFull::load_coeff_data(std::string file_path_ursi, std
     std::string line;
     RealArray data_ursi, data_ccir;
 
-    try
-    {
-        fs.open(file_path_ursi.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("ERROR: Unable to open URSI coefficient file " + file_path_ursi + ". This file is needed when Ionosphere modeling is turned on.");
-    }
+    fs.open(file_path_ursi.c_str(), std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("ERROR: Unable to open URSI coefficient file " + file_path_ursi + ". This file is needed when Ionosphere modeling is turned on.");
 
     while (!fs.eof())
     {
@@ -395,14 +385,9 @@ void IonosphereCoefficientsFull::load_coeff_data(std::string file_path_ursi, std
     if (data_ursi.size() != 1976)
         throw MeasurementException("Bad Length");
 
-    try
-    {
-        fs.open(file_path_ccir.c_str(), std::fstream::in);
-    }
-    catch (...)
-    {
-        throw MeasurementException("ERROR: Unable to open CCIR coefficient file " + file_path_ccir + ". This file is needed when Ionosphere modeling is turned on.");
-    }
+    fs.open(file_path_ccir.c_str(), std::fstream::in);
+    if (!fs.is_open())
+       throw MeasurementException("ERROR: Unable to open CCIR coefficient file " + file_path_ccir + ". This file is needed when Ionosphere modeling is turned on.");
 
     while (!fs.eof())
     {

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <refentry version="5.0" xml:id="StartupFile"
-          xmlns="http://docbook.org/ns/docbook"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          xmlns:xi="http://www.w3.org/2001/XInclude"
-          xmlns:svg="http://www.w3.org/2000/svg"
-          xmlns:m="http://www.w3.org/1998/Math/MathML"
-          xmlns:html="http://www.w3.org/1999/xhtml"
-          xmlns:db="http://docbook.org/ns/docbook">
+          xmlns="http://docbook.org/ns/docbook">
   <indexterm>
     <primary>Startup File</primary>
   </indexterm>
@@ -410,6 +404,15 @@ data\planetary_ephem/spk\de421.bsp</literallayout></para>
         </varlistentry>
 
         <varlistentry>
+          <term><literal>IONOSPHERE_PATH</literal></term>
+
+          <listitem>
+            <para>Path to data files required for the IRI2007 ionosphere
+            model.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
           <term><literal>JGM2_FILE=<replaceable>EARTH_POT_PATH</replaceable>/JGM2.cof</literal></term>
 
           <listitem>
@@ -430,7 +433,8 @@ data\planetary_ephem/spk\de421.bsp</literallayout></para>
 
           <listitem>
             <para>Path to cumulative leap seconds file from <link
-            xlink:href="http://maia.usno.navy.mil"><uri>http://maia.usno.navy.mil</uri></link>.</para>
+            xlink:href="http://maia.usno.navy.mil"
+            xmlns:xlink="http://www.w3.org/1999/xlink"><uri>http://maia.usno.navy.mil</uri></link>.</para>
           </listitem>
         </varlistentry>
 
@@ -651,15 +655,17 @@ data\planetary_ephem/spk\de421.bsp</literallayout></para>
           <term><literal>HELP_DIRECTORY_FILE</literal></term>
 
           <listitem>
-            <para>Path to CHM help file, used to navigate user guide contents through the GMAT GUI.</para>
+            <para>Path to CHM help file, used to navigate user guide contents
+            through the GMAT GUI.</para>
           </listitem>
         </varlistentry>
-        
+
         <varlistentry>
           <term><literal>HELP_HTML_FILE</literal></term>
 
           <listitem>
-            <para>Path to HTML help file, used to open the entire user guide in a browser.</para>
+            <para>Path to HTML help file, used to open the entire user guide
+            in a browser.</para>
           </listitem>
         </varlistentry>
 
@@ -804,14 +810,17 @@ data\planetary_ephem/spk\de421.bsp</literallayout></para>
             <literal>ON</literal> and <literal>OFF</literal>.</para>
           </listitem>
         </varlistentry>
-		
-		        <varlistentry>
+
+        <varlistentry>
           <term><literal>WRITE_PERSONALIZATION_FILE=ON</literal></term>
 
           <listitem>
-            <para>Write data on window locations and other local configuration settings to 
-			the GMAT.ini file. Setting to OFF avoids issues encountered when simultaneous instances of GMAT try to write to the user config file at the same time, resulting in a system error. Accepted values are
-            <literal>ON</literal> and <literal>OFF</literal>.</para>
+            <para>Write data on window locations and other local configuration
+            settings to the GMAT.ini file. Setting to OFF avoids issues
+            encountered when simultaneous instances of GMAT try to write to
+            the user config file at the same time, resulting in a system
+            error. Accepted values are <literal>ON</literal> and
+            <literal>OFF</literal>.</para>
           </listitem>
         </varlistentry>
       </variablelist>

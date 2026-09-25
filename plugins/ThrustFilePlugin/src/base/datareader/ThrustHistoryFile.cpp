@@ -1156,7 +1156,7 @@ void ThrustHistoryFile::SetSegmentData(ThfDataSegment seg)
             {
                // Update segment with any changes in scriptSegment
                ThrustSegment newSegment(*(scriptSegments[j]));
-               (*(scriptSegments[i])).SetPrecisionTimeFlag(this->HasPrecisionTime());
+               (*(scriptSegments[j])).SetPrecisionTimeFlag(this->HasPrecisionTime());
                newSegment.SetPrecisionTimeFlag(this->HasPrecisionTime());
                segments[i] = newSegment;
                break;

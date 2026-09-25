@@ -35,7 +35,7 @@
 class MagneticHistory
 {
 public:
-	MagneticHistory(std::string data_path);
+	MagneticHistory(std::string ionosphereDir);
 	MagneticHistory(const MagneticHistory& magnetic_history);
 
 	MagneticField* make_magnetic_field(Integer year, Integer doy);

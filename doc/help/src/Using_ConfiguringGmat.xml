@@ -311,11 +311,11 @@
 
     <informaltable>
       <tgroup cols="3">
-        <colspec colwidth="217*"/>
+        <colspec colwidth="331*"/>
 
-        <colspec colwidth="275*"/>
+        <colspec colwidth="303*"/>
 
-        <colspec colwidth="275*"/>
+        <colspec colwidth="366*"/>
 
         <thead>
           <row>
@@ -329,6 +329,46 @@
 
         <tbody>
           <row>
+            <entry>CSSI_FLUX_FILE</entry>
+
+            <entry>ftp://ftp.agi.com/pub/DynamicEarthData/SpaceWeather-All-v1.2.txt</entry>
+
+            <entry>The CSSI Space Weather File used for flux and geomagnetic
+            indeces in drag modeling when a propgator is configured to use the
+            CSSI file as the source for space weather modeling.</entry>
+          </row>
+
+          <row>
+            <entry>EARTH_LATEST_PCK_FILE</entry>
+
+            <entry>https://naif.jpl.nasa.gov/pub/naif/ generic_kernels/pck/
+            earth_latest_high_prec.bpc</entry>
+
+            <entry>The EOP file used by SPICE’s astrodynamics
+            routines.</entry>
+          </row>
+
+          <row>
+            <entry>EARTH_PCK _CURRENT_FILE</entry>
+
+            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/</entry>
+
+            <entry>The SPICE kernel containing historical, precession,
+            nutation ,nutation corrections, UT1-TAI , and polar motion for the
+            Earth. Used in SPICE's astrodynamic routines.</entry>
+          </row>
+
+          <row>
+            <entry>EARTH_PCK _PREDICTED_FILE</entry>
+
+            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/</entry>
+
+            <entry>The SPICE kernel containing predicted, precession, nutation
+            ,nutation corrections, UT1-TAI , and polar motion for the Earth.
+            Used in SPICE's astrodynamic routines.</entry>
+          </row>
+
+          <row>
             <entry>EOP_FILE</entry>
 
             <entry>ftp://hpiers.obspm.fr/iers/series/
@@ -338,15 +378,16 @@
           </row>
 
           <row>
-            <entry>PLANETARY_PCK _FILE</entry>
+            <entry>IONOSPHERE_PATH</entry>
 
-            <entry>https://naif.jpl.nasa.gov/pub/naif/
-            generic_kernels/pck/</entry>
+            <entry>http://irimodel.org/indices/ and
+            https://ftp.agi.com/pub/DynamicEarthData/SpaceWeather-v1.2.txt
+            (for Ap data)</entry>
 
-            <entry>The SPICE planetary constants kernel containing
-            orientation, size and shape data. As of release R2017a, the
-            version is pck00010.pck. This can change and the file checks for
-            new versions.</entry>
+            <entry>Data files required for the computation of tracking data
+            ionosphere corrections using the IRI2007 model. The ap.dat file is
+            created by the GMATDataFileManager.py script from the CCSI space
+            weather file.</entry>
           </row>
 
           <row>
@@ -369,55 +410,14 @@
           </row>
 
           <row>
-            <entry>CSSI_FLUX_FILE</entry>
+            <entry>LUNA_FRAME _KERNEL_FILE</entry>
 
-            <entry>ftp://ftp.agi.com/pub/DynamicEarthData/SpaceWeather-All-v1.2.txt</entry>
+            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/fk/satellites/</entry>
 
-            <entry>The CSSI Space Weather File used for flux and geomagnetic
-            indeces in drag modeling when a propgator is configured to use the
-            CSSI file as the source for space weather modeling.</entry>
-          </row>
-
-          <row>
-            <entry>SCHATTEN_FILE</entry>
-
-            <entry>https://iswa.ccmc.gsfc.nasa.gov/iswa_data_tree/model/solar/FDF/SchattenSolarFluxPrediction/</entry>
-
-            <entry>The Schatten file is not currently updated by the data file
-            manager utility. Users can manually download it from the data
-            source. Note that after doing this BEGIN_DATA and END_DATA tags
-            must be added to the data file as shown in the Schatten data file
-            packaged with GMAT.</entry>
-          </row>
-
-          <row>
-            <entry>EARTH_LATEST_PCK_FILE</entry>
-
-            <entry>https://naif.jpl.nasa.gov/pub/naif/ generic_kernels/pck/
-            earth_latest_high_prec.bpc</entry>
-
-            <entry>The EOP file used by SPICE’s astrodynamics
-            routines.</entry>
-          </row>
-
-          <row>
-            <entry>EARTH_PCK _PREDICTED_FILE</entry>
-
-            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/</entry>
-
-            <entry>The SPICE kernel containing predicted, precession, nutation
-            ,nutation corrections, UT1-TAI , and polar motion for the Earth.
-            Used in SPICE's astrodynamic routines.</entry>
-          </row>
-
-          <row>
-            <entry>EARTH_PCK _CURRENT_FILE</entry>
-
-            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/</entry>
-
-            <entry>The SPICE kernel containing historical, precession,
-            nutation ,nutation corrections, UT1-TAI , and polar motion for the
-            Earth. Used in SPICE's astrodynamic routines.</entry>
+            <entry>This frame kernel contains the latest specifications of
+            lunar reference frames realizing the Lunar Principal Axis (PA) and
+            Mean Earth/Polar Axis (ME) reference systems. Used in SPICE's
+            astrodynamic routines.</entry>
           </row>
 
           <row>
@@ -430,14 +430,27 @@
           </row>
 
           <row>
-            <entry>LUNA_FRAME _KERNEL_FILE</entry>
+            <entry>PLANETARY_PCK _FILE</entry>
 
-            <entry>https://naif.jpl.nasa.gov/pub/naif/generic_kernels/fk/satellites/</entry>
+            <entry>https://naif.jpl.nasa.gov/pub/naif/
+            generic_kernels/pck/</entry>
 
-            <entry>This frame kernel contains the latest specifications of
-            lunar reference frames realizing the Lunar Principal Axis (PA) and
-            Mean Earth/Polar Axis (ME) reference systems. Used in SPICE's
-            astrodynamic routines.</entry>
+            <entry>The SPICE planetary constants kernel containing
+            orientation, size and shape data. As of release R2017a, the
+            version is pck00010.pck. This can change and the file checks for
+            new versions.</entry>
+          </row>
+
+          <row>
+            <entry>SCHATTEN_FILE</entry>
+
+            <entry>https://iswa.ccmc.gsfc.nasa.gov/iswa_data_tree/model/solar/FDF/SchattenSolarFluxPrediction/</entry>
+
+            <entry>The Schatten file is not currently updated by the data file
+            manager utility. Users can manually download it from the data
+            source. Note that after doing this BEGIN_DATA and END_DATA tags
+            must be added to the data file as shown in the Schatten data file
+            packaged with GMAT.</entry>
           </row>
         </tbody>
       </tgroup>

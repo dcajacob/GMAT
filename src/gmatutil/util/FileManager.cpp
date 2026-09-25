@@ -106,6 +106,7 @@ FileManager::FILE_TYPE_STRING[FileTypeCount] =
    "VEHICLE_MODEL_PATH",
    "SPAD_PATH",
    "ATMOSPHERE_PATH",
+   "IONOSPHERE_PATH",
    "MARS_ATMOSPHERE_PATH",
    "FILE_UPDATE_PATH",
    "HELP_PATH",
@@ -1796,6 +1797,8 @@ void FileManager::WriteStartupFile(const std::string &fileName)
    WriteFiles(outStream, "SCHATTEN_");
    outStream << "#-----------------------------------------------------------\n";
    mPathWrittenOuts.push_back("ATMOSPHERE_PATH");
+   outStream << std::setw(22) << "IONOSPHERE_PATH" << " = " << mPathMap["IONOSPHERE_PATH"] << "\n";
+   mPathWrittenOuts.push_back("IONOSPHERE_PATH");
 
    //---------------------------------------------
    // write *_POT_PATH and files next
@@ -3673,6 +3676,7 @@ void FileManager::RefreshFiles()
    AddFileType("MEASUREMENT_PATH", "OUTPUT_PATH");
    AddFileType("VEHICLE_EPHEM_CCSDS_PATH", "OUTPUT_PATH");
    AddFileType("SCREENSHOT_FILE", "OUTPUT_PATH");
+   AddFileType("IONOSPHERE_PATH", "DATA_PATH/IonosphereData");
    
    
    // Should we add default input paths and files?

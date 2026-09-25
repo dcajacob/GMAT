@@ -61,7 +61,7 @@ const Real CommandableNadirPointing::DENOMINATOR_TOLERANCE = 1.0e-15;
 //------------------------------------------------------------------------------
 CommandableNadirPointing::CommandableNadirPointing(const std::string &itsName) :
    Kinematic(itsName),
-   hasComputedFirstDCM  (false)
+   firstInit(true)
 {
    parameterCount = CommandableNadirPointingParamCount;
    objectTypeNames.push_back("CommandableNadirPointing");
@@ -83,7 +83,7 @@ CommandableNadirPointing::CommandableNadirPointing(const std::string &itsName) :
 CommandableNadirPointing::CommandableNadirPointing(
                     const CommandableNadirPointing& att) :
    Kinematic(att),
-   hasComputedFirstDCM  (att.hasComputedFirstDCM)
+   firstInit(att.firstInit)
 {
 }
  
@@ -103,7 +103,7 @@ CommandableNadirPointing&
    CommandableNadirPointing::operator=(const CommandableNadirPointing& att)
 {
    Kinematic::operator=(att);
-   hasComputedFirstDCM = att.hasComputedFirstDCM;
+   firstInit = true;
    return *this;
 }
 
@@ -141,8 +141,6 @@ bool CommandableNadirPointing::Initialize()
    MessageInterface::ShowMessage(" ... epoch = %12.5f     attitudeTime = %12.5f\n", epoch, attitudeTime);
    MessageInterface::ShowMessage ("isInitialized=%s\n", (isInitialized? "true": "false"));
    MessageInterface::ShowMessage ("needsReinit=%s  \n", (needsReinit? "true": "false"));
-   MessageInterface::ShowMessage ("hasComputedFirstDCM=%s\n",
-                                  (hasComputedFirstDCM? "true": "false") );
 #endif
    if (!Kinematic::Initialize()) return false;
    // Cannot check refBody value here, as Initialize is called on
@@ -159,8 +157,6 @@ bool CommandableNadirPointing::Initialize()
    MessageInterface::ShowMessage(" ... epoch = %12.5f     attitudeTime = %12.5f\n", epoch, attitudeTime);
    MessageInterface::ShowMessage ("isInitialized=%s\n", (isInitialized? "true": "false"));
    MessageInterface::ShowMessage ("needsReinit=%s  \n", (needsReinit? "true": "false"));
-   MessageInterface::ShowMessage ("hasComputedFirstDCM=%s\n",
-                                  (hasComputedFirstDCM? "true": "false") );
 #endif
    return true;
 }
@@ -208,27 +204,17 @@ const Rvector&   CommandableNadirPointing::GetQuaternion(Real atTime)
          (quaternion.ToString()).c_str());
    MessageInterface::ShowMessage ("isInitialized=%s, needsReinit=%s\n",
       (isInitialized? "true": "false"), (needsReinit? "true": "false"));
-   MessageInterface::ShowMessage ("hasComputedFirstDCM=%s\n",
-                                  (hasComputedFirstDCM? "true": "false") );
 #endif
    if (!isInitialized || needsReinit) Initialize();
-   if (!hasComputedFirstDCM)
-   {
-      attitudeTime = 0.0; // force computation
-      hasComputedFirstDCM = true;
-   }
    
-   if (GmatMathUtil::Abs(atTime - attitudeTime) > ATTITUDE_TIME_TOLERANCE)
-   {
-#ifdef DEBUG_CNP
-   MessageInterface::ShowMessage(" ... about to compute:  quaternion is %s\n",
-         (quaternion.ToString()).c_str());
-   MessageInterface::ShowMessage(" ... atTime = %12.5f     attitudeTime = %12.5f\n", atTime, attitudeTime);
-#endif
-      ComputeCosineMatrixAndAngularVelocity(atTime);
-      attitudeTime = atTime;
-      quaternion       = AttitudeConversionUtility::ToQuaternion(dcm);
-   }
+   #ifdef DEBUG_CNP
+      MessageInterface::ShowMessage(" ... about to compute:  quaternion is %s\n",
+            (quaternion.ToString()).c_str());
+      MessageInterface::ShowMessage(" ... atTime = %12.5f     attitudeTime = %12.5f\n", atTime, attitudeTime);
+   #endif
+   ComputeCosineMatrixAndAngularVelocity(atTime);
+   quaternion       = AttitudeConversionUtility::ToQuaternion(dcm);
+
 #ifdef DEBUG_CNP
    MessageInterface::ShowMessage(" ... returning quaternion: %s\n",
          (quaternion.ToString()).c_str());
@@ -257,18 +243,11 @@ const Rmatrix33& CommandableNadirPointing::GetCosineMatrix(Real atTime)
       // show flags
       MessageInterface::ShowMessage ("isInitialized=%s, needsReinit=%s\n",
          (isInitialized? "true": "false"), (needsReinit? "true": "false"));
-      MessageInterface::ShowMessage ("hasComputedFirstDCM=%s\n",
-                                     (hasComputedFirstDCM? "true": "false") );
       
       MessageInterface::ShowMessage(" ... attitude state - cosine matrix: %s\n",
          (dcm.ToString()).c_str());
    #endif
    if (!isInitialized || needsReinit) Initialize();
-   if (!hasComputedFirstDCM)
-   {
-      attitudeTime = 0.0; // force computation
-      hasComputedFirstDCM = true;
-   }
 
 #ifdef DEBUG_CNP   
    MessageInterface::ShowMessage(" ... about to compute: DCM is %s\n",
@@ -276,15 +255,12 @@ const Rmatrix33& CommandableNadirPointing::GetCosineMatrix(Real atTime)
    MessageInterface::ShowMessage(" ... atTime = %12.5f     attitudeTime = %12.5f\n", atTime, attitudeTime);
 #endif
    
-   if (GmatMathUtil::Abs(atTime - attitudeTime) > ATTITUDE_TIME_TOLERANCE)
-   {
-      ComputeCosineMatrixAndAngularVelocity(atTime);
-      attitudeTime = atTime;
+   ComputeCosineMatrixAndAngularVelocity(atTime);
       
-      // update quaternion in state; GetCosineMatrix is called
-      // by propagator & torque models (I think)
-      quaternion       = AttitudeConversionUtility::ToQuaternion(dcm);
-   }
+   // update quaternion in state; GetCosineMatrix is called
+   // by propagator & torque models (I think)
+   quaternion       = AttitudeConversionUtility::ToQuaternion(dcm);
+
    #ifdef DEBUG_CNP
       MessageInterface::ShowMessage(" ... returning cosine matrix: %s\n",
             (dcm.ToString()).c_str());
@@ -667,6 +643,12 @@ void CommandableNadirPointing::ComputeAttitudeFromCartesianVectors(Real atTime)
    MessageInterface::ShowMessage ("*** Entering ComputeAttitudeFromCartesianVectors\n");
    MessageInterface::ShowMessage ("... atTime = %12.5f\n", atTime);
 #endif
+
+   if (!NeedToEvaluateAttitude(atTime))
+      return;
+
+   attitudeTime = atTime;
+
    // local variables
    Rvector3 pos, vel, nadir, normal; // computed from orbit parameters
    Rvector3 xhat, yhat, zhat; // body axes expressed in inertial frame
@@ -951,6 +933,11 @@ void CommandableNadirPointing::ComputeCosineMatrixAndAngularVelocity(GmatTime &a
    if (!owningSC) MessageInterface::ShowMessage("--- owningSC is NULL!!!!\n");
    if (!refBody) MessageInterface::ShowMessage("--- refBody is NULL!!!!\n");
 #endif
+
+   if (!NeedToEvaluateAttitude(atTime.GetMjd()))
+      return;
+
+   attitudeTime = atTime.GetMjd();
 
    if (!isInitialized || needsReinit)
    {
@@ -1298,6 +1285,11 @@ std::vector<Rmatrix33> CommandableNadirPointing::GetRotationMatrixDerivative(Gma
       if (!refBody) MessageInterface::ShowMessage("--- refBody is NULL!!!!\n");
    #endif
 
+   if (!NeedToEvaluateAttitude(atTime))
+      return;
+
+   attitudeTime = atTime;
+
    if (!isInitialized || needsReinit)
    {
       Initialize();
@@ -1636,3 +1628,30 @@ Rmatrix33 CommandableNadirPointing::TRIAD(Rvector3& V1, Rvector3& V2, Rvector3& 
    return resultRotMatrix;
 }
 
+//------------------------------------------------------------------------------
+// bool NeedToEvaluateAttitude(Real atTime)
+//------------------------------------------------------------------------------
+/**
+ * This method checks if a new attitude calculation is necessary. If this is
+ * the first evalutaion or we haven't moved in time, we keep the current
+ * attitude evaluation.
+ *
+ * @param atTime the A1Mjd time at which to compute the attitude.
+ *
+ * @return Whether or not to freshly evaluate attitude
+ */
+//------------------------------------------------------------------------------
+bool CommandableNadirPointing::NeedToEvaluateAttitude(Real atTime)
+{
+   if (firstInit)
+   {
+      attitudeTime = 0.0; // No attitude computed yet
+      firstInit = false;
+      return true;
+   }
+
+   if (GmatMathUtil::Abs(atTime - attitudeTime) <= ATTITUDE_TIME_TOLERANCE)
+      return false;
+   else
+      return true;
+}

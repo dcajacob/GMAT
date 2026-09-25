@@ -1839,6 +1839,10 @@ Rvector3 GravityField::GetTorquesForSpacecraft(Spacecraft *sc)
    Rvector3 nadirVec(-satState[0] / dist, -satState[1] / dist,
       -satState[2] / dist);
 
+   // Rotate to the body frame
+   Rmatrix33 eq2Body = sc->GetAttitudeRotationMatrix(currEpochGT).Transpose();
+   nadirVec = eq2Body * nadirVec;
+
    Rvector3 gravityTorque = Cross(((3.0 * body->GetGravitationalConstant() /
       pow(dist, 3.0)) * nadirVec), scMOITensor * nadirVec);
 

@@ -61,12 +61,14 @@ Planet::PARAMETER_TEXT[PlanetParamCount - CelestialBodyParamCount] =
 {
    "NutationUpdateInterval",
    "EopFileName",
+   "IonosphereModelDirectory"
 };
 
 const Gmat::ParameterType
 Planet::PARAMETER_TYPE[PlanetParamCount - CelestialBodyParamCount] =
 {
    Gmat::REAL_TYPE,
+   Gmat::STRING_TYPE,
    Gmat::STRING_TYPE,
 };
 
@@ -88,7 +90,8 @@ Planet::PARAMETER_TYPE[PlanetParamCount - CelestialBodyParamCount] =
 Planet::Planet(std::string name) :
    CelestialBody     ("Planet",name),
    nutationUpdateInterval    (60.0),
-   eopFileName               ("")
+   eopFileName               (""),
+   ionosphereModelDirectory  ("")
 {   
    // @todo This constructor should call the other one, setting Sun as central body!!!
    #ifdef DEBUG_PLANET_CONSTRUCT
@@ -148,7 +151,8 @@ Planet::Planet(std::string name) :
 Planet::Planet(std::string name, const std::string &cBody) :
    CelestialBody     ("Planet",name),
    nutationUpdateInterval    (60.0),
-   eopFileName               ("")
+   eopFileName               (""),
+   ionosphereModelDirectory  ("")
 {
 #ifdef DEBUG_PLANET_CONSTRUCT
    MessageInterface::ShowMessage("In Planet constructor for %s, with central body %s\n",
@@ -203,6 +207,7 @@ Planet::Planet(const Planet &pl) :
    CelestialBody  (pl),
    nutationUpdateInterval         (pl.nutationUpdateInterval),
    eopFileName                    (pl.eopFileName),
+   ionosphereModelDirectory       (pl.ionosphereModelDirectory),
    default_nutationUpdateInterval (pl.default_nutationUpdateInterval)
 {
 }
@@ -229,6 +234,7 @@ Planet& Planet::operator=(const Planet &pl)
    default_nutationUpdateInterval  = pl.default_nutationUpdateInterval;
    
    eopFileName                     = pl.eopFileName;
+   ionosphereModelDirectory        = pl.ionosphereModelDirectory;
    
    return *this;
 }
@@ -262,6 +268,8 @@ bool Planet::Initialize()
    #endif
    if (eopFileName != "")
       GmatGlobal::Instance()->GetEopFile()->ResetEopFile(eopFileName);
+   if (ionosphereModelDirectory != "")
+      GmatGlobal::Instance()->SetIonosphereDir(ionosphereModelDirectory);
    return CelestialBody::Initialize();
 }
 
@@ -659,6 +667,11 @@ bool Planet::IsParameterReadOnly(const Integer id) const
       if (instanceName == GmatSolarSystemDefaults::EARTH_NAME) return false;
       else                                         return true;
    }
+    if (id == IONOSPHERE_MODEL_DIR)
+   {
+      if (instanceName == GmatSolarSystemDefaults::EARTH_NAME) return false;
+      else                                         return true;
+   }
    return CelestialBody::IsParameterReadOnly(id);
 }
 
@@ -763,6 +776,8 @@ std::string Planet::GetStringParameter(const Integer id) const
    #endif
    
    if (id == EOP_FILE_NAME)         return eopFileName;
+
+   if (id == IONOSPHERE_MODEL_DIR)  return ionosphereModelDirectory;
    
    return CelestialBody::GetStringParameter(id);
 }
@@ -803,6 +818,21 @@ bool Planet::SetStringParameter(const Integer id,
             GmatGlobal::Instance()->GetEopFile()->ResetEopFile(eopFileName);
          return true;
       }
+      else
+         throw SolarSystemException("Cannot set the EopFileName for body " + instanceName + ". The EopFileName parameter may only be set for Earth");
+   }
+
+   if (id == IONOSPHERE_MODEL_DIR)
+   {
+      if (instanceName == GmatSolarSystemDefaults::EARTH_NAME)
+      {
+         ionosphereModelDirectory = value;
+         if (ionosphereModelDirectory != "")
+            GmatGlobal::Instance()->SetIonosphereDir(ionosphereModelDirectory);
+         return true;
+      }
+      else
+         throw SolarSystemException("Cannot set the IonosphereModelDirectory for body " + instanceName + ". The IonosphereModelDirectory parameter may only be set for Earth");
    }
    
    return CelestialBody::SetStringParameter(id, value);
@@ -889,6 +919,11 @@ bool Planet::IsParameterEqualToDefault(const Integer id) const
    {
       if (eopFileName == "")  return true;
       else                   return false;
+   }
+   if (id == IONOSPHERE_MODEL_DIR)
+   {
+      if (ionosphereModelDirectory == "") return true;
+      else                      return false;
    }
 
    return CelestialBody::IsParameterEqualToDefault(id);

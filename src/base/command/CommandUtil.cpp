@@ -101,7 +101,7 @@ GmatCommand* GmatCommandUtil::GetLastCommand(GmatCommand *cmd)
       ShowCommand("===> GmatCommandUtil::GetLastCommand() cmd = ", cmd);
       #endif
       
-      cmd = cmd->GetNext();
+      cmd = cmd->GetNextWhileExecuting();
       
       if (cmd != NULL)
          nextCmd = cmd;
@@ -128,14 +128,14 @@ GmatCommand* GmatCommandUtil::GetNextCommand(GmatCommand *cmd)
       return NULL;
    
    if (cmd->GetTypeName() != "BeginScript")
-      return cmd->GetNext();
+      return cmd->GetNextWhileExecuting();
    
    GmatCommand *endScript = GetMatchingEnd(cmd);
    
    if (endScript == NULL)
       return NULL;
    else
-      return endScript->GetNext();
+      return endScript->GetNextWhileExecuting();
    
 }
 
@@ -178,14 +178,14 @@ GmatCommand* GmatCommandUtil::GetPreviousCommand(GmatCommand *from,
                return prevCmd;
             
             prevCmd = child;
-            child = child->GetNext();
+            child = child->GetNextWhileExecuting();
          }
          
          branch++;
       }
       
       prevCmd = current;
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
       
    }
    
@@ -239,7 +239,7 @@ GmatCommand* GmatCommandUtil::GetMatchingEnd(GmatCommand *cmd, bool getMatchingE
          if (scriptEventCount == 0)
             break;
       
-         current = current->GetNext();
+         current = current->GetNextWhileExecuting();
       }
       
       #ifdef DEBUG_MATCHING_END
@@ -278,7 +278,7 @@ GmatCommand* GmatCommandUtil::GetMatchingEnd(GmatCommand *cmd, bool getMatchingE
                break;
             }
             
-            child = child->GetNext();
+            child = child->GetNextWhileExecuting();
          }
          
          if (elseFound && branch == 1)
@@ -340,7 +340,7 @@ GmatCommand* GmatCommandUtil::GetParentCommand(GmatCommand *top, GmatCommand *cm
             break;
       }
       
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    #ifdef DEBUG_GET_PARENT
@@ -389,7 +389,7 @@ GmatCommand* GmatCommandUtil::GetSubParent(GmatCommand *brCmd, GmatCommand *cmd)
          if (subParent != NULL)
             return subParent;
          
-         child = child->GetNext();
+         child = child->GetNextWhileExecuting();
          
          #ifdef DEBUG_GET_PARENT
          ShowCommand
@@ -475,7 +475,7 @@ GmatCommand* GmatCommandUtil::RemoveCommand(GmatCommand *seq, GmatCommand *cmd)
    MessageInterface::ShowMessage(cmdString1);
    #endif
    
-   GmatCommand *current = cmd->GetNext();
+   GmatCommand *current = cmd->GetNextWhileExecuting();
    
    #ifdef DEBUG_COMMAND_DELETE
    GmatCommand *nextCmd = GmatCommandUtil::GetNextCommand(cmd);
@@ -499,7 +499,7 @@ GmatCommand* GmatCommandUtil::RemoveCommand(GmatCommand *seq, GmatCommand *cmd)
       if (current == endScript)
          break;
       
-      next = current->GetNext();
+      next = current->GetNextWhileExecuting();
       
       #ifdef DEBUG_COMMAND_DELETE
       ShowCommand("     removing and deleting ", current);
@@ -544,7 +544,7 @@ GmatCommand* GmatCommandUtil::RemoveCommand(GmatCommand *seq, GmatCommand *cmd)
       remvCmd = NULL;
    }
    
-   next = cmd->GetNext();
+   next = cmd->GetNextWhileExecuting();
    
    #ifdef DEBUG_COMMAND_DELETE
    ShowCommand("     next    = ", next, " nextCmd = ", nextCmd);
@@ -637,7 +637,7 @@ bool GmatCommandUtil::IsElseFoundInIf(GmatCommand *ifCmd)
          break;
       }
       
-      child = child->GetNext();
+      child = child->GetNextWhileExecuting();
    }
    
    #ifdef DEBUG_IF_ELSE
@@ -685,12 +685,12 @@ bool GmatCommandUtil::ClearCommandSeq(GmatCommand *seq, bool leaveFirstCmd,
    while (current)
    {
       ShowCommand("   ", current);
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    MessageInterface::ShowMessage("\n");
    #endif
    
-   cmd = cmd->GetNext();
+   cmd = cmd->GetNextWhileExecuting();
    while (cmd)
    {
       if (callRunComplete)
@@ -715,7 +715,7 @@ bool GmatCommandUtil::ClearCommandSeq(GmatCommand *seq, bool leaveFirstCmd,
          delete removedCmd;
       }
       removedCmd = NULL;
-      cmd = seq->GetNext();
+      cmd = seq->GetNextWhileExecuting();
    }
    
    // if first command is to be delete
@@ -765,7 +765,7 @@ bool GmatCommandUtil::IsAfter(GmatCommand *cmd1, GmatCommand *cmd2)
       if (current == cmd1)
          return true;
       
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    return false;
@@ -803,7 +803,7 @@ void GmatCommandUtil::ResetCommandSequenceChanged(GmatCommand *cmd)
       if ((current->GetChildCommand(0)) != NULL)
          ResetBranchCommandChanged(current, 0);
       
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    #ifdef DEBUG_COMMAND_CHANGED
@@ -842,7 +842,7 @@ void GmatCommandUtil::ResetBranchCommandChanged(GmatCommand *brCmd, Integer leve
          if (nextInBranch->GetChildCommand() != NULL)
             ResetBranchCommandChanged(nextInBranch, level+1);
          
-         nextInBranch = nextInBranch->GetNext();
+         nextInBranch = nextInBranch->GetNextWhileExecuting();
       }
       
       ++childNo;
@@ -911,7 +911,7 @@ bool GmatCommandUtil:: HasCommandSequenceChanged(GmatCommand *cmd)
          }
       }
       
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    #ifdef DEBUG_COMMAND_CHANGED
@@ -964,7 +964,7 @@ bool GmatCommandUtil::HasBranchCommandChanged(GmatCommand *brCmd, Integer level)
                #endif
                return true;
             }
-         nextInBranch = nextInBranch->GetNext();
+         nextInBranch = nextInBranch->GetNextWhileExecuting();
       }
       
       ++childNo;
@@ -1086,7 +1086,7 @@ bool GmatCommandUtil::FindObject(GmatCommand *cmd, UnsignedInt objType,
          }
       }
 
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    #ifdef DEBUG_COMMAND_FIND_OBJECT
@@ -1198,7 +1198,7 @@ bool GmatCommandUtil::FindObjectFromSubCommands(GmatCommand *brCmd, Integer leve
                return true;
             }
          }
-         nextInBranch = nextInBranch->GetNext();
+         nextInBranch = nextInBranch->GetNextWhileExecuting();
       }
       
       ++childNo;
@@ -1278,7 +1278,7 @@ GetCommandSeqString(GmatCommand *cmd, bool showAddr, bool showGenStr,
       if ((current->GetChildCommand(0)) != NULL)
          GetSubCommandString(current, 0, cmdseq, showAddr, showGenStr, showSummaryName, indentStr);
       
-      current = current->GetNext();
+      current = current->GetNextWhileExecuting();
    }
    
    cmdseq.append("\n");
@@ -1356,7 +1356,7 @@ GetSubCommandString(GmatCommand* brCmd, Integer level, std::string &cmdseq,
             GetSubCommandString(nextInBranch, level+1, cmdseq, showAddr, showGenStr,
                                 showSummaryName, indentStr);
          
-         nextInBranch = nextInBranch->GetNext();
+         nextInBranch = nextInBranch->GetNextWhileExecuting();
       }
       
       ++childNo;

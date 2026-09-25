@@ -254,6 +254,8 @@ public:
    ItrfCoefficientsFile* GetItrfCoefficientsFile();
    void SetEopFile(EopFile *eop);
    void SetItrfCoefficientsFile(ItrfCoefficientsFile *itrf);
+   std::string GetIonosphereDir();
+   void SetIonosphereDir(std::string ionosphereDir);
    
    // Log file set-up
    void        SetLogfileSource(Integer src, const std::string logfileName = "");
@@ -370,6 +372,7 @@ private:
 
    EopFile *theEopFile;
    ItrfCoefficientsFile *theItrfFile;
+   std::string ionosphereDir;
    
    // Logfile
    Integer logfileSrc;

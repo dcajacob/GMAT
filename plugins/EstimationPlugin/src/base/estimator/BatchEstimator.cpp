@@ -1064,7 +1064,7 @@ void BatchEstimator::Estimate()
       if (measStats[ii].editFlag == NORMAL_FLAG)
          countMeasurements += measStats[ii].residual.size();
 
-   if (countMeasurements < esm.GetStateMap()->size())
+   if (currentMode != INITIAL_GUESS && countMeasurements < esm.GetStateMap()->size())
    {
       std::stringstream ss;
       ss << "Error: For Batch estimator " << GetName() 
