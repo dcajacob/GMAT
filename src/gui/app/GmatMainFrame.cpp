@@ -135,6 +135,7 @@
 #include "RealUtilities.hpp"          // for Abs()
 
 #include <algorithm>
+#include <wx/display.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/gdicmn.h>
@@ -149,6 +150,57 @@
 // Interface to GUI plugin components
 #include "WxGuiInterface.hpp"
 
+
+#ifdef __LINUX__
+namespace
+{
+// Use wxWidgets' native geometry handling (including the normal size of a
+// maximized window), but keep it in GMAT's existing personalization file.
+class LinuxFrameGeometry : public wxTopLevelWindow::GeometrySerializer
+{
+public:
+   explicit LinuxFrameGeometry(wxConfigBase *config) : config(config) {}
+
+   bool SaveField(const wxString &name, int value) const override
+   {
+      return config->Write("/MainFrame/Linux/" + name, value);
+   }
+
+   bool RestoreField(const wxString &name, int *value) override
+   {
+      // Closing a minimized application should not hide the next launch.
+      if (name == "Iconized")
+      {
+         *value = 0;
+         return true;
+      }
+      if (!config->Read("/MainFrame/Linux/" + name, value))
+         return false;
+
+      // Validate dimensions before handing them to GTK, which otherwise may
+      // allocate an enormous window from corrupt or stale preferences.
+      if (name == "w" || name == "h")
+      {
+         if (*value <= 0)
+            return false;
+         int x = 0, y = 0;
+         config->Read("/MainFrame/Linux/x", &x);
+         config->Read("/MainFrame/Linux/y", &y);
+         int display = wxDisplay::GetFromPoint(wxPoint(x, y));
+         if (display == wxNOT_FOUND)
+            display = 0;
+         const wxRect area = wxDisplay(display).GetClientArea();
+         if (!area.IsEmpty())
+            *value = std::min(*value, name == "w" ? area.width : area.height);
+      }
+      return true;
+   }
+
+private:
+   wxConfigBase *config;
+};
+}
+#endif
 
 // If we want to show GL option dialog from tool bar
 //#define __SHOW_GL_OPTION_DIALOG__
@@ -745,6 +797,11 @@ GmatMainFrame::~GmatMainFrame()
    #endif
    //=======================================================
    
+   #ifdef __LINUX__
+   if (GmatGlobal::Instance()->GetWritePersonalizationFile())
+      SaveGeometry(LinuxFrameGeometry(pConfig));
+   #endif
+
    // Save message window height.
    Integer lineHeight = msgTextCtrl->GetCharHeight();
    Integer msgWindowWidth, msgWindowHeight;
@@ -5538,6 +5595,35 @@ void GmatMainFrame::OnGenerateTextEphemFile(wxCommandEvent& event)
    
    if (dlg.CreateEphemFile())
       RunCurrentMission();
+}
+
+
+//------------------------------------------------------------------------------
+// RestoreWindowGeometry()
+//------------------------------------------------------------------------------
+void GmatMainFrame::RestoreWindowGeometry()
+{
+   #ifdef __LINUX__
+   LinuxFrameGeometry geometry(GmatAppData::Instance()->GetPersonalizationConfig());
+   RestoreToGeometry(geometry);
+
+   // A saved monitor may have been disconnected, or its work area reduced.
+   // Keep the title bar and the entire normal window on an available display.
+   int display = wxDisplay::GetFromWindow(this);
+   if (display == wxNOT_FOUND)
+      display = 0;
+   const wxRect area = wxDisplay(display).GetClientArea();
+   if (!area.IsEmpty())
+   {
+      wxSize size = GetSize();
+      size.x = std::max(std::min(FromDIP(640), area.width), std::min(size.x, area.width));
+      size.y = std::max(std::min(FromDIP(480), area.height), std::min(size.y, area.height));
+      wxPoint pos = GetPosition();
+      pos.x = std::max(area.x, std::min(pos.x, area.GetRight() - size.x + 1));
+      pos.y = std::max(area.y, std::min(pos.y, area.GetBottom() - size.y + 1));
+      SetSize(wxRect(pos, size));
+   }
+   #endif
 }
 
 
