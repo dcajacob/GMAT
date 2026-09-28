@@ -30,6 +30,9 @@
 #include "gmatwxdefs.hpp"          // for WX and GL
 #include "MessageInterface.hpp"
 #include "FallbackFont.hpp"
+#include <wx/dcmemory.h>
+#include <wx/image.h>
+#include <vector>
 
 //#define DEBUG_INIT_GL
 //#define TRAP_PIXEL_FORMAT_ERRORS  // Enable this to work on pixel format error
@@ -153,6 +156,64 @@ void SetDefaultGLFont()
    }
 
    glListBase(1000);
+#endif
+}
+
+// Select a readable Linux plot font in physical pixels. Cache each size in the
+// current GL context, so canvases sharing a context can use different DPI scales.
+// The legacy font owns lists 1000..1255; plot-font banks start beyond that range.
+void SetPlotGLFont(double contentScale)
+{
+#ifdef __WXGTK__
+   const int pixelHeight = wxMax(20, wxMin(128, wxRound(20 * contentScale)));
+   const GLuint base = 1000 + 256 * pixelHeight;
+   if (!glIsList(base + 'M'))
+   {
+      wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+      font.SetPixelSize(wxSize(0, pixelHeight));
+      wxBitmap measure(1, 1, 24);
+      wxMemoryDC dc(measure);
+      dc.SetFont(font);
+      const int height = wxMax(1, dc.GetCharHeight());
+      dc.SetTextForeground(*wxWHITE);
+      dc.SetTextBackground(*wxBLACK);
+      dc.SetBackground(*wxBLACK_BRUSH);
+
+      glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+      glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+      glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+      glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+      glPixelStorei(GL_UNPACK_LSB_FIRST, GL_FALSE);
+      for (unsigned int character = 0; character < 256; ++character)
+      {
+         const wxString text(static_cast<wxChar>(character));
+         const int width = wxMax(1, dc.GetTextExtent(text).x);
+         wxBitmap glyph(width, height, 24);
+         dc.SelectObject(glyph);
+         dc.Clear();
+         if (character >= 32 && character != 127)
+            dc.DrawText(text, 0, 0);
+         dc.SelectObject(wxNullBitmap);
+         const wxImage image = glyph.ConvertToImage();
+         const int stride = (width + 7) / 8;
+         std::vector<unsigned char> bits(stride * height, 0);
+         for (int y = 0; y < height; ++y)
+            for (int x = 0; x < width; ++x)
+               if (image.GetRed(x, height - 1 - y) >= 128)
+                  bits[y * stride + x / 8] |= 0x80 >> (x % 8);
+         glNewList(base + character, GL_COMPILE);
+         glBitmap(width, height, 0, 0, width, 0, bits.data());
+         glEndList();
+         dc.SelectObject(measure);
+      }
+      dc.SelectObject(wxNullBitmap);
+      glPopClientAttrib();
+   }
+   glListBase(base);
+#else
+   // Preserve native font behavior on platforms outside this Linux fix.
+   SetDefaultGLFont();
 #endif
 }
 

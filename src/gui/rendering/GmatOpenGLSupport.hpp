@@ -34,5 +34,6 @@
 void InitGL();
 bool SetPixelFormatDescriptor();
 void SetDefaultGLFont();
+void SetPlotGLFont(double contentScale);
 void ScreenShotSave(char* ImagePath);
 #endif
