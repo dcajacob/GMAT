@@ -134,6 +134,7 @@
 #include "GmatOpenGLSupport.hpp"      // for ScreenShotSave
 #include "RealUtilities.hpp"          // for Abs()
 
+#include <algorithm>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/gdicmn.h>
@@ -574,6 +575,15 @@ GmatMainFrame::GmatMainFrame(wxWindow *parent,  const wxWindowID id,
    theNotebook = new GmatNotebook(theMainWin, -1, wxDefaultPosition,
                                   wxDefaultSize, wxCLIP_CHILDREN);
    
+   #ifdef __LINUX__
+   // Allow all three tabs to fit with the user's desktop font. GTK's notebook
+   // best size only includes the page size, not the complete row of tabs.
+   int tabWidth = 0;
+   for (size_t i = 0; i < theNotebook->GetPageCount(); ++i)
+      tabWidth += theNotebook->GetTextExtent(theNotebook->GetPageText(i)).x + FromDIP(48);
+   theMainWin->SetDefaultSize(wxSize(std::max(FromDIP(300), tabWidth), h));
+   #endif
+
    // Set the main frame, because there will no longer be right notebook
    gmatAppData->SetMainFrame(this);
    gmatAppData->GetResourceTree()->SetMainFrame(this);
@@ -5532,6 +5542,44 @@ void GmatMainFrame::OnGenerateTextEphemFile(wxCommandEvent& event)
 
 
 //------------------------------------------------------------------------------
+// LayoutMainFrame()
+//------------------------------------------------------------------------------
+void GmatMainFrame::LayoutMainFrame()
+{
+   #ifdef __LINUX__
+   if (theMainWin && theMessageWin)
+   {
+      const wxSize client = GetClientSize();
+      // Updating the sash's maximum alone does not constrain its default size.
+      // Reserve usable space for the editor/plots even after shrinking a window
+      // or reading a console height saved on a larger display.
+      const int maxWidth = std::max(0, client.x - FromDIP(160));
+      const int maxHeight = std::max(0, client.y - FromDIP(120));
+      const int minWidth = std::min(FromDIP(80), maxWidth);
+      const int minHeight = std::min(FromDIP(40), maxHeight);
+      wxQueryLayoutInfoEvent navInfo(theMainWin->GetId());
+      navInfo.SetRequestedLength(client.y);
+      theMainWin->OnQueryLayoutInfo(navInfo);
+      wxQueryLayoutInfoEvent msgInfo(theMessageWin->GetId());
+      msgInfo.SetRequestedLength(client.x);
+      theMessageWin->OnQueryLayoutInfo(msgInfo);
+      theMainWin->SetMinimumSizeX(minWidth);
+      theMainWin->SetMaximumSizeX(maxWidth);
+      theMessageWin->SetMinimumSizeY(minHeight);
+      theMessageWin->SetMaximumSizeY(maxHeight);
+      theMainWin->SetDefaultSize(wxSize(
+         std::max(minWidth, std::min(navInfo.GetSize().x, maxWidth)), client.y));
+      theMessageWin->SetDefaultSize(wxSize(client.x,
+         std::max(minHeight, std::min(msgInfo.GetSize().y, maxHeight))));
+   }
+   #endif
+
+   wxLayoutAlgorithm layout;
+   layout.LayoutMDIFrame(this);
+}
+
+
+//------------------------------------------------------------------------------
 // void OnSashDrag(wxSashEvent& event)
 //------------------------------------------------------------------------------
 void GmatMainFrame::OnSashDrag(wxSashEvent& event)
@@ -5553,8 +5601,7 @@ void GmatMainFrame::OnSashDrag(wxSashEvent& event)
 
    theMainWin->SetDefaultSize(wxSize(event.GetDragRect().width, h));
 
-   wxLayoutAlgorithm layout;
-   layout.LayoutMDIFrame(this);
+   LayoutMainFrame();
 
    // Leaves bits of itself behind sometimes
    GetClientWindow()->Refresh();
@@ -5583,8 +5630,7 @@ void GmatMainFrame::OnMsgSashDrag(wxSashEvent& event)
 
    theMessageWin->SetDefaultSize(wxSize(w, event.GetDragRect().height));
 
-   wxLayoutAlgorithm layout;
-   layout.LayoutMDIFrame(this);
+   LayoutMainFrame();
 
    // Leaves bits of itself behind sometimes
    GetClientWindow()->Refresh();
@@ -5630,8 +5676,7 @@ void GmatMainFrame::OnMainFrameSize(wxSizeEvent& event)
       theMainWin->SetMaximumSizeX(w-20);
    }
 
-   wxLayoutAlgorithm layout;
-   layout.LayoutMDIFrame(this);
+   LayoutMainFrame();
    
    #ifdef DEBUG_SIZE
    MessageInterface::ShowMessage("GmatMainFrame::OnMainFrameSize() leaving\n");

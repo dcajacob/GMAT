@@ -327,6 +327,7 @@ private:
    void UpdateTitle(const wxString &filename = "");
    void SaveGuiToActiveScript();
    
+   void LayoutMainFrame();
    void SaveChildPositionsAndSizes();
    bool GetConfigurationData(const std::string &forItem, Integer &x, Integer &y,
                              Integer &w, Integer &h, bool &isMinimized, bool &isMaximized);

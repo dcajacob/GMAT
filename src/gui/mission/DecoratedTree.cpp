@@ -72,9 +72,8 @@ DecoratedTree::DecoratedTree(wxWindow* parent, wxWindowID id, const wxPoint& pos
     rowHeight               (14)
 {
     offset = 5;
-    int w, h;
-    GetSize(&w, &h);
-    SetSize(w-80, h);
+    // The containing sizer owns the tree's size. In particular, wxGTK may
+    // create it with a width smaller than 80 before the first layout pass.
 }
 
 
