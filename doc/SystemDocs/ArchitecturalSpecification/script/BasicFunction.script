@@ -21,6 +21,8 @@ mnvr.Axes = VNB;
 mnvr.Element2 = 0.05;
 
 Create Variable dx dy dz dr;
+
+BeginMissionSequence;
 Global dx dy dz;
 
 While Sat1.ElapsedDays < 0.1
