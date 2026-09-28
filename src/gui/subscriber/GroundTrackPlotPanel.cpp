@@ -40,6 +40,8 @@
 #include "bitmaps/OpenFolder.xpm"   // for browse button bitmap
 #include "StringUtil.hpp"
 #include "MessageInterface.hpp"
+#include "SubscriberException.hpp"
+#include "SpacePoint.hpp"
 
 //#define DEBUG_PANEL 1
 //#define DEBUG_PANEL_CREATE 1
@@ -95,13 +97,14 @@ GroundTrackPlotPanel::GroundTrackPlotPanel(wxWindow *parent,
                                  std::string(subscriberName.c_str()) + "\n");
    #endif
    
-   Subscriber *subscriber = (Subscriber*)
-      theGuiInterpreter->GetConfiguredObject(subscriberName.c_str());
-   
-   mGroundTrackPlot = (GroundTrackPlot*)subscriber;
+   mGroundTrack = dynamic_cast<Subscriber *>(
+      theGuiInterpreter->GetConfiguredObject(subscriberName.c_str()));
+   if (!mGroundTrack || !mGroundTrack->IsOfType("GroundTrackPlot"))
+      throw SubscriberException("Cannot open GroundTrack editor for " +
+            std::string(subscriberName.utf8_str()));
    
    // Set the pointer for the "Show Script" button
-   mObject = mGroundTrackPlot;
+   mObject = mGroundTrack;
    
    InitializeData();   
    Create();
@@ -452,7 +455,7 @@ void GroundTrackPlotPanel::LoadData()
       Real rval;
       
       // Load central body
-      wxString centralBody = mGroundTrackPlot->GetStringParameter("CentralBody").c_str();
+      wxString centralBody = mGroundTrack->GetStringParameter("CentralBody").c_str();
       mCentralBody = centralBody;
       
       #ifdef DEBUG_PANEL_LOAD
@@ -461,7 +464,7 @@ void GroundTrackPlotPanel::LoadData()
       mCentralBodyComboBox->SetValue(centralBody);
       
       // Load space objects to draw
-      StringArray objects = mGroundTrackPlot->GetStringArrayParameter("Add");
+      StringArray objects = mGroundTrack->GetStringArrayParameter("Add");
       int count = mObjectCheckListBox->GetCount();
       
       #ifdef DEBUG_PANEL_LOAD
@@ -481,8 +484,17 @@ void GroundTrackPlotPanel::LoadData()
          objName = objects[i];
          
          #ifdef __USE_COLOR_FROM_SUBSCRIBER__
-         mOrbitColorMap[objName] = RgbColor(mGroundTrackPlot->GetColor("Orbit", objName));
-         mTargetColorMap[objName] = RgbColor(mGroundTrackPlot->GetColor("Target", objName));
+         if (auto plot = dynamic_cast<GroundTrackPlot *>(mGroundTrack))
+         {
+            mOrbitColorMap[objName] = RgbColor(plot->GetColor("Orbit", objName));
+            mTargetColorMap[objName] = RgbColor(plot->GetColor("Target", objName));
+         }
+         else if (auto point = dynamic_cast<SpacePoint *>(
+               theGuiInterpreter->GetConfiguredObject(objName)))
+         {
+            mOrbitColorMap[objName] = RgbColor(point->GetCurrentOrbitColor());
+            mTargetColorMap[objName] = RgbColor(point->GetCurrentTargetColor());
+         }
          #endif
          
          // Put check mark in the object list
@@ -499,20 +511,20 @@ void GroundTrackPlotPanel::LoadData()
       
       
       // Load drawing options
-      str.Printf("%d", mGroundTrackPlot->GetIntegerParameter("DataCollectFrequency"));
+      str.Printf("%d", mGroundTrack->GetIntegerParameter("DataCollectFrequency"));
       mDataCollectFreqTextCtrl->SetValue(str);
-      str.Printf("%d", mGroundTrackPlot->GetIntegerParameter("UpdatePlotFrequency"));
+      str.Printf("%d", mGroundTrack->GetIntegerParameter("UpdatePlotFrequency"));
       mUpdatePlotFreqTextCtrl->SetValue(str);
-      str.Printf("%d", mGroundTrackPlot->GetIntegerParameter("MaxPlotPoints"));
+      str.Printf("%d", mGroundTrack->GetIntegerParameter("MaxPlotPoints"));
       mMaxPlottedDataPointsTextCtrl->SetValue(str);
-      str.Printf("%d", mGroundTrackPlot->GetIntegerParameter("NumPointsToRedraw"));
+      str.Printf("%d", mGroundTrack->GetIntegerParameter("NumPointsToRedraw"));
       mNumPointsToRedrawTextCtrl->SetValue(str);
       
-      mShowPlotCheckBox->SetValue(mGroundTrackPlot->GetBooleanParameter("ShowPlot"));
+      mShowPlotCheckBox->SetValue(mGroundTrack->GetBooleanParameter("ShowPlot"));
       
       // Load solver iteration and texture map file
-      mSolverIterComboBox->SetValue(mGroundTrackPlot->GetStringParameter("SolverIterations").c_str());
-      mTextureFile = mGroundTrackPlot->GetStringParameter("TextureMap").c_str();
+      mSolverIterComboBox->SetValue(mGroundTrack->GetStringParameter("SolverIterations").c_str());
+      mTextureFile = mGroundTrack->GetStringParameter("TextureMap").c_str();
       mTextureMapTextCtrl->SetValue(mTextureFile);
       mTextureMapTextCtrl->SetInsertionPointEnd();
       
@@ -580,7 +592,7 @@ void GroundTrackPlotPanel::SaveData()
    //-----------------------------------------------------------------
    // save values to base, base code should do the range checking
    //-----------------------------------------------------------------
-   GmatBase *clonedObj = mGroundTrackPlot->Clone();
+   GmatBase *clonedObj = mGroundTrack->Clone();
    try
    {
       if (mHasCentralBodyChanged)
@@ -682,7 +694,7 @@ void GroundTrackPlotPanel::SaveData()
       // Copy new values to original object (LOJ: 2014.10.30)
       if (canClose)
       {
-         mGroundTrackPlot->Copy(clonedObj);
+         mGroundTrack->Copy(clonedObj);
          mCentralBody = mCentralBodyComboBox->GetValue().c_str();
          mTextureFile = mTextureMapTextCtrl->GetValue().c_str();
          EnableUpdate(false);
@@ -968,7 +980,12 @@ void GroundTrackPlotPanel::SaveObjectColors(const wxString &which,
              mOrbitColorMap[objName].GetIntColor());
          #endif
          
-         mGroundTrackPlot->SetColor(whichOne, objName, colorMap[objName].GetIntColor());
+         if (auto plot = dynamic_cast<GroundTrackPlot *>(mGroundTrack))
+            plot->SetColor(whichOne, objName, colorMap[objName].GetIntColor());
+         else if (auto point = dynamic_cast<SpacePoint *>(
+               theGuiInterpreter->GetConfiguredObject(objName)))
+            point->SetStringParameter(whichOne + "Color",
+                  RgbColor::ToRgbString(colorMap[objName].GetIntColor()));
       }
    }
    #if DEBUG_PANEL_SAVE

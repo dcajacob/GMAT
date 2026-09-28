@@ -344,7 +344,7 @@ void OutputTree::UpdateOutput(bool resetTree, bool removeReports, bool removePlo
          AppendItem(mOrbitViewItem, objName, GmatTree::OUTPUT_ICON_ORBIT_VIEW, -1,
                     new GmatTreeItemData(objName, GmatTree::OUTPUT_ORBIT_VIEW));
       }
-      else if (objTypeName == "GroundTrackPlot" &&
+      else if (sub->IsOfType("GroundTrackPlot") &&
                sub->GetBooleanParameter("ShowPlot"))
       {
          AppendItem(mGroundTrackItem, objName, GmatTree::OUTPUT_ICON_GROUND_TRACK_PLOT, -1,
