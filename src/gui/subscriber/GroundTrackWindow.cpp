@@ -36,6 +36,7 @@
 #include "GmatMainFrame.hpp"
 #include "GmatAppData.hpp"
 #include "MdiTsPlotData.hpp"
+#include <algorithm>
 
 //#define DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
 
@@ -70,6 +71,11 @@ GroundTrackWindow::GroundTrackWindow(wxMDIParentFrame *parent,
       GmatMdiChildFrame(parent, plotName, title, GmatTree::OUTPUT_PERSISTENT,
             -1, pos, size, style | wxNO_FULL_REPAINT_ON_RESIZE)
 {
+   animationTimer.SetOwner(this);
+   Bind(wxEVT_TIMER, &GroundTrackWindow::OnAnimationTimer, this, animationTimer.GetId());
+   nextAnimationFrame = 1;
+   animationInterval = 1;
+   animationIncrement = 1;
    mPlotTitle = title;
    MdiTsPlot::mdiChildren.Append(this);
    MdiTsPlot::numChildren++;
@@ -92,6 +98,7 @@ GroundTrackWindow::GroundTrackWindow(wxMDIParentFrame *parent,
 //------------------------------------------------------------------------------
 GroundTrackWindow::~GroundTrackWindow()
 {
+   animationTimer.Stop();
    //GroundTrackArea::mdiChildren.DeleteObject(this);
    //GroundTrackArea::numChildren--;
 
@@ -182,6 +189,7 @@ void GroundTrackWindow::OnMove(wxMoveEvent& event)
  */
 void GroundTrackWindow::OnClose(wxCloseEvent &event)
 {
+   StopAnimation();
    #ifdef DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
       MessageInterface::ShowMessage
          ("GroundTrackWindow::OnClose() '%s' entered, mCanClose=%d\n",
@@ -238,6 +246,8 @@ void GroundTrackWindow::OnPaint(wxPaintEvent& event)
 bool GroundTrackWindow::AddData(const double epoch, const double *longlat,
       const int satcount)
 {
+   if (IsAnimationRunning())
+      StopAnimation();
    return theMap->AddData(epoch, longlat, satcount);
 }
 
@@ -353,6 +363,8 @@ void GroundTrackWindow::ResetForNewRun()
 //------------------------------------------------------------------------------
 bool GroundTrackWindow::TakeAction(const std::string &theAction)
 {
+   if (theAction == "ClearData" || theAction == "Reinitialize")
+      StopAnimation();
    return theMap->TakeAction(theAction);
 }
 
@@ -366,4 +378,49 @@ void GroundTrackWindow::SetSolarSystem(SolarSystem *ss)
 {
    theSS = ss;
    theMap->SetSolarSystem(ss);
+}
+
+void GroundTrackWindow::SetAnimationSpeed(Integer interval, Integer increment)
+{
+   animationInterval = std::max(1, interval);
+   animationIncrement = std::max(1, increment);
+   if (animationTimer.IsRunning())
+      animationTimer.Start(animationInterval);
+}
+
+void GroundTrackWindow::StartAnimation(Integer interval, Integer increment)
+{
+   StopAnimation();
+   auto main = GmatAppData::Instance()->GetMainFrame();
+   if (theMap->GetFrameCount() == 0)
+   {
+      main->EnableMenuAndToolBar(true, false, true);
+      return;
+   }
+   SetAnimationSpeed(interval, increment);
+   nextAnimationFrame = 1;
+   animationTimer.Start(animationInterval);
+   main->EnableMenuAndToolBar(false, false, true);
+}
+
+void GroundTrackWindow::StopAnimation()
+{
+   const bool running = animationTimer.IsRunning();
+   animationTimer.Stop();
+   if (running)
+   {
+      theMap->SetAnimationFrame(0);
+      GmatAppData::Instance()->GetMainFrame()->EnableMenuAndToolBar(true, false, true);
+   }
+}
+
+void GroundTrackWindow::OnAnimationTimer(wxTimerEvent &event)
+{
+   if (nextAnimationFrame > theMap->GetFrameCount())
+   {
+      StopAnimation();
+      return;
+   }
+   theMap->SetAnimationFrame(nextAnimationFrame);
+   nextAnimationFrame += animationIncrement;
 }

@@ -69,7 +69,8 @@ GroundTrackArea::GroundTrackArea(wxWindow *parent,
       longLineCount (12),
       latLineCount (6),
       theSS (nullptr),
-      penIsDown (true)
+      penIsDown (true),
+      animationFrame (0)
 {
 }
 
@@ -328,6 +329,8 @@ bool GroundTrackArea::TakeAction(const std::string &theAction)
    }
    else if (action == "ClearData")
    {
+      frameCounts.clear();
+      animationFrame = 0;
       for (UnsignedInt i = 0; i < data.size(); ++i)
          (data[i])->Clear();
       points.clear();
@@ -446,6 +449,10 @@ bool GroundTrackArea::AddData(const double epoch, const double *dat,
             data[i]->AddData(dat[i*2], dat[i*2+1], epoch);
       }
 
+      std::vector<unsigned int> counts;
+      for (unsigned int i = 0; i < data.size(); ++i)
+         counts.push_back(data[i]->size());
+      frameCounts.push_back(counts);
       ++currentCount;
    }
 
@@ -486,6 +493,8 @@ bool GroundTrackArea::SetDataNames(const StringArray &names)
  */
 void GroundTrackArea::Clear()
 {
+   frameCounts.clear();
+   animationFrame = 0;
    for (UnsignedInt i = 0; i < data.size(); ++i)
       delete data[i];
    data.clear();
@@ -608,13 +617,17 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
    // Draw the ground tracks
    for (int i = 0; i < data.size(); ++i)
    {
+      const unsigned int pointCount = GetDisplayedPointCount(i);
+      if (pointCount == 0 || i >= startColors.size() || i >= theSats.size())
+         continue;
+
       wxPen pen;
       dc.SetTextForeground(startColors[i]);
       pen.SetColour(startColors[i]);
       pen.SetWidth(lineWidth);
       dc.SetPen(pen);
 
-      for (int j = 0; j < data[i]->size() - 1; ++j)
+      for (unsigned int j = 0; j + 1 < pointCount; ++j)
       {
          x0 = data[i]->Xi(j);
          y0 = data[i]->Yi(j);
@@ -687,6 +700,8 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
       // Draw a label for the curve
       dc.SetPen(currentPen);
 
+      xv2 = (int)((180.0 + data[i]->Xi(pointCount - 1)) * xFactor);
+      yv2 = (int)(( 90.0 - data[i]->Yi(pointCount - 1)) * yFactor);
       wxString label = theSats[i];
       wxRect labelRect(xv2+4, yv2 - 8, 20, 50);
 
@@ -721,3 +736,21 @@ void GroundTrackArea::SetSolarSystem(SolarSystem *ss)
 }
 
 
+
+// Select a recorded publication for display; zero restores the complete track.
+void GroundTrackArea::SetAnimationFrame(size_t frame)
+{
+   animationFrame = frame;
+   Refresh(false);
+   Update();
+}
+
+size_t GroundTrackArea::GetDisplayedPointCount(size_t curve) const
+{
+   if (curve >= data.size())
+      return 0;
+   if (animationFrame > 0 && animationFrame <= frameCounts.size())
+      return curve < frameCounts[animationFrame - 1].size() ?
+            frameCounts[animationFrame - 1][curve] : 0;
+   return data[curve]->size();
+}

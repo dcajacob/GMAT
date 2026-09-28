@@ -43,6 +43,8 @@ public:
    virtual ~GroundTrackArea();
 
    void Clear();
+   size_t GetFrameCount() const { return frameCounts.size(); }
+   void SetAnimationFrame(size_t frame);
 
    void SetOption(const std::string &optionSetting, const std::string &optionValue);
    bool AddData(const double epoch, const double *dat, const int satcount);
@@ -59,6 +61,9 @@ public:
    virtual void SetSolarSystem(SolarSystem *ss);
 
    bool TakeAction(const std::string &theAction);
+
+protected:
+   size_t GetDisplayedPointCount(size_t curve) const;
 
 private:
 
@@ -95,6 +100,10 @@ private:
    Integer longLineCount;
    /// Number of latitude grid lines
    Integer latLineCount;
+
+   // Recorded curve lengths for each publication, including absent spacecraft.
+   std::vector<std::vector<unsigned int> > frameCounts;
+   size_t animationFrame;
 
    /// The trajectory data
    std::vector<GroundTrackCurve*> data;

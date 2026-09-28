@@ -143,6 +143,7 @@
 #include "ddesetup.hpp"   // for IPC_SERVICE, IPC_TOPIC
 
 #include "GroundTrackWindow.hpp"
+#include "MdiTsPlotData.hpp"
 #include "GroundTrackArea.hpp"
 
 // Interface to GUI plugin components
@@ -1196,6 +1197,12 @@ bool GmatMainFrame::IsAnimatable()
 //------------------------------------------------------------------------------
 bool GmatMainFrame::IsAnimationRunning()
 {
+   for (int i = 0; i < MdiTsPlot::numChildren; ++i)
+   {
+      auto groundTrack = dynamic_cast<GroundTrackWindow *>(MdiTsPlot::mdiChildren.Item(i)->GetData());
+      if (groundTrack && groundTrack->IsAnimationRunning())
+         return true;
+   }
    wxToolBar *toolBar = GetToolBar();
    if (toolBar->GetToolState(GmatMenu::TOOL_ANIMATION_PLAY) == true)
       return true;
@@ -3025,6 +3032,13 @@ void GmatMainFrame::StopAnimation()
        MdiGlPlot::numChildren, mAnimationTitle.c_str());
    #endif
    
+   auto groundTrack = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
+   if (groundTrack)
+   {
+      groundTrack->StopAnimation();
+      return;
+   }
+
    MdiChildViewFrame *frame = NULL;
    bool frameFound = false;
    
@@ -3261,9 +3275,7 @@ void GmatMainFrame::OnClose(wxCloseEvent& event)
       if (answer == wxYES)
       {
          // Stop animation first
-         wxCommandEvent tempEvent;
-         tempEvent.SetId(GmatMenu::TOOL_ANIMATION_STOP);
-         OnAnimation(tempEvent);
+         StopAnimation();
          event.Skip();
       }
       else if (event.CanVeto())
@@ -6571,6 +6583,12 @@ void GmatMainFrame::OnFont(wxCommandEvent& event)
 void GmatMainFrame::OnAnimation(wxCommandEvent& event)
 {
    GmatMdiChildFrame* child = (GmatMdiChildFrame *)GetActiveChild();
+   // Stop and speed controls belong to the playing GroundTrack even if the
+   // user has activated another tab. Play starts the currently selected plot.
+   auto playingGroundTrack = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
+   if (event.GetId() != TOOL_ANIMATION_PLAY && playingGroundTrack &&
+         playingGroundTrack->IsAnimationRunning())
+      child = playingGroundTrack;
    wxToolBar *toolBar = GetToolBar();
 
    if (child == NULL)
@@ -6587,6 +6605,13 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
       return;
    }
    
+   if (event.GetId() == TOOL_ANIMATION_PLAY)
+   {
+      auto previous = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
+      if (previous)
+         previous->StopAnimation();
+   }
+   auto groundTrack = dynamic_cast<GroundTrackWindow *>(child);
    wxString title = child->GetTitle();
    MdiChildViewFrame *frame = NULL;
    bool frameFound = false;
@@ -6596,7 +6621,7 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
       ("GmatMainFrame::OnAnimation() entered, title=%s\n", title.c_str());
    #endif
    
-   for (int i=0; i<MdiGlPlot::numChildren; i++)
+   for (int i=0; !groundTrack && i<MdiGlPlot::numChildren; i++)
    {
       frame = (MdiChildViewFrame*)(MdiGlPlot::mdiChildren.Item(i)->GetData());
       if (frame && (frame->GetPlotName().IsSameAs(title)))
@@ -6607,12 +6632,13 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
       }
    }
 
-   if (!frameFound)
+   if (!frameFound && !groundTrack)
       return;
+   mAnimationTitle = title;
    
    #ifdef DEBUG_ANIMATION
    MessageInterface::ShowMessage
-      ("   Apply animation action on frame '%s'\n", frame->GetPlotName().c_str());
+      ("   Apply animation action on frame '%s'\n", title.c_str());
    #endif
    
    if (!mAnimationEnabled)
@@ -6634,6 +6660,30 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
    Integer updateIntervalInMilSec = 1;
    ComputeAnimationSpeed(actualInc, updateIntervalInMilSec, false);
       
+   if (groundTrack)
+   {
+      switch (event.GetId())
+      {
+      case TOOL_ANIMATION_PLAY:
+         groundTrack->StartAnimation(updateIntervalInMilSec, actualInc);
+         break;
+      case TOOL_ANIMATION_STOP:
+         groundTrack->StopAnimation();
+         break;
+      case TOOL_ANIMATION_FAST:
+      case TOOL_ANIMATION_SLOW:
+         mAnimationFrameInc += event.GetId() == TOOL_ANIMATION_FAST ? 5 : -5;
+         actualInc = mAnimationFrameInc;
+         ComputeAnimationSpeed(actualInc, updateIntervalInMilSec,
+               event.GetId() == TOOL_ANIMATION_SLOW);
+         groundTrack->SetAnimationSpeed(updateIntervalInMilSec, actualInc);
+         break;
+      default:
+         break;
+      }
+      return;
+   }
+
    switch (event.GetId())
    {
    case TOOL_ANIMATION_PLAY:
