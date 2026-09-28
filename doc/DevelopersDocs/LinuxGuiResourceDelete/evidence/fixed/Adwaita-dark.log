@@ -1,0 +1,57 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:53:26 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:53:27 GMAT GUI successfully launched.
+
+Interpreting scripts from the file.
+***** file: /home/dan/GIT/GMAT/GMAT/build/linux-gui/linux-gui-tests/resource-delete/deletion.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+PASS: build deletion fixture
+12:53:27: Debug: window wxComboBox@0x57f3c7883820 ("comboBox") lost focus even though it didn't have it
+12:53:27: Debug: window wxComboBox@0x57f3c7883820 ("comboBox") lost focus even though it didn't have it
+12:53:27: Debug: window wxButton@0x57f3c8107d80 ("->") lost focus even though it didn't have it
+12:53:27: Debug: window wxButton@0x57f3c8107d80 ("->") lost focus even though it didn't have it
+PASS: unrelated spacecraft properties panel opens
+PASS: unused variable appears in the real resource tree
+PASS: Delete remains available with an unrelated editor open
+PASS: Rename retains its existing open-editor restriction
+MESSAGE: Are you sure you want to delete UnusedValue?
+PASS: cancelled deletion preserves resource
+MESSAGE: Are you sure you want to delete UnusedValue?
+PASS: confirmed deletion removes unused resource
+PASS: deleted resource leaves the tree
+PASS: unrelated editor and its unsaved value survive deletion
+PASS: protected resource is present
+12:53:27: Warning: BuildTestSat cannot be deleted while panel is opened
+PASS: selected resource's open editor blocks deletion before confirmation
+PASS: open editor or dependency prevents deletion
+PASS: protected resource is present
+MESSAGE: Are you sure you want to delete BuildTestProp?
+*** WARNING *** Cannot remove "BuildTestProp."  It is used in the Propagate command: 'Propagate BuildTestProp(BuildTestSat) {BuildTestSat.ElapsedSecs = 60};'
+12:53:27: Warning: "BuildTestProp" cannot be deleted.
+It is currently used in a resource or in the command sequence
+PASS: open editor or dependency prevents deletion
+PASS: protected resource is present
+MESSAGE: Are you sure you want to delete UsedTank?
+*** WARNING *** Cannot remove "UsedTank."  It is used in the Spacecraft object named "BuildTestSat"
+12:53:27: Warning: "UsedTank" cannot be deleted.
+It is currently used in a resource or in the command sequence
+PASS: open editor or dependency prevents deletion
+PASS: protected resource is present
+MESSAGE: Are you sure you want to delete UsedSolver?
+*** WARNING *** Cannot remove "UsedSolver."  It is used in the Target command: 'Target UsedSolver {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};'
+12:53:27: Warning: "UsedSolver" cannot be deleted.
+It is currently used in a resource or in the command sequence
+PASS: open editor or dependency prevents deletion
+Moderator is deleting core engine...
+2026-09-28 12:53:27 GMAT GUI exiting.

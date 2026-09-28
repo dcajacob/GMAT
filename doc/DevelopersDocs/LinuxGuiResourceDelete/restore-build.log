@@ -1,0 +1,3 @@
+[1/3] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/ResourceTree.cpp.o
+[2/3] Linking CXX executable /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GMAT-R2026a
+[3/3] Creating executable symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GMAT

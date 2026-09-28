@@ -1,0 +1,41 @@
+diff --git a/src/gui/app/ResourceTree.cpp b/src/gui/app/ResourceTree.cpp
+index c9e8bbf..87ccc7e 100644
+--- a/src/gui/app/ResourceTree.cpp
++++ b/src/gui/app/ResourceTree.cpp
+@@ -5235,16 +5235,13 @@ void ResourceTree::ShowMenu(wxTreeItemId itemId, const wxPoint& pt)
+    GmatTreeItemData *selItemData = (GmatTreeItemData *)GetItemData(itemId);
+    wxString title = selItemData->GetName();
+    GmatTree::ItemType itemType = selItemData->GetItemType();
+-   bool showRenameDelete = true;
++   bool showRename = true;
+    
+-   // We don't want to show Rename and Delete menu if any panel is open
+-   // except MissionTree and script editor panels (LOJ: 2012.01.06)
+-   //@tbs Do we want to show any message? Gray out Rename and Delete?
+-   //Integer numChildren = theMainFrame->GetNumberOfChildOpen(false, false, false, false);
+-   // Included plot windows (LOJ: 2013.04.10) to temporarily fix crash renaming plots
++   // Renaming remains restricted while editors or plots are open. Deletion
++   // checks the selected resource's editor and dependencies in OnDelete().
+    Integer numChildren = theMainFrame->GetNumberOfChildOpen(false, true, false, false);
+    if (numChildren > 0)
+-      showRenameDelete = false;
++      showRename = false;
+    
+    #ifdef DEBUG_SHOW_MENU
+    MessageInterface::ShowMessage
+@@ -5436,12 +5433,10 @@ void ResourceTree::ShowMenu(wxTreeItemId itemId, const wxPoint& pt)
+       default:
+          menu.Append(POPUP_OPEN, wxT("Open"));
+          menu.Append(POPUP_CLOSE, wxT("Close"));
+-         if (showRenameDelete)
+-         {
+-            menu.AppendSeparator();
++         menu.AppendSeparator();
++         if (showRename)
+             menu.Append(POPUP_RENAME, wxT("Rename\tF2"));
+-            menu.Append(POPUP_DELETE, wxT("Delete\tDEL"));
+-         }
++         menu.Append(POPUP_DELETE, wxT("Delete\tDEL"));
+          menu.AppendSeparator();
+          menu.Append(POPUP_CLONE, wxT("Clone\tCtrl+Shift+C"));
+          // Disallow clone for Propagator until cloning works for Propagator (GMT-2627)
