@@ -54,7 +54,7 @@ public:
                                   const wxString &oldName,
                                   const wxString &newName);
 protected:
-   GroundTrackPlot *mGroundTrackPlot;
+   GmatBase *mGroundTrack;
    
    bool mHasIntegerDataChanged;
    bool mHasRealDataChanged;
