@@ -9,7 +9,7 @@
 Create Spacecraft Lightsail2;
 GMAT Lightsail2.DateFormat = UTCGregorian;
 GMAT Lightsail2.Epoch = '08 Nov 2019 12:00:00.000'
-GMAT Lightsail2.EphemerisName = '../TLE/Active_Nov-09-2019.txt'
+GMAT Lightsail2.EphemerisName = '../../TLE/Active_Nov-09-2019.txt'
 GMAT Lightsail2.Id = 'LIGHTSAIL 2';
 
 
@@ -18,7 +18,7 @@ GMAT Lightsail2.Id = 'LIGHTSAIL 2';
 %----------------------------------------
 
 Create Propagator TleProp;
-GMAT TleProp.Type = TLE;
+GMAT TleProp.Type = SPICESGP4;
 GMAT TleProp.InitialStepSize = 60;
 
 %----------------------------------------

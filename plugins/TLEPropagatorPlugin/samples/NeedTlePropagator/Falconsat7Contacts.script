@@ -11,7 +11,7 @@
 %---------- Spacecraft
 %----------------------------------------
 Create Spacecraft FalconSat7;
-FalconSat7.EphemerisName = '../TLE/active.txt';
+FalconSat7.EphemerisName = '../../TLE/active.txt';
 FalconSat7.Id = 'FALCONSAT-7';
 
 
@@ -38,7 +38,7 @@ WhiteSands.Location3             =  1.3;
 %---------- Propagators
 %----------------------------------------
 Create Propagator TleProp;
-TleProp.Type = TLE;
+TleProp.Type = SPICESGP4;
 TleProp.InitialStepSize = 60;
 
 %----------------------------------------
