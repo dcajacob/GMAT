@@ -176,6 +176,8 @@ protected:
    // Ground track plot legacy items
    /// Setting for how often to add a data point to the track
    int collectFrequency;
+   /// Remaining published points to skip before the next sample
+   int samplesUntilCollect;
    /// Frequency for updates to teh display
    int updateFrequency;
    /// Length of the redraw on a track
