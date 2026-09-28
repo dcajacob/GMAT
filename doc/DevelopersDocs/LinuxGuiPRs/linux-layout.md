@@ -15,3 +15,5 @@ python3 src/UnitTests/TestLinuxGui/test_layout.py build/linux-gui
 ```
 
 Prepared branch: `pr/linux-layout`. No PR has been opened.
+
+Supplemental test commands above run from `linux-gui-integration`; the proposed upstream net diff contains production code only. Rebuild and validate the isolated branch before submission.

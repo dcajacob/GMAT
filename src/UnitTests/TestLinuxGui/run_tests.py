@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser.add_argument('build_dir', type=Path)
     args = parser.parse_args()
     source = Path(__file__).resolve().parent
-    for suite in ('header', 'layout', 'geometry', 'groundtrack', 'exit', 'plugins'):
+    for suite in ('header', 'layout', 'geometry', 'groundtrack', 'viewport', 'exit', 'plugins'):
         subprocess.run([sys.executable, str(source/('test_'+suite+'.py')), str(args.build_dir.resolve())], check=True)
     ctx = Context(args.build_dir, 'integration')
     ctx.runtime()

@@ -11,3 +11,5 @@ Fresh Release CMake/Ninja configuration passed with wxWidgets_ROOT_DIR=/usr/bin 
 Checked with system wxGTK 3.2.9 on Linux. Other toolchains are not claimed tested.
 
 Prepared branch: `pr/wxwidgets-path`. No PR has been opened.
+
+Supplemental test commands above run from `linux-gui-integration`; the proposed upstream net diff contains production code only. Rebuild and validate the isolated branch before submission.
