@@ -643,38 +643,50 @@ PyObject* PythonInterface::PyExternalFunctionWrapper(const std::string &modName,
 void PythonInterface::PyErrorMsg(PyObject* pType, PyObject* pValue, 
       PyObject* pTraceback, std::string &msg)
 {
-   int reset_error_state = 0;
-
-   // will own the reference to each variables passed
-   if (PyErr_Occurred())
-   {
-      reset_error_state = 1;
+   // Fetching transfers ownership and clears the interpreter error.  The
+   // caller translates it into a GMAT exception, so do not restore it: doing
+   // so would leave an unrelated error pending for the next Python command.
+   const bool fetched = PyErr_Occurred() != NULL;
+   if (fetched)
       PyErr_Fetch(&pType, &pValue, &pTraceback);
-   }
-   
-   if (pType != NULL)
-   {
-      PyObject* v = PyObject_Str(pValue);
-      PyObject* t = PyObject_Str(pType);
 
-      if (v)
-      {
+   msg = "Python error";
+   PyObject *typeName = pType ? PyObject_GetAttrString(pType, "__name__") : NULL;
+   if (typeName)
+   {
 #ifdef IS_PY3K
-         std::string outFromPyString;
-         PyObject *bytes;
-         bytes = PyUnicode_AsUTF8String(t);
-         outFromPyString = PyBytes_AsString(bytes);
-         MessageInterface::ShowMessage(outFromPyString);
+      const char *text = PyUnicode_AsUTF8(typeName);
 #else
-         msg = std::string(PyPyString_AsStringString_AsString(t));
-         msg += ": " + std::string(PyString_AsString(v));
+      const char *text = PyString_AsString(typeName);
 #endif
-      }
+      if (text)
+         msg = text;
    }
+   Py_XDECREF(typeName);
+   PyErr_Clear();
 
-   if (reset_error_state) 
+   PyObject *value = pValue ? PyObject_Str(pValue) : NULL;
+   const char *text = NULL;
+   if (value)
    {
-      PyErr_Restore(pType, pValue, pTraceback);
+#ifdef IS_PY3K
+      text = PyUnicode_AsUTF8(value);
+#else
+      text = PyString_AsString(value);
+#endif
+   }
+   msg += ": ";
+   msg += text ? text : "<exception message unavailable>";
+   Py_XDECREF(value);
+   // __str__ or UTF-8 conversion can fail while formatting the original
+   // exception.  Keep the original type and fallback text in that case.
+   PyErr_Clear();
+
+   if (fetched)
+   {
+      Py_XDECREF(pType);
+      Py_XDECREF(pValue);
+      Py_XDECREF(pTraceback);
    }
 }
 
