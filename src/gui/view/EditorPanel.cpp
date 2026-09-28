@@ -214,8 +214,11 @@ void EditorPanel::LoadData()
    wxFile *file = new wxFile();
    bool mFileExists = file->Exists(mScriptFilename);
    
-   if (mFileExists)
-      mEditor->LoadFile(mScriptFilename);
+   if ((mFileExists || hasFileLoaded) && !mEditor->LoadFile(mScriptFilename))
+   {
+      delete file;
+      return;
+   }
    
    #ifdef DEBUG_EDITORPANEL_LOAD
    MessageInterface::ShowMessage
