@@ -127,7 +127,7 @@ GroundTrack::GroundTrack(const std::string &name) :
 //------------------------------------------------------------------------------
 GroundTrack::~GroundTrack()
 {
-   // TODO Auto-generated destructor stub
+   ClearRuntimeResources();
 }
 
 //------------------------------------------------------------------------------
@@ -140,29 +140,13 @@ GroundTrack::~GroundTrack()
  */
 //------------------------------------------------------------------------------
 GroundTrack::GroundTrack(const GroundTrack& gt) :
-   Subscriber(gt)
+   Subscriber(gt),
+   viewCoordinates(nullptr),
+   inertialSystem(nullptr),
+   longlat(nullptr),
+   pointlonglat(nullptr)
 {
-   theBodyName = gt.theBodyName;
-   theSS = gt.theSS;
-   theBody = gt.theBody;
-   mapFile = gt.mapFile;
-   lineWidth = gt.lineWidth;
-   collectFrequency = gt.collectFrequency;
-   updateFrequency = gt.updateFrequency;
-   redrawCount = gt.redrawCount;
-   maxData = gt.maxData;
-   showPlot = gt.showPlot;
-   useGrid = gt.useGrid;
-   latLineCount = gt.latLineCount;
-   longLineCount = gt.longLineCount;
-   viewCoordinates = gt.viewCoordinates;
-   inertialSystem = gt.inertialSystem;
-   bodyRadius = gt.bodyRadius;
-   bodyFlattening = gt.bodyFlattening;
-   longlat = gt.longlat;
-   pointlonglat = gt.pointlonglat;
-
-   theObjects = gt.theObjects;
+   *this = gt;
 }
 
 //------------------------------------------------------------------------------
@@ -178,7 +162,9 @@ GroundTrack& GroundTrack::operator=(const GroundTrack& gt)
 {
    if (this != &gt)
    {
+      ClearRuntimeResources();
       Subscriber::operator=(gt);
+      isInitialized = false;
 
       theBodyName = gt.theBodyName;
       theSS = gt.theSS;
@@ -193,16 +179,35 @@ GroundTrack& GroundTrack::operator=(const GroundTrack& gt)
       useGrid = gt.useGrid;
       latLineCount = gt.latLineCount;
       longLineCount = gt.longLineCount;
-      viewCoordinates = gt.viewCoordinates;
-      inertialSystem = gt.inertialSystem;
       bodyRadius = gt.bodyRadius;
       bodyFlattening = gt.bodyFlattening;
-      longlat = gt.longlat;
-      pointlonglat = gt.pointlonglat;
 
       theObjects = gt.theObjects;
-}
+      showName = gt.showName;
+      footprintType = gt.footprintType;
+      ccvt = gt.ccvt;
+      theSats = gt.theSats;
+      theStations = gt.theStations;
+      theBodies = gt.theBodies;
+      thePoints = gt.thePoints;
+      stateMap = gt.stateMap;
+      xIndex = gt.xIndex;
+   }
    return *this;
+}
+
+// Release only resources owned by this subscriber. References to spacecraft,
+// stations and solar-system bodies belong to the configuration or sandbox.
+void GroundTrack::ClearRuntimeResources()
+{
+   delete [] longlat;
+   delete [] pointlonglat;
+   delete viewCoordinates;
+   delete inertialSystem;
+   longlat = nullptr;
+   pointlonglat = nullptr;
+   viewCoordinates = nullptr;
+   inertialSystem = nullptr;
 }
 
 //------------------------------------------------------------------------------
@@ -244,6 +249,9 @@ bool GroundTrack::Initialize()
    bool retval = false;
    Integer stationCount = 0;
 
+   ClearRuntimeResources();
+   isInitialized = false;
+   theBody = nullptr;
    if (theSS)
       theBody = theSS->GetBody(theBodyName);
 
@@ -263,40 +271,36 @@ bool GroundTrack::Initialize()
       // Access spacecraft state origin and ensure it matches for all spacecraft
       std::string scOrigin = "Earth";
 
-      if (count > 0)
+      if (!theSats.empty())
       {
          scOrigin = theSats[0]->GetOriginName();
 
          for (int i = 1; i < theSats.size(); ++i)
          {
-             if (scOrigin != theSats[1]->GetOriginName())
+             if (scOrigin != theSats[i]->GetOriginName())
                 throw SubscriberException("Spacecraft origins must match for "
                       "GroundTrack displays");
          }
 
-         for (int i = 0; i < theStations.size(); ++i)
-         {
-             if (theBodyName != theStations[i]->GetStringParameter("CentralBody"))
-                MessageInterface::ShowMessage("Omitting ground station %s; "
+      }
+
+      for (int i = 0; i < theStations.size(); ++i)
+      {
+         if (theBodyName != theStations[i]->GetStringParameter("CentralBody"))
+            MessageInterface::ShowMessage("Omitting ground station %s; "
                       "GroundTracks only show stations on the ground track "
                       "central body (%s for %s)\n",
                       theStations[i]->GetName().c_str(), theBodyName.c_str(),
                       instanceName.c_str());
-             else
-                ++stationCount;
-         }
-
+         else
+            ++stationCount;
       }
 
       count += theBodies.size();
 
       // Setup the buffer used for data passing - reset for groundtrack
-      if (longlat)
-         delete [] longlat;
       longlat = new double[2 * theSats.size()];
 
-      if (pointlonglat)
-         delete [] pointlonglat;
       pointlonglat = new double[2 * stationCount];
 
       #ifdef DEBUG_INITIALIZATION
@@ -327,11 +331,14 @@ bool GroundTrack::Initialize()
       #endif
    }
    else
+   {
       MessageInterface::ShowMessage("Cannot find the body %s for %s\n",
             theBodyName.c_str(), instanceName.c_str());
+      return false;
+   }
 
    // Now interact with the GUI
-   if (PlotInterface::CreateGroundTrackWindow(instanceName,
+   if (showPlot && PlotInterface::CreateGroundTrackWindow(instanceName,
           "", mPlotUpperLeft[0], mPlotUpperLeft[1],
           mPlotSize[0], mPlotSize[1], isMaximized))
    {
@@ -1401,11 +1408,27 @@ bool GroundTrack::SetRefObject(GmatBase *obj, const UnsignedInt type,
    }
    else if (obj->IsOfType(Gmat::SPACECRAFT))
    {
+      for (auto &reference : theSats)
+      {
+         if (reference->GetName() == obj->GetName())
+         {
+            reference = (Spacecraft*)obj;
+            return true;
+         }
+      }
       theSats.push_back((Spacecraft*)obj);
       return true;
    }
    else if (obj->IsOfType(Gmat::GROUND_STATION))
    {
+      for (auto &reference : theStations)
+      {
+         if (reference->GetName() == obj->GetName())
+         {
+            reference = (GroundstationInterface*)obj;
+            return true;
+         }
+      }
       theStations.push_back((GroundstationInterface*)obj);
       return true;
    }

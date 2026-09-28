@@ -156,6 +156,8 @@ public:
    virtual void SetSolarSystem(SolarSystem *ss);
 
 protected:
+   void ClearRuntimeResources();
+
    /// Central body for the track
    std::string theBodyName;
    /// The solar system.  theBody should be a member.
