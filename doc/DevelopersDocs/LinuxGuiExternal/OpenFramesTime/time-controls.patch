@@ -1,0 +1,81 @@
+From 751a352b39ab981fa355fa6f726e1c8bbd08aa10 Mon Sep 17 00:00:00 2001
+From: Dan CaJacob <Dan.cajacob@gmail.com>
+Date: Mon, 28 Sep 2026 12:31:44 -0600
+Subject: [PATCH] Initialize time controls before native-widget operations and
+ guard small buffers
+
+---
+ src/gui/subscriber/wx/TimeDilator.cpp | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
+
+diff --git a/src/gui/subscriber/wx/TimeDilator.cpp b/src/gui/subscriber/wx/TimeDilator.cpp
+index dfedad5..ea77766 100644
+--- a/src/gui/subscriber/wx/TimeDilator.cpp
++++ b/src/gui/subscriber/wx/TimeDilator.cpp
+@@ -106,8 +106,15 @@ bool TimeDilator::Create(wxWindow *parent, wxWindowID winid, const wxPoint& pos,
+                           const wxValidator& val, const wxString& name)
+ {
+    bool status = wxControl::Create(parent, winid, pos, size, style, val, name);
++   if (!status)
++      return false;
++   SetCursor(wxCURSOR_ARROW);
+    SetToolTip(new wxToolTip(TOOLTIP_TIME_SLIDER));
+-   mBuffer = new wxBitmap(GetClientSize());
++   delete mBuffer;
++   mBuffer = nullptr;
++   const wxSize clientSize = GetClientSize();
++   if (clientSize.x > 0 && clientSize.y > 0)
++      mBuffer = new wxBitmap(clientSize);
+    if (parent != nullptr)
+       SetBackgroundColour(parent->GetBackgroundColour());
+    return status;
+@@ -127,7 +134,7 @@ void TimeDilator::Init()
+    mCurrentTime = 1.5;
+    mTimeFormat = "UTCGregorian"; // Tells OFDateTimeDialog to show time in UTCGregorian when it first opens up
+    mCurrentTimeSet = false;
+-   SetCursorState(TIME_SLIDER);
++   mCursorState = TIME_SLIDER;
+ }
+ 
+ 
+@@ -206,12 +213,14 @@ wxSize TimeDilator::DoGetBestSize() const
+  */
+ void TimeDilator::OnPaint(wxPaintEvent&)
+ {
++   wxPaintDC dc(this);
++   if (!mBuffer || !mBuffer->IsOk())
++      return;
+    wxMemoryDC tmpDC;
+    tmpDC.SelectObject(*mBuffer);
+    Draw(tmpDC);
+    tmpDC.SelectObject(wxNullBitmap);
+ 
+-   wxPaintDC dc(this);
+    wxMemoryDC bitmapDc;
+    bitmapDc.SelectObject(*mBuffer);
+    wxRegionIterator upd(GetUpdateRegion()); // get the update rect list
+@@ -232,7 +241,9 @@ void TimeDilator::OnSize(wxSizeEvent&)
+ {
+    wxSize size = GetClientSize();
+    delete mBuffer;
+-   mBuffer = new wxBitmap(size);
++   mBuffer = nullptr;
++   if (size.x > 0 && size.y > 0)
++      mBuffer = new wxBitmap(size);
+    TriggerRedraw();
+ }
+ 
+@@ -257,6 +268,10 @@ void TimeDilator::Draw(wxDC &dc)
+ 
+    dc.SetBackground(GetBackgroundColour());
+    dc.Clear();
++   // The handle and two tracks need room for their borders. During layout a
++   // control may temporarily be smaller; avoid negative drawing rectangles.
++   if (w < 8 || h < 12)
++      return;
+ 
+    // Draw the bottom
+    int s = 2 * h / 3 - 1;
+-- 
+2.53.0
+

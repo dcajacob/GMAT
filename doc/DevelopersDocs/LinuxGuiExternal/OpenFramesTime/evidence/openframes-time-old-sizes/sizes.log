@@ -1,0 +1,42 @@
+HELP_PATH directory does not exist: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/tai-utc.dat
+2026-09-28 12:33:28 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:33:28 GMAT GUI successfully launched.
+
+(OpenFramesTimeRegression:3561874): Gtk-CRITICAL **: 12:33:28.635: gtk_widget_set_tooltip_text: assertion 'GTK_IS_WIDGET (widget)' failed
+PASS: uncreated time control initializes without native-widget calls
+PASS: time control creates successfully
+PASS: created time control has its tooltip
+FAIL: wx assertion: "width > 0 && height > 0" invalid bitmap size
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::Clear - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawRectangle - invalid DC
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawRectangle - invalid DC
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawLine - invalid DC
+FAIL: wx assertion: "IsOk()" wxGCDC(cg)::DoDrawRectangle - invalid DC
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "IsOk()" invalid bitmap
+FAIL: wx assertion: "source && source->IsOk()" invalid source DC
+PASS: time value survives zero, tiny and restored sizes
+PASS: time control restores usable dimensions

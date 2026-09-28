@@ -13,6 +13,11 @@ public:
       auto frame=GmatAppData::Instance()->GetMainFrame();
       if(step==0)
       {
+         wxSetAssertHandler([](const wxString &, int, const wxString &,
+                              const wxString &condition, const wxString &message) {
+            std::printf("FAIL: wx assertion: %s %s\n",condition.utf8_str().data(),message.utf8_str().data());
+            ++failures;
+         });
          // Deterministically expose use of uninitialized constructor members.
          void *storage=::operator new(sizeof(TimeDilator));
          std::memset(storage,0xa5,sizeof(TimeDilator));

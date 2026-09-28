@@ -42,6 +42,7 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-031 | [pr/groundtrack-station-markers](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-station-markers) | `daf193ed67d2` | `934e3b852cdf` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
 | LGUI-032 | [pr/groundtrack-editor-output](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-editor-output) | `a0a5a7078f30` | `33098ec0bb68` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
 | LGUI-033 | [pr/tree-theme-colors](https://github.com/dcajacob/GMAT/tree/pr/tree-theme-colors) | `4c742c8e1081` | `246cdd40f3a3` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
+| LGUI-034 | External OFI patch, archived on integration | `751a352b39ab` in isolated OFI | See external audit | `test_openframes_time.py` | Fixed in local build; external patch not submitted |
 
 ## Validation and dependencies
 
@@ -116,3 +117,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Public documentation-example repairs
 
 [Four independent sample patches, numerical checks and 10-script regressions](LinuxGuiExampleMaintenance.md). The earlier sweep records remain intact.
+
+## External OpenFrames time-control repair
+
+[Patch, baseline failures, scale regressions and build prerequisites](LinuxGuiExternal/OpenFramesTime/README.md). This supersedes the pending-repair status in the second follow-up snapshot.

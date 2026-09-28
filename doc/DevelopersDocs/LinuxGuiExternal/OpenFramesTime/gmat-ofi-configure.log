@@ -1,0 +1,78 @@
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64
+-- Found F2C: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:296 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) 
+==============================
+Setting up install directory structure for GMAT 
+-- Will install GMAT to /home/dan/GIT/GMAT/GMAT/GMAT-R2026a-Linux-x64
+==============================
+GMAT util setup 
+==============================
+GMAT base setup 
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup 
+==============================
+GMAT GUI setup 
+==============================
+GMAT DataInterface Plugin setup 
+==============================
+GMAT EphemPropagator Plugin setup 
+==============================
+GMAT EKF Plugin setup 
+==============================
+GMAT Estimation Plugin setup 
+==============================
+GMAT EventLocator Plugin setup 
+==============================
+GMAT External Force Model Plugin setup (for Python 3.14)
+==============================
+GMAT ExtraPropagators Plugin setup 
+==============================
+GMAT Formation Plugin setup 
+==============================
+GMAT GmatFunction Plugin setup 
+==============================
+GMAT Msise00 Plugin setup 
+==============================
+GMAT NewParameter Plugin setup 
+==============================
+GMAT PolyhedronGravity Plugin setup 
+==============================
+GMAT ProductionPropagators Plugin setup 
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.14)
+==============================
+GMAT SaveCommand Plugin setup 
+==============================
+GMAT ScriptTools Plugin setup 
+==============================
+GMAT Station Plugin setup 
+==============================
+GMAT ThrustFile Plugin setup 
+==============================
+GMAT TLE Propagator Plugin setup 
+==============================
+GMAT Yukon Optimizer Plugin setup 
+==============================
+GMAT OpenFramesInterface Plugin setup 
+-- Enabling wxWidgets support
+-- Setting up OpenSceneGraph [a827840ba], this could take a while...
+-- Local validation: retaining prebuilt openscenegraph
+-- Setting up osgEarth [f7a922ba], this could take a while...
+-- Local validation: retaining prebuilt osgearth
+-- Setting up OpenFrames [67e90d8]...
+-- Local validation: retaining prebuilt openframes
+==============================
+GMAT OVtoOFI Plugin setup 
+==============================
+Setting up wxWidgets install instructions for GMAT 
+-- Configuring done (0.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/dan/GIT/GMAT/GMAT/build/linux-gui

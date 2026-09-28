@@ -1,0 +1,22 @@
+diff --git a/src/CMakeModules/SetupDependencies.cmake b/src/CMakeModules/SetupDependencies.cmake
+index 3351194..3467202 100644
+--- a/src/CMakeModules/SetupDependencies.cmake
++++ b/src/CMakeModules/SetupDependencies.cmake
+@@ -18,6 +18,17 @@
+ # DO NOT MODIFY THIS FILE UNLESS YOU KNOW WHAT YOU ARE DOING!
+ 
+ INCLUDE(FetchContent)
++# Local validation adapter only: reuse the already-built dependency libraries.
++# This adapter is excluded from the proposed production patch.
++foreach(dependency_dir OSG_DIR OSGEARTH_DIR OPENFRAMES_DIR)
++  if(NOT IS_DIRECTORY "${${dependency_dir}}")
++    message(FATAL_ERROR "Prebuilt ${dependency_dir} must be supplied")
++  endif()
++endforeach()
++function(FetchContent_Populate dependency)
++  message(STATUS "Local validation: retaining prebuilt ${dependency}")
++endfunction()
++
+ FIND_PACKAGE(Git)
+ 
+ # Get the current git commit has of the specified repository

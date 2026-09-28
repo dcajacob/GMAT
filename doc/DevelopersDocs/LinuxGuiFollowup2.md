@@ -30,7 +30,9 @@ python3 src/UnitTests/TestLinuxGui/test_gui_followup_more.py build/linux-gui
 
 Windows/macOS and native Wayland remain unvalidated. The disabled legacy subscriber-color-picker macro is **not** a supported tested configuration: an explicit syntax probe fails in both unchanged prerequisite baseline and patched code because of pre-existing missing GetColor/SetColor methods and wxString conversions. This work does not enable that dormant feature; the normal build and normal editor path pass.
 
-## OpenFrames failure reproduced; repair pending
+## OpenFrames failure reproduced; repair pending (historical snapshot)
+
+The repair is now implemented and validated; see [the subsequent external-plugin audit](LinuxGuiExternal/OpenFramesTime/README.md). The following describes this batch before that repair.
 
 The isolated TimeDilator regression constructs the widget in a deterministic nonzero-filled allocation, exposing its uninitialized cursor state. The original Init path calls SetCursorState, which calls GTK tooltip APIs before native Create. With GTK criticals fatal, this reproduces `gtk_widget_set_tooltip_text: assertion 'GTK_IS_WIDGET (widget)' failed` and aborts. This is a demonstrated external-plugin defect; it has not yet been repaired in the current build.
 

@@ -1,0 +1,11 @@
+[1/7] Building CXX object plugins/OVtoOFI/src/base/CMakeFiles/OVtoOFI.dir/plugin/GmatPluginFunctions.cpp.o
+[2/7] Building CXX object plugins/OVtoOFI/src/base/CMakeFiles/OVtoOFI.dir/subscriber/OVtoOFI.cpp.o
+[3/7] Building CXX object plugins/OpenFramesInterface/src/CMakeFiles/OpenFramesInterface.dir/gui/subscriber/wx/TimeDilator.cpp.o
+[4/7] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libOpenFramesInterface.so.R2026a
+[5/7] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libOpenFramesInterface.so
+OpenFramesInterface: Copying icons to /home/dan/GIT/GMAT/GMAT/application/data/graphics/icons
+OpenFramesInterface: Copying textures to /home/dan/GIT/GMAT/GMAT/application/data/graphics/texture
+OpenFramesInterface: Copying star catalog to /home/dan/GIT/GMAT/GMAT/application/data/graphics/stars
+OpenFramesInterface: Copying shaders to /home/dan/GIT/GMAT/GMAT/application/data/graphics/texture
+[6/7] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libOVtoOFI.so.R2026a
+[7/7] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libOVtoOFI.so

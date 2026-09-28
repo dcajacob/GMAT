@@ -1,0 +1,19 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:37:39 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:37:39 GMAT GUI successfully launched.
+PASS: uncreated time control initializes without native-widget calls
+PASS: time control creates successfully
+PASS: created time control has its tooltip
+PASS: time value survives zero, tiny and restored sizes
+PASS: time control restores usable dimensions
+Moderator is deleting core engine...
+2026-09-28 12:37:40 GMAT GUI exiting.

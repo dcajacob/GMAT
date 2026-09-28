@@ -1,0 +1,15 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:24:46 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:24:46 GMAT GUI successfully launched.
+
+(OpenFramesTimeRegression:3513449): Gtk-CRITICAL **: 12:24:47.153: gtk_widget_set_tooltip_text: assertion 'GTK_IS_WIDGET (widget)' failed
+Aborted (core dumped)
