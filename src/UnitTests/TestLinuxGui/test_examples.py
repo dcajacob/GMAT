@@ -143,6 +143,12 @@ def main():
             if not item['script'].startswith('application/samples/') and source.resolve() != copy.resolve():
                 shutil.copytree(source.parent, copy.parent, dirs_exist_ok=True,
                                 ignore=shutil.ignore_patterns('.git', '__pycache__'))
+            # TLE scripts resolve ephemerides relative to their script location.
+            # Copy fixture siblings without changing the script or orbital data.
+            if item['script'].startswith('plugins/TLEPropagatorPlugin/'):
+                for relative in ('TLE', 'test/TLE'):
+                    fixtures = Path('plugins/TLEPropagatorPlugin')/relative
+                    shutil.copytree(root/fixtures, job/'repo'/fixtures, dirs_exist_ok=True)
             out, images = job/'output', job/'images'
             out.mkdir(exist_ok=True)
             images.mkdir(exist_ok=True)
