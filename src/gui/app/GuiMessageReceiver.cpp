@@ -52,6 +52,18 @@
 
 //#define DEBUG_SET_LOG_FILE
 
+namespace
+{
+// Python and other UTF-8 producers must not be decoded using the Windows
+// ANSI code page. Retain the existing locale conversion for legacy messages
+// that are not valid UTF-8.
+wxString DecodeMessage(const char *text)
+{
+   const wxString utf8 = wxString::FromUTF8(text);
+   return !utf8.empty() || !*text ? utf8 : wxString(text);
+}
+}
+
 //---------------------------------
 //  static data
 //---------------------------------
@@ -170,7 +182,7 @@ void GuiMessageReceiver::ShowMessage(const std::string &msgString)
    GmatAppData *appData = GmatAppData::Instance();
    if (appData->GetMessageTextCtrl() != NULL)
    {
-      appData->GetMessageTextCtrl()->AppendText(wxString(msgString.c_str()));
+      appData->GetMessageTextCtrl()->AppendText(DecodeMessage(msgString.c_str()));
       // Added since text in the message window are not always scrolled down,
       // such as debug message from the panel or dialog (LOJ: 2009.03.20)
       // wxWidgets-3.0 does not require page down (LOJ: 2014.09.15)
@@ -238,7 +250,7 @@ void GuiMessageReceiver::ShowMessage(const char *msg, ...)
    GmatAppData *appData = GmatAppData::Instance();
    if (appData->GetMessageTextCtrl() != NULL)
    {
-      appData->GetMessageTextCtrl()->AppendText(wxString(msgBuffer));
+      appData->GetMessageTextCtrl()->AppendText(DecodeMessage(msgBuffer));
       // wxWidgets-3.0 does not require page down (LOJ: 2014.09.15)
       #ifdef __USE_WX28__
       appData->GetMessageTextCtrl()->PageDown();
@@ -300,15 +312,15 @@ void GuiMessageReceiver::PopupMessage(Gmat::MessageType msgType, const std::stri
       switch (msgType)
       {
       case Gmat::ERROR_:
-         (void)wxMessageBox(wxString(msg.c_str()),
+         (void)wxMessageBox(DecodeMessage(msg.c_str()),
                             wxT("GMAT Error"));
          break;
       case Gmat::WARNING_:
-         (void)wxMessageBox(wxString(msg.c_str()),
+         (void)wxMessageBox(DecodeMessage(msg.c_str()),
                             wxT("GMAT Warning"));
          break;
       case Gmat::INFO_:
-         (void)wxMessageBox(wxString(msg.c_str()),
+         (void)wxMessageBox(DecodeMessage(msg.c_str()),
                             wxT("Information"));
          break;
       default:
@@ -389,15 +401,15 @@ void GuiMessageReceiver::PopupMessage(Gmat::MessageType msgType, const char *msg
       switch (msgType)
       {
       case Gmat::ERROR_:
-         (void)wxMessageBox(wxString(msgBuffer),
+         (void)wxMessageBox(DecodeMessage(msgBuffer),
                             wxT("GMAT Error"));
          break;
       case Gmat::WARNING_:
-         (void)wxMessageBox(wxString(msgBuffer),
+         (void)wxMessageBox(DecodeMessage(msgBuffer),
                             wxT("GMAT Warning"));
          break;
       case Gmat::INFO_:
-         (void)wxMessageBox(wxString(msgBuffer),
+         (void)wxMessageBox(DecodeMessage(msgBuffer),
                             wxT("Information"));
          break;
       default:
