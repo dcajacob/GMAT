@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""Integration runner. Each test_*.py is independently runnable for its PR."""
+"""Integration runner. Supplemental focused suites remain on the integration branch."""
 import argparse
 from pathlib import Path
 import subprocess
 import sys
 from support import Context, passed
+from audit_environment import record_environment
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('build_dir', type=Path)
     args = parser.parse_args()
+    record_environment(args.build_dir)
     source = Path(__file__).resolve().parent
-    for suite in ('header', 'layout', 'geometry', 'groundtrack', 'viewport', 'exit', 'plugins'):
+    for suite in ('header', 'layout', 'geometry', 'groundtrack', 'viewport', 'editor_io', 'workflow', 'exit', 'plugins'):
         subprocess.run([sys.executable, str(source/('test_'+suite+'.py')), str(args.build_dir.resolve())], check=True)
     ctx = Context(args.build_dir, 'integration')
     ctx.runtime()

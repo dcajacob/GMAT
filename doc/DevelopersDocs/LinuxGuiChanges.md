@@ -21,16 +21,18 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-005 | [pr/linux-geometry](https://github.com/dcajacob/GMAT/tree/pr/linux-geometry) | `025e86c185b4` | `b3e0c889e640` | `test_geometry.py` | Prepared; not submitted |
 | LGUI-006 | [pr/linux-script-exit](https://github.com/dcajacob/GMAT/tree/pr/linux-script-exit) | `02fd4e4f5c91` | `6e8f646ec3ba` | `test_exit.py` | Prepared; not submitted |
 | LGUI-007 | [pr/linux-plugin-lifetime](https://github.com/dcajacob/GMAT/tree/pr/linux-plugin-lifetime) | `7321902c3fa4` | `596215497ff9` | `test_plugins.py` | Prepared; maintainer design review needed |
-
 | LGUI-008 | [pr/native-viewport](https://github.com/dcajacob/GMAT/tree/pr/native-viewport) | `b3e61889e716` | `097c67fc4036` | `test_viewport.py` | Prepared; not submitted |
+| LGUI-009 | [pr/editor-reload](https://github.com/dcajacob/GMAT/tree/pr/editor-reload) | `bfe0c353d4e4` | `fffdfe934f60` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
+| LGUI-010 | [pr/editor-save](https://github.com/dcajacob/GMAT/tree/pr/editor-save) | `d8f14d423743` | `bd34b116e50c` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
+| LGUI-011 | [pr/model-preview-context](https://github.com/dcajacob/GMAT/tree/pr/model-preview-context) | `a401cd960ec5` | `ba65591932e1` | `test_workflow.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
-The split test suites passed on the existing Release integration build: 25 reported checks. Standalone syntax compilation passed for every modified C++ translation unit on its proposed PR branch, including the separately reconstructed layout and geometry headers. The native viewport correction additionally passes nine GL viewport assertions across 1×, 2× and 3× scaling. Git patch whitespace checks pass.
+The split test suites passed on the existing Release integration build: 30 reported checks. Standalone syntax compilation passed for every modified C++ translation unit on its proposed PR branch, including the separately reconstructed layout and geometry headers. The native viewport correction additionally passes nine GL viewport assertions across 1×, 2× and 3× scaling. Git patch whitespace checks pass.
 
-Full application builds and runtime tests have **not** been repeated independently on all eight PR branch trees. On this host, upstream startup has the fortified DE-header failure, so the ephemeris fix should land before meaningful standalone GUI runtime validation. Strict GTK tests may also need the separate tree/layout fix. Do not describe integration test results as isolated-branch runtime results.
+Full application builds and runtime tests have **not** been repeated independently on the eight earlier PR branch trees. On this host, upstream startup has the fortified DE-header failure, so the ephemeris fix should land before meaningful standalone GUI runtime validation. Strict GTK tests may also need the separate tree/layout fix. Do not describe integration test results as isolated-branch runtime results.
 
-Native test runs use X11 virtual displays and software OpenGL. Physical displays and native Wayland remain additional release checks. OpenFrames checks use optional external dependencies and retain known TimeDilator tooltip warnings in their logs.
+Native test runs use X11 virtual displays and software OpenGL. The new audit also passed physical Intel GPU/XWayland checks; native Wayland remains blocked at toolkit initialization. OpenFrames checks use optional external dependencies and retain known TimeDilator tooltip warnings in their logs.
 
 ## Review and submission order
 
@@ -81,3 +83,7 @@ The first command is the integration runner. Run these test entry points on the 
 - [Native viewport correction](LinuxGuiPRs/native-viewport.md)
 
 See [contribution research and preparation recommendations](LinuxGuiContributing.md).
+
+## First systematic audit batch
+
+[Audit evidence, coverage gaps and next findings](LinuxGuiAudit.md). The three new branches were built and tested independently with the five prerequisites listed in that record; all three also pass combined validation. Hardware XWayland checks now pass on Intel Iris Xe at 3×; native Wayland fails GTK initialization.

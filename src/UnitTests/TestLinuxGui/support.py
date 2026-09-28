@@ -3,19 +3,35 @@ import argparse
 import os
 from pathlib import Path
 import shlex
+import signal
 import subprocess
 
 BASE = '[Main]\nShowWelcomeOnStart=false\n'
 
 
 def run(command, *, cwd, log=None, env=None, timeout=60):
-    result = subprocess.run(command, cwd=cwd, env=env, timeout=timeout,
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    process = subprocess.Popen(command, cwd=cwd, env=env, start_new_session=True,
+                               stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    timed_out = False
+    try:
+        output, _ = process.communicate(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        # Kill the test's process group, including its virtual display and GUI.
+        # Killing only xvfb-run leaves a hung GMAT process behind.
+        os.killpg(process.pid, signal.SIGTERM)
+        try:
+            output, _ = process.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            os.killpg(process.pid, signal.SIGKILL)
+            output, _ = process.communicate()
     if log:
-        log.write_text(result.stdout)
-    if result.returncode or 'FAIL:' in result.stdout:
-        raise RuntimeError(f'Command failed ({result.returncode}): {command[0]}\n{result.stdout[-6000:]}')
-    return result.stdout
+        log.write_text(output)
+    if timed_out or process.returncode or 'FAIL:' in output:
+        reason = 'timeout' if timed_out else str(process.returncode)
+        raise RuntimeError(f'Command failed ({reason}): {command[0]}\n{output[-6000:]}')
+    return output
+
 
 
 class Context:

@@ -67,8 +67,9 @@ After a completed Release Ninja build, with Python 3 and Xvfb installed:
 The runner reuses the actual GUI build objects and compiler/linker options.
 GNU ld --wrap=main selects a test entry point; no production test hooks or
 second GUI implementation are needed. This test driver is Linux/GNU/Ninja
-specific. Focused PRs include only their test_*.py entry point and shared helpers;
-run_tests.py is the integration runner. All logs, outputs and temporary
+specific. Proposed PR branches contain production changes only. Supplemental test entry
+points and shared helpers remain on linux-gui-integration. run_tests.py is the
+integration runner. All logs, outputs and temporary
 preferences go to:
 
   build/linux-gui/linux-gui-tests/<suite>/
@@ -148,3 +149,10 @@ pixel sizing throughout GmatPanel/GmatDialog and individual resource panels.
 These are separate from the startup, layout, and shutdown fixes in this patch.
 
 Change tracking and proposed PR scopes are in LinuxGuiChanges.md.
+
+Systematic audit
+----------------
+See LinuxGuiAudit.md for the workflow checklist, reproduction ledger and
+validation matrix. The suite records environment.json and includes editor I/O
+failures plus native/OpenFrames lifecycle checks. test_desktop.py is an opt-in
+check on the current desktop with isolated settings and no screen captures.
