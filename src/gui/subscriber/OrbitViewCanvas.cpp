@@ -1191,7 +1191,7 @@ void OrbitViewCanvas::OnMouse(wxMouseEvent& event)
       }
    }
    // Mousewheel movements
-   else if (event.GetWheelRotation() != 0 && mControlMode == MODE_ASTRONAUT_6DOF)
+   else if (event.GetWheelRotation() != 0)
    {
       float rot = event.GetWheelRotation();
       Real distance = (mCamera.view_center - mCamera.position).GetMagnitude();
@@ -1204,6 +1204,15 @@ void OrbitViewCanvas::OnMouse(wxMouseEvent& event)
       else if (event.ShiftDown() && rot < 0)
       {
          mCamera.ZoomOut(1);
+      }
+      else if (mControlMode != MODE_ASTRONAUT_6DOF)
+      {
+         // Scale distance per wheel notch, keeping the view center fixed.
+         // Reciprocal steps make zooming reversible and cannot cross the center.
+         const Real delta = event.GetWheelDelta() > 0 ? event.GetWheelDelta() : 120;
+         const Real notches = wxMax(-20.0, wxMin(20.0, rot / delta));
+         movement = distance * (1.0 - pow(0.9, notches));
+         mCamera.Translate(0.0, 0.0, movement, false);
       }
       else if (rot > 0)
       {
