@@ -1597,8 +1597,8 @@ void ViewCanvas::ComputeActualIndex()
       if (mEndIndex2 == -1)
       {
          mRealBeginIndex1 = mEndIndex1 - mNumPointsToRedraw;
-         if (mRealBeginIndex1 < 0)
-            mRealBeginIndex1 = 0;
+         if (mRealBeginIndex1 < mBeginIndex1)
+            mRealBeginIndex1 = mBeginIndex1;
       }
       else
       {
@@ -1612,6 +1612,8 @@ void ViewCanvas::ComputeActualIndex()
          else
          {
             mRealBeginIndex1 = maxData + mRealBeginIndex1;
+            if (mRealBeginIndex1 < mBeginIndex1)
+               mRealBeginIndex1 = mBeginIndex1;
             mRealEndIndex1 = maxData - 1;
             mRealBeginIndex2 = 0;
             mRealEndIndex2 = mEndIndex2;
