@@ -36,6 +36,8 @@
 #include "GroundTrackCurve.hpp"
 #include "GmatAppData.hpp"
 #include "Moderator.hpp"
+#include "FileManager.hpp"
+#include <wx/log.h>
 
 //#define DEBUG_GT_ACTIONS
 
@@ -56,7 +58,7 @@ END_EVENT_TABLE()
 //------------------------------------------------------------------------------
 GroundTrackArea::GroundTrackArea(wxWindow *parent,
       const wxString &name) : wxPanel(parent),
-      mapLoaded (false),
+      mapLoadAttempted (false),
       refreshInterval (50),
       currentCount (0),
       lineWidth (2),
@@ -100,7 +102,9 @@ void GroundTrackArea::SetOption(const std::string &optionSetting, const std::str
    if (optionSetting == "TextureMap")
    {
       textureMap = optionValue;
-      mapLoaded = false;
+      mapLoadAttempted = false;
+      bgImage = wxImage();
+      bgScaledMap = wxNullBitmap;
    }
 }
 
@@ -113,26 +117,37 @@ void GroundTrackArea::SetOption(const std::string &optionSetting, const std::str
 //------------------------------------------------------------------------------
 void GroundTrackArea::LoadImageBG()
 {
-   std::string imageLink = textureMap;
+   if (mapLoadAttempted)
+      return;
+   mapLoadAttempted = true;
 
-   if ((imageLink != "") && !mapLoaded)
+   if (textureMap.empty())
+      return;
+
+   // Use the same script/startup-file search order as other GMAT resources.
+   // The process working directory need not be application/bin.
+   std::string imageLink = FileManager::Instance()->FindPath(
+         textureMap, "TEXTURE_PATH", true);
+   bool loaded = false;
+   if (!imageLink.empty())
    {
-      if (textureMap.find("/") == std::string::npos)
-         imageLink = "../data/graphics/texture/" + textureMap;
-
-      bgImage = wxImage(imageLink, wxBITMAP_TYPE_JPEG);
-
-      if(!bgImage.IsOk())
-      {
-         MessageInterface::ShowMessage
-            ("GroundTrackArea background image '%s' is invalid.\n",
-            imageLink.c_str());
-         return;
-      }
-
-      CreateScaledBg();
-      mapLoaded = true;
+      // wxLogGui would show a modal error during painting. Report one warning
+      // through GMAT instead, and keep the grid and tracks usable without a map.
+      wxLogNull suppressImageErrors;
+      loaded = bgImage.LoadFile(wxString::FromUTF8(imageLink.c_str()),
+            wxBITMAP_TYPE_ANY);
    }
+   if (!loaded)
+   {
+      bgImage = wxImage();
+      MessageInterface::ShowMessage(
+            "*** WARNING *** GroundTrackArea background image '%s' could not "
+            "be loaded. Drawing the ground track without a map.\n",
+            textureMap.c_str());
+      return;
+   }
+
+   CreateScaledBg();
 }
 
 //------------------------------------------------------------------------------
@@ -149,7 +164,12 @@ void GroundTrackArea::CreateScaledBg()
             "DEBUG: Background Creation Entered\n");
    #endif
 
-   wxSize theSize = GetSize();
+   wxSize theSize = GetClientSize();
+   if (!bgImage.IsOk() || theSize.GetWidth() <= 0 || theSize.GetHeight() <= 0)
+   {
+      bgScaledMap = wxNullBitmap;
+      return;
+   }
    bgScaledMap = wxBitmap(bgImage.Scale(theSize.GetWidth(),
          theSize.GetHeight(), wxIMAGE_QUALITY_NORMAL));
 }
@@ -508,10 +528,13 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
       MessageInterface::ShowMessage("DEBUG: GroundTrackArea::OnPaint Entered.\n");
    #endif
 
-   LoadImageBG();
-
    wxCoord w, h;
    dc.GetSize(&w, &h);
+   if (w <= 0 || h <= 0)
+      return;
+
+   LoadImageBG();
+   dc.Clear();
 
    double zoomTop = 90.0, zoomLeft = -180.0,
           zoomWidth = 360.0, zoomHeight = 180.0;
@@ -536,12 +559,12 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
    wxPen currentPen = dc.GetPen();
 
    //Draw the background map
-   if (GetSize() != bgScaledMap.GetSize() )
-   {
-       CreateScaledBg();
-   }
+   if (bgImage.IsOk() &&
+       (!bgScaledMap.IsOk() || GetClientSize() != bgScaledMap.GetSize()))
+      CreateScaledBg();
 
-   dc.DrawBitmap(bgScaledMap, 0, 0);
+   if (bgScaledMap.IsOk())
+      dc.DrawBitmap(bgScaledMap, 0, 0);
    char val[12];     // Only need 4, but ints can use up to 11 places
 
    // Grid is active
@@ -562,8 +585,8 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
          dc.DrawLine(xv1, 0, xv1, yv2);
 
          sprintf(val, "%d", -180 + i * inc);
-         wxRect *labelRect = new wxRect(xv1 + 4, yv2 - 18, 20, 50);
-         dc.DrawLabel(val, *labelRect);
+         wxRect labelRect(xv1 + 4, yv2 - 18, 20, 50);
+         dc.DrawLabel(val, labelRect);
       }
       inc = 180 / latLineCount;
       for (Integer i = 1; i < latLineCount; ++i)
@@ -608,13 +631,17 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
    // Draw the ground tracks
    for (int i = 0; i < data.size(); ++i)
    {
+      const unsigned int pointCount = data[i]->size();
+      if (pointCount == 0 || i >= startColors.size() || i >= theSats.size())
+         continue;
+
       wxPen pen;
       dc.SetTextForeground(startColors[i]);
       pen.SetColour(startColors[i]);
       pen.SetWidth(lineWidth);
       dc.SetPen(pen);
 
-      for (int j = 0; j < data[i]->size() - 1; ++j)
+      for (unsigned int j = 0; j + 1 < pointCount; ++j)
       {
          x0 = data[i]->Xi(j);
          y0 = data[i]->Yi(j);
@@ -688,6 +715,9 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
       dc.SetPen(currentPen);
 
       wxString label = theSats[i];
+      // A single-point or stationary track has no last drawn segment.
+      xv2 = (int)((180.0 + data[i]->Xi(pointCount - 1)) * xFactor);
+      yv2 = (int)((90.0 - data[i]->Yi(pointCount - 1)) * yFactor);
       wxRect labelRect(xv2+4, yv2 - 8, 20, 50);
 
       dc.DrawLabel(label, labelRect);
