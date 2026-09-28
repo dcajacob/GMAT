@@ -57,6 +57,7 @@
 #include "Rendering.hpp"
 #include "GmatOpenGLSupport.hpp"   // for OpenGL support
 #include "AttitudeConversionUtility.hpp"
+#include <algorithm>
 #include <string.h>                // for strlen( )
 
 #include "GuiPublisher.hpp"
@@ -1770,40 +1771,51 @@ void OrbitViewCanvas::DrawFrame()
       GotoObject(mViewObjName);
    }
    
-   int numberOfData = mNumData;
+   const int numberOfData = mNumData;
+   const int beginIndex1 = mBeginIndex1;
+   const int endIndex1 = mEndIndex1;
+   const int beginIndex2 = mBeginIndex2;
+   const int endIndex2 = mEndIndex2;
+   const int lastIndex = mLastIndex;
+   const bool isEndOfData = mIsEndOfData;
+   const bool isEndOfRun = mIsEndOfRun;
    mIsEndOfData = false;
    mIsEndOfRun = false;
-   mCurrIndex = 0;
 
    Publisher *publisher = GuiPublisher::Instance();
 
-   // refresh every 50 points (Allow user to set frame this increment?)
-   for (int frame = 1; frame <= numberOfData; frame+=mFrameInc)
+   for (int frame = 1; frame <= numberOfData; frame += std::max(1, mFrameInc))
    {
       mIsAnimationRunning = true;
-
-      // Yield periodically
       publisher->Ping();
-
       if (mHasUserInterrupted)
          break;
-      
-      //Sleep(mUpdateInterval);
-      wxMilliSleep(mUpdateInterval);
-      
+
+      // Display a chronological prefix of the recorded ring buffer. Advancing
+      // its write indices here corrupts subsequent playback and data updates.
       mNumData = frame;
-      ComputeRingBufferIndex();
-      
+      const int end = beginIndex1 + frame - 1;
+      mEndIndex1 = std::min(end, maxData - 1);
+      mBeginIndex2 = end >= maxData ? 0 : -1;
+      mEndIndex2 = end >= maxData ? end - maxData : -1;
+      mLastIndex = end % maxData;
+
       Refresh(false);
+      Update();
+      wxMilliSleep(mUpdateInterval);
    }
-   
-   // final refresh, in case number of points is less than 50
-   Refresh(false);
-   
+
    mNumData = numberOfData;
-   mIsEndOfData = true;
-   mIsEndOfRun = true;
+   mBeginIndex1 = beginIndex1;
+   mEndIndex1 = endIndex1;
+   mBeginIndex2 = beginIndex2;
+   mEndIndex2 = endIndex2;
+   mLastIndex = lastIndex;
+   mIsEndOfData = isEndOfData;
+   mIsEndOfRun = isEndOfRun;
    mIsAnimationRunning = false;
+   Refresh(false);
+   Update();
    
    #if DEBUG_ANIMATION
    MessageInterface::ShowMessage("OrbitViewCanvas::DrawFrame() leaving\n");
