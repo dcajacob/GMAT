@@ -1,0 +1,41 @@
+HELP_PATH directory does not exist: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/tai-utc.dat
+2026-09-28 13:18:35 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 13:18:35 GMAT GUI successfully launched.
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(GroundTrackCloseRegression:3862931): Gtk-WARNING **: 13:18:36.234: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(GroundTrackCloseRegression:3862931): Gtk-WARNING **: 13:18:36.234: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(GroundTrackCloseRegression:3862931): Gtk-WARNING **: 13:18:36.234: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(GroundTrackCloseRegression:3862931): Gtk-WARNING **: 13:18:36.247: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(GroundTrackCloseRegression:3862931): Gtk-WARNING **: 13:18:36.257: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+Mission run completed.
+===> Total Run Time: 0.292 seconds
+
+========================================
+PASS: default mission completes
+PASS: GroundTrack window exists
+Segmentation fault (core dumped)

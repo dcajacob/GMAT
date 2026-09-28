@@ -46,6 +46,8 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-035 | [pr/native-animation-replay](https://github.com/dcajacob/GMAT/tree/pr/native-animation-replay) | `cd2eacad668e` | `b07be71d2e1c` | `test_native_animation.py` | Independently tested with prerequisites; not submitted |
 | LGUI-036 | [pr/resource-delete-menu](https://github.com/dcajacob/GMAT/tree/pr/resource-delete-menu) | `ba5bc315deb8` | `57e22b63e052` | `test_resource_delete.py` | Independently tested with prerequisites; not submitted |
 | LGUI-037 | [pr/groundtrack-state-mapping](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-state-mapping) | `2ea51e533646` | `a8d0e9a74126` | `test_groundtrack_state.py` | Independently tested with prerequisites; not submitted |
+| LGUI-038 | [pr/groundtrack-direct-close](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-direct-close) | `f327cf93c381` | `9bcf36765304` | `test_groundtrack_close.py` | Independently tested with prerequisites; not submitted |
+| LGUI-039 | [pr/groundtrack-animation](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-animation) | `34140f6dd515` | `afe90a6789b4` | `test_groundtrack_animation.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
@@ -136,3 +138,9 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## GroundTrack state mapping
 
 [Reproductions, missing-point handling, independent validation and integration notes](LinuxGuiGroundTrackState/README.md).
+
+## GroundTrack close and animation
+
+[Direct-close crash and independent fix](LinuxGuiGroundTrackClose/README.md).
+
+[Toolbar playback, scale/lifecycle tests and patch dependencies](LinuxGuiGroundTrackAnimation/README.md).

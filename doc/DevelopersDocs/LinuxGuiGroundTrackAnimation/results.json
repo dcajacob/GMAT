@@ -1,0 +1,9 @@
+{
+  "branches": {
+    "pr/groundtrack-state-mapping": "a8d0e9a74126a630bd582df7f5b39df84f42ea31",
+    "pr/groundtrack-direct-close": "9bcf367653045528c3d8c1a4b2bc0db82b941786",
+    "pr/groundtrack-animation": "afe90a6789b4ffb13100a749fa5e87ff4e6a4b9d"
+  },
+  "validation_base": "584bf1ee0b9fe226caf4b2a3b5c6438aea61d906",
+  "passed": true
+}

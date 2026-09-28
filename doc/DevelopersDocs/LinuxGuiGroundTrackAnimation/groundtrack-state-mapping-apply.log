@@ -1,0 +1,4 @@
+Applied patch to 'src/base/subscriber/GroundTrack.cpp' cleanly.
+Applied patch to 'src/base/subscriber/GroundTrack.hpp' cleanly.
+Applied patch to 'src/gui/subscriber/GroundTrackArea.cpp' with conflicts.
+U src/gui/subscriber/GroundTrackArea.cpp

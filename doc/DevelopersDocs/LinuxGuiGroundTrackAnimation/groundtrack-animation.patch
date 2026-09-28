@@ -1,0 +1,399 @@
+diff --git a/src/gui/app/GmatMainFrame.cpp b/src/gui/app/GmatMainFrame.cpp
+index 9df2c9d..382273b 100644
+--- a/src/gui/app/GmatMainFrame.cpp
++++ b/src/gui/app/GmatMainFrame.cpp
+@@ -143,6 +143,7 @@
+ #include "ddesetup.hpp"   // for IPC_SERVICE, IPC_TOPIC
+ 
+ #include "GroundTrackWindow.hpp"
++#include "MdiTsPlotData.hpp"
+ #include "GroundTrackArea.hpp"
+ 
+ // Interface to GUI plugin components
+@@ -1196,6 +1197,12 @@ bool GmatMainFrame::IsAnimatable()
+ //------------------------------------------------------------------------------
+ bool GmatMainFrame::IsAnimationRunning()
+ {
++   for (int i = 0; i < MdiTsPlot::numChildren; ++i)
++   {
++      auto groundTrack = dynamic_cast<GroundTrackWindow *>(MdiTsPlot::mdiChildren.Item(i)->GetData());
++      if (groundTrack && groundTrack->IsAnimationRunning())
++         return true;
++   }
+    wxToolBar *toolBar = GetToolBar();
+    if (toolBar->GetToolState(GmatMenu::TOOL_ANIMATION_PLAY) == true)
+       return true;
+@@ -3025,6 +3032,13 @@ void GmatMainFrame::StopAnimation()
+        MdiGlPlot::numChildren, mAnimationTitle.c_str());
+    #endif
+    
++   auto groundTrack = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
++   if (groundTrack)
++   {
++      groundTrack->StopAnimation();
++      return;
++   }
++
+    MdiChildViewFrame *frame = NULL;
+    bool frameFound = false;
+    
+@@ -3261,9 +3275,7 @@ void GmatMainFrame::OnClose(wxCloseEvent& event)
+       if (answer == wxYES)
+       {
+          // Stop animation first
+-         wxCommandEvent tempEvent;
+-         tempEvent.SetId(GmatMenu::TOOL_ANIMATION_STOP);
+-         OnAnimation(tempEvent);
++         StopAnimation();
+          event.Skip();
+       }
+       else if (event.CanVeto())
+@@ -6571,6 +6583,12 @@ void GmatMainFrame::OnFont(wxCommandEvent& event)
+ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
+ {
+    GmatMdiChildFrame* child = (GmatMdiChildFrame *)GetActiveChild();
++   // Stop and speed controls belong to the playing GroundTrack even if the
++   // user has activated another tab. Play starts the currently selected plot.
++   auto playingGroundTrack = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
++   if (event.GetId() != TOOL_ANIMATION_PLAY && playingGroundTrack &&
++         playingGroundTrack->IsAnimationRunning())
++      child = playingGroundTrack;
+    wxToolBar *toolBar = GetToolBar();
+ 
+    if (child == NULL)
+@@ -6587,6 +6605,13 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
+       return;
+    }
+    
++   if (event.GetId() == TOOL_ANIMATION_PLAY)
++   {
++      auto previous = dynamic_cast<GroundTrackWindow *>(GetChild(mAnimationTitle));
++      if (previous)
++         previous->StopAnimation();
++   }
++   auto groundTrack = dynamic_cast<GroundTrackWindow *>(child);
+    wxString title = child->GetTitle();
+    MdiChildViewFrame *frame = NULL;
+    bool frameFound = false;
+@@ -6596,7 +6621,7 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
+       ("GmatMainFrame::OnAnimation() entered, title=%s\n", title.c_str());
+    #endif
+    
+-   for (int i=0; i<MdiGlPlot::numChildren; i++)
++   for (int i=0; !groundTrack && i<MdiGlPlot::numChildren; i++)
+    {
+       frame = (MdiChildViewFrame*)(MdiGlPlot::mdiChildren.Item(i)->GetData());
+       if (frame && (frame->GetPlotName().IsSameAs(title)))
+@@ -6607,12 +6632,13 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
+       }
+    }
+ 
+-   if (!frameFound)
++   if (!frameFound && !groundTrack)
+       return;
++   mAnimationTitle = title;
+    
+    #ifdef DEBUG_ANIMATION
+    MessageInterface::ShowMessage
+-      ("   Apply animation action on frame '%s'\n", frame->GetPlotName().c_str());
++      ("   Apply animation action on frame '%s'\n", title.c_str());
+    #endif
+    
+    if (!mAnimationEnabled)
+@@ -6634,6 +6660,30 @@ void GmatMainFrame::OnAnimation(wxCommandEvent& event)
+    Integer updateIntervalInMilSec = 1;
+    ComputeAnimationSpeed(actualInc, updateIntervalInMilSec, false);
+       
++   if (groundTrack)
++   {
++      switch (event.GetId())
++      {
++      case TOOL_ANIMATION_PLAY:
++         groundTrack->StartAnimation(updateIntervalInMilSec, actualInc);
++         break;
++      case TOOL_ANIMATION_STOP:
++         groundTrack->StopAnimation();
++         break;
++      case TOOL_ANIMATION_FAST:
++      case TOOL_ANIMATION_SLOW:
++         mAnimationFrameInc += event.GetId() == TOOL_ANIMATION_FAST ? 5 : -5;
++         actualInc = mAnimationFrameInc;
++         ComputeAnimationSpeed(actualInc, updateIntervalInMilSec,
++               event.GetId() == TOOL_ANIMATION_SLOW);
++         groundTrack->SetAnimationSpeed(updateIntervalInMilSec, actualInc);
++         break;
++      default:
++         break;
++      }
++      return;
++   }
++
+    switch (event.GetId())
+    {
+    case TOOL_ANIMATION_PLAY:
+diff --git a/src/gui/subscriber/GroundTrackArea.cpp b/src/gui/subscriber/GroundTrackArea.cpp
+index 5a47c05..2ef1a10 100644
+--- a/src/gui/subscriber/GroundTrackArea.cpp
++++ b/src/gui/subscriber/GroundTrackArea.cpp
+@@ -69,7 +69,8 @@ GroundTrackArea::GroundTrackArea(wxWindow *parent,
+       longLineCount (12),
+       latLineCount (6),
+       theSS (nullptr),
+-      penIsDown (true)
++      penIsDown (true),
++      animationFrame (0)
+ {
+ }
+ 
+@@ -328,6 +329,8 @@ bool GroundTrackArea::TakeAction(const std::string &theAction)
+    }
+    else if (action == "ClearData")
+    {
++      frameCounts.clear();
++      animationFrame = 0;
+       for (UnsignedInt i = 0; i < data.size(); ++i)
+          (data[i])->Clear();
+       points.clear();
+@@ -446,6 +449,10 @@ bool GroundTrackArea::AddData(const double epoch, const double *dat,
+             data[i]->AddData(dat[i*2], dat[i*2+1], epoch);
+       }
+ 
++      std::vector<unsigned int> counts;
++      for (unsigned int i = 0; i < data.size(); ++i)
++         counts.push_back(data[i]->size());
++      frameCounts.push_back(counts);
+       ++currentCount;
+    }
+ 
+@@ -486,6 +493,8 @@ bool GroundTrackArea::SetDataNames(const StringArray &names)
+  */
+ void GroundTrackArea::Clear()
+ {
++   frameCounts.clear();
++   animationFrame = 0;
+    for (UnsignedInt i = 0; i < data.size(); ++i)
+       delete data[i];
+    data.clear();
+@@ -608,13 +617,17 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
+    // Draw the ground tracks
+    for (int i = 0; i < data.size(); ++i)
+    {
++      const unsigned int pointCount = GetDisplayedPointCount(i);
++      if (pointCount == 0 || i >= startColors.size() || i >= theSats.size())
++         continue;
++
+       wxPen pen;
+       dc.SetTextForeground(startColors[i]);
+       pen.SetColour(startColors[i]);
+       pen.SetWidth(lineWidth);
+       dc.SetPen(pen);
+ 
+-      for (int j = 0; j < data[i]->size() - 1; ++j)
++      for (unsigned int j = 0; j + 1 < pointCount; ++j)
+       {
+          x0 = data[i]->Xi(j);
+          y0 = data[i]->Yi(j);
+@@ -687,6 +700,8 @@ void GroundTrackArea::OnPaint(wxPaintEvent& ev)
+       // Draw a label for the curve
+       dc.SetPen(currentPen);
+ 
++      xv2 = (int)((180.0 + data[i]->Xi(pointCount - 1)) * xFactor);
++      yv2 = (int)(( 90.0 - data[i]->Yi(pointCount - 1)) * yFactor);
+       wxString label = theSats[i];
+       wxRect labelRect(xv2+4, yv2 - 8, 20, 50);
+ 
+@@ -721,3 +736,21 @@ void GroundTrackArea::SetSolarSystem(SolarSystem *ss)
+ }
+ 
+ 
++
++// Select a recorded publication for display; zero restores the complete track.
++void GroundTrackArea::SetAnimationFrame(size_t frame)
++{
++   animationFrame = frame;
++   Refresh(false);
++   Update();
++}
++
++size_t GroundTrackArea::GetDisplayedPointCount(size_t curve) const
++{
++   if (curve >= data.size())
++      return 0;
++   if (animationFrame > 0 && animationFrame <= frameCounts.size())
++      return curve < frameCounts[animationFrame - 1].size() ?
++            frameCounts[animationFrame - 1][curve] : 0;
++   return data[curve]->size();
++}
+diff --git a/src/gui/subscriber/GroundTrackArea.hpp b/src/gui/subscriber/GroundTrackArea.hpp
+index 2fdb11b..3f87deb 100644
+--- a/src/gui/subscriber/GroundTrackArea.hpp
++++ b/src/gui/subscriber/GroundTrackArea.hpp
+@@ -43,6 +43,8 @@ public:
+    virtual ~GroundTrackArea();
+ 
+    void Clear();
++   size_t GetFrameCount() const { return frameCounts.size(); }
++   void SetAnimationFrame(size_t frame);
+ 
+    void SetOption(const std::string &optionSetting, const std::string &optionValue);
+    bool AddData(const double epoch, const double *dat, const int satcount);
+@@ -60,6 +62,9 @@ public:
+ 
+    bool TakeAction(const std::string &theAction);
+ 
++protected:
++   size_t GetDisplayedPointCount(size_t curve) const;
++
+ private:
+ 
+    /// Data structure used for stations and other body fixed points
+@@ -96,6 +101,10 @@ private:
+    /// Number of latitude grid lines
+    Integer latLineCount;
+ 
++   // Recorded curve lengths for each publication, including absent spacecraft.
++   std::vector<std::vector<unsigned int> > frameCounts;
++   size_t animationFrame;
++
+    /// The trajectory data
+    std::vector<GroundTrackCurve*> data;
+    /// Colors for the tracks
+diff --git a/src/gui/subscriber/GroundTrackWindow.cpp b/src/gui/subscriber/GroundTrackWindow.cpp
+index bae20b1..86cd4ff 100644
+--- a/src/gui/subscriber/GroundTrackWindow.cpp
++++ b/src/gui/subscriber/GroundTrackWindow.cpp
+@@ -36,6 +36,7 @@
+ #include "GmatMainFrame.hpp"
+ #include "GmatAppData.hpp"
+ #include "MdiTsPlotData.hpp"
++#include <algorithm>
+ 
+ //#define DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
+ 
+@@ -70,6 +71,11 @@ GroundTrackWindow::GroundTrackWindow(wxMDIParentFrame *parent,
+       GmatMdiChildFrame(parent, plotName, title, GmatTree::OUTPUT_PERSISTENT,
+             -1, pos, size, style | wxNO_FULL_REPAINT_ON_RESIZE)
+ {
++   animationTimer.SetOwner(this);
++   Bind(wxEVT_TIMER, &GroundTrackWindow::OnAnimationTimer, this, animationTimer.GetId());
++   nextAnimationFrame = 1;
++   animationInterval = 1;
++   animationIncrement = 1;
+    mPlotTitle = title;
+    MdiTsPlot::mdiChildren.Append(this);
+    MdiTsPlot::numChildren++;
+@@ -92,6 +98,7 @@ GroundTrackWindow::GroundTrackWindow(wxMDIParentFrame *parent,
+ //------------------------------------------------------------------------------
+ GroundTrackWindow::~GroundTrackWindow()
+ {
++   animationTimer.Stop();
+    //GroundTrackArea::mdiChildren.DeleteObject(this);
+    //GroundTrackArea::numChildren--;
+ 
+@@ -182,6 +189,7 @@ void GroundTrackWindow::OnMove(wxMoveEvent& event)
+  */
+ void GroundTrackWindow::OnClose(wxCloseEvent &event)
+ {
++   StopAnimation();
+    #ifdef DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
+       MessageInterface::ShowMessage
+          ("GroundTrackWindow::OnClose() '%s' entered, mCanClose=%d\n",
+@@ -238,6 +246,8 @@ void GroundTrackWindow::OnPaint(wxPaintEvent& event)
+ bool GroundTrackWindow::AddData(const double epoch, const double *longlat,
+       const int satcount)
+ {
++   if (IsAnimationRunning())
++      StopAnimation();
+    return theMap->AddData(epoch, longlat, satcount);
+ }
+ 
+@@ -353,6 +363,8 @@ void GroundTrackWindow::ResetForNewRun()
+ //------------------------------------------------------------------------------
+ bool GroundTrackWindow::TakeAction(const std::string &theAction)
+ {
++   if (theAction == "ClearData" || theAction == "Reinitialize")
++      StopAnimation();
+    return theMap->TakeAction(theAction);
+ }
+ 
+@@ -367,3 +379,48 @@ void GroundTrackWindow::SetSolarSystem(SolarSystem *ss)
+    theSS = ss;
+    theMap->SetSolarSystem(ss);
+ }
++
++void GroundTrackWindow::SetAnimationSpeed(Integer interval, Integer increment)
++{
++   animationInterval = std::max(1, interval);
++   animationIncrement = std::max(1, increment);
++   if (animationTimer.IsRunning())
++      animationTimer.Start(animationInterval);
++}
++
++void GroundTrackWindow::StartAnimation(Integer interval, Integer increment)
++{
++   StopAnimation();
++   auto main = GmatAppData::Instance()->GetMainFrame();
++   if (theMap->GetFrameCount() == 0)
++   {
++      main->EnableMenuAndToolBar(true, false, true);
++      return;
++   }
++   SetAnimationSpeed(interval, increment);
++   nextAnimationFrame = 1;
++   animationTimer.Start(animationInterval);
++   main->EnableMenuAndToolBar(false, false, true);
++}
++
++void GroundTrackWindow::StopAnimation()
++{
++   const bool running = animationTimer.IsRunning();
++   animationTimer.Stop();
++   if (running)
++   {
++      theMap->SetAnimationFrame(0);
++      GmatAppData::Instance()->GetMainFrame()->EnableMenuAndToolBar(true, false, true);
++   }
++}
++
++void GroundTrackWindow::OnAnimationTimer(wxTimerEvent &event)
++{
++   if (nextAnimationFrame > theMap->GetFrameCount())
++   {
++      StopAnimation();
++      return;
++   }
++   theMap->SetAnimationFrame(nextAnimationFrame);
++   nextAnimationFrame += animationIncrement;
++}
+diff --git a/src/gui/subscriber/GroundTrackWindow.hpp b/src/gui/subscriber/GroundTrackWindow.hpp
+index 6051da8..9ce3587 100644
+--- a/src/gui/subscriber/GroundTrackWindow.hpp
++++ b/src/gui/subscriber/GroundTrackWindow.hpp
+@@ -35,6 +35,7 @@
+ #include "GmatMdiChildFrame.hpp"
+ #include "GroundTrack.hpp"
+ #include "GroundTrackArea.hpp"
++#include <wx/timer.h>
+ 
+ // For compilers that support precompilation, includes "wx/wx.h".
+ #include "wx/wxprec.h"
+@@ -78,10 +79,19 @@ public:
+          const int satcount);
+ 
+    void UpdatePlot();
++   void StartAnimation(Integer interval, Integer increment);
++   void StopAnimation();
++   void SetAnimationSpeed(Integer interval, Integer increment);
++   bool IsAnimationRunning() const { return animationTimer.IsRunning(); }
+    void ResetForNewRun();
+    bool TakeAction(const std::string &theAction);
+ 
+ protected:
++   void OnAnimationTimer(wxTimerEvent &event);
++   wxTimer animationTimer;
++   size_t nextAnimationFrame;
++   Integer animationInterval;
++   Integer animationIncrement;
+    virtual void Create(const std::string &title = "");
+ 
+    void OnPaint(wxPaintEvent& event);

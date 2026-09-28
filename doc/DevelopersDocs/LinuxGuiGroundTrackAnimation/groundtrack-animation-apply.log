@@ -1,0 +1,6 @@
+Applied patch to 'src/gui/app/GmatMainFrame.cpp' cleanly.
+Applied patch to 'src/gui/subscriber/GroundTrackArea.cpp' with conflicts.
+Applied patch to 'src/gui/subscriber/GroundTrackArea.hpp' cleanly.
+Applied patch to 'src/gui/subscriber/GroundTrackWindow.cpp' cleanly.
+Applied patch to 'src/gui/subscriber/GroundTrackWindow.hpp' cleanly.
+U src/gui/subscriber/GroundTrackArea.cpp

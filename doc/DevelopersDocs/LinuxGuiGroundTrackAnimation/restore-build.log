@@ -1,0 +1,39 @@
+[1/28] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/SubscriberFactory.cpp.o
+[2/28] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/GroundTrack.cpp.o
+[3/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/libGmatBase.so.R2026a
+[4/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/libGmatBase.so
+[5/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libOpenFramesInterface.so.R2026a
+[6/28] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GuiPlotReceiver.cpp.o
+[7/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libOpenFramesInterface.so
+OpenFramesInterface: Copying icons to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/graphics/icons
+OpenFramesInterface: Copying textures to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/graphics/texture
+OpenFramesInterface: Copying star catalog to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/graphics/stars
+OpenFramesInterface: Copying shaders to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/graphics/texture
+[8/28] Linking CXX executable /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GmatConsole-R2026a
+[9/28] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackArea.cpp.o
+[10/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libEventLocator.so.R2026a
+[11/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libGmatEstimation.so.R2026a
+[12/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libGmatFunction.so.R2026a
+[13/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libPythonInterface_py314.so.R2026a
+[14/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libStation.so.R2026a
+[15/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/thinksys/libTLEPropagator.so.R2026a
+[16/28] Creating executable symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GmatConsole
+[17/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libGmatEstimation.so
+[18/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libEventLocator.so
+[19/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libGmatFunction.so
+[20/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libPythonInterface_py314.so
+[21/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libStation.so
+[22/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/thinksys/libTLEPropagator.so
+[23/28] Linking CXX shared library /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libOVtoOFI.so.R2026a
+[24/28] Creating library symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/plugins/libOVtoOFI.so
+[25/28] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackWindow.cpp.o
+[26/28] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatMainFrame.cpp.o
+/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/src/gui/app/GmatMainFrame.cpp: In member function ‘void GmatMainFrame::OnScreenshot(wxCommandEvent&)’:
+/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/src/gui/app/GmatMainFrame.cpp:5916:14: warning: ‘char* __builtin___strncat_chk(char*, const char*, long unsigned int, long unsigned int)’ specified bound depends on the length of the source argument [-Wstringop-overflow=]
+ 5916 |       strncat(imageFilename, nameVer, strlen(nameVer));
+      |              ^
+/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/src/gui/app/GmatMainFrame.cpp:5916:14: note: length computed here
+ 5916 |       strncat(imageFilename, nameVer, strlen(nameVer));
+      |       ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[27/28] Linking CXX executable /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GMAT-R2026a
+[28/28] Creating executable symlink /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/bin/GMAT

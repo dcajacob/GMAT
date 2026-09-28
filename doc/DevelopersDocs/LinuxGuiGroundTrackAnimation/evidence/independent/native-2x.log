@@ -1,0 +1,96 @@
+HELP_PATH directory does not exist: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/tai-utc.dat
+2026-09-28 13:29:41 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 13:29:41 GMAT GUI successfully launched.
+PASS: first publication shows only its available spacecraft
+PASS: second publication retains distinct spacecraft counts
+PASS: playback follows publication order even when time goes backwards
+PASS: restoring the full view retains recorded data
+PASS: ClearData resets playback history
+PASS: reinitialization resets playback history
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/build/linux-gui-tests/groundtrack-animation/animation.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+PASS: build GroundTrack animation fixture
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(GroundTrackAnimationRegression:3945647): Gtk-WARNING **: 13:29:41.788: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(GroundTrackAnimationRegression:3945647): Gtk-WARNING **: 13:29:41.788: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(GroundTrackAnimationRegression:3945647): Gtk-WARNING **: 13:29:41.788: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(GroundTrackAnimationRegression:3945647): Gtk-WARNING **: 13:29:41.817: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(GroundTrackAnimationRegression:3945647): Gtk-WARNING **: 13:29:41.841: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+Using default potential file "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/gravity/earth/JGM2.cof" for GravityField object "GravityField.Earth"
+
+Mission run completed.
+===> Total Run Time: 0.377 seconds
+
+========================================
+PASS: GroundTrack animation mission completes
+PASS: GroundTrack output exists
+PASS: mission supplies a replayable recording
+PASS: GroundTrack Play is enabled
+PASS: Play starts asynchronous GroundTrack playback
+PASS: Faster increases playback rate
+PASS: Slower decreases playback rate
+PASS: GUI remains responsive while multiple playback frames paint
+PASS: playback displays a prefix instead of the complete track
+PASS: playback stops and toolbar state returns to idle
+PASS: playback preserves recorded publications and restores all points
+PASS: GroundTrack replays again after Stop
+PASS: another plot tab is available
+PASS: playback is still reported after switching tabs
+PASS: speed control reaches the playing plot after switching tabs
+PASS: playback stops and toolbar state returns to idle
+PASS: playback preserves recorded publications and restores all points
+PASS: playback stops and toolbar state returns to idle
+PASS: playback preserves recorded publications and restores all points
+PASS: playback restarts before the close test
+PASS: playback stops and toolbar state returns to idle
+PASS: playback preserves recorded publications and restores all points
+PASS: closing a playing plot stops its timer and clears toolbar state
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+Mission run completed.
+===> Total Run Time: 0.204 seconds
+
+========================================
+PASS: mission runs after closing a playing plot
+PASS: recreated plot has fresh playback history
+PASS: empty plots do not leave Play stuck on
+Moderator is deleting core engine...
+2026-09-28 13:29:43 GMAT GUI exiting.

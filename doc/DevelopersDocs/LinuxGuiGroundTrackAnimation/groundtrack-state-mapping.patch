@@ -1,0 +1,164 @@
+diff --git a/src/base/subscriber/GroundTrack.cpp b/src/base/subscriber/GroundTrack.cpp
+index 0ed5eed..b2c8fb7 100644
+--- a/src/base/subscriber/GroundTrack.cpp
++++ b/src/base/subscriber/GroundTrack.cpp
+@@ -34,6 +34,8 @@
+ #include "SubscriberException.hpp"
+ #include "StringUtil.hpp"            // for GmatStringUtil::ReplaceName(), GetArrayName()
+ #include "MessageInterface.hpp"      // for ShowMessage()
++#include <cmath>
++#include <limits>
+ #include <sstream>                   // for <<
+ #include "AngleUtil.hpp"
+ 
+@@ -201,6 +203,7 @@ GroundTrack& GroundTrack::operator=(const GroundTrack& gt)
+       pointlonglat = gt.pointlonglat;
+ 
+       theObjects = gt.theObjects;
++      stateIndices = gt.stateIndices;
+ }
+    return *this;
+ }
+@@ -1501,29 +1504,27 @@ void GroundTrack::SetDataLabels(const StringArray& elements)
+          MessageInterface::ShowMessage("   %3d:  %s\n", i, elements[i].c_str());
+    #endif
+ 
+-   xIndex.clear();
+-
++   stateMap.clear();
++   stateIndices.assign(theSats.size(), IntegerArray(6, -1));
++   const char *components[] = {"X", "Y", "Z", "Vx", "Vy", "Vz"};
++   const char *upperComponents[] = {"X", "Y", "Z", "VX", "VY", "VZ"};
+    for (unsigned int i = 0; i < theSats.size(); ++i)
+    {
+-      std::string label = theSats[i]->GetName() + ".X";
+-
+-      for (unsigned int j = 0; j < elements.size(); ++j)
++      const std::string prefix = theSats[i]->GetName() + ".";
++      for (int component = 0; component < 6; ++component)
+       {
+-         if (elements[j] == label)
++         for (unsigned int j = 0; j < elements.size(); ++j)
+          {
+-            stateMap[theSats[i]] = j;
+-            xIndex.push_back(j);
+-
+-            #ifdef DEBUG_STATE_ORDER_DETAIL
+-               MessageInterface::ShowMessage("%s %s %s %s %s %s at %d\n",
+-                     elements[j].c_str(), elements[j+1].c_str(),
+-                     elements[j+2].c_str(), elements[j+3].c_str(),
+-                     elements[j+4].c_str(), elements[j+5].c_str(), j);
+-            #endif
+-
+-            break;
++            if (elements[j] == prefix + components[component] ||
++                elements[j] == prefix + upperComponents[component])
++            {
++               stateIndices[i][component] = j;
++               break;
++            }
+          }
+       }
++      if (stateIndices[i][0] >= 0)
++         stateMap[theSats[i]] = stateIndices[i][0];
+    }
+ 
+    #ifdef DEBUG_STATE_ORDER
+@@ -1598,35 +1599,37 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
+       }
+    }
+ 
+-   if (len == 0)
++   if (len <= 0 || dat == NULL)
+       return true;
+ 
+-   // to do: make this more robust - sat order might change, etc
+-   // GMAT R2022a broke ordering and publishes too much data; this hack fixes Tuan's
+-   int vectorSize = 6; //(len-1) / theSats.size();
+-
+-   // Walk the spacecraft, getting lat and lon
+-   double longitude, latitude;
+-   double bodyState[6];
+-   for (int i = 0; i < theSats.size(); ++i)
++   // A publication may contain only a subset of the tracked spacecraft.
++   // Preserve curve slots and explicitly mark absent states for the receiver.
++   const double absent = std::numeric_limits<double>::quiet_NaN();
++   bool hasPosition = false;
++   for (unsigned int i = 0; i < theSats.size(); ++i)
+    {
+-      if ((xIndex.size() > i) && (xIndex[i] < len))
++      longlat[2*i] = longlat[2*i + 1] = absent;
++      double state[6], bodyState[6];
++      bool complete = i < stateIndices.size();
++      for (int component = 0; component < 6 && complete; ++component)
+       {
+-         ccvt.Convert(dat[0], &(dat[xIndex[i]]), inertialSystem,
+-               bodyState, viewCoordinates);
+-
+-         // Generate the subsatellite point data
+-         CalculateLatLong(bodyState, longitude, latitude);
+-
+-         longlat[  2*i  ] = longitude;
+-         longlat[2*i + 1] = latitude;
+-
+-         #ifdef DEBUG_LATLONG
+-            MessageInterface::ShowMessage("%d [long, lat] = [%lf, %lf]\n", i,
+-                  longlat[i][0], longlat[i][1]);
+-         #endif
++         const int index = stateIndices[i][component];
++         complete = index > 0 && index < len;
++         if (complete)
++         {
++            state[component] = dat[index];
++            complete = std::isfinite(state[component]);
++         }
+       }
++      if (!complete || !std::isfinite(dat[0]))
++         continue;
++
++      ccvt.Convert(dat[0], state, inertialSystem, bodyState, viewCoordinates);
++      CalculateLatLong(bodyState, longlat[2*i], longlat[2*i + 1]);
++      hasPosition = true;
+    }
++   if (!hasPosition)
++      return true;
+ 
+    retval = PlotInterface::UpdateGroundTrackData(instanceName,
+          dat[0], longlat, theSats.size());
+diff --git a/src/base/subscriber/GroundTrack.hpp b/src/base/subscriber/GroundTrack.hpp
+index 64ba1a0..6f3be4a 100644
+--- a/src/base/subscriber/GroundTrack.hpp
++++ b/src/base/subscriber/GroundTrack.hpp
+@@ -216,7 +216,8 @@ protected:
+ 
+    /// Map of state X indices by spacecraft
+    std::map<Spacecraft*, int> stateMap;
+-   std::vector<int> xIndex;
++   /// Published X, Y, Z, Vx, Vy, Vz indices for each spacecraft (-1 if absent)
++   std::vector<IntegerArray> stateIndices;
+ 
+    /// Celestial bodies tracked, omitting central body and spacecraft
+    std::vector<SpacePoint*> theBodies;
+diff --git a/src/gui/subscriber/GroundTrackArea.cpp b/src/gui/subscriber/GroundTrackArea.cpp
+index 5a47c05..699e966 100644
+--- a/src/gui/subscriber/GroundTrackArea.cpp
++++ b/src/gui/subscriber/GroundTrackArea.cpp
+@@ -36,6 +36,7 @@
+ #include "GroundTrackCurve.hpp"
+ #include "GmatAppData.hpp"
+ #include "Moderator.hpp"
++#include <cmath>
+ 
+ //#define DEBUG_GT_ACTIONS
+ 
+@@ -442,7 +443,9 @@ bool GroundTrackArea::AddData(const double epoch, const double *dat,
+    {
+       for (unsigned int i = 0; i < satcount; ++i)
+       {
+-         if (i < data.size())
++         // Missing states retain their curve slot but must not add a point.
++         if (i < data.size() && std::isfinite(dat[i*2]) &&
++               std::isfinite(dat[i*2+1]))
+             data[i]->AddData(dat[i*2], dat[i*2+1], epoch);
+       }
+ 

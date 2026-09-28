@@ -1,0 +1,7 @@
+PASS: native animation: wrapped
+PASS: native animation: wrapped-trail
+PASS: native animation: unwrapped
+PASS: native animation: unwrapped-trail
+PASS: native animation: full
+PASS: native animation: single
+PASS: native animation: wide-trail

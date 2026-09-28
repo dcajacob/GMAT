@@ -1,0 +1,13 @@
+diff --git a/src/gui/subscriber/GroundTrackWindow.cpp b/src/gui/subscriber/GroundTrackWindow.cpp
+index bae20b1..dd4d33d 100644
+--- a/src/gui/subscriber/GroundTrackWindow.cpp
++++ b/src/gui/subscriber/GroundTrackWindow.cpp
+@@ -189,7 +189,7 @@ void GroundTrackWindow::OnClose(wxCloseEvent &event)
+    #endif
+ 
+    GmatMdiChildFrame::OnClose(event);
+-   event.Skip();
++   // The base handler owns destruction; do not dispatch another close handler.
+ 
+    #ifdef DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
+       MessageInterface::ShowMessage

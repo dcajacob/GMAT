@@ -1,0 +1,56 @@
+HELP_PATH directory does not exist: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/tai-utc.dat
+2026-09-28 13:22:41 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+2026-09-28 13:22:42 GMAT GUI successfully launched.
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+Error reading file GFOIL1.JPG: file not found
+Warning: Cannot create texture GFOIL1.JPG
+
+Mission run completed.
+===> Total Run Time: 1.099 seconds
+
+========================================
+PASS: default mission completes
+PASS: GroundTrack window exists
+PASS: direct close removes GroundTrack window safely
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+
+Mission run completed.
+===> Total Run Time: 0.641 seconds
+
+========================================
+PASS: mission recreates GroundTrack after direct close
+Moderator is deleting core engine...
+2026-09-28 13:22:45 GMAT GUI exiting.

@@ -1,0 +1,4 @@
+PASS: GroundTrack playback and lifecycle at 1x
+PASS: GroundTrack playback and lifecycle at 2x
+PASS: GroundTrack playback and lifecycle at 3x
+PASS: GroundTrack playback alongside OpenFrames
