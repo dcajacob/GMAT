@@ -1132,8 +1132,13 @@ void GmatApp::BuildAndRunScript(bool runScript)
    if (GmatGlobal::Instance()->GetRunMode() == GmatGlobal::EXIT_AFTER_RUN)
    {
       #ifdef __LINUX__
-         // Linux needs this to run in the test system successfully
-         exit(0);
+         // Stop plot renderers before process-wide graphics resources are
+         // released. Destroy() is deferred, so process the pending deletions.
+         theMainFrame->CloseAllChildren(true, true, true, true, true);
+         wxSafeYield();
+         DeletePendingObjects();
+         // Retain the Linux test-system exit path, but report script failures.
+         exit(builtOk && (!runScript || runStatus == 1) ? 0 : 1);
       #endif
 
       //Set auto exit mode to GmatMainFrame
