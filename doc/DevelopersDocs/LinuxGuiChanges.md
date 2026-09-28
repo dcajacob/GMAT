@@ -34,6 +34,11 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-023 | [pr/global-function-example](https://github.com/dcajacob/GMAT/tree/pr/global-function-example) | `4f4f077c7123` | `b1ca38c21703` | `test_public_examples.py --mode global` | Independently tested with prerequisites; backed up; not submitted |
 | LGUI-024 | [pr/force-model-tutorial](https://github.com/dcajacob/GMAT/tree/pr/force-model-tutorial) | `631051823e76` | `0350a31697c5` | `test_public_examples.py --mode force` | Independently tested with prerequisites; backed up; not submitted |
 | LGUI-025 | [pr/sensor-contact-example](https://github.com/dcajacob/GMAT/tree/pr/sensor-contact-example) | `18029f89f280` | `746cdb101bd2` | `test_public_examples.py --mode sensor` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-026 | [pr/groundtrack-runtime](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-runtime) | `b40f40bc3f3b` | `230bd15efacf` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
+| LGUI-029 | [pr/groundtrack-sampling](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-sampling) | `569a91d231f2` | `548bec34370a` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
+| LGUI-030 | [pr/groundtrack-window-lookup](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-window-lookup) | `4c7feb215d9d` | `4489b59bf1a2` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
+| LGUI-028 | [pr/native-wheel-zoom](https://github.com/dcajacob/GMAT/tree/pr/native-wheel-zoom) | `19dd83be5c76` | `ea64c9fb581a` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
+| LGUI-027 | [pr/native-plot-text](https://github.com/dcajacob/GMAT/tree/pr/native-plot-text) | `979c0d644ba1` | `57f4031b0a3f` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 

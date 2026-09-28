@@ -1,0 +1,57 @@
+Create Spacecraft DefaultSC;
+GMAT DefaultSC.DateFormat = UTCModJulian;
+GMAT DefaultSC.Epoch = '21545';
+GMAT DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultSC.DisplayStateType = Cartesian;
+GMAT DefaultSC.X = 7100;
+GMAT DefaultSC.Y = 0;
+GMAT DefaultSC.Z = 1300;
+GMAT DefaultSC.VX = 0;
+GMAT DefaultSC.VY = 7.35;
+GMAT DefaultSC.VZ = 1;
+GMAT DefaultSC.DryMass = 850;
+
+Create CoordinateSystem MoonMJ2000Eq;
+GMAT MoonMJ2000Eq.Origin = Luna;
+GMAT MoonMJ2000Eq.Axes = MJ2000Eq;
+
+Create Spacecraft LunaSC;
+Create Spacecraft SecondEarthSC;
+GMAT LunaSC.DateFormat = UTCModJulian;
+GMAT LunaSC.Epoch = '21545';
+GMAT LunaSC.CoordinateSystem = MoonMJ2000Eq;
+GMAT LunaSC.DisplayStateType = Cartesian;
+GMAT LunaSC.X = 4000;
+GMAT LunaSC.Y = 0;
+GMAT LunaSC.Z = 500;
+GMAT LunaSC.VX = 0;
+GMAT LunaSC.VY = 1.5;
+GMAT LunaSC.VZ = 0;
+GMAT LunaSC.DryMass = 850;
+
+Create ForceModel DefaultProp_ForceModel;
+GMAT DefaultProp_ForceModel.CentralBody = Earth;
+GMAT DefaultProp_ForceModel.PrimaryBodies = {Earth};
+GMAT DefaultProp_ForceModel.Drag = None;
+GMAT DefaultProp_ForceModel.SRP = Off;
+GMAT DefaultProp_ForceModel.GravityField.Earth.Degree = 0;
+GMAT DefaultProp_ForceModel.GravityField.Earth.Order = 0;
+GMAT DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+
+Create Propagator DefaultProp;
+GMAT DefaultProp.FM = DefaultProp_ForceModel;
+GMAT DefaultProp.Type = RungeKutta89;
+GMAT DefaultProp.InitialStepSize = 60;
+GMAT DefaultProp.Accuracy = 1e-11;
+GMAT DefaultProp.MinStep = 0.001;
+GMAT DefaultProp.MaxStep = 2700;
+
+Create GroundTrackPlot GTPlot;
+GMAT GTPlot.Add = {DefaultSC, SecondEarthSC, LunaSC};
+GMAT GTPlot.CentralBody = Earth;
+GMAT GTPlot.ShowPlot = false;
+GMAT GTPlot.DataCollectFrequency = 1;
+GMAT GTPlot.UpdatePlotFrequency = 1;
+
+BeginMissionSequence;
+Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedSecs = 60};
