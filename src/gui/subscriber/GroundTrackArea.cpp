@@ -38,6 +38,7 @@
 #include "Moderator.hpp"
 #include "FileManager.hpp"
 #include <wx/log.h>
+#include <cmath>
 
 //#define DEBUG_GT_ACTIONS
 
@@ -470,7 +471,9 @@ bool GroundTrackArea::AddData(const double epoch, const double *dat,
    {
       for (unsigned int i = 0; i < satcount; ++i)
       {
-         if (i < data.size())
+         // Missing states retain their curve slot but must not add a point.
+         if (i < data.size() && std::isfinite(dat[i*2]) &&
+               std::isfinite(dat[i*2+1]))
             data[i]->AddData(dat[i*2], dat[i*2+1], epoch);
       }
 
