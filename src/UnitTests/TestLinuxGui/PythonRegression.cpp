@@ -24,7 +24,7 @@ static PyObject *Evaluate(const char *expression)
 int main(int argc, char **argv)
 {
    if (argc != 2) return 2;
-   std::setvbuf(stdout, NULL, _IOLBF, 0);
+   std::setvbuf(stdout, NULL, _IONBF, 0);
    PythonInterface *python = PythonInterface::PyInstance();
    python->PyInitialize();
    const std::string mode(argv[1]);

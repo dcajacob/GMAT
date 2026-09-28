@@ -129,7 +129,7 @@ public:
 };
 extern "C" int __wrap_main(int argc,char **argv)
 {
-   std::setvbuf(stdout,nullptr,_IOLBF,0);
+   std::setvbuf(stdout,nullptr,_IONBF,0);
    wxLog::SetActiveTarget(new wxLogStderr());
    return RunGuiTest<Sweep>(argc,argv);
 }

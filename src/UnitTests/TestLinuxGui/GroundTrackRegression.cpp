@@ -28,7 +28,9 @@ static void CheckMap(GroundTrackArea *plot, bool expected)
          if (image.GetBlue(x,y) > image.GetRed(x,y) + 20) ++blue;
          ++count;
       }
-   Check(count > 0 && (expected ? blue > count/5 : blue == 0),
+   // ClearType can introduce a few blue subpixels in otherwise gray labels.
+   // A stale map covers a substantial fraction of the canvas.
+   Check(count > 0 && (expected ? blue > count/5 : blue * 100 < count),
          expected ? "ground-track map is visibly painted" : "failed map clears the previous bitmap");
 }
 
@@ -54,7 +56,14 @@ class Regression : public wxTimer
          plot = FindGroundTrack(frame);
          Check(plot != nullptr, "default mission creates a ground-track plot");
          if (!plot) { frame->SetAutoExitAfterRun(true); frame->Close(); return; }
-         if (auto child = dynamic_cast<wxMDIChildFrame *>(plot->GetParent())) child->Activate();
+         if (auto child = dynamic_cast<wxMDIChildFrame *>(plot->GetParent()))
+         {
+            child->Activate();
+#ifdef __WXMSW__
+            // Windows MDI plots overlap; keep the captured client area visible.
+            child->Maximize();
+#endif
+         }
          plot->Refresh();
       }
       else if (step == 1)

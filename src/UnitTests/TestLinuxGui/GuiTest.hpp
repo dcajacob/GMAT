@@ -34,7 +34,7 @@ static void Screenshot(GmatMainFrame *frame, const char *name)
 
 template<class Test> int RunGuiTest(int argc, char **argv)
 {
-   std::setvbuf(stdout, nullptr, _IOLBF, 0);
+   std::setvbuf(stdout, nullptr, _IONBF, 0);
    if (!wxEntryStart(argc,argv) || !wxTheApp->CallOnInit()) return 2;
    Test test;
    test.StartOnce(300);
