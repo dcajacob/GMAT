@@ -444,12 +444,7 @@ bool GmatApp::OnInit()
             theMainFrame->CenterOnScreen(wxBOTH);
          }
          #else
-         // On Linux, open at default (1024x768) size in upper left of screen
-         theMainFrame->SetPosition(wxPoint(32,32));
-
-         // Here are the maximized settings:
-         // theMainFrame->Maximize();
-         // theMainFrame->CenterOnScreen(wxBOTH);
+         theMainFrame->RestoreWindowGeometry();
          #endif
          #endif
          

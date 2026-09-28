@@ -149,6 +149,7 @@ public:
    
    void EnableAnimation(bool enable = true);
    void ManageMissionTree();
+   void RestoreWindowGeometry();
    
    // event handling
    void PanelObjectChanged( GmatBase *obj );
