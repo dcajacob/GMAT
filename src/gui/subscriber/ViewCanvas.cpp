@@ -1147,6 +1147,9 @@ void ViewCanvas::SetDrawingMode()
    int nWidth, nHeight;
    GetClientSize(&nWidth, &nHeight);
    glViewport(0, 0, nWidth, nHeight);
+#ifdef __WXGTK__
+   SetPlotGLFont(GetContentScaleFactor());
+#endif
    
    // Set plygon drawng mode
    if (mDrawWireFrame)
