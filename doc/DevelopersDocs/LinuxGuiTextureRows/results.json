@@ -1,0 +1,7 @@
+{
+  "branch": "pr/native-texture-rows",
+  "head": "27666c2d222cb1591d0d11cbec812d9ed677be78",
+  "validation_base": "584bf1ee0b9fe226caf4b2a3b5c6438aea61d906",
+  "passed": true,
+  "logs": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/build/linux-gui-tests/texture-upload"
+}

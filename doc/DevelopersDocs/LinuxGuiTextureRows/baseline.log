@@ -1,0 +1,184 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:47:17 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 13:47:17 GMAT GUI successfully launched.
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(TextureUploadRegression:4061061): Gtk-WARNING **: 13:47:18.098: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(TextureUploadRegression:4061061): Gtk-WARNING **: 13:47:18.098: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(TextureUploadRegression:4061061): Gtk-WARNING **: 13:47:18.098: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(TextureUploadRegression:4061061): Gtk-WARNING **: 13:47:18.111: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(TextureUploadRegression:4061061): Gtk-WARNING **: 13:47:18.122: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+Mission run completed.
+===> Total Run Time: 0.299 seconds
+
+========================================
+PASS: native mission prepares texture context
+PASS: texture test has current context
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 png alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 png alignment=4
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 png alignment=8
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 bmp alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 bmp alignment=4
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 bmp alignment=8
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 jpg alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 jpg alignment=4
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 17x19 jpg alignment=8
+FAIL: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+FAIL: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 png alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 png alignment=4
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 png alignment=8
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 bmp alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 bmp alignment=4
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 bmp alignment=8
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 jpg alignment=1
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 jpg alignment=4
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row
+PASS: native plot uploads decoded image
+PASS: plot loader preserves caller unpack alignment
+CASE: 32x19 jpg alignment=8
+PASS: plot texture preserves every decoded RGB row
+PASS: native model loader accepts textured fixture
+PASS: model loader preserves caller unpack alignment
+PASS: model texture has requested width
+PASS: model texture preserves every decoded RGB row

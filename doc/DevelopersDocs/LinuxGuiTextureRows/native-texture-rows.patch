@@ -1,0 +1,67 @@
+diff --git a/src/gui/rendering/ModelObject.cpp b/src/gui/rendering/ModelObject.cpp
+index 0346abc..ca77267 100644
+--- a/src/gui/rendering/ModelObject.cpp
++++ b/src/gui/rendering/ModelObject.cpp
+@@ -235,6 +235,13 @@ int ModelObject::LoadTexture(const std::string &filename)
+    glBindTexture(GL_TEXTURE_2D, id);
+    error = glGetError();
+    
++   // wxImage stores tightly packed RGB rows, including non-power-of-two widths.
++   glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
++   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
++   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
++   glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
++   glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
++
+    // Set the texture parameters
+    // Repeat the image if the u,v coordinates exceed the 0,1 range
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+@@ -273,6 +280,7 @@ int ModelObject::LoadTexture(const std::string &filename)
+       ("ModelObject::LoadTexture() returning texture id: %d\n", id);
+    #endif
+    
++   glPopClientAttrib();
+    return id;
+ }
+ //------------------------------------------------------------------------------
+diff --git a/src/gui/subscriber/ViewCanvas.cpp b/src/gui/subscriber/ViewCanvas.cpp
+index d03d7a6..5735a02 100644
+--- a/src/gui/subscriber/ViewCanvas.cpp
++++ b/src/gui/subscriber/ViewCanvas.cpp
+@@ -1891,6 +1891,12 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
+    wxImage mirror = image.Mirror(false);
+    GLubyte *data1 = mirror.GetData();
+    
++   // wxImage rows have no padding. Preserve the caller's pixel-store settings.
++   glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
++   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
++   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
++   glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
++   glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glEnable(GL_TEXTURE_2D);
+    
+    //=======================================================
+@@ -1965,6 +1971,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
+           mPlotName.WX_TO_C_STRING, mipmapsStatus);
+       #endif
+       
++      glPopClientAttrib();
+       return true;
+    }
+    else
+@@ -1974,6 +1981,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
+          ("ViewCanvas::LoadImage() '%s' returning false, mipmapsStatus=%d\n",
+           mPlotName.WX_TO_C_STRING, mipmapsStatus);
+       #endif
++      glPopClientAttrib();
+       return false;
+    }
+    
+@@ -1995,6 +2003,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
+        mPlotName.c_str());
+    #endif
+    
++   glPopClientAttrib();
+    return true;
+    
+    //=======================================================================

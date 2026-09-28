@@ -49,6 +49,7 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-038 | [pr/groundtrack-direct-close](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-direct-close) | `f327cf93c381` | `9bcf36765304` | `test_groundtrack_close.py` | Independently tested with prerequisites; not submitted |
 | LGUI-039 | [pr/groundtrack-animation](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-animation) | `34140f6dd515` | `afe90a6789b4` | `test_groundtrack_animation.py` | Independently tested with prerequisites; not submitted |
 | LGUI-040 | [pr/aura-reflection-map](https://github.com/dcajacob/GMAT/tree/pr/aura-reflection-map) | `4210a0757126` | `f6894739d367` | `test_aura_model.py` | Independently tested with prerequisites; not submitted |
+| LGUI-041 | [pr/native-texture-rows](https://github.com/dcajacob/GMAT/tree/pr/native-texture-rows) | `518989289192` | `27666c2d222c` | `test_texture_upload.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
@@ -149,3 +150,9 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Bundled Aura reflection reference
 
 [Provenance, exact asset edit and identical native/OSG loaded-scene checks](LinuxGuiAuraModel/README.md).
+
+## Native texture rows and remaining OpenFrames assessment
+
+[Pixel corruption reproduction and independent correction](LinuxGuiTextureRows/README.md).
+
+[Playback, hierarchy and font fallback no-change dispositions](LinuxGuiOpenFramesAssessment/README.md).

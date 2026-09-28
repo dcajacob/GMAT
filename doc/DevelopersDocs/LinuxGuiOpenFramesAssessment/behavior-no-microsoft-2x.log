@@ -1,0 +1,132 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:49:10 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+2026-09-28 13:49:10 GMAT GUI successfully launched.
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file courbd.ttf: file not found
+Error reading file msttcore/courbd.ttf: file not found
+Error reading file /usr/share/fonts/msttcore/courbd.ttf: file not found
+Error reading file /usr/share/fonts/truetype/msttcorefonts/courbd.ttf: file not found
+Error reading file LiberationMono-Bold.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+Error reading file arial.ttf: file not found
+
+Mission run completed.
+===> Total Run Time: 0.367 seconds
+
+========================================
+PASS: OpenFrames default mission completes
+PASS: actual OpenFrames panel exists
+PASS: stable plot hierarchy matches existing two-parent lookup
+CHILD TYPE: 10001
+HUD FONT: /usr/share/fonts/truetype/liberation/LiberationMono-Bold.ttf
+PASS: HUD text retains nonempty glyph layout
+PASS: HUD selects Liberation without Microsoft fonts
+PASS: inspect actual OpenFrames HUD text
+PASS: renderer remains running after mission
+PASS: local playback resumes after mission
+PASS: local playback advances time
+PASS: local playback pauses
+PASS: local faster changes playback rate
+PASS: local slower restores rate
+PASS: main animation toolbar is disabled for the plugin tab
+PASS: unsupported main-toolbar command does not disturb plugin playback state
+PASS: OpenFrames plot closes after playback
+PASS: configuration panel created by real plugin factory
+PASS: configuration parent lookup identifies actual child
+PASS: configuration dirty state reaches actual child
+PASS: configuration Cancel/OK destroys correct child
+PASS: configuration panel created by real plugin factory
+PASS: configuration parent lookup identifies actual child
+PASS: configuration dirty state reaches actual child
+PASS: configuration Cancel/OK destroys correct child
+Moderator is deleting core engine...
+2026-09-28 13:49:13 GMAT GUI exiting.
