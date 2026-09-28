@@ -48,6 +48,7 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-037 | [pr/groundtrack-state-mapping](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-state-mapping) | `2ea51e533646` | `a8d0e9a74126` | `test_groundtrack_state.py` | Independently tested with prerequisites; not submitted |
 | LGUI-038 | [pr/groundtrack-direct-close](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-direct-close) | `f327cf93c381` | `9bcf36765304` | `test_groundtrack_close.py` | Independently tested with prerequisites; not submitted |
 | LGUI-039 | [pr/groundtrack-animation](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-animation) | `34140f6dd515` | `afe90a6789b4` | `test_groundtrack_animation.py` | Independently tested with prerequisites; not submitted |
+| LGUI-040 | [pr/aura-reflection-map](https://github.com/dcajacob/GMAT/tree/pr/aura-reflection-map) | `4210a0757126` | `f6894739d367` | `test_aura_model.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
@@ -88,7 +89,7 @@ The first command is the integration runner. Run these test entry points on the 
 ## Unresolved follow-ups
 
 - The reported `pixman_region32_init_rect` warning did not reproduce under the debugger and is not claimed fixed.
-- The bundled Aura model references missing `GFOIL1.JPG`.
+- The bundled Aura reflection reference was repaired in LGUI-040; earlier logs retain the original diagnostic.
 - External OFI TimeDilator can warn about setting a tooltip before creating its widget.
 - Native OrbitView default-mission window creation can produce GTK notebook gadget warnings.
 - Toolbar overflow and dark-theme editor styling remain separate future work.
@@ -144,3 +145,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 [Direct-close crash and independent fix](LinuxGuiGroundTrackClose/README.md).
 
 [Toolbar playback, scale/lifecycle tests and patch dependencies](LinuxGuiGroundTrackAnimation/README.md).
+
+## Bundled Aura reflection reference
+
+[Provenance, exact asset edit and identical native/OSG loaded-scene checks](LinuxGuiAuraModel/README.md).

@@ -1,0 +1,182 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:38:51 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 13:38:51 GMAT GUI successfully launched.
+PASS: native model loader accepts Aura
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native diffuse material resolves its bundled image
+PASS: native Aura contains textured materials
+Error reading file GFOIL1.JPG: file not found
+Warning: Cannot create texture GFOIL1.JPG
+PASS: OpenFrames OSG loader accepts Aura
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG material has a valid texture image
+PASS: bundled texture retains original dimensions
+PASS: OSG Aura contains textured materials
+PASS: serialize complete OSG scene for baseline comparison
+Moderator is deleting core engine...
+2026-09-28 13:38:52 GMAT GUI exiting.

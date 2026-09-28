@@ -1,0 +1,22 @@
+{
+  "integration": {
+    "baseline": {
+      "native-summary.txt": "23bf76ba4e3b4cbeff2294eb7d36dd0a88c6551380585a28c223164f15d83591",
+      "scene.osgt": "01005c83513fadca03212f2d5dc32efa8b5e3f328b09baa24e2ff190e3fde8f6"
+    },
+    "fixed": {
+      "native-summary.txt": "23bf76ba4e3b4cbeff2294eb7d36dd0a88c6551380585a28c223164f15d83591",
+      "scene.osgt": "01005c83513fadca03212f2d5dc32efa8b5e3f328b09baa24e2ff190e3fde8f6"
+    }
+  },
+  "independent": {
+    "baseline": {
+      "native-summary.txt": "1198e7daa4687d1ec15bbfc4e720131df40d6803713c950b74e1478e45cf20f2",
+      "scene.osgt": "a938787263a81f9db8626543c08c29ee6d8d3005f83d47d8c2a50512a4339d5f"
+    },
+    "fixed": {
+      "native-summary.txt": "1198e7daa4687d1ec15bbfc4e720131df40d6803713c950b74e1478e45cf20f2",
+      "scene.osgt": "a938787263a81f9db8626543c08c29ee6d8d3005f83d47d8c2a50512a4339d5f"
+    }
+  }
+}

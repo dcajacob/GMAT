@@ -1,0 +1,7 @@
+{
+  "branch": "pr/aura-reflection-map",
+  "head": "f6894739d36787634ffd9883bbd9ced025d749ae",
+  "validation_base": "584bf1ee0b9fe226caf4b2a3b5c6438aea61d906",
+  "passed": true,
+  "build_required": false
+}

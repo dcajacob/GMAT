@@ -1,0 +1,4 @@
+PASS: exactly one optional reflection chunk removed; every other payload and the original NASA image preserved
+PASS: Aura native material summary and complete OSG scene identical; missing-reflection diagnostic removed by asset repair
+PASS: native mission loads the repaired bundled Aura model and closes normally
+PASS: openframes mission loads the repaired bundled Aura model and closes normally
