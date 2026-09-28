@@ -189,7 +189,7 @@ void GroundTrackWindow::OnClose(wxCloseEvent &event)
    #endif
 
    GmatMdiChildFrame::OnClose(event);
-   event.Skip();
+   // The base handler owns destruction; do not dispatch another close handler.
 
    #ifdef DEBUG_MDI_DYNAMIC_DATA_FRAME_CLOSE
       MessageInterface::ShowMessage
