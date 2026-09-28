@@ -335,11 +335,14 @@ bool GroundTrack::Initialize()
           "", mPlotUpperLeft[0], mPlotUpperLeft[1],
           mPlotSize[0], mPlotSize[1], isMaximized))
    {
-      if (mapFile == "")
-         mapFile = theBody->GetStringParameter(
-               theBody->GetParameterID("TextureMapFileName"));
+      // The body's texture may be outside TEXTURE_PATH. Keep its resolved
+      // path, and leave the scripted setting unchanged for subsequent runs.
+      std::string backgroundMap = mapFile;
+      if (backgroundMap.empty() && theBody)
+         backgroundMap = theBody->GetStringParameter(
+               theBody->GetParameterID("TextureMapFullPath"));
       // Pass in GroundTrack parameters
-      PlotInterface::SetGroundTrackOption(instanceName, "TextureMap", mapFile);
+      PlotInterface::SetGroundTrackOption(instanceName, "TextureMap", backgroundMap);
 
       // Remove stale data if present - we might be reusing the window
       PlotInterface::TakeGroundTrackAction(instanceName, "Reinitialize");

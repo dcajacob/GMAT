@@ -73,8 +73,8 @@ private:
 
    /// Background image for the frame
    std::string textureMap;
-   /// Flag used to avoid multiple map refreshes
-   bool mapLoaded;
+   /// Retry image loading only when the texture option is set again
+   bool mapLoadAttempted;
    /// The raw map data
    wxImage bgImage;
    /// Map data that scales with the window
