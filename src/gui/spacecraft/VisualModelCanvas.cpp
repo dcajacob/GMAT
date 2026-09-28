@@ -94,18 +94,10 @@ VisualModelCanvas::VisualModelCanvas(wxWindow *parent, Spacecraft *spacecraft,
    mLight.SetPosition(10.0f, -10.0f, -10.0f);
    mLight.SetDirectional(true);
    
-   glLightfv(GL_LIGHT1, GL_SPECULAR, mLight.GetColor());
-   
-   // enable the light
-//   glEnable(GL_LIGHTING);
-//   glEnable(GL_LIGHT1);
-
    showEarth = false;
    needToLoadModel = false;
    glInitialized = false;
-   glClearColor(0.0, 0.0, 0.0, 1);
-   // Clear the color and depth bits
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   // OpenGL state is initialized in OnPaint after making this canvas current.
 }
 
 //------------------------------------------------------------------------------
