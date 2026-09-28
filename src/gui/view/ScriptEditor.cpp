@@ -2293,17 +2293,17 @@ bool ScriptEditor::LoadFile(const wxString &filename)
      ("ScriptEditor::LoadFile() entered, this=<%p>, filename='%s'\n", this, filename.c_str());
    #endif
    
-   // load file in edit and clear undo
+   // Keep the existing text, undo history and filename if loading fails.
+   if (!wxStyledTextCtrl::LoadFile(filename.empty() ? mFileName : filename))
+      return false;
    if (!filename.empty())
       mFileName = filename;
-   
-   ClearAll();
+
    mInitializeHighlights = true;
    mFoldLocations.clear();
    mFoldTypes.clear();
    mPrevLineCount = GetNumberOfLines();
 
-   wxStyledTextCtrl::LoadFile(mFileName);
    EmptyUndoBuffer();
    
    // determine lexer language

@@ -470,7 +470,8 @@ bool GmatSavePanel::UpdateStatusOnClose()
 void GmatSavePanel::ReloadFile()
 {
    LoadData();
-   mScriptDirtyLabel->SetLabel("");
+   if (!mEditorModified)
+      mScriptDirtyLabel->SetLabel("");
 }
 
 
