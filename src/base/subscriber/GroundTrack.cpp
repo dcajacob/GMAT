@@ -95,6 +95,7 @@ GroundTrack::GroundTrack(const std::string &name) :
    mapFile           (""),
    lineWidth         (2),
    collectFrequency  (1),
+   samplesUntilCollect (0),
    updateFrequency   (50),
    redrawCount       (0),
    maxData           (20000),
@@ -148,6 +149,7 @@ GroundTrack::GroundTrack(const GroundTrack& gt) :
    mapFile = gt.mapFile;
    lineWidth = gt.lineWidth;
    collectFrequency = gt.collectFrequency;
+   samplesUntilCollect = 0;
    updateFrequency = gt.updateFrequency;
    redrawCount = gt.redrawCount;
    maxData = gt.maxData;
@@ -186,6 +188,7 @@ GroundTrack& GroundTrack::operator=(const GroundTrack& gt)
       mapFile = gt.mapFile;
       lineWidth = gt.lineWidth;
       collectFrequency = gt.collectFrequency;
+      samplesUntilCollect = 0;
       updateFrequency = gt.updateFrequency;
       redrawCount = gt.redrawCount;
       maxData = gt.maxData;
@@ -244,6 +247,7 @@ bool GroundTrack::Initialize()
    bool retval = false;
    Integer stationCount = 0;
 
+   samplesUntilCollect = 0;
    if (theSS)
       theBody = theSS->GetBody(theBodyName);
 
@@ -931,22 +935,26 @@ Integer GroundTrack::SetIntegerParameter(const Integer id, const Integer value)
 
    if (id == DATA_COLLECT_FREQUENCY)
    {
-      if (value > 0)
-         collectFrequency = value;
+      if (value <= 0)
+         throw SubscriberException("DataCollectFrequency must be a positive integer for " + instanceName);
+      collectFrequency = value;
+      samplesUntilCollect = 0;
       return collectFrequency;
    }
 
    if (id == UPDATE_PLOT_FREQUENCY)
    {
-      if (value > 0)
-         updateFrequency = value;
+      if (value <= 0)
+         throw SubscriberException("UpdatePlotFrequency must be a positive integer for " + instanceName);
+      updateFrequency = value;
       return updateFrequency;
    }
 
    if (id == NUM_POINTS_TO_REDRAW)
    {
-      if (value > 0)
-         redrawCount = value;
+      if (value < 0)
+         throw SubscriberException("NumPointsToRedraw must be a nonnegative integer for " + instanceName);
+      redrawCount = value;
       return redrawCount;
    }
 
@@ -1391,13 +1399,17 @@ bool GroundTrack::SetRefObject(GmatBase *obj, const UnsignedInt type,
       }
       else
       {
-         for (unsigned int i = 0; i < theBodies.size(); ++i)
+         for (auto &reference : theBodies)
          {
-            if (theBodies[i]->GetName() == name)
-               break;
+            if (reference->GetName() == obj->GetName())
+            {
+               reference = (SpacePoint*)obj;
+               return true;
+            }
          }
          theBodies.push_back((SpacePoint*)obj);
       }
+      return true;
    }
    else if (obj->IsOfType(Gmat::SPACECRAFT))
    {
@@ -1576,6 +1588,9 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
 {
    bool retval = false;
 
+   if (!active || !showPlot)
+      return true;
+
    #ifdef DEBUG_GROUNDTRACK_PUBLISH
       MessageInterface::ShowMessage("Distributing ground track data\n");
    #endif
@@ -1600,6 +1615,15 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
 
    if (len == 0)
       return true;
+
+   // Keep the initial point and then every collectFrequency-th publication.
+   // A bounded countdown avoids overflow during long missions.
+   if (samplesUntilCollect > 0)
+   {
+      --samplesUntilCollect;
+      return true;
+   }
+   samplesUntilCollect = collectFrequency - 1;
 
    // to do: make this more robust - sat order might change, etc
    // GMAT R2022a broke ordering and publishes too much data; this hack fixes Tuan's
