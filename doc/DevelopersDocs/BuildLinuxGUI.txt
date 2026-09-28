@@ -1,0 +1,150 @@
+Linux GUI development and regression checks
+==========================================
+
+The official GMAT source tree is built with CMake/Ninja and system wxGTK 3.2.
+These changes were verified on Linux with wxWidgets 3.2.9. No Windows or macOS
+build is claimed. Linux geometry/layout changes are platform-guarded. The DE
+binary-copy fix, ground-track fixes and removal of the invalid tree-size
+adjustment are shared.
+
+Build
+-----
+
+A Release configuration using an already-installed CSPICE toolkit:
+
+  cmake -S . -B build/linux-gui -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DwxWidgets_ROOT_DIR=/usr/bin \
+    -DCSPICE_DIR=/absolute/path/to/cspice64 \
+    -DGMAT_PYTHON3_VERSIONS=3.14 \
+    -DGMAT_PYTHON314_ROOT_DIR=/usr \
+    -DPLUGIN_MATLABINTERFACE=OFF
+  cmake --build build/linux-gui --parallel 12
+
+Adjust Python to the development version installed on the host. CSPICE_DIR
+contains include/SpiceUsr.h and lib/cspice.a. wxWidgets must include its GTK,
+OpenGL and styled-text libraries. The existing CMake requirements also include
+Xerces-C and OpenGL. Supplying wxWidgets_ROOT_DIR no longer requires supplying
+the internal SYS_PATH cache variable on a fresh configuration.
+
+Runtime setup
+-------------
+
+The tracked default startup file is not a host-specific Linux configuration.
+For a fresh checkout, copy application/bin/gmat_startup_file_mac_linux.public.txt
+to a local startup file in application/bin. Select the Python plugin actually
+built, and comment out plugins that were not built (notably MATLAB and optional
+OpenFrames/OVtoOFI). Pass that file using --startup_file. Keep local runtime
+configuration out of upstream source changes. The regression runner below
+creates its own absolute paths, output folder and preferences automatically.
+
+Optional OpenFrames
+-------------------
+
+The bundled Hohmann example now creates OpenFrames objects and requires OFI.
+To use already-built OFI dependencies, reconfigure with:
+
+  cmake -S . -B build/linux-gui \
+    -DGMAT_ADDITIONAL_PLUGINS=/path/to/OpenFramesInterface/OpenFramesInterface_AdditionalPlugin.txt \
+    -DPLUGIN_OPENFRAMESINTERFACE=ON -DPLUGIN_OVTOOFI=ON \
+    -DOPENFRAMESINTERFACE_USE_OSGEARTH=ON \
+    -DFETCHCONTENT_FULLY_DISCONNECTED=ON
+  cmake --build build/linux-gui --parallel 12
+
+Fully disconnected mode is for dependency sources and installations that are
+already present. It does not install missing prerequisites. OSG_LIBRARY_PATH
+must include the osgPlugins-* directories from OpenSceneGraph and osgEarth;
+OSG_FILE_PATH should include the installed font directory. The local launcher
+supplies these values for the reused dependencies.
+
+Tests
+-----
+
+After a completed Release Ninja build, with Python 3 and Xvfb installed:
+
+  python3 src/UnitTests/TestLinuxGui/run_tests.py build/linux-gui
+
+The runner reuses the actual GUI build objects and compiler/linker options.
+GNU ld --wrap=main selects a test entry point; no production test hooks or
+second GUI implementation are needed. This test driver is Linux/GNU/Ninja
+specific. Focused PRs include only their test_*.py entry point and shared helpers;
+run_tests.py is the integration runner. All logs, outputs and temporary
+preferences go to:
+
+  build/linux-gui/linux-gui-tests/<suite>/
+
+Checks cover fixed-width ephemeris labels and names (including self-assignment),
+opening a spacecraft properties panel, pane containment after shrinking,
+invalid sash sizes, size/position restoration, off-screen and invalid saved
+geometry, invalid persisted console heights, 800x600 displays, GDK_SCALE=2,
+personalization write opt-out, console/OrbitView numerical equivalence, and a
+nonzero --exit status for an invalid script. Native GUI tests treat GTK criticals
+as failures. The default mission is also run with its ground-track plot visible,
+including at 2x scaling. Pixel checks verify the Earth map, a body texture outside
+TEXTURE_PATH, and absolute/script-relative PNG maps. Missing and corrupt maps
+must each log only one warning across repeated paints; valid replacements must
+recover. Empty, single-point and stationary tracks and a zero-size resize are
+also exercised. If OpenFrames is built, the runner checks its default ground
+track as well as Hohmann convergence
+and normal window closure after an OpenFrames mission. Otherwise it reports that
+optional check as skipped. Optional OFI checks log GTK warnings without making
+them fatal because the external TimeDilator constructor can set a tooltip before
+creating its native widget.
+
+Implementation notes
+--------------------
+
+- GmatMainFrame uses wxTopLevelWindow::SaveGeometry/RestoreToGeometry with the
+  existing personalization file, under /MainFrame/Linux. Saved dimensions are
+  bounded before GTK receives them; restored windows are kept in a display's
+  work area. Restored windows are not iconized. WRITE_PERSONALIZATION_FILE=OFF
+  also disables writing these fields.
+- The sidebar accounts for desktop-font tab widths. LayoutMainFrame clamps sash
+  defaults as well as drag limits, reserving space for editors and plots.
+- DecoratedTree leaves sizing to its containing sizer; its previous constructor
+  could subtract 80 from a width smaller than 80.
+- GroundTrack passes the central body's resolved texture path without changing
+  the scripted TextureMap setting. GroundTrackArea uses FileManager's existing
+  search order for explicit maps, so launch directories need not be bin/.
+  Image type is detected instead of assuming JPEG. Failed loads warn once per
+  texture setting and leave the grid/tracks usable without modal paint errors.
+  Invalid images and zero-size canvases are not scaled. Empty and single-point
+  curves draw safely, and grid labels no longer allocate on every repaint.
+- DE labels, constant names and header padding are fixed-width binary data.
+  Copying them with strcpy overran full fields on fortified Linux builds.
+- Linux --exit closes plot windows and processes deferred deletion before the
+  existing immediate-exit path. It now returns failure for build/run errors.
+- Linux dlopen uses RTLD_NODELETE when available. The reproduced OpenFrames
+  shutdown crash occurred when osgDB's registry closed format plugins and
+  unmapped osgDB while still executing its destructor. Keeping plugin modules
+  resident avoids calls into unloaded code, including from persistent factory
+  and graphics registries. dlclose still releases handles, but module static
+  state remains until process exit; in-process unload/reload no longer resets
+  that state on Linux. Windows and macOS loader flags are unchanged.
+  Reference: https://man7.org/linux/man-pages/man3/dlopen.3.html
+
+Limits and follow-up areas
+--------------------------
+
+The regression suite used X11 virtual displays and Mesa software OpenGL. Brief
+startup checks also ran on the X11 desktop with isolated preferences. Native
+Wayland initialization was unavailable in the agent environment. Physical monitor
+changes, full hardware mission rendering and interactive maximization remain
+manual release checks.
+
+The reported pixman_region32_init_rect warning did not reproduce under a debugger
+with splash/welcome screens or in the X11 desktop startup checks, with or without
+OpenFrames. It is not claimed fixed. Some native OrbitView default-mission tests
+still log GTK notebook gadget warnings during window creation.
+
+The bundled Aura model references missing GFOIL1.JPG; this remains a texture
+warning. The external OFI TimeDilator tooltip issue remains outside this repo's
+source changes. Avoid --minimize for OpenFrames rendering until its hidden-canvas
+context initialization is separately addressed.
+
+Further GUI work can target toolbar status controls that overflow at narrow
+widths, ScriptEditor.cpp's hard-coded light colors on dark desktops, and fixed
+pixel sizing throughout GmatPanel/GmatDialog and individual resource panels.
+These are separate from the startup, layout, and shutdown fixes in this patch.
+
+Change tracking and proposed PR scopes are in LinuxGuiChanges.md.
