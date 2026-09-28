@@ -63,6 +63,11 @@ Linux, and Mac systems.  Installation is straightforward:
 
 Testing the Installation
 ------------------------
-Once installed, the scripts in the samples/NeedTLE Propagator folder provide a 
+Once installed, the scripts in the samples/NeedTlePropagator folder provide a
 set of examples that can test the installation.  These scripts also provide 
 examples illustrating the use of the new component.
+
+Use Type = SPICESGP4 in propagator declarations (the old Type = TLE name is
+no longer registered). Preserve the samples and TLE folder layout. See
+doc/source/Scripting.rst for the five offline tests, bundled input paths,
+and the external catalogs needed by the remaining examples.

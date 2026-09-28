@@ -24,7 +24,7 @@ GMAT FalconSat3.DragArea = 15;
 GMAT FalconSat3.SRPArea = 1;
 GMAT FalconSat3.SPADDragScaleFactor = 1;
 GMAT FalconSat3.SPADSRPScaleFactor = 1;
-GMAT FalconSat3.EphemerisName = '../TLE/Active_Nov-09-2019.txt';
+GMAT FalconSat3.EphemerisName = '../../TLE/Active_Nov-09-2019.txt';
 GMAT FalconSat3.NAIFId = -10019001;
 GMAT FalconSat3.NAIFIdReferenceFrame = -9019001;
 GMAT FalconSat3.OrbitColor = Red;
@@ -69,7 +69,7 @@ GMAT FalconSat6.DragArea = 15;
 GMAT FalconSat6.SRPArea = 1;
 GMAT FalconSat6.SPADDragScaleFactor = 1;
 GMAT FalconSat6.SPADSRPScaleFactor = 1;
-GMAT FalconSat6.EphemerisName = '../TLE/Active_Nov-09-2019.txt';
+GMAT FalconSat6.EphemerisName = '../../TLE/Active_Nov-09-2019.txt';
 GMAT FalconSat6.NAIFId = -10020001;
 GMAT FalconSat6.NAIFIdReferenceFrame = -9020001;
 GMAT FalconSat6.OrbitColor = Green;
@@ -114,7 +114,7 @@ GMAT FalconSat7.DragArea = 15;
 GMAT FalconSat7.SRPArea = 1;
 GMAT FalconSat7.SPADDragScaleFactor = 1;
 GMAT FalconSat7.SPADSRPScaleFactor = 1;
-GMAT FalconSat7.EphemerisName = '../TLE/Active-2020-06-23.txt';
+GMAT FalconSat7.EphemerisName = '../../TLE/Active-2020-06-23.txt';
 GMAT FalconSat7.NAIFId = -10021001;
 GMAT FalconSat7.NAIFIdReferenceFrame = -9021001;
 GMAT FalconSat7.OrbitColor = Yellow;
@@ -169,7 +169,7 @@ GMAT ColoradoSprings.MinimumElevationAngle = 7;
 %----------------------------------------
 
 Create Propagator TleProp;
-GMAT TleProp.Type = TLE;
+GMAT TleProp.Type = SPICESGP4;
 GMAT TleProp.InitialStepSize = 60;
 
 %----------------------------------------

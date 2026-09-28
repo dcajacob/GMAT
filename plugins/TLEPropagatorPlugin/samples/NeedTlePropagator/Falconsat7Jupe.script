@@ -11,7 +11,7 @@
 %---------- Spacecraft
 %----------------------------------------
 Create Spacecraft FalconSat7;
-FalconSat7.EphemerisName = '../TLE/Active-2020-06-23.txt';
+FalconSat7.EphemerisName = '../../TLE/Active-2020-06-23.txt';
 FalconSat7.Id = 'FALCONSAT-7';
 FalconSat7.DateFormat = 'UTCGregorian';
 FalconSat7.Epoch = '23 Jun 2020 20:40:35.868';
@@ -40,7 +40,7 @@ WhiteSands.Location3             =  1.3;
 %---------- Propagators
 %----------------------------------------
 Create Propagator TleProp;
-TleProp.Type = TLE;
+TleProp.Type = SPICESGP4;
 TleProp.InitialStepSize = 60;
 
 %----------------------------------------

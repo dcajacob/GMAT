@@ -9,7 +9,7 @@
 Create Spacecraft ExampleSat;
 GMAT ExampleSat.DateFormat = UTCGregorian;
 GMAT ExampleSat.Epoch = '07 May 2002 00:00:00.000';
-GMAT ExampleSat.EphemerisName = 'C:\Users\jelarbee\Documents\GMAT_Work\Active Topics of Development\NGA-Space Force\gmat-tle-propagator-master\test\TLE\TleTestElements.txt';
+GMAT ExampleSat.EphemerisName = 'TleTestElements.txt';
 GMAT ExampleSat.Id = 'ExampleSat';
 
 
@@ -18,7 +18,7 @@ GMAT ExampleSat.Id = 'ExampleSat';
 %----------------------------------------
 
 Create Propagator TLEProp;
-GMAT TLEProp.Type = TLE;
+GMAT TLEProp.Type = SPICESGP4;
 GMAT TLEProp.StepSize = 300;
 
 %TLEProp.J2 = -4.84165374886470e-04   %"J2",                // J2   J2 value

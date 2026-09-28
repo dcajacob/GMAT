@@ -33,7 +33,7 @@ def WriteIncludeFile(filename, sats, epoch, tleFile):
       print ("SatForm.Add = ", sats[i], sep='')
 
    print ("\nCreate Propagator tleProp;")
-   print ("tleProp.Type = TLE;")
+   print ("tleProp.Type = SPICESGP4;")
 
    print ("\nBeginMissionSequence")
    print ("Propagate tleProp(SatForm) {", sats[0], ".ElapsedDays = 1.0;", sep = '')

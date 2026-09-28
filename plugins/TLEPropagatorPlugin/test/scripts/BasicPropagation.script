@@ -18,7 +18,7 @@ GMAT ExampleSat.Id = 'ExampleSat';
 %----------------------------------------
 
 Create Propagator TLEProp;
-GMAT TLEProp.Type = TLE;
+GMAT TLEProp.Type = SPICESGP4;
 GMAT TLEProp.StepSize = 300;
 
 %TLEProp.J2 = -4.84165374886470e-04   %"J2",                // J2   J2 value
