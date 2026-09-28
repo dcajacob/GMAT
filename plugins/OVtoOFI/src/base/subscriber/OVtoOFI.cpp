@@ -1067,6 +1067,9 @@ bool OVtoOFI::SetOnOffParameter(const Integer id, const std::string& value)
 
     switch (id)
     {
+    case CELESTIAL_PLANE:
+        return OpenFramesInterface::SetOnOffParameter(
+            OpenFramesInterface::ECLIPTIC_PLANE, value);
     case WIRE_FRAME:
         return true; // Not used
     case GRID:
@@ -1119,6 +1122,9 @@ std::string OVtoOFI::GetOnOffParameter(const Integer id) const
 
     switch (id)
     {
+    case CELESTIAL_PLANE:
+        return OpenFramesInterface::GetOnOffParameter(
+            OpenFramesInterface::ECLIPTIC_PLANE);
     case WIRE_FRAME:
         return "Off"; // Not used
     case GRID:
