@@ -87,3 +87,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## First systematic audit batch
 
 [Audit evidence, coverage gaps and next findings](LinuxGuiAudit.md). The three new branches were built and tested independently with the five prerequisites listed in that record; all three also pass combined validation. Hardware XWayland checks now pass on Intel Iris Xe at 3×; native Wayland fails GTK initialization.
+
+## Example coverage and follow-ups
+
+[Example sweep](LinuxGuiExamples.md) and [all 210 outcomes](LinuxGuiExamples.csv): 125 completed, 80 interpretation failures, 5 mission failures. New findings LGUI-017 through LGUI-021 are recorded for follow-up; no production fix or new PR branch was created during the sweep. `test_examples.py` adds opt-in, isolated GUI execution with logs, physical viewport checks and independent screenshots. No PRs, issues or external comments were submitted.

@@ -63,3 +63,7 @@ python3 src/UnitTests/TestLinuxGui/test_desktop.py build/linux-gui
 Results and isolated settings are under `build/linux-gui/linux-gui-tests/`; environment metadata is `environment.json`. Optional OpenFrames checks explicitly skip if its plugins are unavailable. Supplemental tests use the existing Linux/GNU/Ninja harness, with no production test hooks or new public APIs.
 
 The reload correction relies on [wxWidgets' file-loading behavior](https://raw.githubusercontent.com/wxWidgets/wxWidgets/v3.2.9/src/stc/stc.cpp): the base styled-text control reads successfully before replacing its text. GMAT's premature ClearAll and unconditional success return were the destructive layer.
+
+## Full example sweep
+
+The follow-on [210-script example sweep](LinuxGuiExamples.md) records per-script results, five new follow-ups (LGUI-017 through LGUI-021), an opt-in reusable runner, and the limits of its visual evidence. All five initially stopped long missions completed on retry. The existing unresolved findings above remain open.
