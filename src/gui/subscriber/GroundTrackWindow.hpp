@@ -35,6 +35,7 @@
 #include "GmatMdiChildFrame.hpp"
 #include "GroundTrack.hpp"
 #include "GroundTrackArea.hpp"
+#include <wx/timer.h>
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
@@ -78,10 +79,19 @@ public:
          const int satcount);
 
    void UpdatePlot();
+   void StartAnimation(Integer interval, Integer increment);
+   void StopAnimation();
+   void SetAnimationSpeed(Integer interval, Integer increment);
+   bool IsAnimationRunning() const { return animationTimer.IsRunning(); }
    void ResetForNewRun();
    bool TakeAction(const std::string &theAction);
 
 protected:
+   void OnAnimationTimer(wxTimerEvent &event);
+   wxTimer animationTimer;
+   size_t nextAnimationFrame;
+   Integer animationInterval;
+   Integer animationIncrement;
    virtual void Create(const std::string &title = "");
 
    void OnPaint(wxPaintEvent& event);
