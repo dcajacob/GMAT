@@ -216,7 +216,8 @@ protected:
 
    /// Map of state X indices by spacecraft
    std::map<Spacecraft*, int> stateMap;
-   std::vector<int> xIndex;
+   /// Published X, Y, Z, Vx, Vy, Vz indices for each spacecraft (-1 if absent)
+   std::vector<IntegerArray> stateIndices;
 
    /// Celestial bodies tracked, omitting central body and spacecraft
    std::vector<SpacePoint*> theBodies;
