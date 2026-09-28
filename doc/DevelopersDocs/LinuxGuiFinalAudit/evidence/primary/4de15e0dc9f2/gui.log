@@ -1,0 +1,47 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:16 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:16 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script: **** ERROR **** Interpreter Exception: Cannot create an object "MLFunction". The "MatlabFunction" is an unknown object type or invalid object name or dimension in line:
+   "   9: Create MatlabFunction MLFunction;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MLFunction" in line:
+   "  10: GMAT MLFunction.FunctionPath = ./matlab/;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script: **** ERROR **** Interpreter Exception: Setting an object "outputArray" of type "Array" to a value "MLFunction(DefaultSC.A1ModJulian)" is not allowed in line:
+   "  17: [outputArray] = MLFunction(DefaultSC.A1ModJulian);"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script: **** ERROR **** Interpreter Exception: Setting an object "outputArray" of type "Array" to a value "GMFunction(DefaultSC.A1ModJulian)" is not allowed in line:
+   "  22: [outputArray] = GMFunction(DefaultSC.A1ModJulian);"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "This example is TBD." in line:
+   "  28: This example is TBD."
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4de15e0dc9f2/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:16 GMAT GUI exiting.

@@ -1,0 +1,24 @@
+{
+  "script": "application/samples/Ex_GEOTransfer.script",
+  "sha256": "6d5071b24967f78b0702655ca943da4a658c7ecc4782912397f950019f54bf95",
+  "category": "bundled",
+  "id": "4c6345d8bb8e",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "native",
+    "scale": 1,
+    "limit_seconds": 600,
+    "startup_sha256": "068d4bc6013cea7fe256ffe93118dc3e8b76e32b84e02035d0992cc5c4ed4205"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4c6345d8bb8e",
+  "status": "completed",
+  "returncode": 0,
+  "mission_result": 1,
+  "screenshots": 10,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 14.3
+}

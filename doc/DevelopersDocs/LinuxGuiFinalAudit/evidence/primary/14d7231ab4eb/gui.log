@@ -1,0 +1,38 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:07 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:07 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "IncludeSatB" in line:
+   "   1: IncludeSatB.X = 7200;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "IncludeSatB" in line:
+   "   2: IncludeSatB.Z = 1400;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/14d7231ab4eb/repo/application/userincludes/InitializeNestedIncludeSatB.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:08 GMAT GUI exiting.

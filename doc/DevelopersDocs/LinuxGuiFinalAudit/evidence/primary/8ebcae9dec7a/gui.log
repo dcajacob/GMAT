@@ -1,0 +1,65 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:14 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:14 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+   " 178: Create SNOPT NLP;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 180: NLP.ShowProgress = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 181: NLP.ReportStyle  = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 182: NLP.ReportFile   = 'SNOPTSNOPT1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Optimize in line:
+   " 262: Optimize NLP {SolveMode  = Solve, ExitMode = DiscardAndContinue};"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 265:    Vary NLP(burn1Duration = 230, {Perturbation = .01, Lower = 1, Upper = 10000, MultiplicativeScaleFactor = .1});"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 266:    Vary NLP(burn2Duration = 221, {Perturbation = .01,  Lower = 1, Upper = 10000, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = .1});"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 267:    Vary NLP(propDuration  = 2706, {Perturbation = .01,  Lower = 100, Upper = 10000, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = .01});"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 299:    NonlinearConstraint NLP(smaError = 0);"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 300:    NonlinearConstraint NLP(DefaultSC.ECC=0.0);"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
+   " 302:    Minimize NLP(costFunction);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8ebcae9dec7a/repo/application/samples/NeedSNOPT/Ex_OptFiniteBurn.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:15 GMAT GUI exiting.

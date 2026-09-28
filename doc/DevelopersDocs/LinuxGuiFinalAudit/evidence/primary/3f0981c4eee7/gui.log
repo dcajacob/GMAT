@@ -1,0 +1,175 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:09:35 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:09:35 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f0981c4eee7/repo/application/samples/Navigation/Ex_Simulate_And_Estimate_OEMPropagator.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f0981c4eee7/repo/application/samples/Navigation/Ex_Simulate_And_Estimate_OEMPropagator.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+AUDIT_HEARTBEAT seconds=10
+Variable Step Integration Statistics (Sim):
+    8640 steps taken
+    Min step taken  : 10.000000 sec
+    Max step taken  : 10.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 10.000000 sec
+    Stddev of steps : 0.000003 sec
+    Histogram:
+           0.0 -    1.0 sec :      0
+           1.0 -    2.0 sec :      0
+           2.0 -    3.0 sec :      0
+           3.0 -    4.0 sec :      0
+           4.0 -    5.0 sec :      0
+           5.0 -    6.0 sec :      0
+           6.0 -    7.0 sec :      0
+           7.0 -    8.0 sec :      0
+           8.0 -    9.0 sec :      0
+           9.0 -   10.0 sec :   8640
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_Simulate_And_Estimate_OEMPropagator.gmd' has 2307 of 2307 records used for estimation.
+Total number of load records : 2307
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_Simulate_And_Estimate_OEMPropagator.gmd':
+   Config 0: {{GS2,OEMSat,GS2},Range}
+   Config 1: {{GS2,OEMSat,GS2},RangeRate}
+   Config 2: {{GS1,OEMSat,GS1},Range}
+   Config 3: {{GS1,OEMSat,GS1},RangeRate}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.532: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.532: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.532: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.546: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.557: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.558: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.558: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.558: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.558: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:09:52.559: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "BLS")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   21545.5300003979363426294357 A.1 modified Julian
+   21545.5300000000000000368430 TAI modified Julian
+   02 Jan 2000 00:42:40.000 UTCG
+   EstSat.EarthMJ2000Eq.X = -6632.44286837
+   EstSat.EarthMJ2000Eq.Y = -2034.42207085
+   EstSat.EarthMJ2000Eq.Z = -1519.3739262
+   EstSat.EarthMJ2000Eq.VX = 2.45669650797
+   EstSat.EarthMJ2000Eq.VY = -7.11460534923
+   EstSat.EarthMJ2000Eq.VZ = -0.419929788165
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 2307
+Variable Step Integration Statistics (BLS):
+    3039 steps taken
+    Min step taken  : 10.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 124640.000000 sec
+    Average step    : 41.013491 sec
+    Stddev of steps : 24.215757 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :   1147
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      4
+          24.0 -   30.0 sec :      1
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      6
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      4
+          54.0 -   60.0 sec :   1877
+
+   WeightedRMS residuals for this iteration : 0.997823309669
+   BestRMS residuals                        : 0
+   PredictedRMS residuals for next iteration: 0
+This iteration ended due to Run Initial Guess being set.
+
+
+********************************************************
+*** Estimation Completed in 1 iterations
+********************************************************
+
+Estimation ran initial guess only
+
+
+Mission run completed.
+===> Total Run Time: 18.540 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:09:57 GMAT GUI exiting.

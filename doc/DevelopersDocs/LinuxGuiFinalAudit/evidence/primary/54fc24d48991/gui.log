@@ -1,0 +1,78 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:53:46 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 13:53:46 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/54fc24d48991/repo/application/samples/Ex_Contact_Location_Station_Mask.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/54fc24d48991/repo/application/samples/Ex_Contact_Location_Station_Mask.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Kernel /tmp/tmp_AthGS_1790625226_826857.bsp has been loaded.
+Kernel /tmp/tmp_AthGS_1790625226_827090.tf has been loaded.
+Kernel /tmp/tmp_HreGS_1790625226_827298.bsp has been loaded.
+Kernel /tmp/tmp_HreGS_1790625226_827383.tf has been loaded.
+Kernel /tmp/tmp_GSFC_1790625226_827509.bsp has been loaded.
+Kernel /tmp/tmp_GSFC_1790625226_827585.tf has been loaded.
+Kernel /tmp/AthGSImagerFrames_1790625226_827726.tf has been loaded.
+Kernel /tmp/AthGSImagerFOVs_1790625226_827726.tf has been loaded.
+Kernel /tmp/HreGSImagerFrames_1790625226_828458.tf has been loaded.
+Kernel /tmp/HreGSImagerFOVs_1790625226_828458.tf has been loaded.
+Kernel /tmp/GSFCImagerFrames_1790625226_840313.tf has been loaded.
+Kernel /tmp/GSFCImagerFOVs_1790625226_840313.tf has been loaded.
+Kernel /tmp/AthGSImagerFrames_1790625226_853440.tf has been loaded.
+Kernel /tmp/AthGSImagerFOVs_1790625226_853440.tf has been loaded.
+Kernel /tmp/HreGSImagerFrames_1790625226_854222.tf has been loaded.
+Kernel /tmp/HreGSImagerFOVs_1790625226_854222.tf has been loaded.
+Kernel /tmp/GSFCImagerFrames_1790625226_866366.tf has been loaded.
+Kernel /tmp/GSFCImagerFOVs_1790625226_866366.tf has been loaded.
+Kernel /tmp/AthGSImagerFrames_1790625226_878547.tf has been loaded.
+Kernel /tmp/AthGSImagerFOVs_1790625226_878547.tf has been loaded.
+Kernel /tmp/HreGSImagerFrames_1790625226_879315.tf has been loaded.
+Kernel /tmp/HreGSImagerFOVs_1790625226_879315.tf has been loaded.
+Kernel /tmp/GSFCImagerFrames_1790625226_892485.tf has been loaded.
+Kernel /tmp/GSFCImagerFOVs_1790625226_892485.tf has been loaded.
+Kernel /tmp/tmp_SatSCLK_1790625226_826819.tsc has been loaded.
+Kernel /tmp/tmp_SatSCLK_1790625226_826819.tsc has been loaded.
+Kernel /tmp/tmp_Sat_1790625226_826586.bsp has been loaded.
+Kernel /tmp/tmp_Sat_1790625226_826790.bc has been loaded.
+Finding events for ContactLocator AzElRangeCL ...
+Celestial body properties are provided by SPICE kernels.
+Finding events for ContactLocator LegacyCL ...
+Celestial body properties are provided by SPICE kernels.
+Finding events for ContactLocator MaxElevationCL ...
+Celestial body properties are provided by SPICE kernels.
+
+Mission run completed.
+===> Total Run Time: 4.772 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 13:53:53 GMAT GUI exiting.

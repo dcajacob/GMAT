@@ -1,0 +1,491 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:04:55 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:04:55 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a3830d742b90/repo/application/samples/Navigation/Ex_Estimate_TDRSAndUser.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a3830d742b90/repo/application/samples/Navigation/Ex_Estimate_TDRSAndUser.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+AUDIT_HEARTBEAT seconds=10
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+AUDIT_HEARTBEAT seconds=20
+AUDIT_HEARTBEAT seconds=30
+Variable Step Integration Statistics (Sim):
+    1440 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   1440
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_Estimate_TDRSAndUser.gmd' has 3262 of 3262 records used for estimation.
+Total number of load records : 3262
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_Estimate_TDRSAndUser.gmd':
+   Config 0: {{SLGT2,TD4,LEOSat,TD4,SLGT2},SN_Range}
+   Config 1: {{SLGT2,TD4,LEOSat,TD4,SLGT2},SN_Doppler}
+   Config 2: {{SGLT1,TD9,LEOSat,TD9,SGLT1},SN_Range}
+   Config 3: {{SGLT1,TD9,LEOSat,TD9,SGLT1},SN_Doppler}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+WARNING: Glycin running without sandbox.
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.890: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.890: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.890: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+WARNING: Glycin running without sandbox.
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.917: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.928: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.930: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.930: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.930: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.931: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:05:34.932: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "BLS")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369
+   EstTDE.EarthMJ2000Eq.Y = 38864
+   EstTDE.EarthMJ2000Eq.Z = 6
+   EstTDE.EarthMJ2000Eq.VX = -2.795
+   EstTDE.EarthMJ2000Eq.VY = -1.176
+   EstTDE.EarthMJ2000Eq.VZ = 0.5
+   EstTDE.Cr = 1
+   EstTDW.EarthMJ2000Eq.X = 41671.5
+   EstTDW.EarthMJ2000Eq.Y = 6478.5
+   EstTDW.EarthMJ2000Eq.Z = -20.5
+   EstTDW.EarthMJ2000Eq.VX = -0.471
+   EstTDW.EarthMJ2000Eq.VY = 3.026
+   EstTDW.EarthMJ2000Eq.VZ = 0.271
+   EstTDW.Cr = 1.2
+   EstUserSat.EarthMJ2000Eq.X = 576.8
+   EstUserSat.EarthMJ2000Eq.Y = -5701.1
+   EstUserSat.EarthMJ2000Eq.Z = -4170.5
+   EstUserSat.EarthMJ2000Eq.VX = -1.7645
+   EstUserSat.EarthMJ2000Eq.VY = 4.1813
+   EstUserSat.EarthMJ2000Eq.VZ = -5.9658
+   EstUserSat.Cd = 2
+
+AUDIT_HEARTBEAT seconds=40
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+AUDIT_HEARTBEAT seconds=50
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+AUDIT_HEARTBEAT seconds=60
+AUDIT_HEARTBEAT seconds=70
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 376
+   . Outer-Loop Sigma Editor : 0
+   . Signal Blocked by HORP: 4
+Number of records used for estimation: 2882
+Variable Step Integration Statistics (BLS):
+    1270 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 68.031496 sec
+    Stddev of steps : 42.501308 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :   1224
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      3
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      2
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      1
+         270.0 -  300.0 sec :     40
+
+   WeightedRMS residuals for this iteration : 2291.24351336
+   BestRMS residuals                        : 2291.24351336
+   PredictedRMS residuals for next iteration: 3.05412367698
+
+------------------------------------------------------
+Iteration 1
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16367.9957369
+   EstTDE.EarthMJ2000Eq.Y = 38864.4413628
+   EstTDE.EarthMJ2000Eq.Z = 6.11833236633
+   EstTDE.EarthMJ2000Eq.VX = -2.79504023356
+   EstTDE.EarthMJ2000Eq.VY = -1.17593603822
+   EstTDE.EarthMJ2000Eq.VZ = 0.499925328293
+   EstTDE.Cr = 0.900276315795
+   EstTDW.EarthMJ2000Eq.X = 41671.180598
+   EstTDW.EarthMJ2000Eq.Y = 6476.96242163
+   EstTDW.EarthMJ2000Eq.Z = -19.2903739838
+   EstTDW.EarthMJ2000Eq.VX = -0.469929008724
+   EstTDW.EarthMJ2000Eq.VY = 3.02700643491
+   EstTDW.EarthMJ2000Eq.VZ = 0.270035195177
+   EstTDW.Cr = 2.27684884964
+   EstUserSat.EarthMJ2000Eq.X = 576.825534245
+   EstUserSat.EarthMJ2000Eq.Y = -5701.14918692
+   EstUserSat.EarthMJ2000Eq.Z = -4170.6166834
+   EstUserSat.EarthMJ2000Eq.VX = -1.76426435171
+   EstUserSat.EarthMJ2000Eq.VY = 4.18136425969
+   EstUserSat.EarthMJ2000Eq.VZ = -5.96578773062
+   EstUserSat.Cd = 0.306167849871
+
+AUDIT_HEARTBEAT seconds=80
+AUDIT_HEARTBEAT seconds=90
+AUDIT_HEARTBEAT seconds=100
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 3262
+Variable Step Integration Statistics (BLS):
+    1270 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 68.031496 sec
+    Stddev of steps : 42.501308 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :   1224
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      3
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      2
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      1
+         270.0 -  300.0 sec :     40
+
+   WeightedRMS residuals for this iteration : 21.3997017903
+   BestRMS residuals                        : 21.3997017903
+   PredictedRMS residuals for next iteration: 0.975835823546
+This iteration is converging
+
+------------------------------------------------------
+Iteration 2
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16368.9939928
+   EstTDE.EarthMJ2000Eq.Y = 38864.003097
+   EstTDE.EarthMJ2000Eq.Z = 6.00269942483
+   EstTDE.EarthMJ2000Eq.VX = -2.79500033439
+   EstTDE.EarthMJ2000Eq.VY = -1.17599971453
+   EstTDE.EarthMJ2000Eq.VZ = 0.499998638628
+   EstTDE.Cr = 1.09857128561
+   EstTDW.EarthMJ2000Eq.X = 41671.0017811
+   EstTDW.EarthMJ2000Eq.Y = 6477.99493282
+   EstTDW.EarthMJ2000Eq.Z = -19.9840015133
+   EstTDW.EarthMJ2000Eq.VX = -0.469999677348
+   EstTDW.EarthMJ2000Eq.VY = 3.0269999247
+   EstTDW.EarthMJ2000Eq.VZ = 0.270000558508
+   EstTDW.Cr = 1.40141130453
+   EstUserSat.EarthMJ2000Eq.X = 576.870415389
+   EstUserSat.EarthMJ2000Eq.Y = -5701.1413525
+   EstUserSat.EarthMJ2000Eq.Z = -4170.59492614
+   EstUserSat.EarthMJ2000Eq.VX = -1.76450511564
+   EstUserSat.EarthMJ2000Eq.VY = 4.18129027101
+   EstUserSat.EarthMJ2000Eq.VZ = -5.96578954489
+   EstUserSat.Cd = 2.20250288286
+
+AUDIT_HEARTBEAT seconds=110
+AUDIT_HEARTBEAT seconds=120
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 3262
+Variable Step Integration Statistics (BLS):
+    1270 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 68.031496 sec
+    Stddev of steps : 42.501308 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :   1224
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      3
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      2
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      1
+         270.0 -  300.0 sec :     40
+
+   WeightedRMS residuals for this iteration : 0.97750204139
+   BestRMS residuals                        : 0.97750204139
+   PredictedRMS residuals for next iteration: 0.975836127476
+This iteration is converging
+
+------------------------------------------------------
+Iteration 3
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16368.9939769
+   EstTDE.EarthMJ2000Eq.Y = 38864.0030881
+   EstTDE.EarthMJ2000Eq.Z = 6.00269172781
+   EstTDE.EarthMJ2000Eq.VX = -2.79500033303
+   EstTDE.EarthMJ2000Eq.VY = -1.17599971249
+   EstTDE.EarthMJ2000Eq.VZ = 0.499998640154
+   EstTDE.Cr = 1.09858934954
+   EstTDW.EarthMJ2000Eq.X = 41671.0017627
+   EstTDW.EarthMJ2000Eq.Y = 6477.99489828
+   EstTDW.EarthMJ2000Eq.Z = -19.9840170994
+   EstTDW.EarthMJ2000Eq.VX = -0.469999675336
+   EstTDW.EarthMJ2000Eq.VY = 3.02699992415
+   EstTDW.EarthMJ2000Eq.VZ = 0.270000559054
+   EstTDW.Cr = 1.4014405151
+   EstUserSat.EarthMJ2000Eq.X = 576.870411338
+   EstUserSat.EarthMJ2000Eq.Y = -5701.141354
+   EstUserSat.EarthMJ2000Eq.Z = -4170.59492409
+   EstUserSat.EarthMJ2000Eq.VX = -1.76450511549
+   EstUserSat.EarthMJ2000Eq.VY = 4.18129026666
+   EstUserSat.EarthMJ2000Eq.VZ = -5.96578954299
+   EstUserSat.Cd = 2.20260419239
+
+AUDIT_HEARTBEAT seconds=130
+AUDIT_HEARTBEAT seconds=140
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 10
+Number of records used for estimation: 3252
+Variable Step Integration Statistics (BLS):
+    1270 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 68.031496 sec
+    Stddev of steps : 42.501308 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :   1224
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      3
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      2
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      1
+         270.0 -  300.0 sec :     40
+
+   WeightedRMS residuals for this iteration : 0.961627351325
+   BestRMS residuals                        : 0.961627351325
+   PredictedRMS residuals for next iteration: 0.961555186926
+This iteration is converged due to relative convergence criteria.
+
+
+********************************************************
+*** Estimation Completed in 4 iterations
+********************************************************
+
+Estimation converged!
+      |1 - RMSP/RMSB| = | 1- 0.961555 / 0.961627| = 7.5044e-05 is less than RelativeTol, 0.001
+
+Final Estimated State:
+
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16368.999447
+   EstTDE.EarthMJ2000Eq.Y = 38864.0003394
+   EstTDE.EarthMJ2000Eq.Z = 5.99864827595
+   EstTDE.EarthMJ2000Eq.VX = -2.79500019789
+   EstTDE.EarthMJ2000Eq.VY = -1.17600008054
+   EstTDE.EarthMJ2000Eq.VZ = 0.499998673522
+   EstTDE.Cr = 1.09903290314
+   EstTDW.EarthMJ2000Eq.X = 41671.0008502
+   EstTDW.EarthMJ2000Eq.Y = 6478.00220312
+   EstTDW.EarthMJ2000Eq.Z = -19.9836187318
+   EstTDW.EarthMJ2000Eq.VX = -0.470000216923
+   EstTDW.EarthMJ2000Eq.VY = 3.02699985105
+   EstTDW.EarthMJ2000Eq.VZ = 0.270000270383
+   EstTDW.Cr = 1.40389140682
+   EstUserSat.EarthMJ2000Eq.X = 576.871479974
+   EstUserSat.EarthMJ2000Eq.Y = -5701.1417047
+   EstUserSat.EarthMJ2000Eq.Z = -4170.59437872
+   EstUserSat.EarthMJ2000Eq.VX = -1.76450561366
+   EstUserSat.EarthMJ2000Eq.VY = 4.18128938386
+   EstUserSat.EarthMJ2000Eq.VZ = -5.96578995128
+   EstUserSat.Cd = 2.20297636261
+
+Final Covariance Matrix:
+
+         2.799088956248e-04         1.319343673568e-04         1.002977777353e-04        -7.796064292777e-09         1.960309070841e-08        -1.206025861039e-09        -2.408263839611e-05         4.769866710933e-05        -3.788376903177e-04        -1.420615031457e-05         2.776077879746e-08         4.189174670255e-09         6.957972838910e-09        -2.273674508507e-05        -4.894387110265e-05         3.749873834431e-06        -1.115291398780e-05         3.154321174622e-08         2.690289581388e-08         8.993332339814e-09        -1.267679195991e-04
+         1.319343673566e-04         6.301174167613e-05         5.641170452503e-05        -3.591221362553e-09         9.177668659100e-09        -5.835844850531e-10        -1.056385576073e-05         2.215149067821e-05        -1.771139295996e-04        -8.771068392293e-06         1.304767448121e-08         1.919289866157e-09         3.922812876818e-09        -1.106857899155e-05        -2.344576764555e-05         2.856832236253e-06        -6.489026935521e-06         1.432973525575e-08         1.404329112370e-08         5.115120013082e-09        -6.410517048412e-05
+         1.002977777293e-04         5.641170452209e-05         1.910370699806e-04        -1.403584789518e-09         6.053185638886e-09         1.152382771569e-09        -1.467369317310e-05         1.180566248672e-05        -1.234574348208e-04        -6.573452222946e-05         1.014269479833e-08         8.487665220044e-10         1.285434454135e-08        -1.421148700168e-05        -2.600705461962e-05         1.446843460188e-05        -2.157350484773e-05         4.235424441719e-10         2.800694399418e-08         1.817852301646e-08        -1.550114857084e-04
+        -7.796064292894e-09        -3.591221362620e-09        -1.403584789796e-09         2.506548040998e-13        -5.376277979374e-13         2.054949122242e-13         7.425450275551e-10        -1.436202876776e-09         1.022204253465e-08        -2.256689266801e-09        -7.312148522418e-13        -1.036147976851e-13        -1.431989389500e-13         6.136281951964e-10         1.028928150709e-09        -6.570099719802e-11         2.232740653458e-10        -1.218084827783e-12        -6.780116406523e-13        -1.093794609073e-13         4.221283535114e-09
+         1.960309070840e-08         9.177668659106e-09         6.053185639244e-09        -5.376277979297e-13         1.393268816868e-12         3.654783636131e-14        -1.612892813477e-09         3.325507635897e-09        -2.698883555960e-08        -2.367859782091e-09         1.977486303291e-12         3.133687154682e-13         3.872166959984e-13        -1.525818584854e-09        -3.590111264286e-09         1.124166543991e-10        -6.086786735579e-10         2.077839669725e-12         1.689061273227e-12         5.392463789183e-13        -7.002346224246e-09
+        -1.206025861634e-09        -5.835844853714e-10         1.152382770730e-09         2.054949122356e-13         3.654783632402e-14         1.254170886736e-12         4.709289194837e-10        -7.021678797119e-10        -1.880978428193e-09        -1.706424839252e-08         2.075863932466e-13         1.250326870412e-13        -2.561850979174e-13         2.940552371535e-10        -1.875161251947e-09        -6.090697104571e-10         4.812196333860e-10        -2.110208697450e-12        -7.483399384616e-13         1.675003801289e-13         1.104284612468e-08
+        -2.408263839627e-05        -1.056385576083e-05        -1.467369317390e-05         7.425450275466e-10        -1.612892813488e-09         4.709289194253e-10         1.488500002585e-05        -4.346222188974e-06         3.314506589593e-05        -1.949030522060e-06        -2.448218331134e-09        -3.129063961605e-10        -1.096993773014e-09         2.304101838060e-06         3.964288910689e-06        -6.934537277933e-07         1.192108557348e-06        -3.188272707796e-09        -2.890358535314e-09        -8.617693487075e-10         5.258063762439e-05
+         4.769866710971e-05         2.215149067844e-05         1.180566248807e-05        -1.436202876767e-09         3.325507635922e-09        -7.021678796293e-10        -4.346222188990e-06         8.707089253961e-06        -6.520158532100e-05         6.012451606523e-06         4.708087615887e-09         6.999894077014e-10         9.334944971929e-10        -4.555856374125e-06        -7.385808870822e-06         3.959150537312e-07        -1.512203368329e-06         6.511782025799e-09         4.251811194246e-09         1.021572118192e-09        -2.096879284346e-05
+        -3.788376903164e-04        -1.771139295992e-04        -1.234574348265e-04         1.022204253448e-08        -2.698883555954e-08        -1.880978428945e-09         3.314506589561e-05        -6.520158532035e-05         5.370103125100e-04         6.350038973599e-05        -3.936530395338e-08        -6.339259234100e-09        -7.475792030860e-09         3.612047044832e-05         7.204553802467e-05        -1.447739265059e-06         1.179637116074e-05        -3.860437269809e-08        -3.245861831538e-08        -1.126019368393e-08         1.213737664761e-04
+        -1.420615030510e-05        -8.771068387299e-06        -6.573452221819e-05        -2.256689267023e-09        -2.367859781503e-09        -1.706424839272e-08        -1.949030523043e-06         6.012451607962e-06         6.350038972451e-05         2.536619181549e-04        -5.909024110081e-09        -2.006354742969e-09         4.162917144554e-11        -3.064093240441e-07         3.278101645826e-05         4.858498303802e-06        -1.449923096705e-06         2.802455323893e-08         3.041573333727e-09        -6.645778218357e-09        -8.454679803045e-05
+         2.776077879730e-08         1.304767448115e-08         1.014269479871e-08        -7.312148522272e-13         1.977486303283e-12         2.075863933056e-13        -2.448218331104e-09         4.708087615828e-09        -3.936530395332e-08        -5.909024110966e-09         2.898040049128e-12         4.659893176007e-13         6.088176805404e-13        -2.550006967416e-09        -5.437203542683e-09         1.757908451870e-10        -9.572223208815e-10         2.657279364243e-12         2.475624500733e-12         9.253348183985e-13        -9.672260877374e-09
+         4.189174670214e-09         1.919289866138e-09         8.487665220050e-10        -1.036147976832e-13         3.133687154658e-13         1.250326870470e-13        -3.129063961550e-10         6.999894076920e-10        -6.339259234060e-09        -2.006354743047e-09         4.659893175982e-13         8.668664835500e-14         1.512072603769e-14        -4.063697267494e-10        -9.493304106652e-10        -9.225260089241e-11        -1.689344790978e-11         2.961050010719e-13         2.240183423663e-13         7.839135988553e-14         2.904601404086e-10
+         6.957972838656e-09         3.922812876700e-09         1.285434454157e-08        -1.431989389339e-13         3.872166959836e-13        -2.561850978596e-13        -1.096993772974e-09         9.334944971220e-10        -7.475792030667e-09         4.162917061409e-11         6.088176805301e-13         1.512072603921e-14         9.962613730995e-13        -9.799005772491e-10        -1.239530192802e-09         1.176997940931e-09        -1.618754332131e-09         5.540157073650e-13         2.130213287610e-12         1.210415326960e-12        -1.686253654260e-08
+        -2.273674508491e-05        -1.106857899149e-05        -1.421148700221e-05         6.136281951784e-10        -1.525818584846e-09         2.940552370762e-10         2.304101838024e-06        -4.555856374056e-06         3.612047044829e-05        -3.064093228743e-07        -2.550006967421e-09        -4.063697267533e-10        -9.799005772653e-10         2.827492119833e-05         3.919748016706e-06        -9.891682207021e-07         1.800540264193e-06        -2.555831733889e-09        -3.157856095316e-09        -1.389452149212e-09         1.006668102822e-05
+        -4.894387110141e-05        -2.344576764494e-05        -2.600705461930e-05         1.028928150657e-09        -3.590111264211e-09        -1.875161252088e-09         3.964288910530e-06        -7.385808870561e-06         7.204553802340e-05         3.278101646007e-05        -5.437203542595e-09        -9.493304106625e-10        -1.239530192743e-09         3.919748016584e-06         1.246330654364e-05        -4.055792958184e-07         2.236720745210e-06        -1.891142634273e-09        -4.650420123635e-09        -2.668589401663e-09        -5.135900859001e-06
+         3.749873834205e-06         2.856832236161e-06         1.446843460246e-05        -6.570099717743e-11         1.124166543860e-10        -6.090697103764e-10        -6.934537277509e-07         3.959150536479e-07        -1.447739264946e-06         4.858498302577e-06         1.757908451854e-10        -9.225260088949e-11         1.176997940949e-09        -9.891682207009e-07        -4.055792959354e-07         2.266428618285e-06        -2.793448562732e-06         5.232682217287e-10         3.130518884082e-09         1.758025999407e-09         1.433533561793e-05
+        -1.115291398703e-05        -6.489026935149e-06        -2.157350484804e-05         2.232740653041e-10        -6.086786735118e-10         4.812196332494e-10         1.192108557237e-06        -1.512203368136e-06         1.179637116006e-05        -1.449923094794e-06        -9.572223208398e-10        -1.689344791145e-11        -1.618754332116e-09         1.800540264134e-06         2.236720745310e-06        -2.793448562667e-06         4.203754049369e-06        -9.127624368925e-10        -4.582824727963e-09        -2.996621585038e-09        -4.262360236917e-05
+         3.154321174744e-08         1.432973525642e-08         4.235424461685e-10        -1.218084827801e-12         2.077839669802e-12        -2.110208697422e-12        -3.188272707908e-09         6.511782025950e-09        -3.860437269969e-08         2.802455323805e-08         2.657279364371e-12         2.961050010859e-13         5.540157074948e-13        -2.555831734053e-09        -1.891142634622e-09         5.232682219081e-10        -9.127624372094e-10         7.250828302288e-12         2.939677097872e-12        -1.263753657996e-13        -2.565760387215e-08
+         2.690289581338e-08         1.404329112349e-08         2.800694399516e-08        -6.780116406112e-13         1.689061273198e-12        -7.483399383016e-13        -2.890358535224e-09         4.251811194076e-09        -3.245861831510e-08         3.041573331342e-09         2.475624500725e-12         2.240183423721e-13         2.130213287635e-12        -3.157856095301e-09        -4.650420123852e-09         3.130518884069e-09        -4.582824728064e-09         2.939677097519e-12         6.189779332104e-12         3.206659684531e-12         1.388633762054e-08
+         8.993332338877e-09         5.115120012613e-09         1.817852301622e-08        -1.093794608684e-13         5.392463788620e-13         1.675003802377e-13        -8.617693485874e-10         1.021572117996e-09        -1.126019368299e-08        -6.645778219760e-09         9.253348183338e-13         7.839135988400e-14         1.210415326914e-12        -1.389452149122e-09        -2.668589401665e-09         1.758025999307e-09        -2.996621584957e-09        -1.263753660649e-13         3.206659684358e-12         2.456083648657e-12         3.343036050663e-08
+        -1.267679196199e-04        -6.410517049493e-05        -1.550114857257e-04         4.221283535746e-09        -7.002346225523e-09         1.104284612591e-08         5.258063762674e-05        -2.096879284707e-05         1.213737664995e-04        -8.454679804264e-05        -9.672260879115e-09         2.904601402918e-10        -1.686253654411e-08         1.006668103055e-05        -5.135900856585e-06         1.433533561534e-05        -4.262360236586e-05        -2.565760387562e-08         1.388633761577e-08         3.343036050475e-08         5.471098249535e-03
+
+Final Correlation Matrix:
+
+             1.000000000000             0.993433604411             0.433734667684            -0.930741428252             0.992655928187            -0.064367984787            -0.373096602682             0.966187456029            -0.977132631575            -0.053313895837             0.974700309107             0.850440653765             0.416665682621            -0.255575512703            -0.828654183121             0.148880316349            -0.325133226017             0.700170405627             0.646328186656             0.342997311036            -0.102438628628
+             0.993433604410             1.000000000000             0.514161621186            -0.903635777364             0.979499398879            -0.065646962780            -0.344935029481             0.945705069627            -0.962832328564            -0.069376776871             0.965539798944             0.821209041708             0.495108296857            -0.262228822736            -0.836637017475             0.239057830077            -0.398703626227             0.670399395818             0.711083454914             0.411171977764            -0.109180495415
+             0.433734667658             0.514161621159             1.000000000000            -0.202834493773             0.371028875579             0.074449121076            -0.275173235044             0.289464320844            -0.385449167370            -0.298611858437             0.431064582778             0.208570705979             0.931760865667            -0.193365947845            -0.532985884054             0.695331170708            -0.761277918739             0.011380053496             0.814459166258             0.839224575817            -0.151623946926
+            -0.930741428266            -0.903635777381            -0.202834493813             1.000000000000            -0.909758748872             0.366509047382             0.384423880153            -0.972167901640             0.881065821784            -0.283012821339            -0.857935811430            -0.702922849767            -0.286559715613             0.230497695921             0.582143958219            -0.087169172283             0.217511194946            -0.903536511113            -0.544329097651            -0.139404304892             0.113990655347
+             0.992655928187             0.979499398880             0.371028875601            -0.909758748859             1.000000000000             0.027648135903            -0.354171514346             0.954781493820            -0.986677843045            -0.125953687428             0.984110428752             0.901700006761             0.328662360612            -0.243099877621            -0.861536757453             0.063261891789            -0.251508100711             0.653733535663             0.575162235055             0.291506472411            -0.080202677062
+            -0.064367984818            -0.065646962816             0.074449121021             0.366509047402             0.027648135875             1.000000000000             0.108993998094            -0.212483936357            -0.072479325721            -0.956711888031             0.108885069883             0.379200674438            -0.229186408960             0.049379860581            -0.474289624480            -0.361258123655             0.209578308552            -0.699766649589            -0.268585759804             0.095436798564             0.133310821917
+            -0.373096602684            -0.344935029485            -0.275173235060             0.384423880148            -0.354171514348             0.108993998081             1.000000000000            -0.381769304415             0.370726092785            -0.031718788006            -0.372755048476            -0.275463407201            -0.284867626029             0.112312100306             0.291054447039            -0.119391125020             0.150703290973            -0.306893175549            -0.301120078620            -0.142526311611             0.184252831892
+             0.966187456037             0.945705069637             0.289464320877            -0.972167901634             0.954781493828            -0.212483936332            -0.381769304416             1.000000000000            -0.953521180216             0.127934436199             0.937250858139             0.805710204749             0.316948439541            -0.290357350266            -0.708997866332             0.089123963936            -0.249951100711             0.819538849699             0.579161773843             0.220907751961            -0.096072628756
+            -0.977132631572            -0.962832328562            -0.385449167388             0.881065821769            -0.986677843043            -0.072479325750             0.370726092782            -0.953521180207             1.000000000000             0.172051095326            -0.997861127857            -0.929118469221            -0.323205879286             0.293130752986             0.880641479675            -0.041498081353             0.248278130474            -0.618659058413            -0.562990585959            -0.310050881901             0.070810271469
+            -0.053313895801            -0.069376776831            -0.298611858386            -0.283012821367            -0.125953687397            -0.956711888042            -0.031718788022             0.127934436230             0.172051095295             1.000000000000            -0.217939492106            -0.427862260156             0.002618686353            -0.003618042291             0.583012869152             0.202629837733            -0.044401606394             0.653457355943             0.076759665337            -0.266254300391            -0.071768235959
+             0.974700309102             0.965539798940             0.431064582794            -0.857935811413             0.984110428748             0.108885069914            -0.372755048471             0.937250858128            -0.997861127855            -0.217939492139             1.000000000000             0.929710345519             0.358301328674            -0.281701055359            -0.904704522502             0.068591932702            -0.274247057362             0.579683865704             0.584514107439             0.346836772098            -0.076813676721
+             0.850440653756             0.821209041700             0.208570705979            -0.702922849754             0.901700006755             0.379200674456            -0.275463407196             0.805710204738            -0.929118469215            -0.427862260173             0.929710345514             1.000000000000             0.051452904169            -0.259564048542            -0.913323534877            -0.208128469483            -0.027984885982             0.373487289028             0.305822821091             0.169891055917             0.013337461542
+             0.416665682606             0.495108296842             0.931760865683            -0.286559715580             0.328662360600            -0.229186408908            -0.284867626019             0.316948439517            -0.323205879278             0.002618686300             0.358301328668             0.051452904174             1.000000000000            -0.184626767402            -0.351765971620             0.783281797615            -0.790998478703             0.206130198365             0.857825318057             0.773795484941            -0.228401525779
+            -0.255575512701            -0.262228822735            -0.193365947853             0.230497695914            -0.243099877620             0.049379860569             0.112312100304            -0.290357350262             0.293130752986            -0.003618042278            -0.281701055359            -0.259564048545            -0.184626767405             1.000000000000             0.208804959127            -0.123565841435             0.165151866635            -0.178499804957            -0.238700896592            -0.166732904760             0.025594600154
+            -0.828654183100            -0.836637017453            -0.532985884047             0.582143958190            -0.861536757435            -0.474289624515             0.291054447028            -0.708997866307             0.880641479660             0.583012869185            -0.904704522488            -0.913323534875            -0.351765971603             0.208804959120             1.000000000000            -0.076311170613             0.309012806215            -0.198936208471            -0.529465866737            -0.482329185342            -0.019668114881
+             0.148880316340             0.239057830070             0.695331170736            -0.087169172256             0.063261891782            -0.361258123607            -0.119391125013             0.089123963917            -0.041498081350             0.202629837682             0.068591932701            -0.208128469477             0.783281797627            -0.123565841434            -0.076311170635             1.000000000000            -0.905005058812             0.129080169595             0.835810306006             0.745131106445             0.128735873885
+            -0.325133225995            -0.398703626204            -0.761277918750             0.217511194905            -0.251508100692             0.209578308493             0.150703290959            -0.249951100679             0.248278130459            -0.044401606335            -0.274247057350            -0.027984885984            -0.790998478695             0.165151866630             0.309012806228            -0.905005058790             1.000000000000            -0.165327576359            -0.898415043155            -0.932591981921            -0.281056895889
+             0.700170405654             0.670399395849             0.011380053549            -0.903536511126             0.653733535688            -0.699766649579            -0.306893175559             0.819538849718            -0.618659058438             0.653457355923             0.579683865732             0.373487289045             0.206130198413            -0.178499804968            -0.198936208508             0.129080169640            -0.165327576416             1.000000000000             0.438801632907            -0.029946566656            -0.128820514156
+             0.646328186644             0.711083454903             0.814459166287            -0.544329097618             0.575162235046            -0.268585759747            -0.301120078610             0.579161773820            -0.562990585955             0.076759665277             0.584514107437             0.305822821099             0.857825318067            -0.238700896591            -0.529465866762             0.835810306003            -0.898415043174             0.438801632855             1.000000000000             0.822420091578             0.075459318725
+             0.342997311001             0.411171977726             0.839224575806            -0.139404304842             0.291506472380             0.095436798626            -0.142526311591             0.220907751919            -0.310050881875            -0.266254300448             0.346836772074             0.169891055914             0.773795484911            -0.166732904749            -0.482329185342             0.745131106403            -0.932591981896            -0.029946566719             0.822420091533             1.000000000000             0.288391347408
+            -0.102438628645            -0.109180495434            -0.151623946943             0.113990655364            -0.080202677077             0.133310821932             0.184252831900            -0.096072628773             0.070810271483            -0.071768235969            -0.076813676735             0.013337461536            -0.228401525799             0.025594600160            -0.019668114872             0.128735873862            -0.281056895867            -0.128820514174             0.075459318699             0.288391347392             1.000000000000
+
+********************************************************
+
+
+
+Mission run completed.
+===> Total Run Time: 152.334 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+WARNING: Glycin running without sandbox.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:07:31 GMAT GUI exiting.

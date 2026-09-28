@@ -1,0 +1,5 @@
+PASS: GroundTrackStation
+PASS: GroundTrackEditor
+PASS: tree theme: Adwaita
+PASS: tree theme: Adwaita:dark
+PASS: GroundTrack paints during long mission

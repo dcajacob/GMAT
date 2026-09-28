@@ -1,0 +1,184 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:27 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:27 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "J2000Body" on Coordinate Systems is ignored and will be removed from a future build
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "V" field of Burn is deprecated and will be removed from a future build; please use "Element1" instead.
+*** WARNING *** "N" field of Burn is deprecated and will be removed from a future build; please use "Element2" instead.
+*** WARNING *** "B" field of Burn is deprecated and will be removed from a future build; please use "Element3" instead.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+*** WARNING *** "IndVar" field of XYPlot on object "LunarINC" is deprecated and will be removed from a future build; please use "XVariable" instead.
+*** WARNING *** "Add" field of XYPlot on object "LunarINC" is deprecated and will be removed from a future build; please use "YVariables" instead.
+*** WARNING *** "Grid" field of XYPlot on object "LunarINC" is deprecated and will be removed from a future build; please use "ShowGrid" instead.
+*** WARNING *** "V", "N", "B" are deprecated and will be removed from a future build; please use "Element1", "Element2", "Element3" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 3: "Epoch" on ObjectReferenced named "" in line:
+   "  30: GMAT EarthSunRot.Epoch = 21545.000000397937;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthSunRot" in line:
+   "  31: GMAT EarthSunRot.UpdateInterval = 60;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot create an object "SQP1". The "FminconOptimizer" is an unknown object type or invalid object name or dimension in line:
+   " 101: Create FminconOptimizer SQP1;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 102: GMAT SQP1.ShowProgress = true;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 103: GMAT SQP1.ReportStyle = Normal;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 104: GMAT SQP1.TargeterTextFile = FminconOptimizerSQP1.data;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 105: GMAT SQP1.MaximumIterations = 25;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 106: GMAT SQP1.ObjectiveFunction = Objective;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 107: GMAT SQP1.Tolerance = 0;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 108: GMAT SQP1.SourceType = MATLAB;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 109: GMAT SQP1.DiffMaxChange = 0.1000;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 110: GMAT SQP1.DiffMinChange = 1.0000e-5;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 111: GMAT SQP1.MaxFunEvals = 1000;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 112: GMAT SQP1.MaxIter = 50;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 113: GMAT SQP1.TolX = 1.0000e-03;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 114: GMAT SQP1.TolFun = 1.0000e-03;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 115: GMAT SQP1.TolCon = 1.0000e-03;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 116: GMAT SQP1.DerivativeCheck = Off;"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 117: GMAT SQP1.Diagnostics = Off;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 118: GMAT SQP1.Display = iter;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 119: GMAT SQP1.GradObj = Off; "
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 120: GMAT SQP1.GradConstr = Off; "
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "OGL_EarthMJ2K" is no longer in use in line:
+   " 138: GMAT OGL_EarthMJ2K.FixedFovAngle = 50;"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "OGL_EarthMJ2K" is no longer in use in line:
+   " 146: GMAT OGL_EarthMJ2K.PerspectiveMode = Off;"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "OGL_EarthMJ2K" is no longer in use in line:
+   " 147: GMAT OGL_EarthMJ2K.UseFixedFov = Off;"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "OGL_MoonMJ2K" is no longer in use in line:
+   " 159: GMAT OGL_MoonMJ2K.FixedFovAngle = 45;"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "OGL_MoonMJ2K" is no longer in use in line:
+   " 168: GMAT OGL_MoonMJ2K.PerspectiveMode = Off;"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "OGL_MoonMJ2K" is no longer in use in line:
+   " 169: GMAT OGL_MoonMJ2K.UseFixedFov = Off;"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_MinFuelLunarCapture.report" - specified path does not exist.
+ in line:
+   " 220: IterateData.Filename = ./output/SampleMissions/Ex_MinFuelLunarCapture.report;"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Optimize in line:
+   " 262: Optimize SQP1"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Setting "Iteration" to "Iteration + 1" is not allowed before BeginMissionSequence in line:
+   " 265:      Iteration = Iteration + 1;"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 270:      Vary SQP1(LSI.V = 0.1462 ,   { Lower = -1, Upper = 1, MultiplicativeScaleFactor = 1});"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 271:      Vary SQP1(LSI.N = 0.0460 ,   { Lower = -1, Upper = 1, MultiplicativeScaleFactor = 1});"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 272:      Vary SQP1(LSI.B = 0.1086 ,   { Lower = -1, Upper = 1, MultiplicativeScaleFactor = 1});"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 287:      NonlinearConstraint SQP1(MMSRef.MoonMJ2000Eq.BdotT <= 20000.0); "
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 288:      NonlinearConstraint SQP1(MMSRef.Luna.RMAG >= 2000);"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 289:      NonlinearConstraint SQP1(MMSRef.MoonMJ2000Eq.BdotR <= 15000.0); "
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 294:      Vary SQP1(LOI.V = -0.75198120104, { Lower = -1, Upper = 1});"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 295:      Vary SQP1(LOI.N = 0, {  Lower = -1, Upper = 1});"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 296:      Vary SQP1(LOI.B = 0, { Lower = -1, Upper = 1});"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 302:      NonlinearConstraint SQP1(MMSRef.Luna.SMA = 7600);   "
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 303:      NonlinearConstraint SQP1(MMSRef.Luna.ECC = 0.2);  "
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 304:      NonlinearConstraint SQP1(MMSRef.MoonMJ2000Eq.INC = 85);   "
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Setting "dV1Mag" to "sqrt( LSI.Element1^2 + LSI.Element2^2 + LSI.Element3^2 )" is not allowed before BeginMissionSequence in line:
+   " 316:      dV1Mag = sqrt( LSI.Element1^2 + LSI.Element2^2 + LSI.Element3^2 );"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Setting "dV2Mag" to "sqrt( LOI.Element1^2 + LOI.Element2^2 + LOI.Element3^2 )" is not allowed before BeginMissionSequence in line:
+   " 317:      dV2Mag = sqrt( LOI.Element1^2 + LOI.Element2^2 + LOI.Element3^2 ); "
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Setting "TotaldV" to "( dV1Mag + dV2Mag )" is not allowed before BeginMissionSequence in line:
+   " 318:      TotaldV = ( dV1Mag + dV2Mag );"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
+   " 319:      Minimize SQP1(TotaldV);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/2d5f433a2419/repo/doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:28 GMAT GUI exiting.

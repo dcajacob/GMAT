@@ -1,0 +1,112 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:00:14 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:00:14 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0dd9024da2e8/repo/application/samples/Ex_Yukon_AlgebraicOptimization.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0dd9024da2e8/repo/application/samples/Ex_Yukon_AlgebraicOptimization.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 2 variables; 0 equality constraints; 1 inequality constraints
+   Variables:  X1, X2
+   Inequality Constraints:  G
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  X1 = 0, X2 = 0
+   Cost Function Value: 8
+   Yukon1 State: Optimization ready to start.
+
+   Inequality Constraint Variances:
+      Delta G = -8
+
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:14.996: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:14.996: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:14.996: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.009: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.021: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.023: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.023: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.023: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.024: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:00:15.025: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  X1 = 3.99999990464, X2 = 3.99999990464
+   Cost Function Value: 7.99999923709
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Inequality Constraint Variances:
+      Delta G = -1.90728314919e-07
+
+Yukon1 Iteration 1; Function Evaluation 3; Nominal Pass
+   Variables:  X1 = 2, X2 = 2
+   Cost Function Value: 1.57772181044e-30
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Inequality Constraint Variances:
+      Delta G = -4
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 1 iterations and 3 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   X1 = 2
+   X2 = 2
+Yukon1 converged to within target accuracy.
+
+
+
+Mission run completed.
+===> Total Run Time: 0.069 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46013 title=Solver Window - Optimize Yukon1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46013 title=Solver Window - Optimize Yukon1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:00:16 GMAT GUI exiting.

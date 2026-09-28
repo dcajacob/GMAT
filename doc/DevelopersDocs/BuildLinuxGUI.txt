@@ -138,9 +138,11 @@ with splash/welcome screens or in the X11 desktop startup checks, with or withou
 OpenFrames. It is not claimed fixed. Some native OrbitView default-mission tests
 still log GTK notebook gadget warnings during window creation.
 
-The bundled Aura model references missing GFOIL1.JPG; this remains a texture
-warning. The external OFI TimeDilator tooltip issue remains outside this repo's
-source changes. Avoid --minimize for OpenFrames rendering until its hidden-canvas
+The bundled Aura model's unresolved optional reflection reference is repaired
+without changing its loaded geometry/materials (LinuxGuiAuraModel/README.md).
+The current build uses the isolated OFI TimeDilator repair documented in
+LinuxGuiExternal/OpenFramesTime/README.md; its production patch belongs to OFI,
+not GMAT. Avoid --minimize for OpenFrames rendering until its hidden-canvas
 context initialization is separately addressed.
 
 Further GUI work can target toolbar status controls that overflow at narrow

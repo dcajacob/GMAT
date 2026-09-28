@@ -1,0 +1,80 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:12 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:12 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+   "  13: Create SNOPT NLP;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  15: NLP.ShowProgress              = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  16: NLP.ReportStyle               = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  17: NLP.ReportFile                = output.report;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  18: NLP.MajorOptimalityTolerance  = 0.001234;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  19: NLP.MajorFeasibilityTolerance = 0.0004567;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  20: NLP.MajorIterationsLimit      = 456;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  21: NLP.TotalIterationsLimit      = 789012;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  22: NLP.OutputFileName            = 'SNOPTName123.out';"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  23: NLP.SpecsFileName             = 'SNOPT.spec';"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  24: NLP.OverrideSpecsFileValues   = true;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Optimize in line:
+   "  45: Optimize NLP {SolveMode = Solve, ExitMode = DiscardAndContinue};"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   "  48:    Vary 'Vary X1' NLP(X1 = 0, {Perturbation = 0.0000001, Upper = 10, Lower = -10, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   "  49:    Vary 'Vary X2' NLP(X2 = 0, {Perturbation = 0.0000001, Upper = 10, Lower = -10, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
+   "  53:    Minimize 'Minimize Cost (J)' NLP(J);"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   "  61:    NonlinearConstraint 'G = 8' NLP(G<=8);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fc3eb9c96f65/repo/application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:12 GMAT GUI exiting.

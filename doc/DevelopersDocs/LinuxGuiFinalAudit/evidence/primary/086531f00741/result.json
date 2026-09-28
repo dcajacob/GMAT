@@ -1,0 +1,24 @@
+{
+  "script": "application/samples/NeedVF13ad/Ex_OptimalLunarApsidesRotation_2Burn.script",
+  "sha256": "285498aad597581ce50564ec0a2c3283c92f94532b9c672231bdfbc6bfc24f65",
+  "category": "bundled",
+  "id": "086531f00741",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "native",
+    "scale": 1,
+    "limit_seconds": 600,
+    "startup_sha256": "068d4bc6013cea7fe256ffe93118dc3e8b76e32b84e02035d0992cc5c4ed4205"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/086531f00741",
+  "status": "build_failed",
+  "returncode": 248,
+  "mission_result": null,
+  "screenshots": 0,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 0.98
+}

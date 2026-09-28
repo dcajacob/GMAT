@@ -1,0 +1,522 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:08:51 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:08:51 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8dea1c43f04e/repo/application/samples/Navigation/Ex_MultiSpacecraft_Simultaneous_BatchEstimation.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/8dea1c43f04e/repo/application/samples/Navigation/Ex_MultiSpacecraft_Simultaneous_BatchEstimation.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Variable Step Integration Statistics (Sim):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_MultiSpacecraft_Simultaneous_BatchEstimation.gmd' has 2134 of 2134 records used for estimation.
+Total number of load records : 2134
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_MultiSpacecraft_Simultaneous_BatchEstimation.gmd':
+   Config 0: {{WS1,SatTrkr,WS1},Range}
+   Config 1: {{WS1,SatTrkr,WS1},RangeRate}
+   Config 2: {{CAN,SatTrkr,CAN},Range}
+   Config 3: {{CAN,SatTrkr,CAN},RangeRate}
+   Config 4: {{SatTrkr,SatTarg,SatTrkr},Range}
+   Config 5: {{SatTrkr,SatTarg,SatTrkr},RangeRate}
+   Config 6: {{MAD,SatTrkr,MAD},Range}
+   Config 7: {{MAD,SatTrkr,MAD},RangeRate}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.561: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.561: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.561: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.574: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.583: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.584: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.584: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.584: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.584: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:57.585: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "BLS")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1346.7
+   EstSatTarg.MoonMJ2000Eq.Y = 1140.6
+   EstSatTarg.MoonMJ2000Eq.Z = -313.7
+   EstSatTarg.MoonMJ2000Eq.VX = 0.58377
+   EstSatTarg.MoonMJ2000Eq.VY = 0.18794
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55391
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.7
+   EstSatTrkr.MoonMJ2000Eq.Z = -51554.1
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.021363
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.002429
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.1379
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 180
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 1954
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 1499.71800395
+   BestRMS residuals                        : 1499.71800395
+   PredictedRMS residuals for next iteration: 33.9161015159
+
+------------------------------------------------------
+Iteration 1
+
+Current estimated state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1351.99016838
+   EstSatTarg.MoonMJ2000Eq.Y = 1133.47634675
+   EstSatTarg.MoonMJ2000Eq.Z = -317.578436946
+   EstSatTarg.MoonMJ2000Eq.VX = 0.58935039662
+   EstSatTarg.MoonMJ2000Eq.VY = 0.1939759758
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55109086551
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.4870403
+   EstSatTrkr.MoonMJ2000Eq.Y = 38779.7838281
+   EstSatTrkr.MoonMJ2000Eq.Z = -51553.3464778
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213600416889
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.00242829864773
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137904423913
+
+AUDIT_HEARTBEAT seconds=10
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 164
+Number of records used for estimation: 1970
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 680.482786664
+   BestRMS residuals                        : 680.482786664
+   PredictedRMS residuals for next iteration: 5.25552352746
+This iteration is converging
+
+------------------------------------------------------
+Iteration 2
+
+Current estimated state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1347.55276097
+   EstSatTarg.MoonMJ2000Eq.Y = 1139.65586784
+   EstSatTarg.MoonMJ2000Eq.Z = -314.303459235
+   EstSatTarg.MoonMJ2000Eq.VX = 0.584575628692
+   EstSatTarg.MoonMJ2000Eq.VY = 0.188785814356
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55352719106
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5368936
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.9010809
+   EstSatTrkr.MoonMJ2000Eq.Z = -51553.9840815
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213624985448
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.00242883008489
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137900790426
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 210
+Number of records used for estimation: 1924
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 305.465984576
+   BestRMS residuals                        : 305.465984576
+   PredictedRMS residuals for next iteration: 2.40024998389
+This iteration is converging
+
+------------------------------------------------------
+Iteration 3
+
+Current estimated state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1347.19007528
+   EstSatTarg.MoonMJ2000Eq.Y = 1140.12047657
+   EstSatTarg.MoonMJ2000Eq.Z = -314.066372175
+   EstSatTarg.MoonMJ2000Eq.VX = 0.584194109521
+   EstSatTarg.MoonMJ2000Eq.VY = 0.188400770703
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55369962395
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5421537
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.8082946
+   EstSatTrkr.MoonMJ2000Eq.Z = -51554.0514213
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213627565745
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.00242888353493
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137900423696
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 2134
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 17.3007775749
+   BestRMS residuals                        : 17.3007775749
+   PredictedRMS residuals for next iteration: 0.955536550543
+This iteration is converging
+
+------------------------------------------------------
+Iteration 4
+
+Current estimated state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1346.80282909
+   EstSatTarg.MoonMJ2000Eq.Y = 1140.65686826
+   EstSatTarg.MoonMJ2000Eq.Z = -313.783922893
+   EstSatTarg.MoonMJ2000Eq.VX = 0.583779883362
+   EstSatTarg.MoonMJ2000Eq.VY = 0.18795224241
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55390922103
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5476822
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.7101868
+   EstSatTrkr.MoonMJ2000Eq.Z = -51554.1236771
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213630314421
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.00242893258421
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137900030338
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 93
+Number of records used for estimation: 2041
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 8.04959977002
+   BestRMS residuals                        : 8.04959977002
+   PredictedRMS residuals for next iteration: 0.952260750218
+This iteration is converging
+
+------------------------------------------------------
+Iteration 5
+
+Current estimated state:
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1346.80400695
+   EstSatTarg.MoonMJ2000Eq.Y = 1140.6549357
+   EstSatTarg.MoonMJ2000Eq.Z = -313.785125119
+   EstSatTarg.MoonMJ2000Eq.VX = 0.583781566382
+   EstSatTarg.MoonMJ2000Eq.VY = 0.187954247323
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55390820176
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5475318
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.7125258
+   EstSatTrkr.MoonMJ2000Eq.Z = -51554.1219992
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213630248928
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.00242893295868
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137900036285
+
+AUDIT_HEARTBEAT seconds=20
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 2134
+Variable Step Integration Statistics (BLS):
+    4320 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 259200.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   4320
+
+   WeightedRMS residuals for this iteration : 0.957256486301
+   BestRMS residuals                        : 0.957256486301
+   PredictedRMS residuals for next iteration: 0.955508226278
+This iteration is converged due to relative convergence criteria.
+
+
+********************************************************
+*** Estimation Completed in 6 iterations
+********************************************************
+
+Estimation converged!
+      |1 - RMSP/RMSB| = | 1- 0.955508 / 0.957256| = 0.00182632 is less than RelativeTol, 0.005
+
+Final Estimated State:
+
+   Estimation Epoch:
+   29793.5004286386770833333333 A.1 modified Julian
+   29793.5004282407407407407404 TAI modified Julian
+   02 Aug 2022 00:00:00.000 UTCG
+   EstSatTarg.MoonMJ2000Eq.X = -1346.80256237
+   EstSatTarg.MoonMJ2000Eq.Y = 1140.65695141
+   EstSatTarg.MoonMJ2000Eq.Z = -313.78393976
+   EstSatTarg.MoonMJ2000Eq.VX = 0.583779632564
+   EstSatTarg.MoonMJ2000Eq.VY = 0.187952185127
+   EstSatTarg.MoonMJ2000Eq.VZ = -1.55390918833
+   EstSatTrkr.MoonMJ2000Eq.X = -15705.5476688
+   EstSatTrkr.MoonMJ2000Eq.Y = 38778.7104094
+   EstSatTrkr.MoonMJ2000Eq.Z = -51554.1235085
+   EstSatTrkr.MoonMJ2000Eq.VX = 0.0213630308137
+   EstSatTrkr.MoonMJ2000Eq.VY = -0.002428932573
+   EstSatTrkr.MoonMJ2000Eq.VZ = 0.137900030995
+
+Final Covariance Matrix:
+
+         1.791755064965e-05         2.483074521735e-05         1.324764424453e-05        -2.181058846412e-08        -2.404490061269e-08        -1.109914630857e-08        -8.642923477434e-07        -1.284197506297e-05        -9.495078301691e-06         3.734839789866e-11         1.231134013467e-11        -2.995182979398e-11
+         2.483074521762e-05         3.442904961257e-05         1.840341909866e-05        -3.022163812339e-08        -3.325741896893e-08        -1.536876223070e-08        -1.056078348039e-06        -1.574194124967e-05        -1.163440212783e-05         4.585642208609e-11         1.468640494461e-11        -3.722854113244e-11
+         1.324764424474e-05         1.840341909876e-05         9.961852310843e-06        -1.615536100299e-08        -1.759679026488e-08        -8.196714788488e-09        -1.385510828282e-07        -2.260919630676e-06        -1.633521796701e-06         6.827698804957e-12         4.275114078596e-13        -7.797657764826e-12
+        -2.181058846137e-08        -3.022163811925e-08        -1.615536100069e-08         2.677137491666e-11         2.954054065328e-11         1.363460941077e-11         1.102649675818e-09         1.642224085582e-08         1.211126063656e-08        -4.749961724114e-14        -1.400814210720e-14         3.921715681097e-14
+        -2.404490060856e-08        -3.325741896284e-08        -1.759679026152e-08         2.954054065193e-11         3.289219223994e-11         1.508123779780e-11         1.911080667976e-09         2.817627970007e-08         2.083814945755e-08        -8.122731336631e-14        -2.692073871094e-14         6.343793810860e-14
+        -1.109914630691e-08        -1.536876222822e-08        -8.196714787122e-09         1.363460941045e-11         1.508123779813e-11         6.950865323383e-12         6.469070496301e-10         9.602286941643e-09         7.085035254068e-09        -2.773934019597e-14        -8.506072523388e-15         2.257131189225e-14
+        -8.642923452977e-07        -1.056078344636e-06        -1.385510810054e-07         1.102649672953e-09         1.911080664871e-09         6.469070481842e-10         2.021697031447e-06         2.529804826131e-05         1.858141221831e-05        -7.341479476708e-11        -4.378980352730e-11         3.986069411961e-11
+        -1.284197502680e-05        -1.574194119934e-05        -2.260919603714e-06         1.642224081346e-08         2.817627965415e-08         9.602286920266e-09         2.529804826132e-05         3.598384077813e-04         2.666876978125e-04        -1.033711818829e-09        -4.448985514783e-10         7.029248708855e-10
+        -9.495078275250e-06        -1.163440209104e-05        -1.633521776994e-06         1.211126060561e-08         2.083814942401e-08         7.085035238451e-09         1.858141221833e-05         2.666876978127e-04         1.982464083265e-04        -7.658372004042e-10        -3.183575379901e-10         5.302835404948e-10
+         3.734839779763e-11         4.585642194551e-11         6.827698729639e-12        -4.749961712303e-14        -8.122731323837e-14        -2.773934013638e-14        -7.341479476729e-11        -1.033711818831e-09        -7.658372004057e-10         3.030118258604e-15         1.401442099219e-15        -1.959534544504e-15
+         1.231134011607e-11         1.468640491867e-11         4.275113939449e-13        -1.400814208610e-14        -2.692073868836e-14        -8.506072512810e-15        -4.378980352792e-11        -4.448985514872e-10        -3.183575379966e-10         1.401442099243e-15         2.256446204395e-15         3.556977337143e-16
+        -2.995182970540e-11        -3.722854100922e-11        -7.797657698814e-12         3.921715670713e-14         6.343793799600e-14         2.257131183984e-14         3.986069411954e-11         7.029248708840e-10         5.302835404933e-10        -1.959534544494e-15         3.556977337370e-16         2.454293884250e-15
+
+Final Correlation Matrix:
+
+             1.000000000000             0.999741950547             0.991583490079            -0.995847241750            -0.990460718031            -0.994559611782            -0.143602933189            -0.159933243007            -0.159314962690             0.160288685528             0.061228485561            -0.142830434095
+             0.999741950558             1.000000000000             0.993724390945            -0.995451592419            -0.988279107669            -0.993474987605            -0.126583058462            -0.141430153188            -0.140824717716             0.141973686621             0.052691491192            -0.128070828228
+             0.991583490095             0.993724390951             1.000000000000            -0.989261891868            -0.972113553864            -0.985031995502            -0.030873213639            -0.037762550325            -0.036758029373             0.039298368069             0.002851446100            -0.049869020521
+            -0.995847241624            -0.995451592282            -0.989261891728             1.000000000000             0.995489518144             0.999511801343             0.149880170808             0.167318252897             0.166246054999            -0.166772708784            -0.056994468599             0.152995086703
+            -0.990460717861            -0.988279107488            -0.972113553679             0.995489518099             1.000000000000             0.997404081303             0.234355188318             0.258990289842             0.258053690694            -0.257291767170            -0.098816182237             0.223274623842
+            -0.994559611633            -0.993474987445            -0.985031995338             0.999511801320             0.997404081325             1.000000000000             0.172569646793             0.192000113097             0.190862195260            -0.191137939822            -0.067919917897             0.172812073989
+            -0.143602932783            -0.126583058054            -0.030873213233             0.149880170418             0.234355187937             0.172569646407             1.000000000000             0.937940355005             0.928149675975            -0.937984718915            -0.648339479371             0.565878948398
+            -0.159933242556            -0.141430152736            -0.037762549875             0.167318252465             0.258990289420             0.192000112670             0.937940355005             1.000000000000             0.998496530599            -0.989956096144            -0.493735940020             0.747983243823
+            -0.159314962246            -0.140824717270            -0.036758028930             0.166246054574             0.258053690279             0.190862194839             0.928149675976             0.998496530599             1.000000000000            -0.988107066523            -0.475992359388             0.760225093544
+             0.160288685094             0.141973686185             0.039298367636            -0.166772708369            -0.257291766765            -0.191137939411            -0.937984718917            -0.989956096147            -0.988107066525             1.000000000000             0.535960616910            -0.718554729534
+             0.061228485469             0.052691491098             0.002851446007            -0.056994468513            -0.098816182154            -0.067919917812            -0.648339479380            -0.493735940030            -0.475992359398             0.535960616919             1.000000000000             0.151149015765
+            -0.142830433673            -0.128070827804            -0.049869020098             0.152995086298             0.223274623445             0.172812073587             0.565878948397             0.747983243821             0.760225093542            -0.718554729531             0.151149015775             1.000000000000
+
+********************************************************
+
+
+
+Mission run completed.
+===> Total Run Time: 23.291 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=6 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=6 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=7 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=7 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:09:22 GMAT GUI exiting.

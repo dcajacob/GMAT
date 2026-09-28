@@ -1,0 +1,176 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:19 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:19 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   " 160: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 161: GMAT emtgThrustModel.SpacecraftFile = '../data/emtg/EarthToMars.emtg_spacecraftopt';"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 162: GMAT emtgThrustModel.DutyCycle = 1;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 163: GMAT emtgThrustModel.SpacecraftStage = [ 1 ];"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "PCDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   " 169: Create DynamicsConfiguration PCDynConfig;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 170: GMAT PCDynConfig.ForceModels = {PCForceModel};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 171: GMAT PCDynConfig.Spacecraft = {emsat};"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 172: GMAT PCDynConfig.FiniteBurns = {emtgThrustModel};"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "PCLaunchGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   " 177: Create OptimalControlGuess PCLaunchGuess;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 178: GMAT PCLaunchGuess.Type = 'CollocationGuessFile';"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 179: GMAT PCLaunchGuess.TimeSystem = 'A1ModJulian';"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 180: GMAT PCLaunchGuess.CoordinateSystem = EarthMJ2000Eq;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 181: GMAT PCLaunchGuess.FileName = '../data/misc/LISA_matlabCSALT_proptest.och';"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "phase_LAUNCH". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 187: Create Phase phase_LAUNCH;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 188: GMAT phase_LAUNCH.Type = 'RadauPseudospectral';"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 189: GMAT phase_LAUNCH.ThrustMode = 'Coast';"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 190: GMAT phase_LAUNCH.SubPhaseBoundaries = [ -1 0 1 ];"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 191: GMAT phase_LAUNCH.PointsPerSubPhase = [ 7 7 ];"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 192: GMAT phase_LAUNCH.GuessSource = PCLaunchGuess;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 193: GMAT phase_LAUNCH.EpochFormat = 'A1ModJulian';"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 194: GMAT phase_LAUNCH.StateLowerBound = [ -1495980000 -1495980000 -1495980000 -100 -100 -100 1e-05 ];"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 195: GMAT phase_LAUNCH.StateUpperBound = [ 1495980000 1495980000 1495980000 100 100 100 5000 ];"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 196: GMAT phase_LAUNCH.ControlLowerBound = [ 0 0 0 ];"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 197: GMAT phase_LAUNCH.ControlUpperBound = [ 0 0 0 ];"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 198: GMAT phase_LAUNCH.EpochLowerBound = '34110'; %  Set bounds huge +/- your launch and make identical for all phases"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 199: GMAT phase_LAUNCH.EpochUpperBound = '34200';"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 200: GMAT phase_LAUNCH.InitialEpoch = '34114.99962963';"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 201: GMAT phase_LAUNCH.FinalEpoch = '34134.99962963';"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 202: GMAT phase_LAUNCH.DynamicsConfiguration = PCDynConfig;"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 203: GMAT phase_LAUNCH.BuiltInCost = 'None';"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 204: GMAT phase_LAUNCH.MinControlMagnitude = 0;"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 205: GMAT phase_LAUNCH.MaxControlMagnitude = 1;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 206: GMAT phase_LAUNCH.MaxRelativeErrorTolerance = 1e-05;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 207: GMAT phase_LAUNCH.OverrideColorInGraphics = false;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 208: GMAT phase_LAUNCH.OrbitColor = Red;"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "MarsRendezvous". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 210: Create OptimalControlFunction MarsRendezvous;"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 211: GMAT MarsRendezvous.Function = 'CelestialBodyRendezvous';"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 212: GMAT MarsRendezvous.Type = 'AlgebraicConstraint';"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 213: GMAT MarsRendezvous.PhaseList = {'thrustToArrival.Final'};"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsRendezvous.SetModelParameter" in line:
+   " 214: GMAT MarsRendezvous.SetModelParameter(CelestialBody, Mars);"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_LAUNCH". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 219: Create CustomLinkageConstraint duration_LAUNCH;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 220: GMAT duration_LAUNCH.ConstraintMode = 'Difference';"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 221: GMAT duration_LAUNCH.InitialPhase = phase_LAUNCH;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 222: GMAT duration_LAUNCH.InitialPhaseBoundaryType = 'Start';"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 223: GMAT duration_LAUNCH.FinalPhase = phase_LAUNCH;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 224: GMAT duration_LAUNCH.FinalPhaseBoundaryType = 'End';"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_LAUNCH.SetModelParameter" in line:
+   " 225: GMAT duration_LAUNCH.SetModelParameter('TimeLowerBound', 'ElapsedDays', 18.2625);"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_LAUNCH.SetModelParameter" in line:
+   " 226: GMAT duration_LAUNCH.SetModelParameter('TimeUpperBound', 'ElapsedDays', 18.2625);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c2e4750c0c42/repo/prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:20 GMAT GUI exiting.

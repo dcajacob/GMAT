@@ -1,0 +1,92 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:17 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:17 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot create an object "VF13ad1". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   " 317: Create VF13ad VF13ad1;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 319: VF13ad1.ShowProgress          = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 320: VF13ad1.ReportStyle           = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 321: VF13ad1.ReportFile            = 'VF13adVF13ad1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 322: VF13ad1.MaximumIterations     = 200;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 323: VF13ad1.Tolerance             = 1e-005;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 324: VF13ad1.UseCentralDifferences = false;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 325: VF13ad1.FeasibilityTolerance  = 0.001;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Optimize in line:
+   " 573: Optimize VF13ad1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 579:    Vary VF13ad1(DefaultSC.ElectricThruster1.ThrustDirection1 = -1.299280970675032, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 580:    Vary VF13ad1(DefaultSC.ElectricThruster1.ThrustDirection2 = -0.4280554235300299, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 581:    Vary VF13ad1(DefaultSC.ElectricThruster1.ThrustDirection3 = 0.4481178492180087, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 582:    Vary VF13ad1(burnDuration  = 6.636137800714871, {Perturbation = 0.00001, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 583:    Vary VF13ad1(coastDuration = 33.01850097112397, {Perturbation = 0.00001, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 595:    Vary VF13ad1(DefaultSC.MoonThruster.ThrustDirection1 = -0.04815907065338908, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 596:    Vary VF13ad1(DefaultSC.MoonThruster.ThrustDirection2 = -0.3584299631873859, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 597:    Vary VF13ad1(DefaultSC.MoonThruster.ThrustDirection3 = 2.604155402234046, {Perturbation = 0.00001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   " 605:    NonlinearConstraint VF13ad1(DefaultSC.Luna.RMAG>=6000);"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   " 607:    NonlinearConstraint VF13ad1(DefaultSC.Luna.C3Energy<=-0.11);"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   " 608:    NonlinearConstraint VF13ad1(DefaultSC.MoonJ2k.RAAN=250);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/ffc3bd800a10/repo/application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:17 GMAT GUI exiting.

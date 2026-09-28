@@ -1,0 +1,4 @@
+PASS: OpenFrames playback, stable hierarchy and HUD fallback: no-microsoft 1x
+PASS: OpenFrames playback, stable hierarchy and HUD fallback: no-microsoft 2x
+PASS: OpenFrames playback, stable hierarchy and HUD fallback: no-microsoft 3x
+PASS: OpenFrames playback, stable hierarchy and HUD fallback: none 1x

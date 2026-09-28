@@ -1,0 +1,1300 @@
+{
+  "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+  "scripts": [
+    {
+      "script": "application/samples/Ex_AnalyticMassProperties.script",
+      "sha256": "4db8aeba48d621493f8e567ff6356b461cd0fe6c18ee6604ab11ccce819069a9",
+      "category": "bundled",
+      "id": "98831d775a1e"
+    },
+    {
+      "script": "application/samples/Ex_Attitude_Inertial.script",
+      "sha256": "a4643afed9481aed7ff48199e9245fba7b01858458f8d72d34d7299833eaa0db",
+      "category": "bundled",
+      "id": "dcd1c89e0cac"
+    },
+    {
+      "script": "application/samples/Ex_Attitude_ModifiedRodriguesParameters.script",
+      "sha256": "cf7aec208ad6bae1687bf2c249773f90232d9c3a472e786b85c3c00972f1dbce",
+      "category": "bundled",
+      "id": "615066674553"
+    },
+    {
+      "script": "application/samples/Ex_Attitude_NadirPointing.script",
+      "sha256": "d41fd9bf2ba41539664e3b7eb791e1e02a5d3e374cfd4c7eaf796e973fa56048",
+      "category": "bundled",
+      "id": "35d9ff8be53d"
+    },
+    {
+      "script": "application/samples/Ex_Attitude_Spinner.script",
+      "sha256": "b197fb8b4551433f6e22cc2b2f23385e7e136fbe563adf203f67f188a79327fa",
+      "category": "bundled",
+      "id": "0079db14025c"
+    },
+    {
+      "script": "application/samples/Ex_Attitude_VNB.script",
+      "sha256": "7c7a4e02c3038e73823a549603b5636cd854554b1caef90b74a2c317e4c74a4d",
+      "category": "bundled",
+      "id": "e921918409d7"
+    },
+    {
+      "script": "application/samples/Ex_Basic3DModel.script",
+      "sha256": "b50c3d73bbb4aa18de75e0715147bb8279264ff15122e2f0eb1884373c2b9942",
+      "category": "bundled",
+      "id": "360a5f07f86b"
+    },
+    {
+      "script": "application/samples/Ex_CCSDSAEMAttitude.script",
+      "sha256": "6e94ac0363dc29ce2b87867077174a2b39c596dc1f8ff7b2c65e032699fefc8d",
+      "category": "bundled",
+      "id": "21b1a334b70c"
+    },
+    {
+      "script": "application/samples/Ex_CSSISpaceWeatherFile.script",
+      "sha256": "8f12e5e9947afb468ad61047919840a544704e9d211fcb4287e55a3d8d52fe13",
+      "category": "bundled",
+      "id": "7cb99c0ab883"
+    },
+    {
+      "script": "application/samples/Ex_CommandEcho_GEOTransfer.script",
+      "sha256": "46ca875f07fb2a3a5f1a5c623ad5620e0f8b5247dfacf3c32b29a44cdfa86fbe",
+      "category": "bundled",
+      "id": "5a369994300f"
+    },
+    {
+      "script": "application/samples/Ex_ConstellationScript.script",
+      "sha256": "f2ae845025ccfbe7dad4a74bcc63f80869033593a0aa4961e9504d8625dd5c49",
+      "category": "bundled",
+      "id": "d6d0f730b0f0"
+    },
+    {
+      "script": "application/samples/Ex_Contact_Location_Station_Mask.script",
+      "sha256": "2037c046a488bc04adb753b0180e842288afd4ad31369e9b3374021a603597d7",
+      "category": "bundled",
+      "id": "54fc24d48991"
+    },
+    {
+      "script": "application/samples/Ex_ControlFlow.script",
+      "sha256": "fd98ffeb06a98bcfc57fae4f42c8478aad92cca39788505c123e81e5923ed809",
+      "category": "bundled",
+      "id": "3da1e9ff69c6"
+    },
+    {
+      "script": "application/samples/Ex_CustomSegmentColors.script",
+      "sha256": "d7ebfaee8ae25bf57dd6e1dbf4537b0a2d2a458e04115e19279fc94cfa3c676f",
+      "category": "bundled",
+      "id": "8dda685c3076"
+    },
+    {
+      "script": "application/samples/Ex_DoubleLunarSwingby.script",
+      "sha256": "cd8ec8f468362e4e42798c97c4eaa4f28e332554ad2892cd791e8ab71674360c",
+      "category": "bundled",
+      "id": "c97a04c5c030"
+    },
+    {
+      "script": "application/samples/Ex_DynamicDisplay_QuaternionPropagation.script",
+      "sha256": "6e00eb342602276750297640cb4a9ffae180093a2654c9dee9183592bfcaae59",
+      "category": "bundled",
+      "id": "ecd96f9e644e"
+    },
+    {
+      "script": "application/samples/Ex_EOPFileLocationFromScript.script",
+      "sha256": "112cfa1f8614e2560acefd896c181f374fe31786a2a42642bc6044e2a2d68d96",
+      "category": "bundled",
+      "id": "f68a3a680774"
+    },
+    {
+      "script": "application/samples/Ex_EclipseLocation.script",
+      "sha256": "644a6fac3544288eaee296cc637105d994d2c97add1ff158bdb1d94b6305ec3a",
+      "category": "bundled",
+      "id": "45d6abb7c971"
+    },
+    {
+      "script": "application/samples/Ex_ElectricPropulsion.script",
+      "sha256": "409e3d87c5573d1e2ff5d21e025bde61b672d152634860c0e2dd44f6671390e3",
+      "category": "bundled",
+      "id": "2a4d2e7e563c"
+    },
+    {
+      "script": "application/samples/Ex_ExternalForceModel.script",
+      "sha256": "ad657162246ba9ff71c96e2cb101b405c842c8d526f165b9d7e8d8831a445991",
+      "category": "bundled",
+      "id": "d5304f5082d2"
+    },
+    {
+      "script": "application/samples/Ex_ExternalForceModel_NoAPI.script",
+      "sha256": "081e7e501238e1d09407fb545b46b80650461a4f92016d5ee1af5d825ff13d9f",
+      "category": "bundled",
+      "id": "2176af5a9fc1"
+    },
+    {
+      "script": "application/samples/Ex_FileInterface.script",
+      "sha256": "209796d3a5b2d14dea907a00b3c84ffded70f25678d8525353cdd119c01fbc54",
+      "category": "bundled",
+      "id": "0adb7c8adc56"
+    },
+    {
+      "script": "application/samples/Ex_FiniteBurn.script",
+      "sha256": "606c9ae47d5d9a4ed360f40b24ce01885874a2cfcdba85079324ab4876ded210",
+      "category": "bundled",
+      "id": "14ac5764189a"
+    },
+    {
+      "script": "application/samples/Ex_FiniteBurnParameters.script",
+      "sha256": "e1a5b8bd9c5a63c667a6d45687f5e50fc9bdd098cb66d0bb31586ab52c19afbf",
+      "category": "bundled",
+      "id": "8d43aae8e068"
+    },
+    {
+      "script": "application/samples/Ex_ForceModel_ExtraShadowBodies.script",
+      "sha256": "45c029a78c6858e1ac2de342bf75896ff3841e4cf7edecdf8a05c4b0f92eb016",
+      "category": "bundled",
+      "id": "b5bf719256f1"
+    },
+    {
+      "script": "application/samples/Ex_ForceModels.script",
+      "sha256": "8cbd3729b1c5dc8d95f407887f90bd4d1e9832862070fffcac1a249257a9cec6",
+      "category": "bundled",
+      "id": "5eff63efac6d"
+    },
+    {
+      "script": "application/samples/Ex_GEOTransfer.script",
+      "sha256": "6d5071b24967f78b0702655ca943da4a658c7ecc4782912397f950019f54bf95",
+      "category": "bundled",
+      "id": "4c6345d8bb8e"
+    },
+    {
+      "script": "application/samples/Ex_GMATFunction_Math.script",
+      "sha256": "17f65e51ae92fefa5d5d4f1c7824ccfa8e8fa94150fa0a8e27e65731fff5f20b",
+      "category": "bundled",
+      "id": "36aa60d81c93"
+    },
+    {
+      "script": "application/samples/Ex_GMATFunction_TargetInsideFunction.script",
+      "sha256": "942fbe32e660c07adbc134d683e8a3085ce9e0abee6781b1f72be31695bee67a",
+      "category": "bundled",
+      "id": "6e27895f090e"
+    },
+    {
+      "script": "application/samples/Ex_GMATFunction_UsingGlobalObjects.script",
+      "sha256": "4920d0a6b0dc7019acaa3f9aef66b5bb0b2c5ff45fca80708a499dc3d4624c22",
+      "category": "bundled",
+      "id": "3b8853b9b2a9"
+    },
+    {
+      "script": "application/samples/Ex_GivenEpochGoToTheMoon.script",
+      "sha256": "9caae1962aa210540d96556041de4038161877253f6b596080953f2c3aba558d",
+      "category": "bundled",
+      "id": "e783ace9a7b8"
+    },
+    {
+      "script": "application/samples/Ex_HighFidelitySRP.script",
+      "sha256": "e29c33b6a4eedbd527e0492e4905565a45ebfb36d86a82c2350206606f9c07d0",
+      "category": "bundled",
+      "id": "53fd961af036"
+    },
+    {
+      "script": "application/samples/Ex_HohmannTransfer.script",
+      "sha256": "c7f060256b4d0d329c17b576a424d0386569956dbe778e19cc7b20f72a17b56f",
+      "category": "bundled",
+      "id": "c0e9d91db763"
+    },
+    {
+      "script": "application/samples/Ex_IOD.script",
+      "sha256": "40085ca14b1c253a638b2cec1acff27f8c6ae0320763a019f6991105b4538e7b",
+      "category": "bundled",
+      "id": "f802327444b2"
+    },
+    {
+      "script": "application/samples/Ex_ImprovedTargeterAlgorithms.script",
+      "sha256": "73e36354e0a0dc97fa99bce2e9a0c0946e9609bde87e64a497a62458832b944e",
+      "category": "bundled",
+      "id": "daef32047821"
+    },
+    {
+      "script": "application/samples/Ex_IncludeMacro.script",
+      "sha256": "d06136610bf8262fd0aae707c42bd209344ea313364125d8e898f4045105a122",
+      "category": "bundled",
+      "id": "772709393d73"
+    },
+    {
+      "script": "application/samples/Ex_Integrators.script",
+      "sha256": "a15f6d80adb5dcdcc2f221f3da0baa9360109ddaef601c12516f790a673f4af2",
+      "category": "bundled",
+      "id": "f2a01a681df0"
+    },
+    {
+      "script": "application/samples/Ex_IntrusionLocator_Mercury_Sun_Transit.script",
+      "sha256": "9726d3325167a5607d6c35e998dbcf747b6c98614bd118aa580d18ae2cadced5",
+      "category": "bundled",
+      "id": "60898f77b8e1"
+    },
+    {
+      "script": "application/samples/Ex_L2Design.script",
+      "sha256": "bd3d39ea04211c078ce90bbda56efcc377b001093663b30a3adb326a3a8868fb",
+      "category": "bundled",
+      "id": "c182c9313337"
+    },
+    {
+      "script": "application/samples/Ex_LCROSSTrajectory.script",
+      "sha256": "44d1e3acd63319853c90aa0ca9e3bdb2b733913a3ddfdf5e3bb2a85aadedc7aa",
+      "category": "bundled",
+      "id": "b1f21098567b"
+    },
+    {
+      "script": "application/samples/Ex_LEOStationKeeping.script",
+      "sha256": "369fccea440fa29802eae9e86ead64c5d6f27800b4db8e70280b30e80418784f",
+      "category": "bundled",
+      "id": "535df20c4a9d"
+    },
+    {
+      "script": "application/samples/Ex_LibrationPointStationKeeping_ESM.script",
+      "sha256": "b7646530b1c604b855f279a7991e49106239a65f208f53d0d1d7d3694528c23c",
+      "category": "bundled",
+      "id": "7c25571a7efe"
+    },
+    {
+      "script": "application/samples/Ex_LunarOrbitStationKeeping.script",
+      "sha256": "d4fa3836435efccc726cda90c9d5899fbcbd1975c006493f12a56f2176f53fe0",
+      "category": "bundled",
+      "id": "93c972f7ece8"
+    },
+    {
+      "script": "application/samples/Ex_LunarTransfer.script",
+      "sha256": "abdddc5aedcb10b561e545fb0d92035ebdde6264e525018f3c582445555bc365",
+      "category": "bundled",
+      "id": "cc9a05fa024f"
+    },
+    {
+      "script": "application/samples/Ex_MMSSingleLunarSwingby.script",
+      "sha256": "7f64ba953e372c675b0e8fe95be5e2c18db6d709bd9f1b36eb086b0d689c1566",
+      "category": "bundled",
+      "id": "9c313d924cbb"
+    },
+    {
+      "script": "application/samples/Ex_MarsBPlane.script",
+      "sha256": "abc78d7b2795548723255bb89c41e6ff3e5b7a6ac0cbdd441dedd32505b61f39",
+      "category": "bundled",
+      "id": "9d158f0e8e45"
+    },
+    {
+      "script": "application/samples/Ex_MarsExponentialAtmosphere.script",
+      "sha256": "7a1a6bba67e306486bcbd7bfcc9de786e72c66e87d21bf665f7ceb03964257a2",
+      "category": "bundled",
+      "id": "fb4cc0ca9e36"
+    },
+    {
+      "script": "application/samples/Ex_MarsGRAM2005.script",
+      "sha256": "4e233c2f3c382152f3bb25f6fcdbb5e0f62026a85f7908378be8405e9abaa1ed",
+      "category": "bundled",
+      "id": "1d6451766d60"
+    },
+    {
+      "script": "application/samples/Ex_MarsOrbit.script",
+      "sha256": "9cac20ecebef483d6d5ce101543cd94e72e9541d6bf0df6b0b1a399e9255f40b",
+      "category": "bundled",
+      "id": "645c663d8dce"
+    },
+    {
+      "script": "application/samples/Ex_MathInScript.script",
+      "sha256": "4aa562dbc970c59a92e6a3f987a858be9a4cc98896e023de76d64c9b7953cce0",
+      "category": "bundled",
+      "id": "db9360ef80a5"
+    },
+    {
+      "script": "application/samples/Ex_MultibodySphericalHarmonicGravity.script",
+      "sha256": "7c7188049112a77cfea8cc912240f75315988c6892294eb047499ded7409aa16",
+      "category": "bundled",
+      "id": "1bd449b60f19"
+    },
+    {
+      "script": "application/samples/Ex_NadirPointingAttitude.script",
+      "sha256": "b374a4699641302bae3cdfc9cf4cc789f67e073c084bc845bd98777c05f927c4",
+      "category": "bundled",
+      "id": "37f804b31ef1"
+    },
+    {
+      "script": "application/samples/Ex_NewFunctions_GetEphemStates.script",
+      "sha256": "f8c843fe45fcf93cce2e535cf17b5a0d03b4a3708ef3a0da8ff516c23f725d92",
+      "category": "bundled",
+      "id": "b0ea6a4638d8"
+    },
+    {
+      "script": "application/samples/Ex_NewMathFunctions.script",
+      "sha256": "6ad655c41af40d1ba83ad958ca666190e52a037cad9b9c72a0ae0b68b753d11f",
+      "category": "bundled",
+      "id": "4be8515eed01"
+    },
+    {
+      "script": "application/samples/Ex_NewOrbitStateReps.script",
+      "sha256": "39974ddf054191e74ecc2bcd5ec9602e7686193973a41004d88d3129e68135ae",
+      "category": "bundled",
+      "id": "f5e9278d155e"
+    },
+    {
+      "script": "application/samples/Ex_NewStringFunctions.script",
+      "sha256": "838ac613dd534f6ebcc3c02ffb671d8d95fa7201cb21ade8b2d59fdb69e6c196",
+      "category": "bundled",
+      "id": "1ad5b12360af"
+    },
+    {
+      "script": "application/samples/Ex_OEMPropagation.script",
+      "sha256": "41b9b5ae6814d34dddbf224ec00a0cf0b86d9b714df17b9e27238466bd78a279",
+      "category": "bundled",
+      "id": "694de0fde99d"
+    },
+    {
+      "script": "application/samples/Ex_PlanetographicRegion.script",
+      "sha256": "f55f57d08f86eb6ec28d56b401fbb0dbb6c1ef810eeebb806af48636a1fc6d58",
+      "category": "bundled",
+      "id": "ca0103e3057c"
+    },
+    {
+      "script": "application/samples/Ex_PrecessingSpinnerAttitude.script",
+      "sha256": "a2fc4e697bf5592bd40487546cf5941bf57ab2aec8c58836527e5b83da90e59b",
+      "category": "bundled",
+      "id": "fc6bec81f79e"
+    },
+    {
+      "script": "application/samples/Ex_Propagate_Covariance.script",
+      "sha256": "4f40c897813dc9aa579a6ddeabce301b3b0637eaaa22bbe9f10393a98e406ece",
+      "category": "bundled",
+      "id": "25b3ef29b540"
+    },
+    {
+      "script": "application/samples/Ex_Propagate_ThrustHistoryFile.script",
+      "sha256": "7fa362f19a5f821f7be781b6ce69f9d1091e1260905dfa87d8c46e9890c6376e",
+      "category": "bundled",
+      "id": "89b729f6d033"
+    },
+    {
+      "script": "application/samples/Ex_PythonInterface.script",
+      "sha256": "ab219999b13dc8d873b70a15fa490cbd4210b78d4afd53b4cbbf9e0f374ce1ee",
+      "category": "bundled",
+      "id": "c1fd80bc441f"
+    },
+    {
+      "script": "application/samples/Ex_SPICECoordinateAxes.script",
+      "sha256": "71270c3260f8adfebedee8fc72b6410e1a5f0e7a2cfe3d98db779ab51f0c4887",
+      "category": "bundled",
+      "id": "d7d209285d5b"
+    },
+    {
+      "script": "application/samples/Ex_SPICEOrbitAndAttitudePropagation.script",
+      "sha256": "9bf85d3af01937b25ed2f16b775ea1b1fccf38d5c3e481b6506ac9a665da111d",
+      "category": "bundled",
+      "id": "ddff5ab362cf"
+    },
+    {
+      "script": "application/samples/Ex_STKEphemOutput.script",
+      "sha256": "33248fe9d577c40af6462b17326eb88668b01bcd3a10675c31cb1faf879cf430",
+      "category": "bundled",
+      "id": "f514980176de"
+    },
+    {
+      "script": "application/samples/Ex_STKEphemPropagation.script",
+      "sha256": "13ada50076e7ac6a47fc5ac661dd2f5a1860df716cfe819fa975c1d5afb8494e",
+      "category": "bundled",
+      "id": "7175446ee553"
+    },
+    {
+      "script": "application/samples/Ex_SafetyEllipse.script",
+      "sha256": "05a7c8a1501a1d9791a05260a35d154e3df8336f9c196d6b3481a244ef93ed46",
+      "category": "bundled",
+      "id": "8e15acf5d23c"
+    },
+    {
+      "script": "application/samples/Ex_SchattenFile_NominalCycle_Mean.script",
+      "sha256": "0b9739098e296049ea2f75163982dd6e8222e3ab6babeb49837bcd9c9e91a570",
+      "category": "bundled",
+      "id": "078aff898ebf"
+    },
+    {
+      "script": "application/samples/Ex_SolverConvergenceParameters.script",
+      "sha256": "7e09970b225a750d9e68f12fc613cfc422d1285472c2ea3de67b37332acd9758",
+      "category": "bundled",
+      "id": "f66a0ae0fc3d"
+    },
+    {
+      "script": "application/samples/Ex_StationContactLocator.script",
+      "sha256": "37c7294698bc1a13cba298840373df7c2393676cf8464c637fc60db91d5ea735",
+      "category": "bundled",
+      "id": "c1fbfc494c71"
+    },
+    {
+      "script": "application/samples/Ex_TLE_Propagation.script",
+      "sha256": "4c19641d289a2614e2636dbc308cbac425a2f512b01f9a66225eada07d3bc3bb",
+      "category": "bundled",
+      "id": "919705fb96e8"
+    },
+    {
+      "script": "application/samples/Ex_TargetFiniteBurn_CenterPeriapsisDuration.script",
+      "sha256": "edae685586e81ad2f39da82fe1e6e774b93329a6db257cf651c7f5548342e791",
+      "category": "bundled",
+      "id": "89527f2b00fe"
+    },
+    {
+      "script": "application/samples/Ex_TargetFiniteBurn_CenterPeriapsisTA.script",
+      "sha256": "cc87f35c6055140ae2e85b84c73a0ba0b49523066414d76aed17d95a27b854b1",
+      "category": "bundled",
+      "id": "5cc831ef7a0c"
+    },
+    {
+      "script": "application/samples/Ex_TargetStatusWindow.script",
+      "sha256": "e3ab6bcc9b11e5814aadba0fb155904f71e0fce5987565eae9025f0fb1f2bb78",
+      "category": "bundled",
+      "id": "53510cd7dbea"
+    },
+    {
+      "script": "application/samples/Ex_ThrusterWithMultipleTanks.script",
+      "sha256": "3f6651de8162698af47b00dd4292ff5c6bd73b91b0afa5b713216aa2f864596d",
+      "category": "bundled",
+      "id": "c13c6810cc96"
+    },
+    {
+      "script": "application/samples/Ex_WriteCommand.script",
+      "sha256": "18e9b43040fe1219f5e296662d559a24fcc981cb46fbc51879ba484ab61c71bc",
+      "category": "bundled",
+      "id": "db96eb69c4b9"
+    },
+    {
+      "script": "application/samples/Ex_Yukon_AlgebraicOptimization.script",
+      "sha256": "76e694ef89bb9b889be11612efe7c5e96a57f30d28a95f8c22c7c06f8390e087",
+      "category": "bundled",
+      "id": "0dd9024da2e8"
+    },
+    {
+      "script": "application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script",
+      "sha256": "3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1",
+      "category": "bundled",
+      "id": "1066fb7aa782"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_CompareEphemeris.script",
+      "sha256": "ddbe40f71a34507b86bbc667992cc8142ba5480527d139bfd0926615b54b4c85",
+      "category": "bundled",
+      "id": "8da20fed1826"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_AngleData.script",
+      "sha256": "4b2133f9d0f8b2d2aeacf81046292122521b9fb359e649a12a25016771b23e08",
+      "category": "bundled",
+      "id": "3fbb8dcf3c45"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_BRTSTracking.script",
+      "sha256": "0629d032facb3223dc70f67ddda1ec34336c2f770ceb9fed292520fb4344699c",
+      "category": "bundled",
+      "id": "739fb8c6ce44"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_NPlateSRP_AreaCoefficient.script",
+      "sha256": "ded1e889f57ec4a047b5d444855eab6472f025fa9d00742f8f595dd7dcea0656",
+      "category": "bundled",
+      "id": "1e65caf27678"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_RangeRangeRate.script",
+      "sha256": "718dc96862fe5cbe634921ec557a7074271554ff5c36c908e179a57272437444",
+      "category": "bundled",
+      "id": "78cefc760807"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_RangeSkin.script",
+      "sha256": "c2191e1d28916a36a33f789afc8fd97866d02445ba2a3647961ad9fa45fc92a7",
+      "category": "bundled",
+      "id": "dd0788b697e9"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_SPADDragScaleFactor.script",
+      "sha256": "b7bc1e3533671b79326d1e3a8031159f216703e770ddbce1b0da5e94138b1422",
+      "category": "bundled",
+      "id": "fec0a90f1f0a"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_SPADSRPScaleFactor.script",
+      "sha256": "7bb77fda288c845fb975e96af268a2b4531daaaeec930cc5d59d29d07a5236b6",
+      "category": "bundled",
+      "id": "8e4a521cb42d"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_TDRSAndUser.script",
+      "sha256": "c3b327fc56f1a39b59f91a8d6f0d9d93218ec6639546941ed89f6be9b87c2e78",
+      "category": "bundled",
+      "id": "a3830d742b90"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_TDRSOneWayReturnDoppler.script",
+      "sha256": "b0dcdff9a31af12a2d6e9c1622a4124f4d00ac4899fa1e0ad9ff406828cab398",
+      "category": "bundled",
+      "id": "c82f8895b5c0"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_TDRSUserTracking.script",
+      "sha256": "c64d0744ca89f72b11679fb56b003841ce2bce9d9c79454c8771438c7f6322cf",
+      "category": "bundled",
+      "id": "5e17dab1a066"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_ThrustAngles.script",
+      "sha256": "b9b60800eda724fd667aaa5af08fe63147c3b6e34e0dfac9a0570e5b893a3fc2",
+      "category": "bundled",
+      "id": "1e4691dcf7ab"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_ThrustScaleFactor.script",
+      "sha256": "0c5da05dba33b2697fcf256908fcb1c185f6aad4680fbe85cfcba5481668da81",
+      "category": "bundled",
+      "id": "0fcb8fbccfdb"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Estimate_With_Initial_OrbitErrorCovariance.script",
+      "sha256": "27b3c0f6d92058b7e4c6c92d39359b66cc623c427df6cd76fc36f806117c6f75",
+      "category": "bundled",
+      "id": "67d39ecd3e4f"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_FilterSmoother_GpsPosVec.script",
+      "sha256": "5092eba298d749279fea533cb008b94967fe4abfc799a592d7dfed2ae38e0be1",
+      "category": "bundled",
+      "id": "b8f4a7253b46"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_MultiSpacecraft_Simultaneous_BatchEstimation.script",
+      "sha256": "4b3a544505dc5672948484b5e7806f05e424ba664fe43ef53c00c904aaaa2f80",
+      "category": "bundled",
+      "id": "8dea1c43f04e"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_OEM_EphemerisCompare.script",
+      "sha256": "cbe09fd79e4b8951b898d743bf97b0ec09be5bb22daac5ba3520e82d015afd18",
+      "category": "bundled",
+      "id": "67c0587082b0"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_SGP4ToHighFidelity.script",
+      "sha256": "c75c125cefa780858bb872281823caf25a9d7e50843569c8dd1009608127a297",
+      "category": "bundled",
+      "id": "f5fb389353e5"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Second_Level_Data_Editing.script",
+      "sha256": "d5cdfc0973932d090515ae40e477469be1bbc513c03866a648ce2a8bf287803b",
+      "category": "bundled",
+      "id": "da187a1f5cc9"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Simulate_And_Estimate_OEMPropagator.script",
+      "sha256": "2500810e9e5efa8bac0d655eb0094efcd9cda9c50d601282ad2fe9e20c51bcc6",
+      "category": "bundled",
+      "id": "3f0981c4eee7"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Simulate_and_Process_GpsPosVec_data.script",
+      "sha256": "6a2fe69014006b6b55935a821f79927429ee9d6c550a147c53214f0cbbb6e3bc",
+      "category": "bundled",
+      "id": "0e4951ba9a9f"
+    },
+    {
+      "script": "application/samples/Navigation/Ex_Simulate_and_Process_Range_and_RangeRate_data.script",
+      "sha256": "dddae752ec7968a53f15c27af74f5e3d3a81a48a63261003cb55eda4479737e6",
+      "category": "bundled",
+      "id": "a7ef46ba0972"
+    },
+    {
+      "script": "application/samples/Navigation/Simulate_DSN_Range_then_Estimate_CartesianState_and_Cr.script",
+      "sha256": "b433904ee1a6caca069d818578199bdbf24321603c479920a6ef9738c1245441",
+      "category": "bundled",
+      "id": "1ea3009cbd66"
+    },
+    {
+      "script": "application/samples/NeedMatlab/Ex_CallMatlabFunctions.script",
+      "sha256": "6af1e1524faa4b35d38cc266264eb5d7fa9ea10f16226a17374467bfab24045f",
+      "category": "bundled",
+      "id": "58f88dfcd911"
+    },
+    {
+      "script": "application/samples/NeedMatlab/Ex_MatlabEnv.script",
+      "sha256": "16e3609c5f501a2a10c22bc5ee2c67eae584b3d5ced1bfc5141e96fefb201ac0",
+      "category": "bundled",
+      "id": "fc2a15a47d63"
+    },
+    {
+      "script": "application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script",
+      "sha256": "0d7cf59d8cf373414488d111f2df2c9382a9c0954923d38b7f7ff9667845c6aa",
+      "category": "bundled",
+      "id": "fc3eb9c96f65"
+    },
+    {
+      "script": "application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script",
+      "sha256": "499bcec4c749b0f37afe6264a3257e7d42a83bd97787fddec706361f40c75e91",
+      "category": "bundled",
+      "id": "c71c881aa966"
+    },
+    {
+      "script": "application/samples/NeedSNOPT/Ex_OptFiniteBurn.script",
+      "sha256": "4e8c0eb1e965360b4da79e4dc697940904b271b26f3cb5455a3b8ea6bf41c6fd",
+      "category": "bundled",
+      "id": "8ebcae9dec7a"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script",
+      "sha256": "f7f071eccdc55fdebca308c02d3446f0042bccc62afa9652535adf0253e9aea7",
+      "category": "bundled",
+      "id": "0615f1e1546c"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script",
+      "sha256": "625c64fc1d93938c33ccfdeac5a179f6ce9fce6a087ede08c081c331be9853f4",
+      "category": "bundled",
+      "id": "ffc3bd800a10"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_MarsLaunchWindowAnalysis.script",
+      "sha256": "7dc7e8bf90d13c9588cc06b42a5ad5ab2f4b03f996893ae8e1a440aca62d0cd8",
+      "category": "bundled",
+      "id": "a89e81f836bc"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_MarsPatchConic.script",
+      "sha256": "eb8eb564d2d141ceab189454831d68788fda72d7a7bbb4c329af1c9f51b585a0",
+      "category": "bundled",
+      "id": "fa8a33a008df"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_MinFuelLunarTransfer.script",
+      "sha256": "48ef435544ad754a6b7cc633df07dbaf3433e64b9fbd273ff1d2a81dd4adae65",
+      "category": "bundled",
+      "id": "397f2911ea70"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_MonitoredLunarTransfer.script",
+      "sha256": "20f0407a64656d2a236577e25dff8cd94ee10cf9e60dadc84984a83f6211b028",
+      "category": "bundled",
+      "id": "6c1abd5af1da"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script",
+      "sha256": "73dd2b6a7ca0d514c08f3c21bff7350fd1ce712f71224dc2b105374d531557b4",
+      "category": "bundled",
+      "id": "580c44efdef4"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Ex_OptimalLunarApsidesRotation_2Burn.script",
+      "sha256": "285498aad597581ce50564ec0a2c3283c92f94532b9c672231bdfbc6bfc24f65",
+      "category": "bundled",
+      "id": "086531f00741"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script",
+      "sha256": "52583eea78d3a2c305c19e865270448fe2254d00eb56f6237456a343bd93b6f8",
+      "category": "bundled",
+      "id": "7b56988de252"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step2.script",
+      "sha256": "58e77eb3a7085867d1705ddbb37c7d7ed294e8ea0ad0f7ce33c26c74e32d22d1",
+      "category": "bundled",
+      "id": "920f60362bb7"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step3.script",
+      "sha256": "e6926078df5c45848222fb14d32213f628ff2573c771bc80ecf0a6a0a816dd01",
+      "category": "bundled",
+      "id": "54e68205f373"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step4.script",
+      "sha256": "ea10ed896f5bb561cd564e522303ebb3cf273757eba997af31cb4e1231d73233",
+      "category": "bundled",
+      "id": "a786367f1865"
+    },
+    {
+      "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step5.script",
+      "sha256": "134f95e7c1e8a7fbd8aae47a338457b42676cf97806dc1c17dca07482939a409",
+      "category": "bundled",
+      "id": "c7ebac8839a7"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script",
+      "sha256": "461518e558fa045f2b5dda42f30ae1e3e921017180b22c768d2cb40baecceafd",
+      "category": "bundled",
+      "id": "013d50ed80e7"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_BusPowerType0.script",
+      "sha256": "4ad6197f43c08ac1db35adde5c9508cf491b8847ea5f7c5a5caecc2fd3523ae6",
+      "category": "bundled",
+      "id": "b772b64a3c0c"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_PowerSupplyCurve1.script",
+      "sha256": "88bdffaae0a41d4aad1d17f4809f5930b53829e2da5c7167649c3fce55b345f6",
+      "category": "bundled",
+      "id": "a713e85fad2f"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script",
+      "sha256": "30e81f1bb7554fdd22bd6608baa52f270afea20926ac6022edb0b08e2e2c1abc",
+      "category": "bundled",
+      "id": "86f1d6794d41"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script",
+      "sha256": "d5ebc02790a795e3eb46742db55984c9a6c0937c125d8542598b8c5d41f012ed",
+      "category": "bundled",
+      "id": "055ea1e51d5b"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script",
+      "sha256": "d76d9ce9573966d0a5c653c9fdc66b5317dea4fb3284f1b1b683572045fe7776",
+      "category": "bundled",
+      "id": "16aa99909b1c"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script",
+      "sha256": "cfabf70f83e6f85d986139b95771de71ddf3dd9448d8e7e0755297b2914c986d",
+      "category": "bundled",
+      "id": "6210ee662fea"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script",
+      "sha256": "fa7bd2f42e8722eae55188c5949b2a32b35baf442a50b0b663ccf1234821125e",
+      "category": "bundled",
+      "id": "7a860873c33f"
+    },
+    {
+      "script": "application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script",
+      "sha256": "1dfb32ff7304d1779251e739bb30e90109ee9e6291db7b56a4e4e11fae1954dc",
+      "category": "bundled",
+      "id": "aeee320ccbd5"
+    },
+    {
+      "script": "application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script",
+      "sha256": "f92b0ac232dada6327e18770dccff27682c1984c264e92453adcfca5359956ab",
+      "category": "bundled",
+      "id": "3ac3711a63c6"
+    },
+    {
+      "script": "application/samples/SupportFiles/Ex_IncludeFile.script",
+      "sha256": "52aeea9ba55789629e2be4255368814144f9b555c66125b77cc6419228a4fa1e",
+      "category": "bundled",
+      "id": "0111fddf2961"
+    },
+    {
+      "script": "application/samples/Tut_ElectricPropulsionModelling.script",
+      "sha256": "63fc2633b1fa713397171a58d758da7e288fe133ede7df3a9a7bb8988a14c317",
+      "category": "bundled",
+      "id": "38d58ad7167d"
+    },
+    {
+      "script": "application/samples/Tut_Inter_Spacecraft_Tracking.script",
+      "sha256": "2481886eb33bc7d248978a97138fbf45f55c14b15b28f67a06484962360ae793",
+      "category": "bundled",
+      "id": "c44df08b490a"
+    },
+    {
+      "script": "application/samples/Tut_Mars_B_Plane_Targeting.script",
+      "sha256": "f334cf650aaa435f132de1d8e7823333378a0d40cd179e0bb0e3143af4ff3178",
+      "category": "bundled",
+      "id": "98c4355d31fe"
+    },
+    {
+      "script": "application/samples/Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.script",
+      "sha256": "1b42dd76b4964717b6b5fa1b8e3d24e4dbc0192b754a71319092e5ea23856900",
+      "category": "bundled",
+      "id": "09a05362e85d"
+    },
+    {
+      "script": "application/samples/Tut_SimpleOrbitTransfer.script",
+      "sha256": "c12811942255832ce30a5e6224067760c59a86695969f71f692d281db835c485",
+      "category": "bundled",
+      "id": "7f63d9e51e0b"
+    },
+    {
+      "script": "application/samples/Tut_Simulate_DSN_Range_and_Doppler_Data.script",
+      "sha256": "15ef759430a2c78b2d3609588a4380ae83971e425293a8a7d28b574d19229328",
+      "category": "bundled",
+      "id": "cc0a32d58b02"
+    },
+    {
+      "script": "application/samples/Tut_Simulate_DSN_Range_and_Doppler_Data_3_weeks.script",
+      "sha256": "e0d3de45456bba7c8ad22f76c44bbbecc495a8bcc8fed8861af25bfe65940f98",
+      "category": "bundled",
+      "id": "7522df42847e"
+    },
+    {
+      "script": "application/samples/Tut_SimulatingAnOrbit.script",
+      "sha256": "74e58a4bf113c2465fc077937f385d550f011892be4199cbbb03a62c81349d24",
+      "category": "bundled",
+      "id": "04386e6b73bb"
+    },
+    {
+      "script": "application/samples/Tut_Target_Finite_Burn_to_Raise_Apogee.script",
+      "sha256": "6bab56e5fb2068331e8e2c497d74711551d01266989a922fe03b2613e3624fcb",
+      "category": "bundled",
+      "id": "7791033a0484"
+    },
+    {
+      "script": "application/samples/Tut_UsingGMATFunctions.script",
+      "sha256": "4d7ec5f61e91c07aa3014b461a48e931a43eb0c8b6d935acc82ac41c2fdc3f2f",
+      "category": "bundled",
+      "id": "b3971251cb75"
+    },
+    {
+      "script": "api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script",
+      "sha256": "d564748c88563ed7cb583e476cbec9f40215a322b47eea1591332b4088cc27a6",
+      "category": "supplemental",
+      "id": "bfe57bb13b09"
+    },
+    {
+      "script": "api-interop/doc/GmatMonte/source/ExampleCode/MinimalLunarTransfer.script",
+      "sha256": "40f84ea157b7b039864234ed97307f65d3604be73dde122f768803884ae8b8dc",
+      "category": "supplemental",
+      "id": "bbaa2b19471a"
+    },
+    {
+      "script": "api-interop/doc/GmatMonte/source/ExampleCode/PropagateMonteLunarTransfer.script",
+      "sha256": "18ce983e3eaa7dc68fc3683f1af809582e249d6e56db857cb4c16a95b0d17c29",
+      "category": "supplemental",
+      "id": "6b813806b2c4"
+    },
+    {
+      "script": "api-interop/doc/GmatMonte/source/ExampleCode/PropagateToPerilune.script",
+      "sha256": "cc278398e0f966ee6cf75f065fc39041b1d212be710703b116be138baa1928c1",
+      "category": "supplemental",
+      "id": "7ab8d85a3b99"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script",
+      "sha256": "dbdf83ffd20f90f989ceb4bead55644f2b8c387b99f82aebc3dd68c4ab59a774",
+      "category": "supplemental",
+      "id": "0d814922d321"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/DynamicsSharing/SimpleGmatScript.script",
+      "sha256": "1a87190fc8312457a2d1cd7638f0c28ccdcda5ee1c1792ce04f0de397d853bce",
+      "category": "supplemental",
+      "id": "8dd23bc831b3"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/ephemshare/LunarTransferExample/EnterLunarOrbit.script",
+      "sha256": "d564748c88563ed7cb583e476cbec9f40215a322b47eea1591332b4088cc27a6",
+      "category": "supplemental",
+      "id": "98fdbf690b94"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/ephemshare/ReadWriteBasics/readSPK.script",
+      "sha256": "f9d8740740d659a03ed8d97d5ca85ec984155d7c7638ab137611da8603de2ac6",
+      "category": "supplemental",
+      "id": "ad945028e4c6"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/mnvrshare/lunartransfer/EnterLunarOrbit.script",
+      "sha256": "84a983cb46caf7d78f839ec76981d0c72c4d9456b9e041e80ca680dac60ba15e",
+      "category": "supplemental",
+      "id": "93d298a44239"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/mnvrshare/lunartransfer/FinalLunarOrbit.script",
+      "sha256": "5ad1730748d086f5c9ee56184da6997f3e9ed8cf47a2ea04bdedb76821698165",
+      "category": "supplemental",
+      "id": "d87e7fc6508e"
+    },
+    {
+      "script": "api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script",
+      "sha256": "b0fcfeb0778395ad5ccd2bfdc69963cf16b92a9ae3cce736991d7bec2bd50a0e",
+      "category": "supplemental",
+      "id": "5fe1acee0fec"
+    },
+    {
+      "script": "application/api/Ex_R2020a_ToLuna.script",
+      "sha256": "9f65716d7d57469358fda7a5b882a9f03de6abb422676e475081daaa4c926a49",
+      "category": "supplemental",
+      "id": "b04eb5bd8334"
+    },
+    {
+      "script": "application/userincludes/CreateIncludeSatA.script",
+      "sha256": "416acc146797f3e06152fdba097b025f529d75e9020c0a171513978c019d5306",
+      "category": "supplemental",
+      "id": "c91664e54f00"
+    },
+    {
+      "script": "application/userincludes/InitializeNestedIncludeSatB.script",
+      "sha256": "79b4451ceb83679ca7f6158c7aa1b4298bc080a0d91da0d874022d10966064b7",
+      "category": "supplemental",
+      "id": "14d7231ab4eb"
+    },
+    {
+      "script": "doc/DevelopersDocs/UsingCInterface/Scripts/defaultConfig.script",
+      "sha256": "8b9904c0e1ea02c1b3a97088e25e9e170e868718057729f4971ee080d2d74628",
+      "category": "supplemental",
+      "id": "7012c161696e"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/BasicFunction.script",
+      "sha256": "a6f8679134e750efc0f30776821086d96e9fa50e89961e07a1429b0b61521c0c",
+      "category": "supplemental",
+      "id": "110a1cb2b7ce"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/BasicScript.script",
+      "sha256": "fd83879f711eea03dfc149816c2b019400226e9584eaf29e6d5e86bece4aea7d",
+      "category": "supplemental",
+      "id": "ad96c8098dd4"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script",
+      "sha256": "c7b2e49e9f2323a24473e6ad83e34c466c6736b51635e532ac9326ba61694e06",
+      "category": "supplemental",
+      "id": "160be896ec1e"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script",
+      "sha256": "7992f64cfb2fa43171c695a164003a4cf19b6e2309e87503cd07f189a4569198",
+      "category": "supplemental",
+      "id": "3f5a68cceefe"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script",
+      "sha256": "d606605fd9cd0245b476f76630d39f4c6d4e58029e0200d12b91cb895cc30d17",
+      "category": "supplemental",
+      "id": "4de15e0dc9f2"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/GlobalSample.script",
+      "sha256": "7626e6c4b8d65bc10c29feba3d719e75fc079e4238cd341e63ff7b8f2a6b2fb6",
+      "category": "supplemental",
+      "id": "6916c67227bc"
+    },
+    {
+      "script": "doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script",
+      "sha256": "046360b901667a2c4ed4999a172e7bde650dd53ef0b923b1ad9712b245e4ffcb",
+      "category": "supplemental",
+      "id": "4892179938d8"
+    },
+    {
+      "script": "doc/SystemDocs/ComponentDesigns/SensorAccess/source/scripts/R2020a_BasicSensors.script",
+      "sha256": "93326bdfe696e7b144e8c8c32fa9b321e09078a903237b85365a295066ca38d5",
+      "category": "supplemental",
+      "id": "67acb4e9ef83"
+    },
+    {
+      "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script",
+      "sha256": "6465a4cde819386f658671fa6b1abab8f7a891e681efc11effe9029cc1ce6ecd",
+      "category": "supplemental",
+      "id": "022547bceec1"
+    },
+    {
+      "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/ExtendedKalmanFilter.script",
+      "sha256": "7f82c9de82e319763fa25ca4c1eda98a581819b2456b175e8c3b80ad4b510d6f",
+      "category": "supplemental",
+      "id": "c8eff2969b4b"
+    },
+    {
+      "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script",
+      "sha256": "7183ddb805779829c43d49a0cac9f8d725561d014f976596606accb81929072b",
+      "category": "supplemental",
+      "id": "e31c76136a7a"
+    },
+    {
+      "script": "doc/SystemDocs/Tools/source/API/source/userguide/examples/ToLuna.script",
+      "sha256": "9f65716d7d57469358fda7a5b882a9f03de6abb422676e475081daaa4c926a49",
+      "category": "supplemental",
+      "id": "fbabcc4ac71d"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Ex_AlgebraicOptimization.script",
+      "sha256": "4c4efcdfe3a8177f7cb67f28834b6fa6fa8e91a0e56a87bd4d0f017bd009ccc6",
+      "category": "supplemental",
+      "id": "a5290331734a"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script",
+      "sha256": "9473d6ae742f827ef4d235a0521edcf688b549c4bcc74d835d332778bdc1dc72",
+      "category": "supplemental",
+      "id": "28c22155e460"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script",
+      "sha256": "e639f4ae835157a79fcd032f79dcf20cec862a552d56b00fb3f4cd888cba946b",
+      "category": "supplemental",
+      "id": "2d5f433a2419"
+    },
+    {
+      "script": "doc/help/src/files/scripts/ForceModelsTutorial.script",
+      "sha256": "9caa1eaaa93484afbad7d4da1e693f00988af42f2dcae07131f820617990a237",
+      "category": "supplemental",
+      "id": "e41cc0d2fb85"
+    },
+    {
+      "script": "doc/help/src/files/scripts/FormationRendezvousTutorial.script",
+      "sha256": "e070a6e169cd03e092bc27a5876291ebb1ad681ee1798f53669662d5883d89a4",
+      "category": "supplemental",
+      "id": "cca7841f6611"
+    },
+    {
+      "script": "doc/help/src/files/scripts/LEOStationKeepingTutorial.script",
+      "sha256": "3eedf44147abff0f94ebd06397f66a2f4606a0ca786a6b014e4d85016de7d9f3",
+      "category": "supplemental",
+      "id": "8b77e28a35fb"
+    },
+    {
+      "script": "doc/help/src/files/scripts/LunarTransferToL2-tutorial.script",
+      "sha256": "d99c57b6bb8833b32e07370c413fe14757a82f9ec4e8bd044ec48ea9b391b3c3",
+      "category": "supplemental",
+      "id": "1fc8c3f06977"
+    },
+    {
+      "script": "doc/help/src/files/scripts/LunarTransferTutorial.script",
+      "sha256": "e070a6e169cd03e092bc27a5876291ebb1ad681ee1798f53669662d5883d89a4",
+      "category": "supplemental",
+      "id": "abfd70a11a1f"
+    },
+    {
+      "script": "doc/help/src/files/scripts/MarsBPlaneTutorial.script",
+      "sha256": "cdfa1f34eb2b9221a510338515ec0ebd3f932de3c5e4a678daa59ed67e0098da",
+      "category": "supplemental",
+      "id": "bbbcada56319"
+    },
+    {
+      "script": "doc/help/src/files/scripts/ReportTutorial.script",
+      "sha256": "2ed3b3e11eca4db7c74757faff0175e4c08741bb9ddc1bef4600afe6889857cf",
+      "category": "supplemental",
+      "id": "d1c1c5472dc4"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_HohmannTransfer.script",
+      "sha256": "a138401580abbb78857561b470938220a2d55612ae0026f5a5d82eb46310398e",
+      "category": "supplemental",
+      "id": "9a6b419320f7"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script",
+      "sha256": "ca36eb25476a0df14f174045ce1baa31335b344a306ca6da4e6a935aeedc2bed",
+      "category": "supplemental",
+      "id": "56f4d124597f"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step1.script",
+      "sha256": "e4d75e3162e9a77a36a45a3a1fb038015ac6c4aea87eafa9292deb4d44c8cf95",
+      "category": "supplemental",
+      "id": "7e30de57b624"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step2.script",
+      "sha256": "4d162397a2bbd7ede2c557a76e5e149ef57e774d2f068448b452507000534968",
+      "category": "supplemental",
+      "id": "2f01a5e95b3e"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step3.script",
+      "sha256": "c3c3fadd8401ae4635ddd9f2b0c9cee8cfd07e561e99813674091622673482c9",
+      "category": "supplemental",
+      "id": "cb8a5bb99376"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step4.script",
+      "sha256": "b52ff0efd87f3844e3f75f34100c33c812d31a1e9f60c422065e1254e0ebd9c4",
+      "category": "supplemental",
+      "id": "4ebc253beb00"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step5.script",
+      "sha256": "907b8e52bf2b1c05dfeea194e86e0027db7648cc26b77aff162b660db813e5c5",
+      "category": "supplemental",
+      "id": "dc4efbae3f96"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_Target_Finite_Burn_to_Raise_Apogee.script",
+      "sha256": "b8a810b64434943d2029805daa5dfc6d1210b60467693ef246c383b364e6591f",
+      "category": "supplemental",
+      "id": "062a68d0ee06"
+    },
+    {
+      "script": "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script",
+      "sha256": "60df6ba3e6ad59ad362a3a6ba4fad54a7896ed6d2353feca7d0851d5ee78de3b",
+      "category": "supplemental",
+      "id": "4d42d30353f3"
+    },
+    {
+      "script": "plugins/CInterfacePlugin/matlab/GmatConfig.script",
+      "sha256": "a7d9be5c5eeeabeccb5d5f9a5806dbaf9d48bd91da93aec17c97460cb998ec21",
+      "category": "supplemental",
+      "id": "809698f1cb2d"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+      "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+      "category": "supplemental",
+      "id": "ca2799fd2bfc"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Contacts.script",
+      "sha256": "9e89c249d2b910ed59da646c524ee29197f2d3f91b3a6e57ad1b041ab7abe9a5",
+      "category": "supplemental",
+      "id": "f1803cf06b45"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+      "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+      "category": "supplemental",
+      "id": "8859bb96a959"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/GSFCSats.script",
+      "sha256": "19c7d8ed7aa6274809f27707b9460efa69afa88b8399b09b333c9f023a78f34c",
+      "category": "supplemental",
+      "id": "1d38aea1d7ed"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/PropLightsail2.script",
+      "sha256": "c7651802a1b2199145ecfa800154f9d10fbbd40a189ed6f7d57766189b20243e",
+      "category": "supplemental",
+      "id": "934f092b929f"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Starlink.script",
+      "sha256": "c39f0f81a18c9c0b85648306d77b5523e85cd8227ab23b46406c93708eec14cf",
+      "category": "supplemental",
+      "id": "5fbd73d6239a"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/test/TLE/BasicPropagation.script",
+      "sha256": "80e2c0dd0f60bfe6915a296b57bbb5d69d0d3cd462e7c68f32a8d44efb139a6d",
+      "category": "supplemental",
+      "id": "838074973c43"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/test/scripts/BasicPropagation.script",
+      "sha256": "21b2c394fa69bc661c5d0becf637bd2e08f58955d42ced0e9cb43b6ae6128fb8",
+      "category": "supplemental",
+      "id": "722703ce480d"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/test/scripts/MMS1Propagation.script",
+      "sha256": "d7f0a3f9fd402c99a91d9d262455ca731df5b0855369efa05c774ac404f2cf6a",
+      "category": "supplemental",
+      "id": "199202c1b4a4"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/test/scripts/TdrsPropagation.script",
+      "sha256": "06390c462e891341164077147fe2e01c8a6f9d96e6ea83ed18671c08d57b89b9",
+      "category": "supplemental",
+      "id": "30a0bf4c5c90"
+    },
+    {
+      "script": "plugins/TLEPropagatorPlugin/test/scripts/TerraPropagation.script",
+      "sha256": "2baad582ef920795290135ffaf9cb77bc7107176d916b3650a551516e9af3f6f",
+      "category": "supplemental",
+      "id": "5df695ee2894"
+    },
+    {
+      "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_3DViews.script",
+      "sha256": "cedd134c023bb941352fb15238561a464e1f95555489641438d2e932c3349b56",
+      "category": "supplemental",
+      "id": "86ff4fa09ea2"
+    },
+    {
+      "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_Propagators.script",
+      "sha256": "fd2a49caab57cf82546ce4d4a9c39ddfd3ab205b219b5d0465590fb10204ad58",
+      "category": "supplemental",
+      "id": "de1ab3ac4e00"
+    },
+    {
+      "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script",
+      "sha256": "c5780688a62d8e9e1be329c848e306fb41dde038edc333bd92cc5e45c4171a0c",
+      "category": "supplemental",
+      "id": "012255f9691a"
+    },
+    {
+      "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_Spacecraft.script",
+      "sha256": "d0117365cd8548fa043bb3d431fe167a0eb3ca41e298fb4750eb24665f02b60c",
+      "category": "supplemental",
+      "id": "5303a5141d61"
+    },
+    {
+      "script": "prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script",
+      "sha256": "3c8dcfb0fe077672b3a4974f5cb1d51e0fdadd95904f3a09ab9665cd7496063f",
+      "category": "supplemental",
+      "id": "dcb65e12f4f5"
+    },
+    {
+      "script": "prototype/CSALTMatlab/TestProblems/AutoNGC/LunarOrbiterStationKeeping/AutoNGCLOSK_GMAT_CheckPropagation.script",
+      "sha256": "3873e82b590f53c638672c246967dea4f3d9a2af2b2e8cbc2ea3e73172677c02",
+      "category": "supplemental",
+      "id": "44767f93c8bd"
+    },
+    {
+      "script": "prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script",
+      "sha256": "6c6461592b51424af467e81f914a3bb3838aa5d33dd2566ed18090b9221c3967",
+      "category": "supplemental",
+      "id": "c2e4750c0c42"
+    },
+    {
+      "script": "prototype/GroundTrackPlot/GroundTrack_Earth_GEO.script",
+      "sha256": "3ef506fa27d7bbb169e495175122ba44b6b0405c44c5a5514a432f96e0b458ac",
+      "category": "supplemental",
+      "id": "193c99608459"
+    },
+    {
+      "script": "prototype/GroundTrackPlot/GroundTrack_Earth_LEO_Prograde.script",
+      "sha256": "a34e7284ac633b0294ad9415d1a46902d4a9cf168320ade40c14140c03628698",
+      "category": "supplemental",
+      "id": "f0fddc7ade41"
+    },
+    {
+      "script": "prototype/GroundTrackPlot/GroundTrack_Earth_LEO_Retrograde.script",
+      "sha256": "b7c26022f60135e48882696d1f85e98dd7ae3b2f78a84c4c593c3e0bd3462899",
+      "category": "supplemental",
+      "id": "e490a9f64486"
+    },
+    {
+      "script": "prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script",
+      "sha256": "19e9d8672fbb600bb172e2aee3f98376e033423f2c6f854d94d4481c0d22d1ed",
+      "category": "supplemental",
+      "id": "30a648d7ec0c"
+    },
+    {
+      "script": "prototype/OptimalControl/LowThrust/TestProblems/LowThrustModelling/SolarEndToEndExample.script",
+      "sha256": "87b5825b1b5c2fd296bd727860d13c02be5f482c36e0bca0e1533bed23fefc51",
+      "category": "supplemental",
+      "id": "a212ebe20e95"
+    }
+  ],
+  "selected": [
+    "application/samples/Ex_EOPFileLocationFromScript.script",
+    "application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script",
+    "application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script",
+    "application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script",
+    "application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script",
+    "api-interop/gmat-monte/datasharing/DynamicsSharing/SimpleGmatScript.script",
+    "api-interop/gmat-monte/datasharing/ephemshare/ReadWriteBasics/readSPK.script",
+    "application/api/Ex_R2020a_ToLuna.script",
+    "doc/SystemDocs/Tools/source/API/source/userguide/examples/ToLuna.script",
+    "doc/help/src/files/scripts/LEOStationKeepingTutorial.script",
+    "doc/help/src/files/scripts/Tut_HohmannTransfer.script",
+    "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script",
+    "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step1.script",
+    "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step2.script",
+    "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step3.script",
+    "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step4.script",
+    "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step5.script",
+    "doc/help/src/files/scripts/Tut_Target_Finite_Burn_to_Raise_Apogee.script",
+    "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script",
+    "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/PropLightsail2.script",
+    "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_3DViews.script",
+    "prototype/CSALTMatlab/TestProblems/AutoNGC/LunarOrbiterStationKeeping/AutoNGCLOSK_GMAT_CheckPropagation.script",
+    "prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script",
+    "prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script"
+  ],
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "converted",
+    "scale": 2,
+    "limit_seconds": 600,
+    "startup_sha256": "c47bdddbc3555cc5eb8155034c28f0dfe9c07d714fcd2aa28b13b519a240103b"
+  }
+}

@@ -1,0 +1,73 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:19 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:19 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+"StateType" is deprecated as the string specifying the state type for display, and will be removed from a future build; please use "DisplayStateType" instead.
+"StateType" is deprecated as the string specifying the state type for display, and will be removed from a future build; please use "DisplayStateType" instead.
+"StateType" is deprecated as the string specifying the state type for display, and will be removed from a future build; please use "DisplayStateType" instead.
+"StateType" is deprecated as the string specifying the state type for display, and will be removed from a future build; please use "DisplayStateType" instead.
+*** WARNING *** "ViewPointRef" is deprecated and will be removed from a future build; please use "ViewPointReference" instead.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+*** WARNING *** "TargetStatus" is deprecated and will be removed from a future build; please use "SolverIterations" instead.
+*** WARNING *** "EarthSunLines" is deprecated and will be removed from a future build; please use "SunLine" instead.
+*** WARNING *** "IndVar" field of XYPlot on object "Qvst" is deprecated and will be removed from a future build; please use "XVariable" instead.
+*** WARNING *** "Add" field of XYPlot on object "Qvst" is deprecated and will be removed from a future build; please use "YVariables" instead.
+*** WARNING *** "Grid" field of XYPlot on object "Qvst" is deprecated and will be removed from a future build; please use "ShowGrid" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: **** ERROR **** SpaceObject Exception Thrown: The parameter "TotalMass" is a calculated parameter and cannot be set on the spacecraft MMS1 in line:
+   "  20: GMAT MMS1.TotalMass = 850;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: **** ERROR **** SpaceObject Exception Thrown: The parameter "TotalMass" is a calculated parameter and cannot be set on the spacecraft MMS2 in line:
+   "  32: GMAT MMS2.TotalMass = 850;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: **** ERROR **** SpaceObject Exception Thrown: The parameter "TotalMass" is a calculated parameter and cannot be set on the spacecraft MMS3 in line:
+   "  44: GMAT MMS3.TotalMass = 850;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: **** ERROR **** SpaceObject Exception Thrown: The parameter "TotalMass" is a calculated parameter and cannot be set on the spacecraft MMS4 in line:
+   "  56: GMAT MMS4.TotalMass = 850;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "FormationView1" is no longer in use in line:
+   " 114: GMAT FormationView1.FixedFovAngle = 45;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "FormationView1" is no longer in use in line:
+   " 124: GMAT FormationView1.PerspectiveMode = Off;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "FormationView1" is no longer in use in line:
+   " 125: GMAT FormationView1.UseFixedFov = Off;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "EarthView" is no longer in use in line:
+   " 185: GMAT EarthView.FixedFovAngle = 45;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "EarthView" is no longer in use in line:
+   " 195: GMAT EarthView.PerspectiveMode = Off;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "EarthView" is no longer in use in line:
+   " 196: GMAT EarthView.UseFixedFov = Off;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/4892179938d8/repo/doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:20 GMAT GUI exiting.

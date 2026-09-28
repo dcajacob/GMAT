@@ -1,0 +1,193 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:56:37 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 13:56:37 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/535df20c4a9d/repo/application/samples/Ex_LEOStationKeeping.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/535df20c4a9d/repo/application/samples/Ex_LEOStationKeeping.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.921: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.921: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.921: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.937: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.949: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.951: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.951: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.951: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.952: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:37.953: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+********************************************************
+*** Performing Differential Correction (using "DC")
+*** 2 variables; 2 goals
+   Variables:  TCM1.Element1, TCM2.Element1
+   Goals:  LEOsat.Earth.RMAG, LEOsat.Earth.ECC
+   SolverMode:  Solve
+********************************************************
+DC Iteration 1; Nominal Pass
+   Variables:  TCM1.Element1 = 0.002, TCM2.Element1 = 1e-05
+   Goals and achieved values:
+      LEOsat.Earth.RMAG  Desired: 6737  Achieved: 6736.62108292  Variance: 0.378917084942
+      LEOsat.Earth.ECC  Desired: 5e-05  Achieved: 0.000426283123705  Variance: -0.000376283123705
+
+   Completed iteration 1, pert 1 (TCM1.Element1 = 0.0021)
+   Completed iteration 1, pert 2 (TCM2.Element1 = 6e-05)
+
+DC Iteration 2; Nominal Pass
+   Variables:  TCM1.Element1 = 0.00210974378585, TCM2.Element1 = 0.00158146619587
+   Goals and achieved values:
+      LEOsat.Earth.RMAG  Desired: 6737  Achieved: 6737.00001117  Variance: -1.11683184514e-05
+      LEOsat.Earth.ECC  Desired: 5e-05  Achieved: 4.99494923205e-05  Variance: 5.05076795299e-08
+
+
+*** Targeting Completed in 2 iterations.
+*** The Targeter converged!
+Final Variable values:
+   TCM1.Element1 = 0.00210974378585
+   TCM2.Element1 = 0.00158146619587
+
+AUDIT_HEARTBEAT seconds=10
+********************************************************
+*** Performing Differential Correction (using "DC")
+*** 2 variables; 2 goals
+   Variables:  TCM1.Element1, TCM2.Element1
+   Goals:  LEOsat.Earth.RMAG, LEOsat.Earth.ECC
+   SolverMode:  Solve
+********************************************************
+DC Iteration 1; Nominal Pass
+   Variables:  TCM1.Element1 = 0.002, TCM2.Element1 = 1e-05
+   Goals and achieved values:
+      LEOsat.Earth.RMAG  Desired: 6737  Achieved: 6737.65259141  Variance: -0.652591411271
+      LEOsat.Earth.ECC  Desired: 5e-05  Achieved: 0.00104770265401  Variance: -0.000997702654014
+
+   Completed iteration 1, pert 1 (TCM1.Element1 = 0.0021)
+   Completed iteration 1, pert 2 (TCM2.Element1 = 6e-05)
+
+DC Iteration 2; Nominal Pass
+   Variables:  TCM1.Element1 = 0.00181275935781, TCM2.Element1 = 0.00364765402894
+   Goals and achieved values:
+      LEOsat.Earth.RMAG  Desired: 6737  Achieved: 6737.0002711  Variance: -0.000271102732768
+      LEOsat.Earth.ECC  Desired: 5e-05  Achieved: 4.95883033826e-05  Variance: 4.11696617408e-07
+
+
+*** Targeting Completed in 2 iterations.
+*** The Targeter converged!
+Final Variable values:
+   TCM1.Element1 = 0.00181275935781
+   TCM2.Element1 = 0.00364765402894
+
+
+Mission run completed.
+===> Total Run Time: 16.048 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=1
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=(LEOsat.A1ModJulian) vs (LEOsat.Earth.Altitude) size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=(LEOsat.A1ModJulian) vs (LEOsat.Earth.Altitude) size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=10001 title=OFI_DefaultOrbitView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=10001 title=OFI_DefaultOrbitView size=498x368
+AUDIT_SCREENSHOT result=0
+
+(ExampleSweep:19): Gtk-WARNING **: 13:56:55.987: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46013 title=Solver Window - Target 'Raise Orbit' DC {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46013 title=Solver Window - Target 'Raise Orbit' DC {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 13:56:56 GMAT GUI exiting.

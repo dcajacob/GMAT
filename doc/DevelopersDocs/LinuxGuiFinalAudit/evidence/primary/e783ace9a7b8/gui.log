@@ -1,0 +1,803 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 13:55:27 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 13:55:27 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e783ace9a7b8/repo/application/samples/Ex_GivenEpochGoToTheMoon.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e783ace9a7b8/repo/application/samples/Ex_GivenEpochGoToTheMoon.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+OpenFramesInterface could not find target named "Sun" for OpenFramesView "Sun_View2".
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+OpenFramesInterface could not find target named "Sun" for OpenFramesView "Sun_View1".
+********************************************************
+*** Performing Differential Correction (using "DC1")
+*** 2 variables; 2 goals
+   Variables:  MoonSat.RAAN, MoonSat.AOP
+   Goals:  MoonSat.EarthMoonRot.RA, MoonSat.EarthMoonRot.DEC
+   SolverMode:  Solve
+********************************************************
+DC1 Iteration 1; Nominal Pass
+   Variables:  MoonSat.RAAN = 45.1, MoonSat.AOP = 2.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -152.533211088  Variance: 152.533211088
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 15.6486357302  Variance: -15.6486357302
+
+   Completed iteration 1, pert 1 (MoonSat.RAAN = 45.10001)
+   Completed iteration 1, pert 2 (MoonSat.AOP = 2.50001)
+
+DC1 Iteration 2; Nominal Pass
+   Variables:  MoonSat.RAAN = 45.1792802535, MoonSat.AOP = 7.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -147.312587356  Variance: 147.312587356
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 15.0502881647  Variance: -15.0502881647
+
+   Completed iteration 2, pert 1 (MoonSat.RAAN = 45.1792902535)
+   Completed iteration 2, pert 2 (MoonSat.AOP = 7.50001)
+
+DC1 Iteration 3; Nominal Pass
+   Variables:  MoonSat.RAAN = 45.5395490218, MoonSat.AOP = 12.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -141.850955121  Variance: 141.850955121
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 14.4242372156  Variance: -14.4242372156
+
+   Completed iteration 3, pert 1 (MoonSat.RAAN = 45.5395590218)
+   Completed iteration 3, pert 2 (MoonSat.AOP = 12.50001)
+
+DC1 Iteration 4; Nominal Pass
+   Variables:  MoonSat.RAAN = 46.2182293822, MoonSat.AOP = 17.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -136.113154651  Variance: 136.113154651
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 13.7610045182  Variance: -13.7610045182
+
+   Completed iteration 4, pert 1 (MoonSat.RAAN = 46.2182393822)
+   Completed iteration 4, pert 2 (MoonSat.AOP = 17.50001)
+
+DC1 Iteration 5; Nominal Pass
+   Variables:  MoonSat.RAAN = 47.3053208247, MoonSat.AOP = 22.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -130.014459576  Variance: 130.014459576
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 13.054069008  Variance: -13.054069008
+
+   Completed iteration 5, pert 1 (MoonSat.RAAN = 47.3053308247)
+   Completed iteration 5, pert 2 (MoonSat.AOP = 22.50001)
+
+DC1 Iteration 6; Nominal Pass
+   Variables:  MoonSat.RAAN = 48.9381226262, MoonSat.AOP = 27.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -123.426869582  Variance: 123.426869582
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 12.2858365996  Variance: -12.2858365996
+
+   Completed iteration 6, pert 1 (MoonSat.RAAN = 48.9381326262)
+   Completed iteration 6, pert 2 (MoonSat.AOP = 27.50001)
+
+DC1 Iteration 7; Nominal Pass
+   Variables:  MoonSat.RAAN = 51.2196694679, MoonSat.AOP = 32.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -116.261975744  Variance: 116.261975744
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 11.3986190852  Variance: -11.3986190852
+
+   Completed iteration 7, pert 1 (MoonSat.RAAN = 51.2196794679)
+   Completed iteration 7, pert 2 (MoonSat.AOP = 32.50001)
+
+DC1 Iteration 8; Nominal Pass
+   Variables:  MoonSat.RAAN = 55.158566333, MoonSat.AOP = 37.5
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -107.561559445  Variance: 107.561559445
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 10.3851774262  Variance: -10.3851774262
+
+   Completed iteration 8, pert 1 (MoonSat.RAAN = 55.158576333)
+   Completed iteration 8, pert 2 (MoonSat.AOP = 37.50001)
+
+DC1 Iteration 9; Nominal Pass
+   Variables:  MoonSat.RAAN = 60.158566333, MoonSat.AOP = 41.0850993415
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -99.2956276767  Variance: 99.2956276767
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 9.43299114047  Variance: -9.43299114047
+
+   Completed iteration 9, pert 1 (MoonSat.RAAN = 60.158576333)
+   Completed iteration 9, pert 2 (MoonSat.AOP = 41.0851093415)
+
+DC1 Iteration 10; Nominal Pass
+   Variables:  MoonSat.RAAN = 65.158566333, MoonSat.AOP = 43.5968663667
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -92.1410243027  Variance: 92.1410243027
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 8.43426817423  Variance: -8.43426817423
+
+   Completed iteration 10, pert 1 (MoonSat.RAAN = 65.158576333)
+   Completed iteration 10, pert 2 (MoonSat.AOP = 43.5968763667)
+
+DC1 Iteration 11; Nominal Pass
+   Variables:  MoonSat.RAAN = 70.158566333, MoonSat.AOP = 44.874767753
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -86.2024697094  Variance: 86.2024697094
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 7.60682524987  Variance: -7.60682524987
+
+   Completed iteration 11, pert 1 (MoonSat.RAAN = 70.158576333)
+   Completed iteration 11, pert 2 (MoonSat.AOP = 44.874777753)
+
+DC1 Iteration 12; Nominal Pass
+   Variables:  MoonSat.RAAN = 75.158566333, MoonSat.AOP = 44.5197233796
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -81.7729234418  Variance: 81.7729234418
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 7.29334204309  Variance: -7.29334204309
+
+   Completed iteration 12, pert 1 (MoonSat.RAAN = 75.158576333)
+   Completed iteration 12, pert 2 (MoonSat.AOP = 44.5197333796)
+
+DC1 Iteration 13; Nominal Pass
+   Variables:  MoonSat.RAAN = 80.158566333, MoonSat.AOP = 43.7426874529
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -77.7215473771  Variance: 77.7215473771
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 7.03978426738  Variance: -7.03978426738
+
+   Completed iteration 13, pert 1 (MoonSat.RAAN = 80.158576333)
+   Completed iteration 13, pert 2 (MoonSat.AOP = 43.7426974529)
+
+DC1 Iteration 14; Nominal Pass
+   Variables:  MoonSat.RAAN = 85.158566333, MoonSat.AOP = 42.6516688452
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -73.938311399  Variance: 73.938311399
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 6.82976385264  Variance: -6.82976385264
+
+   Completed iteration 14, pert 1 (MoonSat.RAAN = 85.158576333)
+   Completed iteration 14, pert 2 (MoonSat.AOP = 42.6516788452)
+
+DC1 Iteration 15; Nominal Pass
+   Variables:  MoonSat.RAAN = 90.158566333, MoonSat.AOP = 41.5682543185
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -70.1438977573  Variance: 70.1438977573
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 6.50868237914  Variance: -6.50868237914
+
+   Completed iteration 15, pert 1 (MoonSat.RAAN = 90.158576333)
+   Completed iteration 15, pert 2 (MoonSat.AOP = 41.5682643185)
+
+DC1 Iteration 16; Nominal Pass
+   Variables:  MoonSat.RAAN = 95.158566333, MoonSat.AOP = 41.0436596187
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -65.899671459  Variance: 65.899671459
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 5.74668809536  Variance: -5.74668809536
+
+   Completed iteration 16, pert 1 (MoonSat.RAAN = 95.158576333)
+   Completed iteration 16, pert 2 (MoonSat.AOP = 41.0436696187)
+
+DC1 Iteration 17; Nominal Pass
+   Variables:  MoonSat.RAAN = 100.158566333, MoonSat.AOP = 39.6555526712
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -62.3563020411  Variance: 62.3563020411
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 5.39591221872  Variance: -5.39591221872
+
+   Completed iteration 17, pert 1 (MoonSat.RAAN = 100.158576333)
+   Completed iteration 17, pert 2 (MoonSat.AOP = 39.6555626712)
+
+DC1 Iteration 18; Nominal Pass
+   Variables:  MoonSat.RAAN = 105.158566333, MoonSat.AOP = 38.1143719349
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -58.9220080816  Variance: 58.9220080816
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 5.06186612896  Variance: -5.06186612896
+
+   Completed iteration 18, pert 1 (MoonSat.RAAN = 105.158576333)
+   Completed iteration 18, pert 2 (MoonSat.AOP = 38.1143819349)
+
+DC1 Iteration 19; Nominal Pass
+   Variables:  MoonSat.RAAN = 110.158566333, MoonSat.AOP = 36.0179540761
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -55.8887311725  Variance: 55.8887311725
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 5.0275079143  Variance: -5.0275079143
+
+   Completed iteration 19, pert 1 (MoonSat.RAAN = 110.158576333)
+   Completed iteration 19, pert 2 (MoonSat.AOP = 36.0179640761)
+
+DC1 Iteration 20; Nominal Pass
+   Variables:  MoonSat.RAAN = 115.158566333, MoonSat.AOP = 34.101442913
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -52.6941142702  Variance: 52.6941142702
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 4.82001717397  Variance: -4.82001717397
+
+   Completed iteration 20, pert 1 (MoonSat.RAAN = 115.158576333)
+   Completed iteration 20, pert 2 (MoonSat.AOP = 34.101452913)
+
+DC1 Iteration 21; Nominal Pass
+   Variables:  MoonSat.RAAN = 120.158566333, MoonSat.AOP = 31.8516811896
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -49.712861575  Variance: 49.712861575
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 4.7942798389  Variance: -4.7942798389
+
+   Completed iteration 21, pert 1 (MoonSat.RAAN = 120.158576333)
+   Completed iteration 21, pert 2 (MoonSat.AOP = 31.8516911896)
+
+DC1 Iteration 22; Nominal Pass
+   Variables:  MoonSat.RAAN = 125.158566333, MoonSat.AOP = 30.5816825703
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -46.0256495287  Variance: 46.0256495287
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 4.01374607597  Variance: -4.01374607597
+
+   Completed iteration 22, pert 1 (MoonSat.RAAN = 125.158576333)
+   Completed iteration 22, pert 2 (MoonSat.AOP = 30.5816925703)
+
+DC1 Iteration 23; Nominal Pass
+   Variables:  MoonSat.RAAN = 130.158566333, MoonSat.AOP = 28.3922164939
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -42.9597061024  Variance: 42.9597061024
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 3.84459852553  Variance: -3.84459852553
+
+   Completed iteration 23, pert 1 (MoonSat.RAAN = 130.158576333)
+   Completed iteration 23, pert 2 (MoonSat.AOP = 28.3922264939)
+
+DC1 Iteration 24; Nominal Pass
+   Variables:  MoonSat.RAAN = 135.158566333, MoonSat.AOP = 26.3283508547
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -39.7863861718  Variance: 39.7863861718
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 3.53967224067  Variance: -3.53967224067
+
+   Completed iteration 24, pert 1 (MoonSat.RAAN = 135.158576333)
+   Completed iteration 24, pert 2 (MoonSat.AOP = 26.3283608547)
+
+DC1 Iteration 25; Nominal Pass
+   Variables:  MoonSat.RAAN = 140.158566333, MoonSat.AOP = 24.6287405022
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -36.3614542274  Variance: 36.3614542274
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 2.91215242711  Variance: -2.91215242711
+
+   Completed iteration 25, pert 1 (MoonSat.RAAN = 140.158576333)
+   Completed iteration 25, pert 2 (MoonSat.AOP = 24.6287505022)
+
+DC1 Iteration 26; Nominal Pass
+   Variables:  MoonSat.RAAN = 145.158566333, MoonSat.AOP = 22.4040807384
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -33.2578904368  Variance: 33.2578904368
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 2.64730202941  Variance: -2.64730202941
+
+   Completed iteration 26, pert 1 (MoonSat.RAAN = 145.158576333)
+   Completed iteration 26, pert 2 (MoonSat.AOP = 22.4040907384)
+
+DC1 Iteration 27; Nominal Pass
+   Variables:  MoonSat.RAAN = 150.158566333, MoonSat.AOP = 20.1333094308
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -30.1629451569  Variance: 30.1629451569
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 2.38635147788  Variance: -2.38635147788
+
+   Completed iteration 27, pert 1 (MoonSat.RAAN = 150.158576333)
+   Completed iteration 27, pert 2 (MoonSat.AOP = 20.1333194308)
+
+DC1 Iteration 28; Nominal Pass
+   Variables:  MoonSat.RAAN = 155.158566333, MoonSat.AOP = 17.8217676278
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -27.0741873264  Variance: 27.0741873264
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 2.12904965531  Variance: -2.12904965531
+
+   Completed iteration 28, pert 1 (MoonSat.RAAN = 155.158576333)
+   Completed iteration 28, pert 2 (MoonSat.AOP = 17.8217776278)
+
+AUDIT_HEARTBEAT seconds=10
+DC1 Iteration 29; Nominal Pass
+   Variables:  MoonSat.RAAN = 160.158566333, MoonSat.AOP = 15.4744958297
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -23.9898970419  Variance: 23.9898970419
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 1.87523746246  Variance: -1.87523746246
+
+   Completed iteration 29, pert 1 (MoonSat.RAAN = 160.158576333)
+   Completed iteration 29, pert 2 (MoonSat.AOP = 15.4745058297)
+
+DC1 Iteration 30; Nominal Pass
+   Variables:  MoonSat.RAAN = 165.158566333, MoonSat.AOP = 13.3459026277
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -20.7636661312  Variance: 20.7636661312
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 1.42186730777  Variance: -1.42186730777
+
+   Completed iteration 30, pert 1 (MoonSat.RAAN = 165.158576333)
+   Completed iteration 30, pert 2 (MoonSat.AOP = 13.3459126277)
+
+DC1 Iteration 31; Nominal Pass
+   Variables:  MoonSat.RAAN = 170.158566333, MoonSat.AOP = 10.9030069628
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -17.7093161885  Variance: 17.7093161885
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 1.20513706053  Variance: -1.20513706053
+
+   Completed iteration 31, pert 1 (MoonSat.RAAN = 170.158576333)
+   Completed iteration 31, pert 2 (MoonSat.AOP = 10.9030169628)
+
+DC1 Iteration 32; Nominal Pass
+   Variables:  MoonSat.RAAN = 175.158566333, MoonSat.AOP = 8.43964713296
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -14.6559996059  Variance: 14.6559996059
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 0.991426375637  Variance: -0.991426375637
+
+   Completed iteration 32, pert 1 (MoonSat.RAAN = 175.158576333)
+   Completed iteration 32, pert 2 (MoonSat.AOP = 8.43965713296)
+
+DC1 Iteration 33; Nominal Pass
+   Variables:  MoonSat.RAAN = 180.158566333, MoonSat.AOP = 6.38626668965
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -11.3628579562  Variance: 11.3628579562
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 0.429547059243  Variance: -0.429547059243
+
+   Completed iteration 33, pert 1 (MoonSat.RAAN = 180.158576333)
+   Completed iteration 33, pert 2 (MoonSat.AOP = 6.38627668965)
+
+DC1 Iteration 34; Nominal Pass
+   Variables:  MoonSat.RAAN = 185.158566333, MoonSat.AOP = 4.38479434042
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -8.03754926258  Variance: 8.03754926258
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: -0.18297668118  Variance: 0.18297668118
+
+   Completed iteration 34, pert 1 (MoonSat.RAAN = 185.158576333)
+   Completed iteration 34, pert 2 (MoonSat.AOP = 4.38480434042)
+
+DC1 Iteration 35; Nominal Pass
+   Variables:  MoonSat.RAAN = 190.158566333, MoonSat.AOP = 1.1337957166
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -5.41505143722  Variance: 5.41505143722
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 0.233672247876  Variance: -0.233672247876
+
+   Completed iteration 35, pert 1 (MoonSat.RAAN = 190.158576333)
+   Completed iteration 35, pert 2 (MoonSat.AOP = 1.1338057166)
+
+DC1 Iteration 36; Nominal Pass
+   Variables:  MoonSat.RAAN = 195.158566333, MoonSat.AOP = -1.45626757457
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: -2.42142207917  Variance: 2.42142207917
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: 0.105285870654  Variance: -0.105285870654
+
+   Completed iteration 36, pert 1 (MoonSat.RAAN = 195.158576333)
+   Completed iteration 36, pert 2 (MoonSat.AOP = -1.45625757457)
+
+DC1 Iteration 37; Nominal Pass
+   Variables:  MoonSat.RAAN = 199.202789597, MoonSat.AOP = -3.40536023058
+   Goals and achieved values:
+      MoonSat.EarthMoonRot.RA  Desired: 0  Achieved: 0.0788723629875  Variance: -0.0788723629875
+      MoonSat.EarthMoonRot.DEC  Desired: 0  Achieved: -0.115955135535  Variance: 0.115955135535
+
+
+*** Targeting Completed in 37 iterations.
+*** The Targeter converged!
+Final Variable values:
+   MoonSat.RAAN = 199.202789597
+   MoonSat.AOP = -3.40536023058
+
+********************************************************
+*** Performing Differential Correction (using "DC1")
+*** 4 variables; 3 goals
+   Variables:  MoonSat.RAAN, MoonSat.AOP, TOI.Element1, LOI.Element1
+   Goals:  MoonSat.Luna.RMAG, MoonSat.MoonInertial.BVectorAngle, MoonSat.Luna.ECC
+   SolverMode:  Solve
+********************************************************
+DC1 Iteration 1; Nominal Pass
+   Variables:  MoonSat.RAAN = 199.202789597, MoonSat.AOP = 356.594640621, TOI.Element1 = 3.14, LOI.Element1 = -0.6
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15045.1588369  Variance: -45.1588369234
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 174.105811604  Variance: -99.1058116035
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.179956495053  Variance: -0.169956495053
+
+   Completed iteration 1, pert 1 (MoonSat.RAAN = 199.202790597)
+   Completed iteration 1, pert 2 (MoonSat.AOP = 356.594641621)
+   Completed iteration 1, pert 3 (TOI.Element1 = 3.1400001)
+   Completed iteration 1, pert 4 (LOI.Element1 = -0.59999)
+
+DC1 Iteration 2; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.842990205, MoonSat.AOP = 358.594640621, TOI.Element1 = 3.13958771587, LOI.Element1 = -0.614750793836
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 17818.0055488  Variance: -2818.00554881
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 142.573983276  Variance: -67.5739832758
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.14199080524  Variance: -0.13199080524
+
+   Completed iteration 2, pert 1 (MoonSat.RAAN = 198.842991205)
+   Completed iteration 2, pert 2 (MoonSat.AOP = 358.594641621)
+   Completed iteration 2, pert 3 (TOI.Element1 = 3.13958781587)
+   Completed iteration 2, pert 4 (LOI.Element1 = -0.614740793836)
+
+DC1 Iteration 3; Nominal Pass
+   Variables:  MoonSat.RAAN = 199.472284574, MoonSat.AOP = 360.594640621, TOI.Element1 = 3.1347164344, LOI.Element1 = -0.625271437503
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 27089.1162192  Variance: -12089.1162192
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 87.3159248723  Variance: -12.3159248723
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.158502556812  Variance: -0.148502556812
+
+   Completed iteration 3, pert 1 (MoonSat.RAAN = 199.472285574)
+   Completed iteration 3, pert 2 (MoonSat.AOP = 360.594641621)
+   Completed iteration 3, pert 3 (TOI.Element1 = 3.1347165344)
+   Completed iteration 3, pert 4 (LOI.Element1 = -0.625261437503)
+
+DC1 Iteration 4; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.465375626, MoonSat.AOP = 359.047919618, TOI.Element1 = 3.13248800672, LOI.Element1 = -0.626665897513
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 16412.2311927  Variance: -1412.23119272
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 68.478895582  Variance: 6.52110441802
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.048630077702  Variance: -0.038630077702
+
+   Completed iteration 4, pert 1 (MoonSat.RAAN = 198.465376626)
+   Completed iteration 4, pert 2 (MoonSat.AOP = 359.047920618)
+   Completed iteration 4, pert 3 (TOI.Element1 = 3.13248810672)
+   Completed iteration 4, pert 4 (LOI.Element1 = -0.626655897513)
+
+DC1 Iteration 5; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.46035766, MoonSat.AOP = 359.040216666, TOI.Element1 = 3.13321970386, LOI.Element1 = -0.635069055714
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15140.6185676  Variance: -140.618567643
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 75.3927487703  Variance: -0.392748770278
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.0132380628406  Variance: -0.00323806284062
+
+   Completed iteration 5, pert 1 (MoonSat.RAAN = 198.46035866)
+   Completed iteration 5, pert 2 (MoonSat.AOP = 359.040217666)
+   Completed iteration 5, pert 3 (TOI.Element1 = 3.13321980386)
+   Completed iteration 5, pert 4 (LOI.Element1 = -0.635059055714)
+
+DC1 Iteration 6; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.445671005, MoonSat.AOP = 359.030460963, TOI.Element1 = 3.13318661918, LOI.Element1 = -0.635803050123
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15074.3385084  Variance: -74.338508429
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 75.0238519515  Variance: -0.0238519514529
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.0103176805272  Variance: -0.000317680527193
+
+   Completed iteration 6, pert 1 (MoonSat.RAAN = 198.445672005)
+   Completed iteration 6, pert 2 (MoonSat.AOP = 359.030461963)
+   Completed iteration 6, pert 3 (TOI.Element1 = 3.13318671918)
+   Completed iteration 6, pert 4 (LOI.Element1 = -0.635793050123)
+
+DC1 Iteration 7; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.448066019, MoonSat.AOP = 359.018401209, TOI.Element1 = 3.13318692498, LOI.Element1 = -0.635808159771
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15012.046704  Variance: -12.0467040036
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 75.0042413277  Variance: -0.00424132765031
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.0100499612638  Variance: -4.99612638089e-05
+
+   Completed iteration 7, pert 1 (MoonSat.RAAN = 198.448067019)
+   Completed iteration 7, pert 2 (MoonSat.AOP = 359.018402209)
+   Completed iteration 7, pert 3 (TOI.Element1 = 3.13318702498)
+   Completed iteration 7, pert 4 (LOI.Element1 = -0.635798159771)
+
+DC1 Iteration 8; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.448455777, MoonSat.AOP = 359.016438504, TOI.Element1 = 3.13318694231, LOI.Element1 = -0.635808757143
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15001.9583407  Variance: -1.95834066368
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 75.0007078057  Variance: -0.000707805673031
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.0100077082809  Variance: -7.70828093545e-06
+
+   Completed iteration 8, pert 1 (MoonSat.RAAN = 198.448456777)
+   Completed iteration 8, pert 2 (MoonSat.AOP = 359.016439504)
+AUDIT_HEARTBEAT seconds=20
+   Completed iteration 8, pert 3 (TOI.Element1 = 3.13318704231)
+   Completed iteration 8, pert 4 (LOI.Element1 = -0.635798757143)
+
+DC1 Iteration 9; Nominal Pass
+   Variables:  MoonSat.RAAN = 198.448303715, MoonSat.AOP = 359.0162058, TOI.Element1 = 3.13318694047, LOI.Element1 = -0.635808859554
+   Goals and achieved values:
+      MoonSat.Luna.RMAG  Desired: 15000  Achieved: 15000.0021061  Variance: -0.0021060720519
+      MoonSat.MoonInertial.BVectorAngle  Desired: 75  Achieved: 75.0000006276  Variance: -6.27603725434e-07
+      MoonSat.Luna.ECC  Desired: 0.01  Achieved: 0.0100000108194  Variance: -1.08193868014e-08
+
+
+*** Targeting Completed in 9 iterations.
+*** The Targeter converged!
+Final Variable values:
+   MoonSat.RAAN = 198.448303715
+   MoonSat.AOP = 359.0162058
+   TOI.Element1 = 3.13318694047
+   LOI.Element1 = -0.635808859554
+
+
+Mission run completed.
+===> Total Run Time: 27.636 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=10001 title=OFI_EarthInertialView size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=10001 title=OFI_EarthInertialView size=498x368
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=10001 title=OFI_MoonInertialView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=10001 title=OFI_MoonInertialView size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=10001 title=OFI_EarthMoonRotView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=10001 title=OFI_EarthMoonRotView size=498x368
+AUDIT_SCREENSHOT result=0
+
+(ExampleSweep:22): Gtk-WARNING **: 13:56:00.026: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46013 title=Solver Window - Target 'Coarse Lunar Target' DC1 {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46013 title=Solver Window - Target 'Coarse Lunar Target' DC1 {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+
+(ExampleSweep:22): Gtk-WARNING **: 13:56:01.238: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=1 type=46013 title=Solver Window - Target 'Fine Lunar Target' DC1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=2 type=46013 title=Solver Window - Target 'Fine Lunar Target' DC1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 13:56:03 GMAT GUI exiting.

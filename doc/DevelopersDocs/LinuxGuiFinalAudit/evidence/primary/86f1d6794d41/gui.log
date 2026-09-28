@@ -1,0 +1,233 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:32 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:32 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   "  42: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  43: emtgThrustModel.SpacecraftFile = ThrusterModelForTesting2.emtg_spacecraftopt"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  44: emtgThrustModel.DutyCycle = 1.0"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  45: emtgThrustModel.SpacecraftStage = [2]"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "SunThrustDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   "  51: Create DynamicsConfiguration SunThrustDynConfig"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  52: SunThrustDynConfig.ForceModels = {DeepSpaceForceModel};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  53: SunThrustDynConfig.Spacecraft = {aSat}"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  54: SunThrustDynConfig.FiniteBurns = {emtgThrustModel}"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  55: SunThrustDynConfig.EMTGTankConfig = {ChemicalTank1};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   "  60: Create OptimalControlGuess trajectoryGuess"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  61: trajectoryGuess.Type = CollocationGuessFile  "
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  62: trajectoryGuess.FileName = ../data/misc/GuessWithUnityControl.och"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   "  68: Create Phase thePhase"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  70: thePhase.Type = RadauPseudospectral"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  71: thePhase.ThrustMode = Thrust"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  72: thePhase.DynamicsConfiguration = SunThrustDynConfig"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  73: thePhase.SubPhaseBoundaries = [-1 -0.5 0 0.5 1]"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  74: thePhase.PointsPerSubPhase = [5 5 5 5]"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  75: thePhase.GuessSource = trajectoryGuess"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  76: thePhase.EpochFormat = A1ModJulian"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  77: thePhase.EpochLowerBound = 30537.58129245887"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  78: thePhase.EpochUpperBound = 32406.49962790855"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  80:                               -100 -100 -100 0.00001]"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  82: 									100 100 100 4000]"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  83: thePhase.ControlLowerBound = [ -1  -1  -1]"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  84: thePhase.ControlUpperBound = [ 1  1  1]"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  85: thePhase.InitialEpoch = 30542.0"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  86: thePhase.FinalEpoch = 30692.0"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  87: thePhase.MaxRelativeErrorTolerance = 1e-5"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  88: thePhase.BuiltInCost = 'RMAGFinal'"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   "  93: Create CustomLinkageConstraint initialConditions;"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   "  95: initialConditions.ConstraintMode = Absolute;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   "  96: initialConditions.InitialPhase = thePhase;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   "  97: initialConditions.InitialPhaseBoundaryType = Start;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   "  98: initialConditions.SetModelParameter('TimeLowerBound', A1ModJulian, 30542)"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   "  99: initialConditions.SetModelParameter('TimeUpperBound', A1ModJulian, 30542)"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 100: initialConditions.SetModelParameter('PositionLowerBound', [125291184.0  -75613036.0 -32788527.0])"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 101: initialConditions.SetModelParameter('PositionUpperBound', [125291184.0  -75613036.0 -32788527.0])"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 102: initialConditions.SetModelParameter('VelocityLowerBound', [13.438  25.234  10.903])"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 103: initialConditions.SetModelParameter('VelocityUpperBound', [13.438  25.234   10.903])"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 104: initialConditions.SetModelParameter('MassLowerBound', 4000)"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 105: initialConditions.SetModelParameter('MassUpperBound', 4000)"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 112: Create CustomLinkageConstraint duration_Thrust;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 113: duration_Thrust.ConstraintMode = Difference;"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 114: duration_Thrust.InitialPhase = thePhase;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 115: duration_Thrust.InitialPhaseBoundaryType = Start;"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 116: duration_Thrust.FinalPhase = thePhase;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 117: duration_Thrust.FinalPhaseBoundaryType = End;"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 118: duration_Thrust.SetModelParameter('TimeLowerBound', ElapsedSeconds, 21600000)"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 119: duration_Thrust.SetModelParameter('TimeUpperBound', ElapsedSeconds, 21600000)"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 125: Create Trajectory traj"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 126: traj.PhaseList = {thePhase}"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 127: traj.GuessSource = trajectoryGuess;"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 128: traj.SolutionFile = 'EMTGSpacecraft_SCOpt_ThrustType1.och';"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 129: traj.StateScaleMode = Canonical;"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 130: traj.MassScaleFactor = 4000;"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 131: traj.MaxMeshRefinementIterations = 10;"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 132: traj.CustomLinkages = {initialConditions, duration_Thrust}"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 133: traj.MajorIterationsLimits = [200 500];"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 134: traj.TotalIterationsLimits = [20000];"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 135: traj.FeasibilityTolerances = [1e-3,1e-3,1e-7];"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 136: traj.MajorOptimalityTolerances = [1e-2,1e-2,1e-5];"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 137: traj.OptimizationMode = {Maximize};"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 138: traj.AllowFailedMeshOptimizations = True"
+
+65: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 139: traj.MeshRefinementGuessMode = 'BestSolutionMostRecentMesh'"
+
+66: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 140: traj.PublishUpdateRate = 10"
+
+67: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 180: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/86f1d6794d41/repo/application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:32 GMAT GUI exiting.

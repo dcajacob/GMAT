@@ -1,0 +1,24 @@
+{
+  "script": "plugins/TLEPropagatorPlugin/test/TLE/BasicPropagation.script",
+  "sha256": "80e2c0dd0f60bfe6915a296b57bbb5d69d0d3cd462e7c68f32a8d44efb139a6d",
+  "category": "supplemental",
+  "id": "838074973c43",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "native",
+    "scale": 1,
+    "limit_seconds": 600,
+    "startup_sha256": "068d4bc6013cea7fe256ffe93118dc3e8b76e32b84e02035d0992cc5c4ed4205"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/838074973c43",
+  "status": "completed",
+  "returncode": 0,
+  "mission_result": 1,
+  "screenshots": 0,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 1.28
+}

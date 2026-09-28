@@ -1,0 +1,378 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:00:33 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:00:33 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/739fb8c6ce44/repo/application/samples/Navigation/Ex_Estimate_BRTSTracking.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/739fb8c6ce44/repo/application/samples/Navigation/Ex_Estimate_BRTSTracking.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Variable Step Integration Statistics (Sim):
+    288 steps taken
+    Min step taken  : 300.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 300.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :      0
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      0
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      0
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      0
+         270.0 -  300.0 sec :    288
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_Estimate_BRTSTracking.gmd' has 1156 of 1156 records used for estimation.
+Total number of load records : 1156
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_Estimate_BRTSTracking.gmd':
+   Config 0: {{SGLT1,TD4,BRTS1,TD4,SGLT1},BRTS_Range}
+   Config 1: {{SGLT1,TD4,BRTS1,TD4,SGLT1},BRTS_Doppler}
+   Config 2: {{SGLT1,TD4,BRTS2,TD4,SGLT1},BRTS_Range}
+   Config 3: {{SGLT1,TD4,BRTS2,TD4,SGLT1},BRTS_Doppler}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.418: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.418: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.418: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.432: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.445: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.446: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.446: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.446: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.447: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:37.447: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "BLS")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369
+   EstTDE.EarthMJ2000Eq.Y = 38863
+   EstTDE.EarthMJ2000Eq.Z = 6.2
+   EstTDE.EarthMJ2000Eq.VX = -2.7953
+   EstTDE.EarthMJ2000Eq.VY = -1.1763
+   EstTDE.EarthMJ2000Eq.VZ = 0.5012
+   EstTDE.Cr = 1
+
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 1156
+Variable Step Integration Statistics (BLS):
+    288 steps taken
+    Min step taken  : 300.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 300.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :      0
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      0
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      0
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      0
+         270.0 -  300.0 sec :    288
+
+   WeightedRMS residuals for this iteration : 598.324200787
+   BestRMS residuals                        : 598.324200787
+   PredictedRMS residuals for next iteration: 0.991568720871
+
+------------------------------------------------------
+Iteration 1
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369.1065116
+   EstTDE.EarthMJ2000Eq.Y = 38864.2239784
+   EstTDE.EarthMJ2000Eq.Z = 6.33965225203
+   EstTDE.EarthMJ2000Eq.VX = -2.79531525339
+   EstTDE.EarthMJ2000Eq.VY = -1.1763348244
+   EstTDE.EarthMJ2000Eq.VZ = 0.500215889641
+   EstTDE.Cr = 1.1907313065
+
+AUDIT_HEARTBEAT seconds=10
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 130
+Number of records used for estimation: 1026
+Variable Step Integration Statistics (BLS):
+    288 steps taken
+    Min step taken  : 300.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 300.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :      0
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      0
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      0
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      0
+         270.0 -  300.0 sec :    288
+
+   WeightedRMS residuals for this iteration : 1.29689944153
+   BestRMS residuals                        : 1.29689944153
+   PredictedRMS residuals for next iteration: 0.908323439494
+This iteration is converging
+
+------------------------------------------------------
+Iteration 2
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369.1030308
+   EstTDE.EarthMJ2000Eq.Y = 38864.2251054
+   EstTDE.EarthMJ2000Eq.Z = 6.33386250178
+   EstTDE.EarthMJ2000Eq.VX = -2.79531531512
+   EstTDE.EarthMJ2000Eq.VY = -1.17633456315
+   EstTDE.EarthMJ2000Eq.VZ = 0.500215566294
+   EstTDE.Cr = 1.20094398652
+
+AUDIT_HEARTBEAT seconds=20
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 13
+Number of records used for estimation: 1143
+Variable Step Integration Statistics (BLS):
+    288 steps taken
+    Min step taken  : 300.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 300.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :      0
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      0
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      0
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      0
+         270.0 -  300.0 sec :    288
+
+   WeightedRMS residuals for this iteration : 1.00128075148
+   BestRMS residuals                        : 1.00128075148
+   PredictedRMS residuals for next iteration: 0.949739360396
+This iteration is converging
+
+------------------------------------------------------
+Iteration 3
+
+Current estimated state:
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369.1053047
+   EstTDE.EarthMJ2000Eq.Y = 38864.2247216
+   EstTDE.EarthMJ2000Eq.Z = 6.34160664677
+   EstTDE.EarthMJ2000Eq.VX = -2.79531516677
+   EstTDE.EarthMJ2000Eq.VY = -1.17633473747
+   EstTDE.EarthMJ2000Eq.VZ = 0.500215506434
+   EstTDE.Cr = 1.19738690587
+
+AUDIT_HEARTBEAT seconds=30
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 6
+Number of records used for estimation: 1150
+Variable Step Integration Statistics (BLS):
+    288 steps taken
+    Min step taken  : 300.000000 sec
+    Max step taken  : 300.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 300.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -   30.0 sec :      0
+          30.0 -   60.0 sec :      0
+          60.0 -   90.0 sec :      0
+          90.0 -  120.0 sec :      0
+         120.0 -  150.0 sec :      0
+         150.0 -  180.0 sec :      0
+         180.0 -  210.0 sec :      0
+         210.0 -  240.0 sec :      0
+         240.0 -  270.0 sec :      0
+         270.0 -  300.0 sec :    288
+
+   WeightedRMS residuals for this iteration : 0.964850605349
+   BestRMS residuals                        : 0.964850605349
+   PredictedRMS residuals for next iteration: 0.964216945575
+This iteration is converged due to relative convergence criteria.
+
+
+********************************************************
+*** Estimation Completed in 4 iterations
+********************************************************
+
+Estimation converged!
+      |1 - RMSP/RMSB| = | 1- 0.964217 / 0.964851| = 0.000656744 is less than RelativeTol, 0.005
+
+Final Estimated State:
+
+   Estimation Epoch:
+   23430.5003707683067129629630 A.1 modified Julian
+   23430.5003703703703703703701 TAI modified Julian
+   01 Mar 2005 00:00:00.000 UTCG
+   EstTDE.EarthMJ2000Eq.X = -16369.1045647
+   EstTDE.EarthMJ2000Eq.Y = 38864.2249344
+   EstTDE.EarthMJ2000Eq.Z = 6.34057320866
+   EstTDE.EarthMJ2000Eq.VX = -2.79531519969
+   EstTDE.EarthMJ2000Eq.VY = -1.17633467198
+   EstTDE.EarthMJ2000Eq.VZ = 0.500215496311
+   EstTDE.Cr = 1.19659422598
+
+Final Covariance Matrix:
+
+         7.528111038527e-06         3.296579720350e-06         1.149188855132e-06        -2.599562080171e-10         4.903423960416e-10        -3.388530966309e-10        -1.454222759572e-06
+         3.296579720350e-06         1.822960016432e-06         3.107021763448e-06        -8.366321471712e-11         1.999712234251e-10        -1.597682129678e-10         2.732943797430e-07
+         1.149188855132e-06         3.107021763448e-06         3.155766773033e-05         2.294277703180e-10        -9.047069379380e-11        -5.655813909102e-11        -5.167289897049e-06
+        -2.599562080171e-10        -8.366321471711e-11         2.294277703180e-10         1.372400274343e-14        -1.619347894668e-14         2.783985595398e-14         1.062228205734e-10
+         4.903423960416e-10         1.999712234251e-10        -9.047069379382e-11        -1.619347894669e-14         3.557924799300e-14        -3.163036822835e-15        -6.325431156488e-11
+        -3.388530966308e-10        -1.597682129677e-10        -5.655813909109e-11         2.783985595397e-14        -3.163036822830e-15         1.539574809503e-13         2.133783332812e-10
+        -1.454222759572e-06         2.732943797430e-07        -5.167289897049e-06         1.062228205734e-10        -6.325431156487e-11         2.133783332812e-10         1.553944344147e-05
+
+Final Correlation Matrix:
+
+             1.000000000000             0.889881140815             0.074558291535            -0.808754643234             0.947453827319            -0.314751676788            -0.134452907824
+             0.889881140815             1.000000000000             0.409640864609            -0.528938986082             0.785200467923            -0.301579215866             0.051348102435
+             0.074558291535             0.409640864609             1.000000000000             0.348620672867            -0.085380184499            -0.025659149891            -0.233341855782
+            -0.808754643234            -0.528938986082             0.348620672867             1.000000000000            -0.732826862774             0.605656228036             0.230016876172
+             0.947453827319             0.785200467923            -0.085380184499            -0.732826862774             1.000000000000            -0.042737141159            -0.085069527589
+            -0.314751676788            -0.301579215866            -0.025659149891             0.605656228036            -0.042737141159             1.000000000000             0.137953330620
+            -0.134452907824             0.051348102435            -0.233341855782             0.230016876172            -0.085069527589             0.137953330620             1.000000000000
+
+********************************************************
+
+
+
+Mission run completed.
+===> Total Run Time: 30.739 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=BLS_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=BLS_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:01:09 GMAT GUI exiting.

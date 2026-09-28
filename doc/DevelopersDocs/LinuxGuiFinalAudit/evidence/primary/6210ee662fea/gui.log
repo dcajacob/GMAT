@@ -1,0 +1,224 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:33 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:33 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   "  70: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  72: emtgThrustModel.SpacecraftFile = spacecraft.emtg_spacecraftopt"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  73: emtgThrustModel.DutyCycle      = 1.0;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "EarthThrustDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   "  79: Create DynamicsConfiguration EarthThrustDynConfig"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+   "  81: EarthThrustDynConfig.ForceModels    = {theForceModel};"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+   "  82: EarthThrustDynConfig.Spacecraft     = {GEO}"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+   "  83: EarthThrustDynConfig.FiniteBurns    = {emtgThrustModel}"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+   "  84: EarthThrustDynConfig.EMTGTankConfig = {ChemicalTank1}"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   "  89: Create OptimalControlGuess trajectoryGuess"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  91: trajectoryGuess.Type = CollocationGuessFile  "
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  92: trajectoryGuess.FileName = ../data/misc/GMAT_GEO_GuessData.och"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   "  97: Create Phase thePhase"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  99: thePhase.Type                  = RadauPseudospectral"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 100: thePhase.ThrustMode            = Coast"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 101: thePhase.DynamicsConfiguration = EarthThrustDynConfig"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 102: thePhase.SubPhaseBoundaries    = [-1.0  -.8  -.6  -.4  -.2   0   .2   .4  .6  .8   1.0]"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 103: thePhase.PointsPerSubPhase     =  [5 5 5 5 5 5 5 5 5 5 ]"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 105: thePhase.GuessSource     = trajectoryGuess"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 106: thePhase.EpochFormat     = A1ModJulian"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 107: thePhase.EpochLowerBound = 23158.00037076831"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 108: thePhase.EpochUpperBound = 23168.00037076831"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 110:                               -100 -100 -100 0.0001]"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 112:                              100 100 100 1000]"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 114: thePhase.ControlLowerBound         = [ -1  -1  -1]"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 115: thePhase.ControlUpperBound         = [ 1  1  1]"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 116: thePhase.InitialEpoch              = 23158.00037076831"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 117: thePhase.FinalEpoch                = 23158.2253707683"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 118: thePhase.MaxRelativeErrorTolerance = 1e-9;"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 123: Create CustomLinkageConstraint initialConditions;"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 125: initialConditions.ConstraintMode           = Absolute;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 126: initialConditions.InitialPhase             = thePhase;"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 127: initialConditions.InitialPhaseBoundaryType = Start;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 128: initialConditions.SetModelParameter('TimeLowerBound', A1ModJulian, 23158.00037076831)"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 129: initialConditions.SetModelParameter('TimeUpperBound', A1ModJulian, 23158.00037076831)"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 130: initialConditions.SetModelParameter('PositionLowerBound', [36607.3582560 -20921.723703 0])"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 131: initialConditions.SetModelParameter('PositionUpperBound', [36607.3582560 -20921.723703 0])"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 132: initialConditions.SetModelParameter('VelocityLowerBound', [1.52563600 2.66945100 0])"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 133: initialConditions.SetModelParameter('VelocityUpperBound', [1.52563600 2.66945100 0])"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 134: initialConditions.SetModelParameter('MassLowerBound', 1000)"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 135: initialConditions.SetModelParameter('MassUpperBound', 1000)"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 141: Create CustomLinkageConstraint duration_Thrust;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 143: duration_Thrust.ConstraintMode           = Difference;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 144: duration_Thrust.InitialPhase             = thePhase;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 145: duration_Thrust.InitialPhaseBoundaryType = Start;"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 146: duration_Thrust.FinalPhase               = thePhase;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 147: duration_Thrust.FinalPhaseBoundaryType   = End;"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 148: duration_Thrust.SetModelParameter('TimeLowerBound', ElapsedSeconds, 19439.9999992456)"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 149: duration_Thrust.SetModelParameter('TimeUpperBound', ElapsedSeconds, 19439.9999992456)"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 155: Create Trajectory traj"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 157: traj.PhaseList                    = {thePhase}"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 158: traj.GuessSource                  = trajectoryGuess;"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 159: traj.SolutionFile                 = 'OCPropTest_GEO_4x4.och';"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 160: traj.StateScaleMode               = Canonical;"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 161: traj.MassScaleFactor              = 4000;"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 162: traj.MaxMeshRefinementIterations  = 5;"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 163: traj.CustomLinkages               = {initialConditions, duration_Thrust}"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 164: traj.MajorIterationsLimits        = [3000];"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 165: traj.TotalIterationsLimits        = [20000];"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 166: traj.FeasibilityTolerances        = [1e-6];"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 167: traj.MajorOptimalityTolerances    = [1e-6];"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 168: traj.OptimizationMode             = {'Feasible point'};"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 169: traj.MeshRefinementGuessMode      = 'BestSolutionMostRecentMesh'"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 170: traj.AllowFailedMeshOptimizations = True"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 195: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/6210ee662fea/repo/application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:33 GMAT GUI exiting.

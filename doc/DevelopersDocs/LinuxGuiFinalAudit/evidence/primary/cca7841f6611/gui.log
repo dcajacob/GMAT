@@ -1,0 +1,125 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:32 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:32 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "TargeterTextFile" field of DifferentialCorrector on object "DefaultDC" is deprecated and will be removed from a future build; please use "ReportFile" instead.
+*** WARNING *** "UseCentralDifferences" field of DifferentialCorrector on object "DefaultDC" is deprecated and will be removed from a future build; please use "DerivativeMethod" instead.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+*** WARNING *** "V", "N", "B" are deprecated and will be removed from a future build; please use "Element1", "Element2", "Element3" instead.
+*** WARNING *** "V" field of Burn is deprecated and will be removed from a future build; please use "Element1" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Eq" already exists, so ignored in line:
+   " 139: Create CoordinateSystem EarthMJ2000Eq;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 140: GMAT EarthMJ2000Eq.Origin = Earth;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 141: GMAT EarthMJ2000Eq.Axes = MJ2000Eq;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 142: GMAT EarthMJ2000Eq.UpdateInterval = 60;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 143: GMAT EarthMJ2000Eq.OverrideOriginInterval = false;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Ec" already exists, so ignored in line:
+   " 145: Create CoordinateSystem EarthMJ2000Ec;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 146: GMAT EarthMJ2000Ec.Origin = Earth;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 147: GMAT EarthMJ2000Ec.Axes = MJ2000Ec;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 148: GMAT EarthMJ2000Ec.UpdateInterval = 60;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 149: GMAT EarthMJ2000Ec.OverrideOriginInterval = false;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthFixed" already exists, so ignored in line:
+   " 151: Create CoordinateSystem EarthFixed;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 152: GMAT EarthFixed.Origin = Earth;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 153: GMAT EarthFixed.Axes = BodyFixed;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 154: GMAT EarthFixed.UpdateInterval = 60;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 155: GMAT EarthFixed.OverrideOriginInterval = false;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthToMoon" in line:
+   " 160: GMAT EarthToMoon.UpdateInterval = 60;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "EarthToMoon" in line:
+   " 161: GMAT EarthToMoon.OverrideOriginInterval = false;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "LunaFixed" in line:
+   " 170: GMAT LunaFixed.UpdateInterval = 60;"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "LunaFixed" in line:
+   " 171: GMAT LunaFixed.OverrideOriginInterval = false;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthOGL" is no longer in use in line:
+   " 191: GMAT EarthOGL.OrbitColor = [ 255 32768 1743054 ];"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthOGL" is no longer in use in line:
+   " 192: GMAT EarthOGL.TargetColor = [ 8421440 8421440 8421440 ];"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthMoonOGL" is no longer in use in line:
+   " 215: GMAT EarthMoonOGL.OrbitColor = [ 255 1743054 35297486 ];"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthMoonOGL" is no longer in use in line:
+   " 216: GMAT EarthMoonOGL.TargetColor = [ 1065386048 8421440 8421440 ];"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.RAAN" to "RAAN" is not allowed before BeginMissionSequence in line:
+   " 260: GMAT Sat.RAAN = RAAN;"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.AOP" to "AOP" is not allowed before BeginMissionSequence in line:
+   " 261: GMAT Sat.AOP = AOP;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/cca7841f6611/repo/doc/help/src/files/scripts/FormationRendezvousTutorial.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:32 GMAT GUI exiting.

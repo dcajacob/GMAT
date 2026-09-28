@@ -1,0 +1,40 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:17 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:17 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script: **** ERROR **** Utility Exception: Error finding relative path for file "../OutputFiles/reportEstimatedStateData.txt" - specified path does not exist.
+ in line:
+   "   8: GMAT reportEstimatedStateData.Filename = '../OutputFiles/reportEstimatedStateData.txt';"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script: **** ERROR **** Utility Exception: Error finding relative path for file "../OutputFiles/reportTruthStateData.txt" - specified path does not exist.
+ in line:
+   "  24: GMAT reportTruthStateData.Filename = '../OutputFiles/reportTruthStateData.txt';"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/012255f9691a/repo/prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:18 GMAT GUI exiting.

@@ -1,0 +1,24 @@
+{
+  "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_3DViews.script",
+  "sha256": "cedd134c023bb941352fb15238561a464e1f95555489641438d2e932c3349b56",
+  "category": "supplemental",
+  "id": "86ff4fa09ea2",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "converted",
+    "scale": 2,
+    "limit_seconds": 600,
+    "startup_sha256": "c47bdddbc3555cc5eb8155034c28f0dfe9c07d714fcd2aa28b13b519a240103b"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/86ff4fa09ea2",
+  "status": "build_failed",
+  "returncode": 248,
+  "mission_result": null,
+  "screenshots": 0,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 0.84
+}

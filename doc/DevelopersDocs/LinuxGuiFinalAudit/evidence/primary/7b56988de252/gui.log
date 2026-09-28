@@ -1,0 +1,161 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:24 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:24 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot create an object "NLPOpt". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   " 134: Create VF13ad NLPOpt"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 135: NLPOpt.ShowProgress          = true"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 136: NLPOpt.ReportStyle           = Normal"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 137: NLPOpt.ReportFile            = 'VF13adVF13ad1.data'"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 138: NLPOpt.MaximumIterations     = 200"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 139: NLPOpt.Tolerance             = 1e-004"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 140: NLPOpt.UseCentralDifferences = false"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLPOpt" in line:
+   " 141: NLPOpt.FeasibilityTolerance  = 0.1"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Optimize in line:
+   " 296: Optimize 'Optimize Flyby' NLPOpt {SolveMode = Solve, ExitMode = DiscardAndContinue}"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 302:    Vary NLPOpt(toiEpoch    = toiEpoch,   {Perturbation = 0.0001, MaxStep = 0.5})"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 303:    Vary NLPOpt(flybyEpoch  = flybyEpoch, {Perturbation = 0.0001, MaxStep = 0.5})"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 304:    Vary NLPOpt(moiEpoch    = moiEpoch,   {Perturbation = 0.0001, MaxStep = 0.5})"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 314:    Vary NLPOpt(satTOI.X            = satTOI.X, {Perturbation = 0.00001, MaxStep = 100})"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 315:    Vary NLPOpt(satTOI.Y            = satTOI.Y, {Perturbation = 0.000001, MaxStep = 100})"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 316:    Vary NLPOpt(satTOI.Z            = satTOI.Z, {Perturbation = 0.00001, MaxStep = 100})"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 317:    Vary NLPOpt(satTOI.VX           = satTOI.VX, {Perturbation = 0.00001, MaxStep = 0.05})"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 318:    Vary NLPOpt(satTOI.VY           = satTOI.VY, {Perturbation = 0.000001, MaxStep = 0.05})"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 319:    Vary NLPOpt(satTOI.VZ           = satTOI.VZ, {Perturbation = 0.000001, MaxStep = 0.05})"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 320:    Vary NLPOpt(satFlyBy_Forward.X  = satFlyBy_Forward.MoonMJ2000Eq.X, {Perturbation = 0.00001, MaxStep = 100})"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 321:    Vary NLPOpt(satFlyBy_Forward.Y  = satFlyBy_Forward.MoonMJ2000Eq.Y, {Perturbation = 0.00001, MaxStep = 100})"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 322:    Vary NLPOpt(satFlyBy_Forward.Z  = satFlyBy_Forward.MoonMJ2000Eq.Z, {Perturbation = 0.00001, MaxStep = 100})"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 323:    Vary NLPOpt(satFlyBy_Forward.VX = satFlyBy_Forward.MoonMJ2000Eq.VX, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 324:    Vary NLPOpt(satFlyBy_Forward.VY = satFlyBy_Forward.MoonMJ2000Eq.VY, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 325:    Vary NLPOpt(satFlyBy_Forward.VZ = satFlyBy_Forward.MoonMJ2000Eq.VZ, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 326:    Vary NLPOpt(satMOI_Backward.X   = satMOI_Backward.X, {Perturbation = 0.000001, MaxStep = 40000})"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 327:    Vary NLPOpt(satMOI_Backward.Y   = satMOI_Backward.Y, {Perturbation = 0.000001, MaxStep = 40000})"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 328:    Vary NLPOpt(satMOI_Backward.Z   = satMOI_Backward.Z, {Perturbation = 0.000001, MaxStep = 40000})"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 329:    Vary NLPOpt(satMOI_Backward.VX  = satMOI_Backward.VX, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 330:    Vary NLPOpt(satMOI_Backward.VY  = satMOI_Backward.VY, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 331:    Vary NLPOpt(satMOI_Backward.VZ  = satMOI_Backward.VZ, {Perturbation = 0.00001, MaxStep = 0.1})"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the Vary in line:
+   " 332:    Vary NLPOpt(MOI.Element1        = MOI.Element1, {Perturbation = 0.0001, MaxStep = 0.005})"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 381:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.X=satFlyBy_Backward.EarthMJ2000Eq.X)"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 382:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.Y=satFlyBy_Backward.EarthMJ2000Eq.Y)"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 383:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.Z=satFlyBy_Backward.EarthMJ2000Eq.Z)"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 384:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.VX=satFlyBy_Backward.EarthMJ2000Eq.VX)"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 385:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.VY=satFlyBy_Backward.EarthMJ2000Eq.VY)"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 386:    NonlinearConstraint NLPOpt(satTOI.EarthMJ2000Eq.VZ=satFlyBy_Backward.EarthMJ2000Eq.VZ)"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 387:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.X=satFlyBy_Forward.EarthMJ2000Eq.X)"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 388:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.Y=satFlyBy_Forward.EarthMJ2000Eq.Y)"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 389:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.Z=satFlyBy_Forward.EarthMJ2000Eq.Z)"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 390:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.VX=satFlyBy_Forward.EarthMJ2000Eq.VX)"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 391:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.VY=satFlyBy_Forward.EarthMJ2000Eq.VY)"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLPOpt" referenced in the NonlinearConstraint in line:
+   " 392:    NonlinearConstraint NLPOpt(satMOI_Backward.EarthMJ2000Eq.VZ=satFlyBy_Forward.EarthMJ2000Eq.VZ)"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/7b56988de252/repo/application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:25 GMAT GUI exiting.

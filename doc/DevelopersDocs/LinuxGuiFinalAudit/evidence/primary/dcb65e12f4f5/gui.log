@@ -1,0 +1,84 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:18 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:18 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** The include file "../ConfigurationFiles/GMAT_Objects_Spacecraft.script" was not found on line 9.
+*** WARNING *** The include file "../ConfigurationFiles/GMAT_Objects_Propagators.script" was not found on line 14.
+*** WARNING *** The include file "../ConfigurationFiles/GMAT_Objects_3DViews.script" was not found on line 19.
+*** WARNING *** The include file "../ConfigurationFiles/GMAT_Objects_ReportFiles.script" was not found on line 24.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: LHS object "dummySat.Epoch.UTCGregorian" in Assignment is invalid or undefined in line:
+   "  44: dummySat.Epoch.UTCGregorian = systemTimeString;  % NOTE: we should be able to use str2num but there is a blocker bug."
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: LHS object "truthSat.TAIModJulian" in Assignment is invalid or undefined in line:
+   "  45: truthSat.TAIModJulian = dummySat.TAIModJulian;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "dummySat.TAIModJulian" found in line:
+   "  45: truthSat.TAIModJulian = dummySat.TAIModJulian;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception:  Undefined function, object, or disallowed object field "truthSat.ElapsedDays" found in line:
+   "  47: While truthSat.ElapsedDays <= .5"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: LHS object "utilSat.Epoch.UTCGregorian" in Assignment is invalid or undefined in line:
+   "  54:    utilSat.Epoch.UTCGregorian = systemTimeString;  % NOTE: we should be able to use str2num but there is a blocker bug."
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception:  Undefined function, object, or disallowed object field "truthSat.TAIModJulian" found in line:
+   "  57:    Propagate propLEOHiFi1(truthSat) {truthSat.TAIModJulian = utilSat.TAIModJulian};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.X" found in line:
+   "  60:    xWithNoise = truthSat.X + randn(1)/1000"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.Y" found in line:
+   "  61:    yWithNoise = truthSat.Y + randn(1)/1000"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.Z" found in line:
+   "  62:    zWithNoise = truthSat.Z + randn(1)/1000"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.VX" found in line:
+   "  63: 	vxWithNoise = truthSat.VX + randn(1)/10000"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.VY" found in line:
+   "  64:    vyWithNoise = truthSat.VY + randn(1)/10000"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "truthSat.VZ" found in line:
+   "  65:    vzWithNoise = truthSat.VZ + randn(1)/10000"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Cannot find the ReportFile "reportTruthStateData" in line:
+   "  66:    Report reportTruthStateData truthSat.TAIModJulian truthSat.X truthSat.Y truthSat.Z truthSat.VX truthSat.VY truthSat.VZ"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Failed to parse Report reportTruthStateData truthSat.TAIModJulian truthSat.X truthSat.Y truthSat.Z truthSat.VX truthSat.VY truthSat.VZ in line:
+   "  66:    Report reportTruthStateData truthSat.TAIModJulian truthSat.X truthSat.Y truthSat.Z truthSat.VX truthSat.VY truthSat.VZ"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Cannot find the ReportFile "reportEstimatedStateData" in line:
+   "  67:    Report reportEstimatedStateData truthSat.TAIModJulian xWithNoise yWithNoise zWithNoise vxWithNoise vyWithNoise vzWithNoise"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script: **** ERROR **** Interpreter Exception: Failed to parse Report reportEstimatedStateData truthSat.TAIModJulian xWithNoise yWithNoise zWithNoise vxWithNoise vyWithNoise vzWithNoise in line:
+   "  67:    Report reportEstimatedStateData truthSat.TAIModJulian xWithNoise yWithNoise zWithNoise vxWithNoise vyWithNoise vzWithNoise"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/dcb65e12f4f5/repo/prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:18 GMAT GUI exiting.

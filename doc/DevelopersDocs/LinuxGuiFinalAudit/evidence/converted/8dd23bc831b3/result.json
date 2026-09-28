@@ -1,0 +1,24 @@
+{
+  "script": "api-interop/gmat-monte/datasharing/DynamicsSharing/SimpleGmatScript.script",
+  "sha256": "1a87190fc8312457a2d1cd7638f0c28ccdcda5ee1c1792ce04f0de397d853bce",
+  "category": "supplemental",
+  "id": "8dd23bc831b3",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "converted",
+    "scale": 2,
+    "limit_seconds": 600,
+    "startup_sha256": "c47bdddbc3555cc5eb8155034c28f0dfe9c07d714fcd2aa28b13b519a240103b"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8dd23bc831b3",
+  "status": "mission_failed",
+  "returncode": 251,
+  "mission_result": -5,
+  "screenshots": 2,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 7.62
+}

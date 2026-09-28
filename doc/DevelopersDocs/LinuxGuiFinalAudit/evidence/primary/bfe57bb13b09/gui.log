@@ -1,0 +1,38 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:11:42 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:11:42 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bfe57bb13b09/repo/api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bfe57bb13b09/repo/api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "V", "N", "B" are deprecated and will be removed from a future build; please use "Element1", "Element2", "Element3" instead.
+*** WARNING *** "V" field of Burn is deprecated and will be removed from a future build; please use "Element1" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bfe57bb13b09/repo/api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script: **** ERROR **** GmatBase Exception Thrown: The value of "/home/djc/monte/toolinterop/doc/GmatMonte/source/ExampleCode/LunarExpedition.bsp" for field "OrbitSpiceKernelName" on object "LunarExpedition" is not an allowed value.
+The allowed values are: [File must exist] in line:
+   "  14: GMAT LunarExpedition.OrbitSpiceKernelName = {'/home/djc/monte/toolinterop/doc/GmatMonte/source/ExampleCode/LunarExpedition.bsp'};"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bfe57bb13b09/repo/api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bfe57bb13b09/repo/api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:11:43 GMAT GUI exiting.

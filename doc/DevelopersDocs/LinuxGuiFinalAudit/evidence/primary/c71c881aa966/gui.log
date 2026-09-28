@@ -1,0 +1,89 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:13 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:13 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot create an object "SQP1". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+   " 185: Create SNOPT SQP1;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 187: SQP1.ShowProgress              = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 188: SQP1.ReportStyle               = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 189: SQP1.ReportFile                = 'SNOPTSNOPT1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 190: SQP1.MajorOptimalityTolerance  = 1e-5;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 191: SQP1.MajorFeasibilityTolerance = 1e-005;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 192: SQP1.MajorIterationsLimit      = 100;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 193: SQP1.TotalIterationsLimit      = 100000;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 194: SQP1.OutputFileName            = 'SNOPT.out';"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+   " 195: SQP1.OverrideSpecsFileValues   = true;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Optimize in line:
+   " 337: Optimize 'Optimal Transfer' SQP1 {SolveMode = Solve, ExitMode = DiscardAndContinue};"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 339: Vary 'Vary TOI.V' SQP1(TOI.Element1 = 0.1562, {Perturbation = 1e-005, Lower = 0, Upper = 1, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 340:    Vary 'Vary TOI.N' SQP1(TOI.Element2 = 0.056042, {Perturbation = 1e-005, Lower = 0, Upper = 1, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 341:    Vary 'Vary TOI.B' SQP1(TOI.Element3 = 0.1386, {Perturbation = 1e-005, Lower = 0, Upper = 1, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+   " 349:    Vary 'Vary LOI.V' SQP1(LOI.Element1 = -0.6, {Perturbation = 1e-003, Lower = -2, Upper = 2, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 358:    NonlinearConstraint 'SMA = 2300' SQP1(smaCon = 0);"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 359:    NonlinearConstraint 'Inc = 65'   SQP1(incCon = 0);"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 360:    NonlinearConstraint 'ECC = 0.01' SQP1(eccCon = 0);"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
+   " 361:    Minimize 'Minimize delta V' SQP1(Cost);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/c71c881aa966/repo/application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:14 GMAT GUI exiting.

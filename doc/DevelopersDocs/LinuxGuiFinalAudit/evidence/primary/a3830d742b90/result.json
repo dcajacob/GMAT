@@ -1,0 +1,24 @@
+{
+  "script": "application/samples/Navigation/Ex_Estimate_TDRSAndUser.script",
+  "sha256": "c3b327fc56f1a39b59f91a8d6f0d9d93218ec6639546941ed89f6be9b87c2e78",
+  "category": "bundled",
+  "id": "a3830d742b90",
+  "configuration": {
+    "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+    "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+    "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+    "mode": "native",
+    "scale": 1,
+    "limit_seconds": 600,
+    "startup_sha256": "068d4bc6013cea7fe256ffe93118dc3e8b76e32b84e02035d0992cc5c4ed4205"
+  },
+  "job": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a3830d742b90",
+  "status": "completed",
+  "returncode": 0,
+  "mission_result": 1,
+  "screenshots": 8,
+  "viewport_mismatches": 0,
+  "inactive_windows": 0,
+  "screenshot_errors": 0,
+  "seconds": 156.89
+}

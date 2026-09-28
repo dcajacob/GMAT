@@ -1,0 +1,56 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:20 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:20 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Interpreter Exception: Cannot create an object "BLSE". The "BatchLeastSquares" is an unknown object type or invalid object name or dimension in line:
+   "   1: Create BatchLeastSquares BLSE;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   2: BLSI.Measurements ="
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   3: BLSI.Propagator ="
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   4: BLSE.SolveFor ="
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   5: BLSE.Consider ="
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   6: BLSE.SolutionEpoch ="
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   7: BLSE.AbsoluteConvergenceTol ="
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script: **** ERROR **** Utility Exception: RHS of "=" not found in the assignment block in line:
+   "   8: BLSE.Propagator ="
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/022547bceec1/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:21 GMAT GUI exiting.

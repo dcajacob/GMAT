@@ -1,0 +1,79 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:25 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:25 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** Type "FuelTank" is deprecated.  Please use "ChemicalTank" or "ElectricTank" instead.  A ChemicalTank will be created.
+*** WARNING *** Type "Thruster" is deprecated.  Please use "ChemicalThruster" or "ElectricThruster" instead.  A ChemicalThruster will be created.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot create an object "VF13ad1". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   " 159: Create VF13ad VF13ad1;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 160: GMAT VF13ad1.ShowProgress = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 161: GMAT VF13ad1.ReportStyle = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 162: GMAT VF13ad1.ReportFile = 'VF13adVF13ad1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 163: GMAT VF13ad1.MaximumIterations = 200;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 164: GMAT VF13ad1.Tolerance = 0.001;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 165: GMAT VF13ad1.UseCentralDifferences = false;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 166: GMAT VF13ad1.FeasibilityTolerance = 0.001;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Optimize in line:
+   " 235: Optimize VF13ad1 {SolveMode = Solve, ExitMode = DiscardAndContinue};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 236:    Vary VF13ad1(burn1Duration = 230, {Perturbation = .01, MaxStep = 50, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 237:    Vary VF13ad1(burn2Duration = 221, {Perturbation = .01, MaxStep = 50, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   " 238:    Vary VF13ad1(propDuration = 2706, {Perturbation = .01, MaxStep = 50, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   " 262:    NonlinearConstraint VF13ad1(DefaultSC.SMA=7100);"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   " 263:    NonlinearConstraint VF13ad1(DefaultSC.ECC=0.0);"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Minimize in line:
+   " 265:    Minimize VF13ad1(costFunction);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/30a648d7ec0c/repo/prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:25 GMAT GUI exiting.

@@ -1,0 +1,86 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:15 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:15 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "x" to "Sat.X" is not allowed before BeginMissionSequence in line:
+   "  29:    x = Sat.X"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "y" to "Sat.Y" is not allowed before BeginMissionSequence in line:
+   "  30:    y = Sat.Y"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "z" to "Sat.Z" is not allowed before BeginMissionSequence in line:
+   "  31:    z = Sat.Z"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "vx" to "Sat.VX" is not allowed before BeginMissionSequence in line:
+   "  32:    vx = Sat.VX"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "vy" to "Sat.VY" is not allowed before BeginMissionSequence in line:
+   "  33:    vy = Sat.VY"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "vz" to "Sat.VZ" is not allowed before BeginMissionSequence in line:
+   "  34:    vz = Sat.VZ"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "Energy" to "v^2/2 - mu/r" is not allowed before BeginMissionSequence in line:
+   "  40:    Energy = v^2/2 - mu/r;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "SMA" to "-mu/2/Energy" is not allowed before BeginMissionSequence in line:
+   "  41:    SMA = -mu/2/Energy;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting an object "ev" of type "Array" to a value "cross(vv, cross(rv, vv)) / mu - rv / r" is not allowed in line:
+   "  44:    ev = cross(vv, cross(rv, vv)) / mu - rv / r;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "ECC" to "magnitude(ev)" is not allowed before BeginMissionSequence in line:
+   "  45:    [ECC] = magnitude(ev);"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "nv(1,1)" to "x*vz-z*vx" is not allowed before BeginMissionSequence in line:
+   "  48:    nv(1,1)  =  x*vz-z*vx;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "nv(2,1)" to "y*vz-z*vy" is not allowed before BeginMissionSequence in line:
+   "  49:    nv(2,1)  =  y*vz-z*vy;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "n" in line:
+   "  51:    [n] = magnitude(nv);"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "acos( nv(1,1)/n )" is not allowed before BeginMissionSequence in line:
+   "  52:    RAAN = acos( nv(1,1)/n );"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "(pi2 - RAAN) / d2r" is not allowed before BeginMissionSequence in line:
+   "  54:       RAAN = (pi2 - RAAN) / d2r;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "SMAError" to "Sat.SMA  - SMA" is not allowed before BeginMissionSequence in line:
+   "  57:    SMAError  = Sat.SMA  - SMA;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "ECCError" to "Sat.ECC  - ECC" is not allowed before BeginMissionSequence in line:
+   "  58:    ECCError  = Sat.ECC  - ECC;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script: **** ERROR **** Interpreter Exception: Setting "RAANError" to "Sat.RAAN - RAAN" is not allowed before BeginMissionSequence in line:
+   "  59:    RAANError = Sat.RAAN - RAAN;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3f5a68cceefe/repo/doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:15 GMAT GUI exiting.

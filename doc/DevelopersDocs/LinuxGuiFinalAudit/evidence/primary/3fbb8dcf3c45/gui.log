@@ -1,0 +1,314 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:00:20 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:00:20 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3fbb8dcf3c45/repo/application/samples/Navigation/Ex_Estimate_AngleData.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3fbb8dcf3c45/repo/application/samples/Navigation/Ex_Estimate_AngleData.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Variable Step Integration Statistics (sim):
+    2880 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 172800.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   2880
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_Estimate_AngleData.gmd' has 352 of 352 records used for estimation.
+Total number of load records : 352
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_Estimate_AngleData.gmd':
+   Config 0: {{MAD,LEOSat,MAD},XSouth}
+   Config 1: {{MAD,LEOSat,MAD},YEast}
+   Config 2: {{CAN,LEOSat,CAN},XEast}
+   Config 3: {{CAN,LEOSat,CAN},YNorth}
+   Config 4: {{GDS,LEOSat,GDS},Azimuth}
+   Config 5: {{GDS,LEOSat,GDS},Elevation}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.502: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.502: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.502: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.517: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.528: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.528: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.528: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.528: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.529: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:00:27.530: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "bat")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   26086.5003939164548611111111 A.1 modified Julian
+   26086.5003935185185185185190 TAI modified Julian
+   08 Jun 2012 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 576.8
+   EstSat.EarthMJ2000Eq.Y = -5701.1
+   EstSat.EarthMJ2000Eq.Z = -4170.5
+   EstSat.EarthMJ2000Eq.VX = -1.76451
+   EstSat.EarthMJ2000Eq.VY = 4.18129
+   EstSat.EarthMJ2000Eq.VZ = -5.96579
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 6
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 346
+Variable Step Integration Statistics (bat):
+    2721 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 163260.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   2721
+
+   WeightedRMS residuals for this iteration : 131.92924389
+   BestRMS residuals                        : 131.92924389
+   PredictedRMS residuals for next iteration: 2.87702603284
+
+------------------------------------------------------
+Iteration 1
+
+Current estimated state:
+   Estimation Epoch:
+   26086.5003939164548611111111 A.1 modified Julian
+   26086.5003935185185185185190 TAI modified Julian
+   08 Jun 2012 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 576.80845227
+   EstSat.EarthMJ2000Eq.Y = -5701.16759163
+   EstSat.EarthMJ2000Eq.Z = -4170.5496811
+   EstSat.EarthMJ2000Eq.VX = -1.76457643688
+   EstSat.EarthMJ2000Eq.VY = 4.18127214828
+   EstSat.EarthMJ2000Eq.VZ = -5.96579515157
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 352
+Variable Step Integration Statistics (bat):
+    2721 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 163260.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   2721
+
+   WeightedRMS residuals for this iteration : 1.02997182985
+   BestRMS residuals                        : 1.02997182985
+   PredictedRMS residuals for next iteration: 0.977909895122
+This iteration is converging
+
+------------------------------------------------------
+Iteration 2
+
+Current estimated state:
+   Estimation Epoch:
+   26086.5003939164548611111111 A.1 modified Julian
+   26086.5003935185185185185190 TAI modified Julian
+   08 Jun 2012 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 576.859825731
+   EstSat.EarthMJ2000Eq.Y = -5701.15312638
+   EstSat.EarthMJ2000Eq.Z = -4170.59601476
+   EstSat.EarthMJ2000Eq.VX = -1.76453098668
+   EstSat.EarthMJ2000Eq.VY = 4.18128190533
+   EstSat.EarthMJ2000Eq.VZ = -5.96577547566
+
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 352
+Variable Step Integration Statistics (bat):
+    2721 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 163260.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   2721
+
+   WeightedRMS residuals for this iteration : 0.977910321841
+   BestRMS residuals                        : 0.977910321841
+   PredictedRMS residuals for next iteration: 0.977910136365
+This iteration is converged due to relative convergence criteria.
+
+
+********************************************************
+*** Estimation Completed in 3 iterations
+********************************************************
+
+Estimation converged!
+      |1 - RMSP/RMSB| = | 1- 0.97791 / 0.97791| = 1.89666e-07 is less than RelativeTol, 0.0001
+
+Final Estimated State:
+
+   Estimation Epoch:
+   26086.5003939164548611111111 A.1 modified Julian
+   26086.5003935185185185185190 TAI modified Julian
+   08 Jun 2012 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 576.859826415
+   EstSat.EarthMJ2000Eq.Y = -5701.15312389
+   EstSat.EarthMJ2000Eq.Z = -4170.59601642
+   EstSat.EarthMJ2000Eq.VX = -1.76453098771
+   EstSat.EarthMJ2000Eq.VY = 4.18128190763
+   EstSat.EarthMJ2000Eq.VZ = -5.96577547447
+
+Final Covariance Matrix:
+
+         2.014084009273e-04        -4.915931097977e-05         7.441423343862e-05         6.532621270038e-08        -9.971082512541e-08        -7.262208824787e-08
+        -4.915931097977e-05         3.037718291710e-04        -2.980061673769e-04        -5.249373545033e-08         3.367655135029e-07         1.535675193460e-07
+         7.441423343862e-05        -2.980061673769e-04         4.189872602311e-04         2.372559177232e-08        -3.706832675171e-07        -2.666398229901e-07
+         6.532621270038e-08        -5.249373545033e-08         2.372559177232e-08         2.478063368093e-10        -2.127305230844e-11        -4.335829944403e-11
+        -9.971082512541e-08         3.367655135029e-07        -3.706832675171e-07        -2.127305230844e-11         4.282522662587e-10         2.240517824109e-10
+        -7.262208824787e-08         1.535675193460e-07        -2.666398229901e-07        -4.335829944403e-11         2.240517824109e-10         2.054079624151e-10
+
+Final Correlation Matrix:
+
+             1.000000000000            -0.198743643941             0.256163242945             0.292410178577            -0.339510870782            -0.357043642880
+            -0.198743643941             1.000000000000            -0.835316567035            -0.191327557001             0.933692839159             0.614776111288
+             0.256163242945            -0.835316567035             1.000000000000             0.073630956243            -0.875090035605            -0.908899712592
+             0.292410178577            -0.191327557001             0.073630956243             1.000000000000            -0.065301591999            -0.192179650499
+            -0.339510870782             0.933692839159            -0.875090035605            -0.065301591999             1.000000000000             0.755422526134
+            -0.357043642880             0.614776111288            -0.908899712592            -0.192179650499             0.755422526134             1.000000000000
+
+********************************************************
+
+
+
+Mission run completed.
+===> Total Run Time: 6.983 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=1 type=46004 title=bat_estData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=2 type=46004 title=bat_estData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:00:33 GMAT GUI exiting.

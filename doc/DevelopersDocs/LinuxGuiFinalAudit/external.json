@@ -1,0 +1,7 @@
+{
+  "external_head": "751a352b39ab981fa355fa6f726e1c8bbd08aa10",
+  "production_patch_id": "172d067452bd841d97cab3480406e684d9b19f0d",
+  "archived_patch_matches": true,
+  "worktree_changes": "M src/CMakeModules/SetupDependencies.cmake",
+  "plugin_sha256": "9bb8663b7d0dd8597801366f1de574d664a231878b1f04a0ea840509b1f1fb17"
+}

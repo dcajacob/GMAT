@@ -1,0 +1,401 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:34 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:34 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "OrbitView1" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+The OrbitView "OrbitView2" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   " 254: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 256: emtgThrustModel.SpacecraftFile  = 'FixedThrustAndIsp_Model1.emtg_spacecraftopt';"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 257: emtgThrustModel.DutyCycle       = 1;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 258: emtgThrustModel.SpacecraftStage = [ 1 ];"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "SunThrustDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   " 264: Create DynamicsConfiguration SunThrustDynConfig;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   " 266: SunThrustDynConfig.ForceModels    = {DeepSpaceForceModel};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   " 267: SunThrustDynConfig.Spacecraft     = {emsat};"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   " 268: SunThrustDynConfig.FiniteBurns    = {emtgThrustModel};"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   " 269: SunThrustDynConfig.EMTGTankConfig = {ChemicalTank1};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "transferGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   " 271: Create OptimalControlGuess transferGuess;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 273: transferGuess.Type             = 'CollocationGuessFile';"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 274: transferGuess.TimeSystem       = 'A1ModJulian';"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 275: transferGuess.CoordinateSystem = EarthJ2000Eq;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 276: transferGuess.FileName         = '../data/misc/e2m_transfer_guessFile.och';"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "phase_LAUNCH". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 282: Create Phase phase_LAUNCH;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 284: phase_LAUNCH.Type                      = 'RadauPseudospectral';"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 285: phase_LAUNCH.ThrustMode                = 'Coast';"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 286: phase_LAUNCH.SubPhaseBoundaries        = [ -1 0 1 ];"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 287: phase_LAUNCH.PointsPerSubPhase         = [ 7 7 ];"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 288: phase_LAUNCH.GuessSource               = transferGuess;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 289: phase_LAUNCH.EpochFormat               = 'A1ModJulian';"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 290: phase_LAUNCH.StateLowerBound           = [ -1495980000 -1495980000 -1495980000 -100 -100 -100 1e-05 ];"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 291: phase_LAUNCH.StateUpperBound           = [ 1495980000 1495980000 1495980000 100 100 100 5000 ];"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 292: phase_LAUNCH.ControlLowerBound         = [ -2 -2 -2 ];"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 293: phase_LAUNCH.ControlUpperBound         = [ 2 2 2 ];"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 294: phase_LAUNCH.EpochLowerBound           = '29000'; %  Set bounds huge +/- your launch and make identical for all phases"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 295: phase_LAUNCH.EpochUpperBound           = '29500';"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 296: phase_LAUNCH.InitialEpoch              = '29075';"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 297: phase_LAUNCH.FinalEpoch                = '29080';"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 298: phase_LAUNCH.DynamicsConfiguration     = SunThrustDynConfig;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 299: phase_LAUNCH.BuiltInCost               = 'TotalMassFinal';"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 300: phase_LAUNCH.MinControlMagnitude       = 0;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 301: phase_LAUNCH.MaxControlMagnitude       = 1;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 302: phase_LAUNCH.MaxRelativeErrorTolerance = 1e-05;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 303: phase_LAUNCH.OverrideColorInGraphics   = false;"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 304: phase_LAUNCH.OrbitColor                = Red;"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "thrustToArrival". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 309: Create Phase thrustToArrival;"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 311: thrustToArrival.Type                      = 'RadauPseudospectral';"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 312: thrustToArrival.ThrustMode                = 'Thrust';"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 313: thrustToArrival.SubPhaseBoundaries        = [ -1 -0.5 0 0.5 1 ];"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 314: thrustToArrival.PointsPerSubPhase         = [ 3 3 3 3 ];"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 315: thrustToArrival.GuessSource               = transferGuess;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 316: thrustToArrival.EpochFormat               = 'A1ModJulian';"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 317: thrustToArrival.StateLowerBound           = [ -230000000 -230000000 -230000000 -100 -100 -100 1e-05 ];"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 318: thrustToArrival.StateUpperBound           = [ 230000000 230000000 230000000 100 100 100 5000 ];"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 319: thrustToArrival.ControlLowerBound         = [ -2 -2 -2 ];"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 320: thrustToArrival.ControlUpperBound         = [ 2 2 2 ];"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 321: thrustToArrival.EpochLowerBound           = '29000';"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 322: thrustToArrival.EpochUpperBound           = '29500';"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 323: thrustToArrival.InitialEpoch              = '29080';"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 324: thrustToArrival.FinalEpoch                = '29380';"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 325: thrustToArrival.DynamicsConfiguration     = SunThrustDynConfig;"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 326: thrustToArrival.BuiltInCost               = 'TotalMassFinal';"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 327: thrustToArrival.MinControlMagnitude       = 0;"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 328: thrustToArrival.MaxControlMagnitude       = 1;"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 329: thrustToArrival.MaxRelativeErrorTolerance = 1e-05;"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 330: thrustToArrival.OverrideColorInGraphics   = false;"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 331: thrustToArrival.OrbitColor                = Red;"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "coast". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 333: Create Phase coast;"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 335: coast.Type                      = 'RadauPseudospectral';"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 336: coast.ThrustMode                = 'Coast';"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 337: coast.SubPhaseBoundaries        = [ -1 -0.5 0 0.5 1 ];"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 338: coast.PointsPerSubPhase         = [ 3 3 3 3 ];"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 339: coast.GuessSource               = transferGuess;"
+
+65: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 340: coast.EpochFormat               = 'A1ModJulian';"
+
+66: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 341: coast.StateLowerBound           = [ -230000000 -230000000 -230000000 -100 -100 -100 1e-05 ];"
+
+67: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 342: coast.StateUpperBound           = [ 230000000 230000000 230000000 100 100 100 5000 ];"
+
+68: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 343: coast.ControlLowerBound         = [ -2 -2 -2 ];"
+
+69: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 344: coast.ControlUpperBound         = [ 2 2 2 ];"
+
+70: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 345: coast.EpochLowerBound           = '29380';"
+
+71: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 346: coast.EpochUpperBound           = '29420';"
+
+72: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 347: coast.InitialEpoch              = '29380';"
+
+73: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 348: coast.FinalEpoch                = '29420';"
+
+74: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 349: coast.DynamicsConfiguration     = SunThrustDynConfig;"
+
+75: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 350: coast.BuiltInCost               = 'TotalMassFinal';"
+
+76: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 351: coast.MinControlMagnitude       = 0;"
+
+77: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 352: coast.MaxControlMagnitude       = 1;"
+
+78: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 353: coast.MaxRelativeErrorTolerance = 1e-05;"
+
+79: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 354: coast.OverrideColorInGraphics   = false;"
+
+80: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "coast" in line:
+   " 355: coast.OrbitColor                = White;"
+
+81: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "MarsPre". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 357: Create OptimalControlFunction MarsPre;"
+
+82: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsPre" in line:
+   " 359: MarsPre.Function = 'IntegratedFlyby';"
+
+83: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsPre" in line:
+   " 360: MarsPre.Type = 'AlgebraicConstraint';"
+
+84: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsPre" in line:
+   " 361: MarsPre.PhaseList = {'thrustToArrival.Final', 'coast.Initial'};"
+
+85: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsPre.SetModelParameter" in line:
+   " 362: MarsPre.SetModelParameter(CelestialBody, Mars);"
+
+86: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsPre.SetModelParameter" in line:
+   " 363: MarsPre.SetModelParameter(PeriapsisRadiusLowerBound, 6000);"
+
+87: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsPre.SetModelParameter" in line:
+   " 364: MarsPre.SetModelParameter(PeriapsisRadiusUpperBound, 6000);"
+
+88: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_LAUNCH". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 369: Create CustomLinkageConstraint duration_LAUNCH;"
+
+89: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 371: duration_LAUNCH.ConstraintMode           = 'Difference';"
+
+90: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 372: duration_LAUNCH.InitialPhase             = phase_LAUNCH;"
+
+91: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 373: duration_LAUNCH.InitialPhaseBoundaryType = 'Start';"
+
+92: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 374: duration_LAUNCH.FinalPhase               = phase_LAUNCH;"
+
+93: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 375: duration_LAUNCH.FinalPhaseBoundaryType   = 'End';"
+
+94: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_LAUNCH.SetModelParameter" in line:
+   " 376: duration_LAUNCH.SetModelParameter('TimeLowerBound', 'ElapsedDays', 5);"
+
+95: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_LAUNCH.SetModelParameter" in line:
+   " 377: duration_LAUNCH.SetModelParameter('TimeUpperBound', 'ElapsedDays', 5);"
+
+96: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "launchBound". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 382: Create OptimalControlFunction launchBound;"
+
+97: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 384: launchBound.Function  = 'PatchedConicLaunch';"
+
+98: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 385: launchBound.Type      = 'AlgebraicConstraint';"
+
+99: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 386: launchBound.PhaseList = {'phase_LAUNCH.Initial'};"
+
+100: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 387: launchBound.SetModelParameter(VehicleName, Atlas_V_401);"
+
+101: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 388: launchBound.SetModelParameter(CentralBody, Earth);"
+
+102: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 389: launchBound.SetModelParameter(EMTGLaunchVehicleOptionsFile, ../data/emtg/NLSII_August2018_Augmented.emtg_launchvehicleopt);"
+
+103: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 395: Create Trajectory traj;"
+
+104: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 397: traj.GuessSource                  = transferGuess;"
+
+105: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 398: traj.MaxMeshRefinementIterations  = 5;"
+
+106: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 399: traj.PhaseList                    = {phase_LAUNCH, thrustToArrival, coast};"
+
+107: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 400: traj.AddBoundaryFunction          = {launchBound, MarsPre};"
+
+108: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 401: traj.SNOPTOutputFile              = 'SNOPTOutputFile.txt';"
+
+109: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 402: traj.AddSimpleLinkageChain        = {phase_LAUNCH, thrustToArrival, coast};"
+
+110: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 403: traj.SolutionFile                 = 'IntegratedFlyby_MarsFlyby.och';"
+
+111: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 404: traj.StateScaleMode               = 'Canonical';"
+
+112: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 405: traj.MassScaleFactor              = 1000;"
+
+113: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 406: traj.OutputCoordinateSystem       = MarsMJ2000Ec;"
+
+114: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 407: traj.FeasibilityTolerances        = [ 0.001 0.001 0.001 1e-05 ];"
+
+115: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 408: traj.MajorOptimalityTolerances    = [ 1 ];"
+
+116: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 410: traj.MajorIterationsLimits        = [ 500 ];"
+
+117: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 411: traj.TotalIterationsLimits        = [ 20000 ];"
+
+118: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 412: traj.OptimizationMode             = {'Maximize'};"
+
+119: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 413: traj.AllowFailedMeshOptimizations = true;"
+
+120: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 414: traj.MeshRefinementGuessMode      = 'BestSolutionMostRecentMesh';"
+
+121: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 415: traj.PublishUpdateRate            = 10;"
+
+122: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 426: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/16aa99909b1c/repo/application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:35 GMAT GUI exiting.

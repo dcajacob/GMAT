@@ -1,0 +1,104 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:19 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:19 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   " 235: Create VF13ad NLP;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 237: NLP.ShowProgress          = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 238: NLP.ReportStyle           = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 239: NLP.ReportFile            = 'VF13adVF13ad1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 240: NLP.MaximumIterations     = 200;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 241: NLP.Tolerance             = 1e-005;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 242: NLP.UseCentralDifferences = false;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   " 243: NLP.FeasibilityTolerance  = 1;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Optimize in line:
+   " 408:    Optimize NLP {SolveMode = Solve, ExitMode = SaveAndContinue};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 411:       Vary NLP(launchEpoch  = launchEpoch, {Perturbation = 1e-4, MaxStep = 125, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 413:       Vary NLP(arrivalEpoch = arrivalEpoch, {Perturbation = 1e-4, MaxStep = 125, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 420:       Vary NLP(satForward.VX  = satForward.EarthSunRot.VX, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 421:       Vary NLP(satForward.VY  = satForward.EarthSunRot.VY, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 422:       Vary NLP(satForward.VZ  = satForward.EarthSunRot.VZ, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 424:       Vary NLP(satBackward.VX = satBackward.MarsSunRot.VX, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 425:       Vary NLP(satBackward.VY = satBackward.MarsSunRot.VY, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+   " 426:       Vary NLP(satBackward.VZ = satBackward.MarsSunRot.VZ, {Perturbation = 1e-6, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 438:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.X=satBackward.SunMJ2000Ec.X);"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 439:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.Y=satBackward.SunMJ2000Ec.Y);"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 440:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.Z=satBackward.SunMJ2000Ec.Z);"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 441:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.VX=satBackward.SunMJ2000Ec.VX);"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 442:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.VY=satBackward.SunMJ2000Ec.VY);"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 443:       NonlinearConstraint NLP(satForward.SunMJ2000Ec.VZ=satBackward.SunMJ2000Ec.VZ);"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
+   " 448:       Minimize NLP(cost);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/fa8a33a008df/repo/application/samples/NeedVF13ad/Ex_MarsPatchConic.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:19 GMAT GUI exiting.

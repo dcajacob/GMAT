@@ -1,5 +1,8 @@
 # Native GUI follow-up: first verified patch batch
 
+Final status: see the [completed evidence audit](LinuxGuiFinalAudit/README.md). The dated batch snapshot below is retained as history.
+
+
 28 September 2026. The durable goal remains active. This report covers five completed patches; it does not claim the entire Old-derived review is resolved. Qt and floating-window work remain excluded. Old and the Downloads reference sources were read only. No PRs, issues or comments have been submitted.
 
 ## Changes in the current build

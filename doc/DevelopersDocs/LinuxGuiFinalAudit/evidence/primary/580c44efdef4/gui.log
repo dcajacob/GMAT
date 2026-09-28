@@ -1,0 +1,119 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:22 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:22 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot create an object "VF13ad1". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   " 519: Create VF13ad VF13ad1;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 521: VF13ad1.ShowProgress          = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 522: VF13ad1.ReportStyle           = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 523: VF13ad1.ReportFile            = 'VF13adVF13ad1.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 524: VF13ad1.MaximumIterations     = 200;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 525: VF13ad1.Tolerance             = 0.0001;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 526: VF13ad1.UseCentralDifferences = false;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "VF13ad1" in line:
+   " 527: VF13ad1.FeasibilityTolerance  = 1;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Optimize in line:
+   "1368: Optimize VF13ad1 {SolveMode = Solve, ExitMode = DiscardAndContinue};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1384:    Vary VF13ad1(ET_dv3 = ET_dv3, {Perturbation = .0001, MaxStep = .5, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1385:    NonlinearConstraint VF13ad1(ET_dv3>=8);"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1401:    Vary VF13ad1(dV3.Element1 = dV3.Element1, {Perturbation = .000001, MaxStep = .001, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1402:    Vary VF13ad1(dV3.Element2 = dV3.Element2, {Perturbation = .000001, MaxStep = .001, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1403:    Vary VF13ad1(dV3.Element3 = dV3.Element3, {Perturbation = .000001, MaxStep = .001, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1415:    Vary VF13ad1(ET_LCM2 = ET_LCM2, {Perturbation = .0001, MaxStep = .5, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1430:    Vary VF13ad1(dV2.Element1 = dV2.Element1, {Perturbation = .000001, MaxStep = .01, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1431:    Vary VF13ad1(dV2.Element2 = dV2.Element2, {Perturbation = .000001, MaxStep = .01, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1432:    Vary VF13ad1(dV2.Element3 = dV2.Element3, {Perturbation = .000001, MaxStep = .01, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1447:    Vary VF13ad1(ET_Coll = ET_Coll, {Perturbation = .00001, MaxStep = .01, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1460:    Vary VF13ad1(dVatMoon.Element1 = dVatMoon.Element1, {Perturbation = .0000001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1461:    Vary VF13ad1(dVatMoon.Element2 = dVatMoon.Element2, {Perturbation = .0000001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Vary in line:
+   "1462:    Vary VF13ad1(dVatMoon.Element3 = dVatMoon.Element3, {Perturbation = .0000001, MaxStep = .1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the Minimize in line:
+   "1494:    Minimize VF13ad1(Cost);"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1495:    NonlinearConstraint VF13ad1(dx=0);"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1496:    NonlinearConstraint VF13ad1(dy=0);"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1497:    NonlinearConstraint VF13ad1(dz=0);"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1498:    NonlinearConstraint VF13ad1(dVx=0);"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1499:    NonlinearConstraint VF13ad1(dVy=0);"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "VF13ad1" referenced in the NonlinearConstraint in line:
+   "1500:    NonlinearConstraint VF13ad1(dVz=0);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/580c44efdef4/repo/application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:23 GMAT GUI exiting.

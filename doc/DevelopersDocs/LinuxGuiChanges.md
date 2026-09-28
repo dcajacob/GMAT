@@ -57,7 +57,7 @@ The split test suites passed on the existing Release integration build: 30 repor
 
 Full application builds and runtime tests have **not** been repeated independently on the eight earlier PR branch trees. On this host, upstream startup has the fortified DE-header failure, so the ephemeris fix should land before meaningful standalone GUI runtime validation. Strict GTK tests may also need the separate tree/layout fix. Do not describe integration test results as isolated-branch runtime results.
 
-Native test runs use X11 virtual displays and software OpenGL. The new audit also passed physical Intel GPU/XWayland checks; native Wayland remains blocked at toolkit initialization. OpenFrames checks use optional external dependencies and retain known TimeDilator tooltip warnings in their logs.
+Native test runs use X11 virtual displays and software OpenGL. The new audit also passed physical Intel GPU/XWayland checks; native Wayland remains blocked at toolkit initialization. Earlier OpenFrames checks retained the TimeDilator tooltip warning. The current isolated OFI build includes LGUI-034; the final sweeps contain neither that warning nor the repaired Aura reflection warning.
 
 ## Review and submission order
 
@@ -156,3 +156,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 [Pixel corruption reproduction and independent correction](LinuxGuiTextureRows/README.md).
 
 [Playback, hierarchy and font fallback no-change dispositions](LinuxGuiOpenFramesAssessment/README.md).
+
+## Final non-Qt follow-up audit
+
+[Requirement-by-requirement completion evidence, all focused tests, 210/24-script comparisons, branch checks and validation limits](LinuxGuiFinalAudit/README.md). All requested candidates have a fix or tested disposition; no PR, issue or external comment was submitted.

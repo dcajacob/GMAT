@@ -1,0 +1,265 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:35 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:35 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "OrbitView1" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtg". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   " 216: Create EMTGSpacecraft emtg;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtg" in line:
+   " 218: emtg.SpacecraftFile  = 'FixedThrustAndIsp_Model1.emtg_spacecraftopt';"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtg" in line:
+   " 219: emtg.DutyCycle       = 1;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtg" in line:
+   " 220: emtg.SpacecraftStage = [ 1 ];"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "PatchedConicDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   " 226: Create DynamicsConfiguration PatchedConicDynConfig;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicDynConfig" in line:
+   " 228: PatchedConicDynConfig.ForceModels    = {PatchedConicForceModel};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicDynConfig" in line:
+   " 229: PatchedConicDynConfig.Spacecraft     = {testSat};"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicDynConfig" in line:
+   " 230: PatchedConicDynConfig.FiniteBurns    = {emtg};"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicDynConfig" in line:
+   " 231: PatchedConicDynConfig.EMTGTankConfig = {ChemicalTank1};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "PatchedConicLaunchGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   " 237: Create OptimalControlGuess PatchedConicLaunchGuess;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchGuess" in line:
+   " 239: PatchedConicLaunchGuess.Type             = 'CollocationGuessFile';"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchGuess" in line:
+   " 240: PatchedConicLaunchGuess.TimeSystem       = 'A1ModJulian';"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchGuess" in line:
+   " 241: PatchedConicLaunchGuess.CoordinateSystem = EarthMJ2000Eq;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchGuess" in line:
+   " 242: PatchedConicLaunchGuess.FileName         = '../data/misc/GuessWithUnityControl.och';"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "Phase_PatchedConicLaunch". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 248: Create Phase Phase_PatchedConicLaunch;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 250: Phase_PatchedConicLaunch.Type               = 'RadauPseudospectral';"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 251: Phase_PatchedConicLaunch.ThrustMode         = 'Coast';"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 252: Phase_PatchedConicLaunch.SubPhaseBoundaries = [ -1 -0.75 -0.5 -0.25 0 0.25 0.5 0.75 1 ];"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 253: Phase_PatchedConicLaunch.PointsPerSubPhase  = [ 3 3 3 3 3 3 3 3 ];"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 254: Phase_PatchedConicLaunch.GuessSource        = PatchedConicLaunchGuess;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 255: Phase_PatchedConicLaunch.EpochFormat        = 'A1ModJulian';"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 256: Phase_PatchedConicLaunch.StateLowerBound    = [ -1495980000 -1495980000 -1495980000 -100 -100 -100 1 ];"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 257: Phase_PatchedConicLaunch.StateUpperBound    = [ 1495980000 1495980000 1495980000 100 100 100 50000 ];"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 258: Phase_PatchedConicLaunch.ControlLowerBound  = [ -1 -1 -1 ];"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 259: Phase_PatchedConicLaunch.ControlUpperBound  = [ 1 1 1 ];"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 260: Phase_PatchedConicLaunch.EpochLowerBound    = '30540';"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 261: Phase_PatchedConicLaunch.EpochUpperBound    = '30600';"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 264: Phase_PatchedConicLaunch.InitialEpoch          = '30545';"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 265: Phase_PatchedConicLaunch.FinalEpoch            = '30555';"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 266: Phase_PatchedConicLaunch.DynamicsConfiguration = PatchedConicDynConfig;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 269: Phase_PatchedConicLaunch.BuiltInCost               = 'TotalMassFinal';"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 270: Phase_PatchedConicLaunch.MinControlMagnitude       = 0;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 271: Phase_PatchedConicLaunch.MaxControlMagnitude       = 1;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 272: Phase_PatchedConicLaunch.MaxRelativeErrorTolerance = 1e-05;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 273: Phase_PatchedConicLaunch.OverrideColorInGraphics   = false;"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Phase_PatchedConicLaunch" in line:
+   " 274: Phase_PatchedConicLaunch.OrbitColor                = Red;"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "LaunchPhaseDuration". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 281: Create CustomLinkageConstraint LaunchPhaseDuration;"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchPhaseDuration" in line:
+   " 283: LaunchPhaseDuration.ConstraintMode           = 'Difference';"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchPhaseDuration" in line:
+   " 284: LaunchPhaseDuration.InitialPhase             = Phase_PatchedConicLaunch;"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchPhaseDuration" in line:
+   " 285: LaunchPhaseDuration.InitialPhaseBoundaryType = 'Start';"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchPhaseDuration" in line:
+   " 286: LaunchPhaseDuration.FinalPhase               = Phase_PatchedConicLaunch;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchPhaseDuration" in line:
+   " 287: LaunchPhaseDuration.FinalPhaseBoundaryType   = 'End';"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "LaunchPhaseDuration.SetModelParameter" in line:
+   " 288: LaunchPhaseDuration.SetModelParameter('TimeLowerBound', 'ElapsedDays', 8);"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "LaunchPhaseDuration.SetModelParameter" in line:
+   " 289: LaunchPhaseDuration.SetModelParameter('TimeUpperBound', 'ElapsedDays', 8);"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "LaunchEpoch". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 292: Create CustomLinkageConstraint LaunchEpoch;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchEpoch" in line:
+   " 294: LaunchEpoch.ConstraintMode = 'Absolute';"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchEpoch" in line:
+   " 295: LaunchEpoch.InitialPhase   = Phase_PatchedConicLaunch;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "LaunchEpoch" in line:
+   " 296: LaunchEpoch.InitialPhaseBoundaryType = 'Start';"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "LaunchEpoch.SetModelParameter" in line:
+   " 297: LaunchEpoch.SetModelParameter('TimeLowerBound', A1ModJulian, 30540);"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "LaunchEpoch.SetModelParameter" in line:
+   " 298: LaunchEpoch.SetModelParameter('TimeUpperBound', A1ModJulian, 30560);"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "PatchedConicLaunchConstraint". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 305: Create OptimalControlFunction PatchedConicLaunchConstraint;"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchConstraint" in line:
+   " 307: PatchedConicLaunchConstraint.Function  = 'PatchedConicLaunch';"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchConstraint" in line:
+   " 308: PatchedConicLaunchConstraint.Type      = 'AlgebraicConstraint';"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PatchedConicLaunchConstraint" in line:
+   " 309: PatchedConicLaunchConstraint.PhaseList = {'Phase_PatchedConicLaunch.Initial'};"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "PatchedConicLaunchConstraint.SetModelParameter" in line:
+   " 310: PatchedConicLaunchConstraint.SetModelParameter('VehicleName', 'TestConfig1');"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "PatchedConicLaunchConstraint.SetModelParameter" in line:
+   " 311: PatchedConicLaunchConstraint.SetModelParameter('CentralBody', 'Earth');"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "PatchedConicLaunchConstraint.SetModelParameter" in line:
+   " 312: PatchedConicLaunchConstraint.SetModelParameter('EMTGLaunchVehicleOptionsFile', ../data/emtg/NLSII_August2018_Augmented.emtg_launchvehicleopt);"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 317: Create Trajectory traj;"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 319: traj.GuessSource                  = PatchedConicLaunchGuess;"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 320: traj.MaxMeshRefinementIterations  = 5;"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 321: traj.PhaseList                    = {Phase_PatchedConicLaunch};"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 322: traj.AddBoundaryFunction          = {PatchedConicLaunchConstraint};"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 323: traj.SNOPTOutputFile              = 'SNOPTOutputFile.txt';"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 324: traj.CustomLinkages               = {LaunchPhaseDuration, LaunchEpoch};"
+
+65: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 325: traj.SolutionFile                 = 'PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.och';"
+
+66: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 326: traj.StateScaleMode               = 'Canonical';"
+
+67: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 327: traj.MassScaleFactor              = 1000;"
+
+68: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 328: traj.OutputCoordinateSystem       = UsePhaseCoordinateSystems;"
+
+69: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 329: traj.FeasibilityTolerances        = [ 1e-08 ];"
+
+70: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 330: traj.MajorOptimalityTolerances    = [ 0.0001 ];"
+
+71: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 331: traj.MajorIterationsLimits        = [ 1000 ];"
+
+72: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 332: traj.TotalIterationsLimits        = [ 200000 ];"
+
+73: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 333: traj.OptimizationMode             = {'Minimize'};"
+
+74: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 334: traj.AllowFailedMeshOptimizations = true;"
+
+75: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 335: traj.MeshRefinementGuessMode      = 'BestSolutionMostRecentMesh';"
+
+76: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 336: traj.PublishUpdateRate            = 30;"
+
+77: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 345: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/7a860873c33f/repo/application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:13:36 GMAT GUI exiting.

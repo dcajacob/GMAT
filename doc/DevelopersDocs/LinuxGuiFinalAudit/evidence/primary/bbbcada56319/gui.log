@@ -1,0 +1,92 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:41 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:41 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "TargeterTextFile" field of DifferentialCorrector on object "MarsTOIDC" is deprecated and will be removed from a future build; please use "ReportFile" instead.
+*** WARNING *** "UseCentralDifferences" field of DifferentialCorrector on object "MarsTOIDC" is deprecated and will be removed from a future build; please use "DerivativeMethod" instead.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+*** WARNING *** "V", "N", "B" are deprecated and will be removed from a future build; please use "Element1", "Element2", "Element3" instead.
+*** WARNING *** "N" field of Burn is deprecated and will be removed from a future build; please use "Element2" instead.
+*** WARNING *** "V" field of Burn is deprecated and will be removed from a future build; please use "Element1" instead.
+*** WARNING *** "B" field of Burn is deprecated and will be removed from a future build; please use "Element3" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "MarsMJ2000Eq" in line:
+   " 144: GMAT MarsMJ2000Eq.UpdateInterval = 60;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "MarsMJ2000Eq" in line:
+   " 145: GMAT MarsMJ2000Eq.OverrideOriginInterval = false;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "SunMJ2kEc" in line:
+   " 150: GMAT SunMJ2kEc.UpdateInterval = 60;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "SunMJ2kEc" in line:
+   " 151: GMAT SunMJ2kEc.OverrideOriginInterval = false;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "SunMJ2kEq" in line:
+   " 156: GMAT SunMJ2kEq.UpdateInterval = 60;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "SunMJ2kEq" in line:
+   " 157: GMAT SunMJ2kEq.OverrideOriginInterval = false;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthSunRot" in line:
+   " 162: GMAT EarthSunRot.UpdateInterval = 60;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "EarthSunRot" in line:
+   " 163: GMAT EarthSunRot.OverrideOriginInterval = false;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_MarsBPlane.report" - specified path does not exist.
+ in line:
+   " 187: GMAT Data.Filename = ./output/SampleMissions/Ex_MarsBPlane.report;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+   " 195: GMAT EarthView.OrbitColor = [ 3707764991 1743054 4227327 ];"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "EarthView" is no longer in use in line:
+   " 201: GMAT EarthView.FixedFovAngle = 45;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "EarthView" is no longer in use in line:
+   " 212: GMAT EarthView.PerspectiveMode = Off;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "EarthView" is no longer in use in line:
+   " 213: GMAT EarthView.UseFixedFov = Off;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MarsView" is no longer in use in line:
+   " 221: GMAT MarsView.OrbitColor = [ 255 1743054 ];"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "MarsView" is no longer in use in line:
+   " 227: GMAT MarsView.FixedFovAngle = 45;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "MarsView" is no longer in use in line:
+   " 238: GMAT MarsView.PerspectiveMode = Off;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script: *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "MarsView" is no longer in use in line:
+   " 239: GMAT MarsView.UseFixedFov = Off;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/bbbcada56319/repo/doc/help/src/files/scripts/MarsBPlaneTutorial.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:41 GMAT GUI exiting.

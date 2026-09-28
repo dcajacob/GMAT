@@ -1,0 +1,2580 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:00:16 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:00:16 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1066fb7aa782/repo/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1066fb7aa782/repo/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+Scaling image '/home/dan/GIT/GMAT/GMAT/application/data/graphics/texture/Sun.jpg' from (720,360) to (512,256)
+Scaling image '/home/dan/GIT/GMAT/GMAT/application/data/graphics/texture/Mars_JPLCaltechUSGS.jpg' from (1440,720) to (1024,512)
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Scaling image '/home/dan/GIT/GMAT/GMAT/application/data/graphics/texture/Sun.jpg' from (720,360) to (512,256)
+Scaling image '/home/dan/GIT/GMAT/GMAT/application/data/graphics/texture/Mars_JPLCaltechUSGS.jpg' from (1440,720) to (1024,512)
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27722.2678134, satForward.VX = 1.24242326859, satForward.VY = 0.857493964283, satForward.VZ = -7.31156188552, satBackward.VX = -4.24323514703, satBackward.VY = -0.238185150576, satBackward.VZ = -5.58416575838
+   Cost Function Value: 28.4780224845
+   Yukon1 State: Optimization ready to start.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -217379226.74
+      Delta satForward.SunMJ2000Ec.Y = 116463608.057
+      Delta satForward.SunMJ2000Ec.Z = 4769275.72321
+      Delta satForward.SunMJ2000Ec.VX = 8.64150873749
+      Delta satForward.SunMJ2000Ec.VY = -22.517458521
+      Delta satForward.SunMJ2000Ec.VZ = -0.569583251415
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27722.3238804, satForward.VX = 1.05466034232, satForward.VY = 0.825348174043, satForward.VZ = -6.67958160598, satBackward.VX = -5.14614465877, satBackward.VY = -0.223591407458, satBackward.VZ = -4.58416575838
+   Cost Function Value: 25.7186099252
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -192057661.314
+      Delta satForward.SunMJ2000Ec.Y = 102727661.914
+      Delta satForward.SunMJ2000Ec.Z = 4213187.24376
+      Delta satForward.SunMJ2000Ec.VX = 7.5761497538
+      Delta satForward.SunMJ2000Ec.VY = -19.8341847295
+      Delta satForward.SunMJ2000Ec.VZ = -0.501313673985
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27722.4336474, satForward.VX = 0.857123676989, satForward.VY = 0.789842589108, satForward.VZ = -6.41429725855, satBackward.VX = -6.00757510726, satBackward.VY = -0.207716947567, satBackward.VZ = -3.58416575838
+   Cost Function Value: 23.4012164099
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -161953958.858
+      Delta satForward.SunMJ2000Ec.Y = 86640610.9105
+      Delta satForward.SunMJ2000Ec.Z = 3557619.12371
+      Delta satForward.SunMJ2000Ec.VX = 6.31390812139
+      Delta satForward.SunMJ2000Ec.VY = -16.6207895145
+      Delta satForward.SunMJ2000Ec.VZ = -0.420098630827
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27722.7035393, satForward.VX = 0.646855981496, satForward.VY = 0.746744066778, satForward.VZ = -7.05396124399, satBackward.VX = -6.83673887584, satBackward.VY = -0.189388500161, satBackward.VZ = -2.58416575838
+   Cost Function Value: 22.0067100147
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -121089973.108
+      Delta satForward.SunMJ2000Ec.Y = 65042663.7029
+      Delta satForward.SunMJ2000Ec.Z = 2683121.23878
+      Delta satForward.SunMJ2000Ec.VX = 4.50760640819
+      Delta satForward.SunMJ2000Ec.VY = -12.3178747484
+      Delta satForward.SunMJ2000Ec.VZ = -0.308967426397
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27723.1064114, satForward.VX = 0.543404137344, satForward.VY = 0.727815578539, satForward.VZ = -8.05396124399, satBackward.VX = -7.1258194454, satBackward.VY = -0.183544095785, satBackward.VZ = -2.38443235441
+   Cost Function Value: 22.2264761871
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -100688704.018
+      Delta satForward.SunMJ2000Ec.Y = 53944283.4027
+      Delta satForward.SunMJ2000Ec.Z = 2239758.38392
+      Delta satForward.SunMJ2000Ec.VX = 3.63075931102
+      Delta satForward.SunMJ2000Ec.VY = -10.3128448916
+      Delta satForward.SunMJ2000Ec.VZ = -0.25542786776
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27723.8524031, satForward.VX = 0.422709737779, satForward.VY = 0.712978750289, satForward.VZ = -9.05396124399, satBackward.VX = -7.39027012664, satBackward.VY = -0.18073931696, satBackward.VZ = -2.36690565427
+   Cost Function Value: 22.4920235577
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -83091594.7043
+      Delta satForward.SunMJ2000Ec.Y = 44320425.5313
+      Delta satForward.SunMJ2000Ec.Z = 1853309.01543
+      Delta satForward.SunMJ2000Ec.VX = 2.89861085632
+      Delta satForward.SunMJ2000Ec.VY = -8.58878695176
+      Delta satForward.SunMJ2000Ec.VZ = -0.209715289491
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27725.4046581, satForward.VX = 0.282282060453, satForward.VY = 0.702465063211, satForward.VZ = -10.053961244, satBackward.VX = -7.6410631895, satBackward.VY = -0.180761298716, satBackward.VZ = -2.51472590331
+   Cost Function Value: 22.5253593747
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -65754065.1517
+      Delta satForward.SunMJ2000Ec.Y = 34818023.5727
+      Delta satForward.SunMJ2000Ec.Z = 1466114.18836
+      Delta satForward.SunMJ2000Ec.VX = 2.20053103835
+      Delta satForward.SunMJ2000Ec.VY = -6.87639678822
+      Delta satForward.SunMJ2000Ec.VZ = -0.164879094585
+
+Yukon1 Iteration 7; Function Evaluation 8; Nominal Pass
+   Variables:  arrivalEpoch = 27728.157365, satForward.VX = 0.124384634525, satForward.VY = 0.698052060333, satForward.VZ = -11.053961244, satBackward.VX = -7.85350038026, satBackward.VY = -0.183045172531, satBackward.VZ = -2.86439916667
+   Cost Function Value: 22.12882594
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -47494884.8137
+      Delta satForward.SunMJ2000Ec.Y = 24764797.9475
+      Delta satForward.SunMJ2000Ec.Z = 1047194.78554
+      Delta satForward.SunMJ2000Ec.VX = 1.48541662181
+      Delta satForward.SunMJ2000Ec.VY = -5.03750766112
+      Delta satForward.SunMJ2000Ec.VZ = -0.1174780864
+
+Yukon1 Iteration 8; Function Evaluation 9; Nominal Pass
+   Variables:  arrivalEpoch = 27733.7477171, satForward.VX = -0.0278105582538, satForward.VY = 0.70863129183, satForward.VZ = -12.053961244, satBackward.VX = -7.86713500183, satBackward.VY = -0.186657641039, satBackward.VZ = -3.57382733859
+   Cost Function Value: 20.5029277294
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -24479757.0235
+      Delta satForward.SunMJ2000Ec.Y = 11758697.7956
+      Delta satForward.SunMJ2000Ec.Z = 481081.939819
+      Delta satForward.SunMJ2000Ec.VX = 0.57908771898
+      Delta satForward.SunMJ2000Ec.VY = -2.58976821746
+      Delta satForward.SunMJ2000Ec.VZ = -0.0554142426354
+
+Yukon1 Iteration 9; Function Evaluation 10; Nominal Pass
+   Variables:  arrivalEpoch = 27741.9340189, satForward.VX = -0.0683864048343, satForward.VY = 0.746783459121, satForward.VZ = -12.7171424797, satBackward.VX = -7.24375688682, satBackward.VY = -0.17916746476, satBackward.VZ = -4.57382733859
+   Cost Function Value: 17.4370961053
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1832238.42033
+      Delta satForward.SunMJ2000Ec.Y = -1644954.59051
+      Delta satForward.SunMJ2000Ec.Z = -112253.038589
+      Delta satForward.SunMJ2000Ec.VX = -0.226097715814
+      Delta satForward.SunMJ2000Ec.VY = 0.0810905235526
+      Delta satForward.SunMJ2000Ec.VZ = 0.00844636845501
+
+Yukon1 Iteration 10; Function Evaluation 11; Nominal Pass
+   Variables:  arrivalEpoch = 27743.913214, satForward.VX = -0.00356715235411, satForward.VY = 0.769486539006, satForward.VZ = -12.6892818789, satBackward.VX = -6.67061236305, satBackward.VY = -0.161822159702, satBackward.VZ = -4.65437521209
+   Cost Function Value: 16.9818164989
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -152783.175996
+      Delta satForward.SunMJ2000Ec.Y = -85767.23101
+      Delta satForward.SunMJ2000Ec.Z = -3060.56919155
+      Delta satForward.SunMJ2000Ec.VX = 0.00682581669072
+      Delta satForward.SunMJ2000Ec.VY = 0.0016946895969
+      Delta satForward.SunMJ2000Ec.VZ = -4.98892792072e-05
+
+Yukon1 Iteration 11; Function Evaluation 12; Nominal Pass
+   Variables:  arrivalEpoch = 27746.7336277, satForward.VX = 0.356097195398, satForward.VY = 0.803213174785, satForward.VZ = -11.7420640371, satBackward.VX = -5.67061236305, satBackward.VY = -0.155838964175, satBackward.VZ = -4.15816887506
+   Cost Function Value: 14.4763688438
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1596568.67813
+      Delta satForward.SunMJ2000Ec.Y = -117899.029807
+      Delta satForward.SunMJ2000Ec.Z = 26688.8611805
+      Delta satForward.SunMJ2000Ec.VX = 0.0704680458665
+      Delta satForward.SunMJ2000Ec.VY = -0.142514107933
+      Delta satForward.SunMJ2000Ec.VZ = -0.00308149082095
+
+Yukon1 Iteration 12; Function Evaluation 13; Nominal Pass
+   Variables:  arrivalEpoch = 27749.5083455, satForward.VX = 0.695139241669, satForward.VY = 0.837150802273, satForward.VZ = -10.7910173926, satBackward.VX = -4.67061236305, satBackward.VY = -0.148982141777, satBackward.VZ = -3.56698150818
+   Cost Function Value: 12.2238580961
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=10
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -3155689.49894
+      Delta satForward.SunMJ2000Ec.Y = -27381.9746217
+      Delta satForward.SunMJ2000Ec.Z = 61713.3526934
+      Delta satForward.SunMJ2000Ec.VX = 0.125640083208
+      Delta satForward.SunMJ2000Ec.VY = -0.303933083206
+      Delta satForward.SunMJ2000Ec.VZ = -0.00632664354108
+
+Yukon1 Iteration 13; Function Evaluation 14; Nominal Pass
+   Variables:  arrivalEpoch = 27752.2446094, satForward.VX = 1.0107355553, satForward.VY = 0.871360811473, satForward.VZ = -9.83486958082, satBackward.VX = -3.67061236305, satBackward.VY = -0.141108223452, satBackward.VZ = -2.8567431204
+   Cost Function Value: 10.5896112245
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -4379103.01495
+      Delta satForward.SunMJ2000Ec.Y = 213579.043442
+      Delta satForward.SunMJ2000Ec.Z = 93853.1778645
+      Delta satForward.SunMJ2000Ec.VX = 0.157242218753
+      Delta satForward.SunMJ2000Ec.VY = -0.44075410981
+      Delta satForward.SunMJ2000Ec.VZ = -0.00894286105404
+
+Yukon1 Iteration 14; Function Evaluation 15; Nominal Pass
+   Variables:  arrivalEpoch = 27752.1790219, satForward.VX = 1.02657294457, satForward.VY = 0.873747238804, satForward.VZ = -9.6253086463, satBackward.VX = -3.608210621, satBackward.VY = -0.139639866246, satBackward.VZ = -2.5159161914
+   Cost Function Value: 9.99986430525
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -56596.6564083
+      Delta satForward.SunMJ2000Ec.Y = -33290.7339368
+      Delta satForward.SunMJ2000Ec.Z = 774.669573873
+      Delta satForward.SunMJ2000Ec.VX = 0.00965318684549
+      Delta satForward.SunMJ2000Ec.VY = -0.00386742729612
+      Delta satForward.SunMJ2000Ec.VZ = -0.000248557711629
+
+Yukon1 Iteration 15; Function Evaluation 16; Nominal Pass
+   Variables:  arrivalEpoch = 27752.8814191, satForward.VX = 1.11714941184, satForward.VY = 0.883239367299, satForward.VZ = -9.30229708372, satBackward.VX = -3.33078866318, satBackward.VY = -0.13756183506, satBackward.VZ = -2.2332919472
+   Cost Function Value: 9.71268226107
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -185318.599551
+      Delta satForward.SunMJ2000Ec.Y = 44903.5411986
+      Delta satForward.SunMJ2000Ec.Z = 5122.25738704
+      Delta satForward.SunMJ2000Ec.VX = 0.00435059107985
+      Delta satForward.SunMJ2000Ec.VY = -0.0235291155908
+      Delta satForward.SunMJ2000Ec.VZ = -0.000428098467889
+
+Yukon1 Iteration 16; Function Evaluation 17; Nominal Pass
+   Variables:  arrivalEpoch = 27753.810586, satForward.VX = 1.22454162986, satForward.VY = 0.895471355304, satForward.VZ = -8.9154066737, satBackward.VX = -2.98152103883, satBackward.VY = -0.134665167654, satBackward.VZ = -1.88599606509
+   Cost Function Value: 9.6235113247
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -284857.001941
+      Delta satForward.SunMJ2000Ec.Y = 72287.1969301
+      Delta satForward.SunMJ2000Ec.Z = 7860.55398324
+      Delta satForward.SunMJ2000Ec.VX = 0.00624139523445
+      Delta satForward.SunMJ2000Ec.VY = -0.0350928981533
+      Delta satForward.SunMJ2000Ec.VZ = -0.000637965189862
+
+Yukon1 Iteration 17; Function Evaluation 18; Nominal Pass
+   Variables:  arrivalEpoch = 27753.6155121, satForward.VX = 1.20186624137, satForward.VY = 0.892956764615, satForward.VZ = -8.98991034399, satBackward.VX = -3.05415578747, satBackward.VY = -0.13525530514, satBackward.VZ = -1.94737348552
+   Cost Function Value: 9.59731369317
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -11150.7021213
+      Delta satForward.SunMJ2000Ec.Y = 3935.98097268
+      Delta satForward.SunMJ2000Ec.Z = 332.895507485
+      Delta satForward.SunMJ2000Ec.VX = -2.45441682587e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00136915389021
+      Delta satForward.SunMJ2000Ec.VZ = -1.99756613837e-05
+
+Yukon1 Iteration 18; Function Evaluation 19; Nominal Pass
+   Variables:  arrivalEpoch = 27753.6288824, satForward.VX = 1.20316321239, satForward.VY = 0.89312579033, satForward.VZ = -8.98519078546, satBackward.VX = -3.04943372773, satBackward.VY = -0.135211011829, satBackward.VZ = -1.94277920254
+   Cost Function Value: 9.59733029743
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -70.6065266579
+      Delta satForward.SunMJ2000Ec.Y = 20.054594487
+      Delta satForward.SunMJ2000Ec.Z = 1.92182077467
+      Delta satForward.SunMJ2000Ec.VX = 2.5536227497e-06
+      Delta satForward.SunMJ2000Ec.VY = -7.91714016923e-06
+      Delta satForward.SunMJ2000Ec.VZ = -1.71510156521e-07
+
+Yukon1 Iteration 19; Function Evaluation 20; Nominal Pass
+   Variables:  arrivalEpoch = 27753.6286083, satForward.VX = 1.20313204095, satForward.VY = 0.893122195258, satForward.VZ = -8.98530348042, satBackward.VX = -3.04953611394, satBackward.VY = -0.1352118692, satBackward.VZ = -1.942881029
+   Cost Function Value: 9.59732527904
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.0690026432
+      Delta satForward.SunMJ2000Ec.Y = 10.1033962369
+      Delta satForward.SunMJ2000Ec.Z = 0.677792742848
+      Delta satForward.SunMJ2000Ec.VX = 8.6323138504e-07
+      Delta satForward.SunMJ2000Ec.VY = -2.35718945785e-06
+      Delta satForward.SunMJ2000Ec.VZ = -5.6371089574e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 19 iterations and 20 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27753.6286083
+   satForward.VX = 1.20313204095
+   satForward.VY = 0.893122195258
+   satForward.VZ = -8.98530348042
+   satBackward.VX = -3.04953611394
+   satBackward.VY = -0.1352118692
+   satBackward.VZ = -1.942881029
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27753.6286083, satForward.VX = 1.20313204095, satForward.VY = 0.893122195258, satForward.VZ = -8.98530348042, satBackward.VX = -3.04953611394, satBackward.VY = -0.1352118692, satBackward.VZ = -1.942881029
+   Cost Function Value: 9.57663587657
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3608598.98698
+      Delta satForward.SunMJ2000Ec.Y = 1422996.94646
+      Delta satForward.SunMJ2000Ec.Z = 112484.528161
+      Delta satForward.SunMJ2000Ec.VX = 0.199388108981
+      Delta satForward.SunMJ2000Ec.VY = 0.269113039693
+      Delta satForward.SunMJ2000Ec.VZ = -0.00778437900911
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27753.4561214, satForward.VX = 1.30114876629, satForward.VY = 0.877364797461, satForward.VZ = -8.6628967049, satBackward.VX = -3.0716901647, satBackward.VY = -0.161659721482, satBackward.VZ = -1.73004042447
+   Cost Function Value: 9.40980057367
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -102361.64928
+      Delta satForward.SunMJ2000Ec.Y = 57005.5234946
+      Delta satForward.SunMJ2000Ec.Z = 1367.54786369
+      Delta satForward.SunMJ2000Ec.VX = -0.0130248812364
+      Delta satForward.SunMJ2000Ec.VY = -0.0108563479254
+      Delta satForward.SunMJ2000Ec.VZ = -0.000145483386846
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27753.3772232, satForward.VX = 1.28268911885, satForward.VY = 0.87560698992, satForward.VZ = -8.75041791534, satBackward.VX = -3.11520169411, satBackward.VY = -0.161651463201, satBackward.VZ = -1.80851968066
+   Cost Function Value: 9.42004994194
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -9729.0307212
+      Delta satForward.SunMJ2000Ec.Y = 2915.15147576
+      Delta satForward.SunMJ2000Ec.Z = 312.362011865
+      Delta satForward.SunMJ2000Ec.VX = 1.61841647888e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00149057579978
+      Delta satForward.SunMJ2000Ec.VZ = -2.0746368312e-05
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27753.0507445, satForward.VX = 1.24716119598, satForward.VY = 0.871405436938, satForward.VZ = -8.88587709761, satBackward.VX = -3.23657266124, satBackward.VY = -0.162459814899, satBackward.VZ = -1.93089827012
+   Cost Function Value: 9.39864695839
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -34665.7256739
+      Delta satForward.SunMJ2000Ec.Y = 9099.05502173
+      Delta satForward.SunMJ2000Ec.Z = 953.695358351
+      Delta satForward.SunMJ2000Ec.VX = 0.00072470933647
+      Delta satForward.SunMJ2000Ec.VY = -0.00431622793984
+      Delta satForward.SunMJ2000Ec.VZ = -7.20069779443e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27753.01783, satForward.VX = 1.24340389119, satForward.VY = 0.870986546576, satForward.VZ = -8.89905161873, satBackward.VX = -3.24889065237, satBackward.VY = -0.162537065139, satBackward.VZ = -1.94172062861
+   Cost Function Value: 9.39609299405
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=20
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -350.248503402
+      Delta satForward.SunMJ2000Ec.Y = 112.95124352
+      Delta satForward.SunMJ2000Ec.Z = 10.0566746444
+      Delta satForward.SunMJ2000Ec.VX = 2.51645885996e-06
+      Delta satForward.SunMJ2000Ec.VY = -4.3255420211e-05
+      Delta satForward.SunMJ2000Ec.VZ = -6.36003672172e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27753.0176797, satForward.VX = 1.24338219624, satForward.VY = 0.870984488294, satForward.VZ = -8.89913104029, satBackward.VX = -3.24895323068, satBackward.VY = -0.162537367191, satBackward.VZ = -1.94178383705
+   Cost Function Value: 9.39608591428
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.0827891938
+      Delta satForward.SunMJ2000Ec.Y = 10.0040664673
+      Delta satForward.SunMJ2000Ec.Z = 0.660186156631
+      Delta satForward.SunMJ2000Ec.VX = 9.00427131967e-07
+      Delta satForward.SunMJ2000Ec.VY = -2.36575276524e-06
+      Delta satForward.SunMJ2000Ec.VZ = -5.43386335927e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27753.0176797
+   satForward.VX = 1.24338219624
+   satForward.VY = 0.870984488294
+   satForward.VZ = -8.89913104029
+   satBackward.VX = -3.24895323068
+   satBackward.VY = -0.162537367191
+   satBackward.VZ = -1.94178383705
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27753.0176797, satForward.VX = 1.24338219624, satForward.VY = 0.870984488294, satForward.VZ = -8.89913104029, satBackward.VX = -3.24895323068, satBackward.VY = -0.162537367191, satBackward.VZ = -1.94178383705
+   Cost Function Value: 9.3794494683
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3382859.20669
+      Delta satForward.SunMJ2000Ec.Y = 1413598.36882
+      Delta satForward.SunMJ2000Ec.Z = 115685.051346
+      Delta satForward.SunMJ2000Ec.VX = 0.193656457759
+      Delta satForward.SunMJ2000Ec.VY = 0.252330658622
+      Delta satForward.SunMJ2000Ec.VZ = -0.00724572464709
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27752.8565402, satForward.VX = 1.33515581965, satForward.VY = 0.857187478772, satForward.VZ = -8.58977802717, satBackward.VX = -3.26759335417, satBackward.VY = -0.187606643783, satBackward.VZ = -1.73623817559
+   Cost Function Value: 9.21782161797
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -92791.7216239
+      Delta satForward.SunMJ2000Ec.Y = 50003.3572586
+      Delta satForward.SunMJ2000Ec.Z = 1403.69991371
+      Delta satForward.SunMJ2000Ec.VX = -0.0116587840066
+      Delta satForward.SunMJ2000Ec.VY = -0.00986569697368
+      Delta satForward.SunMJ2000Ec.VZ = -0.000149147261838
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27752.7765387, satForward.VX = 1.31851996634, satForward.VY = 0.85549720609, satForward.VZ = -8.67009611455, satBackward.VX = -3.3097583435, satBackward.VY = -0.187586981572, satBackward.VZ = -1.80701470471
+   Cost Function Value: 9.22598451952
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -8203.47730379
+      Delta satForward.SunMJ2000Ec.Y = 2375.24615133
+      Delta satForward.SunMJ2000Ec.Z = 259.681412935
+      Delta satForward.SunMJ2000Ec.VX = 3.34728609168e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.0012505725451
+      Delta satForward.SunMJ2000Ec.VZ = -1.61613517868e-05
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27752.4437126, satForward.VX = 1.28403555206, satForward.VY = 0.851335413312, satForward.VZ = -8.80458603833, satBackward.VX = -3.43193521081, satBackward.VY = -0.188187961915, satBackward.VZ = -1.92461762847
+   Cost Function Value: 9.20497311922
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=30
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -33558.7292572
+      Delta satForward.SunMJ2000Ec.Y = 8139.87645856
+      Delta satForward.SunMJ2000Ec.Z = 898.564695284
+      Delta satForward.SunMJ2000Ec.VX = 0.000746035839946
+      Delta satForward.SunMJ2000Ec.VY = -0.00413304840887
+      Delta satForward.SunMJ2000Ec.VZ = -6.44126984695e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27752.4137152, satForward.VX = 1.28076040434, satForward.VY = 0.85096605154, satForward.VZ = -8.81623013801, satBackward.VX = -3.44298774192, satBackward.VY = -0.188238152679, satBackward.VZ = -1.93372330517
+   Cost Function Value: 9.20241736983
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -274.020497877
+      Delta satForward.SunMJ2000Ec.Y = 84.6395325661
+      Delta satForward.SunMJ2000Ec.Z = 7.66571006179
+      Delta satForward.SunMJ2000Ec.VX = 2.04384389946e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.3313628288e-05
+      Delta satForward.SunMJ2000Ec.VZ = -4.48867477854e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27752.4135292, satForward.VX = 1.28073693948, satForward.VY = 0.850963641835, satForward.VZ = -8.81631918998, satBackward.VX = -3.44306126044, satBackward.VY = -0.188238422103, satBackward.VZ = -1.9337943245
+   Cost Function Value: 9.20241228664
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.100097537
+      Delta satForward.SunMJ2000Ec.Y = 9.89901944995
+      Delta satForward.SunMJ2000Ec.Z = 0.643549352884
+      Delta satForward.SunMJ2000Ec.VX = 9.37611297047e-07
+      Delta satForward.SunMJ2000Ec.VY = -2.3731056471e-06
+      Delta satForward.SunMJ2000Ec.VZ = -5.23841039435e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27752.4135292
+   satForward.VX = 1.28073693948
+   satForward.VY = 0.850963641835
+   satForward.VZ = -8.81631918998
+   satBackward.VX = -3.44306126044
+   satBackward.VY = -0.188238422103
+   satBackward.VZ = -1.9337943245
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27752.4135292, satForward.VX = 1.28073693948, satForward.VY = 0.850963641835, satForward.VZ = -8.81631918998, satBackward.VX = -3.44306126044, satBackward.VY = -0.188238422103, satBackward.VZ = -1.9337943245
+   Cost Function Value: 9.19119886087
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3170481.19383
+      Delta satForward.SunMJ2000Ec.Y = 1389680.1297
+      Delta satForward.SunMJ2000Ec.Z = 118083.897978
+      Delta satForward.SunMJ2000Ec.VX = 0.1873571595
+      Delta satForward.SunMJ2000Ec.VY = 0.235279931815
+      Delta satForward.SunMJ2000Ec.VZ = -0.00675442148942
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27752.2618054, satForward.VX = 1.3664022477, satForward.VY = 0.838853050003, satForward.VZ = -8.51834048352, satBackward.VX = -3.45888635216, satBackward.VY = -0.212090006256, satBackward.VZ = -1.73548088476
+   Cost Function Value: 9.03320253855
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -84349.4467066
+      Delta satForward.SunMJ2000Ec.Y = 43476.6084152
+      Delta satForward.SunMJ2000Ec.Z = 1411.50858377
+      Delta satForward.SunMJ2000Ec.VX = -0.0104195971226
+      Delta satForward.SunMJ2000Ec.VY = -0.00904847919432
+      Delta satForward.SunMJ2000Ec.VZ = -0.000151694386295
+
+AUDIT_HEARTBEAT seconds=40
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27752.1801847, satForward.VX = 1.3513089571, satForward.VY = 0.837221551177, satForward.VZ = -8.59237212025, satBackward.VX = -3.49996271412, satBackward.VY = -0.212053081313, satBackward.VZ = -1.79947878475
+   Cost Function Value: 9.03933416352
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -6992.84370808
+      Delta satForward.SunMJ2000Ec.Y = 1952.59497648
+      Delta satForward.SunMJ2000Ec.Z = 218.180553436
+      Delta satForward.SunMJ2000Ec.VX = 4.57187398375e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00105810049679
+      Delta satForward.SunMJ2000Ec.VZ = -1.2669673799e-05
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27751.8432776, satForward.VX = 1.31805246845, satForward.VY = 0.833124203711, satForward.VZ = -8.72512185454, satBackward.VX = -3.62203955783, satBackward.VY = -0.212446830712, satBackward.VZ = -1.91163869554
+   Cost Function Value: 9.01896934103
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -32060.5295481
+      Delta satForward.SunMJ2000Ec.Y = 7134.73529997
+      Delta satForward.SunMJ2000Ec.Z = 836.512483791
+      Delta satForward.SunMJ2000Ec.VX = 0.000753489239198
+      Delta satForward.SunMJ2000Ec.VY = -0.00390407360742
+      Delta satForward.SunMJ2000Ec.VZ = -5.6687099816e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27751.8163586, satForward.VX = 1.31523826833, satForward.VY = 0.832803439577, satForward.VZ = -8.73526306456, satBackward.VX = -3.63179502388, satBackward.VY = -0.212474678119, satBackward.VZ = -1.9191488962
+   Cost Function Value: 9.01644658379
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -209.184927449
+      Delta satForward.SunMJ2000Ec.Y = 62.0839945972
+      Delta satForward.SunMJ2000Ec.Z = 5.70751291513
+      Delta satForward.SunMJ2000Ec.VX = 1.63818808829e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.49824684744e-05
+      Delta satForward.SunMJ2000Ec.VZ = -3.07793521337e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27751.8161412, satForward.VX = 1.31521359607, satForward.VY = 0.832800742159, satForward.VZ = -8.73535971947, satBackward.VX = -3.63187778103, satBackward.VY = -0.212474872785, satBackward.VZ = -1.91922515726
+   Cost Function Value: 9.01644319479
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1085518748
+      Delta satForward.SunMJ2000Ec.Y = 9.78868097067
+      Delta satForward.SunMJ2000Ec.Z = 0.627691820264
+      Delta satForward.SunMJ2000Ec.VX = 9.74106029616e-07
+      Delta satForward.SunMJ2000Ec.VY = -2.37862860342e-06
+      Delta satForward.SunMJ2000Ec.VZ = -5.04792225797e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27751.8161412
+   satForward.VX = 1.31521359607
+   satForward.VY = 0.832800742159
+   satForward.VZ = -8.73535971947
+   satBackward.VX = -3.63187778103
+   satBackward.VY = -0.212474872785
+   satBackward.VZ = -1.91922515726
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27751.8161412, satForward.VX = 1.31521359607, satForward.VY = 0.832800742159, satForward.VZ = -8.73535971947, satBackward.VX = -3.63187778103, satBackward.VY = -0.212474872785, satBackward.VZ = -1.91922515726
+   Cost Function Value: 9.00987605682
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=50
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3017800.19192
+      Delta satForward.SunMJ2000Ec.Y = 1372858.09757
+      Delta satForward.SunMJ2000Ec.Z = 118667.6496
+      Delta satForward.SunMJ2000Ec.VX = 0.182254565511
+      Delta satForward.SunMJ2000Ec.VY = 0.22389819578
+      Delta satForward.SunMJ2000Ec.VZ = -0.00633128247318
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27751.6723692, satForward.VX = 1.39595323506, satForward.VY = 0.822102720628, satForward.VZ = -8.44608137984, satBackward.VX = -3.64511988733, satBackward.VY = -0.235252669148, satBackward.VZ = -1.72705243529
+   Cost Function Value: 8.85573246066
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -77914.2910444
+      Delta satForward.SunMJ2000Ec.Y = 38698.1832926
+      Delta satForward.SunMJ2000Ec.Z = 1407.88050188
+      Delta satForward.SunMJ2000Ec.VX = -0.00952286952512
+      Delta satForward.SunMJ2000Ec.VY = -0.00844605474155
+      Delta satForward.SunMJ2000Ec.VZ = -0.000148844824575
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27751.5897774, satForward.VX = 1.38212236967, satForward.VY = 0.820530962674, satForward.VZ = -8.51524820942, satBackward.VX = -3.685221588, satBackward.VY = -0.235185279581, satBackward.VZ = -1.78561156083
+   Cost Function Value: 8.86051710396
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -6093.98782459
+      Delta satForward.SunMJ2000Ec.Y = 1630.59353888
+      Delta satForward.SunMJ2000Ec.Z = 187.344382375
+      Delta satForward.SunMJ2000Ec.VX = 5.32147947645e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000916114563125
+      Delta satForward.SunMJ2000Ec.VZ = -1.01140052957e-05
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27751.2511547, satForward.VX = 1.35026673837, satForward.VY = 0.816521879574, satForward.VZ = -8.64550878005, satBackward.VX = -3.80629311665, satBackward.VY = -0.235375779612, satBackward.VZ = -1.89176896915
+   Cost Function Value: 8.84085658762
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -30239.179623
+      Delta satForward.SunMJ2000Ec.Y = 6121.79154414
+      Delta satForward.SunMJ2000Ec.Z = 769.842056289
+      Delta satForward.SunMJ2000Ec.VX = 0.000747146465429
+      Delta satForward.SunMJ2000Ec.VY = -0.00363951554673
+      Delta satForward.SunMJ2000Ec.VZ = -4.90621640112e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27751.2258671, satForward.VX = 1.34774128468, satForward.VY = 0.816229859638, satForward.VZ = -8.65478487928, satBackward.VX = -3.81529907831, satBackward.VY = -0.235386803799, satBackward.VZ = -1.89829436805
+   Cost Function Value: 8.83838956507
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -175.372783564
+      Delta satForward.SunMJ2000Ec.Y = 49.1711076498
+      Delta satForward.SunMJ2000Ec.Z = 4.65952473879
+      Delta satForward.SunMJ2000Ec.VX = 1.58261883954e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.05893233778e-05
+      Delta satForward.SunMJ2000Ec.VZ = -2.33224551671e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27751.22559, satForward.VX = 1.34771260871, satForward.VY = 0.816226549839, satForward.VZ = -8.6549002447, satBackward.VX = -3.81540122438, satBackward.VY = -0.235386904512, satBackward.VZ = -1.89838349785
+   Cost Function Value: 8.83838658439
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=60
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1115599871
+      Delta satForward.SunMJ2000Ec.Y = 9.6750267148
+      Delta satForward.SunMJ2000Ec.Z = 0.612466648221
+      Delta satForward.SunMJ2000Ec.VX = 1.00995693586e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.38264037122e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.86287132784e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27751.22559
+   satForward.VX = 1.34771260871
+   satForward.VY = 0.816226549839
+   satForward.VZ = -8.6549002447
+   satBackward.VX = -3.81540122438
+   satBackward.VY = -0.235386904512
+   satBackward.VZ = -1.89838349785
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27751.22559, satForward.VX = 1.34771260871, satForward.VY = 0.816226549839, satForward.VZ = -8.6549002447, satBackward.VX = -3.81540122438, satBackward.VY = -0.235386904512, satBackward.VZ = -1.89838349785
+   Cost Function Value: 8.83434164383
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2933295.81023
+      Delta satForward.SunMJ2000Ec.Y = 1375403.20708
+      Delta satForward.SunMJ2000Ec.Z = 117511.643889
+      Delta satForward.SunMJ2000Ec.VX = 0.179089078786
+      Delta satForward.SunMJ2000Ec.VY = 0.220105847359
+      Delta satForward.SunMJ2000Ec.VZ = -0.00597196167451
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27751.0889283, satForward.VX = 1.42500111747, satForward.VY = 0.806734050998, satForward.VZ = -8.37203756754, satBackward.VX = -3.82602858104, satBackward.VY = -0.257214331503, satBackward.VZ = -1.71107160489
+   Cost Function Value: 8.68566141941
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -73310.5036119
+      Delta satForward.SunMJ2000Ec.Y = 35815.3750479
+      Delta satForward.SunMJ2000Ec.Z = 1404.8174632
+      Delta satForward.SunMJ2000Ec.VX = -0.00898084486342
+      Delta satForward.SunMJ2000Ec.VY = -0.00800335016873
+      Delta satForward.SunMJ2000Ec.VZ = -0.000140331144321
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27751.006585, satForward.VX = 1.41223842396, satForward.VY = 0.805227847327, satForward.VZ = -8.43757349327, satBackward.VX = -3.86511007429, satBackward.VY = -0.257105873135, satBackward.VZ = -1.7653615965
+   Cost Function Value: 8.68992662017
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -5414.44071814
+      Delta satForward.SunMJ2000Ec.Y = 1378.54048759
+      Delta satForward.SunMJ2000Ec.Z = 164.102261841
+      Delta satForward.SunMJ2000Ec.VX = 5.72205482179e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000811376107515
+      Delta satForward.SunMJ2000Ec.VZ = -8.20701100879e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27750.6677011, satForward.VX = 1.38185351376, satForward.VY = 0.801318428994, satForward.VZ = -8.56498996094, satBackward.VX = -3.98462924841, satBackward.VY = -0.257100769611, satBackward.VZ = -1.86535154984
+   Cost Function Value: 8.67090757269
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -28301.9609919
+      Delta satForward.SunMJ2000Ec.Y = 5157.76882017
+      Delta satForward.SunMJ2000Ec.Z = 704.023351282
+      Delta satForward.SunMJ2000Ec.VX = 0.000731848491558
+      Delta satForward.SunMJ2000Ec.VY = -0.0033653805778
+      Delta satForward.SunMJ2000Ec.VZ = -4.19309603945e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27750.6423785, satForward.VX = 1.37944628297, satForward.VY = 0.801034363324, satForward.VZ = -8.57407250187, satBackward.VX = -3.99349034689, satBackward.VY = -0.257097627189, satBackward.VZ = -1.8714676774
+   Cost Function Value: 8.66850654459
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -165.577849932
+      Delta satForward.SunMJ2000Ec.Y = 42.7304683626
+      Delta satForward.SunMJ2000Ec.Z = 4.27168555558
+      Delta satForward.SunMJ2000Ec.VX = 1.81861821957e-06
+      Delta satForward.SunMJ2000Ec.VY = -1.91496588364e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.99758554364e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27750.64201, satForward.VX = 1.37941091872, satForward.VY = 0.801030103969, satForward.VZ = -8.57421830274, satBackward.VX = -3.99362278359, satBackward.VY = -0.257097566624, satBackward.VZ = -1.87157692083
+   Cost Function Value: 8.66850293543
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1078498289
+      Delta satForward.SunMJ2000Ec.Y = 9.55686432123
+      Delta satForward.SunMJ2000Ec.Z = 0.597981110215
+      Delta satForward.SunMJ2000Ec.VX = 1.04513265242e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.3849079902e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.68187479896e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27750.64201
+   satForward.VX = 1.37941091872
+   satForward.VY = 0.801030103969
+   satForward.VZ = -8.57421830274
+   satBackward.VX = -3.99362278359
+   satBackward.VY = -0.257097566624
+   satBackward.VZ = -1.87157692083
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27750.64201, satForward.VX = 1.37941091872, satForward.VY = 0.801030103969, satForward.VZ = -8.57421830274, satBackward.VX = -3.99362278359, satBackward.VY = -0.257097566624, satBackward.VZ = -1.87157692083
+   Cost Function Value: 8.66467999543
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=70
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2900302.2522
+      Delta satForward.SunMJ2000Ec.Y = 1397822.75226
+      Delta satForward.SunMJ2000Ec.Z = 115230.735038
+      Delta satForward.SunMJ2000Ec.VX = 0.177620562669
+      Delta satForward.SunMJ2000Ec.VY = 0.222600391641
+      Delta satForward.SunMJ2000Ec.VZ = -0.0056593776034
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27750.5119705, satForward.VX = 1.45444569952, satForward.VY = 0.79261070756, satForward.VZ = -8.29636746812, satBackward.VX = -4.00158220758, satBackward.VY = -0.278079589469, satBackward.VZ = -1.68817606374
+   Cost Function Value: 8.52347198241
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -69933.9570114
+      Delta satForward.SunMJ2000Ec.Y = 34342.4044917
+      Delta satForward.SunMJ2000Ec.Z = 1406.80857794
+      Delta satForward.SunMJ2000Ec.VX = -0.00869720056317
+      Delta satForward.SunMJ2000Ec.VY = -0.00764643928099
+      Delta satForward.SunMJ2000Ec.VZ = -0.000128006385497
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27750.4309927, satForward.VX = 1.44263635576, satForward.VY = 0.791174905057, satForward.VZ = -8.35909537471, satBackward.VX = -4.03954525217, satBackward.VY = -0.277925693207, satBackward.VZ = -1.73901016444
+   Cost Function Value: 8.52786053878
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -4867.40818603
+      Delta satForward.SunMJ2000Ec.Y = 1172.3795206
+      Delta satForward.SunMJ2000Ec.Z = 145.559349373
+      Delta satForward.SunMJ2000Ec.VX = 5.9008009142e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00072983075525
+      Delta satForward.SunMJ2000Ec.VZ = -6.71113816941e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27750.0926524, satForward.VX = 1.41372595353, satForward.VY = 0.787368345631, satForward.VZ = -8.48357155794, satBackward.VX = -4.15721499693, satBackward.VY = -0.277734090756, satBackward.VZ = -1.83290731276
+   Cost Function Value: 8.50941503709
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -26393.3312744
+      Delta satForward.SunMJ2000Ec.Y = 4273.58087713
+      Delta satForward.SunMJ2000Ec.Z = 642.212710887
+      Delta satForward.SunMJ2000Ec.VX = 0.000711659921148
+      Delta satForward.SunMJ2000Ec.VY = -0.00309930585864
+      Delta satForward.SunMJ2000Ec.VZ = -3.55116674255e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27750.0660515, satForward.VX = 1.41132490019, satForward.VY = 0.787077751881, satForward.VZ = -8.49293139165, satBackward.VX = -4.16636479624, satBackward.VY = -0.277716711666, satBackward.VZ = -1.8389766717
+   Cost Function Value: 8.50708287819
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -170.665505111
+      Delta satForward.SunMJ2000Ec.Y = 39.4750786722
+      Delta satForward.SunMJ2000Ec.Z = 4.27239920199
+      Delta satForward.SunMJ2000Ec.VX = 2.27128218455e-06
+      Delta satForward.SunMJ2000Ec.VY = -1.94738531958e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.87432638521e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27750.0655484, satForward.VX = 1.41127968756, satForward.VY = 0.787072105575, satForward.VZ = -8.49312250125, satBackward.VX = -4.1665416937, satBackward.VY = -0.277716370012, satBackward.VZ = -1.8391147277
+   Cost Function Value: 8.5070778843
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1141648814
+      Delta satForward.SunMJ2000Ec.Y = 9.43687337637
+      Delta satForward.SunMJ2000Ec.Z = 0.584539890289
+      Delta satForward.SunMJ2000Ec.VX = 1.07984312692e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.38757644899e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.5071894883e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27750.0655484
+   satForward.VX = 1.41127968756
+   satForward.VY = 0.787072105575
+   satForward.VZ = -8.49312250125
+   satBackward.VX = -4.1665416937
+   satBackward.VY = -0.277716370012
+   satBackward.VZ = -1.8391147277
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27750.0655484, satForward.VX = 1.41127968756, satForward.VY = 0.787072105575, satForward.VZ = -8.49312250125, satBackward.VX = -4.1665416937, satBackward.VY = -0.277716370012, satBackward.VZ = -1.8391147277
+   Cost Function Value: 8.501443218
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2901268.60992
+      Delta satForward.SunMJ2000Ec.Y = 1436440.1805
+      Delta satForward.SunMJ2000Ec.Z = 112333.275363
+      Delta satForward.SunMJ2000Ec.VX = 0.177359721154
+      Delta satForward.SunMJ2000Ec.VY = 0.22959164584
+      Delta satForward.SunMJ2000Ec.VZ = -0.00537980204119
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27749.9417567, satForward.VX = 1.48491367991, satForward.VY = 0.77964202746, satForward.VZ = -8.21949875191, satBackward.VX = -4.1718413423, satBackward.VY = -0.297944101474, satBackward.VZ = -1.6590237105
+   Cost Function Value: 8.36963357581
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -67313.2377544
+      Delta satForward.SunMJ2000Ec.Y = 33792.8821836
+      Delta satForward.SunMJ2000Ec.Z = 1414.76134756
+      Delta satForward.SunMJ2000Ec.VX = -0.00858438038854
+      Delta satForward.SunMJ2000Ec.VY = -0.00732886736942
+      Delta satForward.SunMJ2000Ec.VZ = -0.000113497406639
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27749.86295, satForward.VX = 1.47398515847, satForward.VY = 0.77827884054, satForward.VZ = -8.27994577556, satBackward.VX = -4.20860819853, satBackward.VY = -0.29774498829, satBackward.VZ = -1.7069589991
+   Cost Function Value: 8.37457479163
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -4404.23998941
+      Delta satForward.SunMJ2000Ec.Y = 998.348230124
+      Delta satForward.SunMJ2000Ec.Z = 130.249607876
+      Delta satForward.SunMJ2000Ec.VX = 5.94253865032e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000662919106972
+      Delta satForward.SunMJ2000Ec.VZ = -5.4939542522e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27749.5257875, satForward.VX = 1.44653541299, satForward.VY = 0.774576117923, satForward.VZ = -8.40144886194, satBackward.VX = -4.32420531715, satBackward.VY = -0.297376434388, satBackward.VZ = -1.79490096187
+   Cost Function Value: 8.35667158991
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -24544.5811274
+      Delta satForward.SunMJ2000Ec.Y = 3470.5923892
+      Delta satForward.SunMJ2000Ec.Z = 584.941112876
+      Delta satForward.SunMJ2000Ec.VX = 0.000687874037563
+      Delta satForward.SunMJ2000Ec.VY = -0.00284493593131
+      Delta satForward.SunMJ2000Ec.VZ = -2.97853126012e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27749.4970476, satForward.VX = 1.44407530162, satForward.VY = 0.774269748303, satForward.VZ = -8.41139020272, satBackward.VX = -4.33392784835, satBackward.VY = -0.297343170761, satBackward.VZ = -1.80112419341
+   Cost Function Value: 8.35441025855
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=80
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -185.575364243
+      Delta satForward.SunMJ2000Ec.Y = 37.5444349349
+      Delta satForward.SunMJ2000Ec.Z = 4.51343874633
+      Delta satForward.SunMJ2000Ec.VX = 2.92181817585e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.09075765119e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.84835339478e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27749.4963439, satForward.VX = 1.44401577267, satForward.VY = 0.774262063095, satForward.VZ = -8.41164856158, satBackward.VX = -4.33417037814, satBackward.VY = -0.297342342517, satBackward.VZ = -1.80130349778
+   Cost Function Value: 8.35440320903
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1209339052
+      Delta satForward.SunMJ2000Ec.Y = 9.31370359659
+      Delta satForward.SunMJ2000Ec.Z = 0.571698874235
+      Delta satForward.SunMJ2000Ec.VX = 1.1141884535e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.38914040462e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.33731819349e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27749.4963439
+   satForward.VX = 1.44401577267
+   satForward.VY = 0.774262063095
+   satForward.VZ = -8.41164856158
+   satBackward.VX = -4.33417037814
+   satBackward.VY = -0.297342342517
+   satBackward.VZ = -1.80130349778
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27749.4963439, satForward.VX = 1.44401577267, satForward.VY = 0.774262063095, satForward.VZ = -8.41164856158, satBackward.VX = -4.33417037814, satBackward.VY = -0.297342342517, satBackward.VZ = -1.80130349778
+   Cost Function Value: 8.3450412102
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2926894.06206
+      Delta satForward.SunMJ2000Ec.Y = 1489014.7027
+      Delta satForward.SunMJ2000Ec.Z = 109063.551971
+      Delta satForward.SunMJ2000Ec.VX = 0.177994207307
+      Delta satForward.SunMJ2000Ec.VY = 0.240114176396
+      Delta satForward.SunMJ2000Ec.VZ = -0.00512596726929
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27749.3784563, satForward.VX = 1.51691598605, satForward.VY = 0.767765632591, satForward.VZ = -8.14174343371, satBackward.VX = -4.33685733541, satBackward.VY = -0.316897054443, satBackward.VZ = -1.62410882215
+   Cost Function Value: 8.22452688242
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -65228.5691612
+      Delta satForward.SunMJ2000Ec.Y = 33918.3229467
+      Delta satForward.SunMJ2000Ec.Z = 1429.11995092
+      Delta satForward.SunMJ2000Ec.VX = -0.0085980431569
+      Delta satForward.SunMJ2000Ec.VY = -0.0070305454542
+      Delta satForward.SunMJ2000Ec.VZ = -9.76136943813e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27749.3024194, satForward.VX = 1.50681492963, satForward.VY = 0.76647561571, satForward.VZ = -8.20029645139, satBackward.VX = -4.37238016305, satBackward.VY = -0.316655175441, satBackward.VZ = -1.6695804141
+   Cost Function Value: 8.23033211027
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -4011.60545371
+      Delta satForward.SunMJ2000Ec.Y = 850.947970986
+      Delta satForward.SunMJ2000Ec.Z = 117.42783241
+      Delta satForward.SunMJ2000Ec.VX = 5.91298794177e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000607771658621
+      Delta satForward.SunMJ2000Ec.VZ = -4.50055306467e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27748.9670406, satForward.VX = 1.48080759347, satForward.VY = 0.762877234421, satForward.VZ = -8.31880141964, satBackward.VX = -4.48570406964, satBackward.VY = -0.316119460473, satBackward.VZ = -1.75172080969
+   Cost Function Value: 8.21296690088
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22763.9123232
+      Delta satForward.SunMJ2000Ec.Y = 2746.61461079
+      Delta satForward.SunMJ2000Ec.Z = 532.046796635
+      Delta satForward.SunMJ2000Ec.VX = 0.000661229753771
+      Delta satForward.SunMJ2000Ec.VY = -0.00260308061368
+      Delta satForward.SunMJ2000Ec.VZ = -2.47135875304e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27748.9354679, satForward.VX = 1.47824597876, satForward.VY = 0.762548228942, satForward.VZ = -8.32955274922, satBackward.VX = -4.49621434662, satBackward.VY = -0.316067672875, satBackward.VZ = -1.75821925358
+   Cost Function Value: 8.21077766056
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -207.721908979
+      Delta satForward.SunMJ2000Ec.Y = 35.8496118784
+      Delta satForward.SunMJ2000Ec.Z = 4.91659928858
+      Delta satForward.SunMJ2000Ec.VX = 3.77105407878e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.30973618804e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.8537155011e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27748.9345132, satForward.VX = 1.47816961079, satForward.VY = 0.762538063625, satForward.VZ = -8.32989358344, satBackward.VX = -4.49653742771, satBackward.VY = -0.316066087129, satBackward.VZ = -1.75844569402
+   Cost Function Value: 8.2107679109
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.1500044949
+      Delta satForward.SunMJ2000Ec.Y = 9.18835645914
+      Delta satForward.SunMJ2000Ec.Z = 0.560105621815
+      Delta satForward.SunMJ2000Ec.VX = 1.14854379163e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.39229735755e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.1735141787e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27748.9345132
+   satForward.VX = 1.47816961079
+   satForward.VY = 0.762538063625
+   satForward.VZ = -8.32989358344
+   satBackward.VX = -4.49653742771
+   satBackward.VY = -0.316066087129
+   satBackward.VZ = -1.75844569402
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27748.9345132, satForward.VX = 1.47816961079, satForward.VY = 0.762538063625, satForward.VZ = -8.32989358344, satBackward.VX = -4.49653742771, satBackward.VY = -0.316066087129, satBackward.VZ = -1.75844569402
+   Cost Function Value: 8.19565818014
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=90
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2972852.01272
+      Delta satForward.SunMJ2000Ec.Y = 1555406.5561
+      Delta satForward.SunMJ2000Ec.Z = 105539.843946
+      Delta satForward.SunMJ2000Ec.VX = 0.179400443601
+      Delta satForward.SunMJ2000Ec.VY = 0.253834296916
+      Delta satForward.SunMJ2000Ec.VZ = -0.00489110792442
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27748.8222211, satForward.VX = 1.55093759555, satForward.VY = 0.756944332911, satForward.VZ = -8.06335721111, satBackward.VX = -4.49666414196, satBackward.VY = -0.335021547628, satBackward.VZ = -1.58381032103
+   Cost Function Value: 8.08847158722
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -63574.7078833
+      Delta satForward.SunMJ2000Ec.Y = 34618.6503345
+      Delta satForward.SunMJ2000Ec.Z = 1452.15994464
+      Delta satForward.SunMJ2000Ec.VX = -0.00872109894795
+      Delta satForward.SunMJ2000Ec.VY = -0.00673778697602
+      Delta satForward.SunMJ2000Ec.VZ = -8.05713109344e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27748.7494729, satForward.VX = 1.54162287098, satForward.VY = 0.755727570415, satForward.VZ = -8.12033773198, satBackward.VX = -4.53091034117, satBackward.VY = -0.334740578562, satBackward.VZ = -1.62719671903
+   Cost Function Value: 8.09540378238
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -3670.25412375
+      Delta satForward.SunMJ2000Ec.Y = 723.720004022
+      Delta satForward.SunMJ2000Ec.Z = 106.469059125
+      Delta satForward.SunMJ2000Ec.VX = 5.82829073181e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000561283062079
+      Delta satForward.SunMJ2000Ec.VZ = -3.67359431297e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27748.4165022, satForward.VX = 1.5170389745, satForward.VY = 0.752234057986, satForward.VZ = -8.2358103177, satBackward.VX = -4.64176680036, satBackward.VY = -0.334047793545, satBackward.VZ = -1.70369281228
+   Cost Function Value: 8.07858241738
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21044.5414923
+      Delta satForward.SunMJ2000Ec.Y = 2098.1328721
+      Delta satForward.SunMJ2000Ec.Z = 482.867347986
+      Delta satForward.SunMJ2000Ec.VX = 0.000632114764141
+      Delta satForward.SunMJ2000Ec.VY = -0.00237268777299
+      Delta satForward.SunMJ2000Ec.VZ = -2.02225378687e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27748.3814196, satForward.VX = 1.51434193747, satForward.VY = 0.751876180432, satForward.VZ = -8.24758274896, satBackward.VX = -4.65326387642, satBackward.VY = -0.333973933749, satBackward.VZ = -1.7105561814
+   Cost Function Value: 8.07646574326
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -238.936537314
+      Delta satForward.SunMJ2000Ec.Y = 34.0002112985
+      Delta satForward.SunMJ2000Ec.Z = 5.526723966
+      Delta satForward.SunMJ2000Ec.VX = 4.88939882715e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.62275964724e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.89153292807e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27748.3801197, satForward.VX = 1.51424344388, satForward.VY = 0.751862666637, satForward.VZ = -8.24803550871, satBackward.VX = -4.65369606863, satBackward.VY = -0.333971169562, satBackward.VZ = -1.71084337944
+   Cost Function Value: 8.07645238483
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.2366287187
+      Delta satForward.SunMJ2000Ec.Y = 9.06252366304
+      Delta satForward.SunMJ2000Ec.Z = 0.550680622458
+      Delta satForward.SunMJ2000Ec.VX = 1.1837925129e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.40070866075e-06
+      Delta satForward.SunMJ2000Ec.VZ = -4.01614952406e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27748.3801197
+   satForward.VX = 1.51424344388
+   satForward.VY = 0.751862666637
+   satForward.VZ = -8.24803550871
+   satBackward.VX = -4.65369606863
+   satBackward.VY = -0.333971169562
+   satBackward.VZ = -1.71084337944
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27748.3801197, satForward.VX = 1.51424344388, satForward.VY = 0.751862666637, satForward.VZ = -8.24803550871, satBackward.VX = -4.65369606863, satBackward.VY = -0.333971169562, satBackward.VZ = -1.71084337944
+   Cost Function Value: 8.05354013387
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3032519.58732
+      Delta satForward.SunMJ2000Ec.Y = 1635075.59808
+      Delta satForward.SunMJ2000Ec.Z = 101946.412577
+      Delta satForward.SunMJ2000Ec.VX = 0.181461792685
+      Delta satForward.SunMJ2000Ec.VY = 0.27020475897
+      Delta satForward.SunMJ2000Ec.VZ = -0.00466090882196
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27748.2731591, satForward.VX = 1.58739153452, satForward.VY = 0.747173626716, satForward.VZ = -7.98479427433, satBackward.VX = -4.65132616924, satBackward.VY = -0.35239471498, satBackward.VZ = -1.53851458561
+   Cost Function Value: 7.96178060952
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=100
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -62190.0848179
+      Delta satForward.SunMJ2000Ec.Y = 35772.4948289
+      Delta satForward.SunMJ2000Ec.Z = 1486.6119263
+      Delta satForward.SunMJ2000Ec.VX = -0.00893001327078
+      Delta satForward.SunMJ2000Ec.VY = -0.00642779131036
+      Delta satForward.SunMJ2000Ec.VZ = -6.27368105157e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27748.2031908, satForward.VX = 1.57876895283, satForward.VY = 0.746020045473, satForward.VZ = -8.04076428775, satBackward.VX = -4.68457804093, satBackward.VY = -0.352077330323, satBackward.VZ = -1.58032631442
+   Cost Function Value: 7.96995649181
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -3415.59947495
+      Delta satForward.SunMJ2000Ec.Y = 620.491662621
+      Delta satForward.SunMJ2000Ec.Z = 98.2009328753
+      Delta satForward.SunMJ2000Ec.VX = 5.83526505729e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000527815266417
+      Delta satForward.SunMJ2000Ec.VZ = -3.01771454803e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27747.8737799, satForward.VX = 1.55562297267, satForward.VY = 0.742637278792, satForward.VZ = -8.15298566936, satBackward.VX = -4.79261163658, satBackward.VY = -0.351239123177, satBackward.VZ = -1.65122293874
+   Cost Function Value: 7.95377394784
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -19339.7794349
+      Delta satForward.SunMJ2000Ec.Y = 1517.59078342
+      Delta satForward.SunMJ2000Ec.Z = 436.262774512
+      Delta satForward.SunMJ2000Ec.VX = 0.000599224554666
+      Delta satForward.SunMJ2000Ec.VY = -0.00214871972938
+      Delta satForward.SunMJ2000Ec.VZ = -1.62307455769e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27747.8348931, satForward.VX = 1.55279007767, satForward.VY = 0.742248510854, satForward.VZ = -8.16585213045, satBackward.VX = -4.80516008532, satBackward.VY = -0.351139817283, satBackward.VZ = -1.65843855959
+   Cost Function Value: 7.95173711013
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -273.281873371
+      Delta satForward.SunMJ2000Ec.Y = 31.0126889348
+      Delta satForward.SunMJ2000Ec.Z = 6.17393554747
+      Delta satForward.SunMJ2000Ec.VX = 6.19836241711e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.95767704244e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.8945134217e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27747.833179, satForward.VX = 1.55266690101, satForward.VY = 0.742231088421, satForward.VZ = -8.1664363116, satBackward.VX = -4.80572031573, satBackward.VY = -0.351135399476, satBackward.VZ = -1.65879143261
+   Cost Function Value: 7.95171959066
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.3512298986
+      Delta satForward.SunMJ2000Ec.Y = 8.93304985762
+      Delta satForward.SunMJ2000Ec.Z = 0.542192399502
+      Delta satForward.SunMJ2000Ec.VX = 1.21996673741e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.41044107963e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.86369150007e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27747.833179
+   satForward.VX = 1.55266690101
+   satForward.VY = 0.742231088421
+   satForward.VZ = -8.1664363116
+   satBackward.VX = -4.80572031573
+   satBackward.VY = -0.351135399476
+   satBackward.VZ = -1.65879143261
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27747.833179, satForward.VX = 1.55266690101, satForward.VY = 0.742231088421, satForward.VZ = -8.1664363116, satBackward.VX = -4.80572031573, satBackward.VY = -0.351135399476, satBackward.VZ = -1.65879143261
+   Cost Function Value: 7.91943328124
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3091195.70252
+      Delta satForward.SunMJ2000Ec.Y = 1723483.70709
+      Delta satForward.SunMJ2000Ec.Z = 98652.9486726
+      Delta satForward.SunMJ2000Ec.VX = 0.183862822383
+      Delta satForward.SunMJ2000Ec.VY = 0.287609660432
+      Delta satForward.SunMJ2000Ec.VZ = -0.00440932174923
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27747.7312794, satForward.VX = 1.62645184073, satForward.VY = 0.738488151327, satForward.VZ = -7.90692519015, satBackward.VX = -4.80098929888, satBackward.VY = -0.369088208885, satBackward.VZ = -1.48871392102
+   Cost Function Value: 7.8448139625
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -60791.7816004
+      Delta satForward.SunMJ2000Ec.Y = 37076.9141839
+      Delta satForward.SunMJ2000Ec.Z = 1534.71333677
+      Delta satForward.SunMJ2000Ec.VX = -0.00916384616486
+      Delta satForward.SunMJ2000Ec.VY = -0.00607210414202
+      Delta satForward.SunMJ2000Ec.VZ = -4.51315282211e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27747.6633918, satForward.VX = 1.61845180441, satForward.VY = 0.737387340604, satForward.VZ = -7.96225190462, satBackward.VX = -4.83350931811, satBackward.VY = -0.368737883143, satBackward.VZ = -1.52926031615
+   Cost Function Value: 7.85421304078
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=110
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -3221.27192432
+      Delta satForward.SunMJ2000Ec.Y = 533.384878159
+      Delta satForward.SunMJ2000Ec.Z = 91.8087705076
+      Delta satForward.SunMJ2000Ec.VX = 5.93817264161e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00050281548917
+      Delta satForward.SunMJ2000Ec.VZ = -2.47378516116e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27747.3383271, satForward.VX = 1.59672499844, satForward.VY = 0.734117091362, satForward.VZ = -8.07113115937, satBackward.VX = -4.93850143483, satBackward.VY = -0.367765745235, satBackward.VZ = -1.59470408866
+   Cost Function Value: 7.83877327293
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -17694.3056718
+      Delta satForward.SunMJ2000Ec.Y = 1007.66475046
+      Delta satForward.SunMJ2000Ec.Z = 392.836439401
+      Delta satForward.SunMJ2000Ec.VX = 0.000564453786698
+      Delta satForward.SunMJ2000Ec.VY = -0.00193594081055
+      Delta satForward.SunMJ2000Ec.VZ = -1.2747262143e-05
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27747.2958225, satForward.VX = 1.59378976792, satForward.VY = 0.73370030129, satForward.VZ = -8.08500162436, satBackward.VX = -4.95200663486, satBackward.VY = -0.367638778434, satBackward.VZ = -1.6021553917
+   Cost Function Value: 7.83682332918
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -305.291460283
+      Delta satForward.SunMJ2000Ec.Y = 26.1344816983
+      Delta satForward.SunMJ2000Ec.Z = 6.75313667953
+      Delta satForward.SunMJ2000Ec.VX = 7.52499218848e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.25525137388e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.81453348236e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27747.2936302, satForward.VX = 1.59364029626, satForward.VY = 0.733678488735, satForward.VZ = -8.0857342394, satBackward.VX = -4.95271115076, satBackward.VY = -0.367632175108, satBackward.VZ = -1.60257585717
+   Cost Function Value: 7.83680158643
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.5516413897
+      Delta satForward.SunMJ2000Ec.Y = 8.79519596696
+      Delta satForward.SunMJ2000Ec.Z = 0.535907864571
+      Delta satForward.SunMJ2000Ec.VX = 1.2579071651e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.42845174547e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.71645579866e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 5 iterations and 6 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27747.2936302
+   satForward.VX = 1.59364029626
+   satForward.VY = 0.733678488735
+   satForward.VZ = -8.0857342394
+   satBackward.VX = -4.95271115076
+   satBackward.VY = -0.367632175108
+   satBackward.VZ = -1.60257585717
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27747.2936302, satForward.VX = 1.59364029626, satForward.VY = 0.733678488735, satForward.VZ = -8.0857342394, satBackward.VX = -4.95271115076, satBackward.VY = -0.367632175108, satBackward.VZ = -1.60257585717
+   Cost Function Value: 7.79483321839
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=120
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3126596.10888
+      Delta satForward.SunMJ2000Ec.Y = 1810253.48416
+      Delta satForward.SunMJ2000Ec.Z = 96169.7455768
+      Delta satForward.SunMJ2000Ec.VX = 0.186019646221
+      Delta satForward.SunMJ2000Ec.VY = 0.303178751571
+      Delta satForward.SunMJ2000Ec.VZ = -0.00410389776381
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27747.1964248, satForward.VX = 1.66786523686, satForward.VY = 0.730953846576, satForward.VZ = -7.831015043, satBackward.VX = -4.94590224486, satBackward.VY = -0.385169433428, satBackward.VZ = -1.43500948201
+   Cost Function Value: 7.73797682239
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -58966.6613038
+      Delta satForward.SunMJ2000Ec.Y = 38012.7386135
+      Delta satForward.SunMJ2000Ec.Z = 1595.31029624
+      Delta satForward.SunMJ2000Ec.VX = -0.00931940230574
+      Delta satForward.SunMJ2000Ec.VY = -0.00564568055786
+      Delta satForward.SunMJ2000Ec.VZ = -2.95669161662e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27747.1308895, satForward.VX = 1.66052048249, satForward.VY = 0.729907072309, satForward.VZ = -7.8853429508, satBackward.VX = -4.97751142316, satBackward.VY = -0.384795203371, satBackward.VZ = -1.47406437972
+   Cost Function Value: 7.74844621791
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -2997.85055517
+      Delta satForward.SunMJ2000Ec.Y = 447.288714617
+      Delta satForward.SunMJ2000Ec.Z = 84.8022449911
+      Delta satForward.SunMJ2000Ec.VX = 5.95141414585e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000472623664114
+      Delta satForward.SunMJ2000Ec.VZ = -1.95546313575e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27746.8098657, satForward.VX = 1.64012079873, satForward.VY = 0.726740121016, satForward.VZ = -7.99114974223, satBackward.VX = -5.07960408938, satBackward.VY = -0.383697237865, satBackward.VZ = -1.53442584569
+   Cost Function Value: 7.73377772851
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -16224.7311344
+      Delta satForward.SunMJ2000Ec.Y = 569.13469854
+      Delta satForward.SunMJ2000Ec.Z = 354.983465254
+      Delta satForward.SunMJ2000Ec.VX = 0.000532051203127
+      Delta satForward.SunMJ2000Ec.VY = -0.00174688565408
+      Delta satForward.SunMJ2000Ec.VZ = -9.80005653251e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27746.7640336, satForward.VX = 1.63711961902, satForward.VY = 0.726299020047, satForward.VZ = -8.00590359919, satBackward.VX = -5.09394015412, satBackward.VY = -0.383541133311, satBackward.VZ = -1.54198312842
+   Cost Function Value: 7.7319109464
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=130
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -333.319599383
+      Delta satForward.SunMJ2000Ec.Y = 19.7461714447
+      Delta satForward.SunMJ2000Ec.Z = 7.24359302223
+      Delta satForward.SunMJ2000Ec.VX = 8.79976186496e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.49926592209e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.65520129825e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27746.761314, satForward.VX = 1.63694365541, satForward.VY = 0.726272500276, satForward.VZ = -8.0067963258, satBackward.VX = -5.09479962798, satBackward.VY = -0.383531800474, satBackward.VZ = -1.54246874085
+   Cost Function Value: 7.73188518073
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -22.8623052314
+      Delta satForward.SunMJ2000Ec.Y = 8.65170651674
+      Delta satForward.SunMJ2000Ec.Z = 0.53217369318
+      Delta satForward.SunMJ2000Ec.VX = 1.29887364153e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.45728927295e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.57665196349e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27746.7612874, satForward.VX = 1.63694194624, satForward.VY = 0.72627223968, satForward.VZ = -8.00680504195, satBackward.VX = -5.09480804806, satBackward.VY = -0.383531709398, satBackward.VZ = -1.54247353959
+   Cost Function Value: 7.73188507793
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.7242841199
+      Delta satForward.SunMJ2000Ec.Y = 8.65011146665
+      Delta satForward.SunMJ2000Ec.Z = 0.50813998282
+      Delta satForward.SunMJ2000Ec.VX = 1.26535341138e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.34320760262e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.51874618332e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27746.7612874
+   satForward.VX = 1.63694194624
+   satForward.VY = 0.72627223968
+   satForward.VZ = -8.00680504195
+   satBackward.VX = -5.09480804806
+   satBackward.VY = -0.383531709398
+   satBackward.VZ = -1.54247353959
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27746.7612874, satForward.VX = 1.63694194624, satForward.VY = 0.72627223968, satForward.VZ = -8.00680504195, satBackward.VX = -5.09480804806, satBackward.VY = -0.383531709398, satBackward.VZ = -1.54247353959
+   Cost Function Value: 7.68175188398
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=140
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3116507.34044
+      Delta satForward.SunMJ2000Ec.Y = 1881337.31608
+      Delta satForward.SunMJ2000Ec.Z = 94953.2860793
+      Delta satForward.SunMJ2000Ec.VX = 0.18723121275
+      Delta satForward.SunMJ2000Ec.VY = 0.313598570194
+      Delta satForward.SunMJ2000Ec.VZ = -0.0037192959851
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27746.6682381, satForward.VX = 1.71088830149, satForward.VY = 0.724642151311, satForward.VZ = -7.75839062477, satBackward.VX = -5.08637845001, satBackward.VY = -0.400703719779, satBackward.VZ = -1.3779919276
+   Cost Function Value: 7.64164767083
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -56354.8208257
+      Delta satForward.SunMJ2000Ec.Y = 38007.9783323
+      Delta satForward.SunMJ2000Ec.Z = 1661.91983384
+      Delta satForward.SunMJ2000Ec.VX = -0.00928437642793
+      Delta satForward.SunMJ2000Ec.VY = -0.0051480594646
+      Delta satForward.SunMJ2000Ec.VZ = -1.80226126212e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27746.6053293, satForward.VX = 1.70424916961, satForward.VY = 0.723652187429, satForward.VZ = -7.81096673364, satBackward.VX = -5.11677134831, satBackward.VY = -0.400317698054, satBackward.VZ = -1.41502352315
+   Cost Function Value: 7.65277454467
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -2716.34179696
+      Delta satForward.SunMJ2000Ec.Y = 361.329949588
+      Delta satForward.SunMJ2000Ec.Z = 76.3460998088
+      Delta satForward.SunMJ2000Ec.VX = 5.81144324734e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.00043179387702
+      Delta satForward.SunMJ2000Ec.VZ = -1.45027782217e-06
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27746.2873871, satForward.VX = 1.68505077957, satForward.VY = 0.720573493344, satForward.VZ = -7.91416502178, satBackward.VX = -5.21630763237, satBackward.VY = -0.399098460884, satBackward.VZ = -1.47075588941
+   Cost Function Value: 7.63891736007
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -14970.2807621
+      Delta satForward.SunMJ2000Ec.Y = 191.559460461
+      Delta satForward.SunMJ2000Ec.Z = 323.23897399
+      Delta satForward.SunMJ2000Ec.VX = 0.000504037978352
+      Delta satForward.SunMJ2000Ec.VY = -0.0015849095211
+      Delta satForward.SunMJ2000Ec.VZ = -7.33494766425e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27746.2391755, satForward.VX = 1.68205559225, satForward.VY = 0.72011788324, satForward.VZ = -7.9294749847, satBackward.VX = -5.23114717458, satBackward.VY = -0.39891473848, satBackward.VZ = -1.47818919646
+   Cost Function Value: 7.63713219414
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=150
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -346.610327765
+      Delta satForward.SunMJ2000Ec.Y = 11.7752060592
+      Delta satForward.SunMJ2000Ec.Z = 7.4197781086
+      Delta satForward.SunMJ2000Ec.VX = 9.66339671393e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.57733956236e-05
+      Delta satForward.SunMJ2000Ec.VZ = -1.36617342772e-07
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27746.2359259, satForward.VX = 1.68185608457, satForward.VY = 0.720086789291, satForward.VZ = -7.93052438241, satBackward.VX = -5.23215726403, satBackward.VY = -0.398902267644, satBackward.VZ = -1.47872903574
+   Cost Function Value: 7.6371037491
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.1618988663
+      Delta satForward.SunMJ2000Ec.Y = 8.48389473557
+      Delta satForward.SunMJ2000Ec.Z = 0.528945490718
+      Delta satForward.SunMJ2000Ec.VX = 1.33995470364e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.48211179299e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.42614339122e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27746.2358949, satForward.VX = 1.68185419553, satForward.VY = 0.720086492295, satForward.VZ = -7.93053435603, satBackward.VX = -5.23216688997, satBackward.VY = -0.398902149095, satBackward.VZ = -1.478734213
+   Cost Function Value: 7.63710360697
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.6434722692
+      Delta satForward.SunMJ2000Ec.Y = 8.51376467943
+      Delta satForward.SunMJ2000Ec.Z = 0.497108593583
+      Delta satForward.SunMJ2000Ec.VX = 1.29344370592e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.33160315943e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.36723176009e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27746.2358949
+   satForward.VX = 1.68185419553
+   satForward.VY = 0.720086492295
+   satForward.VZ = -7.93053435603
+   satBackward.VX = -5.23216688997
+   satBackward.VY = -0.398902149095
+   satBackward.VZ = -1.478734213
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27746.2358949, satForward.VX = 1.68185419553, satForward.VY = 0.720086492295, satForward.VZ = -7.93053435603, satBackward.VX = -5.23216688997, satBackward.VY = -0.398902149095, satBackward.VZ = -1.478734213
+   Cost Function Value: 7.58215005625
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 3047615.68473
+      Delta satForward.SunMJ2000Ec.Y = 1923703.56119
+      Delta satForward.SunMJ2000Ec.Z = 95219.7169344
+      Delta satForward.SunMJ2000Ec.VX = 0.186925216444
+      Delta satForward.SunMJ2000Ec.VY = 0.316307907453
+      Delta satForward.SunMJ2000Ec.VZ = -0.00324934804937
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27746.1462606, satForward.VX = 1.7543998799, satForward.VY = 0.719598101473, satForward.VZ = -7.68996564674, satBackward.VX = -5.22270063604, satBackward.VY = -0.415756302369, satBackward.VZ = -1.31807523795
+   Cost Function Value: 7.5560872347
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -52833.54247
+      Delta satForward.SunMJ2000Ec.Y = 36686.3783833
+      Delta satForward.SunMJ2000Ec.Z = 1723.72719286
+      Delta satForward.SunMJ2000Ec.VX = -0.00898622049513
+      Delta satForward.SunMJ2000Ec.VY = -0.00461126092517
+      Delta satForward.SunMJ2000Ec.VZ = -1.18445604584e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27746.0862589, satForward.VX = 1.74850938838, satForward.VY = 0.718668472592, satForward.VZ = -7.73980679486, satBackward.VX = -5.25149638828, satBackward.VY = -0.415371681733, satBackward.VZ = -1.3523941133
+   Cost Function Value: 7.56727295833
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -2371.35159328
+      Delta satForward.SunMJ2000Ec.Y = 278.837058663
+      Delta satForward.SunMJ2000Ec.Z = 66.3261361867
+      Delta satForward.SunMJ2000Ec.VX = 5.47252968843e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000378981384331
+      Delta satForward.SunMJ2000Ec.VZ = -9.73746402511e-07
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27745.7699401, satForward.VX = 1.730369613, satForward.VY = 0.715659071854, satForward.VZ = -7.84099490958, satBackward.VX = -5.34895976162, satBackward.VY = -0.41403187792, satBackward.VZ = -1.4039784126
+   Cost Function Value: 7.55427158352
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -13946.3168614
+      Delta satForward.SunMJ2000Ec.Y = -138.174026817
+      Delta satForward.SunMJ2000Ec.Z = 297.497165993
+      Delta satForward.SunMJ2000Ec.VX = 0.000481627890711
+      Delta satForward.SunMJ2000Ec.VY = -0.00145060327331
+      Delta satForward.SunMJ2000Ec.VZ = -5.27503640224e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27745.720776, satForward.VX = 1.72747007045, satForward.VY = 0.715202740852, satForward.VZ = -7.85639574126, satBackward.VX = -5.36384184303, satBackward.VY = -0.413825298548, satBackward.VZ = -1.41101746985
+   Cost Function Value: 7.55256891331
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -339.508555517
+      Delta satForward.SunMJ2000Ec.Y = 3.50409758091
+      Delta satForward.SunMJ2000Ec.Z = 7.14952272177
+      Delta satForward.SunMJ2000Ec.VX = 9.8864141691e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.43881126024e-05
+      Delta satForward.SunMJ2000Ec.VZ = -9.93748044964e-08
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27745.7170611, satForward.VX = 1.72725372224, satForward.VY = 0.715167819979, satForward.VZ = -7.85757742755, satBackward.VX = -5.36497764621, satBackward.VY = -0.413809578399, satBackward.VZ = -1.41159097024
+   Cost Function Value: 7.55253990877
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=160
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.388139911
+      Delta satForward.SunMJ2000Ec.Y = 8.2912953496
+      Delta satForward.SunMJ2000Ec.Z = 0.524568796158
+      Delta satForward.SunMJ2000Ec.VX = 1.3786779185e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.49667797281e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.27097390285e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27745.7170227, satForward.VX = 1.72725149616, satForward.VY = 0.715167458148, satForward.VZ = -7.8575896203, satBackward.VX = -5.36498939214, satBackward.VY = -0.413809416145, satBackward.VZ = -1.41159692942
+   Cost Function Value: 7.55253973275
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.5563399121
+      Delta satForward.SunMJ2000Ec.Y = 8.37656182051
+      Delta satForward.SunMJ2000Ec.Z = 0.486444294453
+      Delta satForward.SunMJ2000Ec.VX = 1.32069688163e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.31872193224e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.21883442123e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27745.7170227
+   satForward.VX = 1.72725149616
+   satForward.VY = 0.715167458148
+   satForward.VZ = -7.8575896203
+   satBackward.VX = -5.36498939214
+   satBackward.VY = -0.413809416145
+   satBackward.VZ = -1.41159692942
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27745.7170227, satForward.VX = 1.72725149616, satForward.VY = 0.715167458148, satForward.VZ = -7.8575896203, satBackward.VX = -5.36498939214, satBackward.VY = -0.413809416145, satBackward.VZ = -1.41159692942
+   Cost Function Value: 7.49734363872
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2920893.11407
+      Delta satForward.SunMJ2000Ec.Y = 1929757.65633
+      Delta satForward.SunMJ2000Ec.Z = 96853.4847659
+      Delta satForward.SunMJ2000Ec.VX = 0.184838268902
+      Delta satForward.SunMJ2000Ec.VY = 0.310414236427
+      Delta satForward.SunMJ2000Ec.VZ = -0.00271321814933
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27745.6299163, satForward.VX = 1.79712777232, satForward.VY = 0.715811175943, satForward.VZ = -7.62590594413, satBackward.VX = -5.35508442779, satBackward.VY = -0.430392298429, satBackward.VZ = -1.25542422286
+   Cost Function Value: 7.48136553206
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -48600.3110343
+      Delta satForward.SunMJ2000Ec.Y = 34043.3233743
+      Delta satForward.SunMJ2000Ec.Z = 1770.05066168
+      Delta satForward.SunMJ2000Ec.VX = -0.00842683171562
+      Delta satForward.SunMJ2000Ec.VY = -0.00409095712493
+      Delta satForward.SunMJ2000Ec.VZ = -1.10189662469e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27745.5731016, satForward.VX = 1.79199807682, satForward.VY = 0.714945036402, satForward.VZ = -7.67208067098, satBackward.VX = -5.3819200847, satBackward.VY = -0.430020699908, satBackward.VZ = -1.2864126808
+   Cost Function Value: 7.4919851933
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1987.61482608
+      Delta satForward.SunMJ2000Ec.Y = 204.892449707
+      Delta satForward.SunMJ2000Ec.Z = 55.4231790304
+      Delta satForward.SunMJ2000Ec.VX = 4.93962114732e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000318210365887
+      Delta satForward.SunMJ2000Ec.VZ = -5.6237679269e-07
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27745.2568974, satForward.VX = 1.77478771735, satForward.VY = 0.711986487939, satForward.VZ = -7.77184381984, satBackward.VX = -5.47778886415, satBackward.VY = -0.428558573012, satBackward.VZ = -1.33426998621
+   Cost Function Value: 7.47988454338
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -13125.588707
+      Delta satForward.SunMJ2000Ec.Y = -434.349580586
+      Delta satForward.SunMJ2000Ec.Z = 277.031735405
+      Delta satForward.SunMJ2000Ec.VX = 0.000464417291962
+      Delta satForward.SunMJ2000Ec.VY = -0.00134021511766
+      Delta satForward.SunMJ2000Ec.VZ = -3.51762528283e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27745.2082644, satForward.VX = 1.77206367045, satForward.VY = 0.711543043225, satForward.VZ = -7.7868721385, satBackward.VX = -5.49225633676, satBackward.VY = -0.428335862303, satBackward.VZ = -1.34068800324
+   Cost Function Value: 7.47826614226
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -314.572421536
+      Delta satForward.SunMJ2000Ec.Y = -3.66454458237
+      Delta satForward.SunMJ2000Ec.Z = 6.53833650053
+      Delta satForward.SunMJ2000Ec.VX = 9.48700592218e-06
+      Delta satForward.SunMJ2000Ec.VY = -3.12390578108e-05
+      Delta satForward.SunMJ2000Ec.VZ = -6.04406895643e-08
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27745.2041778, satForward.VX = 1.77183799736, satForward.VY = 0.711505258949, satForward.VZ = -7.7881540273, satBackward.VX = -5.49348541662, satBackward.VY = -0.428317006432, satBackward.VZ = -1.34127331508
+   Cost Function Value: 7.47823861402
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.5648072585
+      Delta satForward.SunMJ2000Ec.Y = 8.09904325008
+      Delta satForward.SunMJ2000Ec.Z = 0.519507169724
+      Delta satForward.SunMJ2000Ec.VX = 1.41609913129e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.50604355045e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.10968201189e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27745.20413, satForward.VX = 1.77183536923, satForward.VY = 0.711504816539, satForward.VZ = -7.78816898499, satBackward.VX = -5.49349978666, satBackward.VY = -0.428316786285, satBackward.VZ = -1.34128018106
+   Cost Function Value: 7.47823840721
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=170
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.4628869221
+      Delta satForward.SunMJ2000Ec.Y = 8.23868054152
+      Delta satForward.SunMJ2000Ec.Z = 0.476090013981
+      Delta satForward.SunMJ2000Ec.VX = 1.34712201572e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.30458602024e-06
+      Delta satForward.SunMJ2000Ec.VZ = -3.07319885096e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27745.20413
+   satForward.VX = 1.77183536923
+   satForward.VY = 0.711504816539
+   satForward.VZ = -7.78816898499
+   satBackward.VX = -5.49349978666
+   satBackward.VY = -0.428316786285
+   satBackward.VZ = -1.34128018106
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27745.20413, satForward.VX = 1.77183536923, satForward.VY = 0.711504816539, satForward.VZ = -7.78816898499, satBackward.VX = -5.49349978666, satBackward.VY = -0.428316786285, satBackward.VZ = -1.34128018106
+   Cost Function Value: 7.4273136833
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2755096.858
+      Delta satForward.SunMJ2000Ec.Y = 1901686.24856
+      Delta satForward.SunMJ2000Ec.Z = 99356.2529549
+      Delta satForward.SunMJ2000Ec.VX = 0.181165922591
+      Delta satForward.SunMJ2000Ec.VY = 0.297482030646
+      Delta satForward.SunMJ2000Ec.VZ = -0.00215761282951
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27745.1186458, satForward.VX = 1.83799925066, satForward.VY = 0.713200471144, satForward.VZ = -7.56541124555, satBackward.VX = -5.48362490715, satBackward.VY = -0.444675992504, satBackward.VZ = -1.18993300033
+   Cost Function Value: 7.41734948935
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -44120.7810312
+      Delta satForward.SunMJ2000Ec.Y = 30512.4313681
+      Delta satForward.SunMJ2000Ec.Z = 1793.85889517
+      Delta satForward.SunMJ2000Ec.VX = -0.00769846761358
+      Delta satForward.SunMJ2000Ec.VY = -0.00364271598119
+      Delta satForward.SunMJ2000Ec.VZ = -1.39682550728e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27745.0633949, satForward.VX = 1.83350236632, satForward.VY = 0.712381877489, satForward.VZ = -7.60794000701, satBackward.VX = -5.50882618421, satBackward.VY = -0.444315459859, satBackward.VZ = -1.21755168377
+   Cost Function Value: 7.42682710906
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1660.31194326
+      Delta satForward.SunMJ2000Ec.Y = 148.630114406
+      Delta satForward.SunMJ2000Ec.Z = 46.1492436379
+      Delta satForward.SunMJ2000Ec.VX = 4.4705092531e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000264234065531
+      Delta satForward.SunMJ2000Ec.VZ = -2.51979952126e-07
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27744.7471695, satForward.VX = 1.81717885102, satForward.VY = 0.709469480825, satForward.VZ = -7.70640550025, satBackward.VX = -5.60314570228, satBackward.VY = -0.442734036299, satBackward.VZ = -1.26183565857
+   Cost Function Value: 7.41576942477
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -12370.8698507
+      Delta satForward.SunMJ2000Ec.Y = -701.56234169
+      Delta satForward.SunMJ2000Ec.Z = 258.633367181
+      Delta satForward.SunMJ2000Ec.VX = 0.000447956771186
+      Delta satForward.SunMJ2000Ec.VY = -0.00123884866401
+      Delta satForward.SunMJ2000Ec.VZ = -1.96807725072e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27744.7008669, satForward.VX = 1.81471498889, satForward.VY = 0.709054700198, satForward.VZ = -7.7205206901, satBackward.VX = -5.61667140539, satBackward.VY = -0.442505117271, satBackward.VZ = -1.26741920644
+   Cost Function Value: 7.41425104241
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -271.32978607
+      Delta satForward.SunMJ2000Ec.Y = -8.57616820931
+      Delta satForward.SunMJ2000Ec.Z = 5.57436603308
+      Delta satForward.SunMJ2000Ec.VX = 8.43299365272e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.63860081953e-05
+      Delta satForward.SunMJ2000Ec.VZ = -2.57069994181e-08
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27744.6966141, satForward.VX = 1.81449245218, satForward.VY = 0.709015985412, satForward.VZ = -7.7218373567, satBackward.VX = -5.61792954539, satBackward.VY = -0.442483912738, satBackward.VZ = -1.26798296073
+   Cost Function Value: 7.41422715157
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.5183988586
+      Delta satForward.SunMJ2000Ec.Y = 7.90745541453
+      Delta satForward.SunMJ2000Ec.Z = 0.510007321835
+      Delta satForward.SunMJ2000Ec.VX = 1.44572168992e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.49171200473e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.95039870313e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27744.6965545, satForward.VX = 1.81448934139, satForward.VY = 0.709015441625, satForward.VZ = -7.72185579205, satBackward.VX = -5.61794719306, satBackward.VY = -0.44248361563, satBackward.VZ = -1.26799089136
+   Cost Function Value: 7.4142269363
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=180
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.3637683243
+      Delta satForward.SunMJ2000Ec.Y = 8.10027006269
+      Delta satForward.SunMJ2000Ec.Z = 0.466068118811
+      Delta satForward.SunMJ2000Ec.VX = 1.37274930267e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.28929526802e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.93006008345e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27744.6965545
+   satForward.VX = 1.81448934139
+   satForward.VY = 0.709015441625
+   satForward.VZ = -7.72185579205
+   satBackward.VX = -5.61794719306
+   satBackward.VY = -0.44248361563
+   satBackward.VZ = -1.26799089136
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27744.6965545, satForward.VX = 1.81448934139, satForward.VY = 0.709015441625, satForward.VZ = -7.72185579205, satBackward.VX = -5.61794719306, satBackward.VY = -0.44248361563, satBackward.VZ = -1.26799089136
+   Cost Function Value: 7.37015347182
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2584920.15225
+      Delta satForward.SunMJ2000Ec.Y = 1854282.00516
+      Delta satForward.SunMJ2000Ec.Z = 101913.804587
+      Delta satForward.SunMJ2000Ec.VX = 0.176646783086
+      Delta satForward.SunMJ2000Ec.VY = 0.281775564674
+      Delta satForward.SunMJ2000Ec.VZ = -0.00164608291012
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27744.6119709, satForward.VX = 1.8765408516, satForward.VY = 0.711628340824, satForward.VZ = -7.5068791116, satBackward.VX = -5.60831201978, satBackward.VY = -0.458668565249, satBackward.VZ = -1.12132523948
+   Cost Function Value: 7.36377082369
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -40034.4509298
+      Delta satForward.SunMJ2000Ec.Y = 26869.6975656
+      Delta satForward.SunMJ2000Ec.Z = 1798.16376396
+      Delta satForward.SunMJ2000Ec.VX = -0.0069600043625
+      Delta satForward.SunMJ2000Ec.VY = -0.00330415556348
+      Delta satForward.SunMJ2000Ec.VZ = -1.7778627992e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27744.5555692, satForward.VX = 1.87247371782, satForward.VY = 0.710830278552, satForward.VZ = -7.54666198447, satBackward.VX = -5.63269135338, satBackward.VY = -0.458304066633, satBackward.VZ = -1.14606947275
+   Cost Function Value: 7.371823665
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1443.13072809
+      Delta satForward.SunMJ2000Ec.Y = 108.967671424
+      Delta satForward.SunMJ2000Ec.Z = 39.9032883346
+      Delta satForward.SunMJ2000Ec.VX = 4.22784539076e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000226068333474
+      Delta satForward.SunMJ2000Ec.VZ = -3.24611815206e-08
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27744.2410709, satForward.VX = 1.85709241078, satForward.VY = 0.707976824041, satForward.VZ = -7.64336836374, satBackward.VX = -5.72495131554, satBackward.VY = -0.45661601839, satBackward.VZ = -1.18667068142
+   Cost Function Value: 7.36195437379
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -11530.2408855
+      Delta satForward.SunMJ2000Ec.Y = -932.831081688
+      Delta satForward.SunMJ2000Ec.Z = 239.150434583
+      Delta satForward.SunMJ2000Ec.VX = 0.00042676122402
+      Delta satForward.SunMJ2000Ec.VY = -0.00113110299623
+      Delta satForward.SunMJ2000Ec.VZ = -5.87600797575e-07
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27744.1978187, satForward.VX = 1.85490752435, satForward.VY = 0.707595956819, satForward.VZ = -7.65638232549, satBackward.VX = -5.73735230916, satBackward.VY = -0.456386919093, satBackward.VZ = -1.19140604942
+   Cost Function Value: 7.36055453659
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -226.028673314
+      Delta satForward.SunMJ2000Ec.Y = -11.257096827
+      Delta satForward.SunMJ2000Ec.Z = 4.59526303411
+      Delta satForward.SunMJ2000Ec.VX = 7.25636215293e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.14954423723e-05
+      Delta satForward.SunMJ2000Ec.VZ = -6.11306782972e-10
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27744.19353, satForward.VX = 1.85469507936, satForward.VY = 0.707557482397, satForward.VZ = -7.65769377426, satBackward.VX = -5.73860015498, satBackward.VY = -0.456363981167, satBackward.VZ = -1.19193037112
+   Cost Function Value: 7.36053476794
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=190
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.3092357814
+      Delta satForward.SunMJ2000Ec.Y = 7.7210945785
+      Delta satForward.SunMJ2000Ec.Z = 0.497536420822
+      Delta satForward.SunMJ2000Ec.VX = 1.4689319201e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.46039048424e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.78848344415e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27744.1934798, satForward.VX = 1.85469259433, satForward.VY = 0.707557031429, satForward.VZ = -7.65770910815, satBackward.VX = -5.73861476597, satBackward.VY = -0.456363712688, satBackward.VZ = -1.19193649697
+   Cost Function Value: 7.36053456133
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.2589259073
+      Delta satForward.SunMJ2000Ec.Y = 7.96190518141
+      Delta satForward.SunMJ2000Ec.Z = 0.456310555339
+      Delta satForward.SunMJ2000Ec.VX = 1.39762610729e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.27291725685e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.78936419518e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27744.1934798
+   satForward.VX = 1.85469259433
+   satForward.VY = 0.707557031429
+   satForward.VZ = -7.65770910815
+   satBackward.VX = -5.73861476597
+   satBackward.VY = -0.456363712688
+   satBackward.VZ = -1.19193649697
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27744.1934798, satForward.VX = 1.85469259433, satForward.VY = 0.707557031429, satForward.VZ = -7.65770910815, satBackward.VX = -5.73861476597, satBackward.VY = -0.456363712688, satBackward.VZ = -1.19193649697
+   Cost Function Value: 7.32273535697
+   Yukon1 State converged to within target accuracy.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2445495.50006
+      Delta satForward.SunMJ2000Ec.Y = 1809470.64676
+      Delta satForward.SunMJ2000Ec.Z = 103753.950067
+      Delta satForward.SunMJ2000Ec.VX = 0.172288997031
+      Delta satForward.SunMJ2000Ec.VY = 0.26851124417
+      Delta satForward.SunMJ2000Ec.VZ = -0.00122694075146
+
+AUDIT_HEARTBEAT seconds=200
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27744.1094383, satForward.VX = 1.91303780542, satForward.VY = 0.710950251867, satForward.VZ = -7.4486237607, satBackward.VX = -5.72914640577, satBackward.VY = -0.472424523624, satBackward.VZ = -1.04939710057
+   Cost Function Value: 7.32038895001
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -36787.7821722
+      Delta satForward.SunMJ2000Ec.Y = 23847.8460801
+      Delta satForward.SunMJ2000Ec.Z = 1794.77845395
+      Delta satForward.SunMJ2000Ec.VX = -0.00635921900335
+      Delta satForward.SunMJ2000Ec.VY = -0.00307030455572
+      Delta satForward.SunMJ2000Ec.VZ = -1.95318164571e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27744.0518737, satForward.VX = 1.90933079868, satForward.VY = 0.710169805527, satForward.VZ = -7.48619919023, satBackward.VX = -5.75286592344, satBackward.VY = -0.472049923954, satBackward.VZ = -1.0717243563
+   Cost Function Value: 7.32724839361
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1277.3939165
+      Delta satForward.SunMJ2000Ec.Y = 77.2480268478
+      Delta satForward.SunMJ2000Ec.Z = 35.1036862731
+      Delta satForward.SunMJ2000Ec.VX = 4.02055416302e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000196802661558
+      Delta satForward.SunMJ2000Ec.VZ = 1.34225134674e-07
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27743.7395477, satForward.VX = 1.89488040516, satForward.VY = 0.707375805797, satForward.VZ = -7.58109927689, satBackward.VX = -5.84296113866, satBackward.VY = -0.470261984071, satBackward.VZ = -1.10874897211
+   Cost Function Value: 7.31850565921
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -10719.7782339
+      Delta satForward.SunMJ2000Ec.Y = -1131.33479246
+      Delta satForward.SunMJ2000Ec.Z = 220.852965489
+      Delta satForward.SunMJ2000Ec.VX = 0.000405130879152
+      Delta satForward.SunMJ2000Ec.VY = -0.00102895897936
+      Delta satForward.SunMJ2000Ec.VZ = 6.06896528699e-07
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27743.6983039, satForward.VX = 1.89290647891, satForward.VY = 0.707018338294, satForward.VZ = -7.59336028201, satBackward.VX = -5.85456908456, satBackward.VY = -0.4700293287, satBackward.VZ = -1.11283707222
+   Cost Function Value: 7.31721614678
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=210
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -196.43343316
+      Delta satForward.SunMJ2000Ec.Y = -13.4182578325
+      Delta satForward.SunMJ2000Ec.Z = 3.95064890385
+      Delta satForward.SunMJ2000Ec.VX = 6.53149437824e-06
+      Delta satForward.SunMJ2000Ec.VY = -1.82725962428e-05
+      Delta satForward.SunMJ2000Ec.VZ = 1.62718136743e-08
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27743.6939263, satForward.VX = 1.89270145078, satForward.VY = 0.706979610153, satForward.VZ = -7.59468317666, satBackward.VX = -5.8558214281, satBackward.VY = -0.470004367973, satBackward.VZ = -1.11332818574
+   Cost Function Value: 7.31719906655
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.1401655227
+      Delta satForward.SunMJ2000Ec.Y = 7.53087374568
+      Delta satForward.SunMJ2000Ec.Z = 0.487348824739
+      Delta satForward.SunMJ2000Ec.VX = 1.49276443295e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.4324182224e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.61740116247e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27743.6938682, satForward.VX = 1.89269873494, satForward.VY = 0.706979096419, satForward.VZ = -7.59470069184, satBackward.VX = -5.85583802997, satBackward.VY = -0.470004037242, satBackward.VZ = -1.11333468203
+   Cost Function Value: 7.31719886519
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.1490851194
+      Delta satForward.SunMJ2000Ec.Y = 7.82308092713
+      Delta satForward.SunMJ2000Ec.Z = 0.44683650136
+      Delta satForward.SunMJ2000Ec.VX = 1.42178490492e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.2554446395e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.65090587259e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27743.6938682
+   satForward.VX = 1.89269873494
+   satForward.VY = 0.706979096419
+   satForward.VZ = -7.59470069184
+   satBackward.VX = -5.85583802997
+   satBackward.VY = -0.470004037242
+   satBackward.VZ = -1.11333468203
+Yukon1 converged to within target accuracy.
+
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27743.6938682, satForward.VX = 1.89269873494, satForward.VY = 0.706979096419, satForward.VZ = -7.59470069184, satBackward.VX = -5.85583802997, satBackward.VY = -0.470004037242, satBackward.VZ = -1.11333468203
+   Cost Function Value: 7.28257119795
+   Yukon1 State converged to within target accuracy.
+
+AUDIT_HEARTBEAT seconds=220
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = 2353222.35603
+      Delta satForward.SunMJ2000Ec.Y = 1783721.21933
+      Delta satForward.SunMJ2000Ec.Z = 104550.731743
+      Delta satForward.SunMJ2000Ec.VX = 0.168802137584
+      Delta satForward.SunMJ2000Ec.VY = 0.260935296541
+      Delta satForward.SunMJ2000Ec.VZ = -0.000906920262463
+
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27743.6103609, satForward.VX = 1.94826333253, satForward.VY = 0.711066011053, satForward.VZ = -7.38967089338, satBackward.VX = -5.84629779314, satBackward.VY = -0.48598920545, satBackward.VZ = -0.974224704842
+   Cost Function Value: 7.28712910695
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -34433.896656
+      Delta satForward.SunMJ2000Ec.Y = 21767.3670573
+      Delta satForward.SunMJ2000Ec.Z = 1796.43582137
+      Delta satForward.SunMJ2000Ec.VX = -0.00595741664803
+      Delta satForward.SunMJ2000Ec.VY = -0.00290475353071
+      Delta satForward.SunMJ2000Ec.VZ = -1.77958550476e-05
+
+Yukon1 Iteration 2; Function Evaluation 3; Nominal Pass
+   Variables:  arrivalEpoch = 27743.5526031, satForward.VX = 1.94490192081, satForward.VY = 0.710309027356, satForward.VZ = -7.42545921209, satBackward.VX = -5.8693046429, satBackward.VY = -0.48560393262, satBackward.VZ = -0.994603596078
+   Cost Function Value: 7.29321051355
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -1139.49077041
+      Delta satForward.SunMJ2000Ec.Y = 51.4187517464
+      Delta satForward.SunMJ2000Ec.Z = 31.1883082539
+      Delta satForward.SunMJ2000Ec.VX = 3.80500410913e-05
+      Delta satForward.SunMJ2000Ec.VY = -0.000173609619523
+      Delta satForward.SunMJ2000Ec.VZ = 2.63059543371e-07
+
+Yukon1 Iteration 3; Function Evaluation 4; Nominal Pass
+   Variables:  arrivalEpoch = 27743.2411957, satForward.VX = 1.93129896902, satForward.VY = 0.707560029065, satForward.VZ = -7.51901549493, satBackward.VX = -5.9576190684, satBackward.VY = -0.483712634455, satBackward.VZ = -1.02834890261
+   Cost Function Value: 7.28546428015
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -10053.728677
+      Delta satForward.SunMJ2000Ec.Y = -1313.40184641
+      Delta satForward.SunMJ2000Ec.Z = 206.064152136
+      Delta satForward.SunMJ2000Ec.VX = 0.000387591297784
+      Delta satForward.SunMJ2000Ec.VY = -0.00094322280197
+      Delta satForward.SunMJ2000Ec.VZ = 1.64251220536e-06
+
+Yukon1 Iteration 4; Function Evaluation 5; Nominal Pass
+   Variables:  arrivalEpoch = 27743.2009806, satForward.VX = 1.92947939016, satForward.VY = 0.707216580051, satForward.VZ = -7.53083737354, satBackward.VX = -5.96872971036, satBackward.VY = -0.48347226382, satBackward.VZ = -1.03194087144
+   Cost Function Value: 7.2842667305
+   Yukon1 State: Optimization is proceeding as expected.
+
+AUDIT_HEARTBEAT seconds=230
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -178.227726661
+      Delta satForward.SunMJ2000Ec.Y = -15.7684473097
+      Delta satForward.SunMJ2000Ec.Z = 3.55179432034
+      Delta satForward.SunMJ2000Ec.VX = 6.12508020126e-06
+      Delta satForward.SunMJ2000Ec.VY = -1.62153201648e-05
+      Delta satForward.SunMJ2000Ec.VZ = 3.01669353941e-08
+
+Yukon1 Iteration 5; Function Evaluation 6; Nominal Pass
+   Variables:  arrivalEpoch = 27743.1964374, satForward.VX = 1.92927854049, satForward.VY = 0.70717691625, satForward.VZ = -7.5321949578, satBackward.VX = -5.97000728085, satBackward.VY = -0.483444790488, satBackward.VZ = -1.03240595032
+   Cost Function Value: 7.28425131273
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -23.0801922232
+      Delta satForward.SunMJ2000Ec.Y = 7.33656364679
+      Delta satForward.SunMJ2000Ec.Z = 0.47934307158
+      Delta satForward.SunMJ2000Ec.VX = 1.52004196252e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.41521397637e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.46782918545e-08
+
+Yukon1 Iteration 6; Function Evaluation 7; Nominal Pass
+   Variables:  arrivalEpoch = 27743.1963765, satForward.VX = 1.92927585033, satForward.VY = 0.707176384701, satForward.VZ = -7.53221312074, satBackward.VX = -5.9700243906, satBackward.VY = -0.483444422691, satBackward.VZ = -1.03241215369
+   Cost Function Value: 7.28425110536
+   Yukon1 State: Optimization is proceeding as expected.
+
+   Equality Constraint Variances:
+      Delta satForward.SunMJ2000Ec.X = -21.0353354067
+      Delta satForward.SunMJ2000Ec.Y = 7.68425926566
+      Delta satForward.SunMJ2000Ec.Z = 0.43765117228
+      Delta satForward.SunMJ2000Ec.VX = 1.44532902979e-06
+      Delta satForward.SunMJ2000Ec.VY = -2.23705892277e-06
+      Delta satForward.SunMJ2000Ec.VZ = -2.51454553846e-08
+
+
+ Optimization Terminated Successfully 
+ Magnitude of gradient of Lagrangian is less than tolerance 
+
+*** Optimization Completed in 6 iterations and 7 function evaluations
+*** The Optimizer Converged!
+Final Variable values:
+   arrivalEpoch = 27743.1963765
+   satForward.VX = 1.92927585033
+   satForward.VY = 0.707176384701
+   satForward.VZ = -7.53221312074
+   satBackward.VX = -5.9700243906
+   satBackward.VY = -0.483444422691
+   satBackward.VZ = -1.03241215369
+Yukon1 converged to within target accuracy.
+
+
+
+Mission run completed.
+===> Total Run Time: 242.314 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=2
+WARNING: Glycin running without sandbox.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=10001 title=OFI_SunInertialView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=10001 title=OFI_SunInertialView size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=(loopCount) vs (launchEpoch, arrivalEpoch) size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=(loopCount) vs (launchEpoch, arrivalEpoch) size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=(loopCount) vs (cost) size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=(loopCount) vs (cost) size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=10001 title=OFI_EarthSunRotView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=10001 title=OFI_EarthSunRotView size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=1 type=46013 title=Solver Window - Optimize Yukon1 {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=2 type=46013 title=Solver Window - Optimize Yukon1 {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:04:24 GMAT GUI exiting.

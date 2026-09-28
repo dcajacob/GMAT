@@ -1,0 +1,83 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:22 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:22 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot create an object "CanberraB3". The "MeasurementModel" is an unknown object type or invalid object name or dimension in line:
+   "   2: Create MeasurementModel CanberraB3"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   3: CanberraB3.Particpants = {ODSat, Canberra};"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   4: CanberraB3.MeasurementTypes  = {Azimuth, Elevation, Range};"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   5: CanberraB3.DataSource        = {Simulation};"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   6: CanberraB3.FileFormat        =  B3;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   7: CanberraB3.Filename          = \CanberraData.txt"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   8: CanberraB3.LightTimeModel    = LineOfSight;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "   9: CanberraB3.IonosphereModel   = IRI;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  10: CanberraB3.TroposphereModel  = Saastamoinen;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  11: CanberraB3.Sim.ErrorModel    = {Gaussian, Uniform, Guassian};"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  12: CanberraB3.Sim.MeanError     = {.001, .0005, .1};"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  13: CanberraB3.Sim.SdtDevError   = {3, 3, 2};"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  14: CanberraB3.Sim.Propagator    =  TruthProp"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  15: CanberraB3.Sim.Particpants   = {TruthODSat,Canberra};"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  16: CanberraB3.Sim.StartTime     = 01 Jan 2008 12:00.00.000"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  17: CanberraB3.Sim.StoptTime     = 02 Jan 2008 12:00.00.000"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "CanberraB3" in line:
+   "  18: CanberraB3.Sim.StepSize      = 60}"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/e31c76136a7a/repo/doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:22 GMAT GUI exiting.

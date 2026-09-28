@@ -1,0 +1,31 @@
+PASS: fixed-width DE header copy, assignment and self-assignment
+PASS: layout: layout
+PASS: layout: oversized-console
+PASS: layout: invalid-console
+PASS: layout: small
+PASS: layout: hidpi
+PASS: geometry: save
+PASS: geometry: restore
+PASS: geometry: oversized
+PASS: geometry: invalid
+PASS: geometry: small
+PASS: geometry: hidpi
+PASS: geometry: personalization write opt-out
+PASS: groundtrack: groundtrack
+PASS: groundtrack: body-texture
+PASS: groundtrack: hidpi
+PASS: native viewport fills canvas at 1x before and after resizing
+PASS: native viewport fills canvas at 2x before and after resizing
+PASS: native viewport fills canvas at 3x before and after resizing
+PASS: editor: save failure preserves work and retry succeeds
+PASS: editor: reload failure preserves work and retry succeeds
+PASS: workflow: native
+PASS: workflow: native-dark-2x
+PASS: workflow: openframes
+PASS: exit: console mission
+PASS: exit: GUI mission and identical console state report
+PASS: exit: invalid script returns status 1
+PASS: plugins: normal window close after an OpenFrames mission
+PASS: integration: OpenFrames default ground-track rendering
+PASS: integration: OpenFrames Hohmann convergence and automatic exit
+Logs: /home/dan/GIT/GMAT/GMAT/build/linux-gui/linux-gui-tests

@@ -1,0 +1,227 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:34 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:34 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   "  50: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  52: emtgThrustModel.SpacecraftFile = FixedThrustAndIsp_Model2.emtg_spacecraftopt"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   "  53: emtgThrustModel.DutyCycle      = 1.0"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "SunThrustDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   "  59: Create DynamicsConfiguration SunThrustDynConfig"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  61: SunThrustDynConfig.ForceModels    = {DeepSpaceForceModel};"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  62: SunThrustDynConfig.Spacecraft     = {aSat}"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  63: SunThrustDynConfig.FiniteBurns    = {emtgThrustModel}"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+   "  64: SunThrustDynConfig.EMTGTankConfig = {ChemicalTank1};"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   "  69: Create OptimalControlGuess trajectoryGuess"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  71: trajectoryGuess.Type     = CollocationGuessFile  "
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+   "  72: trajectoryGuess.FileName = ../data/misc/GuessWithUnityControl.och"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   "  77: Create Phase thePhase"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  79: thePhase.Type                  = ImplicitRKOrder6	"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  80: thePhase.ThrustMode            = Thrust"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  81: thePhase.DynamicsConfiguration = SunThrustDynConfig"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  82: thePhase.SubPhaseBoundaries    = [0 1]"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  83: thePhase.PointsPerSubPhase     = [30]"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  84: thePhase.GuessSource           = trajectoryGuess"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  85: thePhase.EpochFormat           = A1ModJulian"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  87: thePhase.EpochLowerBound = 30537.58129245887"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  88: thePhase.EpochUpperBound = 32406.49962790855"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  90:                               -100 -100 -100 0.00001]"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  92:                              100 100 100 4000]"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  93: thePhase.ControlLowerBound         = [ -1  -1  -1]"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  94: thePhase.ControlUpperBound         = [ 1  1  1]"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  95: thePhase.InitialEpoch              = 30542.0"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  96: thePhase.FinalEpoch                = 30692.0"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  97: thePhase.MaxRelativeErrorTolerance = 1e-4"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  98: thePhase.BuiltInCost               = 'RMAGFinal'"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 103: Create CustomLinkageConstraint initialConditions;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 105: initialConditions.ConstraintMode           = Absolute;"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 106: initialConditions.InitialPhase             = thePhase;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+   " 107: initialConditions.InitialPhaseBoundaryType = Start;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 108: initialConditions.SetModelParameter('TimeLowerBound', 'A1ModJulian', 30542)"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 109: initialConditions.SetModelParameter('TimeUpperBound', 'A1ModJulian', 30542)"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 110: initialConditions.SetModelParameter('PositionLowerBound', [125291184 -75613036 -32788527])"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 111: initialConditions.SetModelParameter('PositionUpperBound', [125291184 -75613036 -32788527])"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 112: initialConditions.SetModelParameter('VelocityLowerBound', [13.438 25.234 10.903])"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 113: initialConditions.SetModelParameter('VelocityUpperBound', [13.438 25.234 10.903])"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 114: initialConditions.SetModelParameter('MassLowerBound', 4000)"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+   " 115: initialConditions.SetModelParameter('MassUpperBound', 4000)"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 122: Create CustomLinkageConstraint duration_Thrust;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 124: duration_Thrust.ConstraintMode           = Difference;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 125: duration_Thrust.InitialPhase             = thePhase;"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 126: duration_Thrust.InitialPhaseBoundaryType = Start;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 127: duration_Thrust.FinalPhase               = thePhase;"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+   " 128: duration_Thrust.FinalPhaseBoundaryType   = End;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 129: duration_Thrust.SetModelParameter('TimeLowerBound', ElapsedDays, 250)"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+   " 130: duration_Thrust.SetModelParameter('TimeUpperBound', ElapsedDays, 250)"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 136: Create Trajectory traj"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 138: traj.PhaseList                    = {thePhase}"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 139: traj.GuessSource                  = trajectoryGuess;"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 140: traj.SolutionFile                 = 'Phase_Type_ImplicitRKOrder6.och';"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 141: traj.StateScaleMode               = Canonical;"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 142: traj.MassScaleFactor              = 4000;"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 143: traj.MaxMeshRefinementIterations  = 5;"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 144: traj.CustomLinkages               = {initialConditions, duration_Thrust}"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 145: traj.MajorIterationsLimits        = [200 500];"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 146: traj.TotalIterationsLimits        = [20000];"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 147: traj.FeasibilityTolerances        = [1e-3,1e-3,1e-7];"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 148: traj.MajorOptimalityTolerances    = [1e-2,1e-2,1e-5];"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 149: traj.OptimizationMode             = {Maximize};"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 150: traj.AllowFailedMeshOptimizations = True"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 151: traj.PublishUpdateRate            = 10"
+
+65: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 195: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/aeee320ccbd5/repo/application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:35 GMAT GUI exiting.

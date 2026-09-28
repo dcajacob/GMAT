@@ -1,0 +1,95 @@
+{
+  "primary": {
+    "selected": 210,
+    "counts": {
+      "build_failed": 67,
+      "completed": 136,
+      "mission_failed": 7
+    },
+    "regressions": [],
+    "changes": [
+      {
+        "lane": "primary",
+        "script": "doc/SystemDocs/ArchitecturalSpecification/script/BasicFunction.script",
+        "previous_status": "build_failed",
+        "status": "completed",
+        "seconds": 2.74,
+        "sha256": "a6f8679134e750efc0f30776821086d96e9fa50e89961e07a1429b0b61521c0c",
+        "script_changed_since_baseline": true,
+        "previous_reason": "1: <local-path> **** ERROR **** Interpreter Exception: Setting \"dr\" to \"SatSep(Sat1, Sat2)\" is not allowed before BeginMissionSequence in line:\n2: <local-path> **** ERROR **** Interpreter Exception: Setting \"dr\" to \"SatSep(Sat1, Sat2)\" is not allowed before BeginMissionSequence in line:\nAUDIT_DIALOG title=GMAT Error message=Errors were found in the script named \"<local-path>\". | Please fix all errors listed in message window. |",
+        "log": "evidence/primary/110a1cb2b7ce/gui.log"
+      },
+      {
+        "lane": "primary",
+        "script": "doc/SystemDocs/ArchitecturalSpecification/script/GlobalSample.script",
+        "previous_status": "mission_failed",
+        "status": "completed",
+        "seconds": 3.64,
+        "sha256": "7626e6c4b8d65bc10c29feba3d719e75fc079e4238cd341e63ff7b8f2a6b2fb6",
+        "script_changed_since_baseline": true,
+        "previous_reason": "AUDIT_DIALOG title=GMAT Warning message=*** WARNING ***  BeginMissionSequence command is missing. One will be required in future release. Command mode entered at 'Global globalBurn globalSat;' |\n**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window\nAUDIT_DIALOG title=GMAT Error message=**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window |",
+        "log": "evidence/primary/6916c67227bc/gui.log"
+      },
+      {
+        "lane": "primary",
+        "script": "doc/SystemDocs/ComponentDesigns/SensorAccess/source/scripts/R2020a_BasicSensors.script",
+        "previous_status": "mission_failed",
+        "status": "completed",
+        "seconds": 19.32,
+        "sha256": "93326bdfe696e7b144e8c8c32fa9b321e09078a903237b85365a295066ca38d5",
+        "script_changed_since_baseline": true,
+        "previous_reason": "**** ERROR **** Sandbox Exception: Error initializing objects in Sandbox.\nEvent Exception Thrown: A ConicalFov may not be used on an Antenna attached to a GroundStation. Remove TenDegEl from TenDegreeAntenna or replace it with a CustomFOV object.\nAUDIT_DIALOG title=GMAT Error message=**** ERROR **** Sandbox Exception: Error initializing objects in Sandbox. | Event Exception Thrown: A ConicalFov may not be used on an Antenna attached to a GroundStation. Remove TenDegEl from TenDegreeAntenna or replace it with a CustomFOV object. |  This error occurred on line 88 of file: \"<local-path>\" |  |",
+        "log": "evidence/primary/67acb4e9ef83/gui.log"
+      },
+      {
+        "lane": "primary",
+        "script": "doc/help/src/files/scripts/ForceModelsTutorial.script",
+        "previous_status": "build_failed",
+        "status": "completed",
+        "seconds": 3.63,
+        "sha256": "9caa1eaaa93484afbad7d4da1e693f00988af42f2dcae07131f820617990a237",
+        "script_changed_since_baseline": true,
+        "previous_reason": "3: <local-path> **** ERROR **** Utility Exception: Error finding relative path for file \"./output/SampleMissions/Ex_ForceModels.report\" - specified path does not exist.\nAUDIT_DIALOG title=GMAT Error message=Errors were found in the script named \"<local-path>\". | Please fix all errors listed in message window. |",
+        "log": "evidence/primary/e41cc0d2fb85/gui.log"
+      }
+    ],
+    "diagnostics": {
+      "viewport_mismatches": 0,
+      "inactive_windows": 0,
+      "screenshot_errors": 0
+    },
+    "configuration": {
+      "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+      "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+      "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+      "mode": "native",
+      "scale": 1,
+      "limit_seconds": 600,
+      "startup_sha256": "068d4bc6013cea7fe256ffe93118dc3e8b76e32b84e02035d0992cc5c4ed4205"
+    }
+  },
+  "converted": {
+    "selected": 24,
+    "counts": {
+      "build_failed": 13,
+      "completed": 10,
+      "mission_failed": 1
+    },
+    "regressions": [],
+    "changes": [],
+    "diagnostics": {
+      "viewport_mismatches": 0,
+      "inactive_windows": 0,
+      "screenshot_errors": 0
+    },
+    "configuration": {
+      "revision": "397444d217d8f19a8697db26ec8a9036548fa61b",
+      "harness_sha256": "f9c7058ef4a5a0366f26d9912a3a6f58dd4f805f96a7475e18a595818bef0c8f",
+      "gui_harness_sha256": "9906badaca6e37a8a9b9e3ff4f50a309fd3add726fae95d471020aa2df5fd081",
+      "mode": "converted",
+      "scale": 2,
+      "limit_seconds": 600,
+      "startup_sha256": "c47bdddbc3555cc5eb8155034c28f0dfe9c07d714fcd2aa28b13b519a240103b"
+    }
+  }
+}

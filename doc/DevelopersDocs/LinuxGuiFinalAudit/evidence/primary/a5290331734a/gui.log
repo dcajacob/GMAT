@@ -1,0 +1,50 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:26 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:26 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot create an object "SQPfmincon". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   "  15: Create VF13ad SQPfmincon"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Optimize in line:
+   "  39: Optimize SQPfmincon;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   "  42:     Vary SQPfmincon( X1 = 0  , { Upper = 10, Lower = -10 } );"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   "  43:     Vary SQPfmincon( X2 = 0  , { Upper = 10, Lower = -10 } );"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Minimize in line:
+   "  47:     Minimize SQPfmincon(F);"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   "  55:     NonlinearConstraint SQPfmincon( G = 8 );"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/a5290331734a/repo/doc/help/src/files/scripts/Ex_AlgebraicOptimization.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:26 GMAT GUI exiting.

@@ -1,0 +1,20 @@
+[
+  {
+    "path": "/home/dan/GIT/GMAT/Old/gmat-git",
+    "head": "53151531ed6ee406aeb2d13a07e0fad4f50865e3",
+    "tracked_files_modified_after_goal_start": [],
+    "tracked_diff_sha256": "c5916a477d5475831c7a8672849c4d73a2329c6389ccca8e8112fa686fb6e37e"
+  },
+  {
+    "path": "/home/dan/GIT/GMAT/Old/OpenFramesInterface",
+    "head": "82ea72584fc1c858bd3eb3899e5c3d3b31e32f3c",
+    "tracked_files_modified_after_goal_start": [],
+    "tracked_diff_sha256": "4e230337e8264b0170004a024ba665b650c36df3a32c9a29bdfcb394bc459285"
+  },
+  {
+    "path": "/home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a",
+    "method": "source/data file modification times; release tree has no Git metadata",
+    "files_checked": 3425,
+    "files_modified_after_goal_start": []
+  }
+]

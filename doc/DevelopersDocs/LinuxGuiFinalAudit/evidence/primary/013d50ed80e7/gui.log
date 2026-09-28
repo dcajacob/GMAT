@@ -1,0 +1,344 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:30 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:30 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "emtgThrustModel". The "EMTGSpacecraft" is an unknown object type or invalid object name or dimension in line:
+   " 207: Create EMTGSpacecraft emtgThrustModel;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 209: emtgThrustModel.SpacecraftFile  = 'EarthToMars.emtg_spacecraftopt';"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 210: emtgThrustModel.DutyCycle       = 1;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "emtgThrustModel" in line:
+   " 211: emtgThrustModel.SpacecraftStage = [ 1 ];"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "PCDynConfig". The "DynamicsConfiguration" is an unknown object type or invalid object name or dimension in line:
+   " 217: Create DynamicsConfiguration PCDynConfig;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 219: PCDynConfig.ForceModels    = {PCForceModel};"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 220: PCDynConfig.Spacecraft     = {emsat};"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 221: PCDynConfig.FiniteBurns    = {emtgThrustModel};"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCDynConfig" in line:
+   " 222: PCDynConfig.EMTGTankConfig = {ChemicalTank1};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "PCLaunchGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   " 227: Create OptimalControlGuess PCLaunchGuess"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 229: PCLaunchGuess.Type             = 'CollocationGuessFile';"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 230: PCLaunchGuess.TimeSystem       = 'A1ModJulian';"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 231: PCLaunchGuess.CoordinateSystem = EarthJ2000Eq;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "PCLaunchGuess" in line:
+   " 232: PCLaunchGuess.FileName         = '../data/misc/EarthToMars_Solution.och';"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "phase_LAUNCH". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 239: Create Phase phase_LAUNCH;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 241: phase_LAUNCH.Type                      = 'RadauPseudospectral';"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 242: phase_LAUNCH.ThrustMode                = 'Coast';"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 243: phase_LAUNCH.SubPhaseBoundaries        = [ -1 0 1 ];"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 244: phase_LAUNCH.PointsPerSubPhase         = [ 7 7 ];"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 245: phase_LAUNCH.GuessSource               = PCLaunchGuess;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 246: phase_LAUNCH.EpochFormat               = 'A1ModJulian';"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 247: phase_LAUNCH.StateLowerBound           = [ -1495980000 -1495980000 -1495980000 -100 -100 -100 1e-05 ];"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 248: phase_LAUNCH.StateUpperBound           = [ 1495980000 1495980000 1495980000 100 100 100 5000 ];"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 249: phase_LAUNCH.ControlLowerBound         = [ -2 -2 -2 ];"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 250: phase_LAUNCH.ControlUpperBound         = [ 2 2 2 ];"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 251: phase_LAUNCH.EpochLowerBound           = '29000'; %  Set bounds huge +/- your launch and make identical for all phases"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 252: phase_LAUNCH.EpochUpperBound           = '29500';"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 253: phase_LAUNCH.InitialEpoch              = '29075';"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 254: phase_LAUNCH.FinalEpoch                = '29080';"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 255: phase_LAUNCH.DynamicsConfiguration     = PCDynConfig;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 256: phase_LAUNCH.BuiltInCost               = 'TotalMassFinal';"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 257: phase_LAUNCH.MinControlMagnitude       = 0;"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 258: phase_LAUNCH.MaxControlMagnitude       = 1;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 259: phase_LAUNCH.MaxRelativeErrorTolerance = 1e-05;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 260: phase_LAUNCH.OverrideColorInGraphics   = false;"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "phase_LAUNCH" in line:
+   " 261: phase_LAUNCH.OrbitColor                = Red;"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "transferGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+   " 266: Create OptimalControlGuess transferGuess;"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 268: transferGuess.Type             = 'CollocationGuessFile';"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 269: transferGuess.TimeSystem       = 'A1ModJulian';"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 270: transferGuess.CoordinateSystem = EarthJ2000Eq;"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "transferGuess" in line:
+   " 271: transferGuess.FileName         = '../data/misc/EarthToMars_Solution.och';"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "thrustToArrival". The "Phase" is an unknown object type or invalid object name or dimension in line:
+   " 277: Create Phase thrustToArrival;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 279: thrustToArrival.Type                      = 'RadauPseudospectral';"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 280: thrustToArrival.ThrustMode                = 'Thrust';"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 281: thrustToArrival.SubPhaseBoundaries        = [ -1 -0.5 0 0.5 1 ];"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 282: thrustToArrival.PointsPerSubPhase         = [ 7 7 7 7 ];"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 283: thrustToArrival.GuessSource               = transferGuess;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 284: thrustToArrival.EpochFormat               = 'A1ModJulian';"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 285: thrustToArrival.StateLowerBound           = [ -1495980000 -1495980000 -1495980000 -100 -100 -100 100 ];"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 286: thrustToArrival.StateUpperBound           = [ 1495980000 1495980000 1495980000 100 100 100 5000 ];"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 287: thrustToArrival.ControlLowerBound         = [ -2 -2 -2 ];"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 288: thrustToArrival.ControlUpperBound         = [ 2 2 2 ];"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 289: thrustToArrival.EpochLowerBound           = '29000';"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 290: thrustToArrival.EpochUpperBound           = '29500';"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 291: thrustToArrival.InitialEpoch              = '29080';"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 292: thrustToArrival.FinalEpoch                = '29400';"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 293: thrustToArrival.DynamicsConfiguration     = PCDynConfig;"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 294: thrustToArrival.BuiltInCost               = 'TotalMassFinal';"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 295: thrustToArrival.MinControlMagnitude       = 0;"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 296: thrustToArrival.MaxControlMagnitude       = 1;"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 297: thrustToArrival.MaxRelativeErrorTolerance = 1e-05;"
+
+62: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 298: thrustToArrival.OverrideColorInGraphics   = false;"
+
+63: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 299: thrustToArrival.OrbitColor                = Red;"
+
+64: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "MarsRendezvous". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 302: Create OptimalControlFunction MarsRendezvous;"
+
+65: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 304: MarsRendezvous.Function  = 'CelestialBodyRendezvous';"
+
+66: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 305: MarsRendezvous.Type      = 'AlgebraicConstraint';"
+
+67: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+   " 306: MarsRendezvous.PhaseList = {'thrustToArrival.Final'};"
+
+68: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsRendezvous.SetModelParameter" in line:
+   " 307: MarsRendezvous.SetModelParameter('CelestialBody', 'Mars');"
+
+69: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "duration_LAUNCH". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+   " 312: Create CustomLinkageConstraint duration_LAUNCH;"
+
+70: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 314: duration_LAUNCH.ConstraintMode           = 'Difference';"
+
+71: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 315: duration_LAUNCH.InitialPhase             = phase_LAUNCH;"
+
+72: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 316: duration_LAUNCH.InitialPhaseBoundaryType = 'Start';"
+
+73: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 317: duration_LAUNCH.FinalPhase               = phase_LAUNCH;"
+
+74: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+   " 318: duration_LAUNCH.FinalPhaseBoundaryType   = 'End';"
+
+75: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+   " 319: duration_LAUNCH.SetModelParameter('TimeLowerBound', 'ElapsedDays', 5);  %LowerBounds              = [432000]; % 5 days * 86400 seconds"
+
+76: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+   " 320: duration_LAUNCH.SetModelParameter('TimeUpperBound', 'ElapsedDays', 5);  %UpperBounds              = [432000];"
+
+77: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "launchBound". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+   " 327: Create OptimalControlFunction launchBound;"
+
+78: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 329: launchBound.Function  = 'PatchedConicLaunch';"
+
+79: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 330: launchBound.Type      = 'AlgebraicConstraint';"
+
+80: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+   " 331: launchBound.PhaseList = {'phase_LAUNCH.Initial'};"
+
+81: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 332: launchBound.SetModelParameter(VehicleName, Atlas_V_401);"
+
+82: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 333: launchBound.SetModelParameter(CentralBody, Earth);"
+
+83: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+   " 334: launchBound.SetModelParameter(EMTGLaunchVehicleOptionsFile, ../data/emtg/NLSII_August2018_Augmented.emtg_launchvehicleopt);"
+
+84: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+   " 339: Create Trajectory traj;"
+
+85: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 341: traj.GuessSource                  = PCLaunchGuess;"
+
+86: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 342: traj.MaxMeshRefinementIterations  = 12;"
+
+87: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 343: traj.PhaseList                    = {phase_LAUNCH, thrustToArrival};"
+
+88: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 344: traj.AddBoundaryFunction          = {launchBound, MarsRendezvous};"
+
+89: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 345: traj.SNOPTOutputFile              = 'SNOPTOutputFile.txt';"
+
+90: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 346: traj.AddSimpleLinkageChain        = {phase_LAUNCH, thrustToArrival};"
+
+91: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 347: traj.CustomLinkages               = {duration_LAUNCH};"
+
+92: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 348: traj.SolutionFile                 = 'CelestialBodyRendezvous_Mars.och';"
+
+93: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 349: traj.StateScaleMode               = 'Canonical';"
+
+94: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 350: traj.MassScaleFactor              = 1000;"
+
+95: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 351: traj.OutputCoordinateSystem       = MarsMJ2000Ec;"
+
+96: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 352: traj.FeasibilityTolerances        = [ 0.0001 1e-06 ];"
+
+97: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 353: traj.MajorOptimalityTolerances    = [ 0.01 0.001 0.0001 ];"
+
+98: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 354: traj.MajorIterationsLimits        = [ 300 ];"
+
+99: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 355: traj.TotalIterationsLimits        = [ 20000 ];"
+
+100: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 356: traj.OptimizationMode             = {'Maximize'};"
+
+101: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 357: traj.AllowFailedMeshOptimizations = true;"
+
+102: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 358: traj.MeshRefinementGuessMode      = 'BestSolutionMostRecentMesh';"
+
+103: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 359: traj.PublishUpdateRate            = 20;"
+
+104: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script: **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
+   " 366: Collocate traj"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/013d50ed80e7/repo/application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:30 GMAT GUI exiting.

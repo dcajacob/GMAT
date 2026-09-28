@@ -1,0 +1,183 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:14 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:14 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "IndVar" field of XYPlot on object "SMAvsTimeINT" is deprecated and will be removed from a future build; please use "XVariable" instead.
+*** WARNING *** "Add" field of XYPlot on object "SMAvsTimeINT" is deprecated and will be removed from a future build; please use "YVariables" instead.
+*** WARNING *** "Grid" field of XYPlot on object "SMAvsTimeINT" is deprecated and will be removed from a future build; please use "ShowGrid" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** ODEModel Exception Thrown: The file name "./files/gravity/earth/JGM2.cof" does not exist in line:
+   "  41: GMAT Propagator1_ForceModel.Gravity.Earth.PotentialFile = ./files/gravity/earth/JGM2.cof;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: *** WARNING *** Interpreter Exception: Variable object named "r" already exists, so ignored in line:
+   "  54: Create Variable x y z vx vy vz r pi2 mu d2r;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: *** WARNING *** Interpreter Exception: Variable object named "mu" already exists, so ignored in line:
+   "  54: Create Variable x y z vx vy vz r pi2 mu d2r;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_Cart2KepMathTest.report" - specified path does not exist.
+ in line:
+   "  81: GMAT Cart2KeptConvert.Filename = ./output/SampleMissions/Ex_Cart2KepMathTest.report;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "x" to "Sat.X" is not allowed before BeginMissionSequence in line:
+   " 111:       GMAT x = Sat.X;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "y" to "Sat.Y" is not allowed before BeginMissionSequence in line:
+   " 112:       GMAT y = Sat.Y;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "z" to "Sat.Z" is not allowed before BeginMissionSequence in line:
+   " 113:       GMAT z = Sat.Z;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vx" to "Sat.VX" is not allowed before BeginMissionSequence in line:
+   " 114:       GMAT vx = Sat.VX;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vy" to "Sat.VY" is not allowed before BeginMissionSequence in line:
+   " 115:       GMAT vy = Sat.VY;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vz" to "Sat.VZ" is not allowed before BeginMissionSequence in line:
+   " 116:       GMAT vz = Sat.VZ;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "rv(1,1)" to "x" is not allowed before BeginMissionSequence in line:
+   " 118:       GMAT rv(1,1) = x;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "rv(2,1)" to "y" is not allowed before BeginMissionSequence in line:
+   " 119:       GMAT rv(2,1) = y;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "rv(3,1)" to "z" is not allowed before BeginMissionSequence in line:
+   " 120:       GMAT rv(3,1) = z;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vv(1,1)" to "vx" is not allowed before BeginMissionSequence in line:
+   " 121:       GMAT vv(1,1) = vx;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vv(2,1)" to "vy" is not allowed before BeginMissionSequence in line:
+   " 122:       GMAT vv(2,1) = vy;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "vv(3,1)" to "vz" is not allowed before BeginMissionSequence in line:
+   " 123:       GMAT vv(3,1) = vz;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "hv(1,1)" to "y*vz-z*vy" is not allowed before BeginMissionSequence in line:
+   " 126:       GMAT hv(1,1) = y*vz-z*vy;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "hv(2,1)" to "z*vx-x*vz" is not allowed before BeginMissionSequence in line:
+   " 127:       GMAT hv(2,1) = z*vx-x*vz;"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "hv(3,1)" to "x*vy-y*vx" is not allowed before BeginMissionSequence in line:
+   " 128:       GMAT hv(3,1) = x*vy-y*vx;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "h" to "sqrt( hv(1,1)^2 +  hv(2,1)^2 +  hv(3,1)^2 )" is not allowed before BeginMissionSequence in line:
+   " 129:       GMAT h       = sqrt( hv(1,1)^2 +  hv(2,1)^2 +  hv(3,1)^2 );"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "nv(1,1)" to "x*vz-z*vx" is not allowed before BeginMissionSequence in line:
+   " 133:       GMAT nv(1,1)  =  x*vz-z*vx;"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "nv(2,1)" to "y*vz-z*vy" is not allowed before BeginMissionSequence in line:
+   " 134:       GMAT nv(2,1)  =  y*vz-z*vy;"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "n" to "sqrt( nv(1,1)^2 +  nv(2,1)^2 +  nv(3,1)^2 )" is not allowed before BeginMissionSequence in line:
+   " 136:       GMAT n        =  sqrt( nv(1,1)^2 +  nv(2,1)^2 +  nv(3,1)^2 );"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "r" to "sqrt( x^2 +   y^2  + z^2 )" is not allowed before BeginMissionSequence in line:
+   " 139:       GMAT r = sqrt( x^2 +   y^2  + z^2 );"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "v" to "sqrt( vx^2 + vy^2 + vz^2 )" is not allowed before BeginMissionSequence in line:
+   " 140:       GMAT v = sqrt( vx^2 + vy^2 + vz^2 );"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "rdotv" to "x*vx + y*vy + z*vz" is not allowed before BeginMissionSequence in line:
+   " 143:       GMAT rdotv = x*vx + y*vy + z*vz;"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting an object "ev" of type "Array" to a value "( ( v^2 - mu/r )*rv - rdotv*vv  ) / mu" is not allowed in line:
+   " 144:       GMAT ev    = ( ( v^2 - mu/r )*rv - rdotv*vv  ) / mu;    %  This should make a column vector!!"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "ECC" to "sqrt( ev(1,1)^2 +  ev(2,1)^2 +  ev(3,1)^2 )" is not allowed before BeginMissionSequence in line:
+   " 145:       GMAT ECC   = sqrt( ev(1,1)^2 +  ev(2,1)^2 +  ev(3,1)^2 );"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "Energy" to "v^2/2 - mu/r" is not allowed before BeginMissionSequence in line:
+   " 148:       GMAT Energy = v^2/2 - mu/r;"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "SMA" to "-mu/2/Energy" is not allowed before BeginMissionSequence in line:
+   " 149:       GMAT SMA    = -mu/2/Energy;"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "INC" to "acos(hv(3,1)/h)" is not allowed before BeginMissionSequence in line:
+   " 150:       GMAT INC    = acos(hv(3,1)/h);"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "acos( nv(1,1)/n )" is not allowed before BeginMissionSequence in line:
+   " 153:       GMAT RAAN = acos( nv(1,1)/n );"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "pi2 - RAAN" is not allowed before BeginMissionSequence in line:
+   " 156:           GMAT RAAN = pi2 - RAAN;"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "ndote" to "nv(1,1)*ev(1,1) + nv(2,1)*ev(2,1) + nv(3,1)*ev(3,1)" is not allowed before BeginMissionSequence in line:
+   " 161:       GMAT ndote =  nv(1,1)*ev(1,1) + nv(2,1)*ev(2,1) + nv(3,1)*ev(3,1)  ;"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "AOP" to "acos(ndote/(n*ECC))" is not allowed before BeginMissionSequence in line:
+   " 162:       GMAT AOP = acos(ndote/(n*ECC));"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "AOP" to "pi2 - AOP" is not allowed before BeginMissionSequence in line:
+   " 165:          GMAT AOP = pi2 - AOP;"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "edotr" to "rv(1,1)*ev(1,1) + rv(2,1)*ev(2,1) + rv(3,1)*ev(3,1)" is not allowed before BeginMissionSequence in line:
+   " 169:       GMAT edotr = rv(1,1)*ev(1,1) + rv(2,1)*ev(2,1) + rv(3,1)*ev(3,1);"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "TA" to "acos(edotr/(ECC*r))" is not allowed before BeginMissionSequence in line:
+   " 170:       GMAT TA = acos(edotr/(ECC*r));   "
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "TA" to "pi2 - TA" is not allowed before BeginMissionSequence in line:
+   " 173:           GMAT TA = pi2 - TA;"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "INC" to "INC/d2r" is not allowed before BeginMissionSequence in line:
+   " 182:       GMAT INC  = INC/d2r;"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "RAAN/d2r" is not allowed before BeginMissionSequence in line:
+   " 183:       GMAT RAAN = RAAN/d2r;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "AOP" to "AOP/d2r" is not allowed before BeginMissionSequence in line:
+   " 184:       GMAT AOP  = AOP/d2r;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "TA" to "TA/d2r" is not allowed before BeginMissionSequence in line:
+   " 185:       GMAT TA   = TA/d2r;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "SMAError" to "SMA - Sat.SMA" is not allowed before BeginMissionSequence in line:
+   " 187:       GMAT SMAError  = SMA - Sat.SMA;"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "ECCError" to "ECC - Sat.ECC" is not allowed before BeginMissionSequence in line:
+   " 188:       GMAT ECCError  = ECC - Sat.ECC;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "INCError" to "INC - Sat.INC" is not allowed before BeginMissionSequence in line:
+   " 189:       GMAT INCError  = INC - Sat.INC;"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "RAANError" to "RAAN - Sat.RAAN" is not allowed before BeginMissionSequence in line:
+   " 190:       GMAT RAANError = RAAN - Sat.RAAN;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "AOPError" to "AOP  - Sat.AOP" is not allowed before BeginMissionSequence in line:
+   " 191:       GMAT AOPError  = AOP  - Sat.AOP;"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script: **** ERROR **** Interpreter Exception: Setting "TAError" to "TA   - Sat.TA" is not allowed before BeginMissionSequence in line:
+   " 192:       GMAT TAError   = TA   - Sat.TA;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/160be896ec1e/repo/doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:14 GMAT GUI exiting.

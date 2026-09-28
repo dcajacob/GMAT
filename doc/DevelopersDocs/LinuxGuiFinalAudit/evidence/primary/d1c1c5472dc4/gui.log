@@ -1,0 +1,109 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:42 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:42 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** Interpreter Exception: Setting "stringVar" to "stringVar" is not allowed before BeginMissionSequence in line:
+   "  72: GMAT stringVar = stringVar"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Eq" already exists, so ignored in line:
+   "  79: Create CoordinateSystem EarthMJ2000Eq;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   "  80: GMAT EarthMJ2000Eq.Origin = Earth;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   "  81: GMAT EarthMJ2000Eq.Axes = MJ2000Eq;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   "  82: GMAT EarthMJ2000Eq.UpdateInterval = 60;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   "  83: GMAT EarthMJ2000Eq.OverrideOriginInterval = false;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Ec" already exists, so ignored in line:
+   "  85: Create CoordinateSystem EarthMJ2000Ec;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   "  86: GMAT EarthMJ2000Ec.Origin = Earth;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   "  87: GMAT EarthMJ2000Ec.Axes = MJ2000Ec;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   "  88: GMAT EarthMJ2000Ec.UpdateInterval = 60;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   "  89: GMAT EarthMJ2000Ec.OverrideOriginInterval = false;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthFixed" already exists, so ignored in line:
+   "  91: Create CoordinateSystem EarthFixed;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   "  92: GMAT EarthFixed.Origin = Earth;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   "  93: GMAT EarthFixed.Axes = BodyFixed;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   "  94: GMAT EarthFixed.UpdateInterval = 60;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   "  95: GMAT EarthFixed.OverrideOriginInterval = false;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "DefaultOpenGL" is no longer in use in line:
+   " 105: GMAT DefaultOpenGL.OrbitColor = [ 255 32768 ];"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/AutoReport.txt" - specified path does not exist.
+ in line:
+   " 127: GMAT AutoReport.Filename = ./output/AutoReport.txt;"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/ManualReport.txt" - specified path does not exist.
+ in line:
+   " 137: GMAT ManualReport.Filename = ./output/ManualReport.txt;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/DecoratedReport.txt" - specified path does not exist.
+ in line:
+   " 146: GMAT DecoratedReport.Filename = ./output/DecoratedReport.txt;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/d1c1c5472dc4/repo/doc/help/src/files/scripts/ReportTutorial.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:42 GMAT GUI exiting.

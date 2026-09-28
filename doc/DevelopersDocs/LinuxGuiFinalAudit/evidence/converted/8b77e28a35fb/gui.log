@@ -1,0 +1,308 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:13:49 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+WARNING: Glycin running without sandbox.
+2026-09-28 14:13:49 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8b77e28a35fb/repo/doc/help/src/files/scripts/LEOStationKeepingTutorial.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8b77e28a35fb/repo/doc/help/src/files/scripts/LEOStationKeepingTutorial.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** Setting attitude initial conditions has no effect when attitude mode is CoordinateSystemFixed
+The OrbitView "DefaultOrbitView" has been converted to an OpenFramesInterface object by the libOVtoOFI plugin.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8b77e28a35fb/repo/doc/help/src/files/scripts/LEOStationKeepingTutorial.script: *** WARNING *** Interpreter Exception: The field "Drag" of ForceModel "LEOprop_ForceModel" will not be permitted in a future build; please use "Drag.AtmosphereModel" instead in line:
+   "  57: GMAT LEOprop_ForceModel.Drag = JacchiaRoberts;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8b77e28a35fb/repo/doc/help/src/files/scripts/LEOStationKeepingTutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "DefaultOrbitView" is no longer in use in line:
+   " 118: GMAT DefaultOrbitView.OrbitColor = [ 255 32768 ];"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/converted/8b77e28a35fb/repo/doc/help/src/files/scripts/LEOStationKeepingTutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "DefaultOrbitView" is no longer in use in line:
+   " 119: GMAT DefaultOrbitView.TargetColor = [ 8421440 0 ];"
+
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+OpenFrames renderer: llvmpipe (LLVM 21.1.8, 256 bits), version: 4.5 (Compatibility Profile) Mesa 26.0.8-1ubuntu0.3
+OpenFrames plotting 5068 stars in magnitude range [-1.44,6.00], and pixel size range [1.00,9.08]
+********************************************************
+*** Performing Differential Correction (using "DC")
+*** 2 variables; 2 goals
+   Variables:  DeltaV.Element1, DeltaV.Element1
+   Goals:  LEOsat.Earth.SMA, LEOsat.Earth.ECC
+   SolverMode:  Solve
+********************************************************
+DC Iteration 1; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.002, DeltaV.Element1 = 0.001
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6731.46471163  Variance: 2.53528837123
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000191486977181  Variance: 0.000308513022819
+
+   Completed iteration 1, pert 1 (DeltaV.Element1 = 0.0021)
+   Completed iteration 1, pert 2 (DeltaV.Element1 = 0.00105)
+
+DC Iteration 2; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0021, DeltaV.Element1 = 0.00102405914157
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6731.64005434  Variance: 2.35994565831
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000212823935922  Variance: 0.000287176064078
+
+   Completed iteration 2, pert 1 (DeltaV.Element1 = 0.0022)
+   Completed iteration 2, pert 2 (DeltaV.Element1 = 0.00107405914157)
+
+AUDIT_HEARTBEAT seconds=10
+DC Iteration 3; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0022, DeltaV.Element1 = 0.00104792751074
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6731.81540846  Variance: 2.18459153659
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000234162288766  Variance: 0.000265837711234
+
+   Completed iteration 3, pert 1 (DeltaV.Element1 = 0.0023)
+   Completed iteration 3, pert 2 (DeltaV.Element1 = 0.00109792751074)
+
+DC Iteration 4; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0023, DeltaV.Element1 = 0.00107161357371
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6731.99077399  Variance: 2.00922600501
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000255502035677  Variance: 0.000244497964323
+
+   Completed iteration 4, pert 1 (DeltaV.Element1 = 0.0024)
+   Completed iteration 4, pert 2 (DeltaV.Element1 = 0.00112161357371)
+
+DC Iteration 5; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0024, DeltaV.Element1 = 0.00109512526882
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6732.16615094  Variance: 1.8338490625
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.00027684317719  Variance: 0.00022315682281
+
+   Completed iteration 5, pert 1 (DeltaV.Element1 = 0.0025)
+   Completed iteration 5, pert 2 (DeltaV.Element1 = 0.00114512526882)
+
+DC Iteration 6; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0025, DeltaV.Element1 = 0.00111847011173
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6732.34153929  Variance: 1.65846070799
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000298185713919  Variance: 0.000201814286081
+
+   Completed iteration 6, pert 1 (DeltaV.Element1 = 0.0026)
+   Completed iteration 6, pert 2 (DeltaV.Element1 = 0.00116847011173)
+
+DC Iteration 7; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0026, DeltaV.Element1 = 0.00114165514814
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6732.51693906  Variance: 1.4830609404
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000319529646591  Variance: 0.000180470353409
+
+   Completed iteration 7, pert 1 (DeltaV.Element1 = 0.0027)
+   Completed iteration 7, pert 2 (DeltaV.Element1 = 0.00119165514814)
+
+DC Iteration 8; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0027, DeltaV.Element1 = 0.0011646870825
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6732.69235024  Variance: 1.30764975868
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000340874976076  Variance: 0.000159125023924
+
+   Completed iteration 8, pert 1 (DeltaV.Element1 = 0.0028)
+   Completed iteration 8, pert 2 (DeltaV.Element1 = 0.0012146870825)
+
+DC Iteration 9; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0028, DeltaV.Element1 = 0.00118757225133
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6732.86777284  Variance: 1.13222716174
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000362221703452  Variance: 0.000137778296548
+
+   Completed iteration 9, pert 1 (DeltaV.Element1 = 0.0029)
+   Completed iteration 9, pert 2 (DeltaV.Element1 = 0.00123757225133)
+
+DC Iteration 10; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0029, DeltaV.Element1 = 0.00121031658524
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.04320685  Variance: 0.95679314852
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000383569830095  Variance: 0.000116430169905
+
+   Completed iteration 10, pert 1 (DeltaV.Element1 = 0.003)
+   Completed iteration 10, pert 2 (DeltaV.Element1 = 0.00126031658524)
+
+DC Iteration 11; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.003, DeltaV.Element1 = 0.00123292575507
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.21865228  Variance: 0.781347717948
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000404919357849  Variance: 9.50806421513e-05
+
+   Completed iteration 11, pert 1 (DeltaV.Element1 = 0.0031)
+   Completed iteration 11, pert 2 (DeltaV.Element1 = 0.00128292575507)
+
+DC Iteration 12; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0031, DeltaV.Element1 = 0.00125540514504
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.39410913  Variance: 0.605890868952
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000426270289332  Variance: 7.37297106683e-05
+
+   Completed iteration 12, pert 1 (DeltaV.Element1 = 0.0032)
+   Completed iteration 12, pert 2 (DeltaV.Element1 = 0.00130540514504)
+
+DC Iteration 13; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0032, DeltaV.Element1 = 0.00127775975194
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.5695774  Variance: 0.430422600465
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000447622628616  Variance: 5.23773713842e-05
+
+   Completed iteration 13, pert 1 (DeltaV.Element1 = 0.0033)
+   Completed iteration 13, pert 2 (DeltaV.Element1 = 0.00132775975194)
+
+DC Iteration 14; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0033, DeltaV.Element1 = 0.00129999441716
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.74505709  Variance: 0.254942911414
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000468976383001  Variance: 3.1023616999e-05
+
+   Completed iteration 14, pert 1 (DeltaV.Element1 = 0.0034)
+   Completed iteration 14, pert 2 (DeltaV.Element1 = 0.00134999441716)
+
+DC Iteration 15; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.0034, DeltaV.Element1 = 0.00132211371441
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.9205482  Variance: 0.0794518007278
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000490331569678  Variance: 9.66843032179e-06
+
+
+*** Targeting Completed in 15 iterations.
+*** The Targeter converged!
+Final Variable values:
+   DeltaV.Element1 = 0.0034
+   DeltaV.Element1 = 0.00132211371441
+
+AUDIT_HEARTBEAT seconds=20
+********************************************************
+*** Performing Differential Correction (using "DC")
+*** 2 variables; 2 goals
+   Variables:  DeltaV.Element1, DeltaV.Element1
+   Goals:  LEOsat.Earth.SMA, LEOsat.Earth.ECC
+   SolverMode:  Solve
+********************************************************
+DC Iteration 1; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.001, DeltaV.Element1 = 0.001
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.10408672  Variance: 0.895913280192
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000850506751459  Variance: -0.000350506751459
+
+   Completed iteration 1, pert 1 (DeltaV.Element1 = 0.00105)
+   Completed iteration 1, pert 2 (DeltaV.Element1 = 0.00105)
+
+DC Iteration 2; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.00128898353674, DeltaV.Element1 = 0.002
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6733.61114797  Variance: 0.388852028254
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.000652585055122  Variance: -0.000152585055122
+
+   Completed iteration 2, pert 1 (DeltaV.Element1 = 0.00133898353674)
+   Completed iteration 2, pert 2 (DeltaV.Element1 = 0.00205)
+
+DC Iteration 3; Nominal Pass
+   Variables:  DeltaV.Element1 = 0.00151057301706, DeltaV.Element1 = 0.00277173846813
+   Goals and achieved values:
+      LEOsat.Earth.SMA  Desired: 6734  Achieved: 6734.00002171  Variance: -2.17148981392e-05
+      LEOsat.Earth.ECC  Desired: 0.0005  Achieved: 0.0005002142484  Variance: -2.14248400248e-07
+
+
+*** Targeting Completed in 3 iterations.
+*** The Targeter converged!
+Final Variable values:
+   DeltaV.Element1 = 0.00151057301706
+   DeltaV.Element1 = 0.00277173846813
+
+
+Mission run completed.
+===> Total Run Time: 29.661 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=1
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=10001 title=DefaultOrbitView size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=10001 title=DefaultOrbitView size=498x368
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=(LEOsat.A1ModJulian) vs (LEOsat.Earth.Altitude) size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=(LEOsat.A1ModJulian) vs (LEOsat.Earth.Altitude) size=498x368
+AUDIT_SCREENSHOT result=0
+
+(ExampleSweep:19): Gtk-WARNING **: 14:14:22.823: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46013 title=Solver Window - Target DC {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=798x568
+AUDIT_SCREENSHOT result=0
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+WindowEventHandler::handle WARNING: OpenGL context was not properly updated during RESIZE event. Rendering artifacts may occur.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46013 title=Solver Window - Target DC {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true}; size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:14:24 GMAT GUI exiting.

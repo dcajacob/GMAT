@@ -1,0 +1,233 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:26 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:26 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+*** WARNING *** "IndVar" field of XYPlot on object "CostPlot" is deprecated and will be removed from a future build; please use "XVariable" instead.
+*** WARNING *** "Add" field of XYPlot on object "CostPlot" is deprecated and will be removed from a future build; please use "YVariables" instead.
+*** WARNING *** "Grid" field of XYPlot on object "CostPlot" is deprecated and will be removed from a future build; please use "ShowGrid" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Eq" already exists, so ignored in line:
+   " 101: Create CoordinateSystem EarthMJ2000Eq;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 102: GMAT EarthMJ2000Eq.Origin = Earth;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 103: GMAT EarthMJ2000Eq.Axes = MJ2000Eq;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 104: GMAT EarthMJ2000Eq.UpdateInterval = 60;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 105: GMAT EarthMJ2000Eq.OverrideOriginInterval = false;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Ec" already exists, so ignored in line:
+   " 107: Create CoordinateSystem EarthMJ2000Ec;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 108: GMAT EarthMJ2000Ec.Origin = Earth;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 109: GMAT EarthMJ2000Ec.Axes = MJ2000Ec;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 110: GMAT EarthMJ2000Ec.UpdateInterval = 60;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 111: GMAT EarthMJ2000Ec.OverrideOriginInterval = false;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthFixed" already exists, so ignored in line:
+   " 113: Create CoordinateSystem EarthFixed;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 114: GMAT EarthFixed.Origin = Earth;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 115: GMAT EarthFixed.Axes = BodyFixed;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 116: GMAT EarthFixed.UpdateInterval = 60;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 117: GMAT EarthFixed.OverrideOriginInterval = false;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot create an object "SQPfmincon". The "FminconOptimizer" is an unknown object type or invalid object name or dimension in line:
+   " 122: Create FminconOptimizer SQPfmincon;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 123: GMAT SQPfmincon.ShowProgress = true;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 124: GMAT SQPfmincon.ReportStyle = 'Normal';"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 125: GMAT SQPfmincon.TargeterTextFile = 'FminconOptimizerSQPfmincon.data';"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 126: GMAT SQPfmincon.MaximumIterations = 25;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 127: GMAT SQPfmincon.Tolerance = 0;"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 128: GMAT SQPfmincon.FunctionPath = '';"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 129: GMAT SQPfmincon.SourceType = 'MATLAB';"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 130: GMAT SQPfmincon.DiffMaxChange = '0.1';"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 131: GMAT SQPfmincon.DiffMinChange = '0.00001';"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 132: GMAT SQPfmincon.MaxFunEvals = '1000';"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 133: GMAT SQPfmincon.MaxIter = '100';"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 134: GMAT SQPfmincon.TolX = '0.001';"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 135: GMAT SQPfmincon.TolFun = '0.00001';"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 136: GMAT SQPfmincon.TolCon = '0.00001';"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 137: GMAT SQPfmincon.DerivativeCheck = 'Off';"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 138: GMAT SQPfmincon.Diagnostics = 'On';"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 139: GMAT SQPfmincon.Display = 'Iter';"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 140: GMAT SQPfmincon.GradObj = 'Off';"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   " 141: GMAT SQPfmincon.GradConstr = 'Off';"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "DefaultOpenGL" is no longer in use in line:
+   " 149: GMAT DefaultOpenGL.OrbitColor = [ 255 32768 ];"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "DefaultOpenGL" is no longer in use in line:
+   " 150: GMAT DefaultOpenGL.TargetColor = [ 8421440 0 ];"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_LowEarthMinFuelTransfer.report" - specified path does not exist.
+ in line:
+   " 172: GMAT IterateData.Filename = './output/SampleMissions/Ex_LowEarthMinFuelTransfer.report';"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "RefEpoch" to "Sat.A1ModJulian" is not allowed before BeginMissionSequence in line:
+   " 221: GMAT RefEpoch = Sat.A1ModJulian;"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Optimize in line:
+   " 228: Optimize SQPfmincon;"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "Iterate" to "Iterate + 1" is not allowed before BeginMissionSequence in line:
+   " 231:    GMAT Iterate = Iterate + 1;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 238:    Vary SQPfmincon(dV1Time = 0.1, {Lower = -.5, Upper = 0.5, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 10});"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "PropEpoch" to "RefEpoch + dV1Time" is not allowed before BeginMissionSequence in line:
+   " 239:    GMAT PropEpoch = RefEpoch + dV1Time;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 251:    Vary SQPfmincon(dv1.Element1 = 0.1, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 252:    Vary SQPfmincon(dv1.Element2 = 0.01, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 253:    Vary SQPfmincon(dv1.Element3 = 0.01, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 261:    Vary SQPfmincon(TOF = 0.3, {Lower = 0, Upper = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 10});"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "PropEpoch" to "RefEpoch + TOF" is not allowed before BeginMissionSequence in line:
+   " 262:    GMAT PropEpoch = RefEpoch + TOF;"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 269:    Vary SQPfmincon(dv2.Element1 = 0.1, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 270:    Vary SQPfmincon(dv2.Element2 = 0.01, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   " 271:    Vary SQPfmincon(dv2.Element3 = 0.01, {Lower = -5, Upper = 5, AdditiveScaleFactor = 0, MultiplicativeScaleFactor = 1});"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "Constraint1" to "Sat.SMA/10000" is not allowed before BeginMissionSequence in line:
+   " 279:    GMAT Constraint1 = Sat.SMA/10000;"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "Constraint2" to "Sat.ECC" is not allowed before BeginMissionSequence in line:
+   " 280:    GMAT Constraint2 = Sat.ECC;"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "Constraint3" to "Sat.INC" is not allowed before BeginMissionSequence in line:
+   " 281:    GMAT Constraint3 = Sat.INC;"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   " 283:    NonlinearConstraint SQPfmincon(Constraint1=1);    % SMA Constraint"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   " 284:    NonlinearConstraint SQPfmincon(Constraint2=0.05);    % ECC Constraint "
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   " 285:    NonlinearConstraint SQPfmincon(Constraint3=5);    % INC Constraint"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "dV1mag" to "sqrt( dv1.Element1^2 + dv1.Element2^2 + dv1.Element3^2 )" is not allowed before BeginMissionSequence in line:
+   " 290:    GMAT dV1mag = sqrt( dv1.Element1^2 + dv1.Element2^2 + dv1.Element3^2 );"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "dV2mag" to "sqrt( dv2.Element1^2 + dv2.Element2^2 + dv2.Element3^2 )" is not allowed before BeginMissionSequence in line:
+   " 291:    GMAT dV2mag = sqrt( dv2.Element1^2 + dv2.Element2^2 + dv2.Element3^2 );"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Setting "Cost" to "( dV1mag + dV2mag )" is not allowed before BeginMissionSequence in line:
+   " 292:    GMAT Cost = ( dV1mag + dV2mag );"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Minimize in line:
+   " 293:    Minimize SQPfmincon(Cost);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/28c22155e460/repo/doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:27 GMAT GUI exiting.

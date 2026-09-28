@@ -1,0 +1,257 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:46 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:46 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/09a05362e85d/repo/application/samples/Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/09a05362e85d/repo/application/samples/Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file '../samples/SupportFiles/Simulate DSN Range and Doppler Data 3 weeks.gmd' has 1348 of 1348 records used for estimation.
+Total number of load records : 1348
+
+List of tracking configurations (present in participant ID) for load records from data file '../samples/SupportFiles/Simulate DSN Range and Doppler Data 3 weeks.gmd':
+   Config 0: {{22222,11111,22222},DSN_SeqRange}
+   Config 1: {{22222,11111,22222},DSN_TCP}
+   Config 2: {{33333,11111,33333},DSN_SeqRange}
+   Config 3: {{33333,11111,33333},DSN_TCP}
+   Config 4: {{44444,11111,44444},DSN_SeqRange}
+   Config 5: {{44444,11111,44444},DSN_TCP}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.025: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.025: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.025: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.037: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.048: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.049: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.049: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.049: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.050: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:19): Gtk-WARNING **: 14:10:47.050: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+********************************************************
+    Performing Estimation (using "bat")
+    
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   27253.5004170646030092592593 A.1 modified Julian
+   27253.5004166666666666666665 TAI modified Julian
+   19 Aug 2015 00:00:00.000 UTCG
+   Sat.SunMJ2000Eq.X = -126544963
+   Sat.SunMJ2000Eq.Y = 61978518
+   Sat.SunMJ2000Eq.Z = 24133225
+   Sat.SunMJ2000Eq.VX = -13.789
+   Sat.SunMJ2000Eq.VY = -24.673
+   Sat.SunMJ2000Eq.VZ = -10.662
+
+AUDIT_HEARTBEAT seconds=10
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 0
+Number of records used for estimation: 1348
+Variable Step Integration Statistics (bat):
+    30240 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 1814400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :  30240
+
+   WeightedRMS residuals for this iteration : 1459.92640728
+   BestRMS residuals                        : 1459.92640728
+   PredictedRMS residuals for next iteration: 1.02862086927
+
+------------------------------------------------------
+Iteration 1
+
+Current estimated state:
+   Estimation Epoch:
+   27253.5004170646030092592593 A.1 modified Julian
+   27253.5004166666666666666665 TAI modified Julian
+   19 Aug 2015 00:00:00.000 UTCG
+   Sat.SunMJ2000Eq.X = -126544970.43
+   Sat.SunMJ2000Eq.Y = 61978508.9401
+   Sat.SunMJ2000Eq.Z = 24133222.7308
+   Sat.SunMJ2000Eq.VX = -13.7889991389
+   Sat.SunMJ2000Eq.VY = -24.6729999222
+   Sat.SunMJ2000Eq.VZ = -10.6620012173
+
+AUDIT_HEARTBEAT seconds=20
+AUDIT_HEARTBEAT seconds=30
+Number of Records Removed Due To:
+   . No Computed Value Configuration Available : 0
+   . Out of Ramp Table Range   : 0
+   . Signal Blocked : 0
+   . Initial RMS Sigma Filter  : 0
+   . Outer-Loop Sigma Editor : 2
+Number of records used for estimation: 1346
+Variable Step Integration Statistics (bat):
+    30240 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 1814400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :  30240
+
+   WeightedRMS residuals for this iteration : 1.02124514437
+   BestRMS residuals                        : 1.02124514437
+   PredictedRMS residuals for next iteration: 1.02122146477
+This iteration is converged due to relative convergence criteria.
+
+
+********************************************************
+*** Estimation Completed in 2 iterations
+********************************************************
+
+Estimation converged!
+      |1 - RMSP/RMSB| = | 1- 1.02122 / 1.02125| = 2.3187e-05 is less than RelativeTol, 0.0001
+
+Final Estimated State:
+
+   Estimation Epoch:
+   27253.5004170646030092592593 A.1 modified Julian
+   27253.5004166666666666666665 TAI modified Julian
+   19 Aug 2015 00:00:00.000 UTCG
+   Sat.SunMJ2000Eq.X = -126544970.106
+   Sat.SunMJ2000Eq.Y = 61978509.8355
+   Sat.SunMJ2000Eq.Z = 24133221.9692
+   Sat.SunMJ2000Eq.VX = -13.7889992518
+   Sat.SunMJ2000Eq.VY = -24.6729999404
+   Sat.SunMJ2000Eq.VZ = -10.662001035
+
+Final Covariance Matrix:
+
+         6.564064462156e+00         1.045463057987e+01         3.080801165669e+00        -2.344782487585e-06         5.031583831228e-07         1.602237422578e-06
+         1.045463055467e+01         2.047407447489e+01        -4.325209468217e+00        -3.706732774088e-06         2.029269142685e-07         3.973798960549e-06
+         3.080801226566e+00        -4.325209359402e+00         2.374053857793e+01        -1.167700464596e-06         1.680758115945e-06        -2.680343810167e-06
+        -2.344782488993e-06        -3.706732785245e-06        -1.167700443712e-06         8.381687285601e-13        -1.657452747679e-13        -6.046037763528e-13
+         5.031583271397e-07         2.029268312634e-07         1.680758074791e-06        -1.657452546177e-13         1.030446854747e-12        -2.185878181372e-12
+         1.602237552384e-06         3.973799163621e-06        -2.680343740389e-06        -6.046038224814e-13        -2.185878157792e-12         5.765062667082e-12
+
+Final Correlation Matrix:
+
+             1.000000000000             0.901820562237             0.246792505845            -0.999655630227             0.193466375393             0.260458440665
+             0.901820560063             1.000000000000            -0.196182254961            -0.894794718103             0.044179898435             0.365764655262
+             0.246792510724            -0.196182250025             1.000000000000            -0.261770343347             0.339818590723            -0.229109556764
+            -0.999655630827            -0.894794720797            -0.261770338665             1.000000000000            -0.178345694830            -0.275044593421
+             0.193466353867             0.044179880364             0.339818582402            -0.178345673148             1.000000000000            -0.896832090655
+             0.260458461766             0.365764673953            -0.229109550800            -0.275044614406            -0.896832080981             1.000000000000
+
+********************************************************
+
+
+JSON file will be written to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/09a05362e85d/output/Orbit Estimation using DSN Range and Doppler Data.json
+Finished Writing Estimator JSON File.
+
+
+Mission run completed.
+===> Total Run Time: 38.130 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+WARNING: Glycin running without sandbox.
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=1 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=2 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=3 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=4 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=1 type=46004 title=bat_DSNsimData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=5 phase=2 type=46004 title=bat_DSNsimData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:11:30 GMAT GUI exiting.

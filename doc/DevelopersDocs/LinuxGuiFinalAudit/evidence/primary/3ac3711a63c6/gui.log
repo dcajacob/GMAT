@@ -1,0 +1,156 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:35 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:35 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent object "CompareStep" referenced during creating Wrapper for "EphProp.StepSize = CompareStep;" in line:
+   "  86: EphProp.StepSize = CompareStep;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: "CompareFrame" is nonexistent CallBuiltinGmatFunction Input Parameter. The allowed input values are : [Variable, Array, Array Element, String, Parameter] in line:
+   " 101: [eph1StartUtcg, initialState, eph1EndUtcg, finalState] = GetEphemStates('CCSDS-OEM', Sat1, 'UTCGregorian', CompareFrame);"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent or disallowed Report Variable: "Ephemeris1";
+Currently object fields are not allowed to report. It will not be added to Report in line:
+   " 111: Report ricCompare description Ephemeris1"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Failed to parse Report ricCompare description Ephemeris1 in line:
+   " 111: Report ricCompare description Ephemeris1"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent or disallowed Report Variable: "Sat1Id";
+Currently object fields are not allowed to report. It will not be added to Report in line:
+   " 113: Report ricCompare description Sat1Id"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Failed to parse Report ricCompare description Sat1Id in line:
+   " 113: Report ricCompare description Sat1Id"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: "CompareFrame" is nonexistent CallBuiltinGmatFunction Input Parameter. The allowed input values are : [Variable, Array, Array Element, String, Parameter] in line:
+   " 120: [eph2StartUtcg, initialState, eph2EndUtcg, finalState] = GetEphemStates('CCSDS-OEM', Sat2, 'UTCGregorian', CompareFrame);"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent or disallowed Report Variable: "Ephemeris2";
+Currently object fields are not allowed to report. It will not be added to Report in line:
+   " 130: Report ricCompare description Ephemeris2"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Failed to parse Report ricCompare description Ephemeris2 in line:
+   " 130: Report ricCompare description Ephemeris2"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent or disallowed Report Variable: "Sat2Id";
+Currently object fields are not allowed to report. It will not be added to Report in line:
+   " 132: Report ricCompare description Sat2Id"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Failed to parse Report ricCompare description Sat2Id in line:
+   " 132: Report ricCompare description Sat2Id"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 230: rv1(1,1) = Sat1.CompareFrame.X"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Y" in line:
+   " 231: rv1(2,1) = Sat1.CompareFrame.Y"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Z" in line:
+   " 232: rv1(3,1) = Sat1.CompareFrame.Z"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VX" in line:
+   " 233: rv1(4,1) = Sat1.CompareFrame.VX"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VY" in line:
+   " 234: rv1(5,1) = Sat1.CompareFrame.VY"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VZ" in line:
+   " 235: rv1(6,1) = Sat1.CompareFrame.VZ"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 237: rv2(1,1) = Sat2.CompareFrame.X"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Y" in line:
+   " 238: rv2(2,1) = Sat2.CompareFrame.Y"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Z" in line:
+   " 239: rv2(3,1) = Sat2.CompareFrame.Z"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VX" in line:
+   " 240: rv2(4,1) = Sat2.CompareFrame.VX"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VY" in line:
+   " 241: rv2(5,1) = Sat2.CompareFrame.VY"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VZ" in line:
+   " 242: rv2(6,1) = Sat2.CompareFrame.VZ"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 300: RMAG1 = Sqrt(Sat1.CompareFrame.X*Sat1.CompareFrame.X + Sat1.CompareFrame.Y*Sat1.CompareFrame.Y + Sat1.CompareFrame.Z*Sat1.CompareFrame.Z)"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 301: RMAG2 = Sqrt(Sat2.CompareFrame.X*Sat2.CompareFrame.X + Sat2.CompareFrame.Y*Sat2.CompareFrame.Y + Sat2.CompareFrame.Z*Sat2.CompareFrame.Z)"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent object "CompareStep" referenced during creating Wrapper for "compareEndMjd = compareEndMjd - CompareStep/86400;" in line:
+   " 312: compareEndMjd = compareEndMjd - CompareStep/86400;"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 329:    rv1(1,1) = Sat1.CompareFrame.X"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Y" in line:
+   " 330:    rv1(2,1) = Sat1.CompareFrame.Y"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Z" in line:
+   " 331:    rv1(3,1) = Sat1.CompareFrame.Z"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VX" in line:
+   " 332:    rv1(4,1) = Sat1.CompareFrame.VX"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VY" in line:
+   " 333:    rv1(5,1) = Sat1.CompareFrame.VY"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VZ" in line:
+   " 334:    rv1(6,1) = Sat1.CompareFrame.VZ"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 336:    rv2(1,1) = Sat2.CompareFrame.X"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Y" in line:
+   " 337:    rv2(2,1) = Sat2.CompareFrame.Y"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "Z" in line:
+   " 338:    rv2(3,1) = Sat2.CompareFrame.Z"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VX" in line:
+   " 339:    rv2(4,1) = Sat2.CompareFrame.VX"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VY" in line:
+   " 340:    rv2(5,1) = Sat2.CompareFrame.VY"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "VZ" in line:
+   " 341:    rv2(6,1) = Sat2.CompareFrame.VZ"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 418:    RMAG1 = Sqrt(Sat1.CompareFrame.X*Sat1.CompareFrame.X + Sat1.CompareFrame.Y*Sat1.CompareFrame.Y + Sat1.CompareFrame.Z*Sat1.CompareFrame.Z)"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script: **** ERROR **** Interpreter Exception: Nonexistent dependency name "CompareFrame" found for Parameter type "X" in line:
+   " 419:    RMAG2 = Sqrt(Sat2.CompareFrame.X*Sat2.CompareFrame.X + Sat2.CompareFrame.Y*Sat2.CompareFrame.Y + Sat2.CompareFrame.Z*Sat2.CompareFrame.Z)"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/3ac3711a63c6/repo/application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:36 GMAT GUI exiting.

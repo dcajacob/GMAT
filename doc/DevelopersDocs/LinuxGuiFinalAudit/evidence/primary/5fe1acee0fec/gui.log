@@ -1,0 +1,36 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:11:59 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:11:59 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/5fe1acee0fec/repo/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/5fe1acee0fec/repo/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/5fe1acee0fec/repo/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script: **** ERROR **** GmatBase Exception Thrown: The value of "/home/alex/api-stuff/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/DefaultSC.bsp" for field "OrbitSpiceKernelName" on object "DefaultSC" is not an allowed value.
+The allowed values are: [File must exist] in line:
+   "  28: GMAT DefaultSC.OrbitSpiceKernelName = {'/home/alex/api-stuff/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/DefaultSC.bsp'};"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/5fe1acee0fec/repo/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/5fe1acee0fec/repo/api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:11:59 GMAT GUI exiting.

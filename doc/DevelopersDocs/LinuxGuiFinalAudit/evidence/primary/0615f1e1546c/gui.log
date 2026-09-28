@@ -1,0 +1,71 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:10:15 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:10:16 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot create an object "SQPfmincon". The "VF13ad" is an unknown object type or invalid object name or dimension in line:
+   "  12: Create VF13ad SQPfmincon;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  14: SQPfmincon.ShowProgress          = true;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  15: SQPfmincon.ReportStyle           = Normal;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  16: SQPfmincon.ReportFile            = 'VF13adSQPfmincon.data';"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  17: SQPfmincon.MaximumIterations     = 200;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  18: SQPfmincon.Tolerance             = 1e-005;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  19: SQPfmincon.UseCentralDifferences = false;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+   "  20: SQPfmincon.FeasibilityTolerance  = .0001;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Optimize in line:
+   "  51: Optimize SQPfmincon {SolveMode = Solve, ExitMode = DiscardAndContinue};"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   "  54:    Vary 'Vary X1' SQPfmincon(X1 = 0, {Perturbation = 0.0000001, MaxStep = 9.999999e300, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+   "  55:    Vary 'Vary X2' SQPfmincon(X2 = 0, {Perturbation = 0.0000001, MaxStep = 9.999999e300, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Minimize in line:
+   "  59:    Minimize 'Minimize Cost (J)' SQPfmincon(J);"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script: **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   "  67:    NonlinearConstraint 'G = 8' SQPfmincon(G<=8);"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0615f1e1546c/repo/application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:10:16 GMAT GUI exiting.

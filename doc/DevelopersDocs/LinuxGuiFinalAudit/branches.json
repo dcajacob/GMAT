@@ -1,0 +1,402 @@
+{
+  "tested_integration": "397444d217d8f19a8697db26ec8a9036548fa61b",
+  "base": "9363e129be366520c6edb0b4079204ed60666007",
+  "main": "9363e129be366520c6edb0b4079204ed60666007",
+  "branches": [
+    {
+      "id": "LGUI-001",
+      "branch": "pr/de-header",
+      "head": "437c812a1684c7acac620d61f4e84b6cdb390cc5",
+      "integration_commit": "00f98cce80e95297eeeec2361e52e98efe0f03e2",
+      "files": [
+        "src/base/solarsys/DeFile.cpp",
+        "src/base/solarsys/DeFile.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-002",
+      "branch": "pr/wxwidgets-path",
+      "head": "42158c089d885b3cf52391d24d1f477027153358",
+      "integration_commit": "f3a66269d70a8ff16f49d02ec4acbafd19e4db63",
+      "files": [
+        "CMakeLists.txt"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-003",
+      "branch": "pr/groundtrack-map",
+      "head": "d7acd5aebeb1d1713c0e070fada626d896ce4a21",
+      "integration_commit": "e236844b3297e6bbbba3062223c55cf109dee99c",
+      "files": [
+        "src/base/subscriber/GroundTrack.cpp",
+        "src/gui/subscriber/GroundTrackArea.cpp",
+        "src/gui/subscriber/GroundTrackArea.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-004",
+      "branch": "pr/linux-layout",
+      "head": "4acd19e622b426e6c041daff158ed959abdb60ea",
+      "integration_commit": "dba102c8cc2ca367af5723dbd0eaac11b15cb9ea",
+      "files": [
+        "src/gui/app/GmatMainFrame.cpp",
+        "src/gui/app/GmatMainFrame.hpp",
+        "src/gui/mission/DecoratedTree.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-005",
+      "branch": "pr/linux-geometry",
+      "head": "b3e0c889e640b78a61cae9988fa6f05059d3ead7",
+      "integration_commit": "025e86c185b4ab22970211f29e014d2a303cd083",
+      "files": [
+        "src/gui/app/GmatApp.cpp",
+        "src/gui/app/GmatMainFrame.cpp",
+        "src/gui/app/GmatMainFrame.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-006",
+      "branch": "pr/linux-script-exit",
+      "head": "6e8f646ec3ba1bc37b19699e65d6ad9f62ae426b",
+      "integration_commit": "02fd4e4f5c91a57cb5d264d1981c4f7ebfbbdde7",
+      "files": [
+        "src/gui/app/GmatApp.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-007",
+      "branch": "pr/linux-plugin-lifetime",
+      "head": "596215497ff96757852400f334e64a968752ed88",
+      "integration_commit": "7321902c3fa4564f49aded6462c3b6e0eb49ca0b",
+      "files": [
+        "src/base/plugin/DynamicLibrary.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-008",
+      "branch": "pr/native-viewport",
+      "head": "097c67fc4036d57e9189676ae5a411eaec38bf6c",
+      "integration_commit": "b3e61889e716e1f6f49935b716469e2e124bc952",
+      "files": [
+        "src/gui/subscriber/GroundTrackCanvas.cpp",
+        "src/gui/subscriber/OrbitViewCanvas.cpp",
+        "src/gui/subscriber/ViewCanvas.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-009",
+      "branch": "pr/editor-reload",
+      "head": "fffdfe934f60b97939c7a4c4d28971a9dcc815d7",
+      "integration_commit": "bfe0c353d4e4ccc110bac3e45db7a2c146a038ed",
+      "files": [
+        "src/gui/foundation/GmatSavePanel.cpp",
+        "src/gui/view/EditorPanel.cpp",
+        "src/gui/view/ScriptEditor.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-010",
+      "branch": "pr/editor-save",
+      "head": "bd34b116e50c36e0ed931ea1fa512da956f55ed7",
+      "integration_commit": "d8f14d4237437b617fe854ca46e43b2dfe161353",
+      "files": [
+        "src/gui/app/ScriptPanel.cpp",
+        "src/gui/foundation/GmatSavePanel.cpp",
+        "src/gui/view/EditorPanel.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-011",
+      "branch": "pr/model-preview-context",
+      "head": "ba65591932e153cd25586cbd0c72838f248bdb4e",
+      "integration_commit": "a401cd960ec5a55463ba6e3a6be3a78f9e2354d1",
+      "files": [
+        "src/gui/spacecraft/VisualModelCanvas.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-017",
+      "branch": "pr/python-diagnostics",
+      "head": "91953c519cf1562cc876b009e462763e14fe9032",
+      "integration_commit": "b904b645f09c6fd1b69477642e27661b6b172926",
+      "files": [
+        "plugins/PythonInterfacePlugin/src/base/interface/PythonInterface.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-020",
+      "branch": "pr/python-return-conversion",
+      "head": "3ffc37638fa0a7ac7e4a6a5ffff2bd8453aae5eb",
+      "integration_commit": "c001a19dab337ac1f97e5623ada65269b3786a1f",
+      "files": [
+        "plugins/PythonInterfacePlugin/src/base/command/CallPythonFunction.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-020",
+      "branch": "pr/linux-python-extensions",
+      "head": "927e7fb46bacd88158fcdf1983d6d4cf63ae5315",
+      "integration_commit": "07b3989fe6ed9db993fa42b064ad175a632e34e2",
+      "files": [
+        "plugins/PythonInterfacePlugin/src/base/CMakeLists.txt",
+        "plugins/PythonInterfacePlugin/src/base/interface/PythonInterface.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-018",
+      "branch": "pr/orbitview-plane-alias",
+      "head": "001400757fedd2c2675477657e2808d02fdccf60",
+      "integration_commit": "2791d7c1e752c1cd5cd07d19de67ca463533a94d",
+      "files": [
+        "plugins/OVtoOFI/src/base/subscriber/OVtoOFI.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-021",
+      "branch": "pr/tle-examples",
+      "head": "2b4b9f27c372a32d13c39f913e8e9adcdd36c456",
+      "integration_commit": "584c63e2538f8d9cbb9faec56b9700450ebc20cd",
+      "files": [
+        "plugins/TLEPropagatorPlugin/doc/README-TlePropagator.txt",
+        "plugins/TLEPropagatorPlugin/doc/source/Scripting.rst",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/BuildFormationScript.py",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Contacts.script",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/GSFCSats.script",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/PropLightsail2.script",
+        "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Starlink.script",
+        "plugins/TLEPropagatorPlugin/test/TLE/BasicPropagation.script",
+        "plugins/TLEPropagatorPlugin/test/scripts/BasicPropagation.script",
+        "plugins/TLEPropagatorPlugin/test/scripts/MMS1Propagation.script",
+        "plugins/TLEPropagatorPlugin/test/scripts/TdrsPropagation.script",
+        "plugins/TLEPropagatorPlugin/test/scripts/TerraPropagation.script"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-022",
+      "branch": "pr/satellite-separation-example",
+      "head": "12e10aa7f3449f51bcf7a9594c0ab98597a26a24",
+      "integration_commit": "9c7c2429694f00eae504e8ce073a3e1fb98ebad5",
+      "files": [
+        "doc/SystemDocs/ArchitecturalSpecification/script/BasicFunction.script",
+        "doc/SystemDocs/ArchitecturalSpecification/script/SatSep.gmf",
+        "doc/SystemDocs/ArchitecturalSpecification/script/dot.gmf"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-023",
+      "branch": "pr/global-function-example",
+      "head": "b1ca38c217037698184794bdd31ee95565b08c37",
+      "integration_commit": "4f4f077c712358f2a8fada1e3c276c4a9afbb862",
+      "files": [
+        "doc/SystemDocs/ArchitecturalSpecification/script/GlobalSample.script",
+        "doc/SystemDocs/ArchitecturalSpecification/script/RaiseApogee.gmf"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-024",
+      "branch": "pr/force-model-tutorial",
+      "head": "0350a31697c518fb681f73c8ca1c79894a988ef3",
+      "integration_commit": "631051823e76fb503f42fb30b34424beed258383",
+      "files": [
+        "doc/help/src/files/scripts/ForceModelsTutorial.script"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-025",
+      "branch": "pr/sensor-contact-example",
+      "head": "746cdb101bd2afc4a66079ab12ccb571e3d5bc99",
+      "integration_commit": "18029f89f280ade0e1903b72dbff43ff5bd16946",
+      "files": [
+        "doc/SystemDocs/ComponentDesigns/SensorAccess/source/scripts/R2020a_BasicSensors.script"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-026",
+      "branch": "pr/groundtrack-runtime",
+      "head": "230bd15efacf7056746ef4914f095a9288912a4c",
+      "integration_commit": "b40f40bc3f3b401759e1455dafa03f235b8f8cf0",
+      "files": [
+        "src/base/subscriber/GroundTrack.cpp",
+        "src/base/subscriber/GroundTrack.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-029",
+      "branch": "pr/groundtrack-sampling",
+      "head": "548bec34370ade1964ba42fffa876f01bacc85d2",
+      "integration_commit": "569a91d231f213f8b4289d04bcf4b257610e45e3",
+      "files": [
+        "src/base/subscriber/GroundTrack.cpp",
+        "src/base/subscriber/GroundTrack.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-030",
+      "branch": "pr/groundtrack-window-lookup",
+      "head": "4489b59bf1a2ccbc5abdca0e9b41e4752f3efc80",
+      "integration_commit": "4c7feb215d9daa0d5704ae05dfbe379d0844119b",
+      "files": [
+        "src/gui/app/GuiPlotReceiver.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-028",
+      "branch": "pr/native-wheel-zoom",
+      "head": "ea64c9fb581a4e7cc4abf073ae02638685c6d252",
+      "integration_commit": "19dd83be5c7602c4457548c56c4f844da884da70",
+      "files": [
+        "src/gui/subscriber/OrbitViewCanvas.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-027",
+      "branch": "pr/native-plot-text",
+      "head": "57f4031b0a3f5c56a39705d2832b02c9c5b8329a",
+      "integration_commit": "979c0d644ba10c972fbb718ae1930bc534973252",
+      "files": [
+        "src/gui/rendering/GmatOpenGLSupport.cpp",
+        "src/gui/rendering/GmatOpenGLSupport.hpp",
+        "src/gui/subscriber/ViewCanvas.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-031",
+      "branch": "pr/groundtrack-station-markers",
+      "head": "934e3b852cdff8b45a7625833cd36dcec7906c1d",
+      "integration_commit": "daf193ed67d2240cecc04940a09cc9b1e40a18c1",
+      "files": [
+        "src/gui/subscriber/GroundTrackArea.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-032",
+      "branch": "pr/groundtrack-editor-output",
+      "head": "33098ec0bb68428eabef63ea29650b63494ccdd2",
+      "integration_commit": "a0a5a7078f305346af8a39bd5f64bc0147d28d3c",
+      "files": [
+        "src/gui/output/OutputTree.cpp",
+        "src/gui/subscriber/GroundTrackPlotPanel.cpp",
+        "src/gui/subscriber/GroundTrackPlotPanel.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-033",
+      "branch": "pr/tree-theme-colors",
+      "head": "246cdd40f3a35a63f53bb21bce68f33feee81ae8",
+      "integration_commit": "4c742c8e108140393a02b2038676a1a10ec46cdf",
+      "files": [
+        "src/gui/app/GmatMainFrame.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-035",
+      "branch": "pr/native-animation-replay",
+      "head": "b07be71d2e1c382c59d9cd7186dba1d53c2ab0ce",
+      "integration_commit": "cd2eacad668e4a9f8e986c9049a7f98d00102f33",
+      "files": [
+        "src/gui/subscriber/OrbitViewCanvas.cpp",
+        "src/gui/subscriber/ViewCanvas.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-036",
+      "branch": "pr/resource-delete-menu",
+      "head": "57e22b63e052bd62f6e75da1b76adb6d3be76418",
+      "integration_commit": "ba5bc315deb8b8346c0ce8ac9d7d044e87f6d91b",
+      "files": [
+        "src/gui/app/ResourceTree.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-037",
+      "branch": "pr/groundtrack-state-mapping",
+      "head": "a8d0e9a74126a630bd582df7f5b39df84f42ea31",
+      "integration_commit": "2ea51e533646e7dab343df103c242b93a461cdf2",
+      "files": [
+        "src/base/subscriber/GroundTrack.cpp",
+        "src/base/subscriber/GroundTrack.hpp",
+        "src/gui/subscriber/GroundTrackArea.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-038",
+      "branch": "pr/groundtrack-direct-close",
+      "head": "9bcf367653045528c3d8c1a4b2bc0db82b941786",
+      "integration_commit": "f327cf93c381982979aaec1070869f9e592e0cc7",
+      "files": [
+        "src/gui/subscriber/GroundTrackWindow.cpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-039",
+      "branch": "pr/groundtrack-animation",
+      "head": "afe90a6789b4ffb13100a749fa5e87ff4e6a4b9d",
+      "integration_commit": "34140f6dd515d49bacf21b2a280bdaf3a88283ea",
+      "files": [
+        "src/gui/app/GmatMainFrame.cpp",
+        "src/gui/subscriber/GroundTrackArea.cpp",
+        "src/gui/subscriber/GroundTrackArea.hpp",
+        "src/gui/subscriber/GroundTrackWindow.cpp",
+        "src/gui/subscriber/GroundTrackWindow.hpp"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-040",
+      "branch": "pr/aura-reflection-map",
+      "head": "f6894739d36787634ffd9883bbd9ced025d749ae",
+      "integration_commit": "4210a0757126e5ee3b91a85c5a00a38678d1718f",
+      "files": [
+        "application/data/vehicle/models/README.md",
+        "application/data/vehicle/models/aura.3ds"
+      ],
+      "fork_matches": true
+    },
+    {
+      "id": "LGUI-041",
+      "branch": "pr/native-texture-rows",
+      "head": "27666c2d222cb1591d0d11cbec812d9ed677be78",
+      "integration_commit": "5189892891921afd59318bfe315c29b7ef2f03a5",
+      "files": [
+        "src/gui/rendering/ModelObject.cpp",
+        "src/gui/subscriber/ViewCanvas.cpp"
+      ],
+      "fork_matches": true
+    }
+  ]
+}

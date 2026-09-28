@@ -1,0 +1,46 @@
+[
+  {
+    "suite": "gui_followup",
+    "exit_code": 0
+  },
+  {
+    "suite": "gui_followup_more",
+    "exit_code": 0
+  },
+  {
+    "suite": "groundtrack_state",
+    "exit_code": 0
+  },
+  {
+    "suite": "groundtrack_close",
+    "exit_code": 0
+  },
+  {
+    "suite": "groundtrack_animation",
+    "exit_code": 0
+  },
+  {
+    "suite": "native_animation",
+    "exit_code": 0
+  },
+  {
+    "suite": "resource_delete",
+    "exit_code": 0
+  },
+  {
+    "suite": "openframes_time",
+    "exit_code": 0
+  },
+  {
+    "suite": "openframes_behavior",
+    "exit_code": 0
+  },
+  {
+    "suite": "aura_model",
+    "exit_code": 0
+  },
+  {
+    "suite": "texture_upload",
+    "exit_code": 0
+  }
+]

@@ -1,0 +1,387 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:08:43 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:08:43 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/b8f4a7253b46/repo/application/samples/Navigation/Ex_FilterSmoother_GpsPosVec.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/b8f4a7253b46/repo/application/samples/Navigation/Ex_FilterSmoother_GpsPosVec.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+AUDIT_BUILD_END success=1
+AUDIT_RUN_BEGIN
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Variable Step Integration Statistics (Sim):
+    1440 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   1440
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_FilterSmoother_GpsPosVec.gmd' has 145 of 145 records used for estimation.
+Total number of load records : 145
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_FilterSmoother_GpsPosVec.gmd':
+   Config 0: {{LEOSat.800},GPS_PosVec}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+********************************************************
+*** Performing Estimation (using "EKF")
+*** 
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   25357.5003939164548611111111 A.1 modified Julian
+   25357.5003935185185185185190 TAI modified Julian
+   10 Jun 2010 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 576.8
+   EstSat.EarthMJ2000Eq.Y = -5701.1
+   EstSat.EarthMJ2000Eq.Z = -4170.5
+   EstSat.EarthMJ2000Eq.VX = -1.7645
+   EstSat.EarthMJ2000Eq.VY = 4.1813
+   EstSat.EarthMJ2000Eq.VZ = -5.9658
+   EstSat.Cd = 2.2
+
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:44.995: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:44.995: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:44.995: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.013: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.025: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.026: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.026: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.026: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.027: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(ExampleSweep:22): Gtk-WARNING **: 14:08:45.028: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+Variable Step Integration Statistics (EKF):
+    1440 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   1440
+
+********************************************************
+*** Estimation Completed
+********************************************************
+
+Final Estimated State:
+
+   Estimation Epoch:
+   25358.5003939164548611111111 A.1 modified Julian
+   25358.5003935185185185185190 TAI modified Julian
+   11 Jun 2010 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 35.6758808431
+   EstSat.EarthMJ2000Eq.Y = 3764.83553945
+   EstSat.EarthMJ2000Eq.Z = 5989.52660518
+   EstSat.EarthMJ2000Eq.VX = 1.97298554583
+   EstSat.EarthMJ2000Eq.VY = -6.14014248594
+   EstSat.EarthMJ2000Eq.VZ = 3.83924607106
+   EstSat.Cd = 2.1056881429
+
+
+Final Covariance Matrix:
+
+         3.239260138851e-06        -2.835080075119e-06         1.431422528435e-06         1.098879302773e-10        -2.081360313358e-09        -2.971790632904e-09         2.464702495912e-05
+        -2.835080075119e-06         1.134676039830e-05        -5.315781250600e-06        -2.707978908738e-10         7.420539581704e-09         9.436313864322e-09        -8.880129494301e-05
+         1.431422528435e-06        -5.315781250600e-06         3.854218925858e-06        -1.963767554317e-10        -2.736413352422e-09        -5.439254255841e-09         3.346196656985e-05
+         1.098879302773e-10        -2.707978908738e-10        -1.963767554317e-10         2.766975242918e-12         2.581573761828e-13        -3.809900207460e-13         2.146008791946e-09
+        -2.081360313358e-09         7.420539581704e-09        -2.736413352422e-09         2.581573761828e-13         5.640753651414e-12         5.962812760123e-12        -6.895394157559e-08
+        -2.971790632904e-09         9.436313864322e-09        -5.439254255841e-09        -3.809900207460e-13         5.962812760123e-12         9.466463316231e-12        -8.869169561481e-08
+         2.464702495912e-05        -8.880129494301e-05         3.346196656985e-05         2.146008791946e-09        -6.895394157559e-08        -8.869169561481e-08         2.511112447691e-02
+Final Correlation Matrix:
+
+             1.000000000000            -0.467634424920             0.405113527059             0.036704933664            -0.486917954978            -0.536662708205             0.086418855635
+            -0.467634424920             1.000000000000            -0.803827702040            -0.048328876439             0.927536432656             0.910484501223            -0.166360522743
+             0.405113527059            -0.803827702040             1.000000000000            -0.060133883760            -0.586874101202            -0.900486678200             0.107559850703
+             0.036704933664            -0.048328876439            -0.060133883760             1.000000000000             0.065345146373            -0.074441837663             0.008141337892
+            -0.486917954978             0.927536432656            -0.586874101202             0.065345146373             1.000000000000             0.815997310656            -0.183213490814
+            -0.536662708205             0.910484501223            -0.900486678200            -0.074441837663             0.815997310656             1.000000000000            -0.181909759328
+             0.086418855635            -0.166360522743             0.107559850703             0.008141337892            -0.183213490814            -0.181909759328             1.000000000000
+
+********************************************************
+
+
+
+EstSat.DateFormat = 'UTCGregorian';
+EstSat.Epoch = '11 Jun 2010 00:00:00.000';
+EstSat.CoordinateSystem = 'EarthMJ2000Eq';
+EstSat.DisplayStateType = 'Cartesian';
+EstSat.X = 35.67588084307629;
+EstSat.Y = 3764.835539447669;
+EstSat.Z = 5989.526605182232;
+EstSat.VX = 1.972985545834698;
+EstSat.VY = -6.140142485939195;
+EstSat.VZ = 3.839246071061165;
+EstSat.DryMass = 50;
+EstSat.Cd = 2.105688142901002;
+EstSat.Cr = 1.8;
+EstSat.DragArea = 10;
+EstSat.SRPArea = 10;
+EstSat.SPADDragScaleFactor = 1;
+EstSat.SPADSRPScaleFactor = 1;
+EstSat.AtmosDensityScaleFactor = 1;
+EstSat.ExtendedMassPropertiesModel = 'None';
+EstSat.PowerSystem = '';
+EstSat.NAIFId = -10002001;
+EstSat.NAIFIdReferenceFrame = -9002001;
+EstSat.SpiceFrameId = '';
+EstSat.OrbitColor = 'Green';
+EstSat.TargetColor = 'LightGray';
+EstSat.OrbitErrorCovariance = [ 3.239260138851458e-06 -2.835080075119244e-06 1.431422528435045e-06 1.098879302772883e-10 -2.08136031335811e-09 -2.971790632903832e-09 ; -2.835080075119244e-06 1.134676039830333e-05 -5.315781250599772e-06 -2.707978908737705e-10 7.420539581704018e-09 9.436313864322332e-09 ; 1.431422528435045e-06 -5.315781250599772e-06 3.854218925857856e-06 -1.96376755431715e-10 -2.736413352422285e-09 -5.439254255841348e-09 ; 1.098879302772883e-10 -2.707978908737705e-10 -1.96376755431715e-10 2.766975242917645e-12 2.581573761828465e-13 -3.809900207459582e-13 ; -2.08136031335811e-09 7.420539581704018e-09 -2.736413352422285e-09 2.581573761828465e-13 5.640753651414424e-12 5.962812760122588e-12 ; -2.971790632903832e-09 9.436313864322332e-09 -5.439254255841348e-09 -3.809900207459582e-13 5.962812760122588e-12 9.466463316230933e-12 ];
+EstSat.ProcessNoiseModel = 'SNC';
+EstSat.CdSigma = 0.158464899826155;
+EstSat.CrSigma = 1e+70;
+EstSat.Id = 'LEOSat';
+EstSat.Attitude = 'CoordinateSystemFixed';
+EstSat.SPADSRPFile = '';
+EstSat.SPADSRPInterpolationMethod = 'Bilinear';
+EstSat.SPADSRPScaleFactorSigma = 1e+70;
+EstSat.SPADDragFile = '';
+EstSat.SPADDragInterpolationMethod = 'Bilinear';
+EstSat.SPADDragScaleFactorSigma = 1e+70;
+EstSat.AtmosDensityScaleFactorSigma = 1e+70;
+EstSat.AddHardware = {'GpsReceiver', 'GpsAntenna'};
+EstSat.SolveFors = {'CartesianState', 'FogmCd'};
+EstSat.ModelFile = 'aura.3ds';
+EstSat.ModelOffsetX = 0;
+EstSat.ModelOffsetY = 0;
+EstSat.ModelOffsetZ = 0;
+EstSat.ModelRotationX = 0;
+EstSat.ModelRotationY = 0;
+EstSat.ModelRotationZ = 0;
+EstSat.ModelScale = 1;
+EstSat.AttitudeDisplayStateType = 'Quaternion';
+EstSat.AttitudeRateDisplayStateType = 'AngularVelocity';
+EstSat.AttitudeCoordinateSystem = EarthMJ2000Eq;
+EstSat.EulerAngleSequence = '321';
+
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_FilterSmoother_GpsPosVec.gmd' has 145 of 145 records used for estimation.
+Total number of load records : 145
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_FilterSmoother_GpsPosVec.gmd':
+   Config 0: {{LEOSat.800},GPS_PosVec}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+Number of thrown records due to:
+     .Invalid measurement value : 0
+     .Record duplication or time order : 0
+Data file 'Ex_FilterSmoother_GpsPosVec.gmd' has 145 of 145 records used for estimation.
+Total number of load records : 145
+
+List of tracking configurations (present in participant ID) for load records from data file 'Ex_FilterSmoother_GpsPosVec.gmd':
+   Config 0: {{LEOSat.800},GPS_PosVec}
+
+****   No tracking configuration was generated because the tracking configuration is defined in the script.
+********************************************************
+*** Performing Estimation (using "FPS")
+*** 
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   25358.5003939164548611111111 A.1 modified Julian
+   25358.5003935185185185185190 TAI modified Julian
+   11 Jun 2010 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 35.6758808431
+   EstSat.EarthMJ2000Eq.Y = 3764.83553945
+   EstSat.EarthMJ2000Eq.Z = 5989.52660518
+   EstSat.EarthMJ2000Eq.VX = 1.97298554583
+   EstSat.EarthMJ2000Eq.VY = -6.14014248594
+   EstSat.EarthMJ2000Eq.VZ = 3.83924607106
+   EstSat.Cd = 2.1056881429
+
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Variable Step Integration Statistics (FPS):
+    1440 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 86400.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :   1440
+Variable Step Integration Statistics (FPS):
+    0 steps taken
+
+********************************************************
+*** Estimation Completed
+********************************************************
+
+Final Estimated State:
+
+   Estimation Epoch:
+   25358.5003939164548611111111 A.1 modified Julian
+   25358.5003935185185185185190 TAI modified Julian
+   11 Jun 2010 00:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 35.6758808431
+   EstSat.EarthMJ2000Eq.Y = 3764.83553945
+   EstSat.EarthMJ2000Eq.Z = 5989.52660518
+   EstSat.EarthMJ2000Eq.VX = 1.97298554583
+   EstSat.EarthMJ2000Eq.VY = -6.14014248594
+   EstSat.EarthMJ2000Eq.VZ = 3.83924607106
+   EstSat.Cd = 2.1056881429
+
+Final Covariance Matrix:
+
+         3.239257719325e-06        -2.835071358647e-06         1.431419243721e-06         1.098877196398e-10        -2.081353545191e-09        -2.971781927270e-09         2.464456049180e-05
+        -2.835071358647e-06         1.134672899431e-05        -5.315769416429e-06        -2.707971320088e-10         7.420515197098e-09         9.436282499437e-09        -8.879241566785e-05
+         1.431419243721e-06        -5.315769416429e-06         3.854214466167e-06        -1.963770413583e-10        -2.736404163514e-09        -5.439242436415e-09         3.345862069076e-05
+         1.098877196398e-10        -2.707971320088e-10        -1.963770413583e-10         2.766975224298e-12         2.581579653908e-13        -3.809892628044e-13         2.145794212144e-09
+        -2.081353545191e-09         7.420515197098e-09        -2.736404163514e-09         2.581579653908e-13         5.640734717131e-12         5.962788405861e-12        -6.894704684867e-08
+        -2.971781927270e-09         9.436282499437e-09        -5.439242436415e-09        -3.809892628044e-13         5.962788405861e-12         9.466431990330e-12        -8.868282730152e-08
+         2.464456049180e-05        -8.879241566785e-05         3.345862069076e-05         2.145794212144e-09        -6.894704684867e-08        -8.868282730152e-08         2.510861361527e-02
+
+Final Correlation Matrix:
+
+             1.000000000000            -0.467633808948             0.405112983111             0.036704877138            -0.486917370683            -0.536662224466             0.086414567251
+            -0.467633808948             1.000000000000            -0.803827489944            -0.048328808047             0.927536224963             0.910484241328            -0.166352435483
+             0.405112983111            -0.803827489944             1.000000000000            -0.060134006308            -0.586873454983            -0.900486732349             0.107554535285
+             0.036704877138            -0.048328808047            -0.060134006308             1.000000000000             0.065345405406            -0.074441812989             0.008140930882
+            -0.486917370683             0.927536224963            -0.586873454983             0.065345405406             1.000000000000             0.815996697483            -0.183204638250
+            -0.536662224466             0.910484241328            -0.900486732349            -0.074441812989             0.815996697483             1.000000000000            -0.181900965429
+             0.086414567251            -0.166352435483             0.107554535285             0.008140930882            -0.183204638250            -0.181900965429             1.000000000000
+
+********************************************************
+
+
+
+EstSat.DateFormat = 'UTCGregorian';
+EstSat.Epoch = '11 Jun 2010 00:00:00.000';
+EstSat.CoordinateSystem = 'EarthMJ2000Eq';
+EstSat.DisplayStateType = 'Cartesian';
+EstSat.X = 35.67588084307629;
+EstSat.Y = 3764.835539447669;
+EstSat.Z = 5989.526605182232;
+EstSat.VX = 1.972985545834698;
+EstSat.VY = -6.140142485939195;
+EstSat.VZ = 3.839246071061165;
+EstSat.DryMass = 50;
+EstSat.Cd = 2.105688142901002;
+EstSat.Cr = 1.8;
+EstSat.DragArea = 10;
+EstSat.SRPArea = 10;
+EstSat.SPADDragScaleFactor = 1;
+EstSat.SPADSRPScaleFactor = 1;
+EstSat.AtmosDensityScaleFactor = 1;
+EstSat.ExtendedMassPropertiesModel = 'None';
+EstSat.PowerSystem = '';
+EstSat.NAIFId = -10002001;
+EstSat.NAIFIdReferenceFrame = -9002001;
+EstSat.SpiceFrameId = '';
+EstSat.OrbitColor = 'Green';
+EstSat.TargetColor = 'LightGray';
+EstSat.OrbitErrorCovariance = [ 3.239257719324619e-06 -2.835071358646757e-06 1.431419243720583e-06 1.098877196398024e-10 -2.081353545190713e-09 -2.971781927269521e-09 ; -2.835071358646757e-06 1.134672899431408e-05 -5.315769416429068e-06 -2.707971320088007e-10 7.420515197097666e-09 9.436282499436903e-09 ; 1.431419243720583e-06 -5.315769416429068e-06 3.854214466166635e-06 -1.963770413583334e-10 -2.736404163514425e-09 -5.439242436414776e-09 ; 1.098877196398024e-10 -2.707971320088007e-10 -1.963770413583334e-10 2.766975224298153e-12 2.58157965390824e-13 -3.809892628044482e-13 ; -2.081353545190713e-09 7.420515197097666e-09 -2.736404163514425e-09 2.58157965390824e-13 5.640734717131176e-12 5.962788405860961e-12 ; -2.971781927269521e-09 9.436282499436903e-09 -5.439242436414776e-09 -3.809892628044482e-13 5.962788405860961e-12 9.466431990330235e-12 ];
+EstSat.ProcessNoiseModel = 'SNC';
+EstSat.CdSigma = 0.1584569771744589;
+EstSat.CrSigma = 1e+70;
+EstSat.Id = 'LEOSat';
+EstSat.Attitude = 'CoordinateSystemFixed';
+EstSat.SPADSRPFile = '';
+EstSat.SPADSRPInterpolationMethod = 'Bilinear';
+EstSat.SPADSRPScaleFactorSigma = 1e+70;
+EstSat.SPADDragFile = '';
+EstSat.SPADDragInterpolationMethod = 'Bilinear';
+EstSat.SPADDragScaleFactorSigma = 1e+70;
+EstSat.AtmosDensityScaleFactorSigma = 1e+70;
+EstSat.AddHardware = {'GpsReceiver', 'GpsAntenna'};
+EstSat.SolveFors = {'CartesianState', 'FogmCd'};
+EstSat.ModelFile = 'aura.3ds';
+EstSat.ModelOffsetX = 0;
+EstSat.ModelOffsetY = 0;
+EstSat.ModelOffsetZ = 0;
+EstSat.ModelRotationX = 0;
+EstSat.ModelRotationY = 0;
+EstSat.ModelRotationZ = 0;
+EstSat.ModelScale = 1;
+EstSat.AttitudeDisplayStateType = 'Quaternion';
+EstSat.AttitudeRateDisplayStateType = 'AngularVelocity';
+EstSat.AttitudeCoordinateSystem = EarthMJ2000Eq;
+EstSat.EulerAngleSequence = '321';
+
+
+Mission run completed.
+===> Total Run Time: 6.006 seconds
+
+========================================
+AUDIT_RUN_END result=1 active_plots=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=1 type=46004 title=EKF_EstData_Residuals size=798x568
+AUDIT_SCREENSHOT result=0
+AUDIT_ACTIVE match=1 shown=1
+AUDIT_WINDOW index=0 phase=2 type=46004 title=EKF_EstData_Residuals size=498x368
+AUDIT_SCREENSHOT result=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:08:51 GMAT GUI exiting.

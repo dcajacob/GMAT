@@ -1,0 +1,25 @@
+{"script": "application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script", "status": "build_failed", "seconds": 1.24}
+{"script": "application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script", "status": "build_failed", "seconds": 1.19}
+{"script": "application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script", "status": "build_failed", "seconds": 1.13}
+{"script": "application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script", "status": "build_failed", "seconds": 1.45}
+{"script": "application/samples/Ex_EOPFileLocationFromScript.script", "status": "completed", "seconds": 9.42}
+{"script": "api-interop/gmat-monte/datasharing/ephemshare/ReadWriteBasics/readSPK.script", "status": "build_failed", "seconds": 1.19}
+{"script": "api-interop/gmat-monte/datasharing/DynamicsSharing/SimpleGmatScript.script", "status": "mission_failed", "seconds": 7.62}
+{"script": "application/api/Ex_R2020a_ToLuna.script", "status": "completed", "seconds": 6.66}
+{"script": "doc/SystemDocs/Tools/source/API/source/userguide/examples/ToLuna.script", "status": "completed", "seconds": 6.65}
+{"script": "doc/help/src/files/scripts/Tut_HohmannTransfer.script", "status": "completed", "seconds": 15.93}
+{"script": "doc/help/src/files/scripts/LEOStationKeepingTutorial.script", "status": "completed", "seconds": 35.58}
+{"script": "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script", "status": "completed", "seconds": 17.82}
+{"script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step1.script", "status": "build_failed", "seconds": 0.78}
+{"script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step2.script", "status": "build_failed", "seconds": 0.79}
+{"script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step3.script", "status": "build_failed", "seconds": 0.78}
+{"script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step4.script", "status": "build_failed", "seconds": 0.83}
+{"script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step5.script", "status": "build_failed", "seconds": 0.82}
+{"script": "doc/help/src/files/scripts/Tut_Target_Finite_Burn_to_Raise_Apogee.script", "status": "completed", "seconds": 10.7}
+{"script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/PropLightsail2.script", "status": "completed", "seconds": 4.39}
+{"script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_3DViews.script", "status": "build_failed", "seconds": 0.84}
+{"script": "prototype/CSALTMatlab/TestProblems/AutoNGC/LunarOrbiterStationKeeping/AutoNGCLOSK_GMAT_CheckPropagation.script", "status": "completed", "seconds": 4.4}
+{"script": "prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script", "status": "build_failed", "seconds": 0.88}
+{"script": "prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script", "status": "build_failed", "seconds": 0.88}
+{"script": "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script", "status": "completed", "seconds": 36.93}
+SWEEP COMPLETE 24 (see per-script status; this is not a blanket GUI pass)

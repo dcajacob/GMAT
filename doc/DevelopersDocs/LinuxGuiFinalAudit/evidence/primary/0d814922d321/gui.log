@@ -1,0 +1,38 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:11:47 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:11:48 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0d814922d321/repo/api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0d814922d321/repo/api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting value for bat.EstimationEpoch has no effect due to bat.EstimationEpochFormat to be "FromParticipants"
+*** Warning *** the parameter "ProcessNoiseTimeStep" is deprecated and may be removed from a future build; please use "UpdateTimeStep" on the ProcessNoiseModel instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0d814922d321/repo/api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script: **** ERROR **** Utility Exception: Error finding relative path for file "../Output/KalmanFilter_WarmStartEpoch.rpt" - specified path does not exist.
+ in line:
+   " 184: StateReport.Filename     = '../Output/KalmanFilter_WarmStartEpoch.rpt';"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0d814922d321/repo/api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/0d814922d321/repo/api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:11:48 GMAT GUI exiting.

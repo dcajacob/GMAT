@@ -1,0 +1,232 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 14:12:39 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+WARNING: Glycin running without sandbox.
+2026-09-28 14:12:39 GMAT GUI successfully launched.
+WARNING: Glycin running without sandbox.
+AUDIT_BUILD_BEGIN /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script
+
+Interpreting scripts from the file.
+***** file: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** WARNING *** "VectorFormat" field of Burn is deprecated and will be removed from a future build.
+*** WARNING *** "TargeterTextFile" field of DifferentialCorrector on object "DC1" is deprecated and will be removed from a future build; please use "ReportFile" instead.
+*** WARNING *** "UseCentralDifferences" field of DifferentialCorrector on object "DC1" is deprecated and will be removed from a future build; please use "DerivativeMethod" instead.
+*** WARNING *** "CelestialPlane" is deprecated and will be removed from a future build; please use "EclipticPlane" instead.
+1: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Eq" already exists, so ignored in line:
+   " 149: Create CoordinateSystem EarthMJ2000Eq;"
+
+2: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 150: GMAT EarthMJ2000Eq.Origin = Earth;"
+
+3: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 151: GMAT EarthMJ2000Eq.Axes = MJ2000Eq;"
+
+4: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 152: GMAT EarthMJ2000Eq.UpdateInterval = 60;"
+
+5: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+ in line:
+   " 153: GMAT EarthMJ2000Eq.OverrideOriginInterval = false;"
+
+6: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Ec" already exists, so ignored in line:
+   " 155: Create CoordinateSystem EarthMJ2000Ec;"
+
+7: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 156: GMAT EarthMJ2000Ec.Origin = Earth;"
+
+8: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 157: GMAT EarthMJ2000Ec.Axes = MJ2000Ec;"
+
+9: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 158: GMAT EarthMJ2000Ec.UpdateInterval = 60;"
+
+10: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+ in line:
+   " 159: GMAT EarthMJ2000Ec.OverrideOriginInterval = false;"
+
+11: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthFixed" already exists, so ignored in line:
+   " 161: Create CoordinateSystem EarthFixed;"
+
+12: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 162: GMAT EarthFixed.Origin = Earth;"
+
+13: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 163: GMAT EarthFixed.Axes = BodyFixed;"
+
+14: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 164: GMAT EarthFixed.UpdateInterval = 60;"
+
+15: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+ in line:
+   " 165: GMAT EarthFixed.OverrideOriginInterval = false;"
+
+16: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthMoonRot" in line:
+   " 174: GMAT EarthMoonRot.UpdateInterval = 60;"
+
+17: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "EarthMoonRot" in line:
+   " 175: GMAT EarthMoonRot.OverrideOriginInterval = false;"
+
+18: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthSunRotCS" in line:
+   " 184: GMAT EarthSunRotCS.UpdateInterval = 60;"
+
+19: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "EarthSunRotCS" in line:
+   " 185: GMAT EarthSunRotCS.OverrideOriginInterval = false;"
+
+20: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "ESML2Centered" in line:
+   " 194: GMAT ESML2Centered.UpdateInterval = 0;"
+
+21: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "ESML2Centered" in line:
+   " 195: GMAT ESML2Centered.OverrideOriginInterval = false;"
+
+22: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "MoonInertial" in line:
+   " 204: GMAT MoonInertial.UpdateInterval = 60;"
+
+23: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named "MoonInertial" in line:
+   " 205: GMAT MoonInertial.OverrideOriginInterval = false;"
+
+24: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 3: "Epoch" on BodyInertial named "" in line:
+   " 206: GMAT MoonInertial.Epoch = 21544.99962789778;"
+
+25: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_FindL2TransferWithLunar.report" - specified path does not exist.
+ in line:
+   " 225: GMAT Data.Filename = './output/SampleMissions/Ex_FindL2TransferWithLunar.report';"
+
+26: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "SystemView" is no longer in use in line:
+   " 239: GMAT SystemView.OrbitColor = [ 255 32768 12632256 ];"
+
+27: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "SystemView" is no longer in use in line:
+   " 240: GMAT SystemView.TargetColor = [ 8421440 0 0 ];"
+
+28: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+   " 263: GMAT EarthView.OrbitColor = [ 255 32768 4227327 65280 ];"
+
+29: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+   " 264: GMAT EarthView.TargetColor = [ 8421440 0 0 8421440 ];"
+
+30: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView2" is no longer in use in line:
+   " 288: GMAT EarthView2.OrbitColor = [ 255 32768 4227327 65280 ];"
+
+31: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView2" is no longer in use in line:
+   " 289: GMAT EarthView2.TargetColor = [ 8421440 0 0 8421440 ];"
+
+32: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MoonView" is no longer in use in line:
+   " 312: GMAT MoonView.OrbitColor = [ 255 1092262094 32768 ];"
+
+33: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "MoonView" is no longer in use in line:
+   " 313: GMAT MoonView.TargetColor = [ 8421440 0 0 ];"
+
+34: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthInertial" is no longer in use in line:
+   " 336: GMAT EarthInertial.OrbitColor = [ 3808428287 1743054 2316998862 32768 4227327 ];"
+
+35: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthInertial" is no longer in use in line:
+   " 337: GMAT EarthInertial.TargetColor = [ 8421440 0 8421440 0 0 ];"
+
+36: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "AboveL2" is no longer in use in line:
+   " 360: GMAT AboveL2.OrbitColor = [ 255 1743054 1743054 1743054 ];"
+
+37: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "AboveL2" is no longer in use in line:
+   " 361: GMAT AboveL2.TargetColor = [ 8421440 8421440 8421440 8421440 ];"
+
+38: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "SMA" to "Sat.SMA" is not allowed before BeginMissionSequence in line:
+   " 386: GMAT SMA = Sat.SMA;"
+
+39: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "ECC" to "Sat.ECC" is not allowed before BeginMissionSequence in line:
+   " 387: GMAT ECC = Sat.ECC;"
+
+40: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "INC" to "Sat.INC" is not allowed before BeginMissionSequence in line:
+   " 388: GMAT INC = Sat.INC;"
+
+41: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "TA" to "Sat.TA" is not allowed before BeginMissionSequence in line:
+   " 389: GMAT TA = Sat.TA;"
+
+42: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.A1Epoch" to "Epoch" is not allowed before BeginMissionSequence in line:
+   " 396: GMAT Sat.A1Epoch = Epoch;"
+
+43: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "RAAN" to "Sat.RAAN" is not allowed before BeginMissionSequence in line:
+   " 404:    GMAT RAAN = Sat.RAAN;"
+
+44: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "AOP" to "Sat.AOP" is not allowed before BeginMissionSequence in line:
+   " 405:    GMAT AOP = Sat.AOP;"
+
+45: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.RAAN" to "RAAN" is not allowed before BeginMissionSequence in line:
+   " 415: GMAT Sat.RAAN = RAAN;"
+
+46: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.AOP" to "AOP" is not allowed before BeginMissionSequence in line:
+   " 416: GMAT Sat.AOP = AOP;"
+
+47: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Sat.A1Epoch" to "Epoch" is not allowed before BeginMissionSequence in line:
+   " 417: GMAT Sat.A1Epoch = Epoch;"
+
+48: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "c" to "c + 1" is not allowed before BeginMissionSequence in line:
+   " 433:    GMAT c = c + 1;"
+
+49: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "BdotT" to "LB" is not allowed before BeginMissionSequence in line:
+   " 437:       GMAT BdotT = LB;"
+
+50: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "BdotT" to "UB" is not allowed before BeginMissionSequence in line:
+   " 441:       GMAT BdotT = UB;"
+
+51: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "EnergyError" to "Sat.Energy - DesiredEnergy" is not allowed before BeginMissionSequence in line:
+   " 466:    GMAT EnergyError = Sat.Energy - DesiredEnergy;"
+
+52: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "FLow" to "EnergyError" is not allowed before BeginMissionSequence in line:
+   " 470:       GMAT FLow = EnergyError;"
+
+53: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "FHigh" to "EnergyError" is not allowed before BeginMissionSequence in line:
+   " 473:       GMAT FHigh = EnergyError;"
+
+54: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Prod" to "FLow*FHigh" is not allowed before BeginMissionSequence in line:
+   " 480:       GMAT Prod = FLow*FHigh;"
+
+55: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Prod" to "FLow*EnergyError" is not allowed before BeginMissionSequence in line:
+   " 489:       GMAT Prod = FLow*EnergyError;"
+
+56: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "UB" to "BdotT" is not allowed before BeginMissionSequence in line:
+   " 492:          GMAT UB = BdotT;"
+
+57: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "LB" to "BdotT" is not allowed before BeginMissionSequence in line:
+   " 494:          GMAT LB = BdotT;"
+
+58: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "Error" to "sqrt( (EnergyError)^2 )" is not allowed before BeginMissionSequence in line:
+   " 500:    GMAT Error = sqrt( (EnergyError)^2 );"
+
+59: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "BdotT" to "( UB + LB ) / 2" is not allowed before BeginMissionSequence in line:
+   " 501:    GMAT BdotT = ( UB + LB ) / 2;"
+
+60: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "LowerBoxSize" to "LowerBoxSize - 50" is not allowed before BeginMissionSequence in line:
+   " 532:       GMAT LowerBoxSize = LowerBoxSize - 50;"
+
+61: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script: **** ERROR **** Interpreter Exception: Setting "UpperBoxSize" to "UpperBoxSize + 50" is not allowed before BeginMissionSequence in line:
+   " 533:       GMAT UpperBoxSize = UpperBoxSize + 50;"
+
+
+========================================
+Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script".
+Please fix all errors listed in message window.
+AUDIT_DIALOG title=GMAT Error message=Errors were found in the script named "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-followup/final-sweep/primary/1fc8c3f06977/repo/doc/help/src/files/scripts/LunarTransferToL2-tutorial.script". | Please fix all errors listed in message window. | 
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+AUDIT_BUILD_END success=0
+AUDIT_CLOSE_BEGIN
+AUDIT_CLOSE_RETURN
+Moderator is deleting core engine...
+2026-09-28 14:12:40 GMAT GUI exiting.
