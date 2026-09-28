@@ -54,16 +54,16 @@ class Context:
         self.environment = {**os.environ, 'G_DEBUG': 'fatal-criticals', 'LIBGL_ALWAYS_SOFTWARE': '1',
                             'GDK_BACKEND': 'x11', 'GDK_SCALE': '1'}
 
-    def build_gui(self, source):
+    def build_gui(self, source, *, extra_flags=(), extra_link=()):
         obj = self.work/(Path(source).stem+'.o')
-        run(self.flags+['-g', '-c', str(self.source/source), '-o', str(obj)], cwd=self.build)
+        run(self.flags+list(extra_flags)+['-g', '-c', str(self.source/source), '-o', str(obj)], cwd=self.build)
         original = str(self.application/'bin'/('GMAT-'+self.cache['GMAT_RELEASE_NAME']))
         link_line = next(c for c in self.commands if ' -o '+original+' ' in c)
         link = shlex.split(link_line.split('&&')[1])
         link = [a for a in link if not a.startswith('-Wl,--dependency-file=')]
         binary = self.work/Path(source).stem
         link[link.index('-o')+1] = str(binary)
-        run(link+['-Wl,--wrap=main', str(obj)], cwd=self.build)
+        run(link+['-Wl,--wrap=main', str(obj)]+list(extra_link), cwd=self.build)
         return binary
 
     def runtime(self):

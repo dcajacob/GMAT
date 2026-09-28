@@ -42,6 +42,8 @@ python3 src/UnitTests/TestLinuxGui/test_gui_followup.py build/linux-gui
 
 ## Remaining goal scope
 
+This is the first-batch snapshot. See LinuxGuiFollowup2.md for the subsequent editor, station and theme fixes, live-paint evidence and the OpenFrames reproduction.
+
 | Finding | Current disposition |
 |---|---|
 | GroundTrack editor and Output tree integration | Source defects identified; implementation and editor/save regression pending |

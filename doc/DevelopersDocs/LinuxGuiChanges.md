@@ -39,6 +39,9 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-030 | [pr/groundtrack-window-lookup](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-window-lookup) | `4c7feb215d9d` | `4489b59bf1a2` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
 | LGUI-028 | [pr/native-wheel-zoom](https://github.com/dcajacob/GMAT/tree/pr/native-wheel-zoom) | `19dd83be5c76` | `ea64c9fb581a` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
 | LGUI-027 | [pr/native-plot-text](https://github.com/dcajacob/GMAT/tree/pr/native-plot-text) | `979c0d644ba1` | `57f4031b0a3f` | `test_gui_followup.py` | Independently tested with prerequisites; not submitted |
+| LGUI-031 | [pr/groundtrack-station-markers](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-station-markers) | `daf193ed67d2` | `934e3b852cdf` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
+| LGUI-032 | [pr/groundtrack-editor-output](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-editor-output) | `a0a5a7078f30` | `33098ec0bb68` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
+| LGUI-033 | [pr/tree-theme-colors](https://github.com/dcajacob/GMAT/tree/pr/tree-theme-colors) | `4c742c8e1081` | `246cdd40f3a3` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
