@@ -36,6 +36,9 @@
 #include "Array.hpp"
 #include <iostream>
 #include <pyconfig.h>
+#ifdef __linux__
+#include <dlfcn.h>
+#endif
 
 //#define DEBUG_INITIALIZATION
 //#define DEBUG_EXECUTION
@@ -145,6 +148,31 @@ bool PythonInterface::PyInitialize()
 {
 #ifdef DEBUG_INITIALIZATION
    MessageInterface::ShowMessage("PythonInterface::PyInitialize() start.\n");
+#endif
+
+#ifdef __linux__
+   // GMAT loads plugins locally.  Python extension modules (e.g. NumPy)
+   // require the symbols of this plugin's linked interpreter in global scope.
+   // Promote that already-loaded library, never a guessed Python version.
+   // Retain one handle for the interpreter's lifetime, including shutdown.
+   static void *pythonLibrary = NULL;
+   if (!pythonLibrary)
+   {
+      Dl_info libraryInfo;
+      if (!dladdr(reinterpret_cast<void *>(&Py_Initialize), &libraryInfo) ||
+          !libraryInfo.dli_fname)
+         throw InterfaceException("Cannot locate the linked Python library.");
+      dlerror();
+      pythonLibrary = dlopen(libraryInfo.dli_fname,
+            RTLD_NOW | RTLD_NOLOAD | RTLD_GLOBAL);
+      if (!pythonLibrary)
+      {
+         const char *error = dlerror();
+         throw InterfaceException("Cannot expose the linked Python library "
+               "to extension modules: " + std::string(error ? error :
+               "unknown dynamic loader error"));
+      }
+   }
 #endif
 
    // Initialize Python only once.

@@ -71,3 +71,8 @@ SET_TARGET_PROPERTIES(${TargetName} PROPERTIES DEFINE_SYMBOL "PYTHON_EXPORTS")
 # TODO: Link against Python3::Module once Py_LIMITED_API compiles without errors
 #       and GMAT provides another method of loading Python at runtime.
 TARGET_LINK_LIBRARIES(${TargetName} PRIVATE Python3::Python)
+
+# Linux uses dladdr/dlopen to expose the linked interpreter to extensions.
+IF(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  TARGET_LINK_LIBRARIES(${TargetName} PRIVATE ${CMAKE_DL_LIBS})
+ENDIF()
