@@ -1,6 +1,6 @@
 # Linux GUI change tracker
 
-No upstream issues or pull requests have been opened. The branch names below reserve proposed PR scopes; they are not submitted PRs.
+Initial upstream PRs opened on 2026-09-28: [#14 DE header copies](https://github.com/nasa/GMAT/pull/14), [#15 CMake PATH](https://github.com/nasa/GMAT/pull/15), and [#16 native viewport](https://github.com/nasa/GMAT/pull/16). Other branches remain unsubmitted. Historical audit records below retain their original submission status.
 
 - Upstream: `nasa/GMAT`, base `9363e129be366520c6edb0b4079204ed60666007` (verified against `origin/main`).
 - Fork: https://github.com/dcajacob/GMAT (`fork` remote); NASA remains `origin`.
@@ -14,14 +14,14 @@ No upstream issues or pull requests have been opened. The branch names below res
 
 | Local ID | Branch | Integration commit | PR branch commit | Test entry point | Status |
 |---|---|---|---|---|---|
-| LGUI-001 | [pr/de-header](https://github.com/dcajacob/GMAT/tree/pr/de-header) | `00f98cce80e9` | `437c812a1684` | `test_header.py` | Prepared; not submitted |
-| LGUI-002 | [pr/wxwidgets-path](https://github.com/dcajacob/GMAT/tree/pr/wxwidgets-path) | `f3a66269d70a` | `42158c089d88` | `Fresh CMake configure` | Prepared; not submitted |
+| LGUI-001 | [pr/de-header](https://github.com/dcajacob/GMAT/tree/pr/de-header) | `00f98cce80e9` | `437c812a1684` | `test_header.py` | [Submitted #14](https://github.com/nasa/GMAT/pull/14) |
+| LGUI-002 | [pr/wxwidgets-path](https://github.com/dcajacob/GMAT/tree/pr/wxwidgets-path) | `f3a66269d70a` | `42158c089d88` | `Fresh CMake configure` | [Submitted #15](https://github.com/nasa/GMAT/pull/15) |
 | LGUI-003 | [pr/groundtrack-map](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-map) | `e236844b3297` | `d7acd5aebeb1` | `test_groundtrack.py` | Prepared; not submitted |
 | LGUI-004 | [pr/linux-layout](https://github.com/dcajacob/GMAT/tree/pr/linux-layout) | `dba102c8cc2c` | `4acd19e622b4` | `test_layout.py` | Prepared; not submitted |
 | LGUI-005 | [pr/linux-geometry](https://github.com/dcajacob/GMAT/tree/pr/linux-geometry) | `025e86c185b4` | `b3e0c889e640` | `test_geometry.py` | Prepared; not submitted |
 | LGUI-006 | [pr/linux-script-exit](https://github.com/dcajacob/GMAT/tree/pr/linux-script-exit) | `02fd4e4f5c91` | `6e8f646ec3ba` | `test_exit.py` | Prepared; not submitted |
 | LGUI-007 | [pr/linux-plugin-lifetime](https://github.com/dcajacob/GMAT/tree/pr/linux-plugin-lifetime) | `7321902c3fa4` | `596215497ff9` | `test_plugins.py` | Prepared; maintainer design review needed |
-| LGUI-008 | [pr/native-viewport](https://github.com/dcajacob/GMAT/tree/pr/native-viewport) | `b3e61889e716` | `097c67fc4036` | `test_viewport.py` | Prepared; not submitted |
+| LGUI-008 | [pr/native-viewport](https://github.com/dcajacob/GMAT/tree/pr/native-viewport) | `b3e61889e716` | `097c67fc4036` | `test_viewport.py` | [Submitted #16](https://github.com/nasa/GMAT/pull/16) |
 | LGUI-009 | [pr/editor-reload](https://github.com/dcajacob/GMAT/tree/pr/editor-reload) | `bfe0c353d4e4` | `fffdfe934f60` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
 | LGUI-010 | [pr/editor-save](https://github.com/dcajacob/GMAT/tree/pr/editor-save) | `d8f14d423743` | `bd34b116e50c` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
 | LGUI-011 | [pr/model-preview-context](https://github.com/dcajacob/GMAT/tree/pr/model-preview-context) | `a401cd960ec5` | `ba65591932e1` | `test_workflow.py` | Independently tested with prerequisites; not submitted |
