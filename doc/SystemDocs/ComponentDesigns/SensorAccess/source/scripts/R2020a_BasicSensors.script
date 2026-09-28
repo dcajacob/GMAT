@@ -65,17 +65,22 @@
 
 	GMAT TheCape.AddHardware = {TenDegreeAntenna};
 
-	Create ConicalFOV TenDegEl;
+	% ContactLocator supports CustomFOV masks on ground stations.
+	% Approximate the 10-degree elevation horizon at 1-degree azimuth steps;
+	% the polygon boundary differs from the circular cone by less than 0.0004 deg.
+	Create CustomFOV TenDegEl;
 	GMAT TenDegEl.Color = [0 255 0];
 	GMAT TenDegEl.Alpha = 64;
-	GMAT TenDegEl.FieldOfViewAngle = 80;
+	GMAT TenDegEl.Azimuth = [0 90 180 270];
+	GMAT TenDegEl.Elevation = [10 10 10 10];
+	GMAT TenDegEl.InterpolationStepSize = 1;
 
 	Create Antenna TenDegreeAntenna;
 	GMAT TenDegreeAntenna.FieldOfView = TenDegEl;
 	GMAT TenDegreeAntenna.DirectionX = 0;
 	GMAT TenDegreeAntenna.DirectionY = 0;
 	GMAT TenDegreeAntenna.DirectionZ = 1;
-	GMAT TenDegreeAntenna.SecondDirectionX = 1;	% Ignored for cone
+	GMAT TenDegreeAntenna.SecondDirectionX = 1;
 	GMAT TenDegreeAntenna.SecondDirectionY = 0;
 	GMAT TenDegreeAntenna.SecondDirectionZ = 0;
 	GMAT TenDegreeAntenna.HWOriginInBCSX = 0;
