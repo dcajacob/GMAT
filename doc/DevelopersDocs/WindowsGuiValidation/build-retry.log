@@ -1,0 +1,2350 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: C:/GMAT-Test/deps/cspice
+-- Found F2C: C:/GMAT-Test/deps/cspice/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:296 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) 
+==============================-- Will install GMAT to C:/GMAT-Test/upstream/GMAT-R2026a-Windows-x64
+
+Setting up install directory structure for GMAT 
+==============================
+GMAT util setup 
+==============================
+GMAT base setup 
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup 
+==============================
+GMAT GUI setup 
+==============================
+GMAT DataInterface Plugin setup 
+==============================
+GMAT EphemPropagator Plugin setup 
+==============================
+GMAT EKF Plugin setup 
+==============================
+GMAT Estimation Plugin setup 
+==============================
+GMAT EventLocator Plugin setup 
+==============================
+GMAT External Force Model Plugin setup (for Python 3.12)
+-- Found Python3: C:/Python312/libs/python312.lib (found suitable exact version "3.12.10") found components: Development Development.Module Development.Embed
+==============================
+GMAT ExtraPropagators Plugin setup 
+==============================
+GMAT Formation Plugin setup 
+==============================
+GMAT GmatFunction Plugin setup 
+==============================
+GMAT Msise00 Plugin setup 
+==============================
+GMAT NewParameter Plugin setup 
+==============================
+GMAT PolyhedronGravity Plugin setup 
+==============================
+GMAT ProductionPropagators Plugin setup 
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.12)
+==============================
+GMAT SaveCommand Plugin setup 
+==============================
+GMAT ScriptTools Plugin setup 
+==============================
+GMAT Station Plugin setup 
+==============================
+GMAT ThrustFile Plugin setup 
+==============================
+GMAT TLE Propagator Plugin setup 
+==============================
+GMAT Yukon Optimizer Plugin setup 
+======================================
+Skipping the OVtoOFI Plugin:
+OpenFramesInterface is not being built
+=======================================
+==============================
+Setting up wxWidgets install instructions for GMAT 
+-- Configuring done (0.2s)
+-- Generating done (1.0s)
+-- Build files have been written to: C:/GMAT-Test/upstream/build-win
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/GMAT-Test/upstream/src/gmatutil/CMakeLists.txt
+  A1Date.cpp
+  A1Mjd.cpp
+  AngleUtil.cpp
+  AttitudeConversionUtility.cpp
+  AttitudeUtil.cpp
+  BaseException.cpp
+  BodyFixedStateConverter.cpp
+  CalculationUtilities.cpp
+  CCSDSAEMEulerAngleSegment.cpp
+  CCSDSAEMQuaternionSegment.cpp
+  CCSDSAEMReader.cpp
+  CCSDSAEMSegment.cpp
+  CCSDSEMReader.cpp
+  CCSDSEMSegment.cpp
+  CCSDSEMWriter.cpp
+  CCSDSEphemerisFile.cpp
+  CCSDSOEMReader.cpp
+  CCSDSOEMSegment.cpp
+  CCSDSOEMWriter.cpp
+  Code500EphemerisFile.cpp
+  ColorDatabase.cpp
+  CubicSpline.cpp
+  Date.cpp
+  DateUtil.cpp
+  ElapsedTime.cpp
+  Ephemeris.cpp
+  EopFile.cpp
+  FileManager.cpp
+  FileUtil.cpp
+  GmatGlobal.cpp
+  GmatTime.cpp
+  GravityFileUtil.cpp
+  GregorianDate.cpp
+  IFileUpdater.cpp
+C:\GMAT-Test\upstream\src\gmatutil\util\GmatTime.cpp(688,29): warning C4244: '=': conversion from 'Real' to 'long', possible loss of data [C:\GMAT-Test\upstream\build-win\src\gmatutil\GmatUtil.vcxproj]
+C:\GMAT-Test\upstream\src\gmatutil\util\GmatTime.cpp(704,33): warning C4244: '-=': conversion from 'Real' to 'long', possible loss of data [C:\GMAT-Test\upstream\build-win\src\gmatutil\GmatUtil.vcxproj]
+  LeapSecsFileReader.cpp
+  Linear.cpp
+  MemoryTracker.cpp
+  MessageInterface.cpp
+  MessageReceiver.cpp
+  NumericJacobian.cpp
+  NPlateHistoryFileReader.cpp
+  RandomNumber.cpp
+  RealUtilities.cpp
+  RgbColor.cpp
+  Rmatrix33.cpp
+  Rmatrix66.cpp
+  Rmatrix.cpp
+  Rvector3.cpp
+  Rvector6.cpp
+  Rvector.cpp
+  SPADFileReader.cpp
+  StateConversionUtil.cpp
+  STKEphemerisFile.cpp
+  StringTokenizer.cpp
+  StringUtil.cpp
+  TextParser.cpp
+  TimeSystemConverter.cpp
+  TimeTypes.cpp
+  UtcDate.cpp
+  DataBucket.cpp
+  DataWriter.cpp
+  DataWriterInterface.cpp
+  DataWriterMaker.cpp
+  WriterData.cpp
+  InterpolatorException.cpp
+  Interpolator.cpp
+  BrentDekkerZero.cpp
+  CubicSplineInterpolator.cpp
+  HermiteInterpolator.cpp
+  LinearInterpolator.cpp
+  NotAKnotInterpolator.cpp
+  LagrangeInterpolator.cpp
+  CholeskyFactorization.cpp
+  LUFactorization.cpp
+  MatrixFactorization.cpp
+  QRFactorization.cpp
+  SchurFactorization.cpp
+  Frozen.cpp
+  OrbitDesignerTime.cpp
+  RepeatSunSync.cpp
+  RepeatGroundTrack.cpp
+  SunSync.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/src/gmatutil/Release/GmatUtil.lib and object C:/GMAT-Test/upstream/build-win/src/gmatutil/Release/GmatUtil.exp
+  GmatUtil.vcxproj -> C:\GMAT-Test\upstream\application\bin\libGmatUtil.dll
+  Building Custom Rule C:/GMAT-Test/upstream/src/base/CMakeLists.txt
+  APIFunctions.cpp
+  APIException.cpp
+  APIMessageReceiver.cpp
+  HelpSystem.cpp
+  AssetException.cpp
+  BodyFixedPoint.cpp
+  GroundstationInterface.cpp
+  Attitude.cpp
+  AttitudeException.cpp
+  CCSDSAttitude.cpp
+  CommandableNadirPointing.cpp
+  CSFixed.cpp
+  Kinematic.cpp
+  NadirPointing.cpp
+  PrecessingSpinner.cpp
+  Spinner.cpp
+  ThreeAxisKinematic.cpp
+  BurnException.cpp
+  Burn.cpp
+  FiniteBurn.cpp
+  ImpulsiveBurn.cpp
+  InertialManeuverFrame.cpp
+  ManeuverFrameManager.cpp
+  ManeuverFrame.cpp
+  VnbManeuverFrame.cpp
+  Achieve.cpp
+  Assignment.cpp
+  BeginFiniteBurn.cpp
+  BeginFunction.cpp
+  BeginMissionSequence.cpp
+  BeginScript.cpp
+  BranchCommand.cpp
+  CallFunction.cpp
+  CallBuiltinGmatFunction.cpp
+  CommandException.cpp
+  FindEvents.cpp
+  GmatCommand.cpp
+  CommandUtil.cpp
+  ClearPlot.cpp
+  ConditionalBranch.cpp
+  Create.cpp
+  Else.cpp
+  EndFiniteBurn.cpp
+  EndFor.cpp
+  EndFunction.cpp
+  EndIf.cpp
+  EndOptimize.cpp
+  EndScript.cpp
+  EndTarget.cpp
+  EndWhile.cpp
+  For.cpp
+  If.cpp
+  ManageObject.cpp
+  Maneuver.cpp
+  MarkPoint.cpp
+  Minimize.cpp
+  NonlinearConstraint.cpp
+  NoOp.cpp
+  Optimize.cpp
+  PenDown.cpp
+  PenUp.cpp
+  Propagate.cpp
+  PropagationEnabledCommand.cpp
+  PlotCommand.cpp
+  SolverSequenceCommand.cpp
+  RHSEquation.cpp
+  Report.cpp
+  RunSolver.cpp
+  SaveMission.cpp
+  SolverBranchCommand.cpp
+  Stop.cpp
+  Target.cpp
+  Toggle.cpp
+  UpdateDynamicData.cpp
+  Vary.cpp
+  While.cpp
+  Write.cpp
+  ConfigManagerException.cpp
+  ConfigManager.cpp
+  ItemManager.cpp
+  PluginItemManager.cpp
+  AxisSystem.cpp
+  BodyFixedAxes.cpp
+  BodyInertialAxes.cpp
+  CoordinateBase.cpp
+  CoordinateConverter.cpp
+  CoordinateSystemException.cpp
+  CoordinateSystem.cpp
+  CoordinateTransformation.cpp
+  CoordinateTranslation.cpp
+  DynamicAxes.cpp
+  EquatorAxes.cpp
+  GeocentricSolarEclipticAxes.cpp
+  GeocentricSolarMagneticAxes.cpp
+  InertialAxes.cpp
+  ItrfCoefficientsFile.cpp
+  LocalAlignedConstrainedAxes.cpp
+  MeanOfDateAxes.cpp
+  MJ2000EcAxes.cpp
+  MJ2000EqAxes.cpp
+  MODEcAxes.cpp
+  MODEqAxes.cpp
+  MOEEcAxes.cpp
+  MOEEqAxes.cpp
+  ObjectReferencedAxes.cpp
+  SpiceAxes.cpp
+  TODEcAxes.cpp
+  TODEqAxes.cpp
+  TEMEAxes.cpp
+  TOEEcAxes.cpp
+  TOEEqAxes.cpp
+  TopocentricAxes.cpp
+  TransformUtil.cpp
+  TrueOfDateAxes.cpp
+  ICRFAxes.cpp
+  ICRFFile.cpp
+  ITRFAxes.cpp
+  IAUFile.cpp
+  BodySpinSunAxes.cpp
+  EventException.cpp
+  EventLocator.cpp
+C:\GMAT-Test\upstream\src\base\coordsystem\IAUFile.cpp(198,22): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  LocatedEvent.cpp
+  ListenerManager.cpp
+  ListenerManagerInterface.cpp
+  Moderator.cpp
+  PlotInterface.cpp
+  PlotReceiver.cpp
+  PublisherException.cpp
+  Publisher.cpp
+  SandboxException.cpp
+  Sandbox.cpp
+  AtmosphereFactory.cpp
+  AttitudeFactory.cpp
+  AxisSystemFactory.cpp
+  BurnFactory.cpp
+  CalculatedPointFactory.cpp
+  CelestialBodyFactory.cpp
+  CommandFactory.cpp
+  CoordinateSystemFactory.cpp
+  FactoryException.cpp
+  FactoryManager.cpp
+  Factory.cpp
+  FunctionFactory.cpp
+  HardwareFactory.cpp
+  FieldOfViewFactory.cpp
+  InterfaceFactory.cpp
+  MathFactory.cpp
+  ODEModelFactory.cpp
+  ParameterFactory.cpp
+  PhysicalModelFactory.cpp
+  PlanetographicRegionFactory.cpp
+  PlateFactory.cpp
+  PropagatorFactory.cpp
+  PropSetupFactory.cpp
+  SolarSystemFactory.cpp
+  SolverFactory.cpp
+  SpacecraftFactory.cpp
+  StopConditionFactory.cpp
+  SubscriberFactory.cpp
+  GuiFactory.cpp
+  GmatWidget.cpp
+  PluginWidget.cpp
+  DragForce.cpp
+  FiniteThrust.cpp
+  ODEModelException.cpp
+  ODEModel.cpp
+  GravityField.cpp
+  GravityBase.cpp
+  HarmonicField.cpp
+  NumericJacobianOriginal.cpp
+  PhysicalModel.cpp
+  PointMassForce.cpp
+  SolarRadiationPressure.cpp
+  RelativisticCorrection.cpp
+  Harmonic.cpp
+  HarmonicGravity.cpp
+  Covariance.cpp
+C:\GMAT-Test\upstream\src\base\forcemodel\harmonic\HarmonicGravity.cpp(234,36): warning C4244: '=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  ElementWrapper.cpp
+  EquationInitializer.cpp
+  FileUpdaterSVN.cpp
+  GmatBaseException.cpp
+  GmatBase.cpp
+  GmatState.cpp
+  GmatType.cpp
+  IChangeListener.cpp
+  ObjectInitializer.cpp
+  SpacePoint.cpp
+  StateManager.cpp
+  TriggerManager.cpp
+  BuiltinGmatFunction.cpp
+  Function.cpp
+  FunctionException.cpp
+  FunctionManager.cpp
+  GetEphemStates.cpp
+  GetLastState.cpp
+  ObjectManagedFunction.cpp
+  Pause.cpp
+  QuaternionProduct.cpp
+  QuaternionRotation.cpp
+  QuaternionToDCM.cpp
+  SystemTime.cpp
+  SetSeed.cpp
+  ConvertTime.cpp
+  Sign.cpp
+  Str2num.cpp
+  Num2str.cpp
+  RotationMatrix.cpp
+  Angle.cpp
+  UserDefinedFunction.cpp
+  ChemicalTank.cpp
+  ConicalFOV.cpp
+  CustomFOV.cpp
+  ChemicalThruster.cpp
+  ElectricTank.cpp
+  ElectricThruster.cpp
+  FieldOfView.cpp
+  FieldOfViewException.cpp
+  FuelTank.cpp
+  HardwareException.cpp
+  Hardware.cpp
+  Imager.cpp
+  NuclearPowerSystem.cpp
+  PowerSystem.cpp
+  RectangularFOV.cpp
+C:\GMAT-Test\upstream\src\base\hardware\Imager.cpp(443,14): warning C4244: 'return': conversion from 'const Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\upstream\src\base\hardware\Imager.cpp(466,14): warning C4244: 'return': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  SolarPowerSystem.cpp
+  Thruster.cpp
+  InterfaceException.cpp
+  Interface.cpp
+  GmatInterface.cpp
+  InterpreterException.cpp
+  Interpreter.cpp
+  MathParser.cpp
+  MathTree.cpp
+  ScriptInterpreter.cpp
+  ScriptReadWriter.cpp
+  Validator.cpp
+  ApiInterpreter.cpp
+  Abs.cpp
+  Acos.cpp
+  Acosh.cpp
+  Add.cpp
+  Asin.cpp
+  Asinh.cpp
+  Atan.cpp
+  Atan2.cpp
+  BuiltinFunctionNode.cpp
+  Ceil.cpp
+  Cos.cpp
+  Cosh.cpp
+  Cross3.cpp
+  DegToRad.cpp
+  Determinant.cpp
+  Diag.cpp
+  Divide.cpp
+  Exp.cpp
+  Fix.cpp
+  Floor.cpp
+  FunctionRunner.cpp
+  Log.cpp
+  Log10.cpp
+  Inverse.cpp
+  MathElement.cpp
+  MathException.cpp
+  MathFunction.cpp
+  MathNode.cpp
+  Min.cpp
+  Mod.cpp
+  Multiply.cpp
+  Negate.cpp
+  Norm.cpp
+  NumericFunctionNode.cpp
+  Power.cpp
+  RadToDeg.cpp
+  Rand.cpp
+  Randn.cpp
+  Sin.cpp
+  Sinh.cpp
+  Sprintf.cpp
+  Sqrt.cpp
+  StringFunctionNode.cpp
+  Strcat.cpp
+  Strcmp.cpp
+  Strfind.cpp
+  Strlen.cpp
+  Strrep.cpp
+  Substr.cpp
+  Subtract.cpp
+  Tan.cpp
+C:\GMAT-Test\upstream\src\base\math\Strlen.cpp(174,23): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  Tanh.cpp
+  Transpose.cpp
+C:\GMAT-Test\upstream\src\base\math\Substr.cpp(152,54): warning C4244: '=': conversion from 'Real' to 'int', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\upstream\src\base\math\Substr.cpp(161,56): warning C4244: '=': conversion from 'Real' to 'int', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  EquationWrapper.cpp
+  AlternateEquinoctialParameters.cpp
+  AngularParameters.cpp
+  Array.cpp
+  ArrayWrapper.cpp
+  ArrayElementWrapper.cpp
+  AttitudeData.cpp
+  AttitudeParameters.cpp
+  AttitudeReal.cpp
+  AttitudeRmat33.cpp
+  AttitudeRvector.cpp
+  BallisticMassParameters.cpp
+  BallisticMassReal.cpp
+  BooleanWrapper.cpp
+  BplaneData.cpp
+  BplaneParameters.cpp
+  BplaneReal.cpp
+  BrouwerMeanLongParameters.cpp
+  BrouwerMeanShortParameters.cpp
+  BurnData.cpp
+  BurnParameters.cpp
+  BurnReal.cpp
+  CartesianParameters.cpp
+  DelaunayParameters.cpp
+  EnvData.cpp
+  EnvReal.cpp
+  EquinoctialParameters.cpp
+  ExpressionParser.cpp
+  HardwareParameters.cpp
+  HardwareReal.cpp
+  HardwareRvector.cpp
+  HardwareString.cpp
+  IncomingAsymptoteParameters.cpp
+  KeplerianParameters.cpp
+  ModEquinoctialParameters.cpp
+  OrbitTime.cpp
+  NumberWrapper.cpp
+  ObjectWrapper.cpp
+  ObjectPropertyWrapper.cpp
+  OnOffWrapper.cpp
+  OrbitalParameters.cpp
+  OrbitCovarianceParameters.cpp
+  OrbitData.cpp
+  OrbitReal.cpp
+  OrbitRmat33.cpp
+  OrbitRmat66.cpp
+  OrbitRvec6.cpp
+  OrbitStmParameters.cpp
+  OutgoingAsymptoteParameters.cpp
+  ParameterDatabase.cpp
+  ParameterInfo.cpp
+  Parameter.cpp
+  ParameterWrapper.cpp
+  PlanetodeticParameters.cpp
+  PlanetData.cpp
+  PlanetParameters.cpp
+  PlanetReal.cpp
+  RealVar.cpp
+  RefData.cpp
+  Rmat33Var.cpp
+  Rmat66Var.cpp
+  Rvec3Var.cpp
+  Rvec6Var.cpp
+  RvectorVar.cpp
+  SpacecraftData.cpp
+  SphericalParameters.cpp
+  StringWrapper.cpp
+  StringObjectWrapper.cpp
+  StringVar.cpp
+  TimeData.cpp
+  TimeParameters.cpp
+  TimeReal.cpp
+  TimeString.cpp
+  Variable.cpp
+  VariableWrapper.cpp
+  AttitudeString.cpp
+  DynamicLibrary.cpp
+  GmatEventHandler.cpp
+  GuiInterface.cpp
+  AdamsBashforthMoulton.cpp
+  DormandElMikkawyPrince68.cpp
+  Integrator.cpp
+  PredictorCorrector.cpp
+  PrinceDormand45.cpp
+  PrinceDormand78.cpp
+  PropagationStateManager.cpp
+  Propagator.cpp
+  PropSetup.cpp
+  RungeKutta89.cpp
+  RungeKuttaFehlberg56.cpp
+  RungeKuttaNystrom.cpp
+  RungeKutta.cpp
+  Asteroid.cpp
+  AtmosphereModel.cpp
+  Barycenter.cpp
+  CalculatedPoint.cpp
+  CelestialBody.cpp
+  Comet.cpp
+  DeFile.cpp
+  EphemSmoother.cpp
+  ExponentialAtmosphere.cpp
+C:\GMAT-Test\upstream\src\base\solarsys\EphemSmoother.cpp(246,20): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\upstream\src\base\solarsys\EphemSmoother.cpp(252,38): warning C4244: '=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  JacchiaRobertsAtmosphere.cpp
+  LibrationPoint.cpp
+  MediaCorrectionInterface.cpp
+  Moon.cpp
+  Msise90Atmosphere.cpp
+  PlanetaryEphemException.cpp
+  PlanetaryEphem.cpp
+  PlanetographicRegion.cpp
+  Planet.cpp
+  ShadowState.cpp
+  SlpFile.cpp
+  SolarFluxReader.cpp
+  SolarSystemException.cpp
+  SolarSystem.cpp
+C:\GMAT-Test\upstream\src\base\solarsys\SolarFluxReader.cpp(916,29): warning C4244: 'initializing': conversion from 'GmatEpoch' to 'UnsignedInt', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+  Star.cpp
+  Solver.cpp
+  DifferentialCorrector.cpp
+  Optimizer.cpp
+  InternalOptimizer.cpp
+  ISolverListener.cpp
+  ExternalOptimizer.cpp
+  DerivativeModel.cpp
+  Gradient.cpp
+  Jacobian.cpp
+  LineSearch.cpp
+  FormationInterface.cpp
+  Plate.cpp
+  Spacecraft.cpp
+  SpaceObject.cpp
+  TextTrajectoryFile.cpp
+  StopCondition.cpp
+  AttitudeWriterCK.cpp
+  EphemerisFile.cpp
+  EphemerisWriter.cpp
+  EphemWriterCCSDS.cpp
+  EphemWriterCode500.cpp
+  EphemWriterSPK.cpp
+  EphemWriterSTK.cpp
+  EphemWriterWithInterpolator.cpp
+  EphemManager.cpp
+  MessageWindow.cpp
+  TextEphemFile.cpp
+  OrbitView.cpp
+  OwnedPlot.cpp
+  ReportFile.cpp
+  Subscriber.cpp
+  XyPlot.cpp
+  OrbitPlot.cpp
+  GroundTrackPlot.cpp
+  GroundTrack.cpp
+  DynamicDataDisplay.cpp
+  DynamicDataInterface.cpp
+  SimpleExponentialAtmosphere.cpp
+  SpecialCelestialPoint.cpp
+  SpiceAttitude.cpp
+  SpiceAttitudeKernelReader.cpp
+  SpiceAttitudeKernelWriter.cpp
+  SpiceFrameKernelWriter.cpp
+  SpiceInterface.cpp
+  SpiceOrbitKernelReader.cpp
+  SpiceKernelReader.cpp
+  SpiceKernelWriter.cpp
+  SpiceOrbitKernelWriter.cpp
+  SpiceSCClockKernelWriter.cpp
+  msise90_sub.c
+C:\GMAT-Test\upstream\src\base\solarsys\msise90_sub.c(1774,24): warning C4244: '=': conversion from 'real' to 'integer', possible loss of data [C:\GMAT-Test\upstream\build-win\src\base\GmatBase.vcxproj]
+     Creating library C:/GMAT-Test/upstream/build-win/src/base/Release/GmatBase.lib and object C:/GMAT-Test/upstream/build-win/src/base/Release/GmatBase.exp
+  GmatBase.vcxproj -> C:\GMAT-Test\upstream\application\bin\libGmatBase.dll
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/FormationPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/src/console/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/EstimationPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/EventLocatorPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/EphemPropagatorPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ExtraPropagatorsPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/GmatFunctionPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/src/gui/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/Msise00Plugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/NewParameterPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/PolyhedronGravityPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ProductionPropagatorPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/PythonInterfacePlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/SaveCommandPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ScriptToolsPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/StationPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/TLEPropagatorPlugin/src/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/YukonOptimizerPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/DataInterfacePlugin/src/base/CMakeLists.txt
+  Set.cpp
+  DataInterface.cpp
+  FileInterface.cpp
+  DataReader.cpp
+  FileReader.cpp
+  TcopsVHFAscii.cpp
+  YukonOptimizerFactory.cpp
+  TcopsVHFData.cpp
+  GmatPluginFunctions.cpp
+  GmatProblemInterface.cpp
+  DataInterfaceCommandFactory.cpp
+  YukonUserProblem.cpp
+  Yukon.cpp
+  Yukonad.cpp
+  MinQP.cpp
+  NLPFunctionGenerator.cpp
+  TlePropFactory.cpp
+  GmatPluginFunctions.cpp
+  TLEData.cpp
+  SPICEPropagator.cpp
+  TLEReader.cpp
+  ExtraPropagatorFactory.cpp
+  GmatPluginFunctions.cpp
+  BulirschStoer.cpp
+  ContactEvent.cpp
+  ContactResult.cpp
+  EclipseEvent.cpp
+  EclipseTotalEvent.cpp
+  IntrusionEvent.cpp
+  IntrusionResult.cpp
+  EventLocatorFactory.cpp
+  ContactLocator.cpp
+  EphemPropFactory.cpp
+  StationFactory.cpp
+  GmatPluginFunctions.cpp
+  GmatPluginFunctions.cpp
+  GroundStation.cpp
+  EphemerisPropagator.cpp
+C:\GMAT-Test\upstream\plugins\TLEPropagatorPlugin\src\propagator\SPICEPropagator.cpp(270,20): warning C4244: '+=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\TLEPropagatorPlugin\src\TLEPropagator.vcxproj]
+  DataInterfaceFactory.cpp
+  ReaderFactory.cpp
+  CcsdsEphPropagator.cpp
+  Code500Propagator.cpp
+  SPKPropagator.cpp
+  CommandEcho.cpp
+  CommandEchoFactory.cpp
+  StkEPropagator.cpp
+  GmatPluginFunctions.cpp
+  EclipseLocator.cpp
+  IntrusionLocator.cpp
+  GmatPluginFunctions.cpp
+  GmatPluginFunctions.cpp
+C:\GMAT-Test\upstream\plugins\EphemPropagatorPlugin\src\base\propagator\Code500Propagator.cpp(1449,33): warning C4244: 'initializing': conversion from 'GmatEpoch' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EphemPropagatorPlugin\src\base\EphemPropagator.vcxproj]
+C:\GMAT-Test\upstream\plugins\EphemPropagatorPlugin\src\base\propagator\Code500Propagator.cpp(1602,33): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EphemPropagatorPlugin\src\base\EphemPropagator.vcxproj]
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/YukonOptimizerPlugin/src/base/Release/YukonOptimizer.lib and object C:/GMAT-Test/upstream/build-win/plugins/YukonOptimizerPlugin/src/base/Release/YukonOptimizer.exp
+  YukonOptimizer.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libYukonOptimizer.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ExtraPropagatorsPlugin/src/base/Release/ExtraPropagators.lib and object C:/GMAT-Test/upstream/build-win/plugins/ExtraPropagatorsPlugin/src/base/Release/ExtraPropagators.exp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/DataInterfacePlugin/src/base/Release/DataInterface.lib and object C:/GMAT-Test/upstream/build-win/plugins/DataInterfacePlugin/src/base/Release/DataInterface.exp
+  ExtraPropagators.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libExtraPropagators.dll
+  DataInterface.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libDataInterface.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ScriptToolsPlugin/src/base/Release/ScriptTools.lib and object C:/GMAT-Test/upstream/build-win/plugins/ScriptToolsPlugin/src/base/Release/ScriptTools.exp
+  ScriptTools.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libScriptTools.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/TLEPropagatorPlugin/src/Release/TLEPropagator.lib and object C:/GMAT-Test/upstream/build-win/plugins/TLEPropagatorPlugin/src/Release/TLEPropagator.exp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/EphemPropagatorPlugin/src/base/Release/EphemPropagator.lib and object C:/GMAT-Test/upstream/build-win/plugins/EphemPropagatorPlugin/src/base/Release/EphemPropagator.exp
+  TLEPropagator.vcxproj -> C:\GMAT-Test\upstream\application\plugins\thinksys\libTLEPropagator.dll
+  EphemPropagator.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libEphemPropagator.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/StationPlugin/src/base/Release/Station.lib and object C:/GMAT-Test/upstream/build-win/plugins/StationPlugin/src/base/Release/Station.exp
+  Station.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libStation.dll
+  Save.cpp
+  SaveCommandFactory.cpp
+  GmatPluginFunctions.cpp
+  CallPythonFunction.cpp
+  PythonCommandFactory.cpp
+  ProductionPropagatorFactory.cpp
+  GmatPluginFunctions.cpp
+  PythonModule.cpp
+  PythonInterface.cpp
+  GmatPluginFunctions.cpp
+  PrinceDormand853.cpp
+  PolyhedronGravityModelFactory.cpp
+  GravityParameterFactory.cpp
+  PolyhedronBody.cpp
+  PolyhedronGravityModel.cpp
+  GravData.cpp
+  GravReal.cpp
+  NewParameterFactory.cpp
+  SurfaceHeight.cpp
+  GmatPluginFunctions.cpp
+  AtmosDensity.cpp
+  FMAcceleration.cpp
+  FMDensity.cpp
+  OdeData.cpp
+  OdeReal.cpp
+  OdeRvec3.cpp
+  SolverData.cpp
+  NRLMsise00Atmosphere.cpp
+  NRLMsise00Factory.cpp
+  GmatPluginFunctions.cpp
+  AboutDialog.cpp
+  FileUpdateDialog.cpp
+  GmatApp.cpp
+  GmatAppData.cpp
+  CompareFilesDialog.cpp
+  CompareTextDialog.cpp
+  GmatConnection.cpp
+  GmatMainFrame.cpp
+C:\GMAT-Test\deps\cspice\include\f2c.h(628,9): warning C4005: 'min': macro redefinition [C:\GMAT-Test\upstream\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+  (compiling source file '../../../../../plugins/Msise00Plugin/src/base/atmosphere/NRLMsise00Atmosphere.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(197,9):
+      see previous definition of 'min'
+  
+C:\GMAT-Test\deps\cspice\include\f2c.h(629,9): warning C4005: 'max': macro redefinition [C:\GMAT-Test\upstream\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+  (compiling source file '../../../../../plugins/Msise00Plugin/src/base/atmosphere/NRLMsise00Atmosphere.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(193,9):
+      see previous definition of 'max'
+  
+  CallGmatFunction.cpp
+  Global.cpp
+  GmatFunctionCommandFactory.cpp
+  GmatFunctionFactory.cpp
+  GmatFunction.cpp
+  GmatPluginFunctions.cpp
+  SolverReal.cpp
+  SolverState.cpp
+  SolverStatus.cpp
+  SolverString.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ProductionPropagatorPlugin/src/base/Release/ProductionPropagators.lib and object C:/GMAT-Test/upstream/build-win/plugins/ProductionPropagatorPlugin/src/base/Release/ProductionPropagators.exp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/EventLocatorPlugin/src/base/Release/EventLocator.lib and object C:/GMAT-Test/upstream/build-win/plugins/EventLocatorPlugin/src/base/Release/EventLocator.exp
+  ProductionPropagators.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libProductionPropagators.dll
+  Torque.cpp
+  GmatPluginFunctions.cpp
+  EventLocator.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libEventLocator.dll
+  nrlmsise00_sub.c
+C:\GMAT-Test\upstream\plugins\Msise00Plugin\src\base\atmosphere\nrlmsise00_sub.c(2364,24): warning C4244: '=': conversion from 'real' to 'integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/SaveCommandPlugin/src/base/Release/SaveCommand.lib and object C:/GMAT-Test/upstream/build-win/plugins/SaveCommandPlugin/src/base/Release/SaveCommand.exp
+  SaveCommand.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libSaveCommand.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/Msise00Plugin/src/base/Release/Msise00.lib and object C:/GMAT-Test/upstream/build-win/plugins/Msise00Plugin/src/base/Release/Msise00.exp
+  Msise00.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libMsise00.dll
+  GmatMenuBar.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/PythonInterfacePlugin/src/base/py3.12/Release/PythonInterface_py312.lib and object C:/GMAT-Test/upstream/build-win/plugins/PythonInterfacePlugin/src/base/py3.12/Release/PythonInterface_py312.exp
+  PythonInterface_py312.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libPythonInterface_py312.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/GmatFunctionPlugin/src/base/Release/GmatFunction.lib and object C:/GMAT-Test/upstream/build-win/plugins/GmatFunctionPlugin/src/base/Release/GmatFunction.exp
+  GmatToolBar.cpp
+  GmatFunction.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libGmatFunction.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/NewParameterPlugin/src/base/Release/NewParameters.lib and object C:/GMAT-Test/upstream/build-win/plugins/NewParameterPlugin/src/base/Release/NewParameters.exp
+  NewParameters.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libNewParameters.dll
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/PolyhedronGravityPlugin/src/base/Release/PolyhedronGravity.lib and object C:/GMAT-Test/upstream/build-win/plugins/PolyhedronGravityPlugin/src/base/Release/PolyhedronGravity.exp
+  GuiInterpreter.cpp
+  PolyhedronGravity.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libPolyhedronGravity.dll
+  GuiListenerManager.cpp
+  AngleAdapterDeg.cpp
+  AzimuthAdapter.cpp
+  GuiMessageReceiver.cpp
+  BRTSDopplerAdapter.cpp
+  BRTSRangeAdapter.cpp
+  DeclinationAdapter.cpp
+  DopplerAdapter.cpp
+  DSNPNRangeAdapter.cpp
+  DSNRangeAdapter.cpp
+  GuiPublisher.cpp
+  driver.cpp
+  ConsoleAppException.cpp
+  PrintUtility.cpp
+  ConsoleMessageReceiver.cpp
+  FormationFactory.cpp
+  Formation.cpp
+  GmatPluginFunctions.cpp
+  GmatNotebook.cpp
+  GmatServer.cpp
+  GmatTreeItemData.cpp
+  ElevationAdapter.cpp
+  GNDopplerAdapter.cpp
+  GNRangeAdapter.cpp
+  GPSAdapter.cpp
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ThrustFilePlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ExternalForceModelPlugin/src/base/CMakeLists.txt
+  PointRangeRateAdapterKps.cpp
+  GuiPlotReceiver.cpp
+  RangeAdapterKm.cpp
+  RangeRateAdapterKps.cpp
+  RightAscAdapter.cpp
+  TDRSDopplerAdapter.cpp
+  InteractiveMatlabDialog.cpp
+  TDRSDOWDAdapter.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/FormationPlugin/src/base/Release/Formation.lib and object C:/GMAT-Test/upstream/build-win/plugins/FormationPlugin/src/base/Release/Formation.exp
+  TDRSRangeAdapter.cpp
+  Formation.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libFormation.dll
+  MissionTreeItemData.cpp
+  RunScriptFolderDialog.cpp
+  TDRS3LReturnDopplerAdapter.cpp
+  TrackingDataAdapter.cpp
+  XEastAdapter.cpp
+  GmatConsole.vcxproj -> C:\GMAT-Test\upstream\application\bin\GmatConsole.exe
+  ResourceTree.cpp
+  XSouthAdapter.cpp
+  ScriptPanel.cpp
+  SetPathDialog.cpp
+  BeginFileThrust.cpp
+  EndFileThrust.cpp
+  TextEphemFileDialog.cpp
+  ThfDataSegment.cpp
+  ThrustHistoryFile.cpp
+  YEastAdapter.cpp
+  ThrustSegment.cpp
+  ThrustFileCommandFactory.cpp
+  ThrustFileForceFactory.cpp
+  ThrustFileReaderFactory.cpp
+  ExternalModelFactory.cpp
+  GmatPluginFunctions.cpp
+  ExternalModel.cpp
+  YNorthAdapter.cpp
+  RangeSkinAdapter.cpp
+  RunEstimator.cpp
+  RunSimulator.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\adapter\TrackingDataAdapter.cpp(2421,39): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\adapter\TrackingDataAdapter.cpp(2425,45): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  DataFilter.cpp
+  AcceptFilter.cpp
+  RejectFilter.cpp
+  ThrustSegmentParameterFactory.cpp
+  FileThrust.cpp
+  GmatPluginFunctions.cpp
+  ErrorModel.cpp
+  ThrustSegmentData.cpp
+  WelcomePanel.cpp
+  ThrustSegmentParameters.cpp
+  ThrustSegmentReal.cpp
+  ThrustSegmentRvector.cpp
+  BatchEstimatorBase.cpp
+  GroundStationPanel.cpp
+  BatchEstimator.cpp
+  EstimationStateManager.cpp
+  FiniteBurnSetupPanel.cpp
+  Estimator.cpp
+  ImpulsiveBurnSetupPanel.cpp
+  AchievePanel.cpp
+  EstimatorException.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\BatchEstimator.cpp(682,64): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  Simulator.cpp
+  EstimationRootFinder.cpp
+  AssignmentPanel.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ExternalForceModelPlugin/src/base/py3.12/Release/ExternalForceModel_py312.lib and object C:/GMAT-Test/upstream/build-win/plugins/ExternalForceModelPlugin/src/base/py3.12/Release/ExternalForceModel_py312.exp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6519,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6583,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6679,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(7421,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(7870,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8320,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8429,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8500,77): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8589,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8873,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(9638,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(9658,77): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10363,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10363,27): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10413,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10447,85): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10691,70): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10692,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(11473,81): warning C4244: 'argument': conversion from 'Real' to 'const Integer', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  ExternalForceModel_py312.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libExternalForceModel_py312.dll
+  Event.cpp
+  BeginFiniteBurnPanel.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ThrustFilePlugin/src/base/Release/ThrustFile.lib and object C:/GMAT-Test/upstream/build-win/plugins/ThrustFilePlugin/src/base/Release/ThrustFile.exp
+  EventData.cpp
+  EventException.cpp
+  CallFunctionPanel.cpp
+  EventManager.cpp
+  ThrustFile.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libThrustFile.dll
+  DataFileFactory.cpp
+  EndFiniteBurnPanel.cpp
+  FindEventsPanel.cpp
+  ErrorModelFactory.cpp
+  EstimationCommandFactory.cpp
+  EstimationDataFilterFactory.cpp
+  GmatCommandPanel.cpp
+  ManageObjectPanel.cpp
+  EstimatorFactory.cpp
+  EstimatorHardwareFactory.cpp
+  ManeuverPanel.cpp
+  MinimizePanel.cpp
+  MeasurementModelFactory.cpp
+  NavPropagatorFactory.cpp
+  ObTypeFactory.cpp
+  SignalModelFactory.cpp
+  Antenna.cpp
+  RFHardware.cpp
+  NonlinearConstraintPanel.cpp
+  Receiver.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/factory/ObTypeFactory.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  Sensor.cpp
+  Signal.cpp
+  Transmitter.cpp
+  Transponder.cpp
+  Ionosphere.cpp
+  APData.cpp
+  OptimizePanel.cpp
+  MagneticField.cpp
+  MagneticHistory.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\measurement\Ionosphere\Ionosphere.cpp(1190,51): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\measurement\Ionosphere\Ionosphere.cpp(1197,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  IonosphereCoefficients.cpp
+  IonosphereCoefficientsFull.cpp
+  PropagatePanel.cpp
+  ReportPanel.cpp
+  MeasurementData.cpp
+  MeasurementManager.cpp
+  MeasurementModelBase.cpp
+  MediaCorrection.cpp
+  Troposphere.cpp
+  ScriptEventPanel.cpp
+  TargetPanel.cpp
+  B3_obtype.cpp
+  TogglePanel.cpp
+  VaryPanel.cpp
+  DataFile.cpp
+  DataFileAdapter.cpp
+  GmatObType.cpp
+  GmatData.cpp
+  ObservationData.cpp
+  ObType.cpp
+  ForPanel.cpp
+  RampTableData.cpp
+  RampTableType.cpp
+  MeasureModel.cpp
+  ConditionPanel.cpp
+  GPSPointMeasureModel.cpp
+  GmatPluginFunctions.cpp
+  RungeKutta4.cpp
+  ProgressReporter.cpp
+  PhysicalSignal.cpp
+  SignalBase.cpp
+  CoordPanel.cpp
+  CoordSysCreateDialog.cpp
+  CoordSystemConfigPanel.cpp
+  SignalData.cpp
+  Breakpoint.cpp
+  SinglePointSignal.cpp
+  DebuggerCommandFactory.cpp
+  PassivePhysicalSignal.cpp
+  SignalDataCache.cpp
+  InspectorPanel.cpp
+  TdmErrorHandler.cpp
+  TdmObType.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmErrorHandler.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  TdmReadWriter.cpp
+  TFSMagicNumbers.cpp
+  EventLocatorPanel.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmObType.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  TrackingFileSet.cpp
+  DragInputsDialog.cpp
+C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\upstream\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmReadWriter.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\upstream\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  ArraySetupDialog.cpp
+  ArraySetupPanel.cpp
+  GmatColorPanel.cpp
+  GmatDialog.cpp
+  GmatMdiChildFrame.cpp
+  GmatPanel.cpp
+  GmatBaseSetupPanel.cpp
+  GmatSavePanel.cpp
+  GmatStaticBoxSizer.cpp
+  GuiItemManager.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/EstimationPlugin/src/base/Release/GmatEstimation.lib and object C:/GMAT-Test/upstream/build-win/plugins/EstimationPlugin/src/base/Release/GmatEstimation.exp
+  MultiPathSetupPanel.cpp
+  GmatEstimation.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libGmatEstimation.dll
+  ParameterCreateDialog.cpp
+  ParameterSelectDialog.cpp
+  Building Custom Rule C:/GMAT-Test/upstream/plugins/ExtendedKalmanFilterPlugin/src/base/CMakeLists.txt
+  RunSmoother.cpp
+  ExtendedKalmanFilter.cpp
+  SeqEstimator.cpp
+  EstimatedParameter.cpp
+  EstimatedParameterModel.cpp
+  FirstOrderGaussMarkov.cpp
+  EKFCommandFactory.cpp
+  ParameterSetupPanel.cpp
+  ExtendedKalmanFilterFactory.cpp
+  ShowScriptDialog.cpp
+  EstimatedParameterFactory.cpp
+  EstimatedParameterModelFactory.cpp
+  ShowSummaryDialog.cpp
+  SinglePathSetupPanel.cpp
+  UserInputValidator.cpp
+  ProcessNoiseFactory.cpp
+  ProcessNoiseModelFactory.cpp
+  SmootherFactory.cpp
+  LinearProcessNoise.cpp
+  ProcessNoiseBase.cpp
+  ProcessNoiseModel.cpp
+  SNCProcessNoise.cpp
+  FunctionSetupPanel.cpp
+  GmatPluginFunctions.cpp
+  Smoother.cpp
+  MatlabFunctionSetupPanel.cpp
+  SmootherBase.cpp
+  BurnThrusterPanel.cpp
+  PowerSystemConfigPanel.cpp
+  TankAndMixDialog.cpp
+  ThrusterCoefficientDialog.cpp
+  ThrusterConfigPanel.cpp
+  DecoratedTree.cpp
+     Creating library C:/GMAT-Test/upstream/build-win/plugins/ExtendedKalmanFilterPlugin/src/base/Release/EKF.lib and object C:/GMAT-Test/upstream/build-win/plugins/ExtendedKalmanFilterPlugin/src/base/Release/EKF.exp
+  MissionTree.cpp
+  MissionTreeToolBar.cpp
+  EKF.vcxproj -> C:\GMAT-Test\upstream\application\plugins\libEKF.dll
+  TreeViewOptionDialog.cpp
+  UndockedMissionPanel.cpp
+  CompareReportPanel.cpp
+  EventFilePanel.cpp
+  OutputTree.cpp
+  ReportFilePanel.cpp
+  WxGuiInterface.cpp
+  PropagationConfigPanel.cpp
+  PropagatorSelectDialog.cpp
+  Camera.cpp
+  GLStars.cpp
+  GmatOpenGLSupport.cpp
+  Light.cpp
+  ModelManager.cpp
+  ModelObject.cpp
+  Rendering.cpp
+  Structure.cpp
+  StructureReader.cpp
+  StructureReader3ds.cpp
+  SurfaceBase.cpp
+  BarycenterPanel.cpp
+  CelesBodySelectDialog.cpp
+  CelestialBodyOrbitPanel.cpp
+  CelestialBodyOrientationPanel.cpp
+  CelestialBodyPanel.cpp
+  CelestialBodyPropertiesPanel.cpp
+  CelestialBodyVisualizationPanel.cpp
+  LibrationPointPanel.cpp
+  UniversePanel.cpp
+  DCSetupPanel.cpp
+  SQPSetupPanel.cpp
+  SolverCreatePanel.cpp
+  SolverGoalsPanel.cpp
+  SolverSetupPanel.cpp
+  SolverVariablesPanel.cpp
+  AttitudePanel.cpp
+  BallisticsMassPanel.cpp
+  FormationSetupPanel.cpp
+  OrbitDesignerDialog.cpp
+  OrbitPanel.cpp
+  OrbitSummaryDialog.cpp
+  PowerSystemPanel.cpp
+  SpacecraftPanel.cpp
+  SpaceObjectSelectDialog.cpp
+  TankPanel.cpp
+  ThrusterPanel.cpp
+  VisualModelCanvas.cpp
+  VisualModelPanel.cpp
+  DynamicDataDisplaySetupPanel.cpp
+  DynamicDataSettingsDialog.cpp
+  EphemerisFilePanel.cpp
+  GroundTrackArea.cpp
+  GroundTrackCanvas.cpp
+  GroundTrackCurve.cpp
+  GroundTrackPlotPanel.cpp
+  GroundTrackWindow.cpp
+  MdiChild3DViewFrame.cpp
+  MdiChildDynamicDataFrame.cpp
+  MdiChildGroundTrackFrame.cpp
+  MdiChildViewFrame.cpp
+  MdiChildTsFrame.cpp
+  MdiGlPlotData.cpp
+  MdiTableViewFrame.cpp
+  MdiTsPlotData.cpp
+  OrbitViewCanvas.cpp
+  OrbitViewPanel.cpp
+  ReportFileSetupPanel.cpp
+  SubscriberSetupPanel.cpp
+  ViewCanvas.cpp
+  TsPlotCanvas.cpp
+  TsPlotXYCanvas.cpp
+  TsPlotCurve.cpp
+  TsPlotOptionsDialog.cpp
+  XyPlotSetupPanel.cpp
+  EditorPanel.cpp
+  EditorPreferences.cpp
+  EditorPrintout.cpp
+  FindReplaceDialog.cpp
+  ScriptEditor.cpp
+  ViewTextDialog.cpp
+  ViewTextFrame.cpp
+  SpicePanel.cpp
+  GmatGUI.vcxproj -> C:\GMAT-Test\upstream\application\bin\GMAT.exe
+  Building Custom Rule C:/GMAT-Test/upstream/CMakeLists.txt
+-- Selecting Windows SDK version 10.0.26100.0 to target Windows 10.0.26200.
+-- The C compiler identification is MSVC 19.44.35229.0
+-- The CXX compiler identification is MSVC 19.44.35229.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found wxWidgets: debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_core.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_core.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32ud.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32u.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32ud_xml.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32u_xml.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32ud_net.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxbase32u_net.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_richtext.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_richtext.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_aui.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_aui.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_xrc.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_xrc.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_qa.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_qa.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_html.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_html.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_adv.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_adv.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_stc.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_stc.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32ud_gl.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxmsw32u_gl.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxscintillad.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxscintilla.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxpngd.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxpng.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxtiffd.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxtiff.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxjpegd.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxjpeg.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxzlibd.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxzlib.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxregexud.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxregexu.lib;debug;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxexpatd.lib;optimized;C:/GMAT-Test/deps/wx/lib/vc14x_x64_dll/wxexpat.lib;opengl32;glu32;imm32;gdiplus;msimg32;winmm;comctl32;uuid;oleacc;uxtheme;rpcrt4;shlwapi;version;wsock32 (found version "3.2.10") found components: core base xml net richtext aui xrc qa html adv stc gl scintilla png tiff jpeg zlib regex expat missing components: lexilla
+-- Found CSPICE: C:/GMAT-Test/deps/cspice
+-- Found F2C: C:/GMAT-Test/deps/cspice/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:296 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Found XercesC: C:/GMAT-Test/deps/xerces/lib/xerces-c_3.lib (found version "3.2.2")
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) 
+==============================-- Will install GMAT to C:/GMAT-Test/patched/GMAT-R2026a-Windows-x64
+
+Setting up install directory structure for GMAT 
+==============================
+GMAT util setup 
+==============================
+GMAT base setup 
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup 
+==============================
+GMAT GUI setup 
+-- Found OpenGL: opengl32
+==============================
+GMAT DataInterface Plugin setup 
+==============================
+GMAT EphemPropagator Plugin setup 
+==============================
+GMAT EKF Plugin setup 
+==============================
+GMAT Estimation Plugin setup 
+==============================
+GMAT EventLocator Plugin setup 
+==============================
+GMAT External Force Model Plugin setup (for Python 3.12)
+-- Found Python3: C:/Python312/libs/python312.lib (found suitable exact version "3.12.10") found components: Development Development.Module Development.Embed
+==============================
+GMAT ExtraPropagators Plugin setup 
+==============================
+GMAT Formation Plugin setup 
+==============================
+GMAT GmatFunction Plugin setup 
+==============================
+GMAT Msise00 Plugin setup 
+==============================
+GMAT NewParameter Plugin setup 
+==============================
+GMAT PolyhedronGravity Plugin setup 
+==============================
+GMAT ProductionPropagators Plugin setup 
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.12)
+==============================
+GMAT SaveCommand Plugin setup 
+==============================
+GMAT ScriptTools Plugin setup 
+==============================
+GMAT Station Plugin setup 
+==============================
+GMAT ThrustFile Plugin setup 
+==============================
+GMAT TLE Propagator Plugin setup 
+==============================
+GMAT Yukon Optimizer Plugin setup 
+======================================
+Skipping the OVtoOFI Plugin:
+OpenFramesInterface is not being built
+=======================================
+==============================
+Setting up wxWidgets install instructions for GMAT 
+-- Configuring done (13.5s)
+-- Generating done (1.0s)
+-- Build files have been written to: C:/GMAT-Test/patched/build-win
+MSBuild version 17.14.60+43b635718 for .NET Framework
+
+  1>Checking Build System
+  Building Custom Rule C:/GMAT-Test/patched/src/gmatutil/CMakeLists.txt
+  A1Date.cpp
+  A1Mjd.cpp
+  AngleUtil.cpp
+  AttitudeConversionUtility.cpp
+  AttitudeUtil.cpp
+  BaseException.cpp
+  BodyFixedStateConverter.cpp
+  CalculationUtilities.cpp
+  CCSDSAEMEulerAngleSegment.cpp
+  CCSDSAEMQuaternionSegment.cpp
+  CCSDSAEMReader.cpp
+  CCSDSAEMSegment.cpp
+  CCSDSEMReader.cpp
+  CCSDSEMSegment.cpp
+  CCSDSEMWriter.cpp
+  CCSDSEphemerisFile.cpp
+  CCSDSOEMReader.cpp
+  CCSDSOEMSegment.cpp
+  CCSDSOEMWriter.cpp
+  Code500EphemerisFile.cpp
+  ColorDatabase.cpp
+  CubicSpline.cpp
+  Date.cpp
+  DateUtil.cpp
+  ElapsedTime.cpp
+  Ephemeris.cpp
+  EopFile.cpp
+  FileManager.cpp
+  FileUtil.cpp
+  GmatGlobal.cpp
+  GmatTime.cpp
+  GravityFileUtil.cpp
+  GregorianDate.cpp
+C:\GMAT-Test\patched\src\gmatutil\util\GmatTime.cpp(688,29): warning C4244: '=': conversion from 'Real' to 'long', possible loss of data [C:\GMAT-Test\patched\build-win\src\gmatutil\GmatUtil.vcxproj]
+C:\GMAT-Test\patched\src\gmatutil\util\GmatTime.cpp(704,33): warning C4244: '-=': conversion from 'Real' to 'long', possible loss of data [C:\GMAT-Test\patched\build-win\src\gmatutil\GmatUtil.vcxproj]
+  IFileUpdater.cpp
+  LeapSecsFileReader.cpp
+  Linear.cpp
+  MemoryTracker.cpp
+  MessageInterface.cpp
+  MessageReceiver.cpp
+  NumericJacobian.cpp
+  NPlateHistoryFileReader.cpp
+  RandomNumber.cpp
+  RealUtilities.cpp
+  RgbColor.cpp
+  Rmatrix33.cpp
+  Rmatrix66.cpp
+  Rmatrix.cpp
+  Rvector3.cpp
+  Rvector6.cpp
+  Rvector.cpp
+  SPADFileReader.cpp
+  StateConversionUtil.cpp
+  STKEphemerisFile.cpp
+  StringTokenizer.cpp
+  StringUtil.cpp
+  TextParser.cpp
+  TimeSystemConverter.cpp
+  TimeTypes.cpp
+  UtcDate.cpp
+  DataBucket.cpp
+  DataWriter.cpp
+  DataWriterInterface.cpp
+  DataWriterMaker.cpp
+  WriterData.cpp
+  InterpolatorException.cpp
+  Interpolator.cpp
+  BrentDekkerZero.cpp
+  CubicSplineInterpolator.cpp
+  HermiteInterpolator.cpp
+  LinearInterpolator.cpp
+  NotAKnotInterpolator.cpp
+  LagrangeInterpolator.cpp
+  CholeskyFactorization.cpp
+  LUFactorization.cpp
+  MatrixFactorization.cpp
+  QRFactorization.cpp
+  SchurFactorization.cpp
+  Frozen.cpp
+  OrbitDesignerTime.cpp
+  RepeatSunSync.cpp
+  RepeatGroundTrack.cpp
+  SunSync.cpp
+     Creating library C:/GMAT-Test/patched/build-win/src/gmatutil/Release/GmatUtil.lib and object C:/GMAT-Test/patched/build-win/src/gmatutil/Release/GmatUtil.exp
+  GmatUtil.vcxproj -> C:\GMAT-Test\patched\application\bin\libGmatUtil.dll
+  Building Custom Rule C:/GMAT-Test/patched/src/base/CMakeLists.txt
+  APIFunctions.cpp
+  APIException.cpp
+  APIMessageReceiver.cpp
+  HelpSystem.cpp
+  AssetException.cpp
+  BodyFixedPoint.cpp
+  GroundstationInterface.cpp
+  Attitude.cpp
+  AttitudeException.cpp
+  CCSDSAttitude.cpp
+  CommandableNadirPointing.cpp
+  CSFixed.cpp
+  Kinematic.cpp
+  NadirPointing.cpp
+  PrecessingSpinner.cpp
+  Spinner.cpp
+  ThreeAxisKinematic.cpp
+  BurnException.cpp
+  Burn.cpp
+  FiniteBurn.cpp
+  ImpulsiveBurn.cpp
+  InertialManeuverFrame.cpp
+  ManeuverFrameManager.cpp
+  ManeuverFrame.cpp
+  VnbManeuverFrame.cpp
+  Achieve.cpp
+  Assignment.cpp
+  BeginFiniteBurn.cpp
+  BeginFunction.cpp
+  BeginMissionSequence.cpp
+  BeginScript.cpp
+  BranchCommand.cpp
+  CallFunction.cpp
+  CallBuiltinGmatFunction.cpp
+  CommandException.cpp
+  FindEvents.cpp
+  GmatCommand.cpp
+  CommandUtil.cpp
+  ClearPlot.cpp
+  ConditionalBranch.cpp
+  Create.cpp
+  Else.cpp
+  EndFiniteBurn.cpp
+  EndFor.cpp
+  EndFunction.cpp
+  EndIf.cpp
+  EndOptimize.cpp
+  EndScript.cpp
+  EndTarget.cpp
+  EndWhile.cpp
+  For.cpp
+  If.cpp
+  ManageObject.cpp
+  Maneuver.cpp
+  MarkPoint.cpp
+  Minimize.cpp
+  NonlinearConstraint.cpp
+  NoOp.cpp
+  Optimize.cpp
+  PenDown.cpp
+  PenUp.cpp
+  Propagate.cpp
+  PropagationEnabledCommand.cpp
+  PlotCommand.cpp
+  SolverSequenceCommand.cpp
+  RHSEquation.cpp
+  Report.cpp
+  RunSolver.cpp
+  SaveMission.cpp
+  SolverBranchCommand.cpp
+  Stop.cpp
+  Target.cpp
+  Toggle.cpp
+  UpdateDynamicData.cpp
+  Vary.cpp
+  While.cpp
+  Write.cpp
+  ConfigManagerException.cpp
+  ConfigManager.cpp
+  ItemManager.cpp
+  PluginItemManager.cpp
+  AxisSystem.cpp
+  BodyFixedAxes.cpp
+  BodyInertialAxes.cpp
+  CoordinateBase.cpp
+  CoordinateConverter.cpp
+  CoordinateSystemException.cpp
+  CoordinateSystem.cpp
+  CoordinateTransformation.cpp
+  CoordinateTranslation.cpp
+  DynamicAxes.cpp
+  EquatorAxes.cpp
+  GeocentricSolarEclipticAxes.cpp
+  GeocentricSolarMagneticAxes.cpp
+  InertialAxes.cpp
+  ItrfCoefficientsFile.cpp
+  LocalAlignedConstrainedAxes.cpp
+  MeanOfDateAxes.cpp
+  MJ2000EcAxes.cpp
+  MJ2000EqAxes.cpp
+  MODEcAxes.cpp
+  MODEqAxes.cpp
+  MOEEcAxes.cpp
+  MOEEqAxes.cpp
+  ObjectReferencedAxes.cpp
+  SpiceAxes.cpp
+  TODEcAxes.cpp
+  TODEqAxes.cpp
+  TEMEAxes.cpp
+  TOEEcAxes.cpp
+  TOEEqAxes.cpp
+  TopocentricAxes.cpp
+  TransformUtil.cpp
+  TrueOfDateAxes.cpp
+  ICRFAxes.cpp
+  ICRFFile.cpp
+  ITRFAxes.cpp
+  IAUFile.cpp
+  BodySpinSunAxes.cpp
+  EventException.cpp
+  EventLocator.cpp
+  LocatedEvent.cpp
+C:\GMAT-Test\patched\src\base\coordsystem\IAUFile.cpp(198,22): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  ListenerManager.cpp
+  ListenerManagerInterface.cpp
+  Moderator.cpp
+  PlotInterface.cpp
+  PlotReceiver.cpp
+  PublisherException.cpp
+  Publisher.cpp
+  SandboxException.cpp
+  Sandbox.cpp
+  AtmosphereFactory.cpp
+  AttitudeFactory.cpp
+  AxisSystemFactory.cpp
+  BurnFactory.cpp
+  CalculatedPointFactory.cpp
+  CelestialBodyFactory.cpp
+  CommandFactory.cpp
+  CoordinateSystemFactory.cpp
+  FactoryException.cpp
+  FactoryManager.cpp
+  Factory.cpp
+  FunctionFactory.cpp
+  HardwareFactory.cpp
+  FieldOfViewFactory.cpp
+  InterfaceFactory.cpp
+  MathFactory.cpp
+  ODEModelFactory.cpp
+  ParameterFactory.cpp
+  PhysicalModelFactory.cpp
+  PlanetographicRegionFactory.cpp
+  PlateFactory.cpp
+  PropagatorFactory.cpp
+  PropSetupFactory.cpp
+  SolarSystemFactory.cpp
+  SolverFactory.cpp
+  SpacecraftFactory.cpp
+  StopConditionFactory.cpp
+  SubscriberFactory.cpp
+  GuiFactory.cpp
+  GmatWidget.cpp
+  PluginWidget.cpp
+  DragForce.cpp
+  FiniteThrust.cpp
+  ODEModelException.cpp
+  ODEModel.cpp
+  GravityField.cpp
+  GravityBase.cpp
+  HarmonicField.cpp
+  NumericJacobianOriginal.cpp
+  PhysicalModel.cpp
+  PointMassForce.cpp
+  SolarRadiationPressure.cpp
+  RelativisticCorrection.cpp
+  Harmonic.cpp
+  HarmonicGravity.cpp
+  Covariance.cpp
+  ElementWrapper.cpp
+C:\GMAT-Test\patched\src\base\forcemodel\harmonic\HarmonicGravity.cpp(234,36): warning C4244: '=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  EquationInitializer.cpp
+  FileUpdaterSVN.cpp
+  GmatBaseException.cpp
+  GmatBase.cpp
+  GmatState.cpp
+  GmatType.cpp
+  IChangeListener.cpp
+  ObjectInitializer.cpp
+  SpacePoint.cpp
+  StateManager.cpp
+  TriggerManager.cpp
+  BuiltinGmatFunction.cpp
+  Function.cpp
+  FunctionException.cpp
+  FunctionManager.cpp
+  GetEphemStates.cpp
+  GetLastState.cpp
+  ObjectManagedFunction.cpp
+  Pause.cpp
+  QuaternionProduct.cpp
+  QuaternionRotation.cpp
+  QuaternionToDCM.cpp
+  SystemTime.cpp
+  SetSeed.cpp
+  ConvertTime.cpp
+  Sign.cpp
+  Str2num.cpp
+  Num2str.cpp
+  RotationMatrix.cpp
+  Angle.cpp
+  UserDefinedFunction.cpp
+  ChemicalTank.cpp
+  ConicalFOV.cpp
+  CustomFOV.cpp
+  ChemicalThruster.cpp
+  ElectricTank.cpp
+  ElectricThruster.cpp
+  FieldOfView.cpp
+  FieldOfViewException.cpp
+  FuelTank.cpp
+  HardwareException.cpp
+  Hardware.cpp
+  Imager.cpp
+  NuclearPowerSystem.cpp
+  PowerSystem.cpp
+  RectangularFOV.cpp
+  SolarPowerSystem.cpp
+  Thruster.cpp
+  InterfaceException.cpp
+C:\GMAT-Test\patched\src\base\hardware\Imager.cpp(443,14): warning C4244: 'return': conversion from 'const Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\patched\src\base\hardware\Imager.cpp(466,14): warning C4244: 'return': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  Interface.cpp
+  GmatInterface.cpp
+  InterpreterException.cpp
+  Interpreter.cpp
+  MathParser.cpp
+  MathTree.cpp
+  ScriptInterpreter.cpp
+  ScriptReadWriter.cpp
+  Validator.cpp
+  ApiInterpreter.cpp
+  Abs.cpp
+  Acos.cpp
+  Acosh.cpp
+  Add.cpp
+  Asin.cpp
+  Asinh.cpp
+  Atan.cpp
+  Atan2.cpp
+  BuiltinFunctionNode.cpp
+  Ceil.cpp
+  Cos.cpp
+  Cosh.cpp
+  Cross3.cpp
+  DegToRad.cpp
+  Determinant.cpp
+  Diag.cpp
+  Divide.cpp
+  Exp.cpp
+  Fix.cpp
+  Floor.cpp
+  FunctionRunner.cpp
+  Log.cpp
+  Log10.cpp
+  Inverse.cpp
+  MathElement.cpp
+  MathException.cpp
+  MathFunction.cpp
+  MathNode.cpp
+  Min.cpp
+  Mod.cpp
+  Multiply.cpp
+  Negate.cpp
+  Norm.cpp
+  NumericFunctionNode.cpp
+  Power.cpp
+  RadToDeg.cpp
+  Rand.cpp
+  Randn.cpp
+  Sin.cpp
+  Sinh.cpp
+  Sprintf.cpp
+  Sqrt.cpp
+  StringFunctionNode.cpp
+  Strcat.cpp
+  Strcmp.cpp
+  Strfind.cpp
+  Strlen.cpp
+  Strrep.cpp
+  Substr.cpp
+  Subtract.cpp
+C:\GMAT-Test\patched\src\base\math\Strlen.cpp(174,23): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\patched\src\base\math\Substr.cpp(152,54): warning C4244: '=': conversion from 'Real' to 'int', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\patched\src\base\math\Substr.cpp(161,56): warning C4244: '=': conversion from 'Real' to 'int', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  Tan.cpp
+  Tanh.cpp
+  Transpose.cpp
+  EquationWrapper.cpp
+  AlternateEquinoctialParameters.cpp
+  AngularParameters.cpp
+  Array.cpp
+  ArrayWrapper.cpp
+  ArrayElementWrapper.cpp
+  AttitudeData.cpp
+  AttitudeParameters.cpp
+  AttitudeReal.cpp
+  AttitudeRmat33.cpp
+  AttitudeRvector.cpp
+  BallisticMassParameters.cpp
+  BallisticMassReal.cpp
+  BooleanWrapper.cpp
+  BplaneData.cpp
+  BplaneParameters.cpp
+  BplaneReal.cpp
+  BrouwerMeanLongParameters.cpp
+  BrouwerMeanShortParameters.cpp
+  BurnData.cpp
+  BurnParameters.cpp
+  BurnReal.cpp
+  CartesianParameters.cpp
+  DelaunayParameters.cpp
+  EnvData.cpp
+  EnvReal.cpp
+  EquinoctialParameters.cpp
+  ExpressionParser.cpp
+  HardwareParameters.cpp
+  HardwareReal.cpp
+  HardwareRvector.cpp
+  HardwareString.cpp
+  IncomingAsymptoteParameters.cpp
+  KeplerianParameters.cpp
+  ModEquinoctialParameters.cpp
+  OrbitTime.cpp
+  NumberWrapper.cpp
+  ObjectWrapper.cpp
+  ObjectPropertyWrapper.cpp
+  OnOffWrapper.cpp
+  OrbitalParameters.cpp
+  OrbitCovarianceParameters.cpp
+  OrbitData.cpp
+  OrbitReal.cpp
+  OrbitRmat33.cpp
+  OrbitRmat66.cpp
+  OrbitRvec6.cpp
+  OrbitStmParameters.cpp
+  OutgoingAsymptoteParameters.cpp
+  ParameterDatabase.cpp
+  ParameterInfo.cpp
+  Parameter.cpp
+  ParameterWrapper.cpp
+  PlanetodeticParameters.cpp
+  PlanetData.cpp
+  PlanetParameters.cpp
+  PlanetReal.cpp
+  RealVar.cpp
+  RefData.cpp
+  Rmat33Var.cpp
+  Rmat66Var.cpp
+  Rvec3Var.cpp
+  Rvec6Var.cpp
+  RvectorVar.cpp
+  SpacecraftData.cpp
+  SphericalParameters.cpp
+  StringWrapper.cpp
+  StringObjectWrapper.cpp
+  StringVar.cpp
+  TimeData.cpp
+  TimeParameters.cpp
+  TimeReal.cpp
+  TimeString.cpp
+  Variable.cpp
+  VariableWrapper.cpp
+  AttitudeString.cpp
+  DynamicLibrary.cpp
+  GmatEventHandler.cpp
+  GuiInterface.cpp
+  AdamsBashforthMoulton.cpp
+  DormandElMikkawyPrince68.cpp
+  Integrator.cpp
+  PredictorCorrector.cpp
+  PrinceDormand45.cpp
+  PrinceDormand78.cpp
+  PropagationStateManager.cpp
+  Propagator.cpp
+  PropSetup.cpp
+  RungeKutta89.cpp
+  RungeKuttaFehlberg56.cpp
+  RungeKuttaNystrom.cpp
+  RungeKutta.cpp
+  Asteroid.cpp
+  AtmosphereModel.cpp
+  Barycenter.cpp
+  CalculatedPoint.cpp
+  CelestialBody.cpp
+  Comet.cpp
+  DeFile.cpp
+  EphemSmoother.cpp
+  ExponentialAtmosphere.cpp
+  JacchiaRobertsAtmosphere.cpp
+C:\GMAT-Test\patched\src\base\solarsys\EphemSmoother.cpp(246,20): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+C:\GMAT-Test\patched\src\base\solarsys\EphemSmoother.cpp(252,38): warning C4244: '=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  LibrationPoint.cpp
+  MediaCorrectionInterface.cpp
+  Moon.cpp
+  Msise90Atmosphere.cpp
+  PlanetaryEphemException.cpp
+  PlanetaryEphem.cpp
+  PlanetographicRegion.cpp
+  Planet.cpp
+  ShadowState.cpp
+  SlpFile.cpp
+  SolarFluxReader.cpp
+  SolarSystemException.cpp
+C:\GMAT-Test\patched\src\base\solarsys\SolarFluxReader.cpp(916,29): warning C4244: 'initializing': conversion from 'GmatEpoch' to 'UnsignedInt', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+  SolarSystem.cpp
+  Star.cpp
+  Solver.cpp
+  DifferentialCorrector.cpp
+  Optimizer.cpp
+  InternalOptimizer.cpp
+  ISolverListener.cpp
+  ExternalOptimizer.cpp
+  DerivativeModel.cpp
+  Gradient.cpp
+  Jacobian.cpp
+  LineSearch.cpp
+  FormationInterface.cpp
+  Plate.cpp
+  Spacecraft.cpp
+  SpaceObject.cpp
+  TextTrajectoryFile.cpp
+  StopCondition.cpp
+  AttitudeWriterCK.cpp
+  EphemerisFile.cpp
+  EphemerisWriter.cpp
+  EphemWriterCCSDS.cpp
+  EphemWriterCode500.cpp
+  EphemWriterSPK.cpp
+  EphemWriterSTK.cpp
+  EphemWriterWithInterpolator.cpp
+  EphemManager.cpp
+  MessageWindow.cpp
+  TextEphemFile.cpp
+  OrbitView.cpp
+  OwnedPlot.cpp
+  ReportFile.cpp
+  Subscriber.cpp
+  XyPlot.cpp
+  OrbitPlot.cpp
+  GroundTrackPlot.cpp
+  GroundTrack.cpp
+  DynamicDataDisplay.cpp
+  DynamicDataInterface.cpp
+  SimpleExponentialAtmosphere.cpp
+  SpecialCelestialPoint.cpp
+  SpiceAttitude.cpp
+  SpiceAttitudeKernelReader.cpp
+  SpiceAttitudeKernelWriter.cpp
+  SpiceFrameKernelWriter.cpp
+  SpiceInterface.cpp
+  SpiceOrbitKernelReader.cpp
+  SpiceKernelReader.cpp
+  SpiceKernelWriter.cpp
+  SpiceOrbitKernelWriter.cpp
+  SpiceSCClockKernelWriter.cpp
+  msise90_sub.c
+C:\GMAT-Test\patched\src\base\solarsys\msise90_sub.c(1774,24): warning C4244: '=': conversion from 'real' to 'integer', possible loss of data [C:\GMAT-Test\patched\build-win\src\base\GmatBase.vcxproj]
+     Creating library C:/GMAT-Test/patched/build-win/src/base/Release/GmatBase.lib and object C:/GMAT-Test/patched/build-win/src/base/Release/GmatBase.exp
+  GmatBase.vcxproj -> C:\GMAT-Test\patched\application\bin\libGmatBase.dll
+  Building Custom Rule C:/GMAT-Test/patched/src/console/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/DataInterfacePlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/TLEPropagatorPlugin/src/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ScriptToolsPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/EstimationPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/StationPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ProductionPropagatorPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/plugins/YukonOptimizerPlugin/src/base/CMakeLists.txt
+  Building Custom Rule C:/GMAT-Test/patched/src/gui/CMakeLists.txt
+  Set.cpp
+  DataInterface.cpp
+  FileInterface.cpp
+  DataReader.cpp
+  FileReader.cpp
+  TcopsVHFAscii.cpp
+  TcopsVHFData.cpp
+  DataInterfaceCommandFactory.cpp
+  StationFactory.cpp
+  GmatPluginFunctions.cpp
+  GroundStation.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/PolyhedronGravityPlugin/src/base/CMakeLists.txt
+  AngleAdapterDeg.cpp
+  AzimuthAdapter.cpp
+  BRTSDopplerAdapter.cpp
+  BRTSRangeAdapter.cpp
+  DeclinationAdapter.cpp
+  DopplerAdapter.cpp
+  DSNPNRangeAdapter.cpp
+  DSNRangeAdapter.cpp
+  DataInterfaceFactory.cpp
+  YukonOptimizerFactory.cpp
+  GmatPluginFunctions.cpp
+  ReaderFactory.cpp
+  GmatProblemInterface.cpp
+  YukonUserProblem.cpp
+  Yukon.cpp
+  Yukonad.cpp
+  MinQP.cpp
+  NLPFunctionGenerator.cpp
+  GmatPluginFunctions.cpp
+  AboutDialog.cpp
+  FileUpdateDialog.cpp
+  GmatApp.cpp
+  GmatAppData.cpp
+  CompareFilesDialog.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/SaveCommandPlugin/src/base/CMakeLists.txt
+  CompareTextDialog.cpp
+  GmatConnection.cpp
+  GmatMainFrame.cpp
+  PolyhedronGravityModelFactory.cpp
+  ProductionPropagatorFactory.cpp
+  GmatPluginFunctions.cpp
+  ElevationAdapter.cpp
+  PrinceDormand853.cpp
+  GravityParameterFactory.cpp
+  PolyhedronBody.cpp
+  GNDopplerAdapter.cpp
+  PolyhedronGravityModel.cpp
+  GravData.cpp
+  GravReal.cpp
+  SurfaceHeight.cpp
+  GmatPluginFunctions.cpp
+  Save.cpp
+  SaveCommandFactory.cpp
+  GmatPluginFunctions.cpp
+  CommandEcho.cpp
+  CommandEchoFactory.cpp
+  GmatPluginFunctions.cpp
+  GNRangeAdapter.cpp
+  GPSAdapter.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/DataInterfacePlugin/src/base/Release/DataInterface.lib and object C:/GMAT-Test/patched/build-win/plugins/DataInterfacePlugin/src/base/Release/DataInterface.exp
+  PointRangeRateAdapterKps.cpp
+  RangeAdapterKm.cpp
+  RangeRateAdapterKps.cpp
+  DataInterface.vcxproj -> C:\GMAT-Test\patched\application\plugins\libDataInterface.dll
+  RightAscAdapter.cpp
+  TDRSDopplerAdapter.cpp
+  driver.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/YukonOptimizerPlugin/src/base/Release/YukonOptimizer.lib and object C:/GMAT-Test/patched/build-win/plugins/YukonOptimizerPlugin/src/base/Release/YukonOptimizer.exp
+  TDRSDOWDAdapter.cpp
+  ConsoleAppException.cpp
+  PrintUtility.cpp
+  ConsoleMessageReceiver.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/EphemPropagatorPlugin/src/base/CMakeLists.txt
+     Creating library C:/GMAT-Test/patched/build-win/plugins/PolyhedronGravityPlugin/src/base/Release/PolyhedronGravity.lib and object C:/GMAT-Test/patched/build-win/plugins/PolyhedronGravityPlugin/src/base/Release/PolyhedronGravity.exp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ProductionPropagatorPlugin/src/base/Release/ProductionPropagators.lib and object C:/GMAT-Test/patched/build-win/plugins/ProductionPropagatorPlugin/src/base/Release/ProductionPropagators.exp
+  YukonOptimizer.vcxproj -> C:\GMAT-Test\patched\application\plugins\libYukonOptimizer.dll
+  Building Custom Rule C:/GMAT-Test/patched/plugins/EventLocatorPlugin/src/base/CMakeLists.txt
+  TDRSRangeAdapter.cpp
+  TDRS3LReturnDopplerAdapter.cpp
+  PolyhedronGravity.vcxproj -> C:\GMAT-Test\patched\application\plugins\libPolyhedronGravity.dll
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ScriptToolsPlugin/src/base/Release/ScriptTools.lib and object C:/GMAT-Test/patched/build-win/plugins/ScriptToolsPlugin/src/base/Release/ScriptTools.exp
+  ProductionPropagators.vcxproj -> C:\GMAT-Test\patched\application\plugins\libProductionPropagators.dll
+  TrackingDataAdapter.cpp
+  GmatMenuBar.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/StationPlugin/src/base/Release/Station.lib and object C:/GMAT-Test/patched/build-win/plugins/StationPlugin/src/base/Release/Station.exp
+  EphemPropFactory.cpp
+  GmatPluginFunctions.cpp
+  EphemerisPropagator.cpp
+  CcsdsEphPropagator.cpp
+  Code500Propagator.cpp
+  SPKPropagator.cpp
+  ScriptTools.vcxproj -> C:\GMAT-Test\patched\application\plugins\libScriptTools.dll
+  TlePropFactory.cpp
+  StkEPropagator.cpp
+  GmatPluginFunctions.cpp
+  XEastAdapter.cpp
+  TLEData.cpp
+  SPICEPropagator.cpp
+  GmatToolBar.cpp
+  TLEReader.cpp
+  GuiInterpreter.cpp
+  XSouthAdapter.cpp
+  Station.vcxproj -> C:\GMAT-Test\patched\application\plugins\libStation.dll
+  GuiListenerManager.cpp
+  GuiMessageReceiver.cpp
+  YEastAdapter.cpp
+  GuiPublisher.cpp
+  YNorthAdapter.cpp
+  RangeSkinAdapter.cpp
+  GmatNotebook.cpp
+C:\GMAT-Test\patched\plugins\TLEPropagatorPlugin\src\propagator\SPICEPropagator.cpp(270,20): warning C4244: '+=': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\TLEPropagatorPlugin\src\TLEPropagator.vcxproj]
+  ContactEvent.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/NewParameterPlugin/src/base/CMakeLists.txt
+  ContactResult.cpp
+  EclipseEvent.cpp
+  EclipseTotalEvent.cpp
+  IntrusionEvent.cpp
+  IntrusionResult.cpp
+  EventLocatorFactory.cpp
+  ContactLocator.cpp
+C:\GMAT-Test\patched\plugins\EphemPropagatorPlugin\src\base\propagator\Code500Propagator.cpp(1449,33): warning C4244: 'initializing': conversion from 'GmatEpoch' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EphemPropagatorPlugin\src\base\EphemPropagator.vcxproj]
+C:\GMAT-Test\patched\plugins\EphemPropagatorPlugin\src\base\propagator\Code500Propagator.cpp(1602,33): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EphemPropagatorPlugin\src\base\EphemPropagator.vcxproj]
+  Building Custom Rule C:/GMAT-Test/patched/plugins/Msise00Plugin/src/base/CMakeLists.txt
+  RunEstimator.cpp
+  GmatConsole.vcxproj -> C:\GMAT-Test\patched\application\bin\GmatConsole.exe
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\adapter\TrackingDataAdapter.cpp(2421,39): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\adapter\TrackingDataAdapter.cpp(2425,45): warning C4244: '=': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  RunSimulator.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/SaveCommandPlugin/src/base/Release/SaveCommand.lib and object C:/GMAT-Test/patched/build-win/plugins/SaveCommandPlugin/src/base/Release/SaveCommand.exp
+  DataFilter.cpp
+  NewParameterFactory.cpp
+  AtmosDensity.cpp
+  AcceptFilter.cpp
+  RejectFilter.cpp
+  FMAcceleration.cpp
+  FMDensity.cpp
+  OdeData.cpp
+  OdeReal.cpp
+  OdeRvec3.cpp
+  SolverData.cpp
+  NRLMsise00Atmosphere.cpp
+  NRLMsise00Factory.cpp
+  EclipseLocator.cpp
+  GmatPluginFunctions.cpp
+  GmatServer.cpp
+  IntrusionLocator.cpp
+  ErrorModel.cpp
+  SaveCommand.vcxproj -> C:\GMAT-Test\patched\application\plugins\libSaveCommand.dll
+  GmatPluginFunctions.cpp
+  BatchEstimatorBase.cpp
+  BatchEstimator.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/GmatFunctionPlugin/src/base/CMakeLists.txt
+  GmatTreeItemData.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/EphemPropagatorPlugin/src/base/Release/EphemPropagator.lib and object C:/GMAT-Test/patched/build-win/plugins/EphemPropagatorPlugin/src/base/Release/EphemPropagator.exp
+  EstimationStateManager.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/TLEPropagatorPlugin/src/Release/TLEPropagator.lib and object C:/GMAT-Test/patched/build-win/plugins/TLEPropagatorPlugin/src/Release/TLEPropagator.exp
+  CallGmatFunction.cpp
+  Global.cpp
+  GmatFunctionCommandFactory.cpp
+  GmatFunctionFactory.cpp
+  GmatFunction.cpp
+  GmatPluginFunctions.cpp
+  EphemPropagator.vcxproj -> C:\GMAT-Test\patched\application\plugins\libEphemPropagator.dll
+  Estimator.cpp
+  EstimatorException.cpp
+C:\GMAT-Test\deps\cspice\include\f2c.h(628,9): warning C4005: 'min': macro redefinition [C:\GMAT-Test\patched\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+  (compiling source file '../../../../plugins/Msise00Plugin/src/base/atmosphere/NRLMsise00Atmosphere.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(197,9):
+      see previous definition of 'min'
+  
+C:\GMAT-Test\deps\cspice\include\f2c.h(629,9): warning C4005: 'max': macro redefinition [C:\GMAT-Test\patched\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+  (compiling source file '../../../../plugins/Msise00Plugin/src/base/atmosphere/NRLMsise00Atmosphere.cpp')
+      C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared\minwindef.h(193,9):
+      see previous definition of 'max'
+  
+  TLEPropagator.vcxproj -> C:\GMAT-Test\patched\application\plugins\thinksys\libTLEPropagator.dll
+  SolverReal.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/FormationPlugin/src/base/CMakeLists.txt
+  SolverState.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/PythonInterfacePlugin/src/base/CMakeLists.txt
+  SolverStatus.cpp
+  FormationFactory.cpp
+  SolverString.cpp
+  Formation.cpp
+  GmatPluginFunctions.cpp
+  Simulator.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ExtraPropagatorsPlugin/src/base/CMakeLists.txt
+  Torque.cpp
+  CallPythonFunction.cpp
+  PythonCommandFactory.cpp
+  PythonModule.cpp
+  PythonInterface.cpp
+  GmatPluginFunctions.cpp
+  EstimationRootFinder.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\BatchEstimator.cpp(682,64): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  GmatPluginFunctions.cpp
+  ExtraPropagatorFactory.cpp
+  GmatPluginFunctions.cpp
+  BulirschStoer.cpp
+  GuiPlotReceiver.cpp
+  Event.cpp
+  InteractiveMatlabDialog.cpp
+  MissionTreeItemData.cpp
+  EventData.cpp
+  RunScriptFolderDialog.cpp
+  EventException.cpp
+  ResourceTree.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6519,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6583,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(6679,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(7421,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(7870,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8320,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8429,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8500,77): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8589,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(8873,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(9638,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(9658,77): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10363,71): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10363,27): warning C4244: 'initializing': conversion from 'Real' to 'Integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10413,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10447,85): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10691,70): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(10692,66): warning C4244: 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  EventManager.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\estimator\Estimator.cpp(11473,81): warning C4244: 'argument': conversion from 'Real' to 'const Integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  DataFileFactory.cpp
+  nrlmsise00_sub.c
+  ErrorModelFactory.cpp
+C:\GMAT-Test\patched\plugins\Msise00Plugin\src\base\atmosphere\nrlmsise00_sub.c(2364,24): warning C4244: '=': conversion from 'real' to 'integer', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\Msise00Plugin\src\base\Msise00.vcxproj]
+     Creating library C:/GMAT-Test/patched/build-win/plugins/GmatFunctionPlugin/src/base/Release/GmatFunction.lib and object C:/GMAT-Test/patched/build-win/plugins/GmatFunctionPlugin/src/base/Release/GmatFunction.exp
+  ScriptPanel.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/EventLocatorPlugin/src/base/Release/EventLocator.lib and object C:/GMAT-Test/patched/build-win/plugins/EventLocatorPlugin/src/base/Release/EventLocator.exp
+  EstimationCommandFactory.cpp
+  SetPathDialog.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/FormationPlugin/src/base/Release/Formation.lib and object C:/GMAT-Test/patched/build-win/plugins/FormationPlugin/src/base/Release/Formation.exp
+  GmatFunction.vcxproj -> C:\GMAT-Test\patched\application\plugins\libGmatFunction.dll
+  EventLocator.vcxproj -> C:\GMAT-Test\patched\application\plugins\libEventLocator.dll
+  Formation.vcxproj -> C:\GMAT-Test\patched\application\plugins\libFormation.dll
+     Creating library C:/GMAT-Test/patched/build-win/plugins/Msise00Plugin/src/base/Release/Msise00.lib and object C:/GMAT-Test/patched/build-win/plugins/Msise00Plugin/src/base/Release/Msise00.exp
+  EstimationDataFilterFactory.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ThrustFilePlugin/src/base/CMakeLists.txt
+     Creating library C:/GMAT-Test/patched/build-win/plugins/NewParameterPlugin/src/base/Release/NewParameters.lib and object C:/GMAT-Test/patched/build-win/plugins/NewParameterPlugin/src/base/Release/NewParameters.exp
+  EstimatorFactory.cpp
+  EstimatorHardwareFactory.cpp
+  TextEphemFileDialog.cpp
+  Msise00.vcxproj -> C:\GMAT-Test\patched\application\plugins\libMsise00.dll
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ExtraPropagatorsPlugin/src/base/Release/ExtraPropagators.lib and object C:/GMAT-Test/patched/build-win/plugins/ExtraPropagatorsPlugin/src/base/Release/ExtraPropagators.exp
+  NewParameters.vcxproj -> C:\GMAT-Test\patched\application\plugins\libNewParameters.dll
+  MeasurementModelFactory.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/PythonInterfacePlugin/src/base/py3.12/Release/PythonInterface_py312.lib and object C:/GMAT-Test/patched/build-win/plugins/PythonInterfacePlugin/src/base/py3.12/Release/PythonInterface_py312.exp
+  NavPropagatorFactory.cpp
+  ExtraPropagators.vcxproj -> C:\GMAT-Test\patched\application\plugins\libExtraPropagators.dll
+  ObTypeFactory.cpp
+  PythonInterface_py312.vcxproj -> C:\GMAT-Test\patched\application\plugins\libPythonInterface_py312.dll
+  SignalModelFactory.cpp
+  BeginFileThrust.cpp
+  EndFileThrust.cpp
+  ThfDataSegment.cpp
+  ThrustHistoryFile.cpp
+  ThrustSegment.cpp
+  ThrustFileCommandFactory.cpp
+  ThrustFileForceFactory.cpp
+  ThrustFileReaderFactory.cpp
+  Antenna.cpp
+  RFHardware.cpp
+  WelcomePanel.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ExternalForceModelPlugin/src/base/CMakeLists.txt
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/factory/ObTypeFactory.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  Receiver.cpp
+  ThrustSegmentParameterFactory.cpp
+  Sensor.cpp
+  Signal.cpp
+  GroundStationPanel.cpp
+  Transmitter.cpp
+  FiniteBurnSetupPanel.cpp
+  Transponder.cpp
+  ImpulsiveBurnSetupPanel.cpp
+  Ionosphere.cpp
+  APData.cpp
+  FileThrust.cpp
+  MagneticField.cpp
+  GmatPluginFunctions.cpp
+  MagneticHistory.cpp
+  IonosphereCoefficients.cpp
+  ThrustSegmentData.cpp
+  ThrustSegmentParameters.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\measurement\Ionosphere\Ionosphere.cpp(1190,51): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\measurement\Ionosphere\Ionosphere.cpp(1197,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  ExternalModelFactory.cpp
+  GmatPluginFunctions.cpp
+  ExternalModel.cpp
+  ThrustSegmentReal.cpp
+  IonosphereCoefficientsFull.cpp
+  ThrustSegmentRvector.cpp
+  MeasurementData.cpp
+  AchievePanel.cpp
+  MeasurementManager.cpp
+  AssignmentPanel.cpp
+  MeasurementModelBase.cpp
+  BeginFiniteBurnPanel.cpp
+  MediaCorrection.cpp
+  Troposphere.cpp
+  B3_obtype.cpp
+  DataFile.cpp
+  CallFunctionPanel.cpp
+  DataFileAdapter.cpp
+  GmatObType.cpp
+  GmatData.cpp
+  ObservationData.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ThrustFilePlugin/src/base/Release/ThrustFile.lib and object C:/GMAT-Test/patched/build-win/plugins/ThrustFilePlugin/src/base/Release/ThrustFile.exp
+  ObType.cpp
+  RampTableData.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ExternalForceModelPlugin/src/base/py3.12/Release/ExternalForceModel_py312.lib and object C:/GMAT-Test/patched/build-win/plugins/ExternalForceModelPlugin/src/base/py3.12/Release/ExternalForceModel_py312.exp
+  ThrustFile.vcxproj -> C:\GMAT-Test\patched\application\plugins\libThrustFile.dll
+  RampTableType.cpp
+  MeasureModel.cpp
+  EndFiniteBurnPanel.cpp
+  FindEventsPanel.cpp
+  GmatCommandPanel.cpp
+  ExternalForceModel_py312.vcxproj -> C:\GMAT-Test\patched\application\plugins\libExternalForceModel_py312.dll
+  ManageObjectPanel.cpp
+  GPSPointMeasureModel.cpp
+  GmatPluginFunctions.cpp
+  RungeKutta4.cpp
+  ProgressReporter.cpp
+  PhysicalSignal.cpp
+  ManeuverPanel.cpp
+  SignalBase.cpp
+  SignalData.cpp
+  MinimizePanel.cpp
+  NonlinearConstraintPanel.cpp
+  SinglePointSignal.cpp
+  PassivePhysicalSignal.cpp
+  SignalDataCache.cpp
+  OptimizePanel.cpp
+  TdmErrorHandler.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmErrorHandler.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  PropagatePanel.cpp
+  TdmObType.cpp
+  TdmReadWriter.cpp
+  TFSMagicNumbers.cpp
+  TrackingFileSet.cpp
+  ReportPanel.cpp
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmReadWriter.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,48): warning C4275: non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler' [C:\GMAT-Test\patched\build-win\plugins\EstimationPlugin\src\base\GmatEstimation.vcxproj]
+  (compiling source file '../../../../../plugins/EstimationPlugin/src/base/tdmReader/TdmObType.cpp')
+      C:\GMAT-Test\deps\xerces\include\xercesc\sax\ErrorHandler.hpp(60,18):
+      see declaration of 'xercesc_3_2::ErrorHandler'
+      C:\GMAT-Test\patched\plugins\EstimationPlugin\src\base\tdmReader\TdmErrorHandler.hpp(54,23):
+      see declaration of 'TdmErrorHandler'
+  
+  ScriptEventPanel.cpp
+  TargetPanel.cpp
+  TogglePanel.cpp
+  VaryPanel.cpp
+  ForPanel.cpp
+  ConditionPanel.cpp
+  CoordPanel.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/EstimationPlugin/src/base/Release/GmatEstimation.lib and object C:/GMAT-Test/patched/build-win/plugins/EstimationPlugin/src/base/Release/GmatEstimation.exp
+  GmatEstimation.vcxproj -> C:\GMAT-Test\patched\application\plugins\libGmatEstimation.dll
+  CoordSysCreateDialog.cpp
+  Building Custom Rule C:/GMAT-Test/patched/plugins/ExtendedKalmanFilterPlugin/src/base/CMakeLists.txt
+  CoordSystemConfigPanel.cpp
+  RunSmoother.cpp
+  ExtendedKalmanFilter.cpp
+  SeqEstimator.cpp
+  EstimatedParameter.cpp
+  EstimatedParameterModel.cpp
+  FirstOrderGaussMarkov.cpp
+  EKFCommandFactory.cpp
+  ExtendedKalmanFilterFactory.cpp
+  Breakpoint.cpp
+  DebuggerCommandFactory.cpp
+  InspectorPanel.cpp
+  EventLocatorPanel.cpp
+  EstimatedParameterFactory.cpp
+  EstimatedParameterModelFactory.cpp
+  DragInputsDialog.cpp
+  ProcessNoiseFactory.cpp
+  ProcessNoiseModelFactory.cpp
+  SmootherFactory.cpp
+  LinearProcessNoise.cpp
+  ProcessNoiseBase.cpp
+  ProcessNoiseModel.cpp
+  SNCProcessNoise.cpp
+  GmatPluginFunctions.cpp
+  ArraySetupDialog.cpp
+  Smoother.cpp
+  SmootherBase.cpp
+  ArraySetupPanel.cpp
+  GmatColorPanel.cpp
+  GmatDialog.cpp
+  GmatMdiChildFrame.cpp
+  GmatPanel.cpp
+  GmatBaseSetupPanel.cpp
+  GmatSavePanel.cpp
+     Creating library C:/GMAT-Test/patched/build-win/plugins/ExtendedKalmanFilterPlugin/src/base/Release/EKF.lib and object C:/GMAT-Test/patched/build-win/plugins/ExtendedKalmanFilterPlugin/src/base/Release/EKF.exp
+  GmatStaticBoxSizer.cpp
+  EKF.vcxproj -> C:\GMAT-Test\patched\application\plugins\libEKF.dll
+  GuiItemManager.cpp
+  MultiPathSetupPanel.cpp
+  ParameterCreateDialog.cpp
+  ParameterSelectDialog.cpp
+  ParameterSetupPanel.cpp
+  ShowScriptDialog.cpp
+  ShowSummaryDialog.cpp
+  SinglePathSetupPanel.cpp
+  UserInputValidator.cpp
+  FunctionSetupPanel.cpp
+  MatlabFunctionSetupPanel.cpp
+  BurnThrusterPanel.cpp
+  PowerSystemConfigPanel.cpp
+  TankAndMixDialog.cpp
+  ThrusterCoefficientDialog.cpp
+  ThrusterConfigPanel.cpp
+  DecoratedTree.cpp
+  MissionTree.cpp
+  MissionTreeToolBar.cpp
+  TreeViewOptionDialog.cpp
+  UndockedMissionPanel.cpp
+  CompareReportPanel.cpp
+  EventFilePanel.cpp
+  OutputTree.cpp
+  ReportFilePanel.cpp
+  WxGuiInterface.cpp
+  PropagationConfigPanel.cpp
+  PropagatorSelectDialog.cpp
+  Camera.cpp
+  GLStars.cpp
+  GmatOpenGLSupport.cpp
+  Light.cpp
+  ModelManager.cpp
+  ModelObject.cpp
+  Rendering.cpp
+  Structure.cpp
+  StructureReader.cpp
+  StructureReader3ds.cpp
+  SurfaceBase.cpp
+  BarycenterPanel.cpp
+  CelesBodySelectDialog.cpp
+  CelestialBodyOrbitPanel.cpp
+  CelestialBodyOrientationPanel.cpp
+  CelestialBodyPanel.cpp
+  CelestialBodyPropertiesPanel.cpp
+  CelestialBodyVisualizationPanel.cpp
+  LibrationPointPanel.cpp
+  UniversePanel.cpp
+  DCSetupPanel.cpp
+  SQPSetupPanel.cpp
+  SolverCreatePanel.cpp
+  SolverGoalsPanel.cpp
+  SolverSetupPanel.cpp
+  SolverVariablesPanel.cpp
+  AttitudePanel.cpp
+  BallisticsMassPanel.cpp
+  FormationSetupPanel.cpp
+  OrbitDesignerDialog.cpp
+  OrbitPanel.cpp
+  OrbitSummaryDialog.cpp
+  PowerSystemPanel.cpp
+  SpacecraftPanel.cpp
+  SpaceObjectSelectDialog.cpp
+  TankPanel.cpp
+  ThrusterPanel.cpp
+  VisualModelCanvas.cpp
+  VisualModelPanel.cpp
+  DynamicDataDisplaySetupPanel.cpp
+  DynamicDataSettingsDialog.cpp
+  EphemerisFilePanel.cpp
+  GroundTrackArea.cpp
+  GroundTrackCanvas.cpp
+  GroundTrackCurve.cpp
+  GroundTrackPlotPanel.cpp
+  GroundTrackWindow.cpp
+  MdiChild3DViewFrame.cpp
+  MdiChildDynamicDataFrame.cpp
+  MdiChildGroundTrackFrame.cpp
+  MdiChildViewFrame.cpp
+  MdiChildTsFrame.cpp
+  MdiGlPlotData.cpp
+  MdiTableViewFrame.cpp
+  MdiTsPlotData.cpp
+  OrbitViewCanvas.cpp
+  OrbitViewPanel.cpp
+  ReportFileSetupPanel.cpp
+  SubscriberSetupPanel.cpp
+  ViewCanvas.cpp
+  TsPlotCanvas.cpp
+  TsPlotXYCanvas.cpp
+  TsPlotCurve.cpp
+  TsPlotOptionsDialog.cpp
+  XyPlotSetupPanel.cpp
+  EditorPanel.cpp
+  EditorPreferences.cpp
+  EditorPrintout.cpp
+  FindReplaceDialog.cpp
+  ScriptEditor.cpp
+  ViewTextDialog.cpp
+  ViewTextFrame.cpp
+  SpicePanel.cpp
+  GmatGUI.vcxproj -> C:\GMAT-Test\patched\application\bin\GMAT.exe
+  Building Custom Rule C:/GMAT-Test/patched/CMakeLists.txt

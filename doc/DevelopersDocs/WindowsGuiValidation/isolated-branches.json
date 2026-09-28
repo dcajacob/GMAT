@@ -1,0 +1,78 @@
+[
+  {
+    "branch": "pr/native-wheel-zoom",
+    "head": "ea64c9fb581a4e7cc4abf073ae02638685c6d252",
+    "test": "WindowsWheelRegression",
+    "files": [
+      "src/gui/subscriber/OrbitViewCanvas.cpp"
+    ]
+  },
+  {
+    "branch": "pr/native-animation-replay",
+    "head": "b07be71d2e1c382c59d9cd7186dba1d53c2ab0ce",
+    "test": "NativeAnimationRegression",
+    "files": [
+      "src/gui/subscriber/OrbitViewCanvas.cpp",
+      "src/gui/subscriber/ViewCanvas.cpp"
+    ]
+  },
+  {
+    "branch": "pr/native-viewport",
+    "head": "097c67fc4036d57e9189676ae5a411eaec38bf6c",
+    "test": "ViewportRegression",
+    "files": [
+      "src/gui/subscriber/OrbitViewCanvas.cpp",
+      "src/gui/subscriber/ViewCanvas.cpp",
+      "src/gui/subscriber/GroundTrackCanvas.cpp"
+    ]
+  },
+  {
+    "branch": "pr/groundtrack-direct-close",
+    "head": "9bcf367653045528c3d8c1a4b2bc0db82b941786",
+    "test": "GroundTrackCloseRegression",
+    "files": [
+      "src/gui/subscriber/GroundTrackWindow.cpp"
+    ]
+  },
+  {
+    "branch": "pr/resource-delete-menu",
+    "head": "57e22b63e052bd62f6e75da1b76adb6d3be76418",
+    "test": "ResourceDeleteRegression",
+    "files": [
+      "src/gui/app/ResourceTree.cpp"
+    ]
+  },
+  {
+    "branch": "pr/tree-theme-colors",
+    "head": "246cdd40f3a35a63f53bb21bce68f33feee81ae8",
+    "test": "TreeThemeRegression",
+    "files": [
+      "src/gui/app/GmatMainFrame.cpp"
+    ]
+  },
+  {
+    "branch": "pr/native-texture-rows",
+    "head": "27666c2d222cb1591d0d11cbec812d9ed677be78",
+    "test": "WindowsTextureRegression",
+    "files": [
+      "src/gui/rendering/ModelObject.cpp",
+      "src/gui/subscriber/ViewCanvas.cpp"
+    ]
+  },
+  {
+    "branch": "pr/gui-message-encoding",
+    "head": "9130aaedf6292111afb6766796b887d5ede6a2ef",
+    "test": "MessageEncodingRegression",
+    "files": [
+      "src/gui/app/GuiMessageReceiver.cpp"
+    ]
+  },
+  {
+    "branch": "pr/model-preview-context",
+    "head": "ba65591932e153cd25586cbd0c72838f248bdb4e",
+    "test": "ModelPreviewRegression",
+    "files": [
+      "src/gui/spacecraft/VisualModelCanvas.cpp"
+    ]
+  }
+]

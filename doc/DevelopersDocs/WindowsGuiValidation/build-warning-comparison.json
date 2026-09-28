@@ -1,0 +1,61 @@
+{
+  "upstream": {
+    "warning_count": 45,
+    "warnings": {
+      "src\\gmatutil\\util\\GmatTime.cpp C4244 '=': conversion from 'Real' to 'long', possible loss of data": 1,
+      "src\\gmatutil\\util\\GmatTime.cpp C4244 '-=': conversion from 'Real' to 'long', possible loss of data": 1,
+      "src\\base\\coordsystem\\IAUFile.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\forcemodel\\harmonic\\HarmonicGravity.cpp C4244 '=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\hardware\\Imager.cpp C4244 'return': conversion from 'const Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\hardware\\Imager.cpp C4244 'return': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\math\\Strlen.cpp C4244 '=': conversion from 'unsigned __int64' to 'Real', possible loss of data": 1,
+      "src\\base\\math\\Substr.cpp C4244 '=': conversion from 'Real' to 'int', possible loss of data": 2,
+      "src\\base\\solarsys\\EphemSmoother.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\solarsys\\EphemSmoother.cpp C4244 '=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\solarsys\\SolarFluxReader.cpp C4244 'initializing': conversion from 'GmatEpoch' to 'UnsignedInt', possible loss of data": 1,
+      "src\\base\\solarsys\\msise90_sub.c C4244 '=': conversion from 'real' to 'integer', possible loss of data": 1,
+      "plugins\\TLEPropagatorPlugin\\src\\propagator\\SPICEPropagator.cpp C4244 '+=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\EphemPropagatorPlugin\\src\\base\\propagator\\Code500Propagator.cpp C4244 'initializing': conversion from 'GmatEpoch' to 'Integer', possible loss of data": 1,
+      "plugins\\EphemPropagatorPlugin\\src\\base\\propagator\\Code500Propagator.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\Msise00Plugin\\src\\base\\atmosphere\\nrlmsise00_sub.c C4244 '=': conversion from 'real' to 'integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\adapter\\TrackingDataAdapter.cpp C4244 '=': conversion from 'unsigned __int64' to 'Real', possible loss of data": 2,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\BatchEstimator.cpp C4244 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data": 17,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'argument': conversion from 'Real' to 'const Integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\tdmReader\\TdmErrorHandler.hpp C4275 non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler'": 4,
+      "plugins\\EstimationPlugin\\src\\base\\measurement\\Ionosphere\\Ionosphere.cpp C4244 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\measurement\\Ionosphere\\Ionosphere.cpp C4244 'initializing': conversion from 'double' to 'int', possible loss of data": 1
+    }
+  },
+  "patched": {
+    "warning_count": 45,
+    "warnings": {
+      "src\\gmatutil\\util\\GmatTime.cpp C4244 '=': conversion from 'Real' to 'long', possible loss of data": 1,
+      "src\\gmatutil\\util\\GmatTime.cpp C4244 '-=': conversion from 'Real' to 'long', possible loss of data": 1,
+      "src\\base\\coordsystem\\IAUFile.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\forcemodel\\harmonic\\HarmonicGravity.cpp C4244 '=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\hardware\\Imager.cpp C4244 'return': conversion from 'const Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\hardware\\Imager.cpp C4244 'return': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\math\\Strlen.cpp C4244 '=': conversion from 'unsigned __int64' to 'Real', possible loss of data": 1,
+      "src\\base\\math\\Substr.cpp C4244 '=': conversion from 'Real' to 'int', possible loss of data": 2,
+      "src\\base\\solarsys\\EphemSmoother.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\solarsys\\EphemSmoother.cpp C4244 '=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "src\\base\\solarsys\\SolarFluxReader.cpp C4244 'initializing': conversion from 'GmatEpoch' to 'UnsignedInt', possible loss of data": 1,
+      "src\\base\\solarsys\\msise90_sub.c C4244 '=': conversion from 'real' to 'integer', possible loss of data": 1,
+      "plugins\\TLEPropagatorPlugin\\src\\propagator\\SPICEPropagator.cpp C4244 '+=': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\EphemPropagatorPlugin\\src\\base\\propagator\\Code500Propagator.cpp C4244 'initializing': conversion from 'GmatEpoch' to 'Integer', possible loss of data": 1,
+      "plugins\\EphemPropagatorPlugin\\src\\base\\propagator\\Code500Propagator.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\adapter\\TrackingDataAdapter.cpp C4244 '=': conversion from 'unsigned __int64' to 'Real', possible loss of data": 2,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\BatchEstimator.cpp C4244 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'argument': conversion from 'unsigned __int64' to 'Real', possible loss of data": 17,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'initializing': conversion from 'Real' to 'Integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\estimator\\Estimator.cpp C4244 'argument': conversion from 'Real' to 'const Integer', possible loss of data": 1,
+      "plugins\\Msise00Plugin\\src\\base\\atmosphere\\nrlmsise00_sub.c C4244 '=': conversion from 'real' to 'integer', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\tdmReader\\TdmErrorHandler.hpp C4275 non dll-interface class 'xercesc_3_2::ErrorHandler' used as base for dll-interface class 'TdmErrorHandler'": 4,
+      "plugins\\EstimationPlugin\\src\\base\\measurement\\Ionosphere\\Ionosphere.cpp C4244 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data": 1,
+      "plugins\\EstimationPlugin\\src\\base\\measurement\\Ionosphere\\Ionosphere.cpp C4244 'initializing': conversion from 'double' to 'int', possible loss of data": 1
+    }
+  },
+  "new_warning_types": []
+}

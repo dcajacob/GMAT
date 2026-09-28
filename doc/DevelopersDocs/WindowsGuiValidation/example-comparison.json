@@ -1,0 +1,1052 @@
+[
+  {
+    "script": "application/samples/Ex_Attitude_Spinner.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/SupportFiles/Ex_IncludeFile.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_ReportFiles.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/BatchLeastSquares.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_SimulatingAnOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_AlgebraicOptimization.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_Target_Finite_Burn_to_Raise_Apogee.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_SchattenFile_NominalCycle_Mean.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_OptimalLunarApsidesRotation_2Burn.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "application/samples/Ex_FileInterface.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/CovarianceShare/inputs/warmstartLEOSAT.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Yukon_AlgebraicOptimization.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Simulate_and_Process_GpsPosVec_data.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_ThrustScaleFactor.script",
+    "upstream": "time_limit_stopped",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/BasicFunction.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_FiniteBurn.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/userincludes/InitializeNestedIncludeSatB.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/Ex_Cart2KepMathTest.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/GroundTrackPlot/GroundTrack_Earth_GEO.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/test/scripts/MMS1Propagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_NewStringFunctions.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_MultibodySphericalHarmonicGravity.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/GSFCSats.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_MarsGRAM2005.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_ThrustAngles.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_NPlateSRP_AreaCoefficient.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Simulate_DSN_Range_then_Estimate_CartesianState_and_Cr.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/LunarTransferToL2-tutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ExternalForceModel_NoAPI.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_CCSDSAEMAttitude.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Propagate_Covariance.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Ex_LowEarthMinFuelTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ElectricPropulsion.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Ex_MinFuelLunarCapture.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step2.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/test/scripts/TdrsPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "prototype/OptimalControl/LowThrust/TestProblems/FiniteBurnHohmannTransfer/GMATFiniteHohmannTestScript.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Attitude_NadirPointing.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Basic3DModel.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_GMATFunction_Math.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_NadirPointingAttitude.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_ElectricPropulsionModelling.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_MinFuelLunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/SupportFiles/Ex_EphemerisCompareGeneric.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_GMATFunction_UsingGlobalObjects.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ControlFlow.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Simulate_And_Estimate_OEMPropagator.script",
+    "upstream": "time_limit_stopped",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/FunctionExample.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_AngleData.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "prototype/CSALTMatlab/TestProblems/AutoNGC/LunarOrbiterStationKeeping/AutoNGCLOSK_GMAT_CheckPropagation.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_EclipseLocation.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/MMSFunctionExample.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_NewMathFunctions.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_GEOTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/FunctionSample.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step4.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_Spacecraft.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_TargetStatusWindow.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_LEOStationKeeping.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_HighFidelitySRP.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step3.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Contact_Location_Station_Mask.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_OptimalLCROSSTrajectory.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedMatlab/Ex_CallMatlabFunctions.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_CommandEcho_GEOTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_TargetFiniteBurn_CenterPeriapsisTA.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/test/scripts/TerraPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_TDRSUserTracking.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "application/samples/Ex_ForceModels.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Starlink.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/mnvrshare/raiseApogee/RaiseApogee.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_IntrusionLocator_Mercury_Sun_Transit.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_Attitude_ModifiedRodriguesParameters.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_MarsOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/ComponentDesigns/SensorAccess/source/scripts/R2020a_BasicSensors.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_OEM_EphemerisCompare.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_With_Initial_OrbitErrorCovariance.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/GlobalSample.script",
+    "upstream": "mission_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_OEMPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/doc/GmatMonte/source/ExampleCode/PropagateMonteLunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_MonitoredLunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_GMATFunction_TargetInsideFunction.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/DevelopersDocs/UsingCInterface/Scripts/defaultConfig.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_STKEphemPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/test/scripts/BasicPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_BRTSTracking.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Tut_Simulate_DSN_Range_and_Doppler_Data_3_weeks.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "application/samples/Ex_IncludeMacro.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_Target_Finite_Burn_to_Raise_Apogee.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_RangeRangeRate.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/doc/GmatMonte/source/ExampleCode/PropagateToPerilune.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_LibrationPointStationKeeping_ESM.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_CSSISpaceWeatherFile.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step1.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_SimpleOrbitTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/CInterfacePlugin/matlab/GmatConfig.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/test/TLE/BasicPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_3DViews.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_TargetFiniteBurn_CenterPeriapsisDuration.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Propagate_ThrustHistoryFile.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/LEOStationKeepingTutorial.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_FiniteBurnParameters.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_CompareEphemeris.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/DynamicsSharing/SimpleGmatScript.script",
+    "upstream": "mission_failed",
+    "patched": "mission_failed"
+  },
+  {
+    "script": "application/samples/Ex_CustomSegmentColors.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_MultiSpacecraft_Simultaneous_BatchEstimation.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "application/samples/Ex_SafetyEllipse.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_SPADSRPScaleFactor.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedSNOPT/Ex_OptFiniteBurn.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_TLE_Propagation.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step2.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/PropLightsail2.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_LunarOrbitStationKeeping.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/mnvrshare/lunartransfer/EnterLunarOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_AnalyticMassProperties.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Tut_Mars_B_Plane_Targeting.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/ephemshare/LunarTransferExample/EnterLunarOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_HohmannTransfer.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_MMSSingleLunarSwingby.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_MarsBPlane.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/OptimalControl/LowThrust/TestProblems/LowThrustModelling/SolarEndToEndExample.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_TDRSAndUser.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Ex_AlgebraicOptimization.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_PowerSupplyCurve1.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step4.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Simulate_and_Process_Range_and_RangeRate_data.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_MarsLaunchWindowAnalysis.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/LunarTransferTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/ephemshare/ReadWriteBasics/readSPK.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/SystemDocs/ArchitecturalSpecification/script/BasicScript.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/api/Ex_R2020a_ToLuna.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_NewFunctions_GetEphemStates.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_LCROSSTrajectory.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_UsingGMATFunctions.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ForceModel_ExtraShadowBodies.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_BusPowerType0.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_FilterSmoother_GpsPosVec.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "api-interop/doc/GmatMonte/source/ExampleCode/MinimalLunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/MarsBPlaneTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "api-interop/doc/GmatMonte/source/ExampleCode/EnterLunarOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_HohmannTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ThrusterWithMultipleTanks.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_L2Design.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_StationContactLocator.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_PythonInterface.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "prototype/CSALTMatlab/TestProblems/LISA/LISA_Sean/LISA_GMATproptest_CSALTMatlabSoln.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_Inter_Spacecraft_Tracking.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step5.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_TDRSOneWayReturnDoppler.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/ExtendedKalmanFilter.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/userincludes/CreateIncludeSatA.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_DoubleLunarSwingby.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_PlanetographicRegion.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step3.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Tut_Simulate_DSN_Range_and_Doppler_Data.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_LunarTransfer.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/FormationRendezvousTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/ReportTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_ExternalForceModel.script",
+    "upstream": "mission_failed",
+    "patched": "mission_failed"
+  },
+  {
+    "script": "application/samples/Ex_ConstellationScript.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_SPICECoordinateAxes.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "api-interop/gmat-monte/datasharing/mnvrshare/lunartransfer/FinalLunarOrbit.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Second_Level_Data_Editing.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_ImprovedTargeterAlgorithms.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_MathInScript.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_WriteCommand.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/Tut_MultipleShootingTutorial_Step5.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/Auto-NGC/DriverScripts/Driver_RealTimeSimulator.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Attitude_Inertial.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_RangeSkin.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_SPICEOrbitAndAttitudePropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/Auto-NGC/ConfigurationFiles/GMAT_Objects_Propagators.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/SystemDocs/EstimationSpecification/PrelimOD/GSMeasurement.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "doc/help/src/files/scripts/ForceModelsTutorial.script",
+    "upstream": "interpretation_failed",
+    "patched": "completed"
+  },
+  {
+    "script": "prototype/GroundTrackPlot/GroundTrack_Earth_LEO_Retrograde.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_GivenEpochGoToTheMoon.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Attitude_VNB.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_DynamicDisplay_QuaternionPropagation.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "prototype/GroundTrackPlot/GroundTrack_Earth_LEO_Prograde.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Contacts.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_Integrators.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_STKEphemOutput.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_NewOrbitStateReps.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_SGP4ToHighFidelity.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/Ex_SolverConvergenceParameters.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_EOPFileLocationFromScript.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_IOD.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_MarsPatchConic.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_MarsExponentialAtmosphere.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "doc/SystemDocs/Tools/source/API/source/userguide/examples/ToLuna.script",
+    "upstream": "completed",
+    "patched": "completed"
+  },
+  {
+    "script": "application/samples/NeedMatlab/Ex_MatlabEnv.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Ex_PrecessingSpinnerAttitude.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  },
+  {
+    "script": "application/samples/Navigation/Ex_Estimate_SPADDragScaleFactor.script",
+    "upstream": "time_limit_stopped",
+    "patched": "time_limit_stopped"
+  },
+  {
+    "script": "application/samples/NeedVF13ad/Ex_LunarCubeSatWithElectricPropulsion.script",
+    "upstream": "interpretation_failed",
+    "patched": "interpretation_failed"
+  }
+]

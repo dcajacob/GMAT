@@ -1,0 +1,27 @@
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+{'id': 'python-upstream-diagnostics', 'returncode': 1, 'passes': 9, 'failures': 9}
+{'id': 'python-upstream-vector', 'returncode': 1, 'passes': 8, 'failures': 2}
+{'id': 'python-upstream-mixed', 'returncode': 1, 'passes': 6, 'failures': 4}
+{'id': 'python-upstream-matrix', 'returncode': 0, 'passes': 10, 'failures': 0}
+{'id': 'python-upstream-scalar', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-upstream-integer', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-upstream-string', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-upstream-empty', 'returncode': 3221225477, 'passes': 1, 'failures': 0}
+{'id': 'python-upstream-empty-row', 'returncode': 1, 'passes': 4, 'failures': 2}
+{'id': 'python-upstream-ragged', 'returncode': 3221225477, 'passes': 1, 'failures': 0}
+{'id': 'python-upstream-nonnumeric', 'returncode': 1, 'passes': 2, 'failures': 4}
+{'id': 'python-upstream-overflow', 'returncode': 1, 'passes': 2, 'failures': 4}
+{'id': 'python-patched-diagnostics', 'returncode': 0, 'passes': 18, 'failures': 0}
+{'id': 'python-patched-vector', 'returncode': 0, 'passes': 10, 'failures': 0}
+{'id': 'python-patched-mixed', 'returncode': 0, 'passes': 10, 'failures': 0}
+{'id': 'python-patched-matrix', 'returncode': 0, 'passes': 10, 'failures': 0}
+{'id': 'python-patched-scalar', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-integer', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-string', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-empty', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-empty-row', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-ragged', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-nonnumeric', 'returncode': 0, 'passes': 8, 'failures': 0}
+{'id': 'python-patched-overflow', 'returncode': 0, 'passes': 8, 'failures': 0}

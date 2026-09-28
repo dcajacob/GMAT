@@ -160,3 +160,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Final non-Qt follow-up audit
 
 [Requirement-by-requirement completion evidence, all focused tests, 210/24-script comparisons, branch checks and validation limits](LinuxGuiFinalAudit/README.md). All requested candidates have a fix or tested disposition; no PR, issue or external comment was submitted.
+
+## Windows compatibility validation
+
+[Windows 11 builds, paired 210-script sweep, focused regressions, independent patch checks, and remaining graphics/platform gaps](WindowsGuiValidation/README.md). All 59 baseline-completing examples remain successful; the integrated build completes 70. Windows testing also found LGUI-042, the separately prepared GUI message encoding correction. No PRs, issues, or external comments were submitted.

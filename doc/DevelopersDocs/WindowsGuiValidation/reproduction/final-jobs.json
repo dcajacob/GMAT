@@ -1,0 +1,778 @@
+[
+  {
+    "id": "isolated-upstream-Wheel-centered-WindowsWheelRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\WindowsWheelRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Wheel-centered-WindowsWheelRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Wheel-centered-WindowsWheelRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "centered"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Wheel-free-WindowsWheelRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\WindowsWheelRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Wheel-free-WindowsWheelRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Wheel-free-WindowsWheelRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "free"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Wheel-astronaut-WindowsWheelRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\WindowsWheelRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Wheel-astronaut-WindowsWheelRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Wheel-astronaut-WindowsWheelRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "astronaut"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Wheel-shift-WindowsWheelRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\WindowsWheelRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Wheel-shift-WindowsWheelRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Wheel-shift-WindowsWheelRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "shift"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-wrapped-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-wrapped-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-wrapped-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-wrapped-trail-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-wrapped-trail-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-wrapped-trail-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-unwrapped-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-unwrapped-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-unwrapped-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-unwrapped-trail-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-unwrapped-trail-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-unwrapped-trail-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-full-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-full-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-full-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-single-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-single-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-single-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-Animation-wide-trail-NativeAnimationRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\NativeAnimationRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-Animation-wide-trail-NativeAnimationRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-Animation-wide-trail-NativeAnimationRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-GroundTrackClose-GroundTrackCloseRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\GroundTrackCloseRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-GroundTrackClose-GroundTrackCloseRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-GroundTrackClose-GroundTrackCloseRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-ResourceDelete-ResourceDeleteRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ResourceDeleteRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-ResourceDelete-ResourceDeleteRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-ResourceDelete-ResourceDeleteRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-TreeTheme-TreeThemeRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\TreeThemeRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-TreeTheme-TreeThemeRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-TreeTheme-TreeThemeRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-GroundTrack-ViewportRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ViewportRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-GroundTrack-ViewportRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-GroundTrack-ViewportRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-WindowsTexture-WindowsTextureRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\WindowsTextureRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-WindowsTexture-WindowsTextureRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-WindowsTexture-WindowsTextureRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "verified-upstream-ViewportRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ViewportRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\verified-upstream-ViewportRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/verified-upstream-ViewportRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_MODEL_FILE": "C:\\GMAT-Test\\upstream\\application\\data\\vehicle\\models\\aura.3ds"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "verified-upstream-ModelPreviewRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ModelPreviewRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\verified-upstream-ModelPreviewRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/verified-upstream-ModelPreviewRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_MODEL_FILE": "C:\\GMAT-Test\\upstream\\application\\data\\vehicle\\models\\aura.3ds"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "isolated-upstream-ModelPreviewRegression",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ModelPreviewRegression_isolated.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\isolated-upstream-ModelPreviewRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\upstream\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/isolated-upstream-ModelPreviewRegression",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_MODEL_FILE": "C:\\GMAT-Test\\upstream\\application\\data\\vehicle\\models\\aura.3ds"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "verified-patched-ViewportRegression",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\ViewportRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\verified-patched-ViewportRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/verified-patched-ViewportRegression",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_MODEL_FILE": "C:\\GMAT-Test\\patched\\application\\data\\vehicle\\models\\aura.3ds"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "verified-patched-ModelPreviewRegression",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\ModelPreviewRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\verified-patched-ModelPreviewRegression\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/verified-patched-ModelPreviewRegression",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_MODEL_FILE": "C:\\GMAT-Test\\patched\\application\\data\\vehicle\\models\\aura.3ds"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "paint-check-examples-upstream-56f4d124597f",
+    "script": "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ExampleSweepPaint.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\paint-check-examples-upstream-56f4d124597f\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\results\\examples-upstream-56f4d124597f\\repo\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/paint-check-examples-upstream-56f4d124597f",
+      "GMAT_EXAMPLE_SCRIPT": "C:\\GMAT-Test\\results\\examples-upstream-56f4d124597f\\repo\\doc\\help\\src\\files\\scripts\\Tut_Mars_B_Plane_Targeting.script",
+      "GMAT_EXAMPLE_LIMIT": "30",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "paint-check-examples-upstream-4d42d30353f3",
+    "script": "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script",
+    "command": [
+      "C:\\GMAT-Test\\upstream\\application\\bin\\ExampleSweepPaint.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\paint-check-examples-upstream-4d42d30353f3\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\results\\examples-upstream-4d42d30353f3\\repo\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/paint-check-examples-upstream-4d42d30353f3",
+      "GMAT_EXAMPLE_SCRIPT": "C:\\GMAT-Test\\results\\examples-upstream-4d42d30353f3\\repo\\doc\\help\\src\\files\\scripts\\Tut_UsingGMATFunctions.script",
+      "GMAT_EXAMPLE_LIMIT": "30",
+      "PATH": "C:\\GMAT-Test\\upstream\\application\\bin;C:\\GMAT-Test\\upstream\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "paint-check-examples-patched-56f4d124597f",
+    "script": "doc/help/src/files/scripts/Tut_Mars_B_Plane_Targeting.script",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\ExampleSweepPaint.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\paint-check-examples-patched-56f4d124597f\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\results\\examples-patched-56f4d124597f\\repo\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/paint-check-examples-patched-56f4d124597f",
+      "GMAT_EXAMPLE_SCRIPT": "C:\\GMAT-Test\\results\\examples-patched-56f4d124597f\\repo\\doc\\help\\src\\files\\scripts\\Tut_Mars_B_Plane_Targeting.script",
+      "GMAT_EXAMPLE_LIMIT": "30",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "paint-check-examples-patched-4d42d30353f3",
+    "script": "doc/help/src/files/scripts/Tut_UsingGMATFunctions.script",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\ExampleSweepPaint.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\paint-check-examples-patched-4d42d30353f3\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\results\\examples-patched-4d42d30353f3\\repo\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/paint-check-examples-patched-4d42d30353f3",
+      "GMAT_EXAMPLE_SCRIPT": "C:\\GMAT-Test\\results\\examples-patched-4d42d30353f3\\repo\\doc\\help\\src\\files\\scripts\\Tut_UsingGMATFunctions.script",
+      "GMAT_EXAMPLE_LIMIT": "30",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrack",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrack\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrack",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-EditorIo",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\EditorIoRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-EditorIo\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-EditorIo",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackOwnership",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackOwnershipRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackOwnership\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackOwnership",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackLookup",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackLookupRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackLookup\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackLookup",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackStation",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackStationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackStation\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackStation",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackEditor",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackEditorRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackEditor\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackEditor",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-TreeTheme",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\TreeThemeRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-TreeTheme\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-TreeTheme",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackClose",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackCloseRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackClose\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackClose",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-WindowsGroundTrack",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsGroundTrackRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-WindowsGroundTrack\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-WindowsGroundTrack",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-ResourceDelete",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\ResourceDeleteRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-ResourceDelete\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-ResourceDelete",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-PythonRecovery",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\PythonGuiRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-PythonRecovery\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-PythonRecovery",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-PythonIOD",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\PythonIODRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-PythonIOD\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-PythonIOD",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_IOD_SCRIPT": "C:\\GMAT-Test\\patched\\application\\samples\\Ex_IOD.script"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-WindowsTexture",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsTextureRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-WindowsTexture\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-WindowsTexture",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Wheel-centered",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsWheelRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Wheel-centered\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Wheel-centered",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "centered"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Wheel-free",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsWheelRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Wheel-free\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Wheel-free",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "free"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Wheel-astronaut",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsWheelRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Wheel-astronaut\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Wheel-astronaut",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "astronaut"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Wheel-shift",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\WindowsWheelRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Wheel-shift\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Wheel-shift",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;",
+      "GMAT_WHEEL_MODE": "shift"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-wrapped",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-wrapped\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-wrapped",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-wrapped-trail",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-wrapped-trail\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-wrapped-trail",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-unwrapped",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-unwrapped\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-unwrapped",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-unwrapped-trail",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-unwrapped-trail\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-unwrapped-trail",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-full",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-full\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-full",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-single",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-single\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-single",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-Animation-wide-trail",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\NativeAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-Animation-wide-trail\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-Animation-wide-trail",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  },
+  {
+    "id": "validated-patched-GroundTrackAnimation",
+    "command": [
+      "C:\\GMAT-Test\\patched\\application\\bin\\GroundTrackAnimationRegression.exe",
+      "--startup_file",
+      "C:\\GMAT-Test\\results\\validated-patched-GroundTrackAnimation\\startup.txt",
+      "--no_splash"
+    ],
+    "cwd": "C:\\GMAT-Test\\patched\\application\\bin",
+    "env": {
+      "GMAT_GUI_TEST_IMAGES": "C:/GMAT-Test/results/validated-patched-GroundTrackAnimation",
+      "PATH": "C:\\GMAT-Test\\patched\\application\\bin;C:\\GMAT-Test\\patched\\application\\plugins;C:\\Python312;C:\\Python312\\Scripts\\;C:\\Python312\\;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Users\\gmat\\AppData\\Local\\Microsoft\\WindowsApps;"
+    },
+    "timeout": 60
+  }
+]

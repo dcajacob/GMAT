@@ -1,0 +1,3 @@
+PASS: native viewport fills canvas at 1x before and after resizing
+PASS: native viewport fills canvas at 2x before and after resizing
+PASS: native viewport fills canvas at 3x before and after resizing

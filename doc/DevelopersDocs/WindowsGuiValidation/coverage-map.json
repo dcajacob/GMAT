@@ -1,0 +1,120 @@
+{
+  "pr/de-header": [
+    "default mission / DE405",
+    "public example sweep"
+  ],
+  "pr/wxwidgets-path": [
+    "Windows CMake configure and full build"
+  ],
+  "pr/groundtrack-map": [
+    "GroundTrack"
+  ],
+  "pr/linux-layout": [
+    "Linux-guarded change; Windows startup and viewport regressions"
+  ],
+  "pr/linux-geometry": [
+    "Linux-guarded change; Windows startup and viewport regressions"
+  ],
+  "pr/linux-script-exit": [
+    "Linux-guarded change; Windows close regression"
+  ],
+  "pr/linux-plugin-lifetime": [
+    "Linux-guarded change; Windows startup/plugin loading and close"
+  ],
+  "pr/native-viewport": [
+    "Viewport",
+    "public example plot resizing"
+  ],
+  "pr/editor-reload": [
+    "EditorIo"
+  ],
+  "pr/editor-save": [
+    "EditorIo"
+  ],
+  "pr/model-preview-context": [
+    "13/13 Windows constructor-state and repeated model load/paint/close assertions on upstream, integrated, and isolated object builds; Windows does not reproduce original Linux defect"
+  ],
+  "pr/python-diagnostics": [
+    "Python direct diagnostics",
+    "PythonRecovery"
+  ],
+  "pr/python-return-conversion": [
+    "Python direct conversion groups",
+    "PythonRecovery",
+    "PythonIOD"
+  ],
+  "pr/linux-python-extensions": [
+    "Linux-guarded code; Windows PythonIOD and plugin tests"
+  ],
+  "pr/orbitview-plane-alias": [
+    "Not built: external OpenFrames dependency unavailable"
+  ],
+  "pr/tle-examples": [
+    "public example sweep: 11 TLE scripts"
+  ],
+  "pr/satellite-separation-example": [
+    "public example sweep: BasicFunction"
+  ],
+  "pr/global-function-example": [
+    "public example sweep: GlobalSample"
+  ],
+  "pr/force-model-tutorial": [
+    "public example sweep: ForceModelsTutorial"
+  ],
+  "pr/sensor-contact-example": [
+    "public example sweep: R2020a_BasicSensors"
+  ],
+  "pr/groundtrack-runtime": [
+    "GroundTrackOwnership",
+    "WindowsGroundTrack"
+  ],
+  "pr/groundtrack-sampling": [
+    "WindowsGroundTrack"
+  ],
+  "pr/groundtrack-window-lookup": [
+    "GroundTrackLookup"
+  ],
+  "pr/native-wheel-zoom": [
+    "Wheel-centered",
+    "Wheel-free",
+    "Wheel-astronaut",
+    "Wheel-shift"
+  ],
+  "pr/native-plot-text": [
+    "Linux-guarded font change; Windows compilation and native rendering smoke"
+  ],
+  "pr/groundtrack-station-markers": [
+    "GroundTrackStation"
+  ],
+  "pr/groundtrack-editor-output": [
+    "GroundTrackEditor"
+  ],
+  "pr/tree-theme-colors": [
+    "TreeTheme (default Windows theme)"
+  ],
+  "pr/native-animation-replay": [
+    "Animation: seven ring-buffer/trail cases"
+  ],
+  "pr/resource-delete-menu": [
+    "ResourceDelete"
+  ],
+  "pr/groundtrack-state-mapping": [
+    "WindowsGroundTrack"
+  ],
+  "pr/groundtrack-direct-close": [
+    "GroundTrackClose"
+  ],
+  "pr/groundtrack-animation": [
+    "GroundTrackAnimation (new behavior; patched only)"
+  ],
+  "pr/aura-reflection-map": [
+    "WindowsTexture",
+    "public example sweep: Basic3DModel; OpenFrames rendering gap"
+  ],
+  "pr/native-texture-rows": [
+    "WindowsTexture: GLU mipmap comparison and pixel-store restoration"
+  ],
+  "pr/gui-message-encoding": [
+    "32 direct Windows message assertions; 48 Python GUI recovery assertions; independent upstream-object check; Linux regressions"
+  ]
+}
