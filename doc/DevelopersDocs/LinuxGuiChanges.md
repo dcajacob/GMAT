@@ -43,6 +43,7 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-032 | [pr/groundtrack-editor-output](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-editor-output) | `a0a5a7078f30` | `33098ec0bb68` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
 | LGUI-033 | [pr/tree-theme-colors](https://github.com/dcajacob/GMAT/tree/pr/tree-theme-colors) | `4c742c8e1081` | `246cdd40f3a3` | `test_gui_followup_more.py` | Independently tested with prerequisites; not submitted |
 | LGUI-034 | External OFI patch, archived on integration | `751a352b39ab` in isolated OFI | See external audit | `test_openframes_time.py` | Fixed in local build; external patch not submitted |
+| LGUI-035 | [pr/native-animation-replay](https://github.com/dcajacob/GMAT/tree/pr/native-animation-replay) | `cd2eacad668e` | `b07be71d2e1c` | `test_native_animation.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
@@ -121,3 +122,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## External OpenFrames time-control repair
 
 [Patch, baseline failures, scale regressions and build prerequisites](LinuxGuiExternal/OpenFramesTime/README.md). This supersedes the pending-repair status in the second follow-up snapshot.
+
+## Native animation replay
+
+[Wrapped-buffer failures, isolated patch validation and regression results](LinuxGuiAnimation/README.md).

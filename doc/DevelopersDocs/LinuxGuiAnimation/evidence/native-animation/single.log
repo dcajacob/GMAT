@@ -1,0 +1,67 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:46:02 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:46:02 GMAT GUI successfully launched.
+
+Interpreting scripts from the file.
+***** file: /home/dan/GIT/GMAT/GMAT/build/linux-gui/linux-gui-tests/native-animation/animation.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+PASS: build animation fixture
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(NativeAnimationRegression:3647309): Gtk-WARNING **: 12:46:02.847: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(NativeAnimationRegression:3647309): Gtk-WARNING **: 12:46:02.847: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(NativeAnimationRegression:3647309): Gtk-WARNING **: 12:46:02.847: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(NativeAnimationRegression:3647309): Gtk-WARNING **: 12:46:02.859: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(NativeAnimationRegression:3647309): Gtk-WARNING **: 12:46:02.870: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+Using default potential file "/home/dan/GIT/GMAT/GMAT/application/data/gravity/earth/JGM2.cof" for GravityField object "GravityField.Earth"
+*** WARNING *** 01 Jan 2000 11:59:28.000: 'BuildTestView' exceed the maximum data points, now showing 1 most recent data points.
+
+Mission run completed.
+===> Total Run Time: 0.324 seconds
+
+========================================
+PASS: animation fixture mission completes
+PASS: native canvas exists
+BUFFER: wrapped=1 count=1 total=151 oldest=0 last=0
+PASS: replay preserves recording indices and counts
+PASS: replay preserves recorded epochs
+PASS: replay paints multiple frames while running
+PASS: partial trails only draw within the selected recording
+PASS: replay paints the expected recorded epochs
+PASS: replay epochs advance in chronological order
+FRAME: 21545.017361509046
+PASS: replay preserves recording indices and counts
+PASS: replay preserves recorded epochs
+PASS: replay paints multiple frames while running
+PASS: partial trails only draw within the selected recording
+PASS: replay paints the expected recorded epochs
+PASS: replay epochs advance in chronological order
+FRAME: 21545.017361509046
+PASS: second replay paints the same chronological sequence
+Moderator is deleting core engine...
+2026-09-28 12:46:03 GMAT GUI exiting.

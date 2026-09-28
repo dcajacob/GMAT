@@ -1,0 +1,88 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:44:40 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:44:40 GMAT GUI successfully launched.
+
+Interpreting scripts from the file.
+***** file: /home/dan/GIT/GMAT/GMAT/build/linux-gui/linux-gui-tests/animation-partial-baseline/animation.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+PASS: build animation fixture
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+(NativeAnimationRegression:3637829): Gtk-WARNING **: 12:44:41.531: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node header owner GtkNotebook)
+
+(NativeAnimationRegression:3637829): Gtk-WARNING **: 12:44:41.531: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tabs owner GtkNotebook)
+
+(NativeAnimationRegression:3637829): Gtk-WARNING **: 12:44:41.531: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(NativeAnimationRegression:3637829): Gtk-WARNING **: 12:44:41.543: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node arrow owner GtkNotebook)
+
+(NativeAnimationRegression:3637829): Gtk-WARNING **: 12:44:41.553: Drawing a gadget with negative dimensions. Did you forget to allocate a size? (node tab owner GtkNotebook)
+Using default potential file "/home/dan/GIT/GMAT/GMAT/application/data/gravity/earth/JGM2.cof" for GravityField object "GravityField.Earth"
+*** WARNING *** 01 Jan 2000 12:04:28.000: 'BuildTestView' exceed the maximum data points, now showing 31 most recent data points.
+
+Mission run completed.
+===> Total Run Time: 0.316 seconds
+
+========================================
+PASS: animation fixture mission completes
+PASS: native canvas exists
+BUFFER: wrapped=1 count=31 total=151 oldest=27 last=26
+PASS: replay preserves recording indices and counts
+PASS: replay preserves recorded epochs
+PASS: replay paints multiple frames while running
+FAIL: partial trails only draw within the selected recording
+PASS: replay paints the expected recorded epochs
+PASS: replay epochs advance in chronological order
+FRAME: 21545.013889286827
+FRAME: 21545.014236509047
+FRAME: 21545.014583731270
+FRAME: 21545.014930953494
+FRAME: 21545.015278175713
+FRAME: 21545.015625397937
+FRAME: 21545.015972620160
+FRAME: 21545.016319842380
+FRAME: 21545.016667064603
+FRAME: 21545.017014286826
+FRAME: 21545.017361509046
+PASS: replay preserves recording indices and counts
+PASS: replay preserves recorded epochs
+PASS: replay paints multiple frames while running
+FAIL: partial trails only draw within the selected recording
+PASS: replay paints the expected recorded epochs
+PASS: replay epochs advance in chronological order
+FRAME: 21545.013889286827
+FRAME: 21545.014236509047
+FRAME: 21545.014583731270
+FRAME: 21545.014930953494
+FRAME: 21545.015278175713
+FRAME: 21545.015625397937
+FRAME: 21545.015972620160
+FRAME: 21545.016319842380
+FRAME: 21545.016667064603
+FRAME: 21545.017014286826
+FRAME: 21545.017361509046
+PASS: second replay paints the same chronological sequence
+PASS: Stop interrupts playback and returns to idle
+PASS: interrupted replay preserves recording state
+PASS: replay after Stop returns to the original sequence

@@ -1,0 +1,4 @@
+[1/4] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/OrbitViewCanvas.cpp.o
+[2/4] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/ViewCanvas.cpp.o
+[3/4] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GMAT-R2026a
+[4/4] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GMAT

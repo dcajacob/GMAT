@@ -1,0 +1,7 @@
+{
+  "branch": "pr/native-animation-replay",
+  "head": "b07be71d2e1c382c59d9cd7186dba1d53c2ab0ce",
+  "validation_base": "584bf1ee0b9fe226caf4b2a3b5c6438aea61d906",
+  "passed": true,
+  "logs": "/home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/build/linux-gui-tests/native-animation"
+}
