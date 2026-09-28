@@ -1,5 +1,6 @@
-function [] = RaiseApogee(burnSize)
+function RaiseApogee(burnSize)
 
+BeginMissionSequence;
 Global globalBurn globalSat
 
 globalBurn.Element1 = burnSize / 10.0;
