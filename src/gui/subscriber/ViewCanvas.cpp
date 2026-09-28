@@ -1898,6 +1898,12 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
    wxImage mirror = image.Mirror(false);
    GLubyte *data1 = mirror.GetData();
    
+   // wxImage rows have no padding. Preserve the caller's pixel-store settings.
+   glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+   glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+   glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
    glEnable(GL_TEXTURE_2D);
    
    //=======================================================
@@ -1972,6 +1978,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
           mPlotName.WX_TO_C_STRING, mipmapsStatus);
       #endif
       
+      glPopClientAttrib();
       return true;
    }
    else
@@ -1981,6 +1988,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
          ("ViewCanvas::LoadImage() '%s' returning false, mipmapsStatus=%d\n",
           mPlotName.WX_TO_C_STRING, mipmapsStatus);
       #endif
+      glPopClientAttrib();
       return false;
    }
    
@@ -2002,6 +2010,7 @@ bool ViewCanvas::LoadImage(const std::string &fileName, int objUsingIcon)
        mPlotName.c_str());
    #endif
    
+   glPopClientAttrib();
    return true;
    
    //=======================================================================

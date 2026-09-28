@@ -235,6 +235,13 @@ int ModelObject::LoadTexture(const std::string &filename)
    glBindTexture(GL_TEXTURE_2D, id);
    error = glGetError();
    
+   // wxImage stores tightly packed RGB rows, including non-power-of-two widths.
+   glPushClientAttrib(GL_CLIENT_PIXEL_STORE_BIT);
+   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+   glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+   glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+   glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+
    // Set the texture parameters
    // Repeat the image if the u,v coordinates exceed the 0,1 range
    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -273,6 +280,7 @@ int ModelObject::LoadTexture(const std::string &filename)
       ("ModelObject::LoadTexture() returning texture id: %d\n", id);
    #endif
    
+   glPopClientAttrib();
    return id;
 }
 //------------------------------------------------------------------------------
