@@ -1,0 +1,20 @@
+PASS: GroundTrackOwnership
+PASS: GroundTrackSampling
+PASS: GroundTrackLookup
+PASS: native text at 1x and after resize
+PASS: native text at 2x and after resize
+PASS: native text at 3x and after resize
+PASS: wheel zoom: centered, 1x
+PASS: wheel zoom: centered, 2x
+PASS: wheel zoom: centered, 3x
+PASS: wheel zoom: free, 1x
+PASS: wheel zoom: astronaut, 1x
+PASS: wheel zoom: shift, 1x
+PASS: GroundTrackDataCollectFrequency
+PASS: GroundTrackInvalidCentralBody
+PASS: GroundTrackInvalidDataCollectFrequency
+PASS: GroundTrackMultiScOriginFail
+PASS: GroundTrackShowPlotFalse
+PASS: GroundTrackStationOnly
+PASS: GroundTrackThirdOriginFail
+PASS: GroundTrackWithStation

@@ -45,6 +45,7 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-034 | External OFI patch, archived on integration | `751a352b39ab` in isolated OFI | See external audit | `test_openframes_time.py` | Fixed in local build; external patch not submitted |
 | LGUI-035 | [pr/native-animation-replay](https://github.com/dcajacob/GMAT/tree/pr/native-animation-replay) | `cd2eacad668e` | `b07be71d2e1c` | `test_native_animation.py` | Independently tested with prerequisites; not submitted |
 | LGUI-036 | [pr/resource-delete-menu](https://github.com/dcajacob/GMAT/tree/pr/resource-delete-menu) | `ba5bc315deb8` | `57e22b63e052` | `test_resource_delete.py` | Independently tested with prerequisites; not submitted |
+| LGUI-037 | [pr/groundtrack-state-mapping](https://github.com/dcajacob/GMAT/tree/pr/groundtrack-state-mapping) | `2ea51e533646` | `a8d0e9a74126` | `test_groundtrack_state.py` | Independently tested with prerequisites; not submitted |
 
 ## Validation and dependencies
 
@@ -131,3 +132,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Resource deletion with unrelated editors
 
 [Menu reproduction, dependency protection and independent validation](LinuxGuiResourceDelete/README.md).
+
+## GroundTrack state mapping
+
+[Reproductions, missing-point handling, independent validation and integration notes](LinuxGuiGroundTrackState/README.md).

@@ -1,0 +1,31 @@
+HELP_PATH directory does not exist: /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/Documents/Codex/2026-09-28/referenced-chatgpt-conversation-this-is-an/work/gui-audit/validation-source/application/data/time/tai-utc.dat
+2026-09-28 13:04:10 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 13:04:10 GMAT GUI successfully launched.
+PASS: two-spacecraft track initializes
+PASS: complete publication supplies both positions
+PASS: absent first spacecraft is not assigned the second state
+PASS: second spacecraft retains its own slot
+PASS: reordered state components produce identical coordinates
+PASS: truncated publication is not read as a complete state
+PASS: truncated second state does not discard the complete first state
+PASS: a missing component omits only its own spacecraft
+PASS: epoch-only publication does not emit stale positions
+PASS: full publication recovers after missing data
+PASS: null publication is ignored safely
+PASS: curve only receives finite positions
+PASS: map omits the absent spacecraft without shifting curve slots
+PASS: curve only receives finite positions
+PASS: curve only receives finite positions
+PASS: both curves accept the next complete publication
+PASS: missing positions never shift spacecraft curve identity
+Moderator is deleting core engine...
+2026-09-28 13:04:11 GMAT GUI exiting.

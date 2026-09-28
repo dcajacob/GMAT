@@ -1,0 +1,26 @@
+HELP_PATH directory does not exist: /home/dan/GIT/GMAT/GMAT/application/docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-28 12:58:59 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+2026-09-28 12:58:59 GMAT GUI successfully launched.
+PASS: two-spacecraft track initializes
+PASS: complete publication supplies both positions
+FAIL: absent first spacecraft is not assigned the second state
+PASS: second spacecraft retains its own slot
+FAIL: reordered state components produce identical coordinates
+FAIL: truncated publication is not read as a complete state
+FAIL: epoch-only publication does not emit stale positions
+PASS: full publication recovers after missing data
+FAIL: curve only receives finite positions
+PASS: curve only receives finite positions
+FAIL: map omits the absent spacecraft without shifting curve slots
+PASS: curve only receives finite positions
+PASS: curve only receives finite positions
+FAIL: both curves accept the next complete publication
