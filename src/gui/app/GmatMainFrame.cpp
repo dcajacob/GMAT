@@ -6148,13 +6148,30 @@ void GmatMainFrame::UpdateAdvancedGuiMode(int status)
    // Show advanced GUI mode in the toolbar
    ((GmatToolBar*)theToolBar)->UpdateAdvancedField(theToolBar, status);
    
+   // Keep foreground and background paired with the current system theme.
+   // Non-savable mode keeps a warm tint without forcing a light background.
+   if (status == 1 || status == 2)
+   {
+      wxColour background = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW);
+      const wxColour foreground = wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
+      if (status == 2)
+         background = wxColour((4 * background.Red() + 245) / 5,
+                               (4 * background.Green() + 222) / 5,
+                               (4 * background.Blue() + 179) / 5);
+      wxTreeCtrl *trees[] = {gmatAppData->GetResourceTree(),
+                            gmatAppData->GetMissionTree(),
+                            gmatAppData->GetOutputTree()};
+      for (auto tree : trees)
+      {
+         tree->SetForegroundColour(foreground);
+         tree->SetBackgroundColour(background);
+         tree->Refresh();
+      }
+   }
+
    // Update menu and tools depends on the status
    if (status == 1)
    {
-      const wxColour& back = wxTheColourDatabase->Find(!wxSystemSettings::GetAppearance().IsDark() ? "WHITE" : "BLACK");
-      gmatAppData->GetResourceTree()->SetBackgroundColour(back);
-      gmatAppData->GetMissionTree()->SetBackgroundColour(back);
-      gmatAppData->GetOutputTree()->SetBackgroundColour(back);
       gmatAppData->GetMissionTree()->EnableShowScript(true);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT, true);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT_AS, true);
@@ -6162,14 +6179,6 @@ void GmatMainFrame::UpdateAdvancedGuiMode(int status)
    }
    else if (status == 2)
    {
-      // gmatAppData->GetResourceTree()->
-      //    SetForegroundColour(wxTheColourDatabase->Find("ORANGE"));
-      gmatAppData->GetResourceTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHEAT"));
-      gmatAppData->GetMissionTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHEAT"));
-      gmatAppData->GetOutputTree()->
-         SetBackgroundColour(wxTheColourDatabase->Find("WHEAT"));
       gmatAppData->GetMissionTree()->EnableShowScript(false);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT, false);
       theMenuBar->Enable(MENU_FILE_SAVE_SCRIPT_AS, false);
