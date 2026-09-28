@@ -2473,6 +2473,23 @@ bool GuiPlotReceiver::ComputePlotPositionAndSize(bool isGLPlot, Real positionX,
 
 // Ground track window methods
 
+// The time-series child list contains both XY and GroundTrack windows.
+static GroundTrackWindow *FindGroundTrackWindow(const std::string &name)
+{
+   if (name.empty())
+      return nullptr;
+   for (auto node = MdiTsPlot::mdiChildren.GetFirst(); node; node = node->GetNext())
+   {
+      auto child = static_cast<GmatMdiChildFrame *>(node->GetData());
+      auto track = dynamic_cast<GroundTrackWindow *>(child);
+      if (track && !track->ChildIsClosing() &&
+          track->GetPlotName().IsSameAs(name.c_str()))
+         return track;
+   }
+   return nullptr;
+}
+
+
 bool GuiPlotReceiver::CreateGroundTrackWindow(const std::string &trackName,
                            const std::string &oldName,
                            const std::string &title,
@@ -2482,36 +2499,14 @@ bool GuiPlotReceiver::CreateGroundTrackWindow(const std::string &trackName,
    //-------------------------------------------------------
    // check if new MDI child frame needed
    //-------------------------------------------------------
-   bool createNewFrame = true;
-   wxString currPlotName;
-   GmatMdiChildFrame *frame = NULL;
-
-   for (int i=0; i < MdiTsPlot::numChildren; ++i)
+   GroundTrackWindow *frame = FindGroundTrackWindow(trackName);
+   if (!frame)
    {
-      frame = (MdiChildTsFrame*)(MdiTsPlot::mdiChildren.Item(i)->GetData());
-      currPlotName = frame->GetPlotName();
-
-      if (currPlotName.IsSameAs(trackName.c_str()))
-      {
-         if (!frame->ChildIsClosing())
-            createNewFrame = false;
-         break;
-      }
-      else if (currPlotName.IsSameAs(oldName.c_str()))
-      {
-         #if DEBUG_RENAME
-         MessageInterface::ShowMessage
-            ("GuiPlotReceiver::CreateGroundTrackWindow() currPlotName=%s, "
-                  "oldName=%s\n", currPlotName.c_str(), oldName.c_str());
-         #endif
-
-         // change plot name
+      frame = FindGroundTrackWindow(oldName);
+      if (frame)
          frame->SetPlotName(wxString(trackName.c_str()));
-         if (!frame->ChildIsClosing())
-            createNewFrame = false;
-         break;
-      }
    }
+   const bool createNewFrame = frame == nullptr;
 
    //-------------------------------------------------------
    // create MDI child GroundTrackWindow
@@ -2603,65 +2598,26 @@ void GuiPlotReceiver::SetGroundTrackOption(const std::string &plotName,
                         const std::string &optionSetting,
                         const std::string &optionValue)
 {
-   wxString owner = wxString(plotName.c_str());
-   GmatMdiChildFrame *frame = NULL;
-
-   for (int i = 0; i < MdiTsPlot::numChildren; ++i)
-   {
-      frame = (GmatMdiChildFrame*)(MdiTsPlot::mdiChildren.Item(i)->GetData());
-
-      if (frame && !frame->ChildIsClosing())
-      {
-         if (frame->GetPlotName().IsSameAs(owner.c_str()))
-            ((GroundTrackWindow*)frame)->SetOption(optionSetting, optionValue);
-      }
-   }
+   if (auto frame = FindGroundTrackWindow(plotName))
+      frame->SetOption(optionSetting, optionValue);
 }
 
 bool GuiPlotReceiver::UpdateGroundTrackData(const std::string &plotName,
                         const double epoch, const double *longlat,
                         const int satcount)
 {
-   bool updated = false;
-
-   wxString owner = wxString(plotName.c_str());
-   GmatMdiChildFrame *frame = NULL;
-
-   for (int i = 0; i < MdiTsPlot::numChildren; ++i)
+   if (auto frame = FindGroundTrackWindow(plotName))
    {
-      frame = (GmatMdiChildFrame*)(MdiTsPlot::mdiChildren.Item(i)->GetData());
-
-      if (frame && !frame->ChildIsClosing())
-      {
-         if (frame->GetPlotName().IsSameAs(owner.c_str()))
-         {
-            ((GroundTrackWindow*)frame)->AddData(epoch, longlat, satcount);
-            updated = true;
-         }
-      }
+      frame->AddData(epoch, longlat, satcount);
+      return true;
    }
-
-   return updated;
+   return false;
 }
 
 bool GuiPlotReceiver::TakeGroundTrackAction(const std::string &plotName,
                      const std::string &action)
 {
-   bool retval = false;
-
-   wxString owner = wxString(plotName.c_str());
-   GmatMdiChildFrame *frame = NULL;
-
-   for (int i = 0; i < MdiTsPlot::numChildren; ++i)
-   {
-      frame = (GmatMdiChildFrame*)(MdiTsPlot::mdiChildren.Item(i)->GetData());
-
-      if (frame && !frame->ChildIsClosing())
-      {
-         if (frame->GetPlotName().IsSameAs(owner.c_str()))
-            retval = ((GroundTrackWindow*)frame)->TakeAction(action);
-      }
-   }
-
-   return retval;
+   if (auto frame = FindGroundTrackWindow(plotName))
+      return frame->TakeAction(action);
+   return false;
 }
