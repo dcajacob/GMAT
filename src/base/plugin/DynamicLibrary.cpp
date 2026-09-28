@@ -191,9 +191,17 @@ bool DynamicLibrary::LoadDynamicLibrary()
       // compatibility, first try opening with just the plugin filename so
       // that dlopen() will search rpaths and LD_LIBRARY_PATH.
       // See dlopen manpage for more info.
+      int loadFlags = RTLD_LAZY;
+      #if defined(__linux__) && defined(RTLD_NODELETE)
+         // Plugins register factories and graphics callbacks with process-wide
+         // singletons. Keep their code (and dependencies) mapped until exit:
+         // unloading OpenFrames can otherwise unmap osgDB while its registry
+         // destructor is still closing reader plugins and executing osgDB code.
+         loadFlags |= RTLD_NODELETE;
+      #endif
       #ifdef __linux__
          std::string libFullName = libName + UNIX_EXTENSION;
-         libHandle = dlopen(libFullName.c_str(), RTLD_LAZY);
+         libHandle = dlopen(libFullName.c_str(), loadFlags);
       #endif
 
       // On Linux this will only be true if the library couldn't be found
@@ -203,7 +211,7 @@ bool DynamicLibrary::LoadDynamicLibrary()
       if(libHandle == NULL)
       {
          nameWithPath += UNIX_EXTENSION;
-         libHandle = dlopen(nameWithPath.c_str(), RTLD_LAZY);
+         libHandle = dlopen(nameWithPath.c_str(), loadFlags);
       }
 
       if (libHandle == NULL)
