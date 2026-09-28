@@ -295,7 +295,14 @@ bool GroundTrackArea::TakeAction(const std::string &theAction)
          MessageInterface::ShowMessage("Station %s added\n", actiondata.c_str());
       #endif
 
-      BodyFixedPoint *thePoint = (BodyFixedPoint*)Moderator::Instance()->GetSpacePoint(actiondata);
+      BodyFixedPoint *thePoint = dynamic_cast<BodyFixedPoint *>(
+            Moderator::Instance()->GetSpacePoint(actiondata));
+      if (!thePoint)
+      {
+         MessageInterface::ShowMessage("Cannot add GroundTrack station marker '%s': "
+               "the object is missing or is not a body-fixed point.\n", actiondata.c_str());
+         return false;
+      }
       // Method calls for epoch but does not use it, so using J2000 epoch here
       Rvector3 latlongalt =  thePoint->GetSphericalLocation(21545.0);
       Real lat = latlongalt[0] * GmatMathConstants::DEG_PER_RAD;
@@ -314,6 +321,7 @@ bool GroundTrackArea::TakeAction(const std::string &theAction)
       pt.longitude = lng;
       pt.color = rgb;
       points.push_back(pt);
+      retval = true;
 
       #ifdef DEBUG_FIXEDPOINTS
          MessageInterface::ShowMessage("   [%d]: lat, long, alt = [%lf %lf %lf]\n",
