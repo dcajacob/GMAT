@@ -30,6 +30,10 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-020 | [pr/linux-python-extensions](https://github.com/dcajacob/GMAT/tree/pr/linux-python-extensions) | `07b3989fe6ed` | `927e7fb46bac` | `test_python_iod.py; independent NumPy GUI probe` | Independently tested with prerequisites; backed up; not submitted |
 | LGUI-018 | [pr/orbitview-plane-alias](https://github.com/dcajacob/GMAT/tree/pr/orbitview-plane-alias) | `2791d7c1e752` | `001400757fed` | `test_orbit_alias.py; two unchanged tutorials` | Independently tested with prerequisites; backed up; not submitted |
 | LGUI-021 | [pr/tle-examples](https://github.com/dcajacob/GMAT/tree/pr/tle-examples) | `584c63e2538f` | `2b4b9f27c372` | `test_examples.py --only TLEPropagatorPlugin` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-022 | [pr/satellite-separation-example](https://github.com/dcajacob/GMAT/tree/pr/satellite-separation-example) | `9c7c2429694f` | `12e10aa7f344` | `test_public_examples.py --mode satsep` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-023 | [pr/global-function-example](https://github.com/dcajacob/GMAT/tree/pr/global-function-example) | `4f4f077c7123` | `b1ca38c21703` | `test_public_examples.py --mode global` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-024 | [pr/force-model-tutorial](https://github.com/dcajacob/GMAT/tree/pr/force-model-tutorial) | `631051823e76` | `0350a31697c5` | `test_public_examples.py --mode force` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-025 | [pr/sensor-contact-example](https://github.com/dcajacob/GMAT/tree/pr/sensor-contact-example) | `18029f89f280` | `746cdb101bd2` | `test_public_examples.py --mode sensor` | Independently tested with prerequisites; backed up; not submitted |
 
 ## Validation and dependencies
 
@@ -100,3 +104,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Public-feature fix batch
 
 [Five patches, independent tests, final sweep comparison and limitations](LinuxGuiPublicFixes.md). The original sweep above is retained as the baseline. Production-only branches are backed up to the fork; no PR, issue or external comment has been submitted.
+
+## Public documentation-example repairs
+
+[Four independent sample patches, numerical checks and 10-script regressions](LinuxGuiExampleMaintenance.md). The earlier sweep records remain intact.
