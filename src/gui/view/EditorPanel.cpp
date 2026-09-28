@@ -254,6 +254,14 @@ void EditorPanel::SaveData()
        "mFilename='%s'\n", mScriptFilename.WX_TO_C_STRING, mFilename.WX_TO_C_STRING);
    #endif
    
+   // A failed save must not change the script identity or modified status.
+   mSaveCanceled = !mEditor->SaveFile(mFilename);
+   if (mSaveCanceled)
+   {
+      mFilename = mScriptFilename;
+      return;
+   }
+
    GmatAppData *gmatAppData = GmatAppData::Instance();
 
    if (mScriptFilename != mFilename)
@@ -270,7 +278,6 @@ void EditorPanel::SaveData()
    MessageInterface::ShowMessage("   Calling mEditor->SaveFile(mScriptFilename)\n");
    #endif
    
-   mEditor->SaveFile(mScriptFilename);
    gmatAppData->GetMainFrame()->SetActiveChildDirty(false);
    
    #ifdef DEBUG_EDITORPANEL_SAVE

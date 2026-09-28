@@ -764,6 +764,11 @@ void GmatSavePanel::SaveScript()
    #endif
    
    SaveData();
+   if (mSaveCanceled)
+   {
+      mSyncGui = false;
+      return;
+   }
    mScriptDirtyLabel->SetLabel("");
    SetEditorModified(false);
    
@@ -796,6 +801,11 @@ void GmatSavePanel::SaveAndBuildScript(wxCommandEvent &event)
    #endif
    
    SaveData();
+   if (mSaveCanceled)
+   {
+      mSyncGui = false;
+      return;
+   }
    mScriptDirtyLabel->SetLabel("");
    
    GmatAppData *gmatAppData = GmatAppData::Instance();
