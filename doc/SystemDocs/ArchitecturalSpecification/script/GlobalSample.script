@@ -10,6 +10,7 @@ prop.FM = fm
 Create OpenGLPlot OpenGLPlot1;
 GMAT OpenGLPlot1.Add = {globalSat, Earth};
 
+BeginMissionSequence;
 Global globalBurn globalSat
 
 Propagate prop(globalSat) {globalSat.Earth.Periapsis}
