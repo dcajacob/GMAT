@@ -1,4 +1,5 @@
 #include "GuiTest.hpp"
+#include "Publisher.hpp"
 #include "EditorPanel.hpp"
 #include "OrbitViewCanvas.hpp"
 #include "TsPlotCanvas.hpp"
@@ -39,7 +40,18 @@ class Stopper : public wxTimer
 {
 public:
    bool fired=false;
-   void Notify() override { fired=true; GmatAppData::Instance()->GetMainFrame()->StopRunningMission(); }
+   void Notify() override
+   {
+      // Plot initialization can yield before the mission starts. A Stop at
+      // that point is reset by RunMission, so wait for actual execution.
+      if (Publisher::Instance()->GetRunState() != Gmat::RUNNING)
+      {
+         StartOnce(100);
+         return;
+      }
+      fired=true;
+      GmatAppData::Instance()->GetMainFrame()->StopRunningMission();
+   }
 };
 class Regression : public wxTimer
 {

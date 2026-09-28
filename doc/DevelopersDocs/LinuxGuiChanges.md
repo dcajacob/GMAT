@@ -25,6 +25,11 @@ No upstream issues or pull requests have been opened. The branch names below res
 | LGUI-009 | [pr/editor-reload](https://github.com/dcajacob/GMAT/tree/pr/editor-reload) | `bfe0c353d4e4` | `fffdfe934f60` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
 | LGUI-010 | [pr/editor-save](https://github.com/dcajacob/GMAT/tree/pr/editor-save) | `d8f14d423743` | `bd34b116e50c` | `test_editor_io.py` | Independently tested with prerequisites; not submitted |
 | LGUI-011 | [pr/model-preview-context](https://github.com/dcajacob/GMAT/tree/pr/model-preview-context) | `a401cd960ec5` | `ba65591932e1` | `test_workflow.py` | Independently tested with prerequisites; not submitted |
+| LGUI-017 | [pr/python-diagnostics](https://github.com/dcajacob/GMAT/tree/pr/python-diagnostics) | `b904b645f09c` | `91953c519cf1` | `test_python.py --mode diagnostics; test_python_gui.py` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-020 | [pr/python-return-conversion](https://github.com/dcajacob/GMAT/tree/pr/python-return-conversion) | `c001a19dab33` | `3ffc37638fa0` | `test_python.py; test_python_gui.py` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-020 | [pr/linux-python-extensions](https://github.com/dcajacob/GMAT/tree/pr/linux-python-extensions) | `07b3989fe6ed` | `927e7fb46bac` | `test_python_iod.py; independent NumPy GUI probe` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-018 | [pr/orbitview-plane-alias](https://github.com/dcajacob/GMAT/tree/pr/orbitview-plane-alias) | `2791d7c1e752` | `001400757fed` | `test_orbit_alias.py; two unchanged tutorials` | Independently tested with prerequisites; backed up; not submitted |
+| LGUI-021 | [pr/tle-examples](https://github.com/dcajacob/GMAT/tree/pr/tle-examples) | `584c63e2538f` | `2b4b9f27c372` | `test_examples.py --only TLEPropagatorPlugin` | Independently tested with prerequisites; backed up; not submitted |
 
 ## Validation and dependencies
 
@@ -91,3 +96,7 @@ See [contribution research and preparation recommendations](LinuxGuiContributing
 ## Example coverage and follow-ups
 
 [Example sweep](LinuxGuiExamples.md) and [all 210 outcomes](LinuxGuiExamples.csv): 125 completed, 80 interpretation failures, 5 mission failures. New findings LGUI-017 through LGUI-021 are recorded for follow-up; no production fix or new PR branch was created during the sweep. `test_examples.py` adds opt-in, isolated GUI execution with logs, physical viewport checks and independent screenshots. No PRs, issues or external comments were submitted.
+
+## Public-feature fix batch
+
+[Five patches, independent tests, final sweep comparison and limitations](LinuxGuiPublicFixes.md). The original sweep above is retained as the baseline. Production-only branches are backed up to the fork; no PR, issue or external comment has been submitted.
