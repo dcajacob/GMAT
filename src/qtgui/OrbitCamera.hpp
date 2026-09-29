@@ -23,7 +23,8 @@ struct OrbitSceneBounds
    osg::Vec3d center() const { return (minimum+maximum)*.5; }
    double radius() const { return std::max(1e-6,(maximum-minimum).length()*.5); }
 };
-inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double yaw,double pitch,double extent,double aspect=1.0,const OrbitSceneBounds *bounds=nullptr)
+struct OrbitObjectBounds { osg::Vec3d center; double radius=1; };
+inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double yaw,double pitch,double extent,double aspect=1.0,const OrbitSceneBounds *bounds=nullptr,const QMap<QString,OrbitObjectBounds> *objects=nullptr)
 {
    double viewExtent=extent*1.1,distance=extent*4;
    osg::Vec3d target;
@@ -71,8 +72,16 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       ? model.cameraViews[model.selectedCamera].automaticTrajectory : model.automaticTrajectory;
    const auto automaticRadius=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
       ? model.cameraViews[model.selectedCamera].automaticRadius : model.automaticRadius;
-   if (!model.fitCamera && !trajectory.isEmpty()) {
+   const auto body=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
+      ? model.cameraViews[model.selectedCamera].automaticBody : model.automaticBody;
+   if (!model.fitCamera && (!trajectory.isEmpty() || !body.isEmpty())) {
       OrbitSceneBounds path;
+      OrbitObjectBounds objectBound;
+      if (!body.isEmpty()) {
+         if (objects && objects->contains(body)) objectBound=objects->value(body);
+         else for (const auto &curve:model.curves) if (curve.name==body) objectBound.radius=curve.radius>0 ? curve.radius : 1;
+         path.include(objectBound.center.x(),objectBound.center.y(),objectBound.center.z(),0);
+      }
       if (trajectory=="CoordinateSystem") path.include(0,0,0,0);
       for (const auto &curve:model.curves) if (curve.name==trajectory)
          for (const auto &point:curve.points) path.include(point.x,point.y,point.z,0);
@@ -80,7 +89,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
          const auto center=path.center();
          target=automaticOrigin+automaticRight*center.x()-automaticOutward*center.y()+automaticUp*center.z();
          const double span=(path.maximum-path.minimum).length();
-         const double radius=automaticRadius>0 ? automaticRadius : span>0 ? span*.5 : 1.0;
+         const double radius=!body.isEmpty() ? std::max(objectBound.radius,1e-6) : automaticRadius>0 ? automaticRadius : span>0 ? span*.5 : 1.0;
          distance=2*radius; viewExtent=radius;
          if (model.perspective) {
             const double halfVertical=std::clamp(model.fieldOfView,1.0,150.0)*3.14159265358979323846/360;

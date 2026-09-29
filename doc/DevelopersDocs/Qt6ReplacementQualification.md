@@ -1744,3 +1744,32 @@ Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 39.31 seconds.
 Native checks used isolated Xvfb/software OpenGL. Evidence:
 `Qt6ParityValidation/check-auto-origin.txt` and
 `Qt6ParityValidation/auto-origin-reference.txt`.
+
+## Automatic body and model framing
+
+Audited OFSpaceObject's frame selection and Sphere::getBound: planet views use
+the sphere radius; model views use geometry bounds. Converted primary and named
+body views without stored locations now retain automaticBody metadata instead
+of using a fixed camera distance. The existing body-relative/inertial/LookAt
+pose supplies orientation and origin. Native rendering supplies the loaded
+model's transformed bounding sphere, including offset, scale and rotation, or
+the displayed body's radius. This retains Qt/wx model sizing rather than
+changing model size to OF's convention. The software renderer uses its displayed
+body radius or unit fallback for a marker; it does not load native mesh bounds.
+
+Camera references must agree with automaticBody and belong to the plot's Add
+list. Explicit primary camera pose edits remove automatic framing and imported
+body-relative orientation; named views remain independent. Source Undo restores
+the imported settings.
+
+NativeOrbit tests frame a translated/rotated textured mesh in a portrait window
+and require substantial rendered coverage at normal and high DPI. WorkflowTests
+checks converted primary planet/named spacecraft modes, save/reopen execution,
+planet radius and center, invalid-reference recovery, manual overrides and Undo.
+The preexisting body orientation and LookAt execution checks remain active.
+This qualifies Qt-rendered geometry framing, not identical OF model scale or
+optional decoration bounds. Segment-relative camera conversion remains open.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 50.58 seconds.
+Native checks used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-auto-body.txt`.

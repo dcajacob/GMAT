@@ -64,6 +64,7 @@ struct PlotCameraView
    std::deque<PlotCamera> cameras;
    QString automaticTrajectory;
    double automaticRadius=0;
+   QString automaticBody;
 };
 struct PlotModel
 {
@@ -92,6 +93,7 @@ struct PlotModel
    int selectedCamera=0;
    QString automaticTrajectory;
    double automaticRadius=0;
+   QString automaticBody;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;

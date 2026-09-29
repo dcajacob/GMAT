@@ -136,6 +136,14 @@ struct OrbitRenderer::Scene
       double radius=-1,assetExtent=1;
       Curve() { root->addChild(track); root->addChild(body); }
    };
+   static osg::Matrixd modelTransform(const PlotCurve &source) {
+      const auto &r=source.modelRotation,&offset=source.modelOffset;
+      constexpr double radians=3.14159265358979323846/180;
+      const double scale=source.modelScale*(source.radius==0 ? 1000 : 1);
+      const auto rotation=osg::Matrixd::rotate(r[0]*radians,osg::Vec3d(1,0,0),r[1]*radians,osg::Vec3d(0,1,0),r[2]*radians,osg::Vec3d(0,0,1));
+      return source.radius==0 ? osg::Matrixd::translate(offset[0],offset[1],offset[2])*osg::Matrixd::scale(scale,scale,scale)*rotation :
+         osg::Matrixd::scale(scale,scale,scale)*rotation*osg::Matrixd::translate(offset[0],offset[1],offset[2]);
+   }
    std::shared_ptr<PlotModel> model;
    osgViewer::Viewer viewer;
    osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> context;
@@ -188,10 +196,16 @@ struct OrbitRenderer::Scene
    void synchronize(int width,int height,double pixelRatio) {
       double extent=1;
       OrbitSceneBounds bounds;
+      QMap<QString,OrbitObjectBounds> objects;
       for (auto it=model->curves.cbegin();it!=model->curves.cend();++it) {
          const auto &source=it.value(); prepareCurve(it.key(),source);
+         auto &prepared=curves.at(it.key());
+         if (prepared.modelLoaded) {
+            prepared.modelPose->setMatrix(modelTransform(source));
+            const auto sphere=prepared.modelPose->getBound();
+            objects.insert(source.name,{sphere.center(),sphere.radius()>0 ? sphere.radius() : 1});
+         } else objects.insert(source.name,{{},source.radius>0 ? source.radius : 1});
          if (!source.visible) continue;
-         const auto &prepared=curves.at(it.key());
          const double scale=std::abs(source.modelScale)*(source.radius==0 ? 1000 : 1);
          const double offset=std::hypot(source.modelOffset[0],source.modelOffset[1],source.modelOffset[2]);
          const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
@@ -202,7 +216,7 @@ struct OrbitRenderer::Scene
       }
       // Preserve the orbit controls and stable replay framing in either projection.
       const double aspect=double(width)/height;
-      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect,&bounds);
+      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect,&bounds,&objects);
       const auto &target=camera.target,&right=camera.right,&up=camera.up,&outward=camera.outward;
       const double distance=camera.distance,viewExtent=camera.extent;
       const double tangent=std::tan(std::clamp(model->fieldOfView,1.0,150.0)*osg::PI/360.0)/zoom;
@@ -345,14 +359,6 @@ struct OrbitRenderer::Scene
             new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK,model->wireframe ? osg::PolygonMode::LINE : osg::PolygonMode::FILL),
             osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
          if (curve.modelLoaded) {
-            const auto &r=source.modelRotation,&offset=source.modelOffset;
-            constexpr double radians=3.14159265358979323846/180;
-            // Match wx's normalized model display scale (1000 km at ModelScale=1).
-            const double scale=source.modelScale*(source.radius==0 ? 1000 : 1);
-            const auto rotation=osg::Matrixd::rotate(r[0]*radians,osg::Vec3d(1,0,0),r[1]*radians,osg::Vec3d(0,1,0),r[2]*radians,osg::Vec3d(0,0,1));
-            curve.modelPose->setMatrix(source.radius==0 ? osg::Matrixd::translate(offset[0],offset[1],offset[2])*
-               osg::Matrixd::scale(scale,scale,scale)*
-               rotation : osg::Matrixd::scale(scale,scale,scale)*rotation*osg::Matrixd::translate(offset[0],offset[1],offset[2]));
             curve.modelPose->getOrCreateStateSet()->setMode(GL_NORMALIZE,osg::StateAttribute::ON);
          }
          auto geometry=new osg::Geometry; isolateArrays(geometry);

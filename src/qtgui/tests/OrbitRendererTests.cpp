@@ -118,6 +118,18 @@ int main(int argc,char **argv)
          const auto c=modelImage.pixelColor(x,y); if (c.blue()>c.red()*2 && c.blue()>70) ++textured;
       }
       require(textured>5000,"Textured spacecraft mesh not rendered");
+      {
+         auto automatic=std::make_shared<PlotModel>(*model); automatic->automaticBody="Ship";
+         automatic->perspective=true; automatic->scriptedCamera=true;
+         automatic->curves[0].name="Ship"; automatic->curves[0].modelOffset={50,20,10}; automatic->curves[0].modelRotation={90,0,0};
+         automatic->cameras.push_back({0,{0,-30000,0},{0,0,0},{0,0,1},false});
+         OrbitRenderer autoViewer(automatic); autoViewer.resize(400,600); autoViewer.show(); autoViewer.setView(1,0,0,{},0); app.processEvents();
+         const auto framed=autoViewer.captureImage(); int pixels=0;
+         for (int y=0;y<framed.height();++y) for (int x=0;x<framed.width();++x) {
+            const auto c=framed.pixelColor(x,y); if (c.blue()>c.red()*2 && c.blue()>70) ++pixels;
+         }
+         require(pixels>5000,"Automatic body camera failed to frame offset/rotated model bounds");
+      }
       spacecraft.points.back().hasSun=true; spacecraft.points.back().sunPosition={0,0,1e8};
       const auto lit=viewer.captureImage();
       spacecraft.points.back().sunPosition={0,0,-1e8};

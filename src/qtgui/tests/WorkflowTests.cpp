@@ -1374,6 +1374,7 @@ int main(int argc, char **argv)
          require(!reopened->perspective && reopened->fieldOfView==28.5,"Saved secondary projection did not reopen");
          const auto good=editor->toPlainText(); auto broken=qtCameraSettings(good).value("OFI_EarthView");
          broken.views[0].reference="NoSuchObject";
+         if (!broken.views[0].automaticBody.isEmpty()) broken.views[0].automaticBody="NoSuchObject";
          editor->setPlainText(setQtCameraSetting(good,"OFI_EarthView",broken));
          require(!window.buildScript(),"Unknown camera reference silently built");
          editor->setPlainText(good); require(window.runMission()==MainWindow::RunResult::Completed,"Invalid camera reference recovery failed");
@@ -1477,6 +1478,31 @@ int main(int argc, char **argv)
             const double expected=radius/std::sin(std::atan(.4*std::tan(halfVertical)));
             require(camera.target.length()<1e-8 && std::abs(camera.distance-expected)<1e-6,"Automatic origin camera radius or center wrong");
          }
+      }
+      {
+         auto bodyScript=originalSample;
+         bodyScript.replace(QRegularExpression("TheView\\.ViewFrame\\s*=\\s*CoordinateSystem"),"TheView.ViewFrame = Earth");
+         bodyScript.replace(QRegularExpression("TheView\\.SetDefaultLocation\\s*=\\s*On"),"TheView.SetDefaultLocation = Off");
+         const auto converted=convertOpenFramesViews(bodyScript); require(converted.error.isEmpty(),"Automatic body conversion failed");
+         const auto settings=qtCameraSettings(converted.script).value("OFI_EarthView");
+         require(settings.automaticBody=="Earth" && settings.views[1].automaticBody=="DefaultSC","Automatic body metadata lost");
+         editor->setPlainText(converted.script); QTemporaryDir files; const auto path=files.filePath("body-camera.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Automatic body save/reopen failed");
+         const auto model=window.plotReceiver()->model("OFI_EarthView"); require(model && model->automaticBody=="Earth","Automatic body not delivered to viewer");
+         double radius=0; osg::Vec3d center;
+         for (const auto &curve:model->curves) if (curve.name=="Earth") {
+            radius=curve.radius; const auto &point=curve.points.back(); center.set(point.x,point.y,point.z);
+         }
+         const auto camera=orbitCamera(*model,model->frame,0,0,1,1);
+         require(radius>6000 && (camera.target-center).length()<1e-8 &&
+            std::abs(camera.distance-radius/std::sin(model->fieldOfView*3.14159265358979323846/360))<1e-7,"Automatic planet radius/center incorrect");
+         const auto before=editor->toPlainText();
+         require(window.applyResourceChanges("OFI_EarthView",{{"ViewScaleFactor","2"}},before).isEmpty() &&
+            qtCameraSettings(editor->toPlainText()).value("OFI_EarthView").automaticBody.isEmpty(),"Explicit pose did not override automatic body framing");
+         editor->undo(); require(editor->toPlainText()==before && window.runMission()==MainWindow::RunResult::Completed,"Automatic body override Undo failed");
+         require(window.applyResourceChanges("OFI_EarthView",{{"ViewPointReference","[0 0 0]"}},before).isEmpty() &&
+            !qtCameraSettings(editor->toPlainText()).value("OFI_EarthView").bodyRelative,"Manual vector reference retained imported body-relative rotation");
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Body-reference override Undo failed");
       }
       {
          auto bodyScript=originalSample;

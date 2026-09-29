@@ -38,6 +38,12 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
             throw std::runtime_error((it.key()+": automatic trajectory object must be in Add: "+name).toStdString());
       };
       validateTrajectory(it->automaticTrajectory);
+      validateTrajectory(it->automaticBody);
+      if (!it->automaticBody.isEmpty()) {
+         auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+         if (plot->GetStringParameter("ViewPointRefType")=="Vector" || plot->GetStringParameter("ViewPointReference")!=it->automaticBody.toStdString())
+            throw std::runtime_error("Automatic body camera must match ViewPointReference");
+      }
       if (it->bodyRelative || it->lookAtRotation) {
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
          if (!plot || !plot->IsOfType("OrbitView") || (it->bodyRelative && plot->GetStringParameter("ViewPointRefType")=="Vector") ||
@@ -46,6 +52,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
       }
       for (const auto &view:it->views) {
       validateTrajectory(view.automaticTrajectory);
+      validateTrajectory(view.automaticBody);
       for (const auto &name:{view.reference,view.target}) {
          if (name.isEmpty() || name=="CoordinateSystem") continue;
          auto *object=moderator->GetConfiguredObject(name.toStdString());
@@ -119,6 +126,7 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
       const auto setting=cameraSettings.value(text(name));
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
       entry.data->automaticTrajectory=setting.automaticTrajectory;
+      entry.data->automaticBody=setting.automaticBody;
       // OF's root has no visible axes. Its override radius is stored in a
       // float bounding sphere; with LookAt it instead uses the unit fallback.
       const auto automaticRadius=[](const auto &camera) {
@@ -127,8 +135,8 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
       };
       entry.data->automaticRadius=automaticRadius(setting);
       if (!setting.views.isEmpty()) {
-         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory,automaticRadius(setting)});
-         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory,automaticRadius(view)});
+         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory,automaticRadius(setting),setting.automaticBody});
+         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory,automaticRadius(view),view.automaticBody});
       }
    }
    show(text(name));

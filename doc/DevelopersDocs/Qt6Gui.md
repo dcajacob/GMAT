@@ -657,8 +657,7 @@ Additional views preserve stored Current/Default eye, center and up vectors.
 Object references track positions, including center offsets. With InertialFrame
 Off, body-relative views also follow object orientation; InertialFrame On retains
 plot-frame axes. Named whole-trajectory views support stored and automatic
-framing; segment views remain pending. Other views without a stored location
-currently use a default offset, reported during conversion. Duplicate/unknown view names, invalid poses
+framing; segment views remain pending. Body views without a stored location use the rendered body/model bounds. Duplicate/unknown view names, invalid poses
 and missing reference objects are rejected before execution. The base viewer
 uses the first camera and ignores the additional Qt metadata.
 
@@ -1123,3 +1122,11 @@ Automatic CoordinateSystem views without LookAt use OpenFrames' twelve-Earth-
 radius framing. With LookAt they use its root-frame one-unit radius fallback.
 Stored Current/Default locations still take precedence. Fit remains available
 for framing the actual visible scene.
+
+### Automatic body cameras
+
+Converted views of a planet or spacecraft without a stored camera location now
+frame that object's displayed size. Native model framing includes model scale,
+rotation and offset, while retaining Qt's model display convention. Relative and
+LookAt orientation continue to follow the selected view. Manual primary-camera
+pose edits override automatic body framing; Undo restores it.
