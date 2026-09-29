@@ -122,6 +122,14 @@ Empty report lists can be populated and cleared. References use canonical
 resource names (for example, `Luna`). Other arrays, indexed expressions, and
 compound properties still require the script editor.
 
+Spacecraft panels open on Orbit and group the existing editable fields under
+the familiar Attitude, Ballistic/Mass, Power System, SPICE and Visualization
+tabs when those fields are available. All Properties retains access to every
+supported field. Orbit uses the engine's current state-element labels. The
+filter applies within the selected section; switching sections preserves
+pending values and Apply validates changes across all sections together.
+These are grouped property controls, not yet the full specialized wx forms.
+
 Use **Edit > New resource** or the Resources context menu to add a resource.
 The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
 force-model, coordinate-system, solver and subscriber types, plus Variable and

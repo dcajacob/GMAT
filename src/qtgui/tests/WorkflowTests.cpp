@@ -21,6 +21,7 @@
 #include <QLineEdit>
 #include <QClipboard>
 #include <QTabWidget>
+#include <QTabBar>
 #include <QMenu>
 #include <QMessageBox>
 #include <QKeyEvent>
@@ -121,9 +122,20 @@ int main(int argc, char **argv)
       require(panel != nullptr, "Resource double click did not open editable panel");
       auto *table = panel->findChild<QTableWidget *>();
       require(table != nullptr, "Resource property table missing");
+      auto *sections=panel->findChild<QTabBar *>("propertySections");
+      require(sections && sections->tabText(sections->currentIndex())=="Orbit","Spacecraft did not open on Orbit");
+      int massSection=-1;
+      for (int i=0;i<sections->count();++i) if (sections->tabText(i)=="Ballistic/Mass") massSection=i;
+      require(massSection>=0,"Spacecraft mass section missing");
+      for (int row=0;row<table->rowCount();++row) {
+         if (table->item(row,0)->text()=="DryMass") require(table->isRowHidden(row),"Orbit includes mass properties");
+         if (table->item(row,0)->text()=="X") require(!table->isRowHidden(row),"Orbit is missing its state elements");
+      }
+      sections->setCurrentIndex(massSection);
       bool massFound = false;
       for (int row = 0; row < table->rowCount(); ++row) {
          if (table->item(row, 0)->text() == "DryMass") {
+            require(!table->isRowHidden(row),"Mass section did not reveal DryMass");
             const auto unchangedScript=editor->toPlainText();
             const auto originalText=table->item(row,1)->text();
             table->editItem(table->item(row,1)); QApplication::processEvents();
@@ -142,6 +154,14 @@ int main(int argc, char **argv)
          }
       }
       require(massFound && panel->hasChanges(), "Mass is not editable in the panel");
+      sections->setCurrentIndex(0);
+      require(panel->hasChanges(),"Switching sections discarded pending edits");
+      sections->setCurrentIndex(sections->count()-1);
+      auto *propertyFilter=panel->findChild<QLineEdit *>("propertyFilter");
+      propertyFilter->setText("drymass");
+      for (int row=0;row<table->rowCount();++row)
+         require(table->isRowHidden(row)==(table->item(row,0)->text()!="DryMass"),"Property filter did not combine with sections");
+      propertyFilter->clear(); sections->setCurrentIndex(massSection);
       tree->itemDoubleClicked(items.first(),0);
       int resourcePanelCount=0;
       for (auto *widget:window.findChildren<QWidget *>())

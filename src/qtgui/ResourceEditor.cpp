@@ -1,6 +1,7 @@
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "GmatBase.hpp"
+#include "BaseException.hpp"
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QHeaderView>
@@ -11,13 +12,23 @@
 #include <QVBoxLayout>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QTabBar>
+#include <QSet>
 
 ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
    layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
    auto *search = new QLineEdit(this);
+   search->setObjectName("propertyFilter");
    search->setPlaceholderText("Filter properties…");
+   QTabBar *sections=nullptr;
+   if (object.IsOfType("Spacecraft")) {
+      sections=new QTabBar(this);
+      sections->setObjectName("propertySections");
+      sections->setExpanding(false);
+      layout->addWidget(sections);
+   }
    layout->addWidget(search);
    table = new QTableWidget(this);
    table->setColumnCount(3);
@@ -46,14 +57,48 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
    }
+   if (sections) {
+      // Use the engine's current element labels (Cartesian, Keplerian, etc.).
+      QSet<QString> orbit={"Epoch","DateFormat","StateType","DisplayStateType","AnomalyType","CoordinateSystem"};
+      for (int i=1;i<=6;++i) {
+         try { orbit.insert(QString::fromStdString(object.GetParameterText(object.GetParameterID("Element"+std::to_string(i))))); }
+         catch (BaseException &) {} // Unrecognized labels remain accessible in All Properties.
+      }
+      QSet<QString> present;
+      for (int row=0;row<table->rowCount();++row) {
+         const auto name=table->item(row,0)->text();
+         QString section;
+         if (orbit.contains(name)) section="Orbit";
+         else if (name.startsWith("NAIF") || name.startsWith("Spice")) section="SPICE";
+         else if (name=="Attitude" || name.startsWith("Attitude")) section="Attitude";
+         else if (name.startsWith("Model")) section="Visualization";
+         else if (name.startsWith("Dry") || name.startsWith("System") || name.startsWith("SPAD") ||
+                  name.startsWith("AtmosDensity") || name.contains("Mass") || name.contains("Inertia") ||
+                  QSet<QString>{"Cd","Cr","CdSigma","CrSigma","DragArea","SRPArea"}.contains(name)) section="Ballistic/Mass";
+         else if (name=="PowerSystem") section="Power System";
+         table->item(row,0)->setData(Qt::UserRole,section);
+         if (!section.isEmpty()) present.insert(section);
+      }
+      for (const auto &section : {"Orbit","Attitude","Ballistic/Mass","Power System","SPICE","Visualization"})
+         if (present.contains(section)) sections->addTab(section);
+      sections->addTab("All Properties");
+   }
    layout->addWidget(table, 1);
    status = new QLabel("Apply validates changes and updates the mission script.", this);
    status->setWordWrap(true); layout->addWidget(status);
    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close, this);
    layout->addWidget(buttons);
-   connect(search, &QLineEdit::textChanged, this, [this](const QString &text) {
-      for (int row = 0; row < table->rowCount(); ++row) table->setRowHidden(row, !table->item(row, 0)->text().contains(text, Qt::CaseInsensitive));
-   });
+   const auto filter=[this,search,sections] {
+      const auto section=sections ? sections->tabText(sections->currentIndex()) : QString();
+      for (int row=0;row<table->rowCount();++row) {
+         const auto *name=table->item(row,0);
+         const bool inSection=!sections || section=="All Properties" || name->data(Qt::UserRole).toString()==section;
+         table->setRowHidden(row,!inSection || !name->text().contains(search->text(),Qt::CaseInsensitive));
+      }
+   };
+   connect(search, &QLineEdit::textChanged, this, filter);
+   if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
+   filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply] {
       QMap<QString, QString> changes;
       for (int row = 0; row < table->rowCount(); ++row) {
