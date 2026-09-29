@@ -5,6 +5,14 @@
 #include "ResourceProperties.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QComboBox>
+#include <QFormLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QRegularExpression>
 #include "QtPlotReceiver.hpp"
 #include "PlotInterface.hpp"
 #include "Moderator.hpp"
@@ -32,6 +40,19 @@
 #include <QStyle>
 #include <sstream>
 #include <set>
+
+namespace {
+QStringList creatableResourceTypes()
+{
+   QStringList result;
+   for (const auto category : {Gmat::SPACECRAFT,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
+         Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER})
+      for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
+         result.append(QString::fromStdString(type));
+   result.append({"Variable","String"});
+   result.removeDuplicates(); result.sort(); return result;
+}
+}
 
 MainWindow::MainWindow()
 {
@@ -173,6 +194,14 @@ MainWindow::MainWindow()
    editAction("Cu&t", QKeySequence::Cut, &QPlainTextEdit::cut);
    editAction("&Copy", QKeySequence::Copy, &QPlainTextEdit::copy);
    editAction("&Paste", QKeySequence::Paste, &QPlainTextEdit::paste);
+   edit->addSeparator();
+   auto *create=edit->addAction("New &resource…");
+   create->setObjectName("createResource"); editingActions.append(create);
+   connect(create,&QAction::triggered,this,&MainWindow::showCreateResource);
+   resources->setContextMenuPolicy(Qt::CustomContextMenu);
+   connect(resources,&QTreeWidget::customContextMenuRequested,this,[this,create](const QPoint &position) {
+      QMenu menu(this); menu.addAction(create); menu.exec(resources->viewport()->mapToGlobal(position));
+   });
    view->addAction(navigation->toggleViewAction());
    view->addAction(console->toggleViewAction());
    toolbar->addSeparator();
@@ -337,6 +366,7 @@ void MainWindow::refreshTrees()
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
       {"Formations", Gmat::FORMATION}, {"Ground Stations", Gmat::GROUND_STATION},
       {"Propagators", Gmat::PROP_SETUP}, {"Burns", Gmat::BURN},
+      {"Force Models", Gmat::ODE_MODEL},
       {"Coordinate Systems", Gmat::COORDINATE_SYSTEM}, {"Solvers", Gmat::SOLVER},
       {"Output", Gmat::SUBSCRIBER}, {"Variables, Arrays, Strings", Gmat::PARAMETER},
       {"Functions", Gmat::FUNCTION}};
@@ -515,6 +545,49 @@ QString MainWindow::applyResourceChanges(const QString &name,
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    return applyModelScript(candidate);
+}
+
+QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript)
+{
+   if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "Build the current script before creating a resource.";
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges())
+         return "Apply or discard the open panel changes before creating a resource.";
+   static const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+   if (!identifier.match(name).hasMatch()) return "Use a name starting with a letter, followed by letters, digits or underscores.";
+   if (!creatableResourceTypes().contains(type)) return "Select an available resource type.";
+   if (Moderator::Instance()->GetConfiguredObject(name.toStdString())) return "That resource name is already in use.";
+   return applyModelScript("Create "+type+" "+name+";\n"+builtScript);
+}
+
+void MainWindow::showCreateResource()
+{
+   if (!ready || running || !modelValid || editor->toPlainText()!=builtScript) {
+      statusBar()->showMessage("Build the current script before creating a resource"); return;
+   }
+   const QString snapshot=builtScript;
+   QDialog dialog(this); dialog.setWindowTitle("New resource"); dialog.setObjectName("newResourceDialog");
+   auto *layout=new QFormLayout(&dialog);
+   auto *type=new QComboBox(&dialog); type->setObjectName("resourceType");
+   type->addItems(creatableResourceTypes()); type->setCurrentText("Spacecraft");
+   auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
+   auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setWordWrap(true);
+   layout->addRow("Type",type); layout->addRow("Name",name); layout->addRow(status);
+   auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
+   buttons->button(QDialogButtonBox::Ok)->setText("Create"); layout->addRow(buttons);
+   connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+   connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
+      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot);
+      if (error.isEmpty()) dialog.accept(); else status->setText(error);
+   });
+   dialog.resize(460,180); name->setFocus();
+   if (dialog.exec()==QDialog::Accepted) {
+      auto *navigation=findChild<QDockWidget *>("navigation");
+      navigation->show(); navigation->findChild<QTabWidget *>()->setCurrentWidget(resources);
+      const auto items=resources->findItems(name->text().trimmed(),Qt::MatchExactly|Qt::MatchRecursive);
+      if (items.size()==1) { resources->setCurrentItem(items.first()); resources->scrollToItem(items.first()); resources->itemDoubleClicked(items.first(),0); }
+   }
 }
 
 QString MainWindow::applyModelScript(const QString &candidate)

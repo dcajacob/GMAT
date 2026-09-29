@@ -68,6 +68,16 @@ Empty report lists can be populated and cleared. References use canonical
 resource names (for example, `Luna`). Other arrays, indexed expressions, and
 compound properties still require the script editor.
 
+Use **Edit > New resource** or the Resources context menu to add a resource.
+The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
+force-model, coordinate-system, solver and subscriber types, plus Variable and
+String. Creation validates a complete candidate mission and is one undoable
+script edit. Duplicate names, invalid identifiers, stale script snapshots and
+pending panel changes are rejected. The resource appears in the tree and its
+property panel opens after successful creation. Some resource types require
+further configuration before they can execute; array dimensions and specialized
+forms remain future work. Force models now have their own Resources category.
+
 ## Functional validation
 
 Enable and run the real-engine workflow executable with a host startup file:
@@ -87,6 +97,10 @@ invalid-script recovery, resource validation/rollback, stale panel rejection,
 script undo, and resource-tree-to-Apply-button interaction. It does not prove
 plotting, platform parity, or all property types. The separate wx/console
 exit regression checks shared-engine behavior.
+
+The workflow suite also creates a spacecraft through the New resource dialog,
+checks name/type validation and undo, inserts a propagation command using the
+created object, and verifies that it advances by the requested 60 seconds.
 
 This remains an implementation checkpoint, not a completed replacement.
 Still required: specialized resource and command forms, compound properties,

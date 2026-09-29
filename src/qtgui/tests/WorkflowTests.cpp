@@ -14,6 +14,9 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QTextDocument>
+#include <QDialog>
+#include <QComboBox>
+#include <QLineEdit>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -120,12 +123,44 @@ int main(int argc, char **argv)
       require(!window.buildScript() && window.runMission() == MainWindow::RunResult::Failed,
          "Unapplied resource settings were silently ignored during run");
       require(!window.loadScript(script), "Loading discarded pending resource settings");
+      require(!window.createResource("Spacecraft","PendingSat",editor->toPlainText()).isEmpty(),"Creation ignored pending panel changes");
       if (!screenshot.isEmpty()) {
          QApplication::processEvents();
          require(window.grab().save(screenshot), "Resource screenshot failed");
       }
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
       require(dryMass() == 888.25, "Apply button did not commit the entered value");
+      const auto beforeCreate=editor->toPlainText();
+      for (const auto &name:{"QtSat","Earth","bad name","Bad; Stop;"})
+         require(!window.createResource("Spacecraft",name,beforeCreate).isEmpty(),"Invalid or duplicate name accepted");
+      require(!window.createResource("NoSuchType","CreatedSat",beforeCreate).isEmpty(),"Unknown type accepted");
+      require(window.createResource("Spacecraft","CreatedSat",beforeCreate).isEmpty(),"Spacecraft creation failed");
+      require(Moderator::Instance()->GetConfiguredObject("CreatedSat") && editor->document()->isModified(),"Created spacecraft not synchronized");
+      require(!window.createResource("Spacecraft","StaleSat",beforeCreate).isEmpty(),"Stale creation snapshot accepted");
+      editor->undo(); require(editor->toPlainText()==beforeCreate && window.buildScript(),"Creation could not be undone");
+      require(!Moderator::Instance()->GetConfiguredObject("CreatedSat"),"Undo retained created resource");
+      bool createdThroughDialog=false;
+      bool capturedCreateDialog=screenshot.isEmpty();
+      QTimer::singleShot(0,&window,[&] {
+         auto *dialog=window.findChild<QDialog *>("newResourceDialog");
+         if (!dialog) return;
+         dialog->findChild<QComboBox *>("resourceType")->setCurrentText("Spacecraft");
+         dialog->findChild<QLineEdit *>("resourceName")->setText("CreatedSat");
+         if (!screenshot.isEmpty()) capturedCreateDialog=dialog->grab().save(screenshot+".create.png");
+         dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+         createdThroughDialog=dialog->result()==QDialog::Accepted;
+         if (!createdThroughDialog) dialog->reject();
+      });
+      window.findChild<QAction *>("createResource")->trigger();
+      require(createdThroughDialog && tree->findItems("CreatedSat",Qt::MatchExactly|Qt::MatchRecursive).size()==1,"New resource dialog did not populate tree");
+      require(capturedCreateDialog,"Could not capture resource creation dialog");
+      const auto createdEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("CreatedSat"))->GetEpoch();
+      require(window.applyMissionChange(window.missionSnapshot(),-1,MissionEdit::Append,
+         "Propagate QtProp(CreatedSat) {CreatedSat.ElapsedSecs = 60};").isEmpty(),"Created spacecraft could not be used by mission");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Mission with created spacecraft failed");
+      auto *createdResult=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("CreatedSat"));
+      require(createdResult && std::abs((createdResult->GetEpoch()-createdEpoch)*86400-60)<.01,"Created spacecraft did not propagate");
+      std::cout<<"PASS: resource creation, name/type validation, pending/stale protection, undo, dialog/tree integration and actual propagation\n";
       std::cout << "PASS: propagation, repeated runs, pause/resume/stop, edit protection, close protection, invalid-script recovery, resource apply/rollback/stale-panel protection/undo\n";
       return 0;
    } catch (const std::exception &error) {

@@ -32,12 +32,14 @@ public:
                               MissionEdit operation, const QString &replacement);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
+   QString createResource(const QString &type, const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
 private:
    void refreshTrees();
    void refreshOutput();
    void openCommandEditor(int index, MissionEdit operation);
+   void showCreateResource();
    QString applyModelScript(const QString &candidate);
    void newMission();
    bool saveScript(bool saveAs = false);
