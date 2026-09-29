@@ -107,6 +107,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
          }
+         if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowModel") field.choices={"None","DualCone"};
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies")
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
          if (object.IsOfType("CoordinateSystem") && field.name=="Axes")

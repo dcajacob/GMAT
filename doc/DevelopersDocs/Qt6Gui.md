@@ -1031,3 +1031,6 @@ pending until Apply. Invalid names are rejected without changing the script.
 Changing EpochFormat converts the pending InitialEpoch while preserving the same
 instant. Invalid dates leave both pending fields unchanged, with an error message.
 Apply validates and stores the format and date together.
+
+Solar ShadowModel offers None and DualCone in a dropdown, matching GMAT's supported
+choices. Selecting None disables shadow attenuation when the mission runs.

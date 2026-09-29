@@ -36,7 +36,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; finite-burn execution and electric configuration round trips covered; broader electric operating modes pending |
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
-| `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; runtime power/shadow qualification pending. |
+| `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
@@ -1386,3 +1386,22 @@ The subsequently extended Workflow test, including paired Apply/Undo, passed in
 18.51 seconds. Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-power-epoch.txt` and
 `Qt6ParityValidation/check-power-epoch-apply.txt`.
+
+## Power-model selection and report execution
+
+Solar ShadowModel now offers None and DualCone, matching the engine's accepted
+values and the wx selector. CompatibilityTests edits nuclear and solar resources
+through ResourceEditor, including maximum power, decay, margin, bus coefficients,
+and solar coefficients/model selection. It saves, saves under a second name,
+recovers from a failed interpretation, reopens and runs each mission.
+
+The generated report must show the selected constant bus demand, configured
+margin applied to the generated power, and exactly 10 kW nuclear output. The
+unshadowed solar case uses inverse-square generation coefficients and checks a
+bounded near-Earth output; this is not an exact independent solar-model check.
+Eclipse attenuation, time-dependent decay, and electric-thruster coupling remain
+separate qualification cases.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.43 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-power-runtime.txt`.

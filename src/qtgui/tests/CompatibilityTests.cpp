@@ -64,6 +64,42 @@ int main(int argc,char **argv)
          require(window.loadScript(second) && editor->toPlainText()==source && window.buildScript(),
             "Plugin script did not recover unchanged after failed interpretation and reopen");
       };
+      for (const auto &type:{QString("NuclearPowerSystem"),QString("SolarPowerSystem")}) {
+         const auto report=output.filePath(type+".csv");
+         editor->setPlainText("Create Spacecraft PowerSat;\nCreate "+type+" Power;\nPowerSat.PowerSystem = Power;\n"
+            "Create ReportFile PowerReport;\nPowerReport.Filename = '"+report+"';\nPowerReport.WriteHeaders = false;\nPowerReport.FixedWidth = false;\nPowerReport.Delimiter = ',';\nPowerReport.Precision = 16;\n"
+            "BeginMissionSequence;\nReport PowerReport PowerSat.Power.TotalPowerAvailable PowerSat.Power.RequiredBusPower PowerSat.Power.ThrustPowerAvailable;\n");
+         require(window.buildScript(),"Power report fixture failed");
+         const auto before=editor->toPlainText(); QString error="Apply not invoked";
+         {
+            QWidget owner;
+            ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Power"),[&](const QMap<QString,QString> &changes) {
+               error=window.applyResourceChanges("Power",changes,before); return error;
+            },&owner,before);
+            QMap<QString,QString> values={{"InitialMaxPower","10"},{"AnnualDecayRate","0"},{"Margin","10"},{"BusCoeff1","2"},{"BusCoeff2","0"},{"BusCoeff3","0"}};
+            if (type=="SolarPowerSystem") {
+               values.insert("ShadowModel","None");
+               for (int i=1;i<=5;++i) values.insert("SolarCoeff"+QString::number(i),i==1 ? "1" : "0");
+            }
+            auto *grid=panel.findChild<QTableWidget *>();
+            for (auto it=values.cbegin();it!=values.cend();++it) {
+               int row=-1; for (int r=0;r<grid->rowCount();++r) if (grid->item(r,0)->text()==it.key()) row=r;
+               require(row>=0,"Power resource control absent");
+               if (it.key()=="ShadowModel") {
+                  auto *choice=qobject_cast<QComboBox *>(grid->cellWidget(row,1));
+                  require(choice && choice->count()==2 && choice->findText("DualCone")>=0,"Shadow model choices missing"); choice->setCurrentText(it.value());
+               } else grid->item(row,1)->setText(it.value());
+            }
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error)); roundTrip(type+"-power");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Configured power report mission failed");
+         const auto values=read(report).trimmed().split(','); require(values.size()==3,"Power report column count wrong");
+         const double generated=values[0].toDouble(),bus=values[1].toDouble(),available=values[2].toDouble();
+         require(std::abs(bus-2)<1e-10 && std::abs(available-.9*(generated-2))<1e-10,"Power GUI settings did not reach bus and margin calculations");
+         require(type=="NuclearPowerSystem" ? std::abs(generated-10)<1e-10 : generated>8 && generated<12,
+            "Configured generation was not reflected in the power report");
+      }
       {
          const auto kernelRoot=QFileInfo(startup).dir().absoluteFilePath("../data/vehicle/ephem/spk/");
          QMap<QString,QString> kernels;
