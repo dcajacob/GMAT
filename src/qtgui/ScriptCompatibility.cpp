@@ -86,11 +86,6 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       for (const auto *key:{"ViewFrame","LookAtFrame"}) if (values.value(key).contains('.')) {
          result.error=it.key()+"."+key+": segment-relative cameras are not yet supported by Qt conversion. The original script is unchanged."; return result;
       }
-      if (values.value("ViewTrajectory")=="On" && values.value("SetCurrentLocation")!="On" && values.value("SetDefaultLocation")!="On") {
-         if (values.value("ViewFrame","CoordinateSystem")=="CoordinateSystem") {
-            result.error=it.key()+": automatic trajectory framing with CoordinateSystem is not yet supported. Use a named object or a stored camera location."; return result;
-         }
-      }
       for (const auto *key:{"SetDefaultLocation","SetCurrentLocation","InertialFrame","ViewTrajectory","ShortestAngle"})
          if (values.contains(key) && values.value(key)!="On" && values.value(key)!="Off") {
             result.error=it.key()+"."+key+": expected On or Off."; return result;
@@ -161,7 +156,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       set("ViewDirection",body ? frame : "[0 0 0]");
       const auto prefix=values.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
       const bool stored=values.value("Set"+prefix+"Location")=="On";
-      if (trajectory && !stored) {
+      if ((trajectory || frame=="CoordinateSystem") && !stored) {
          cameraSetting.automaticTrajectory=frame;
          set("ViewPointVector","[0 -30000 0]"); cameraSetting.up=std::array<double,3>{0,0,1};
       }
@@ -172,7 +167,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          }
       }
       if (stored) set("ViewPointVector",formatVector(eye));
-      else if (!trajectory) result.notes.append(plot+": default camera distance used; review Script view or Fit.");
+      else if (cameraSetting.automaticTrajectory.isEmpty()) result.notes.append(plot+": default camera distance used; review Script view or Fit.");
       if (stored) {
          if (!body) set("ViewDirection",formatVector(center));
          else cameraSetting.centerOffset=center;
@@ -214,9 +209,10 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
                   result.error=preset.name+": invalid stored camera "+component.first+" vector."; return result;
                }
             }
-         } else if (trajectory) preset.automaticTrajectory=extraFrame;
+         } else if (trajectory || extraFrame=="CoordinateSystem") preset.automaticTrajectory=extraFrame;
          else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
          cameraSetting.views.append(preset);
+         if (preset.automaticTrajectory=="CoordinateSystem") result.notes.append(preset.name+": automatic origin framing retains the OpenFrames default radius and viewport-aware distance.");
          if (!preset.reference.isEmpty()) result.notes.append(preset.name+(preset.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
          if (!preset.target.isEmpty()) result.notes.append(preset.name+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
          if (trajectory) result.notes.append(preset.name+(preset.automaticTrajectory.isEmpty() ? ": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object." : ": automatic whole-trajectory camera uses retained trajectory bounds, refreshed as points arrive."));
@@ -224,6 +220,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
       catch (const std::exception &error) { result.error=QString::fromUtf8(error.what()); return result; }
       cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
+      if (cameraSetting.automaticTrajectory=="CoordinateSystem") result.notes.append(plot+": automatic origin framing retains the OpenFrames default radius and viewport-aware distance.");
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
       result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views.");
       if (trajectory) result.notes.append(plot+(stored ? ": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object." : ": automatic whole-trajectory camera uses retained trajectory bounds, refreshed as points arrive."));

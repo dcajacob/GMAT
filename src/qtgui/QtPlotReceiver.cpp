@@ -10,6 +10,7 @@
 #include "CoordinateConverter.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
+#include "GmatDefaults.hpp"
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QTableWidget>
@@ -31,6 +32,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
          if (name.isEmpty()) return;
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
          if (!plot || !plot->IsOfType("OrbitView")) throw std::runtime_error("Automatic trajectory camera requires an OrbitView");
+         if (name=="CoordinateSystem") return;
          const auto &objects=plot->GetStringArrayParameter("Add");
          if (std::find(objects.begin(),objects.end(),name.toStdString())==objects.end())
             throw std::runtime_error((it.key()+": automatic trajectory object must be in Add: "+name).toStdString());
@@ -117,9 +119,16 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
       const auto setting=cameraSettings.value(text(name));
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
       entry.data->automaticTrajectory=setting.automaticTrajectory;
+      // OF's root has no visible axes. Its override radius is stored in a
+      // float bounding sphere; with LookAt it instead uses the unit fallback.
+      const auto automaticRadius=[](const auto &camera) {
+         return camera.automaticTrajectory=="CoordinateSystem" ? (camera.lookAtRotation ? 1.0 :
+            static_cast<double>(static_cast<float>(12*GmatSolarSystemDefaults::PLANET_EQUATORIAL_RADIUS[GmatSolarSystemDefaults::EARTH]))) : 0.0;
+      };
+      entry.data->automaticRadius=automaticRadius(setting);
       if (!setting.views.isEmpty()) {
-         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory});
-         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory});
+         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory,automaticRadius(setting)});
+         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory,automaticRadius(view)});
       }
    }
    show(text(name));

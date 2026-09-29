@@ -1,0 +1,10 @@
+Source: src/qtgui/tests/OpenFramesCameraReference.cpp
+Reference: /home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib/libOpenFrames.so
+
+Build/run:
+c++ -std=c++17 -fPIC src/qtgui/tests/OpenFramesCameraReference.cpp -Isrc/qtgui $(pkg-config --cflags --libs Qt6Widgets) -I/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/include -L/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib -Wl,-rpath,/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib -lOpenFrames -losg -losgGA -o /tmp/gmat-camera-reference
+/tmp/gmat-camera-reference
+
+PASS: 48 OpenFrames frame/mode/direction cases; maximum point error=2.06801e-12
+PASS: 72 automatic trajectory LookAt cases; maximum point error=8.92633e-06
+PASS: 12 automatic origin cases; maximum point error=0.0103549

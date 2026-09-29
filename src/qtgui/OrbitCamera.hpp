@@ -69,15 +69,18 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
    }
    const auto trajectory=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
       ? model.cameraViews[model.selectedCamera].automaticTrajectory : model.automaticTrajectory;
+   const auto automaticRadius=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
+      ? model.cameraViews[model.selectedCamera].automaticRadius : model.automaticRadius;
    if (!model.fitCamera && !trajectory.isEmpty()) {
       OrbitSceneBounds path;
+      if (trajectory=="CoordinateSystem") path.include(0,0,0,0);
       for (const auto &curve:model.curves) if (curve.name==trajectory)
          for (const auto &point:curve.points) path.include(point.x,point.y,point.z,0);
       if (!path.empty) {
          const auto center=path.center();
          target=automaticOrigin+automaticRight*center.x()-automaticOutward*center.y()+automaticUp*center.z();
          const double span=(path.maximum-path.minimum).length();
-         const double radius=span>0 ? span*.5 : 1.0;
+         const double radius=automaticRadius>0 ? automaticRadius : span>0 ? span*.5 : 1.0;
          distance=2*radius; viewExtent=radius;
          if (model.perspective) {
             const double halfVertical=std::clamp(model.fieldOfView,1.0,150.0)*3.14159265358979323846/360;

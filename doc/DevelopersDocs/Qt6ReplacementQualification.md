@@ -1716,3 +1716,31 @@ Apply could leave the imported automatic camera overriding explicit user values.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 38.11 seconds.
 Native checks used isolated Xvfb/software OpenGL. Evidence:
 `Qt6ParityValidation/check-camera-overrides.txt`.
+
+## Automatic CoordinateSystem cameras
+
+Audited OFScene root creation (hidden root axes, position zero),
+ProcessOpenFramesView and ReferenceFrame::getBound/View::resetView. Root bounds
+do not include child scene objects. Without LookAt, OFScene supplies twelve
+Earth equatorial radii as the automatic bounding radius; with LookAt, the empty
+root bound falls back to one unit. Qt now converts both primary and named
+CoordinateSystem views without a stored location, regardless of ViewTrajectory.
+It retains these radius rules and viewport/FOV scaling. Stored locations retain
+precedence; Fit and explicit camera overrides retain their Qt behavior.
+
+The optional OpenFrames reference probe adds 12 root-camera cases: both LookAt
+states, both rotation modes and three aspect ratios. All pass with maximum
+point difference 0.0103549 scene units. OF constructs its automatic home eye
+with a float Vec3; the distant-camera comparison therefore uses a 1e-7 relative
+tolerance (minimum 1e-4 absolute), rather than claiming double-precision identity.
+The original 48 stored-frame and 72 trajectory LookAt comparisons still pass.
+
+WorkflowTests checks unchanged mission text during conversion, primary/named
+metadata, save/reopen/run, origin center and the expected radius/FOV distance
+with and without LookAt. Segment-relative cameras and automatic body-bound
+framing remain open requirements.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 39.31 seconds.
+Native checks used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-auto-origin.txt` and
+`Qt6ParityValidation/auto-origin-reference.txt`.

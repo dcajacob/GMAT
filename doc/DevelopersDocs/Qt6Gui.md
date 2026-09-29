@@ -1110,11 +1110,16 @@ no stored camera location, conversion now creates an automatic trajectory camera
 It frames that object's retained path and updates while the mission runs. Named
 views retain their own target paths. Replay keeps framing stable; Fit frames the
 whole scene, and Script view restores the selected trajectory view. Automatic LookAt targets retain both ShortestAngle modes, including roll and
-bounding-center orientation. Segment cameras remain unsupported. Automatic
-CoordinateSystem framing requires a stored supported camera location before
-conversion.
+bounding-center orientation. Automatic CoordinateSystem views also retain the
+OpenFrames default radius and viewport-aware distance, with or without LookAt.
+Segment cameras remain unsupported.
 
 Editing the primary OrbitView camera's reference, position, scale, direction or
 up settings in the resource editor turns off imported automatic trajectory
 framing for that camera. Your explicit pose then takes effect. Additional named
 views retain their own settings, and Undo restores automatic framing.
+
+Automatic CoordinateSystem views without LookAt use OpenFrames' twelve-Earth-
+radius framing. With LookAt they use its root-frame one-unit radius fallback.
+Stored Current/Default locations still take precedence. Fit remains available
+for framing the actual visible scene.

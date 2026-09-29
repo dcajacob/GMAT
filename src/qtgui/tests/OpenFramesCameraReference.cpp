@@ -72,4 +72,32 @@ int main()
       ++automaticCases;
    }
    std::cout<<"PASS: "<<automaticCases<<" automatic trajectory LookAt cases; maximum point error="<<maximumAutomaticError<<'\n';
+   osg::ref_ptr<OpenFrames::ReferenceFrame> originFrame=new OpenFrames::ReferenceFrame("origin");
+   originFrame->showAxes(OpenFrames::ReferenceFrame::NO_AXES);
+   osg::ref_ptr<OpenFrames::ReferenceFrame> lookTarget=new OpenFrames::ReferenceFrame("target"); originFrame->addChild(lookTarget);
+   int originCases=0; double maximumOriginError=0;
+   for (bool aligned:{false,true}) for (bool shortest:{false,true}) for (double aspect:{.4,1.0,2.5}) {
+      const osg::Vec3d direction(1,2,3); lookTarget->setPosition(direction);
+      osg::ref_ptr<OpenFrames::View> view=aligned ?
+         new OpenFrames::View(originFrame,originFrame,lookTarget,OpenFrames::View::ABSOLUTE_FRAME,shortest ? OpenFrames::View::DIRECT : OpenFrames::View::AZEL) :
+         new OpenFrames::View(originFrame,originFrame,OpenFrames::View::ABSOLUTE_FRAME);
+      if (!aligned) view->setDefaultViewDistance(12*6378.1363);
+      view->setPerspective(45,aspect); view->resetView();
+      PlotModel model(PlotModel::Kind::Orbit); model.automaticTrajectory="CoordinateSystem"; model.perspective=true; model.fieldOfView=45; model.scriptedCamera=true;
+      model.automaticRadius=aligned ? 1 : static_cast<double>(static_cast<float>(12*6378.1363));
+      const auto rotation=aligned ? cameraAlignment(direction,shortest) : osg::Quat();
+      const auto eye=rotation*osg::Vec3d(0,-30000,0),up=rotation*osg::Vec3d(0,0,1);
+      model.cameras.push_back({0,{eye.x(),eye.y(),eye.z()},{0,0,0},{up.x(),up.y(),up.z()},false});
+      const auto camera=orbitCamera(model,0,0,0,1,aspect);
+      const auto actual=osg::Matrixd::lookAt(camera.target+camera.outward*camera.distance,camera.target,camera.up);
+      const auto expected=view->getTrackball()->getInverseMatrix();
+      for (const auto &point:std::vector<osg::Vec3d>{{0,0,0},{100,200,300}}) {
+         const double error=(point*actual-point*expected).length(); maximumOriginError=std::max(maximumOriginError,error);
+         // OF constructs the home eye with Vec3 (float); a distant origin
+         // camera therefore has a larger absolute rounding error.
+         if (error>std::max(1e-4,camera.distance*1e-7)) { std::cerr<<"FAIL automatic origin error="<<error<<'\n'; return 1; }
+      }
+      ++originCases;
+   }
+   std::cout<<"PASS: "<<originCases<<" automatic origin cases; maximum point error="<<maximumOriginError<<'\n';
 }

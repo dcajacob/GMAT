@@ -146,6 +146,9 @@ int main(int argc, char **argv)
          require(automaticSecondary.error.isEmpty() && qtCameraSettings(automaticSecondary.script).value("Display").views[0].automaticTrajectory=="Sat","Automatic named trajectory lost");
          const auto automaticLookAt=convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off;\nCamera.LookAtFrame = Sat"));
          require(automaticLookAt.error.isEmpty() && qtCameraSettings(automaticLookAt.script).value("Display").lookAtRotation,"Automatic LookAt mode lost in conversion");
+         const auto automaticOrigin=convertOpenFramesViews(QString(input).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off"));
+         require(automaticOrigin.error.isEmpty() && qtCameraSettings(automaticOrigin.script).value("Display").automaticTrajectory=="CoordinateSystem" &&
+            automaticOrigin.script.endsWith(dynamics),"Automatic CoordinateSystem conversion changed dynamics or lost framing");
          require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop")).error.contains("segment-relative"),"Segment camera lacks specific diagnostic");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
@@ -1455,6 +1458,25 @@ int main(int argc, char **argv)
          }
          require(window.runMission()==MainWindow::RunResult::Completed && window.plotReceiver()->model("OFI_EarthView")->automaticTrajectory=="DefaultSC",
             "Undo did not restore automatic trajectory mode");
+      }
+      for (const bool aligned:{false,true}) {
+         auto originScript=originalSample;
+         originScript.replace(QRegularExpression("TheView\\.SetDefaultLocation\\s*=\\s*On"),"TheView.SetDefaultLocation = Off");
+         QString extra="Earth_View.ViewFrame = CoordinateSystem;\nEarth_View.SetCurrentLocation = Off;\nEarth_View.SetDefaultLocation = Off;\n";
+         if (aligned) extra+="TheView.LookAtFrame = DefaultSC;\nEarth_View.LookAtFrame = DefaultSC;\n";
+         originScript.replace("BeginMissionSequence;",extra+"BeginMissionSequence;");
+         const auto converted=convertOpenFramesViews(originScript); require(converted.error.isEmpty(),"Automatic origin conversion failed");
+         editor->setPlainText(converted.script); QTemporaryDir files; const auto path=files.filePath("origin-camera.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Automatic origin save/reopen failed");
+         const auto model=window.plotReceiver()->model("OFI_EarthView"); auto *selector=window.findChild<QComboBox *>("orbitCameraView");
+         require(model && selector && model->automaticTrajectory=="CoordinateSystem" && model->cameraViews[1].automaticTrajectory=="CoordinateSystem", "Origin framing not delivered to primary/named cameras");
+         const double radius=aligned ? 1 : static_cast<double>(static_cast<float>(12*6378.1363));
+         for (int index:{0,1}) {
+            selector->setCurrentIndex(index); const auto camera=orbitCamera(*model,model->frame,0,0,1,.4);
+            const double halfVertical=model->fieldOfView*3.14159265358979323846/360;
+            const double expected=radius/std::sin(std::atan(.4*std::tan(halfVertical)));
+            require(camera.target.length()<1e-8 && std::abs(camera.distance-expected)<1e-6,"Automatic origin camera radius or center wrong");
+         }
       }
       {
          auto bodyScript=originalSample;
