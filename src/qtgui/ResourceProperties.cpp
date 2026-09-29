@@ -173,6 +173,21 @@ bool isResourceList(GmatBase &object, const QString &name)
    return supported && (parameterType==Gmat::OBJECTARRAY_TYPE || parameterType==Gmat::STRINGARRAY_TYPE) && !object.IsParameterReadOnly(id);
 }
 
+QStringList splitResourceReferences(const QString &value)
+{
+   QStringList entries;
+   int start=0,depth=0;
+   for (int i=0;i<value.size();++i) {
+      if (value[i]=='(') ++depth;
+      else if (value[i]==')') --depth;
+      else if (depth==0 && (value[i]==',' || value[i]=='\n')) {
+         entries.append(value.mid(start,i-start).trimmed()); start=i+1;
+      }
+   }
+   if (!value.trimmed().isEmpty()) entries.append(value.mid(start).trimmed());
+   return entries;
+}
+
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value)
 {
    const auto id=object.GetParameterID(name.toStdString());
@@ -180,11 +195,13 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    // Accept resource/parameter names only. Candidate interpretation resolves
    // references and verifies subscriber-specific parameter restrictions.
    static const QRegularExpression reference("^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$");
+   static const QRegularExpression arrayElement("^[A-Za-z_][A-Za-z0-9_]*\\([1-9][0-9]*,\\s*[1-9][0-9]*\\)$");
+   const bool reportParameters=object.GetTypeName()=="ReportFile" && name=="Add";
    QStringList entries;
    if (!value.trimmed().isEmpty()) {
-      for (const auto &part : value.split(QRegularExpression("[,\\n]"))) {
+      for (const auto &part : splitResourceReferences(value)) {
          const auto entry=part.trimmed();
-         if (!reference.match(entry).hasMatch()) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         if (!reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
          if (name=="Add" && object.IsOfType("Formation")) {
             auto *member=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!member || !member->IsOfType(Gmat::SPACECRAFT)) throw std::runtime_error("Formation members must be existing spacecraft");
@@ -326,6 +343,9 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
    }
    QString leaf;
    if (auto *force=forcePropertyOwner(object,name,leaf)) { setResourceProperty(*force,leaf,value); return; }
+   if (object.GetTypeName()=="ReportFile" && name=="Delimiter" &&
+       (value.size()!=1 || value=="'" || value[0].unicode()>126 || (value[0].unicode()<32 && value!="\t")))
+      throw std::runtime_error("Choose one delimiter character (space, tab or printable ASCII other than a quote)");
    const auto id = object.GetParameterID(name.toStdString());
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
    if (object.IsParameterReadOnly(id) && !arrayValues) throw std::runtime_error("Property is read-only");

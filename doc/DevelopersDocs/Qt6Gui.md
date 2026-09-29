@@ -717,3 +717,15 @@ Workflow checks now cover MOEEq epoch edits and a Sun-aligned
 LocalAlignedConstrained frame, including numerical transforms after save/reopen.
 Other axis modes, dependency combinations and time-varying singularities still
 need broader qualification.
+
+### Report-file settings
+
+ReportFile's Delimiter control names Space, Tab, Comma, Semicolon and Pipe; a
+custom single ASCII delimiter can also be entered. Apply rejects empty,
+multicharacter, quote and control-character delimiters other than tab instead of
+silently accepting the engine's first-character truncation.
+
+The Add list accepts whole parameters and array elements with positive numeric
+indices, for example `Results(1,2), Sat.X`. Commas inside the array indices stay
+part of the reference, including when reopening the selection list. Expressions
+as array indices and the full wx parameter-selection workflow remain pending.

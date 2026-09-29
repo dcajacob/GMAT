@@ -135,7 +135,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Pending audit |
+| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Full parameter chooser, append, fixed-width and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
@@ -506,3 +506,23 @@ singularities remain unqualified.
 
 GmatQt was rebuilt; all 11 Qt tests passed in 26.08 seconds. Evidence:
 `Qt6ParityValidation/check-constrained-axes.txt`.
+
+## Report configuration checkpoint
+
+The wx ReportFileSetupPanel audit found a Qt list parsing gap: array elements
+were split at their internal comma and rejected. ReportFile Add now accepts
+positive numeric array indices and the selection list preserves those entries.
+The engine still resolves parameters and checks array bounds during candidate
+interpretation. Delimiters now have readable labels, map back to literal
+characters, and reject values the engine would silently truncate.
+
+CompatibilityTests verifies array-element list edits and order, no initial dirty
+state in the delimiter control, Tab selection, invalid setting rollback, exact
+save/Save As/reopen with invalid-build recovery, and numerical output with
+precision 6 and comma/tab delimiters. Automatic reporting during propagation
+checks that edited Add order and array values reach the file; explicit Report
+commands retain their own parameter order. Full parameter selection, append,
+fixed-width formatting and solver-iteration combinations remain pending.
+
+GmatQt was rebuilt; all 11 Qt tests passed in 49.81 seconds. Evidence:
+`Qt6ParityValidation/check-report-settings.txt`.

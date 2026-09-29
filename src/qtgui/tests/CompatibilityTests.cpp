@@ -6,6 +6,10 @@
 #include "SolarSystem.hpp"
 #include "CelestialBody.hpp"
 #include "ResourceProperties.hpp"
+#include "ResourceEditor.hpp"
+#include <QComboBox>
+#include <QDialogButtonBox>
+#include <QPushButton>
 #include "FileManager.hpp"
 #include <QRegularExpression>
 #include <array>
@@ -45,6 +49,58 @@ int main(int argc,char **argv)
          require(window.loadScript(second) && editor->toPlainText()==source && window.buildScript(),
             "Plugin script did not recover unchanged after failed interpretation and reopen");
       };
+      {
+         const auto reportPath=output.filePath("configured-report.txt");
+         editor->setPlainText("Create Variable Number;\nCreate Array Values[2,2];\n"
+            "Create ReportFile ConfiguredReport;\nConfiguredReport.Filename = '"+reportPath+"';\n"
+            "BeginMissionSequence;\nGMAT Number = 12.3456789;\nGMAT Values(1,2) = -7.25;\n"
+            "Report ConfiguredReport Number Values(1,2);\n");
+         require(window.buildScript(),"Report fixture failed");
+         require(window.applyResourceChanges("ConfiguredReport",{{"Add","Values(1,2), Number"},
+            {"FixedWidth","false"},{"WriteHeaders","false"},{"Precision","6"},{"Delimiter",","}},editor->toPlainText()).isEmpty(),
+            "Report configuration or array-element list rejected");
+         const auto valid=editor->toPlainText();
+         for (const auto &changes:QVector<QMap<QString,QString>>{
+            {{"Delimiter","::"}},{{"Precision","0"}},{{"ColumnWidth","0"}},{{"Add","Values(1,2); Stop"}}})
+            require(!window.applyResourceChanges("ConfiguredReport",changes,valid).isEmpty() && editor->toPlainText()==valid,
+               "Invalid report setting changed the script");
+         auto *report=Moderator::Instance()->GetConfiguredObject("ConfiguredReport");
+         require(report->GetStringArrayParameter("Add")==StringArray({"Values(1,2)","Number"}),"Report parameter order changed");
+         {
+            QWidget host;
+            QMap<QString,QString> changes;
+            ResourceEditor panel(*report,[&](const auto &value) { changes=value; return QString(); },&host);
+            auto *delimiter=panel.findChild<QComboBox *>("reportDelimiter");
+            require(delimiter && delimiter->currentText()=="Comma" && !panel.hasChanges(),"Report delimiter label or initial dirty state wrong");
+            delimiter->setCurrentText("Tab");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+            require(changes.value("Delimiter")=="\t","Tab label was not translated to a literal tab");
+            delimiter->setEditText(":");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+            require(changes.value("Delimiter")==":" && delimiter->insertPolicy()==QComboBox::NoInsert,
+               "Custom delimiter was lost or can be inserted without its value");
+         }
+         require(splitResourceReferences("Values(1,2), Number")==QStringList({"Values(1,2)","Number"}),
+            "Report picker split an indexed parameter");
+         roundTrip("report-settings");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Configured report run failed");
+         require(read(reportPath).trimmed()=="12.3457,-7.25","Report precision, delimiter or header settings not reflected in output");
+         require(window.applyResourceChanges("ConfiguredReport",{{"Delimiter","\t"}},editor->toPlainText()).isEmpty(),"Tab delimiter edit failed");
+         roundTrip("tab-report");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath).trimmed()=="12.3457\t-7.25",
+            "Tab report save/reopen or output failed");
+         auto automatic=editor->toPlainText();
+         automatic.replace("BeginMissionSequence;","Create Spacecraft ReportSat;\nCreate ForceModel ReportForces;\n"
+            "Create Propagator ReportProp;\nReportProp.FM = ReportForces;\nBeginMissionSequence;");
+         automatic.replace("Report ConfiguredReport Number Values(1,2);","Propagate ReportProp(ReportSat) {ReportSat.ElapsedSecs = 1};");
+         editor->setPlainText(automatic); require(window.buildScript(),"Automatic report fixture failed");
+         roundTrip("automatic-report");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Automatic report execution failed");
+         const auto rows=read(reportPath).trimmed().split('\n');
+         require(rows.size()>=2,"Automatic report did not record propagation");
+         for (const auto &row:rows) require(row.trimmed()=="-7.25\t12.3457","Report Add order or array value did not reach output");
+
+      }
       const auto types=window.availableEngineTypes();
       require(types.contains("GmatFunction") && types.contains("Yukon") && types.contains("EclipseLocator"),"Expected native plugins were not registered");
       auto function=read(samples.filePath("Ex_GMATFunction_Math.script"));

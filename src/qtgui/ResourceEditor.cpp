@@ -34,6 +34,15 @@
 #include <cmath>
 #include <algorithm>
 
+namespace {
+QString comboValue(const QComboBox *combo)
+{
+   if (!combo->property("resourceValueData").toBool()) return combo->currentText();
+   const int index=combo->findText(combo->currentText());
+   return index>=0 ? combo->itemData(index).toString() : combo->currentText();
+}
+}
+
 ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script,bool applyUnchanged) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
@@ -129,7 +138,19 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *name = new QTableWidgetItem(field.name);
       name->setFlags(name->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 0, name);
-      if (field.choices.isEmpty()) {
+      if (object.GetTypeName()=="ReportFile" && field.name=="Delimiter") {
+         auto *choices=new QComboBox(table);
+         choices->setObjectName("reportDelimiter");
+         choices->setEditable(true);
+         choices->setInsertPolicy(QComboBox::NoInsert);
+         choices->setProperty("resourceValueData",true);
+         choices->addItem("Space"," "); choices->addItem("Tab","\t");
+         choices->addItem("Comma",","); choices->addItem("Semicolon",";");
+         choices->addItem("Pipe","|");
+         if (choices->findData(field.value)<0) choices->addItem(field.value,field.value);
+         choices->setCurrentIndex(choices->findData(field.value));
+         table->setCellWidget(row,1,choices);
+      } else if (field.choices.isEmpty()) {
          auto *value=new QTableWidgetItem(field.value);
          if (field.list) value->setToolTip("Comma-separated resource or parameter names. Apply replaces the complete list.");
          if (field.rows>0 && field.columns>0) {
@@ -169,7 +190,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   layout->addWidget(new QLabel("Select resources. Drag rows to change their order.",&dialog));
                   auto *list=new QListWidget(&dialog); list->setObjectName("resourceSelectionList");
                   list->setDragDropMode(QAbstractItemView::InternalMove);
-                  QStringList selected=value->text().split(',',Qt::SkipEmptyParts);
+                  QStringList selected=splitResourceReferences(value->text());
                   for (auto &name:selected) name=name.trimmed();
                   auto names=selected;
                   for (const auto &name:field.references) if (!names.contains(name)) names.append(name);
@@ -338,7 +359,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
-         const QString value = combo ? combo->currentText() : table->item(row, 1)->text();
+         const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
       }
       if (changes.isEmpty() && !applyUnchanged) { status->setText("No changes to apply."); return; }
@@ -359,7 +380,7 @@ bool ResourceEditor::hasChanges() const
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
-      const QString value = combo ? combo->currentText() : table->item(row, 1)->text();
+      const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
       if (value != original.value(table->item(row, 0)->text())) return true;
    }
    return false;
