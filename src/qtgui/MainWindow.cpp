@@ -154,7 +154,8 @@ MainWindow::MainWindow()
          if (!file.atEnd()) viewer->appendPlainText("\n[Preview limited to the first 16 MiB. The complete report is saved at " + name + "]");
          auto *child = workspace->addSubWindow(viewer);
          child->setAttribute(Qt::WA_DeleteOnClose);
-         child->setWindowTitle(item->text(0) + " — Report");
+         child->setWindowTitle(item->text(0) + " — " + name);
+         viewer->setToolTip(name);
          child->resize(750,500); child->show();
       } else if (!name.isEmpty()) plots->show(name);
    });

@@ -729,3 +729,11 @@ The Add list accepts whole parameters and array elements with positive numeric
 indices, for example `Results(1,2), Sat.X`. Commas inside the array indices stay
 part of the reference, including when reopening the selection list. Expressions
 as array indices and the full wx parameter-selection workflow remain pending.
+
+
+Report formatting checks cover fixed-width headers, ColumnWidth, left/right
+justification and zero-filled significant digits. With AppendToExistingFile true,
+each run adds its output (including headers when enabled) to the existing file;
+with it false, a run replaces the file. Output report windows show their full
+file path in the title and display read-only, unwrapped text. Reports larger than
+16 MiB still use the existing bounded preview, with the complete file left on disk.

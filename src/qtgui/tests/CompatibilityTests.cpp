@@ -10,6 +10,8 @@
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QMdiSubWindow>
+#include <QStatusBar>
 #include "FileManager.hpp"
 #include <QRegularExpression>
 #include <array>
@@ -99,6 +101,60 @@ int main(int argc,char **argv)
          const auto rows=read(reportPath).trimmed().split('\n');
          require(rows.size()>=2,"Automatic report did not record propagation");
          for (const auto &row:rows) require(row.trimmed()=="-7.25\t12.3457","Report Add order or array value did not reach output");
+
+         // Format settings must survive reconstruction and affect actual output.
+         require(window.applyResourceChanges("ConfiguredReport",{{"FixedWidth","true"},{"WriteHeaders","true"},
+            {"ColumnWidth","18"},{"Delimiter"," "},{"LeftJustify","On"},{"ZeroFill","On"}},editor->toPlainText()).isEmpty(),
+            "Fixed-width report configuration failed");
+         roundTrip("fixed-width-report");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Fixed-width report failed");
+         const auto fixed=read(reportPath);
+         const auto fixedRows=fixed.split('\n',Qt::SkipEmptyParts);
+         require(fixedRows.size()==rows.size()+1 && fixedRows.first()==QString("Values(1,2)").leftJustified(21)+QString("Number").leftJustified(21),
+            "Fixed-width header or configured width differs");
+         for (int i=1;i<fixedRows.size();++i)
+            require(fixedRows[i]==QString("-7.25000").leftJustified(21)+QString("12.3457").leftJustified(21),
+               "Fixed-width left alignment or zero fill differs");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath)==fixed,
+            "Default repeat run appended instead of replacing report");
+         require(window.applyResourceChanges("ConfiguredReport",{{"LeftJustify","Off"}},editor->toPlainText()).isEmpty(),
+            "Right alignment edit failed");
+         roundTrip("right-aligned-report");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Right-aligned report failed");
+         const auto rightRows=read(reportPath).split('\n',Qt::SkipEmptyParts);
+         require(rightRows.first()==QString("Values(1,2)").rightJustified(21)+QString("Number").rightJustified(21),
+            "Right-aligned header differs");
+         for (int i=1;i<rightRows.size();++i)
+            require(rightRows[i]==QString("-7.25000").rightJustified(21)+QString("12.3457").rightJustified(21),
+               "Right-aligned report data differs");
+         const auto existing=read(reportPath);
+         require(window.applyResourceChanges("ConfiguredReport",{{"AppendToExistingFile","true"}},editor->toPlainText()).isEmpty(),
+            "Append setting edit failed");
+         roundTrip("append-report");
+         require(read(reportPath)==existing,"Configuring or reopening append report modified existing results");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath)==existing+existing,
+            "Append run lost existing results or changed output");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath)==existing+existing+existing,
+            "Repeated append run did not preserve all results");
+         auto *outputTree=window.findChild<QTreeWidget *>("Output");
+         const auto reportItems=outputTree->findItems("ConfiguredReport",Qt::MatchExactly|Qt::MatchRecursive);
+         require(reportItems.size()==1,"Configured report missing from Output");
+         outputTree->itemDoubleClicked(reportItems.first(),0);
+         auto *preview=window.findChild<QPlainTextEdit *>("report:ConfiguredReport");
+         require(preview && preview->isReadOnly() && preview->lineWrapMode()==QPlainTextEdit::NoWrap &&
+            preview->toPlainText()==existing+existing+existing,"Report preview is editable, wrapped or differs from file");
+         auto *previewWindow=qobject_cast<QMdiSubWindow *>(preview->parentWidget());
+         require(previewWindow && previewWindow->windowTitle().contains(reportPath),"Report window does not identify its output path");
+         preview->selectAll(); require(preview->textCursor().hasSelection(),"Report text cannot be selected for copying");
+         previewWindow->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+         require(!window.findChild<QPlainTextEdit *>("report:ConfiguredReport"),"Closing report preview left the window alive");
+         require(QFile::remove(reportPath),"Cannot remove temporary report for unavailable-file check");
+         outputTree->itemDoubleClicked(reportItems.first(),0);
+         require(!window.findChild<QPlainTextEdit *>("report:ConfiguredReport") &&
+            window.statusBar()->currentMessage().startsWith("Report is not available:"),"Missing report was displayed or not diagnosed");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath)==existing,
+            "Append mode could not recreate a missing output file");
+
 
       }
       const auto types=window.availableEngineTypes();

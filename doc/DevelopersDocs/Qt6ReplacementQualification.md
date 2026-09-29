@@ -102,7 +102,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
-| `src/gui/output/ReportFilePanel.hpp` | Pending audit |
+| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports are limited to a 16 MiB preview. |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
 | `src/gui/output/CompareReportPanel.hpp` | Pending audit |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
@@ -135,7 +135,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Full parameter chooser, append, fixed-width and solver-iteration combinations pending. |
+| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Full parameter chooser and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
@@ -526,3 +526,24 @@ fixed-width formatting and solver-iteration combinations remain pending.
 
 GmatQt was rebuilt; all 11 Qt tests passed in 49.81 seconds. Evidence:
 `Qt6ParityValidation/check-report-settings.txt`.
+
+
+### Report formatting and output lifecycle follow-up
+
+CompatibilityTests now exercises fixed-width reports after settings edits and
+save/reopen: width 18 plus GMAT's three separator spaces, headers, left/right
+alignment, precision 6 and zero-filled significant digits. Checks compare complete
+lines, including padding, against expected values. An ordinary second run replaces
+the file exactly; enabling AppendToExistingFile preserves the prior file through
+configuration/reopen and adds one complete report (including headers) per run.
+A missing file is recreated correctly in append mode.
+
+The Output report viewer now includes the full output path in its window title,
+as wx does. Tests open the generated report through Output, compare all displayed
+text with the file, verify read-only/no-wrap behavior and text selection, close it,
+and verify that a missing report produces a diagnostic without an empty viewer.
+The existing 16 MiB preview limit remains; whole-file viewing of larger reports
+is not qualified as wx-equivalent. Clipboard contents are not changed by tests.
+
+GmatQt was rebuilt; all 11 Qt tests passed in 28.06 seconds. Evidence:
+`Qt6ParityValidation/check-report-lifecycle.txt`.
