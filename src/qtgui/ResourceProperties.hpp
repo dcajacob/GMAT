@@ -9,6 +9,8 @@ struct ResourceProperty
    QString value;
    QString unit;
    QStringList choices;
+   QStringList references;
+   bool filename = false;
    bool list = false;
    int rows = 0, columns = 0;
 };

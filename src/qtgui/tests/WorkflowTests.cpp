@@ -13,6 +13,9 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QSpinBox>
+#include <QListWidget>
+#include <QInputDialog>
+#include <QFileDialog>
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
@@ -42,6 +45,7 @@ static void require(bool condition, const char *message)
 int main(int argc, char **argv)
 {
    QApplication app(argc, argv);
+   app.setAttribute(Qt::AA_DontUseNativeDialogs);
    QApplication::setOrganizationName("GMATTests");
    QApplication::setApplicationName("QtWorkflow");
    if (argc < 3 || argc > 4) return 2;
@@ -217,13 +221,78 @@ int main(int argc, char **argv)
          "Created array dimensions wrong");
       editor->setPlainText("Create ChemicalTank FuelA FuelB;\nCreate ChemicalThruster Engine;\n"
          "GMAT Engine.Tank = {FuelA, FuelB};\nGMAT Engine.MixRatio = [2 3];\n"
-         "Create Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");
+         "Create ReportFile PickerReport;\nCreate Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");
       require(window.buildScript(),"Hardware fixture failed");
+      {
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Vehicle"),
+            [](const QMap<QString,QString>&) { return QString(); },&owner);
+         auto *choose=panel.findChild<QPushButton *>("chooseProperty_CoordinateSystem");
+         require(choose,"Coordinate-system picker missing");
+         bool offered=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=qobject_cast<QInputDialog *>(QApplication::activeModalWidget());
+            if (!dialog) return;
+            offered=dialog->comboBoxItems().contains("EarthFixed");
+            dialog->setTextValue("EarthFixed"); dialog->accept();
+         });
+         choose->click();
+         require(offered && panel.hasChanges() && Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringParameter("CoordinateSystem")!="EarthFixed",
+            "Coordinate picker missing choices or applied prematurely");
+         panel.discardChanges();
+      }
+      {
+         QWidget owner; QTemporaryDir destination;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("PickerReport"),
+            [](const QMap<QString,QString>&) { return QString(); },&owner);
+         auto *choose=panel.findChild<QPushButton *>("chooseProperty_Filename");
+         require(choose,"Report filename picker missing");
+         const auto path=destination.filePath("new report.txt");
+         bool opened=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=qobject_cast<QFileDialog *>(QApplication::activeModalWidget());
+            if (!dialog) return;
+            opened=true; dialog->selectFile(path); QMetaObject::invokeMethod(dialog,"accept",Qt::DirectConnection);
+         });
+         choose->click();
+         require(opened && panel.hasChanges() && !QFileInfo::exists(path) &&
+            panel.findChild<QTableWidget *>()->findItems(path,Qt::MatchExactly).size()==1,
+            "Filename picker rejected a new output path or created the file prematurely");
+         panel.discardChanges();
+      }
       const auto hardwareScript=editor->toPlainText();
       require(!window.applyResourceChanges("Vehicle",{{"Tanks","MissingTank"}},hardwareScript).isEmpty(),
          "Missing hardware reference accepted");
       require(editor->toPlainText()==hardwareScript,"Rejected hardware link changed script");
-      const auto tankError=window.applyResourceChanges("Engine",{{"Tank","FuelB, FuelA"}},hardwareScript);
+      QString tankError="Picker Apply did not run";
+      {
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Engine"),
+            [&](const QMap<QString,QString> &changes) { tankError=window.applyResourceChanges("Engine",changes,hardwareScript); return tankError; },&owner);
+         auto *choose=panel.findChild<QPushButton *>("chooseProperty_Tank");
+         require(choose,"Tank reference picker missing");
+         bool candidatesCorrect=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("resourceSelectionDialog");
+            if (!dialog) return;
+            auto *list=dialog->findChild<QListWidget *>("resourceSelectionList");
+            candidatesCorrect=list && list->count()==2 && list->item(0)->text()=="FuelA" && list->item(1)->text()=="FuelB";
+            if (candidatesCorrect) list->item(0)->setCheckState(Qt::Unchecked);
+            dialog->reject();
+         });
+         choose->click();
+         require(candidatesCorrect && !panel.hasChanges(),"Picker lost order, included wrong resource types, or Cancel changed values");
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("resourceSelectionDialog");
+            auto *list=dialog->findChild<QListWidget *>("resourceSelectionList");
+            list->insertItem(0,list->takeItem(1));
+            dialog->accept();
+         });
+         choose->click();
+         require(panel.hasChanges() && Moderator::Instance()->GetConfiguredObject("Engine")->GetStringArrayParameter("Tank").front()=="FuelA",
+            "Picker changed engine before Apply");
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+      }
       if (!tankError.isEmpty()) std::cerr<<tankError.toStdString()<<'\n';
       require(tankError.isEmpty(),"Tank reorder failed");
       auto *engine=Moderator::Instance()->GetConfiguredObject("Engine");

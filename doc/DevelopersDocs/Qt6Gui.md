@@ -557,3 +557,12 @@ remaining wx replacement work. Command settings now include For loop bounds
 and step, If/While conditions, assignment destinations/expressions, Toggle
 subscribers/state, and Global/Clear object lists. Editing branch headers leaves
 nested commands unchanged; Apply validates the complete mission.
+
+
+Resource editors offer **Select…** for references with known engine types and
+**Browse…** for filenames. Multi-resource selection preserves existing order;
+drag rows to reorder them. Cancel keeps the old selection, and accepted choices
+remain pending until Apply. Filename browsing permits new output paths without
+creating files. Formation membership is editable and restricted to existing
+spacecraft. Text entry remains available for expressions and plugin-defined
+references whose choices cannot be enumerated.

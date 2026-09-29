@@ -77,6 +77,15 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.choices.clear(); field.list = true; break;
          default: continue;
          }
+         field.filename=object.GetParameterType(id)==Gmat::FILENAME_TYPE;
+         if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
+            try {
+               const auto type=object.IsOfType("Formation") && field.name=="Add" ? Gmat::SPACECRAFT : object.GetPropertyObjectType(id);
+               if (type!=Gmat::UNKNOWN_OBJECT) for (const auto &name:Moderator::Instance()->GetListOfObjects(type))
+                  field.references.append(QString::fromStdString(name));
+               field.references.removeDuplicates(); field.references.sort();
+            } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
+         }
          fields.append(field);
       } catch (BaseException &) {
          // Some plugin and computed properties have no scalar editor.
@@ -118,7 +127,7 @@ bool isResourceList(GmatBase &object, const QString &name)
    if (forcePropertyOwner(object,name,leaf)) return false;
    const auto id=object.GetParameterID(name.toStdString());
    const auto type=QString::fromStdString(object.GetTypeName());
-   const bool supported=(name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile")) ||
+   const bool supported=(name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       (object.IsOfType("Thruster") && name=="Tank") ||
@@ -141,6 +150,10 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       for (const auto &part : value.split(QRegularExpression("[,\\n]"))) {
          const auto entry=part.trimmed();
          if (!reference.match(entry).hasMatch()) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         if (name=="Add" && object.IsOfType("Formation")) {
+            auto *member=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
+            if (!member || !member->IsOfType(Gmat::SPACECRAFT)) throw std::runtime_error("Formation members must be existing spacecraft");
+         }
          if (name=="Add" && (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="GroundTrack" || object.GetTypeName()=="GroundTrackPlot")) {
             auto *target=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!target || !target->IsOfType(Gmat::SPACE_POINT))

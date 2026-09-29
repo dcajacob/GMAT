@@ -2,6 +2,7 @@
 #include "TestSettings.hpp"
 #include "CommandForm.hpp"
 #include "Moderator.hpp"
+#include "Spacecraft.hpp"
 #include <QApplication>
 #include <QDir>
 #include <QFile>
@@ -85,6 +86,40 @@ int main(int argc,char **argv)
       auto *outputs=window.findChild<QTreeWidget *>("Output");
       const auto reports=outputs->findItems("Eclipse",Qt::MatchExactly|Qt::MatchRecursive);
       require(reports.size()==1 && reports.first()->data(0,Qt::UserRole).toString()==eventPath,"Event report absent from Output");
+      auto python=read(samples.filePath("Ex_PythonInterface.script"));
+      const auto pythonReport=output.filePath("python-cross.txt");
+      python.replace("BeginMissionSequence;","Create ReportFile PythonReport;\nPythonReport.Filename = '"+pythonReport+"';\nBeginMissionSequence;");
+      python+="\nReport PythonReport crossProd(1,1) crossProd(1,2) crossProd(1,3);\n";
+      editor->setPlainText(python); require(window.buildScript(),"Python sample did not build");
+      roundTrip("python");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Python interface execution failed");
+      auto *position=Moderator::Instance()->GetInternalObject("state");
+      auto *velocity=Moderator::Instance()->GetInternalObject("vel");
+      auto *cross=Moderator::Instance()->GetInternalObject("crossProd");
+      require(position && velocity && cross,"Python result arrays missing");
+      for (int i=0;i<3;++i) {
+         const int j=(i+1)%3,k=(i+2)%3;
+         const auto expected=position->GetRealParameter("SingleValue",0,j)*velocity->GetRealParameter("SingleValue",0,k)-
+            position->GetRealParameter("SingleValue",0,k)*velocity->GetRealParameter("SingleValue",0,j);
+         require(std::abs(cross->GetRealParameter("SingleValue",0,i)-expected)<1e-9,"Python cross product differs from independent calculation");
+      }
+      require(!read(pythonReport).trimmed().isEmpty(),"Python report missing");
+      editor->setPlainText("Create Spacecraft MemberA MemberB;\nCreate Formation Fleet;\nFleet.Add = {MemberA, MemberB};\n"
+         "Create ForceModel Forces;\nCreate Propagator Prop;\nProp.FM = Forces;\n"
+         "BeginMissionSequence;\nPropagate Prop(Fleet) {MemberA.ElapsedSecs = 60};\n");
+      require(window.buildScript(),"Formation fixture did not build");
+      const auto formationSource=editor->toPlainText();
+      require(!window.applyResourceChanges("Fleet",{{"Add","Prop"}},formationSource).isEmpty() && editor->toPlainText()==formationSource,
+         "Formation accepted a non-spacecraft member or changed source after rejection");
+      require(window.applyResourceChanges("Fleet",{{"Add","MemberB, MemberA"}},editor->toPlainText()).isEmpty(),"Formation member configuration failed");
+      roundTrip("formation");
+      const auto epoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("MemberA"))->GetEpoch();
+      require(window.runMission()==MainWindow::RunResult::Completed,"Formation propagation failed");
+      for (const auto *name:{"MemberA","MemberB"}) {
+         auto *member=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject(name));
+         require(member && std::abs((member->GetEpoch()-epoch)*86400-60)<.01,"Formation did not propagate both members for 60 seconds");
+      }
+      std::cout<<"PASS: Python cross product and report, configured formation members and simultaneous propagation\n";
       std::cout<<"PASS: plugin save, Save As, exact source round trip and failed-build recovery before numerical execution\n";
       std::cout<<"PASS: registered native plugins, edited GMAT function arguments and cross product, Yukon analytic optimum, automatic eclipse events and report access\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }

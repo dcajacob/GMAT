@@ -18,6 +18,9 @@
 #include <QSet>
 #include <QDialog>
 #include <QSpinBox>
+#include <QInputDialog>
+#include <QFileDialog>
+#include <QListWidget>
 #include <QFormLayout>
 #include <QRegularExpression>
 #include <cmath>
@@ -69,6 +72,53 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
             connect(edit,&QPushButton::clicked,this,[this,value] { table->itemDoubleClicked(value); });
          }
          table->setItem(row, 1, value);
+         if (field.filename || !field.references.isEmpty()) {
+            auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
+            choose->setObjectName("chooseProperty_"+field.name);
+            table->setCellWidget(row,3,choose);
+            connect(choose,&QPushButton::clicked,this,[this,value,field] {
+               if (field.filename) {
+                  QFileDialog dialog(this,"Choose "+field.name,value->text());
+                  // Output files need not exist yet; validation belongs to Apply.
+                  dialog.setFileMode(QFileDialog::AnyFile);
+                  if (dialog.exec()==QDialog::Accepted && !dialog.selectedFiles().isEmpty())
+                     value->setText(dialog.selectedFiles().first());
+               } else if (!field.list) {
+                  auto names=field.references;
+                  if (!names.contains(value->text())) names.prepend(value->text());
+                  bool accepted=false;
+                  const auto selected=QInputDialog::getItem(this,"Select "+field.name,field.name,names,
+                     names.indexOf(value->text()),true,&accepted);
+                  if (accepted) value->setText(selected);
+               } else {
+                  QDialog dialog(this); dialog.setObjectName("resourceSelectionDialog");
+                  dialog.setWindowTitle("Select "+field.name);
+                  auto *layout=new QVBoxLayout(&dialog);
+                  layout->addWidget(new QLabel("Select resources. Drag rows to change their order.",&dialog));
+                  auto *list=new QListWidget(&dialog); list->setObjectName("resourceSelectionList");
+                  list->setDragDropMode(QAbstractItemView::InternalMove);
+                  QStringList selected=value->text().split(',',Qt::SkipEmptyParts);
+                  for (auto &name:selected) name=name.trimmed();
+                  auto names=selected;
+                  for (const auto &name:field.references) if (!names.contains(name)) names.append(name);
+                  for (const auto &name:names) {
+                     auto *item=new QListWidgetItem(name,list);
+                     item->setFlags(item->flags()|Qt::ItemIsUserCheckable);
+                     item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked);
+                  }
+                  layout->addWidget(list);
+                  auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
+                  layout->addWidget(buttons);
+                  connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);
+                  connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+                  if (dialog.exec()==QDialog::Accepted) {
+                     QStringList names;
+                     for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) names.append(list->item(i)->text());
+                     value->setText(names.join(", "));
+                  }
+               }
+            });
+         }
       }
       else {
          auto *choices = new QComboBox(table);

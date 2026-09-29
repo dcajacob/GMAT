@@ -74,12 +74,12 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/AttitudePanel.hpp` | Pending audit |
-| `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | Pending audit |
+| `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/ThrusterPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/SpicePanel.hpp` | Pending audit |
-| `src/gui/spacecraft/FormationSetupPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatDialog.hpp` | Pending audit |
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Pending audit |
@@ -155,13 +155,13 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. Contact and remaining locator workflows pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | Pending qualification |
-| `../plugins/libFormation` | Pending qualification |
+| `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
 | `../plugins/libMsise00` | Pending qualification |
 | `../plugins/libNewParameters` | Pending qualification |
 | `../plugins/libPolyhedronGravity` | Pending qualification |
 | `../plugins/libProductionPropagators` | Pending qualification |
-| `../plugins/libPythonInterface_py314` | Pending qualification |
+| `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | Pending qualification |
 | `../plugins/libScriptTools` | Pending qualification |
 | `../plugins/libStation` | Pending qualification |
@@ -193,3 +193,23 @@ and only then run their numerical/report checks. Both saved files must match
 the edited script exactly. The targeted compatibility test passed; see
 `Qt6ParityValidation/plugin-roundtrip.txt`. This establishes these workflows,
 not qualification of the remaining plugin inventory.
+
+## Reference-picker and plugin checkpoint
+
+Resource properties now offer file browsing and engine-typed scalar/list
+reference selection. Ordered lists retain current members first (including
+existing names absent from the offered set), support drag reordering and do not
+apply until Apply. Tests cover tank order/mixture ratios, Cancel, pending state,
+EarthFixed selection and choosing a new output filename without creating it.
+Free text remains available for parameter expressions and plugin-defined types.
+
+Qualification exposed the missing Formation.Add editor. It now accepts only
+existing spacecraft and supports reconstruction through the normal undoable
+Apply path. The compatibility test verifies member reordering, rejection of a
+propagator as a member, exact file round trips and actual 60-second propagation
+of both spacecraft. The shipped Python interface example also runs after file
+round trips/recovery, with an independently calculated cross product and report.
+These results expand evidence; the remaining plugin and viewer gates stay open.
+
+The rebuilt Linux application passed all 11 tests in 19.07 seconds; evidence:
+`Qt6ParityValidation/check-qualification-2.txt`.
