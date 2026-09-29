@@ -1,3 +1,4 @@
+#include "ReportViewer.hpp"
 #include "MainWindow.hpp"
 #include "QtMessageReceiver.hpp"
 #include "QtInterpreter.hpp"
@@ -143,16 +144,7 @@ MainWindow::MainWindow()
          if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
          QFile file(name);
          if (!file.open(QIODevice::ReadOnly)) { statusBar()->showMessage("Report is not available: " + file.errorString()); return; }
-         constexpr qint64 limit = 16 * 1024 * 1024;
-         const auto bytes = file.read(limit);
-         if (file.error()!=QFileDevice::NoError) { statusBar()->showMessage("Report read failed: " + file.errorString()); return; }
-         auto *viewer = new QPlainTextEdit;
-         viewer->setObjectName("report:" + item->text(0));
-         viewer->setReadOnly(true);
-         viewer->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-         viewer->setLineWrapMode(QPlainTextEdit::NoWrap);
-         viewer->setPlainText(QString::fromUtf8(bytes));
-         if (!file.atEnd()) viewer->appendPlainText("\n[Preview limited to the first 16 MiB. The complete report is saved at " + name + "]");
+         auto *viewer = new ReportViewer(name,item->text(0));
          auto *child = workspace->addSubWindow(viewer);
          child->setAttribute(Qt::WA_DeleteOnClose);
          child->setWindowTitle(item->text(0) + " — " + name);

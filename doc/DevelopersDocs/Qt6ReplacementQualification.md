@@ -102,7 +102,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
-| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports are limited to a 16 MiB preview. |
+| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Full-file search remains pending. |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
 | `src/gui/output/CompareReportPanel.hpp` | Pending audit |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
@@ -542,8 +542,8 @@ The Output report viewer now includes the full output path in its window title,
 as wx does. Tests open the generated report through Output, compare all displayed
 text with the file, verify read-only/no-wrap behavior and text selection, close it,
 and verify that a missing report produces a diagnostic without an empty viewer.
-The existing 16 MiB preview limit remains; whole-file viewing of larger reports
-is not qualified as wx-equivalent. Clipboard contents are not changed by tests.
+At this checkpoint, reports still had a 16 MiB preview limit; the later paging
+milestone below removes that access limit. Clipboard contents are not changed by tests.
 
 GmatQt was rebuilt; all 11 Qt tests passed in 28.06 seconds. Evidence:
 `Qt6ParityValidation/check-report-lifecycle.txt`.
@@ -1126,3 +1126,23 @@ this milestone does not claim complete trajectory camera parity.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 36.87 seconds. Evidence:
 `Qt6ParityValidation/check-trajectory-camera.txt`.
+
+## Paged report viewer
+
+Replaced the first-16-MiB-only preview with ReportViewer: approximately 1 MiB per
+page, First/Previous/Next/Last, page-number jump, reload and existing read-only
+Find dialog scoped explicitly to the current page. All file regions are reachable
+without accumulating previously viewed text. UTF-8 codepoints and CRLF pairs are
+kept on the same side of a boundary. Long rows may span pages, which the UI states.
+Read errors retain the prior display. Reload reopens the path so replaced/shrunk
+files are handled, and page navigation clamps to the current file size.
+
+FileTests reconstructs a four-page report containing three- and four-byte UTF-8
+characters and a CRLF at boundaries, exercises backward/jump navigation, retains
+content after a missing-file error, reaches a marker beyond 17 MiB, then reloads
+a shorter replacement. Existing Compatibility/Plot report checks retain exact
+small-report text, path-in-title, read-only/no-wrap, selection and close behavior.
+Full-file search and wx report-comparison workflows remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 31.05 seconds. Evidence:
+`Qt6ParityValidation/check-report-paging.txt`.

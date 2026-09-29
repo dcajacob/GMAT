@@ -306,7 +306,7 @@ int main(int argc,char **argv)
       outputTree->itemDoubleClicked(reports.first(),0);
       auto *viewer=window.findChild<QPlainTextEdit *>("report:QtReport");
       require(viewer && viewer->toPlainText().contains("12000"),"Output report did not open generated file");
-      viewer->parentWidget()->close();
+      viewer->parentWidget()->parentWidget()->close();
       auto closePlots=[&] { for (auto *child:area->subWindowList()) if (!child->property("plotName").toString().isEmpty()) child->close(); };
       closePlots(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
       require(!receiver->IsThere("QtOrbit") && receiver->show("QtOrbit"),"Closed plot could not reopen");

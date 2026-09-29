@@ -1,4 +1,8 @@
 #include "MainWindow.hpp"
+#include "ReportViewer.hpp"
+#include <QPushButton>
+#include <QSpinBox>
+#include <QLabel>
 #include "TestSettings.hpp"
 #include "QtMessageReceiver.hpp"
 #include "StartupCompatibility.hpp"
@@ -48,6 +52,39 @@ int main(int argc,char **argv)
       require(gutter->width()>narrow,"Line-number margin did not grow with the document");
       syntax.close();
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
+      {
+         const auto report=temporary.filePath("paged-report.txt");
+         constexpr int chunk=1024*1024;
+         QByteArray bytes;
+         while (bytes.size()<chunk-1) bytes.append("row 123\n");
+         bytes.truncate(chunk-1); bytes.append(QString::fromUtf8("€").toUtf8());
+         while (bytes.size()<chunk*2-2) bytes.append("next row\n");
+         bytes.truncate(chunk*2-2); bytes.append(QString::fromUtf8("🚀").toUtf8()); bytes.append("\nlast row\n");
+         while (bytes.size()<chunk*3-1) bytes.append("more rows\n");
+         bytes.truncate(chunk*3-1); bytes.append("\r\nfinal row\n");
+         write(report,bytes); ReportViewer viewer(report,"Paged");
+         auto *text=viewer.findChild<QPlainTextEdit *>("report:Paged");
+         require(text && text->isReadOnly(),"Report paging permits edits");
+         QString joined=text->toPlainText();
+         while (viewer.findChild<QPushButton *>("reportNext")->isEnabled()) {
+            viewer.findChild<QPushButton *>("reportNext")->click(); joined+=text->toPlainText();
+         }
+         require(joined==QString::fromUtf8(bytes).replace("\r\n","\n"),"Report paging split UTF-8/CRLF or lost/duplicated content");
+         require(!viewer.findChild<QPushButton *>("reportNext")->isEnabled(),"Last report page offers Next");
+         viewer.findChild<QPushButton *>("reportPrevious")->click();
+         require(viewer.findChild<QSpinBox *>("reportPage")->value()==3,"Previous page failed");
+         viewer.findChild<QSpinBox *>("reportPage")->setValue(1);
+         require(text->toPlainText().startsWith("row 123"),"Jump to report page failed");
+         const auto retained=text->toPlainText(); require(QFile::rename(report,report+".old"),"Report rename failed");
+         viewer.findChild<QPushButton *>("reportReload")->click();
+         require(text->toPlainText()==retained && viewer.findChild<QLabel *>("reportPageStatus")->text().contains("unavailable"),"Missing report discarded displayed content or hid error");
+         QFile large(report); require(large.open(QIODevice::WriteOnly) && large.resize(17*chunk) && large.seek(17*chunk),"Large report fixture failed");
+         large.write("beyond original preview limit\n"); large.close();
+         viewer.findChild<QPushButton *>("reportLast")->click();
+         require(text->toPlainText()=="beyond original preview limit\n","Cannot inspect report beyond 16 MiB");
+         write(report,"short replacement\n"); viewer.findChild<QPushButton *>("reportReload")->click();
+         require(text->toPlainText()=="short replacement\n" && viewer.findChild<QSpinBox *>("reportPage")->value()==1,"Shrunk/replaced report did not reload and clamp page");
+      }
       const auto startup=temporary.path()+"/startup.txt";
       for (const auto &plugin : {"../plugins/libOpenFramesInterface", "C:\\GMAT Test\\plugins\\libOVtoOFId.dll",
                                 "/opt/gmat/libOpenFramesInterface.so.1", "libOVtoOFI.dylib"}) {

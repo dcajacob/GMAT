@@ -437,8 +437,8 @@ spherical geometry and dateline splitting even near a pole. These are not
 computed sensor coverage or visibility-horizon footprints.
 
 Dynamic tables preserve displayed values and cell colors when closed and
-reopened. Output also lists report files and opens a read-only preview of up
-to 16 MiB; larger files retain their complete contents on disk.
+reopened. Output also lists report files and opens a read-only paged viewer.
+Large reports can be inspected without loading the entire file.
 
 Build `GmatQtPlotTests` with `GMAT_QT_BUILD_TESTS=ON`, then run:
 
@@ -747,8 +747,8 @@ Report formatting checks cover fixed-width headers, ColumnWidth, left/right
 justification and zero-filled significant digits. With AppendToExistingFile true,
 each run adds its output (including headers when enabled) to the existing file;
 with it false, a run replaces the file. Output report windows show their full
-file path in the title and display read-only, unwrapped text. Reports larger than
-16 MiB still use the existing bounded preview, with the complete file left on disk.
+file path in the title and display read-only, unwrapped text. Large reports use
+bounded pages with navigation to the complete file.
 
 
 ### Choosing report parameters
@@ -944,3 +944,12 @@ The named trajectory object must be in the plot's Add list (or use
 CoordinateSystem). Primary and additional named cameras are supported.
 Automatic trajectory framing and segment-relative views still require further
 implementation; conversion explains those cases and leaves the script unchanged.
+
+### Large report navigation
+
+Report windows provide First, Previous, Next, Last and a page-number control.
+Each page loads roughly 1 MiB; rows may continue across pages, but UTF-8 characters
+and Windows line endings remain intact. **Find…** searches the displayed page.
+**Reload** reads the current file again, including replacements or appended data;
+if the file shrank, the page is adjusted automatically. Read failures retain the
+previous display and show an error. Viewing a report does not modify its file.

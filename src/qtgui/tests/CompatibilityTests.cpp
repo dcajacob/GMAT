@@ -282,7 +282,7 @@ int main(int argc,char **argv)
          auto *preview=window.findChild<QPlainTextEdit *>("report:ConfiguredReport");
          require(preview && preview->isReadOnly() && preview->lineWrapMode()==QPlainTextEdit::NoWrap &&
             preview->toPlainText()==existing+existing+existing,"Report preview is editable, wrapped or differs from file");
-         auto *previewWindow=qobject_cast<QMdiSubWindow *>(preview->parentWidget());
+         auto *previewWindow=qobject_cast<QMdiSubWindow *>(preview->parentWidget()->parentWidget());
          require(previewWindow && previewWindow->windowTitle().contains(reportPath),"Report window does not identify its output path");
          preview->selectAll(); require(preview->textCursor().hasSelection(),"Report text cannot be selected for copying");
          previewWindow->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
