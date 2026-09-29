@@ -80,7 +80,8 @@ void CommandForm::setStatement(const QString &statement)
       auto *input=new QLineEdit(statement.mid(start,length),this);
       input->setObjectName("commandField_"+name);
       QString resourceType;
-      if (name=="Report file") resourceType="ReportFile";
+      if (title()=="For loop" && name=="Index") resourceType="Variable";
+      else if (name=="Report file") resourceType="ReportFile";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
@@ -167,7 +168,8 @@ void CommandForm::setStatement(const QString &statement)
       } else if ((title()=="Vary" && name=="Variable") || (title()=="Assignment" && name=="Destination") ||
                  (title()=="Achieve" && (name=="Goal" || name=="Value")) ||
                  (title()=="Minimize" && name=="Objective") ||
-                 (title()=="Constraint" && (name=="Left side" || name=="Right side"))) {
+                 (title()=="Constraint" && (name=="Left side" || name=="Right side")) ||
+                 (title()=="For loop" && (name=="Start" || name=="Step" || name=="End"))) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select parameter…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
          const auto mode=title()=="Vary" ? ReportParameterDialog::Mode::WritableReal :

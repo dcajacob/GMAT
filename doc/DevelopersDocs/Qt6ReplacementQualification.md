@@ -65,7 +65,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/DCSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverCreatePanel.hpp` | Pending audit |
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
-| `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end; real-engine step edit and Undo tested. Parameter selection audit pending. |
+| `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
@@ -92,7 +92,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
 | `src/gui/foundation/GmatSavePanel.hpp` | Pending audit |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid; retained/new cells, cancel, ragged/nonfinite rejection, reconstruction and Undo tested. Expression workflow pending. |
+| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply and arbitrary existing assignments remain outside the grid workflow. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
@@ -1289,3 +1289,18 @@ an independent mathematical validation of GMAT's matrix implementation.
 Validation: rebuilt the user's GmatQt and passed all 11 Qt tests in 34.45 seconds.
 Native rendering tests ran under isolated Xvfb, not the user's live display.
 Evidence: `Qt6ParityValidation/check-propagation-variational.txt`.
+
+## For-loop selection controls
+
+Audited wx ForPanel's four selectors and input restrictions. Qt now provides a
+Variable-only Index selector and the shared parameter browser for Start, Step
+and End, preserving free-text numeric entry. MissionTests checks index filtering
+and Cancel, opens each bound browser, confirms a configured variable is available,
+selects numeric bounds, applies the header edit, executes the changed loop and
+undoes it to recover the original result. The branch body is preserved by the
+existing source-span editing. This does not yet qualify every parameter-valued
+loop-bound combination.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 34.57 seconds,
+with native rendering under isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-for-pickers.txt`.

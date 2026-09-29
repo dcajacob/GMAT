@@ -229,7 +229,24 @@ int main(int argc,char **argv)
          const auto index=find(snapshot,"For");
          form.setStatement(snapshot.nodes[index].statement);
          auto *step=form.findChild<QLineEdit *>("commandField_Step");
-         require(step,"Real mission For header has no step control"); step->setText("2");
+         require(step,"Real mission For header has no step control");
+         QTimer::singleShot(0,[&] {
+            auto *dialog=form.findChild<QInputDialog *>();
+            require(dialog && dialog->comboBoxItems().contains("count"),"For index picker omitted Variable");
+            for (const auto &name:dialog->comboBoxItems())
+               require(Moderator::Instance()->GetConfiguredObject(name.toStdString())->IsOfType("Variable"),"For index picker included a non-variable");
+            dialog->setTextValue("total"); dialog->reject();
+         }); form.findChild<QPushButton *>("commandChoose_Index")->click();
+         require(form.findChild<QLineEdit *>("commandField_Index")->text()=="count","Cancelled For index changed source");
+         for (const auto &field:{QString("Start"),QString("Step"),QString("End")}) {
+            QTimer::singleShot(0,[&] {
+               auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget());
+               auto *entry=dialog->findChild<QComboBox *>("reportParameterEntry");
+               require(entry && entry->findText("total")>=0,"For bound picker omitted configured parameter");
+               entry->setEditText(field=="Step" ? "2" : field=="Start" ? "1" : "3");
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+            }); form.findChild<QPushButton *>("commandChoose_"+field)->click();
+         }
          require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,changed).isEmpty() && total()==5,
             "For form edit did not execute with the new step");
          editor->undo(); require(window.buildScript() && total()==6,"For form undo changed mission results");

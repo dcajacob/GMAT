@@ -1001,3 +1001,10 @@ and comments remain intact. **Propagate STM** and **Compute A-matrix** apply to
 all spacecraft in the command, matching the wx controls. Existing quoted or
 unquoted STM/AMatrix flags load into these checkboxes. Covariance propagation
 currently requires the source editor.
+
+### For-loop selectors
+
+The For-loop command form includes a variable-only selector for Index and
+parameter browsers for Start, Step and End. You can still type numeric bounds
+directly. Cancel leaves the field unchanged. Header edits preserve the loop body;
+Apply validates the command through GMAT.
