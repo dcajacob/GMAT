@@ -227,24 +227,47 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       try { originalExpressions=expressions=arrayExpressions(script,name); setArrayExpressions(script,name,expressions,rows,columns); }
       catch (const std::exception &error) { button->setEnabled(false); button->setToolTip(QString::fromUtf8(error.what())); }
       connect(button,&QPushButton::clicked,this,[this,rows,columns] {
+         int pendingRows=rows,pendingColumns=columns;
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="RmatValue") {
+            const auto lines=table->item(row,1)->text().split(';');
+            pendingRows=lines.size(); pendingColumns=0;
+            for (const auto &line:lines) pendingColumns=std::max(pendingColumns,static_cast<int>(line.trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size()));
+         }
+         int gridRows=pendingRows,gridColumns=pendingColumns;
+         for (const auto &value:QJsonDocument::fromJson(expressions.toUtf8()).array()) {
+            const auto cell=value.toObject();
+            gridRows=std::max(gridRows,cell["row"].toInt()); gridColumns=std::max(gridColumns,cell["column"].toInt());
+         }
          QDialog dialog(this); dialog.setObjectName("arrayExpressionDialog"); dialog.setWindowTitle("Array expressions");
          auto *layout=new QVBoxLayout(&dialog);
          auto *help=new QLabel("Nonempty cells run at mission start, in row order, before existing commands. Blank cells keep their numeric initial values. Apply validates formulas without running them. Numeric values and formulas are applied together.",&dialog);
          help->setWordWrap(true); layout->addWidget(help);
-         auto *grid=new QTableWidget(rows,columns,&dialog); grid->setObjectName("arrayExpressionGrid");
-         for (int r=0;r<rows;++r) for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem);
+         auto *grid=new QTableWidget(gridRows,gridColumns,&dialog); grid->setObjectName("arrayExpressionGrid");
+         for (int r=0;r<gridRows;++r) for (int c=0;c<gridColumns;++c) {
+            auto *item=new QTableWidgetItem; grid->setItem(r,c,item);
+            if (r>=pendingRows || c>=pendingColumns) { item->setBackground(QColor(255,235,190)); item->setToolTip("Outside the pending array dimensions. Clear this formula or cancel and enlarge the numeric grid."); }
+         }
          for (const auto &value:QJsonDocument::fromJson(expressions.toUtf8()).array()) {
             const auto cell=value.toObject(); const int r=cell["row"].toInt()-1,c=cell["column"].toInt()-1;
-            if (r>=0 && r<rows && c>=0 && c<columns) grid->item(r,c)->setText(cell["expression"].toString());
+            if (r>=0 && r<gridRows && c>=0 && c<gridColumns) grid->item(r,c)->setText(cell["expression"].toString());
          }
          configureTableColumns(grid); fitTableColumns(grid); layout->addWidget(grid);
          auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+         auto *error=new QLabel(&dialog); error->setWordWrap(true); layout->addWidget(error);
+         const auto validate=[=] {
+            bool valid=pendingRows>0 && pendingColumns>0;
+            for (int r=0;r<gridRows;++r) for (int c=0;c<gridColumns;++c)
+               if ((r>=pendingRows || c>=pendingColumns) && !grid->item(r,c)->text().trimmed().isEmpty()) valid=false;
+            buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
+            error->setText(valid ? "" : "Clear formulas in highlighted cells, or cancel and enlarge the numeric grid.");
+         };
+         connect(grid,&QTableWidget::itemChanged,&dialog,[=] { validate(); }); validate();
          connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
          connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);
          dialog.resize(650,350);
          if (dialog.exec()!=QDialog::Accepted) return;
          QJsonArray cells;
-         for (int r=0;r<rows;++r) for (int c=0;c<columns;++c) {
+         for (int r=0;r<gridRows;++r) for (int c=0;c<gridColumns;++c) {
             const auto text=grid->item(r,c)->text().trimmed();
             if (!text.isEmpty()) cells.append(QJsonObject{{"row",r+1},{"column",c+1},{"expression",text}});
          }

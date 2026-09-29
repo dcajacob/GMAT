@@ -575,16 +575,34 @@ int main(int argc, char **argv)
          },&owner,expressionSource);
          auto *properties=panel.findChild<QTableWidget *>();
          for (int row=0;row<properties->rowCount();++row)
-            if (properties->item(row,0)->text()=="RmatValue") properties->item(row,1)->setText("3 0");
+            if (properties->item(row,0)->text()=="RmatValue") properties->item(row,1)->setText("3 0 0; 0 0 0");
          QTimer::singleShot(0,&panel,[&] {
             auto *dialog=panel.findChild<QDialog *>("arrayExpressionDialog");
             auto *grid=dialog->findChild<QTableWidget *>("arrayExpressionGrid");
-            grid->item(0,0)->setText(""); grid->item(0,1)->setText("Formula(1,1) * 4"); dialog->accept();
+            require(grid->rowCount()==2 && grid->columnCount()==3,"Expression grid ignored pending resize");
+            grid->item(0,0)->setText(""); grid->item(0,1)->setText("Formula(1,1) * 4");
+            grid->item(1,2)->setText("Formula(1,2) + 9"); dialog->accept();
          }); panel.findChild<QPushButton *>("arrayExpressions")->click();
+         QTableWidgetItem *numeric=nullptr;
+         for (int row=0;row<properties->rowCount();++row)
+            if (properties->item(row,0)->text()=="RmatValue") numeric=properties->item(row,1);
+         require(numeric,"Array numeric field missing"); numeric->setText("3");
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("arrayExpressionDialog");
+            auto *grid=dialog->findChild<QTableWidget *>("arrayExpressionGrid");
+            auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+            require(grid->rowCount()==2 && grid->columnCount()==3 && grid->item(1,2)->text()=="Formula(1,2) + 9" && !ok->isEnabled(),
+               "Pending shrink hid formulas or accepted out-of-range cells");
+            grid->item(0,1)->setText(""); grid->item(1,2)->setText("");
+            require(ok->isEnabled(),"Clearing removed cells did not allow shrink"); dialog->reject();
+         }); panel.findChild<QPushButton *>("arrayExpressions")->click();
+         numeric->setText("3 0 0; 0 0 0");
          panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
          require(combinedError.isEmpty(),qPrintable(combinedError));
       }
       require(formulaResult()==15,"Combined array edit did not use the new numeric initial value");
+      require(Moderator::Instance()->GetInternalObject("Formula")->GetRealParameter("SingleValue",1,2)==21,
+         "Formula in newly added cell did not execute");
       editor->undo(); require(editor->toPlainText()==expressionSource && formulaResult()==20,"Combined array edit was not atomic under Undo");
       require(!window.applyResourceChanges("Formula",{{"RmatValue","7 0"},{"@ArrayExpressions",R"([{"row":1,"column":2,"expression":"UnknownCellInput + 1"}])"}},expressionSource).isEmpty(),
          "Invalid combined array expression accepted");

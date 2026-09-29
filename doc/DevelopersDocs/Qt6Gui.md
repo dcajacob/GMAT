@@ -1016,3 +1016,8 @@ panel and submitted together with Apply. Validation succeeds for the complete
 candidate or leaves both unchanged. Undo restores both as one edit. A resize that
 would remove an existing expression cell is rejected; clear that formula first
 or include its removal in the same Apply.
+
+The expression grid uses the pending numeric grid dimensions, so formulas can be
+entered in newly added cells before Apply. Existing formulas outside a pending
+shrink remain visible in highlighted cells. Clear those formulas to accept the
+expression edit, or Cancel and enlarge the numeric grid. Cancel preserves formulas.

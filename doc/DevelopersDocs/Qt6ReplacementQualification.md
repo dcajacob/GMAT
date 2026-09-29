@@ -92,7 +92,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
 | `src/gui/foundation/GmatSavePanel.hpp` | Pending audit |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
+| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
@@ -1323,3 +1323,25 @@ newly added cells before applying a resize remains a follow-up workflow gap.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.34 seconds.
 Native display checks ran under isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-array-combined.txt`.
+
+## Expression editing with pending array dimensions
+
+The expression editor now derives its dimensions from pending numeric values.
+New rows and columns are available without an intermediate Apply. If a pending
+shrink excludes an existing formula, the grid keeps that cell visible, highlights
+it and disables OK until the formula is cleared. Cancel preserves all formulas;
+users can enlarge the numeric grid instead. Engine validation still handles
+invalid numeric rows and formula references at Apply.
+
+WorkflowTests grows a 1x2 array to 2x3, adds a dependent formula in the new bottom
+right cell, and verifies the result is 21 after the combined Apply. It also opens
+the expression editor after a pending shrink, checks that removed cells remain
+visible and OK is disabled, clears them to enable OK, then cancels. Restoring the
+larger numeric grid and applying proves the cancelled cleanup preserved formulas.
+The existing single-Undo and invalid-formula rollback checks remain in place.
+
+Validation: rebuilt the user's GmatQt and passed all 11 Qt tests in 34.47 seconds.
+After adding explicit shrink-cleanup/Cancel assertions, the updated Workflow test
+passed in 8.20 seconds. Native checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-array-pending-size.txt` and
+`Qt6ParityValidation/check-array-shrink-ui.txt`.
