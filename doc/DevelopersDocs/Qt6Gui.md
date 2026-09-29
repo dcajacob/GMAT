@@ -574,3 +574,12 @@ switches. Choices remain pending while switching between curves. OK applies
 them to the displayed plot, including existing samples; Cancel leaves it
 unchanged. These are display settings for the current plot, not saved script
 properties, and rebuilding the mission resets them.
+
+
+Orbit plots now offer **Orthographic / Perspective** and a vertical field-of-view
+control (1–150 degrees, before wheel zoom). Orthographic remains the default.
+Perspective uses depth-dependent sizing and clips objects behind the camera;
+native stars retain translation invariance and follow perspective zoom. These
+controls currently affect the displayed plot only. They are not yet imported
+from OpenFrames definitions or saved into scripts. That conversion/persistence
+work remains on the replacement qualification checklist.

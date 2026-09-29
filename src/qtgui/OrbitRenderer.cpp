@@ -196,12 +196,13 @@ struct OrbitRenderer::Scene
          const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
          for (const auto &p:source.points) extent=std::max(extent,std::hypot(p.x,p.y,p.z)+radius);
       }
-      // Keep the previous orthographic orbit controls and a stable replay fit.
+      // Preserve the orbit controls and stable replay framing in either projection.
       const double aspect=double(width)/height;
       const auto camera=orbitCamera(*model,frame,yaw,pitch,extent);
       const auto &target=camera.target,&right=camera.right,&up=camera.up,&outward=camera.outward;
       const double distance=camera.distance,viewExtent=camera.extent;
-      const double halfHeight=viewExtent/zoom/std::min(1.0,aspect),halfWidth=halfHeight*aspect;
+      const double tangent=std::tan(std::clamp(model->fieldOfView,1.0,150.0)*osg::PI/360.0)/zoom;
+      const double halfHeight=model->perspective ? distance*tangent : viewExtent/zoom/std::min(1.0,aspect),halfWidth=halfHeight*aspect;
       osg::Vec4 lightPosition(outward.x(),outward.y(),outward.z(),0);
       for (const auto &source:model->curves) {
          const PlotPoint *last=nullptr;
@@ -215,8 +216,11 @@ struct OrbitRenderer::Scene
       const osg::Vec3d center=target+right*(-pan.x()*2*halfWidth/width)+up*(pan.y()*2*halfHeight/height);
       const double farPlane=std::max(extent*10,distance+center.length()+extent*4);
       viewer.getCamera()->setViewMatrixAsLookAt(center+outward*distance,center,up);
-      viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,
-         std::max(1e-6,std::min(extent*.01,distance*.001)),farPlane);
+      const double nearPlane=std::max(1e-6,std::min(extent*.01,distance*.001));
+      if (model->perspective)
+         viewer.getCamera()->setProjectionMatrixAsFrustum(-halfWidth*nearPlane/distance,halfWidth*nearPlane/distance,
+            -halfHeight*nearPlane/distance,halfHeight*nearPlane/distance,nearPlane,farPlane);
+      else viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,nearPlane,farPlane);
       sky->removeDrawables(0,sky->getNumDrawables());
       std::array<double,9> inertialToView={1,0,0,0,1,0,0,0,1};
       const PlotPoint *sample=nullptr;
@@ -228,17 +232,20 @@ struct OrbitRenderer::Scene
          for (int row=0;row<3;++row) for (int col=0;col<3;++col) result[row]+=inertialToView[row*3+col]*value[col];
          return result;
       };
+      const double skyTangent=model->perspective ? tangent : .4663076581549986;
+      const double skyOffset=(farPlane-distance)*.9;
+      const double skyScale=model->perspective ? (distance+skyOffset)/distance : 1;
       auto skyPosition=[&](const osg::Vec3d &direction) {
-         const double forward=-(direction*outward),tangent=.4663076581549986;
+         const double forward=-(direction*outward),tangent=skyTangent;
          const double x=(direction*right)/(forward*tangent*aspect),y=(direction*up)/(forward*tangent);
-         return center+right*(x*halfWidth)+up*(y*halfHeight)-outward*((farPlane-distance)*.9);
+         return center+right*(x*halfWidth*skyScale)+up*(y*halfHeight*skyScale)-outward*skyOffset;
       };
       if (model->starsEnabled && model->starCount>0) {
          osg::ref_ptr<osg::Vec3Array> positions[5];
          for (auto &group:positions) group=new osg::Vec3Array;
-         // Fixed 50-degree celestial field: translations and orthographic zoom
-         // change nearby geometry, never a star's angular position at infinity.
-         constexpr double tangent=.4663076581549986;
+         // Orthographic uses a fixed 50-degree sky; perspective uses the camera
+         // field of view. Translation never shifts stars at infinity.
+         const double tangent=skyTangent;
          const int count=std::min(model->starCount,static_cast<int>(model->starCatalog.stars.size()));
          for (int i=0;i<count;++i) {
             const auto &star=model->starCatalog.stars[i]; osg::Vec3d direction;
@@ -249,7 +256,7 @@ struct OrbitRenderer::Scene
             const double x=(direction*right)/(forward*tangent*aspect),y=(direction*up)/(forward*tangent);
             if (std::abs(x)>1 || std::abs(y)>1) continue;
             const int group=static_cast<int>(std::clamp((star.magnitude+1)/2,0.0,4.0));
-            positions[group]->push_back(center+right*(x*halfWidth)+up*(y*halfHeight)-outward*((farPlane-distance)*.9));
+            positions[group]->push_back(skyPosition(direction));
          }
          for (int group=0;group<5;++group) {
             auto geometry=new osg::Geometry; isolateArrays(geometry);
@@ -464,7 +471,9 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
          const PlotPoint *last=nullptr;
          for (const auto &point:curve.points) if (point.frame<=scene->frame) last=&point;
          if (!last) continue;
-         const auto ndc=osg::Vec3d(last->x,last->y,last->z)*projection;
+         const auto clip=osg::Vec4d(last->x,last->y,last->z,1)*projection;
+         if (clip.w()<=0 || std::abs(clip.x())>clip.w() || std::abs(clip.y())>clip.w() || std::abs(clip.z())>clip.w()) continue;
+         const osg::Vec3d ndc(clip.x()/clip.w(),clip.y()/clip.w(),clip.z()/clip.w());
          painter.drawText(QPointF((ndc.x()+1)*width()/2+7,(1-ndc.y())*height()/2-7),curve.name);
       }
    }

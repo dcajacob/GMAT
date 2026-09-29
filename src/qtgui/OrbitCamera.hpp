@@ -3,6 +3,7 @@
 #include <osg/Vec3d>
 #include <osg/Quat>
 #include <cmath>
+#include <algorithm>
 
 struct OrbitCameraBasis
 {
@@ -39,5 +40,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       // distance sets framing; pan/rotate are offsets from the tracked view.
       if (model.fitCamera) distance=4*(extent+target.length());
    }
+   if (model.perspective && model.fitCamera)
+      distance=(extent+target.length())*1.1/std::sin(std::clamp(model.fieldOfView,1.0,150.0)*3.14159265358979323846/360);
    return {target,right,up,outward,distance,viewExtent};
 }

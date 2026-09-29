@@ -76,6 +76,8 @@ struct PlotModel
    bool constellationsEnabled=false,constellationCatalogLoaded=false;
    ConstellationCatalog constellationCatalog;
    bool scriptedCamera=false, fitCamera=false;
+   bool perspective=false;
+   double fieldOfView=50;
    std::deque<PlotCamera> cameras;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;

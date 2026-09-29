@@ -5,6 +5,7 @@
 #include <QComboBox>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QColorDialog>
@@ -127,10 +128,19 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    for (const auto &curve:data->curves) if (curve.visible)
       for (const auto &point:curve.points) extent=std::max(extent,std::hypot(point.x,point.y,point.z)+curve.radius);
    const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent);
+   auto perspectiveScale=[&](const PlotPoint &point) {
+      const auto relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
+      const double depth=camera.distance-relative*camera.outward;
+      return data->perspective ? (depth>1e-6 ? camera.distance/depth : 0.0) : 1.0;
+   };
    auto project = [&](const PlotPoint &point) {
       if (!orbit) return QPointF(point.x, point.y);
-      const osg::Vec3d relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
-      return QPointF(relative*camera.right,relative*camera.up);
+      osg::Vec3d relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
+      if (data->perspective) {
+         const double hh=camera.distance*std::tan(std::clamp(data->fieldOfView,1.0,150.0)*3.14159265358979323846/360)/zoom;
+         relative+=camera.right*(pan.x()*2*hh/area.height())-camera.up*(pan.y()*2*hh/area.height());
+      }
+      return QPointF(relative*camera.right,relative*camera.up)*perspectiveScale(point);
    };
    if (!ground) for (const auto &curve : data->curves) {
       if (!curve.visible) continue;
@@ -143,9 +153,10 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       }
    }
    if (orbit) {
-      xmin = -camera.extent; xmax = camera.extent; ymin = xmin; ymax = xmax;
+      const auto extent=data->perspective ? camera.distance*std::tan(std::clamp(data->fieldOfView,1.0,150.0)*3.14159265358979323846/360) : camera.extent;
+      xmin = -extent; xmax = extent; ymin = xmin; ymax = xmax;
       const double aspect = area.width()/area.height();
-      if (aspect > 1) { xmin *= aspect; xmax *= aspect; } else { ymin /= aspect; ymax /= aspect; }
+      if (data->perspective || aspect > 1) { xmin *= aspect; xmax *= aspect; } else { ymin /= aspect; ymax /= aspect; }
    } else if (!ground) {
       if (!std::isfinite(xmin)) { xmin=0; xmax=1; ymin=0; ymax=1; }
       const double dx = xmax == xmin ? std::max(1.0, std::abs(xmin)*0.05) : (xmax-xmin)*0.05;
@@ -154,8 +165,9 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    }
    const double cx = (xmin+xmax)/2, cy = (ymin+ymax)/2;
    const double dx = (xmax-xmin)/zoom, dy = (ymax-ymin)/zoom;
-   xmin = cx-dx/2 - pan.x()*dx/area.width(); xmax = xmin+dx;
-   ymin = cy-dy/2 + pan.y()*dy/area.height(); ymax = ymin+dy;
+   const QPointF offset=orbit && data->perspective ? QPointF() : pan;
+   xmin = cx-dx/2 - offset.x()*dx/area.width(); xmax = xmin+dx;
+   ymin = cy-dy/2 + offset.y()*dy/area.height(); ymax = ymin+dy;
    auto screen = [&](const QPointF &p) { return QPointF(area.left()+(p.x()-xmin)/(xmax-xmin)*area.width(), area.bottom()-(p.y()-ymin)/(ymax-ymin)*area.height()); };
    painter.save(); painter.setClipRect(area);
    if (ground && !data->map.isNull()) {
@@ -193,6 +205,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          const PlotPoint *previous=nullptr,*last=nullptr;
          for (const auto &point:curve.points) {
             if (point.frame>visibleFrame) continue;
+            if (perspectiveScale(point)==0) { previous=nullptr; last=nullptr; continue; }
             if (curve.lines && previous && point.connect) objects.append({(depth(*previous)+depth(point))/2,&curve,previous,&point});
             previous=&point; last=&point;
          }
@@ -205,7 +218,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          const auto pixel=screen(project(*object.a));
          if (object.b) painter.drawLine(pixel,screen(project(*object.b)));
          else if (curve.radius>0) {
-            const double radius=curve.radius/(xmax-xmin)*area.width();
+            const double radius=curve.radius/(xmax-xmin)*area.width()*perspectiveScale(*object.a);
             QRadialGradient gradient(pixel-QPointF(radius*.3,radius*.3),radius*1.4);
             gradient.setColorAt(0,curve.color.lighter(145)); gradient.setColorAt(1,curve.color.darker(240));
             painter.setPen(curve.color); painter.setBrush(gradient); painter.drawEllipse(pixel,radius,radius);
@@ -283,6 +296,16 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    drawing = new PlotCanvas(data,this);
    auto *fit = bar->addAction("Fit"); connect(fit,&QAction::triggered,drawing,&PlotCanvas::fit);
    if (data->kind==PlotModel::Kind::Orbit) {
+      auto *projection=new QComboBox(bar); projection->setObjectName("orbitProjection");
+      projection->addItems({"Orthographic","Perspective"}); projection->setCurrentIndex(data->perspective ? 1 : 0);
+      projection->setToolTip("Camera projection"); bar->addWidget(projection);
+      auto *fov=new QDoubleSpinBox(bar); fov->setObjectName("orbitFieldOfView"); fov->setRange(1,150);
+      fov->setSuffix("°"); fov->setValue(data->fieldOfView); fov->setEnabled(data->perspective);
+      fov->setToolTip("Vertical field of view before wheel zoom"); bar->addWidget(fov);
+      connect(projection,&QComboBox::currentIndexChanged,this,[this,fov](int index) {
+         data->perspective=index==1; fov->setEnabled(data->perspective); drawing->refresh();
+      });
+      connect(fov,&QDoubleSpinBox::valueChanged,this,[this](double value) { data->fieldOfView=value; drawing->refresh(); });
       auto *scriptView=bar->addAction("Script view");
       scriptView->setToolTip("Restore the scripted camera, tracking and scale");
       connect(scriptView,&QAction::triggered,drawing,&PlotCanvas::scriptView);

@@ -231,3 +231,22 @@ Camera projection, multiple views and OF-relative camera conversion remain open.
 
 All 11 tests passed in 19.53 seconds and GmatQt was rebuilt; evidence:
 `Qt6ParityValidation/check-xy-style.txt`.
+
+## Perspective camera checkpoint
+
+Added interactive perspective projection and vertical FOV controls while keeping
+orthographic as the default. Native rendering uses a perspective frustum;
+fallback projection applies depth scaling and rejects objects behind the eye.
+The fallback pan offset uses the camera plane, and native labels use clip-space
+bounds rather than drawing labels behind the camera. Perspective sky geometry
+uses the camera FOV/zoom and remains translation invariant.
+
+Native tests cover FOV framing, depth-dependent body size, behind-camera
+clipping, exact orthographic restoration and star translation/zoom behavior.
+PlotTests exercises the actual projection/FOV controls and rendered changes in
+both fallback and native/HiDPI configurations. OF FOV import, persistent camera
+settings, multiple views and relative camera modes are still open; interactive
+projection alone does not satisfy those conversion requirements.
+
+All 11 tests passed in 20.90 seconds; GmatQt was rebuilt. Evidence:
+`Qt6ParityValidation/check-perspective.txt`.

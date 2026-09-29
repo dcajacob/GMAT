@@ -15,6 +15,7 @@
 #include <QDialog>
 #include <QCheckBox>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QPushButton>
 #include <QMenu>
@@ -53,6 +54,26 @@ int main(int argc,char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      {
+         auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+         model->scriptedCamera=true; model->axes=false; model->grid=false; model->labels=false; model->legend=false;
+         model->curves[0].radius=1; model->curves[0].color=Qt::green;
+         model->append(0,0,0,0); model->cameras.push_back({0,{0,0,6},{0,0,0},{0,1,0}});
+         PlotWidget view(model); view.resize(640,480); view.show(); QApplication::processEvents();
+         auto *projection=view.findChild<QComboBox *>("orbitProjection");
+         auto *fov=view.findChild<QDoubleSpinBox *>("orbitFieldOfView");
+         require(projection && fov && !fov->isEnabled(),"Camera projection controls missing");
+         const auto orthographic=view.canvas()->captureImage();
+         projection->setCurrentIndex(1);
+         require(model->perspective && fov->isEnabled(),"Perspective selector did not update model");
+         const auto perspective=view.canvas()->captureImage();
+         fov->setValue(90);
+         require(view.canvas()->captureImage()!=perspective,"FOV control did not affect rendered view");
+         fov->setValue(50); model->curves[0].points.front().z=2;
+         require(view.canvas()->captureImage()!=perspective,"Perspective depth did not affect rendered view");
+         model->curves[0].points.front().z=0; projection->setCurrentIndex(0);
+         require(view.canvas()->captureImage()==orthographic,"Orthographic view was not restored after perspective");
+      }
       PlotModel sample(PlotModel::Kind::GroundTrack);
       sample.maxPoints=3; sample.append(0,170,2); sample.append(0,175,4);
       sample.append(0,std::numeric_limits<double>::quiet_NaN(),8); sample.append(0,-175,8);
