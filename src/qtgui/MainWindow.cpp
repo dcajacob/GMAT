@@ -468,7 +468,7 @@ bool MainWindow::convertOpenFramesScript()
       }
    const auto converted=convertOpenFramesViews(editor->toPlainText());
    if (!converted.error.isEmpty()) { messages->appendPlainText(converted.error); return false; }
-   if (!converted.plots) { statusBar()->showMessage("No OpenFrames viewer definitions to convert"); return true; }
+   if (converted.script==editor->toPlainText()) { statusBar()->showMessage("No OpenFrames viewer definitions to convert"); return true; }
    const auto error=applyModelScript(converted.script);
    if (!error.isEmpty()) { messages->appendPlainText("View conversion rejected: "+error); return false; }
    messages->appendPlainText(QString("Converted %1 OpenFrames viewer(s) for Qt. Review the visual differences listed in the script before saving.").arg(converted.plots));
@@ -485,6 +485,39 @@ bool MainWindow::buildScript()
          statusBar()->showMessage("Apply or discard the open panel changes before building or running");
          return false;
       }
+   }
+   // File > Open and command-line loading both build through here, as does Run.
+   // Offer conversion before the engine rejects unavailable OpenFrames types.
+   const auto conversion=convertOpenFramesViews(editor->toPlainText());
+   if (!conversion.error.isEmpty()) {
+      QMessageBox::warning(this,"OpenFrames views need manual conversion",
+         "This script uses OpenFrames features that cannot be converted automatically.\n\n"+conversion.error);
+      statusBar()->showMessage("Build stopped — OpenFrames views need manual conversion");
+      return false;
+   }
+   if (conversion.script!=editor->toPlainText()) {
+      QMessageBox prompt(QMessageBox::Question,"Convert OpenFrames views?",
+         "This script uses OpenFrames views, which are unavailable in the Qt interface. "
+         "Convert them to Qt views and continue?\n\n"
+         "Mission calculations will be preserved. Some visual settings differ. "
+         "Changes stay unsaved, and Undo restores the original script.",
+         QMessageBox::Yes|QMessageBox::No,this);
+      prompt.setObjectName("openFramesConversionPrompt");
+      prompt.button(QMessageBox::Yes)->setText("Convert views");
+      prompt.button(QMessageBox::No)->setText("Keep original");
+      prompt.setDefaultButton(QMessageBox::Yes);
+      prompt.setEscapeButton(QMessageBox::No);
+      if (!conversion.notes.isEmpty()) prompt.setDetailedText(conversion.notes.join("\n"));
+      if (prompt.exec()!=QMessageBox::Yes) {
+         statusBar()->showMessage("Build canceled — original OpenFrames script kept");
+         return false;
+      }
+      if (!convertOpenFramesScript()) {
+         QMessageBox::warning(this,"Conversion could not be completed",
+            "The converted script could not be built. The original script is unchanged. See the Message Window for details.");
+         return false;
+      }
+      return true; // Conversion already validated and rebuilt the mission.
    }
    bool success = false;
    plots->clear();

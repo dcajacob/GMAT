@@ -11,6 +11,7 @@
 #include <QAction>
 #include <QDir>
 #include <QFileInfo>
+#include <QFile>
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
@@ -447,10 +448,41 @@ int main(int argc, char **argv)
       require(window.loadScript(sample),"Could not load shipped OFI sample");
       const auto originalSample=editor->toPlainText();
       const auto dynamics=originalSample.mid(originalSample.indexOf("BeginMissionSequence;"));
-      require(window.convertOpenFramesScript(),"Shipped OFI sample conversion failed");
+      int conversionPrompts=0;
+      auto answerConversion=[&](QMessageBox::StandardButton answer) {
+         QTimer::singleShot(0,&window,[&,answer] {
+            auto *prompt=qobject_cast<QMessageBox *>(QApplication::activeModalWidget());
+            if (prompt && prompt->objectName()=="openFramesConversionPrompt") {
+               ++conversionPrompts; prompt->button(answer)->click();
+            } else if (prompt) prompt->reject();
+         });
+      };
+      answerConversion(QMessageBox::No);
+      require(!window.buildScript() && conversionPrompts==1,"OFI build did not offer conversion or ignored decline");
+      require(editor->toPlainText()==originalSample && !editor->document()->isModified(),"Declined conversion changed the script");
+      answerConversion(QMessageBox::Yes);
+      require(window.buildScript() && conversionPrompts==2,"Accepted automatic OFI conversion failed");
       require(editor->toPlainText().endsWith(dynamics) && editor->document()->isModified(),"Conversion changed mission or failed to mark unsaved changes");
       require(window.runMission()==MainWindow::RunResult::Completed,"Converted Hohmann mission did not run");
       editor->undo(); require(editor->toPlainText()==originalSample,"Conversion was not one undoable edit");
+      answerConversion(QMessageBox::Yes);
+      require(window.runMission()==MainWindow::RunResult::Completed && conversionPrompts==3,
+         "Run did not offer conversion after undo");
+      QFile unchangedSample(sample);
+      require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
+         "Automatic conversion overwrote the example file");
+      editor->setPlainText("Create OpenFramesVector Vec;\nBeginMissionSequence;\n");
+      bool manualExplanation=false;
+      QTimer::singleShot(0,&window,[&] {
+         if (auto *prompt=qobject_cast<QMessageBox *>(QApplication::activeModalWidget())) {
+            manualExplanation=prompt->windowTitle()=="OpenFrames views need manual conversion";
+            prompt->accept();
+         }
+      });
+      require(!window.buildScript() && manualExplanation,"Unsupported OpenFrames script lacked a specific explanation");
+      require(editor->toPlainText().startsWith("Create OpenFramesVector"),"Unsupported conversion changed source");
+      require(window.loadScript(script) && window.buildScript(),"Normal script no longer builds without conversion");
+      std::cout<<"PASS: automatic OpenFrames conversion offer, decline, accept, Run, undo, original-file preservation and unsupported-feature explanation\n";
       const auto capabilities=window.availableEngineTypes();
       require(capabilities.contains("OrbitView") && capabilities.contains("GmatFunction") && !capabilities.contains("OpenFramesInterface"),
          "Runtime engine capability inventory incorrect");

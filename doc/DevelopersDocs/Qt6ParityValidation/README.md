@@ -150,3 +150,14 @@ spacecraft and stars. The rebuilt application and tests use the same renderer;
 [all 11 regression tests passed](check-msaa.txt). This covers the observed Intel
 configuration, not every hardware/driver combination. The pixel check is now
 part of `QtGui.NativeWindows` so a visible but empty view cannot pass it.
+
+
+## Automatic OpenFrames conversion prompt
+
+The workflow test loads the shipped `Ex_HohmannTransfer.script`, declines the
+conversion offer and verifies unchanged editor text, then accepts and runs the
+converted mission. It undoes the conversion and verifies that Run offers it
+again. It also verifies that the source file remains unchanged, unsupported
+OpenFrames declarations receive a manual-conversion explanation, and ordinary
+scripts build normally. [All 11 tests passed](check-ofi-prompt.txt); the Linux
+`application/bin/GmatQt` executable was rebuilt with this behavior.

@@ -465,7 +465,16 @@ Solver and event-locator reports are accessible from Output. The Help menu's
 **Available engine types…** lists the types registered by this runtime; this
 separates actual plugin availability from dedicated Qt form coverage.
 
-For an OFI-based script, use **Edit > Convert OpenFrames views for Qt** or:
+Opening an OFI-based example automatically offers **Convert views** before
+building it. Build and Run offer the same choice for scripts pasted or edited
+in the editor. Accepting validates the conversion and continues; **Keep
+original** cancels the build without changing the script. The prompt explains
+visual differences, with conversion notes under Details. Unsupported OpenFrames
+features get a specific manual-conversion explanation instead of an unknown-type
+build failure.
+
+You can also use **Edit > Convert OpenFrames views for Qt**, or explicitly
+approve conversion at launch with:
 
 ```sh
 ./application/bin/GmatQt application/samples/Ex_HohmannTransfer.script --convert-views
