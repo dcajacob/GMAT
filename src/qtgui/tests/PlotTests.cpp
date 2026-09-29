@@ -87,6 +87,27 @@ int main(int argc,char **argv)
          cameraAction->trigger(); QApplication::processEvents();
          require(cameraDialog->isVisible() && projection->currentIndex()==0 && fov->value()==50,"Camera panel reopen lost live settings");
          cameraDialog->close();
+         auto *display=view.findChild<QAction *>("orbitDisplayAction"); require(display,"Display action missing");
+         display->trigger(); QApplication::processEvents();
+         auto *displayDialog=view.findChild<QDialog *>("orbitDisplayDialog"); require(displayDialog && displayDialog->isVisible(),"Display panel did not open");
+         const auto beforeDisplay=view.canvas()->captureImage();
+         const auto frame=model->frame; const auto history=model->cameras.size();
+         const QList<QPair<QString,bool PlotModel::*>> controls={
+            {"axes",&PlotModel::axes},{"grid",&PlotModel::grid},{"labels",&PlotModel::labels},{"legend",&PlotModel::legend},
+            {"xyPlane",&PlotModel::xyPlane},{"eclipticPlane",&PlotModel::eclipticPlane},{"wireframe",&PlotModel::wireframe},{"sunLine",&PlotModel::sunLine}};
+         for (const auto &entry:controls) {
+            auto *control=displayDialog->findChild<QCheckBox *>("orbitDisplay_"+entry.first);
+            require(control && control->isVisible() && !control->isChecked(),"Display setting missing or initial value incorrect");
+            control->setChecked(true); require(model.get()->*entry.second,"Display toggle did not change model");
+         }
+         require(view.canvas()->captureImage()!=beforeDisplay,"Display controls did not affect rendering");
+         require(model->frame==frame && model->cameras.size()==history,"Display toggles changed mission history");
+         if (!image.isEmpty()) require(displayDialog->grab().save(image+".display.png"),"Display screenshot failed");
+         displayDialog->close(); model->axes=false; display->trigger();
+         require(!displayDialog->findChild<QCheckBox *>("orbitDisplay_axes")->isChecked(),"Display panel reopen did not synchronize model changes");
+         for (const auto &entry:controls) displayDialog->findChild<QCheckBox *>("orbitDisplay_"+entry.first)->setChecked(false);
+         require(view.canvas()->captureImage()==beforeDisplay,"Display settings did not restore original rendering");
+         displayDialog->close();
       }
       {
          auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);

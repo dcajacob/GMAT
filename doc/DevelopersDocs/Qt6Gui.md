@@ -914,3 +914,11 @@ field of view and **Keep projection**. These controls remain accessible when the
 plot is narrow or tiled. Changes preview immediately; Close dismisses the panel
 without reverting the preview. Reopening retains the current settings. Script
 view, Fit and Sunlight remain available on the viewer toolbar.
+
+### Live orbit display controls
+
+**Display…** opens controls for axes, grid, object labels, legend, XY/ecliptic
+planes, wireframe bodies and the origin–Sun line. Changes update the current view
+without rerunning the mission or clearing replay history. Close retains the live
+settings. These controls do not save script properties; use the plot resource
+editor for persistent settings. Reopening the panel reflects the current view.

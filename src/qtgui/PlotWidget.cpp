@@ -2,6 +2,7 @@
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <QFormLayout>
+#include <QGridLayout>
 #include <QComboBox>
 #include <QCheckBox>
 #include <QSpinBox>
@@ -382,6 +383,34 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       connect(keep,&QPushButton::clicked,saveProjection,&QAction::trigger);
       connect(buttons,&QDialogButtonBox::rejected,cameraDialog,&QDialog::reject);
       cameraDialog->resize(430,240);
+      auto *displayDialog=new QDialog(this); displayDialog->setObjectName("orbitDisplayDialog");
+      displayDialog->setWindowTitle(data->title+" — Display");
+      auto *displayLayout=new QVBoxLayout(displayDialog);
+      auto *displayHelp=new QLabel("Changes affect this viewer immediately. Use the plot resource editor to save display settings in the mission script.",displayDialog);
+      displayHelp->setWordWrap(true); displayLayout->addWidget(displayHelp);
+      auto *options=new QGridLayout; displayLayout->addLayout(options);
+      struct DisplayOption { const char *label; const char *name; bool PlotModel::*value; };
+      const DisplayOption displayOptions[]={
+         {"Axes","axes",&PlotModel::axes},{"Grid","grid",&PlotModel::grid},
+         {"Object labels","labels",&PlotModel::labels},{"Legend","legend",&PlotModel::legend},
+         {"XY plane","xyPlane",&PlotModel::xyPlane},{"Ecliptic plane","eclipticPlane",&PlotModel::eclipticPlane},
+         {"Wireframe bodies","wireframe",&PlotModel::wireframe},{"Origin–Sun line","sunLine",&PlotModel::sunLine}};
+      QList<QPair<QCheckBox *,bool PlotModel::*>> displayControls;
+      int optionIndex=0;
+      for (const auto &option:displayOptions) {
+         auto *control=new QCheckBox(option.label,displayDialog); control->setObjectName(QString("orbitDisplay_")+option.name);
+         control->setChecked(data.get()->*option.value); options->addWidget(control,optionIndex/2,optionIndex%2); ++optionIndex;
+         displayControls.append({control,option.value});
+         connect(control,&QCheckBox::toggled,this,[this,member=option.value](bool checked) { data.get()->*member=checked; drawing->refresh(); });
+      }
+      auto *displayClose=new QDialogButtonBox(QDialogButtonBox::Close,displayDialog); displayLayout->addWidget(displayClose);
+      connect(displayClose,&QDialogButtonBox::rejected,displayDialog,&QDialog::reject);
+      auto *displayAction=bar->addAction("Display…"); displayAction->setObjectName("orbitDisplayAction");
+      connect(displayAction,&QAction::triggered,this,[this,displayDialog,displayControls] {
+         for (const auto &control:displayControls) { const QSignalBlocker block(control.first); control.first->setChecked(data.get()->*control.second); }
+         displayDialog->show(); displayDialog->raise(); displayDialog->activateWindow();
+      });
+      displayDialog->resize(410,240);
       auto *scriptView=bar->addAction("Script view");
       scriptView->setToolTip("Restore the scripted camera, tracking and scale");
       connect(scriptView,&QAction::triggered,drawing,&PlotCanvas::scriptView);

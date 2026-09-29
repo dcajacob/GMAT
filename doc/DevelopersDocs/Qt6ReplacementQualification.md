@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
 | `src/gui/app/TextEphemFileDialog.hpp` | Pending audit |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Pending audit |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Drawing options audited; live Qt display controls covered, camera controls partly covered. Full resource workflow and remaining view modes pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
@@ -1019,3 +1019,22 @@ GmatQt was rebuilt; all 11 Qt checks passed in 39.09 seconds. Evidence:
 `Qt6ParityValidation/check-camera-panel.txt`. An isolated Xvfb/native render run
 also passed; `Qt6ParityValidation/camera-panel.png` was visually inspected for
 label/control fit. This is not a hardware-driver qualification claim.
+
+## Live orbit display controls
+
+Compared wx OrbitViewPanel drawing options with Qt model/renderer fields. The Qt
+viewer now exposes axes, grid, labels, legend, XY/ecliptic planes, wireframe and
+origin–Sun line in a nonmodal Display panel. These are live viewer overrides;
+persistent resource changes still use the resource editor. The panel explicitly
+states this distinction and resynchronizes its checkboxes on reopening.
+
+PlotTests checks each control's initial state and model binding, unchanged replay
+frame/camera history, a combined rendered-image change and exact restoration of
+the original image after clearing the options. It also checks reopening after a
+model value changes. This does not individually qualify every overlay's geometry
+or replace the pending full OrbitView resource audit.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 38.90 seconds. Evidence:
+`Qt6ParityValidation/check-display-controls.txt`. An isolated native/Xvfb run
+also passed, and `Qt6ParityValidation/display-panel.png` was visually inspected.
+Hardware-specific viewer qualification remains separate.
