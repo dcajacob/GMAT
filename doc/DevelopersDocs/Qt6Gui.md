@@ -1061,3 +1061,8 @@ reopen it. Unreadable or invalid UTF-8 files cannot be saved through this editor
 Save As writes a copy and updates FunctionPath as a pending resource change.
 Apply that change to make the mission use the copy. Existing-file replacement
 requires confirmation; failed saves leave the current path unchanged.
+
+**New function file…** creates a file from a basic input/output template using the
+resource's name. Choose an unused destination, edit the template, and Save. The
+file is created only on Save; Cancel creates nothing. Apply the pending
+FunctionPath to connect it to the mission. Existing files use Edit function file.

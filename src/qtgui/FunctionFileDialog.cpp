@@ -11,7 +11,7 @@
 #include <QSaveFile>
 #include <QStringConverter>
 
-FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent)
+FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent,const QString &initialText)
    : QDialog(parent),path(QFileInfo(filename).absoluteFilePath())
 {
    setObjectName("functionFileDialog"); setWindowTitle("Edit function — "+path); resize(850,600);
@@ -35,6 +35,9 @@ FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent)
    connect(buttons->button(QDialogButtonBox::Save),&QPushButton::clicked,this,[this] {
       const auto error=save(); if (error.isEmpty()) accept(); else status->setText(error);
    });
+   if (!initialText.isNull()) {
+      newFile=true; loaded=true; editor->setPlainText(initialText); editor->document()->setModified(true);
+   } else {
    QFile file(path);
    if (!file.open(QIODevice::ReadOnly)) status->setText("Cannot open function file: "+file.errorString());
    else {
@@ -44,11 +47,16 @@ FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent)
       else if (decoder.hasError()) status->setText("The function file is not valid UTF-8. It has not been opened for editing.");
       else { loaded=true; editor->setPlainText(text); editor->document()->setModified(false); }
    }
+   }
    editor->setReadOnly(!loaded); buttons->button(QDialogButtonBox::Save)->setEnabled(loaded); find->setEnabled(loaded); saveAsButton->setEnabled(loaded);
 }
 QString FunctionFileDialog::save()
 {
    if (!loaded) return "Open a readable UTF-8 function file before saving.";
+   if (newFile) {
+      if (QFileInfo::exists(path)) return "A file now exists at this destination. Choose another path with Save As.";
+      return writeTo(path);
+   }
    QFile current(path);
    if (!current.open(QIODevice::ReadOnly)) return "Cannot check the current function file: "+current.errorString();
    const auto bytes=current.readAll();
@@ -75,5 +83,5 @@ QString FunctionFileDialog::writeTo(const QString &destination)
    QSaveFile file(destination);
    if (!file.open(QIODevice::WriteOnly)) return "Cannot save function file: "+file.errorString();
    if (file.write(result)!=result.size() || !file.commit()) return "Cannot save function file: "+file.errorString();
-   original=result; path=destination; setWindowTitle("Edit function — "+path); editor->document()->setModified(false); return {};
+   newFile=false; original=result; path=destination; setWindowTitle("Edit function — "+path); editor->document()->setModified(false); return {};
 }

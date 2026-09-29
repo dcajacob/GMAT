@@ -12,6 +12,7 @@
 #include "ScriptEditor.hpp"
 #include <QApplication>
 #include <QFile>
+#include <QFileInfo>
 #include <QDir>
 #include <QMessageBox>
 #include <QPlainTextEdit>
@@ -56,6 +57,14 @@ int main(int argc,char **argv)
       syntax.close();
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
       {
+         const auto created=temporary.filePath("NewFunction.gmf");
+         {
+            FunctionFileDialog cancelled(created,nullptr,"function [y] = NewFunction(x)\n"); cancelled.reject();
+            require(!QFileInfo::exists(created),"Cancelling a new function created a file");
+         }
+         FunctionFileDialog newFunction(created,nullptr,"function [y] = NewFunction(x)\n");
+         write(created,"created externally\n"); require(!newFunction.save().isEmpty(),"New function overwrote a file created after editing began");
+         require(QFile::remove(created) && newFunction.save().isEmpty() && QFileInfo::exists(created),"New function could not save to its unused destination");
          const auto path=temporary.filePath("editable function.gmf");
          const QByteArray original="\xef\xbb\xbf% unicode: \xce\x94\r\nvalue = 1;\r\n"; write(path,original);
          {

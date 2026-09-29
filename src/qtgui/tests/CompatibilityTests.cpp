@@ -103,6 +103,29 @@ int main(int argc,char **argv)
          roundTrip("edited-function-file");
          require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==12,
             "Saved function editor change did not reach reopened mission execution");
+         require(QDir().mkpath(output.filePath("new function")),"New function folder failed");
+         const auto newPath=output.filePath("new function/ScaleInput.gmf");
+         const auto beforeNew=editor->toPlainText(); QString newError="Apply not invoked";
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("ScaleInput"),[&](const QMap<QString,QString> &changes) {
+               newError=window.applyResourceChanges("ScaleInput",changes,beforeNew); return newError;
+            },&owner,beforeNew);
+            QTimer::singleShot(0,&panel,[&] {
+               auto *chooser=panel.findChild<QFileDialog *>("newFunctionFileDialog"); require(chooser,"New function chooser absent");
+               chooser->selectFile(newPath); QMetaObject::invokeMethod(chooser,"accept",Qt::DirectConnection);
+               QTimer::singleShot(0,&panel,[&] {
+                  auto *dialog=panel.findChild<QDialog *>("functionFileDialog"); auto *text=dialog->findChild<QPlainTextEdit *>("functionFileText");
+                  require(text->toPlainText().contains("function [output] = ScaleInput(input)"),"New function template has the wrong function name");
+                  text->setPlainText(text->toPlainText().replace("output = input;","output = input * 5;"));
+                  dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Save)->click();
+               });
+            }); panel.findChild<QPushButton *>("newFunctionFile")->click();
+            require(panel.hasChanges() && QFileInfo::exists(newPath),"New function path did not remain pending");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(newError.isEmpty(),qPrintable(newError)); roundTrip("new-function-file");
+         require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==15,
+            "Created function did not execute after path Apply and reopen");
       }
       for (const auto &type:{QString("NuclearPowerSystem"),QString("SolarPowerSystem")}) {
          const auto report=output.filePath(type+".csv");

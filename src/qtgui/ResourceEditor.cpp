@@ -227,6 +227,20 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    }
    if (object.IsOfType("GmatFunction")) {
       auto *edit=new QPushButton("Edit function file…",this); edit->setObjectName("editFunctionFile"); layout->addWidget(edit);
+      auto *create=new QPushButton("New function file…",this); create->setObjectName("newFunctionFile"); layout->addWidget(create);
+      const auto functionName=QString::fromStdString(object.GetName());
+      connect(create,&QPushButton::clicked,this,[this,functionName] {
+         QFileDialog chooser(this,"New GMAT function file",functionName+".gmf","GMAT functions (*.gmf);;All files (*)");
+         chooser.setObjectName("newFunctionFileDialog"); chooser.setAcceptMode(QFileDialog::AcceptSave); chooser.setDefaultSuffix("gmf");
+         if (chooser.exec()!=QDialog::Accepted || chooser.selectedFiles().isEmpty()) return;
+         const auto path=chooser.selectedFiles().first();
+         if (QFileInfo::exists(path)) { status->setText("That file already exists. Use Edit function file or choose a new name."); return; }
+         const auto source="function [output] = "+functionName+"(input)\nCreate Variable output;\nBeginMissionSequence;\noutput = input;\n";
+         FunctionFileDialog dialog(path,this,source);
+         if (dialog.exec()!=QDialog::Accepted) return;
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") table->item(row,1)->setText(dialog.savedPath());
+         status->setText("Function file created. Apply to use its path in the mission.");
+      });
       connect(edit,&QPushButton::clicked,this,[this] {
          QString path;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") path=table->item(row,1)->text();

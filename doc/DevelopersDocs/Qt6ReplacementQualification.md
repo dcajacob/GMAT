@@ -58,7 +58,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
-| `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Save As, pending path Apply and execution from the copy covered. New empty function-file creation remains pending. |
+| `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Save As, pending path Apply and execution from the copy covered. New template-based file creation, Cancel, path Apply and reopened execution covered; broader multi-output/function-signature cases remain pending. |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverGoalsPanel.hpp` | Pending audit |
@@ -1513,3 +1513,22 @@ Files passed in 3.40 seconds. Thus every check has a passing result for the fina
 implementation, across the full and targeted runs. Native viewers used Xvfb.
 Evidence: `Qt6ParityValidation/check-function-save-as.txt` and
 `Qt6ParityValidation/check-function-save-as-files.txt`.
+
+## New GMAT function-file creation
+
+ResourceEditor now offers New function file for a GmatFunction resource. It asks
+for an unused destination and opens a basic positional input/output template with
+the resource's function name. Saving creates the file and leaves FunctionPath
+pending until Apply. Cancel creates nothing. If a file appears at the chosen
+destination while the template is open, Save refuses to overwrite it.
+
+FileTests covers creation, Cancel and an externally created destination.
+CompatibilityTests drives the destination chooser, edits the generated template,
+saves, applies the path, saves/reopens the mission with failed-build recovery and
+checks the function's resulting output. The resource in this fixture already
+exists; combined resource creation and broader function signatures still require
+additional qualification.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 41.98 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-new-function.txt`.

@@ -6,7 +6,7 @@ class QLabel;
 class FunctionFileDialog final : public QDialog
 {
 public:
-   explicit FunctionFileDialog(const QString &path,QWidget *parent=nullptr);
+   explicit FunctionFileDialog(const QString &path,QWidget *parent=nullptr,const QString &initialText={});
    QString save();
    QString saveAs(const QString &destination,bool replaceExisting=false);
    QString savedPath() const { return path; }
@@ -17,4 +17,5 @@ private:
    ScriptEditor *editor;
    QLabel *status;
    bool loaded=false;
+   bool newFile=false;
 };
