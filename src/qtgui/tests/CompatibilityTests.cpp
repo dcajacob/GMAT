@@ -127,6 +127,46 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==15,
             "Created function did not execute after path Apply and reopen");
       }
+      {
+         const auto path=output.filePath("Pair.gmf"); QFile file(path); require(file.open(QIODevice::WriteOnly),"Pair function fixture write failed");
+         file.write("function [sum, difference] = Pair(a, b)\nCreate Variable sum difference;\nBeginMissionSequence;\nsum = a + b;\ndifference = a - b;\n"); file.close();
+         editor->setPlainText("Create GmatFunction Pair;\nPair.FunctionPath = '"+path+"';\nCreate Variable a b first second;\nBeginMissionSequence;\na = 7;\nb = 2;\n[first, second] = Pair(a, b); % keep pair\n");
+         require(window.buildScript(),"Function argument fixture failed"); const auto snapshot=window.missionSnapshot(); int index=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.contains("Pair(")) index=i;
+         {
+            const QString source="[first] = Pair('left,right', Matrix(1, 2)); % keep syntax";
+            QString selected=source; CommandForm literalForm([&](const QString &value) { selected=value; }); literalForm.setStatement(source);
+            QTimer::singleShot(0,&literalForm,[&] {
+               auto *dialog=literalForm.findChild<QDialog *>("reportParameterDialog"); auto *list=dialog->findChild<QListWidget *>("reportSelectedParameters");
+               require(list->count()==2 && list->item(0)->text()=="'left,right'" && list->item(1)->text()=="Matrix(1, 2)","Function selector split nested or quoted commas");
+               dialog->accept();
+            }); literalForm.findChild<QPushButton *>("commandChoose_Inputs")->click();
+            require(selected==source,"Function selector rewrote untouched argument syntax");
+         }
+         require(index>=0,"Pair function command absent"); QString replacement;
+         CommandForm form([&](const QString &value) { replacement=value; }); form.setStatement(snapshot.nodes[index].statement);
+         QTimer::singleShot(0,&form,[&] {
+            auto *dialog=form.findChild<QDialog *>("reportParameterDialog"); auto *list=dialog->findChild<QListWidget *>("reportSelectedParameters");
+            require(list->count()==2,"Function input order did not load"); list->clear(); dialog->reject();
+         }); form.findChild<QPushButton *>("commandChoose_Inputs")->click();
+         require(replacement.isEmpty(),"Cancelled function arguments changed source");
+         for (const auto &field:{QString("Inputs"),QString("Outputs")}) {
+            QTimer::singleShot(0,&form,[&] {
+               auto *dialog=form.findChild<QDialog *>("reportParameterDialog"); auto *list=dialog->findChild<QListWidget *>("reportSelectedParameters");
+               auto *entry=dialog->findChild<QComboBox *>("reportParameterEntry"); auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+               require(entry->findText("a")>=0 && entry->findText("first")>=0,"Function selector omitted user variables");
+               if (field=="Outputs") {
+                  entry->setEditText("42"); dialog->findChild<QPushButton *>("reportAddParameter")->click(); require(!ok->isEnabled(),"Numeric function destination accepted");
+                  dialog->findChild<QPushButton *>("reportParameterRemove")->click(); require(ok->isEnabled(),"Function destination recovery failed");
+               }
+               list->setCurrentRow(1); dialog->findChild<QPushButton *>("reportParameterUp")->click(); ok->click();
+            }); form.findChild<QPushButton *>("commandChoose_"+field)->click();
+         }
+         require(replacement.contains("[second, first]") && replacement.contains("Pair(b, a)") && replacement.contains("% keep pair"),"Function argument editing changed ordering or comment");
+         require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty(),"Selected function arguments did not apply"); roundTrip("function-arguments");
+         require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("first")->GetRealParameter("Value")==-5 &&
+            Moderator::Instance()->GetInternalObject("second")->GetRealParameter("Value")==9,"Ordered function inputs/outputs changed after reopen or executed incorrectly");
+      }
       for (const auto &type:{QString("NuclearPowerSystem"),QString("SolarPowerSystem")}) {
          const auto report=output.filePath(type+".csv");
          editor->setPlainText("Create Spacecraft PowerSat;\nCreate "+type+" Power;\nPowerSat.PowerSystem = Power;\n"

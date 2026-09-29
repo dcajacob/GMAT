@@ -1066,3 +1066,13 @@ requires confirmation; failed saves leave the current path unchanged.
 resource's name. Choose an unused destination, edit the template, and Save. The
 file is created only on Save; Cancel creates nothing. Apply the pending
 FunctionPath to connect it to the mission. Existing files use Edit function file.
+
+### Function-call argument selectors
+
+The function-call form offers **Select arguments…** beside Inputs and Outputs.
+Add, remove or reorder arguments; their order determines the function's input and
+output positions. Whole supported objects, variables, strings, arrays and array
+elements are available alongside the property browser. Output choices filter
+writable parameters. The text fields remain editable, and Apply validates the
+function signature. Quoted commas and array-index commas remain within one
+argument when loading the selector. Cancel leaves the command unchanged.

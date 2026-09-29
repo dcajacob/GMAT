@@ -91,7 +91,30 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="Solver branch" && (name=="SolveMode" || name=="ExitMode")) {
+      if (title()=="Function call" && (name=="Inputs" || name=="Outputs")) {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
+         auto *choose=new QPushButton("Select arguments…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
+         connect(choose,&QPushButton::clicked,this,[this,input,name] {
+            auto text=input->text().trimmed(); const bool outputs=name=="Outputs";
+            if (outputs && text.startsWith('[') && text.endsWith(']')) text=text.mid(1,text.size()-2);
+            QStringList selected; int start=0,depth=0; bool quoted=false;
+            for (int i=0;i<text.size();++i) {
+               const auto ch=text[i];
+               if (ch=='\'') {
+                  if (quoted && i+1<text.size() && text[i+1]=='\'') { ++i; continue; }
+                  quoted=!quoted;
+               } else if (!quoted) {
+                  if (ch=='(' || ch=='[') ++depth;
+                  else if (ch==')' || ch==']') --depth;
+                  else if (ch==',' && depth==0) { selected.append(text.mid(start,i-start).trimmed()); start=i+1; }
+               }
+            }
+            if (!text.isEmpty()) selected.append(text.mid(start).trimmed());
+            ReportParameterDialog dialog(selected,this,outputs ? ReportParameterDialog::Mode::FunctionOutputs : ReportParameterDialog::Mode::FunctionInputs);
+            if (dialog.exec()!=QDialog::Accepted) return;
+            const auto values=dialog.selection().join(", "); input->setText(outputs ? "["+values+"]" : values);
+         });
+      } else if (title()=="Solver branch" && (name=="SolveMode" || name=="ExitMode")) {
          Target prototype;
          auto *choice=new QComboBox(this); choice->setObjectName("commandChoice_"+name);
          for (const auto &option:prototype.GetStringArrayParameter((name+"Options").toStdString())) choice->addItem(QString::fromStdString(option));

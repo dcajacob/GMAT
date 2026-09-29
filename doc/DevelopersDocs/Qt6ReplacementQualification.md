@@ -53,7 +53,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered; covariance controls and broader formation/mode combinations pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
-| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
+| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Broader object/string/array signature execution pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
@@ -1532,3 +1532,29 @@ additional qualification.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 41.98 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-new-function.txt`.
+
+## Function-call input and output selection
+
+CommandForm now offers ordered argument selectors for function inputs and outputs,
+using shared parameter browsing plus whole space-point/impulsive-burn objects and
+strings. Output browsing filters writable parameters and rejects numeric output
+destinations. Inputs retain free text for literals and other function syntax.
+Argument splitting respects quoted strings and nested parentheses/brackets;
+command source spans preserve the function name and trailing comment.
+
+CompatibilityTests checks Cancel, ordering, invalid output recovery, and a real
+two-input/two-output function after Apply, save/Save As, failed-build recovery and
+reopen. Swapping both lists must produce the expected sum/difference in the
+selected output variables. A separate source-preservation check covers quoted
+commas and array-index commas; it does not claim execution coverage for those
+string/array signatures. Broader object arguments and zero-output calls remain
+qualification cases.
+
+Validation: rebuilt the user's GmatQt. The full suite passed ten checks; the
+compatibility check initially expected a change notification when accepting an
+unchanged argument list. The corrected test retains the original source as its
+initial value and checks any emitted replacement against it. The targeted
+compatibility rerun passed in 9.54 seconds. No production code changed between
+the full run and that rerun. Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-function-arguments.txt` and
+`Qt6ParityValidation/check-function-arguments-compat.txt`.

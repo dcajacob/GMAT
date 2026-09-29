@@ -21,15 +21,16 @@
 
 ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
-   const bool single=mode!=Mode::Multiple;
-   const bool writable=mode==Mode::Writable || mode==Mode::WritableReal;
+   const bool arguments=mode==Mode::FunctionInputs || mode==Mode::FunctionOutputs;
+   const bool single=mode!=Mode::Multiple && !arguments;
+   const bool writable=mode==Mode::Writable || mode==Mode::WritableReal || mode==Mode::FunctionOutputs;
    const bool realOnly=mode==Mode::WritableReal;
    const bool stop=mode==Mode::StopParameter;
    auto writableParameter=[realOnly](const Parameter *parameter) {
       const bool user=parameter->IsOfType("Variable") || parameter->IsOfType("Array") || parameter->IsOfType("String");
       return (user || parameter->IsSettable()) && (!realOnly || parameter->GetReturnType()==Gmat::REAL_TYPE || parameter->IsOfType("Array"));
    };
-   setObjectName("reportParameterDialog"); setWindowTitle(single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
+   setObjectName("reportParameterDialog"); setWindowTitle(arguments ? (writable ? "Function outputs" : "Function inputs") : single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
    auto *layout=new QVBoxLayout(this);
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
    help->setWordWrap(true); layout->addWidget(help);
@@ -41,6 +42,13 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    for (const auto &name:moderator->GetListOfObjects(Gmat::PARAMETER)) {
       auto *parameter=moderator->GetParameter(name);
       if (parameter && (writable ? writableParameter(parameter) : (parameter->IsReportable() || (stop && (parameter->GetTypeName()=="Periapsis" || parameter->GetTypeName()=="Apoapsis"))))) names.append(QString::fromStdString(name));
+   }
+   if (arguments) {
+      help->setText("Arguments are positional. Add, remove or reorder entries below; Apply validates the function signature and references.");
+      for (const auto &name:moderator->GetListOfObjects(Gmat::UNKNOWN_OBJECT)) {
+         auto *object=moderator->GetConfiguredObject(name);
+         if (object && (object->IsOfType(Gmat::SPACE_POINT) || object->IsOfType("ImpulsiveBurn") || object->IsOfType("String"))) names.append(QString::fromStdString(name));
+      }
    }
    names.sort(); names.removeDuplicates(); entry->addItems(names); layout->addWidget(entry);
    auto *browser=new QGroupBox("Browse object properties",this);
@@ -187,6 +195,19 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
          buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
       };
       connect(entry,&QComboBox::currentTextChanged,this,[validate] { validate(); }); validate();
+   }
+   if (mode==Mode::FunctionOutputs) {
+      auto validate=[this,buttons,moderator,writableParameter] {
+         static const QRegularExpression reference(R"(^[A-Za-z_][A-Za-z0-9_.]*(?:\(\s*[1-9][0-9]*\s*,\s*[1-9][0-9]*\s*\))?$)");
+         bool valid=true;
+         for (int i=0;i<list->count();++i) {
+            const auto value=list->item(i)->text().trimmed(); valid=valid && reference.match(value).hasMatch();
+            if (const auto *parameter=dynamic_cast<const Parameter *>(moderator->GetConfiguredObject(value.toStdString()))) valid=valid && writableParameter(parameter);
+         }
+         buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
+      };
+      connect(list->model(),&QAbstractItemModel::rowsInserted,this,[=] { validate(); });
+      connect(list->model(),&QAbstractItemModel::rowsRemoved,this,[=] { validate(); }); validate();
    }
    connect(buttons,&QDialogButtonBox::accepted,this,&QDialog::accept);
    connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
