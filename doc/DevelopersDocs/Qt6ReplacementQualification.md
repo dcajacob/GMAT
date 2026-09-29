@@ -92,7 +92,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
 | `src/gui/foundation/GmatSavePanel.hpp` | Pending audit |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply and arbitrary existing assignments remain outside the grid workflow. |
+| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
@@ -1304,3 +1304,22 @@ loop-bound combination.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 34.57 seconds,
 with native rendering under isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-for-pickers.txt`.
+
+## Combined array values and formulas
+
+Resource Apply now assembles numeric array settings and managed expression cells
+into one candidate script and validates it once. Formula metadata bypasses the
+ordinary engine property serializer. Expression indices are checked against the
+proposed dimensions, including numeric-only resizes, so a shrink cannot silently
+discard a managed formula cell. Existing mission commands remain preserved.
+
+WorkflowTests changes a numeric value and a dependent formula in the same resource
+panel, submits both with its Apply button, and checks the resulting calculation.
+One Undo restores the original script and result. Invalid combined formulas and
+shrinks past a formula cell leave source and runtime behavior unchanged. The
+expression grid still uses dimensions from panel opening; entering formulas into
+newly added cells before applying a resize remains a follow-up workflow gap.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.34 seconds.
+Native display checks ran under isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-array-combined.txt`.

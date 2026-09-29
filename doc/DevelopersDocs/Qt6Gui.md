@@ -1008,3 +1008,11 @@ The For-loop command form includes a variable-only selector for Index and
 parameter browsers for Start, Step and End. You can still type numeric bounds
 directly. Cancel leaves the field unchanged. Header edits preserve the loop body;
 Apply validates the command through GMAT.
+
+### Applying array values and formulas together
+
+Array numeric values and expression cells can now be changed in one resource
+panel and submitted together with Apply. Validation succeeds for the complete
+candidate or leaves both unchanged. Undo restores both as one edit. A resize that
+would remove an existing expression cell is rejected; clear that formula first
+or include its removal in the same Apply.

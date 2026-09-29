@@ -719,9 +719,8 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
-   if (changes.contains("@ArrayExpressions")) {
-      if (!object->IsOfType("Array")) return "Cell expressions require an Array.";
-      if (changes.size()!=1) return "Apply numeric array changes separately from expression changes.";
+   if (changes.contains("@ArrayExpressions") && !object->IsOfType("Array")) return "Cell expressions require an Array.";
+   if (changes.contains("@ArrayExpressions") && changes.size()==1) {
       try {
          return applyModelScript(setArrayExpressions(expectedScript,name,changes["@ArrayExpressions"],
             object->GetIntegerParameter("NumRows"),object->GetIntegerParameter("NumCols")));
@@ -734,7 +733,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
       const QString mixture=changes.value("MixRatio");
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (pairedMixture && it.key()=="MixRatio") continue;
+         if (it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -754,7 +753,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = serialize(*object);
       auto newBlock = serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
@@ -764,6 +763,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto originalMission=missionStart.match(expectedScript),rebuiltMission=missionStart.match(candidate);
       if (originalMission.hasMatch() && rebuiltMission.hasMatch())
          candidate=candidate.left(rebuiltMission.capturedStart())+expectedScript.mid(originalMission.capturedStart());
+      if (object->IsOfType("Array") && (changes.contains("@ArrayExpressions") || changes.contains("RmatValue")))
+         candidate=setArrayExpressions(candidate,name,changes.value("@ArrayExpressions",arrayExpressions(expectedScript,name)),
+            proposed->GetIntegerParameter("NumRows"),proposed->GetIntegerParameter("NumCols"));
       // An explicit axis edit replaces an imported arbitrary roll vector.
       if (object->IsOfType("OrbitView") && (changes.contains("ViewUpAxis") || changes.contains("ViewDirection"))) {
          const auto settings=qtCameraSettings(expectedScript);

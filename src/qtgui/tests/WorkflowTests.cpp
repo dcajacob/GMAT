@@ -567,6 +567,31 @@ int main(int argc, char **argv)
       require(!window.applyResourceChanges("Formula",{{"@ArrayExpressions",R"([{"row":1,"column":1,"expression":"MissingVariable + 2"}])"}},expressionSource).isEmpty(),
          "Unknown expression variable was accepted");
       require(editor->toPlainText()==expressionSource && formulaResult()==20,"Rejected formula changed source or engine state");
+      {
+         QWidget owner; QString combinedError="Apply was not invoked";
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Formula"),[&](const QMap<QString,QString> &changes) {
+            require(changes.contains("RmatValue") && changes.contains("@ArrayExpressions"),"Panel did not submit both pending array edits");
+            combinedError=window.applyResourceChanges("Formula",changes,expressionSource); return combinedError;
+         },&owner,expressionSource);
+         auto *properties=panel.findChild<QTableWidget *>();
+         for (int row=0;row<properties->rowCount();++row)
+            if (properties->item(row,0)->text()=="RmatValue") properties->item(row,1)->setText("3 0");
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("arrayExpressionDialog");
+            auto *grid=dialog->findChild<QTableWidget *>("arrayExpressionGrid");
+            grid->item(0,0)->setText(""); grid->item(0,1)->setText("Formula(1,1) * 4"); dialog->accept();
+         }); panel.findChild<QPushButton *>("arrayExpressions")->click();
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         require(combinedError.isEmpty(),qPrintable(combinedError));
+      }
+      require(formulaResult()==15,"Combined array edit did not use the new numeric initial value");
+      editor->undo(); require(editor->toPlainText()==expressionSource && formulaResult()==20,"Combined array edit was not atomic under Undo");
+      require(!window.applyResourceChanges("Formula",{{"RmatValue","7 0"},{"@ArrayExpressions",R"([{"row":1,"column":2,"expression":"UnknownCellInput + 1"}])"}},expressionSource).isEmpty(),
+         "Invalid combined array expression accepted");
+      require(editor->toPlainText()==expressionSource && formulaResult()==20,"Failed combined Apply changed numeric values or formulas");
+      require(!window.applyResourceChanges("Formula",{{"RmatValue","7"}},expressionSource).isEmpty(),
+         "Array shrink silently removed an expression cell");
+      require(editor->toPlainText()==expressionSource && formulaResult()==20,"Rejected shrink changed array state");
       editor->setPlainText("Create ChemicalTank FuelA FuelB;\nCreate ChemicalThruster Engine;\n"
          "GMAT Engine.Tank = {FuelA, FuelB};\nGMAT Engine.MixRatio = [2 3];\n"
          "Create ReportFile PickerReport;\nCreate Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");

@@ -229,7 +229,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       connect(button,&QPushButton::clicked,this,[this,rows,columns] {
          QDialog dialog(this); dialog.setObjectName("arrayExpressionDialog"); dialog.setWindowTitle("Array expressions");
          auto *layout=new QVBoxLayout(&dialog);
-         auto *help=new QLabel("Nonempty cells run at mission start, in row order, before existing commands. Blank cells keep their numeric initial values. Apply validates formulas without running them. Apply numeric edits separately.",&dialog);
+         auto *help=new QLabel("Nonempty cells run at mission start, in row order, before existing commands. Blank cells keep their numeric initial values. Apply validates formulas without running them. Numeric values and formulas are applied together.",&dialog);
          help->setWordWrap(true); layout->addWidget(help);
          auto *grid=new QTableWidget(rows,columns,&dialog); grid->setObjectName("arrayExpressionGrid");
          for (int r=0;r<rows;++r) for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem);
