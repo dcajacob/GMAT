@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "TestSettings.hpp"
 #include "CommandEditor.hpp"
+#include "CommandForm.hpp"
 #include "Moderator.hpp"
 #include <QApplication>
 #include <QAction>
@@ -14,6 +15,11 @@
 #include <QPushButton>
 #include <QTabWidget>
 #include <QTreeWidget>
+#include <QLineEdit>
+#include <QTableWidget>
+#include <QLabel>
+#include <QMdiSubWindow>
+#include <QTimer>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -43,6 +49,31 @@ int main(int argc,char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      {
+         QString result;
+         CommandForm form([&](const QString &text) { result=text; });
+         const QString vary="  Vary 'Change X' DC(x = 1, {Upper = 10, Perturbation = 0.001, Lower = -10}); % keep this\n";
+         form.setStatement(vary);
+         auto *upper=form.findChild<QLineEdit *>("commandField_Upper");
+         require(upper && !form.isHidden(),"Vary form missing");
+         upper->setText("25");
+         QString expected=vary; expected.replace("Upper = 10","Upper = 25");
+         require(result==expected,"Vary form changed unrelated source");
+         form.findChild<QLineEdit *>("commandField_Initial value")->setText("3.5");
+         expected.replace("x = 1","x = 3.5"); require(result==expected,"Multiple field edits lost a value");
+         const QString branch="Target 'Keep label' DC {ExitMode = SaveAndContinue, SolveMode = Solve};\n   Vary DC(x = 1);\nEndTarget;";
+         form.setStatement(branch);
+         auto *exitMode=form.findChild<QLineEdit *>("commandField_ExitMode");
+         require(exitMode,"Target branch form missing"); exitMode->setText("DiscardAndContinue");
+         expected=branch; expected.replace("SaveAndContinue","DiscardAndContinue");
+         require(result==expected,"Solver form changed nested command source");
+         for (const auto &statement:{"Maneuver 'Keep label' Burn(Sat);","BeginFiniteBurn Burn(Sat);",
+              "Achieve DC(x = 7, {Tolerance = 0.001});","Minimize Opt(cost);",
+              "NonlinearConstraint Opt(x <= 4);","Report R x y;","FindEvents Locator {Append = true};"}) {
+            form.setStatement(statement); require(!form.isHidden(),"Command-specific form missing");
+         }
+         form.setStatement("% Preserve advanced script\nUnknown foo;"); require(form.isHidden(),"Unknown command was simplified");
+      }
       MainWindow window; window.show(); require(window.initialize(startup),"Runtime failed");
       require(window.loadScript(script) && window.buildScript(),"Mission failed to build");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
@@ -124,6 +155,37 @@ int main(int argc,char **argv)
       if (!screenshot.isEmpty()) { QApplication::processEvents(); require(window.grab().save(screenshot),"Mission screenshot failed"); }
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
       require(total()==15,"Mission panel Apply did not update the loop");
+      editor->setPlainText("Create DifferentialCorrector DC;\nGMAT DC.MaximumIterations = 20;\n"
+         "Create Variable x;\nGMAT x = 1;\nBeginMissionSequence;\n"
+         "Target DC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};\n"
+         "Vary DC(x = 1, {Perturbation = 0.001, Lower = -20, Upper = 20, MaxStep = 10});\n"
+         "Achieve DC(x = 7, {Tolerance = 0.000001});\nEndTarget;\n");
+      require(window.buildScript(),"Targeting fixture did not build");
+      snapshot=window.missionSnapshot();
+      const int achieve=find(snapshot,"Achieve");
+      QString replacement;
+      CommandForm goalForm([&](const QString &text) { replacement=text; });
+      goalForm.setStatement(snapshot.nodes[achieve].statement);
+      auto *goal=goalForm.findChild<QLineEdit *>("commandField_Value");
+      require(goal,"Engine-generated Achieve command has no form"); goal->setText("8");
+      require(window.applyMissionChange(snapshot,achieve,MissionEdit::Replace,replacement).isEmpty(),"Achieve form edit rejected");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Targeting did not execute");
+      auto solved=[&] { return Moderator::Instance()->GetInternalObject("x")->GetRealParameter("Value"); };
+      require(std::abs(solved()-8)<1e-6,"Targeting did not achieve edited goal");
+      auto *progress=window.findChild<QTableWidget *>("solverProgress");
+      auto *solverStatus=window.findChild<QLabel *>("solverStatus");
+      require(progress && progress->rowCount()>=2 && solverStatus && solverStatus->property("converged").toBool(),
+         "Solver progress or convergence feedback missing");
+      bool goalSeen=false;
+      for (int row=0;row<progress->rowCount();++row) if (progress->item(row,0)->text()=="Goal =")
+         goalSeen=progress->item(row,3)->text().toDouble()==8 && std::abs(progress->item(row,4)->text().toDouble())<1e-6;
+      require(goalSeen,"Solver table did not show final goal/residual");
+      auto *progressWindow=qobject_cast<QMdiSubWindow *>(progress->parentWidget()->parentWidget());
+      require(progressWindow,"Solver progress is not an MDI window"); progressWindow->close();
+      QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+      require(window.runMission()==MainWindow::RunResult::Completed && std::abs(solved()-8)<1e-6,
+         "Closing solver progress broke repeated execution");
+      require(window.findChild<QTableWidget *>("solverProgress"),"Rerun did not recreate closed solver progress");
       std::cout<<"PASS: nested branches, duplicate-command identity, replace/insert/delete/append, invalid-edit rollback, stale panel, undo, Mission tree and Apply\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;

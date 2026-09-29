@@ -17,6 +17,8 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include "QtPlotReceiver.hpp"
+#include "QtSolverListener.hpp"
+#include "ListenerManagerInterface.hpp"
 #include "PlotInterface.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
@@ -68,6 +70,7 @@ MainWindow::MainWindow()
    workspace->setBackground(palette().mid());
    setCentralWidget(workspace);
    plots = std::make_unique<QtPlotReceiver>(workspace);
+   solverListeners=std::make_unique<QtSolverListenerManager>(workspace);
    auto *navigation = new QDockWidget("Mission workspace", this);
    navigation->setObjectName("navigation");
    auto *tabs = new QTabWidget(navigation);
@@ -316,6 +319,7 @@ MainWindow::~MainWindow()
    plots->changed = {};
    Moderator::SetUiInterpreter(nullptr);
    if (ready) Moderator::Instance()->Finalize();
+   ListenerManagerInterface::SetListenerManager(nullptr);
    PlotInterface::SetPlotReceiver(nullptr);
    MessageInterface::SetMessageReceiver(nullptr);
 }
@@ -333,6 +337,7 @@ bool MainWindow::initialize(const QString &startup)
    });
    MessageInterface::SetMessageReceiver(receiver.get());
    PlotInterface::SetPlotReceiver(plots.get());
+   ListenerManagerInterface::SetListenerManager(solverListeners.get());
    try {
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
       if (ready) {
@@ -561,6 +566,7 @@ MainWindow::RunResult MainWindow::runMission()
    }
    paused = false;
    setRunning(false);
+   solverListeners->missionFinished(result==RunResult::Stopped,result==RunResult::Failed);
    statusBar()->showMessage(result == RunResult::Completed ? "Mission completed" :
       result == RunResult::Stopped ? "Mission stopped" : "Mission failed — see Message Window");
    return result;
@@ -775,15 +781,34 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    const auto burns=Moderator::Instance()->GetListOfObjects(Gmat::IMPULSIVE_BURN);
    auto first=[](const StringArray &names,const char *fallback) { return QString::fromStdString(names.empty() ? fallback : names.front()); };
    const auto sat=first(spacecraft,"SpacecraftName"),prop=first(propagators,"PropagatorName"),burn=first(burns,"BurnName");
+   auto firstType=[&](UnsignedInt category,const char *type,const char *fallback) {
+      for (const auto &name:Moderator::Instance()->GetListOfObjects(category)) {
+         auto *object=Moderator::Instance()->GetConfiguredObject(name);
+         if (object && object->IsOfType(type)) return QString::fromStdString(name);
+      }
+      return QString::fromLatin1(fallback);
+   };
+   const auto solver=firstType(Gmat::SOLVER,"DifferentialCorrector","SolverName");
+   const auto optimizer=firstType(Gmat::SOLVER,"Optimizer","OptimizerName");
+   const auto finite=firstType(Gmat::BURN,"FiniteBurn","FiniteBurnName");
+   const auto report=firstType(Gmat::SUBSCRIBER,"ReportFile","ReportName");
    const QMap<QString,QString> templates={
       {"Propagate",QString("Propagate %1(%2) {%2.ElapsedSecs = 600};").arg(prop,sat)},
       {"Maneuver",QString("Maneuver %1(%2);").arg(burn,sat)},
-      {"Report",QString("Report ReportName %1.ElapsedSecs %1.X %1.Y %1.Z;").arg(sat)},
+      {"BeginFiniteBurn",QString("BeginFiniteBurn %1(%2);").arg(finite,sat)},
+      {"EndFiniteBurn",QString("EndFiniteBurn %1(%2);").arg(finite,sat)},
+      {"Report",QString("Report %1 %2.ElapsedSecs %2.X %2.Y %2.Z;").arg(report,sat)},
       {"Assignment","VariableName = 1;"},
       {"If","If VariableName > 0;\n   % Insert commands here.\nElse;\n   % Insert alternate commands here.\nEndIf;"},
       {"While","While VariableName < 10;\n   VariableName = VariableName + 1;\nEndWhile;"},
       {"For","For VariableName = 1:1:10;\n   % Insert commands here.\nEndFor;"},
-      {"Target","Target SolverName;\n   % Add Vary, mission commands, and Achieve here.\nEndTarget;"},
+      {"Target",QString("Target %1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};\n   % Add Vary, mission commands, and Achieve here.\nEndTarget;").arg(solver)},
+      {"Vary",QString("Vary %1(%2.Element1 = 0.1, {Perturbation = 0.0001, Lower = -10, Upper = 10, MaxStep = 0.2});").arg(solver,burn)},
+      {"Achieve",QString("Achieve %1(%2.Earth.RMAG = 8000, {Tolerance = 0.1});").arg(solver,sat)},
+      {"Optimize",QString("Optimize %1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};\n   % Add Vary, mission commands, constraints and Minimize here.\nEndOptimize;").arg(optimizer)},
+      {"Minimize",QString("Minimize %1(ObjectiveVariable);").arg(optimizer)},
+      {"NonlinearConstraint",QString("NonlinearConstraint %1(ConstraintVariable <= 1);").arg(optimizer)},
+      {"FindEvents",QString("FindEvents %1 {Append = false};").arg(firstType(Gmat::EVENT_LOCATOR,"EventLocator","LocatorName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    QStringList propagationChoices,spacecraftChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));

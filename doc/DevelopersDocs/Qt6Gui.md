@@ -121,6 +121,22 @@ and nested runs. Closing an active mission requests Stop and retains the
 window until execution has unwound. `Moderator::SetUiInterpreter(nullptr)`
 now safely detaches the Qt adapter during shutdown.
 
+Command panels provide fields for Maneuver, finite burns, Vary, Achieve,
+Minimize, NonlinearConstraint, Report, FindEvents and Target/Optimize headers.
+These edit only matched source spans: command labels, comments, option order,
+unrecognized options and nested branch bodies are preserved. Unsupported
+syntax remains available in the command source editor. Apply still validates
+the complete mission; the form itself does not replace engine validation.
+Templates include solver branches, variables/goals, optimization constraints
+and finite-burn pairs, using available configured resources where possible.
+
+With `ShowProgressWindow = true`, solver branches create Qt MDI tables showing
+variables, objectives, goals, desired values and residuals through GMAT's
+listener interface. Convergence and failure are explicit. Closed windows do
+not invalidate engine listener pointers; subsequent runs recreate them.
+Mission stop/failure ends an otherwise unfinished progress indication.
+This is current-value feedback, not yet iteration-history plotting.
+
 Double-clicking a resource opens an editable property panel. Scalar numbers,
 booleans, strings, enumerations and references are supported. Applying edits
 changes a clone, validates it, serializes it into the complete mission, and

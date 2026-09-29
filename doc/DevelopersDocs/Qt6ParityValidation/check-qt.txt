@@ -1,0 +1,36 @@
+[1/10] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/10] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[3/10] Linking CXX executable src/qtgui/GmatQtMissionTests
+[4/10] Building CXX object src/qtgui/CMakeFiles/GmatQtFileTests.dir/tests/FileTests.cpp.o
+[5/10] Linking CXX executable src/qtgui/GmatQtFileTests
+[6/10] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[7/10] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotTests.dir/tests/PlotTests.cpp.o
+[8/10] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[9/10] Linking CXX executable src/qtgui/GmatQtPlotTests
+[9/10] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 1: QtGui.NativeOrbit
+1/9 Test #1: QtGui.NativeOrbit ................   Passed    0.91 sec
+    Start 2: QtGui.NativeOrbitHiDPI
+2/9 Test #2: QtGui.NativeOrbitHiDPI ...........   Passed    1.41 sec
+    Start 3: QtGui.NativePlots
+3/9 Test #3: QtGui.NativePlots ................   Passed    3.38 sec
+    Start 4: QtGui.Files
+4/9 Test #4: QtGui.Files ......................   Passed    0.19 sec
+    Start 5: QtGui.Workflow
+5/9 Test #5: QtGui.Workflow ...................   Passed    1.22 sec
+    Start 6: QtGui.Mission
+6/9 Test #6: QtGui.Mission ....................   Passed    0.96 sec
+    Start 7: QtGui.Plots
+7/9 Test #7: QtGui.Plots ......................   Passed    2.29 sec
+    Start 8: QtGui.PlotsHiDPI
+8/9 Test #8: QtGui.PlotsHiDPI .................   Passed    2.37 sec
+    Start 9: QtGui.Launch
+9/9 Test #9: QtGui.Launch .....................   Passed    1.24 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Label Time Summary:
+qt-gui    =  13.97 sec*proc (9 tests)
+
+Total Test time (real) =  13.97 sec

@@ -5,6 +5,8 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
    PropagationForm.cpp PropagationForm.hpp
+   CommandForm.cpp CommandForm.hpp
+   QtSolverListener.cpp QtSolverListener.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    OrbitRenderer.cpp OrbitRenderer.hpp

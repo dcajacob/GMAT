@@ -12,6 +12,7 @@ class QCloseEvent;
 class QtMessageReceiver;
 class QtInterpreter;
 class QtPlotReceiver;
+class QtSolverListenerManager;
 class QAction;
 class MainWindow : public QMainWindow
 {
@@ -60,6 +61,7 @@ private:
    std::unique_ptr<QtMessageReceiver> receiver;
    std::unique_ptr<QtInterpreter> interpreter;
    std::unique_ptr<QtPlotReceiver> plots;
+   std::unique_ptr<QtSolverListenerManager> solverListeners;
    QList<QAction *> editingActions;
    QAction *runAction = nullptr;
    QAction *pauseAction = nullptr;

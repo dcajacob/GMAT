@@ -1,5 +1,6 @@
 #include "CommandEditor.hpp"
 #include "PropagationForm.hpp"
+#include "CommandForm.hpp"
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QFontDatabase>
@@ -25,6 +26,13 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    layout->addWidget(propagation);
    connect(source,&QPlainTextEdit::textChanged,propagation,[this,propagation] { propagation->setStatement(source->toPlainText()); });
    propagation->setStatement(statement);
+   auto *command=new CommandForm([this](const QString &text) {
+      auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
+      cursor.insertText(text); cursor.endEditBlock();
+   },this);
+   layout->addWidget(command);
+   connect(source,&QPlainTextEdit::textChanged,command,[this,command] { command->setStatement(source->toPlainText()); });
+   command->setStatement(statement);
    source->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
    source->setLineWrapMode(QPlainTextEdit::NoWrap); layout->addWidget(source,1);
    auto *status=new QLabel("Apply validates the complete mission and updates the script. Branches include their enclosed commands.",this);
