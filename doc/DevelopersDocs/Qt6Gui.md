@@ -922,3 +922,12 @@ planes, wireframe bodies and the origin–Sun line. Changes update the current v
 without rerunning the mission or clearing replay history. Close retains the live
 settings. These controls do not save script properties; use the plot resource
 editor for persistent settings. Reopening the panel reflects the current view.
+
+### Thruster tanks and mixtures
+
+**Tanks and mixtures…** edits the ordered tank list and its ratios together. Add
+selects a configured tank and starts its ratio at 1; Remove drops the selected row.
+Up/Down move the tank and ratio as a pair. Ratios must be finite and positive but
+do not need to sum to one. Columns are adjustable. Cancel leaves pending values
+unchanged; OK returns both fields to the resource panel, and Apply updates the
+mission. The separate property controls remain available.

@@ -417,10 +417,10 @@ int main(int argc,char **argv)
       }
       {
          const auto path=output.filePath("finite-burn-mass.txt");
-         editor->setPlainText("Create ChemicalTank BurnTank;\nBurnTank.FuelMass = 150;\n"
+         editor->setPlainText("Create ChemicalTank BurnTank BurnTank2;\nBurnTank.FuelMass = 150;\nBurnTank2.FuelMass = 150;\n"
             "Create ChemicalThruster BurnEngine;\nBurnEngine.Tank = {BurnTank};\nBurnEngine.DecrementMass = true;\n"
             "BurnEngine.C1 = 90;\nBurnEngine.K1 = 290;\nBurnEngine.CoordinateSystem = EarthMJ2000Eq;\n"
-            "Create Spacecraft BurnSat OtherSat;\nBurnSat.Tanks = {BurnTank};\nBurnSat.Thrusters = {BurnEngine};\n"
+            "Create Spacecraft BurnSat OtherSat;\nBurnSat.Tanks = {BurnTank, BurnTank2};\nBurnSat.Thrusters = {BurnEngine};\n"
             "Create FiniteBurn Continuous;\nContinuous.Thrusters = {BurnEngine};\n"
             "Create ForceModel BurnForces;\nBurnForces.PrimaryBodies = {};\nBurnForces.PointMasses = {Earth};\n"
             "Create Propagator BurnProp;\nBurnProp.FM = BurnForces;\n"
@@ -429,8 +429,8 @@ int main(int argc,char **argv)
             "BeginMissionSequence;\nBeginFiniteBurn 'Start engine' Continuous(OtherSat); % retain start\n"
             "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\n"
             "EndFiniteBurn 'Stop engine' Continuous(OtherSat); % retain end\n"
-            "Report BurnReport BurnSat.BurnTank.FuelMass;\n"
-            "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\nReport BurnReport BurnSat.BurnTank.FuelMass;\n");
+            "Report BurnReport BurnSat.BurnTank.FuelMass BurnSat.BurnTank2.FuelMass;\n"
+            "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\nReport BurnReport BurnSat.BurnTank.FuelMass BurnSat.BurnTank2.FuelMass;\n");
          require(window.buildScript(),"Finite-burn selector fixture failed");
          {
             QWidget owner; QString applyError="Not applied";
@@ -470,6 +470,21 @@ int main(int argc,char **argv)
             require(applyError.isEmpty(),qPrintable(applyError));
          }
 
+         {
+            QWidget owner; QString error="Not applied"; const auto before=editor->toPlainText();
+            ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("BurnEngine"),
+               [&](const auto &changes) { error=window.applyResourceChanges("BurnEngine",changes,before); return error; },&owner);
+            QTimer::singleShot(0,[&] {
+               auto *dialog=panel.findChild<QDialog *>("tankMixtureDialog"); require(dialog,"Burn mixture dialog missing");
+               dialog->findChild<QComboBox *>("tankMixtureAvailable")->setCurrentText("BurnTank2");
+               dialog->findChild<QPushButton *>("tankMixtureAdd")->click();
+               auto *grid=dialog->findChild<QTableWidget *>("tankMixtureTable");
+               require(grid->rowCount()==2,"Second burn tank not added");
+               grid->item(0,1)->setText("3"); grid->item(1,1)->setText("2");
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+            }); panel.findChild<QPushButton *>("thrusterTankMixtures")->click();
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(error.isEmpty(),qPrintable(error));
+         }
          for (const auto *command:{"BeginFiniteBurn","EndFiniteBurn"}) {
             const auto snapshot=window.missionSnapshot(); int index=-1;
             for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type==command) index=i;
@@ -490,9 +505,12 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed,"Selected finite-burn mission failed");
          const auto mass=read(path).trimmed().split('\n');
          const double gravity=Moderator::Instance()->GetConfiguredObject("BurnEngine")->GetRealParameter("GravitationalAccel");
-         const double expected=150.-100.*10./(300.*gravity);
-         require(mass.size()==2 && std::abs(mass[0].toDouble()-expected)<1e-7 &&
-            std::abs(mass[1].toDouble()-mass[0].toDouble())<1e-10,"Finite-burn fuel use or EndFiniteBurn shutdown differs from constant-thrust mass flow");
+         const double used=100.*10./(300.*gravity);
+         require(mass.size()==2,"Finite burn report row count differs");
+         const auto firing=mass[0].trimmed().split(QRegularExpression("\\s+")),coasting=mass[1].trimmed().split(QRegularExpression("\\s+"));
+         require(firing.size()==2 && coasting.size()==2 && std::abs(firing[0].toDouble()-(150.-used*.6))<1e-7 &&
+            std::abs(firing[1].toDouble()-(150.-used*.4))<1e-7 && std::abs(firing[0].toDouble()-coasting[0].toDouble())<1e-10 &&
+            std::abs(firing[1].toDouble()-coasting[1].toDouble())<1e-10,"GUI mixture ratios or EndFiniteBurn shutdown produced incorrect tank fuel use");
       }
       {
          const auto first=output.filePath("toggle-first.txt"),second=output.filePath("toggle-second.txt");

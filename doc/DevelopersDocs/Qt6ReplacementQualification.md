@@ -37,7 +37,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | Pending audit |
-| `src/gui/hardware/TankAndMixDialog.hpp` | Paired tank/ratio Apply semantics audited and fixed; combined selector UI still pending. |
+| `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
@@ -1058,3 +1058,24 @@ execution remain pending, so the wx dialog row is not marked complete.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 34.30 seconds. Evidence:
 `Qt6ParityValidation/check-paired-mixtures.txt`.
+
+## Combined tank and mixture editor
+
+Qt now offers Tanks and mixtures with named, read-only tank rows, editable positive
+ratios, available-tank selection, Add/Remove and Up/Down controls. Moving a row
+moves its ratio with it; duplicate additions are disabled and columns remain
+resizable. Cancel is local and OK defers engine changes until Apply. Explicit
+paired edits submit both fields even if the numeric vector happens to equal the
+original vector while tank order has changed.
+
+WorkflowTests covers Cancel, candidate filtering, duplicate prevention, remove/
+re-add, default ratio, paired movement, zero rejection, pending engine state,
+column resizing and the unchanged-vector/reordered-tanks save/reopen case.
+CompatibilityTests adds a second tank through this dialog and sets ratios 3:2.
+After save/Save As, failed-build recovery and reopen, the finite-burn fixture must
+consume fuel in the corresponding 60/40 split, with both masses unchanged after
+EndFiniteBurn during coasting. This qualifies the chemical two-tank GUI path;
+broader electric operating modes remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 41.78 seconds. Evidence:
+`Qt6ParityValidation/check-tank-mixture-dialog.txt`.

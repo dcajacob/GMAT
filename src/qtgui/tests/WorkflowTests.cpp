@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "FindReplaceDialog.hpp"
 #include <QCheckBox>
+#include <QHeaderView>
 #include <QLabel>
 #include "QtPlotReceiver.hpp"
 #include "OrbitCamera.hpp"
@@ -681,6 +682,42 @@ int main(int argc, char **argv)
       engine=Moderator::Instance()->GetConfiguredObject("Engine");
       require(engine->GetStringArrayParameter("Tank").front()=="FuelB" && engine->GetRvectorParameter("MixRatio").GetSize()==2 &&
          engine->GetRvectorParameter("MixRatio")[0]==17 && engine->GetRvectorParameter("MixRatio")[1]==19,"Combined mixture did not survive round trip");
+      {
+         QWidget owner; QString error="Not applied"; const auto before=editor->toPlainText();
+         ResourceEditor panel(*engine,[&](const auto &changes) { error=window.applyResourceChanges("Engine",changes,before); return error; },&owner);
+         auto *button=panel.findChild<QPushButton *>("thrusterTankMixtures"); require(button,"Combined mixture editor missing");
+         QTimer::singleShot(0,[&] {
+            auto *dialog=panel.findChild<QDialog *>("tankMixtureDialog"); require(dialog,"Combined mixture dialog absent");
+            dialog->findChild<QPushButton *>("tankMixtureRemove")->click(); dialog->reject();
+         }); button->click(); require(!panel.hasChanges(),"Mixture Cancel changed pending values");
+         QTimer::singleShot(0,[&] {
+            auto *dialog=panel.findChild<QDialog *>("tankMixtureDialog");
+            auto *grid=dialog->findChild<QTableWidget *>("tankMixtureTable");
+            auto *available=dialog->findChild<QComboBox *>("tankMixtureAvailable");
+            require(grid->rowCount()==2 && grid->item(0,0)->text()=="FuelB" && available->count()==2,"Mixture editor tank inventory incorrect");
+            require(grid->horizontalHeader()->sectionResizeMode(1)==QHeaderView::Interactive,"Mixture widths locked");
+            grid->setColumnWidth(1,240); require(grid->columnWidth(1)==240,"Mixture column cannot be resized");
+            available->setCurrentText("FuelA"); require(!dialog->findChild<QPushButton *>("tankMixtureAdd")->isEnabled(),"Duplicate tank can be added");
+            grid->selectRow(1); dialog->findChild<QPushButton *>("tankMixtureRemove")->click();
+            require(dialog->findChild<QPushButton *>("tankMixtureAdd")->isEnabled(),"Removed tank cannot be readded");
+            dialog->findChild<QPushButton *>("tankMixtureAdd")->click();
+            require(grid->rowCount()==2 && grid->item(1,1)->text()=="1","New tank did not receive default ratio");
+            grid->item(1,1)->setText("19"); dialog->findChild<QPushButton *>("tankMixtureUp")->click();
+            require(grid->item(0,0)->text()=="FuelA" && grid->item(0,1)->text()=="19","Reordering detached ratio from tank");
+            auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+            grid->item(0,1)->setText("0"); ok->click();
+            require(dialog->isVisible() && !dialog->findChild<QLabel *>("tankMixtureError")->text().isEmpty(),"Invalid mixture accepted");
+            // Same numeric vector as before, but explicitly assigned to new order.
+            grid->item(0,1)->setText("17"); grid->item(1,1)->setText("19"); ok->click();
+         }); button->click();
+         require(panel.hasChanges() && Moderator::Instance()->GetConfiguredObject("Engine")->GetStringArrayParameter("Tank").front()=="FuelB", "Combined editor changed engine before Apply");
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         require(error.isEmpty(),qPrintable(error));
+      }
+      require(window.saveScriptTo(mixturePath) && window.loadScript(mixturePath) && window.buildScript(),"Mixture dialog round trip failed");
+      engine=Moderator::Instance()->GetConfiguredObject("Engine");
+      require(engine->GetStringArrayParameter("Tank").front()=="FuelA" && engine->GetRvectorParameter("MixRatio")[0]==17 &&
+         engine->GetRvectorParameter("MixRatio")[1]==19,"Mixture dialog lost explicit ratios unchanged from original vector");
       editor->setPlainText("Create Variable count;\nBeginMissionSequence;\nWhile count < 1e12;\ncount = count + 1;\nEndWhile;\n");
       bool paused = false, resumed = false, protectedEdits = false;
       double countAtPause = 0;

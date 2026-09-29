@@ -20,4 +20,5 @@ private:
    QMap<QString, QString> original;
    QString originalExpressions="[]",expressions="[]";
    bool applied = false;
+   bool pairedTankEdits = false;
 };

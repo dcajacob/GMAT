@@ -14,6 +14,7 @@
 #include <QJsonObject>
 #include "TableColumns.hpp"
 #include <QTimer>
+#include <QSignalBlocker>
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include <QComboBox>
@@ -152,6 +153,71 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (dialog.exec()!=QDialog::Accepted) return;
          for (int family=0;family<2;++family) for (int row=0;row<grids[family]->rowCount();++row)
             if (targets[family][row]) targets[family][row]->setText(grids[family]->item(row,1)->text().trimmed());
+      });
+   }
+   if (thruster) {
+      QStringList available;
+      for (const auto &field:resourceProperties(object)) if (field.name=="Tank") available=field.references;
+      auto *button=new QPushButton("Tanks and mixtures…",this); button->setObjectName("thrusterTankMixtures"); layout->addWidget(button);
+      connect(button,&QPushButton::clicked,this,[this,available] {
+         QTableWidgetItem *tanks=nullptr,*ratios=nullptr;
+         for (int row=0;row<table->rowCount();++row) {
+            if (table->item(row,0)->text()=="Tank") tanks=table->item(row,1);
+            if (table->item(row,0)->text()=="MixRatio") ratios=table->item(row,1);
+         }
+         if (!tanks || !ratios) return;
+         QDialog dialog(this); dialog.setObjectName("tankMixtureDialog"); dialog.setWindowTitle("Tanks and mixture ratios");
+         auto *layout=new QVBoxLayout(&dialog);
+         auto *help=new QLabel("Each ratio belongs to the tank on the same row. Ratios must be positive; they need not sum to one. OK keeps changes pending until Apply.",&dialog);
+         help->setWordWrap(true); layout->addWidget(help);
+         auto *grid=new QTableWidget(0,2,&dialog); grid->setObjectName("tankMixtureTable"); grid->setHorizontalHeaderLabels({"Tank","Mixture ratio"});
+         grid->setSelectionBehavior(QAbstractItemView::SelectRows); grid->setSelectionMode(QAbstractItemView::SingleSelection);
+         grid->verticalHeader()->hide(); configureTableColumns(grid,{24,20}); layout->addWidget(grid);
+         auto append=[&](const QString &name,const QString &ratio) {
+            const int row=grid->rowCount(); grid->insertRow(row); auto *item=new QTableWidgetItem(name);
+            item->setFlags(item->flags() & ~Qt::ItemIsEditable); grid->setItem(row,0,item); grid->setItem(row,1,new QTableWidgetItem(ratio)); grid->selectRow(row);
+         };
+         const auto selected=splitResourceReferences(tanks->text());
+         const auto values=ratios->text().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         for (int i=0;i<selected.size();++i) append(selected[i],i<values.size() ? values[i] : "1");
+         fitTableColumns(grid);
+         auto *controls=new QHBoxLayout; layout->addLayout(controls);
+         auto *choices=new QComboBox(&dialog); choices->setObjectName("tankMixtureAvailable"); choices->addItems(available); controls->addWidget(choices,1);
+         auto addButton=[&](const QString &text,const QString &name) { auto *control=new QPushButton(text,&dialog); control->setObjectName(name); controls->addWidget(control); return control; };
+         auto *add=addButton("Add","tankMixtureAdd"),*remove=addButton("Remove","tankMixtureRemove");
+         auto *up=addButton("Up","tankMixtureUp"),*down=addButton("Down","tankMixtureDown");
+         auto refresh=[&] {
+            bool exists=false;
+            for (int row=0;row<grid->rowCount();++row) exists=exists || grid->item(row,0)->text()==choices->currentText();
+            add->setEnabled(choices->count()>0 && !exists); remove->setEnabled(grid->currentRow()>=0);
+            up->setEnabled(grid->currentRow()>0); down->setEnabled(grid->currentRow()>=0 && grid->currentRow()+1<grid->rowCount());
+         };
+         connect(add,&QPushButton::clicked,&dialog,[&] { append(choices->currentText(),"1"); refresh(); });
+         connect(remove,&QPushButton::clicked,&dialog,[&] { grid->removeRow(grid->currentRow()); refresh(); });
+         auto move=[&](int delta) {
+            const int row=grid->currentRow(),target=row+delta;
+            if (row<0 || target<0 || target>=grid->rowCount()) return;
+            const QSignalBlocker block(grid);
+            for (int col=0;col<2;++col) { auto *first=grid->takeItem(row,col),*second=grid->takeItem(target,col); grid->setItem(row,col,second); grid->setItem(target,col,first); }
+            grid->selectRow(target); refresh();
+         };
+         connect(up,&QPushButton::clicked,&dialog,[&] { move(-1); }); connect(down,&QPushButton::clicked,&dialog,[&] { move(1); });
+         connect(choices,&QComboBox::currentTextChanged,&dialog,[&] { refresh(); });
+         connect(grid,&QTableWidget::itemSelectionChanged,&dialog,[&] { refresh(); }); refresh();
+         auto *error=new QLabel(&dialog); error->setObjectName("tankMixtureError"); error->setWordWrap(true); layout->addWidget(error);
+         auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+         connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+         connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
+            for (int row=0;row<grid->rowCount();++row) {
+               bool valid=false; const double value=grid->item(row,1)->text().toDouble(&valid);
+               if (!valid || !std::isfinite(value) || value<=0) { error->setText("Enter a finite ratio greater than zero for "+grid->item(row,0)->text()+"."); grid->setCurrentCell(row,1); return; }
+            }
+            dialog.accept();
+         });
+         dialog.resize(620,420); if (dialog.exec()!=QDialog::Accepted) return;
+         QStringList names,mixes;
+         for (int row=0;row<grid->rowCount();++row) { names.append(grid->item(row,0)->text()); mixes.append(grid->item(row,1)->text().trimmed()); }
+         tanks->setText(names.join(", ")); ratios->setText(mixes.join(" ")); ratios->setData(Qt::UserRole+1,mixes.size()); pairedTankEdits=true;
       });
    }
    if (object.IsOfType("Array")) {
@@ -472,6 +538,12 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
          const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
+      }
+      if (pairedTankEdits && (changes.contains("Tank") || changes.contains("MixRatio"))) {
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text();
+            if (name=="Tank" || name=="MixRatio") changes.insert(name,table->item(row,1)->text());
+         }
       }
       if (changes.isEmpty() && !applyUnchanged) { status->setText("No changes to apply."); return; }
       const QString error = apply(changes);
