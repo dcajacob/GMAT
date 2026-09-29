@@ -466,7 +466,32 @@ int main(int argc,char **argv)
          auto append=[&](int frame) { history->frame=frame; history->append(0,frame,0); };
          for (int frame=1;frame<=3;++frame) append(frame);
          PlotWidget replayPlot(history); replayPlot.resize(600,400); replayPlot.show(); app.processEvents();
-         auto *slider=replayPlot.findChild<QSlider *>(); slider->setValue(0);
+         auto *slider=replayPlot.findChild<QSlider *>();
+         auto *play=replayPlot.findChild<QAction *>("plotReplayPlay"); auto *timer=replayPlot.findChild<QTimer *>("plotReplayTimer");
+         auto *speed=replayPlot.findChild<QComboBox *>("plotReplaySpeed");
+         require(play && timer && speed && replayPlot.findChild<QWidget *>("plotPlaybackControls"),"Separate playback controls missing");
+         replayPlot.resize(330,400); app.processEvents();
+         require(replayPlot.width()==330,"Playback controls forced a tiled plot wider than requested");
+         require(slider->isVisible() && slider->width()>=100 && speed->isVisible(),"Narrow plot hid playback timeline or speed");
+         require(replayPlot.rect().contains(slider->mapTo(&replayPlot,slider->rect().bottomRight())) &&
+                 replayPlot.rect().contains(speed->mapTo(&replayPlot,speed->rect().bottomRight())),"Playback controls extend outside narrow plot");
+         slider->setValue(400); play->trigger();
+         require(slider->value()==400 && timer->isActive() && play->text()=="Pause","Playback resumed from start instead of selected position");
+         play->trigger(); require(slider->value()==400 && !timer->isActive(),"Pause lost playback position");
+         speed->setCurrentIndex(4); play->trigger(); QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection);
+         require(slider->value()==440,"Playback speed control did not change replay advance");
+         slider->sliderPressed(); require(!timer->isActive() && !play->isChecked(),"Scrubbing did not pause replay");
+         replayPlot.findChild<QAction *>("plotReplayStart")->trigger(); require(slider->value()==0,"Start did not rewind replay");
+         replayPlot.findChild<QAction *>("plotReplayLatest")->trigger(); require(slider->value()==1000 && !timer->isActive(),"Latest did not restore live end of history");
+         play->trigger(); require(slider->value()==0,"Play at end did not restart history");
+         slider->setValue(990); QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection);
+         require(slider->value()==1000 && !play->isChecked() && !timer->isActive(),"Replay failed to stop at history end");
+         speed->setCurrentIndex(0); slider->setValue(400); play->trigger();
+         QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection);
+         QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection);
+         require(slider->value()==405,"Quarter-speed replay lost fractional advances");
+         play->trigger();
+         slider->setValue(0);
          for (int frame=4;frame<=6;++frame) append(frame);
          replayPlot.refresh();
          auto redPixels=[](const QImage &image) {

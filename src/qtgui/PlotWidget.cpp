@@ -28,6 +28,8 @@
 #include <QStyle>
 #include <QTimer>
 #include <QToolBar>
+#include <QToolButton>
+#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QWheelEvent>
 #include <algorithm>
@@ -354,15 +356,51 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       if (!file.open(QIODevice::WriteOnly) || !drawing->captureImage().save(&file,"PNG") || !file.commit())
          QMessageBox::warning(this,"Could not save plot",file.errorString());
    });
-   timeline = new QSlider(Qt::Horizontal,this); timeline->setRange(0,1000); timeline->setValue(1000);
+   timeline = new QSlider(Qt::Horizontal,this); timeline->setObjectName("plotTimeline"); timeline->setRange(0,1000); timeline->setValue(1000);
    timeline->hide();
-   timer = new QTimer(this); timer->setInterval(30);
+   timer = new QTimer(this); timer->setObjectName("plotReplayTimer"); timer->setInterval(30);
    if (data->kind != PlotModel::Kind::XY) {
-      replay=bar->addAction("Replay"); replay->setCheckable(true);
-      connect(replay,&QAction::toggled,this,[this](bool checked) { if (checked) { timeline->setValue(0); timer->start(); } else timer->stop(); });
-      connect(timer,&QTimer::timeout,this,[this] { timeline->setValue(std::min(1000,timeline->value()+10)); if (timeline->value()==1000) replay->setChecked(false); });
-      bar->addWidget(timeline);
-      timeline->show();
+      auto *transport=new QWidget(this); transport->setObjectName("plotPlaybackControls");
+      auto *transportLayout=new QVBoxLayout(transport); transportLayout->setContentsMargins(4,0,4,2); transportLayout->setSpacing(2);
+      auto *buttons=new QHBoxLayout; buttons->setSpacing(2); transportLayout->addLayout(buttons);
+      auto *position=new QHBoxLayout; position->setSpacing(6); transportLayout->addLayout(position);
+      layout->addWidget(transport);
+      auto addPlaybackAction=[&](QStyle::StandardPixmap icon,const QString &text) {
+         auto *action=new QAction(style()->standardIcon(icon),text,transport);
+         auto *button=new QToolButton(transport); button->setDefaultAction(action);
+         button->setToolButtonStyle(Qt::ToolButtonTextBesideIcon); buttons->addWidget(button);
+         return action;
+      };
+      auto *start=addPlaybackAction(QStyle::SP_MediaSkipBackward,"Start"); start->setObjectName("plotReplayStart");
+      start->setToolTip("Pause and return to the start of retained history");
+      replay=addPlaybackAction(QStyle::SP_MediaPlay,"Play"); replay->setObjectName("plotReplayPlay"); replay->setCheckable(true);
+      replay->setToolTip("Play or pause recorded history; resumes from the current position");
+      auto *latest=addPlaybackAction(QStyle::SP_MediaSkipForward,"Latest"); latest->setObjectName("plotReplayLatest");
+      latest->setToolTip("Stop playback and follow the latest available data");
+      connect(start,&QAction::triggered,this,[this] { replay->setChecked(false); timeline->setValue(0); });
+      connect(latest,&QAction::triggered,this,[this] { replay->setChecked(false); timeline->setValue(1000); });
+      connect(replay,&QAction::toggled,this,[this](bool checked) {
+         replay->setText(checked ? "Pause" : "Play");
+         replay->setIcon(style()->standardIcon(checked ? QStyle::SP_MediaPause : QStyle::SP_MediaPlay));
+         if (checked) { if (timeline->value()==1000) timeline->setValue(0); timer->start(); } else timer->stop();
+      });
+      timeline->setToolTip("Position within retained mission history"); timeline->setAccessibleName("Playback position");
+      timeline->setMinimumWidth(100); timeline->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
+      position->addWidget(timeline,1); timeline->show();
+      replayPosition=new QLabel("Latest",transport); replayPosition->setObjectName("plotReplayPosition");
+      replayPosition->setMinimumWidth(replayPosition->fontMetrics().horizontalAdvance("Latest")+8); position->addWidget(replayPosition);
+      auto *speed=new QComboBox(transport); speed->setObjectName("plotReplaySpeed"); speed->setAccessibleName("Playback speed");
+      speed->setToolTip("Playback speed relative to a three-second sweep of recorded history");
+      for (double rate:{0.25,0.5,1.,2.,4.}) speed->addItem(QString::number(rate)+QString::fromUtf8("×"),rate);
+      speed->setCurrentIndex(2); buttons->addStretch(); buttons->addWidget(speed);
+      connect(timer,&QTimer::timeout,this,[this,speed,remainder=0.]() mutable {
+         const double advance=10*speed->currentData().toDouble()+remainder;
+         const int steps=static_cast<int>(advance); remainder=advance-steps;
+         timeline->setValue(std::min(1000,timeline->value()+steps));
+         if (timeline->value()==1000) replay->setChecked(false);
+      });
+      connect(timeline,&QSlider::sliderPressed,this,[this] { replay->setChecked(false); });
+
    }
    connect(timeline,&QSlider::valueChanged,this,[this] { updateReplayFrame(); });
    layout->addWidget(drawing,1);
@@ -372,6 +410,7 @@ void PlotWidget::updateReplayFrame()
    quint64 first=data->frame;
    for (const auto &curve:data->curves) if (!curve.points.empty()) first=std::min(first,curve.points.front().frame);
    const int value=timeline->value();
+   if (replayPosition) replayPosition->setText(value==1000 ? "Latest" : QString::number(value/10.)+"%");
    drawing->setFrame(value==1000 ? std::numeric_limits<quint64>::max() : first+static_cast<quint64>((data->frame-first)*(value/1000.0)));
 }
 void PlotWidget::refresh()

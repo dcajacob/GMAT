@@ -731,3 +731,22 @@ full command parity.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 27.96 seconds. Evidence:
 `Qt6ParityValidation/check-object-pickers.txt`.
+
+## Plot playback controls and narrow-window layout
+
+OrbitView and GroundTrack now expose Start, Play/Pause, Latest, a position label,
+and 0.25x–4x replay speed. Resuming keeps the paused position; playing at the end
+restarts retained history. Scrubbing pauses playback and Latest restores following
+incoming data. The timeline has its own full-width row rather than disappearing
+into toolbar overflow when plots are tiled. Replay speed is relative to a nominal
+three-second sweep of retained history, not simulation-clock playback.
+
+PlotTests verifies pause/resume, rewind/latest, end-of-history stopping, scrubbing,
+4x and fractional 0.25x advancement, retained-history eviction/reset, and visible,
+in-bounds timeline/speed controls in a 330-pixel-wide plot. These checks run in
+native X11 and offscreen/HiDPI configurations. This does not qualify remaining
+OpenFrames trajectory/segment cameras or actual Intel/Wayland stability.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 50.01 seconds. Evidence:
+`Qt6ParityValidation/check-playback-controls.txt`. A separate native tiled-window
+capture confirms the timeline and speed selector remain visible beside the plots.

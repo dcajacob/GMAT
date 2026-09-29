@@ -345,6 +345,13 @@ existing orthographic rotation, pan, reversible wheel zoom, Fit, image export,
 and replay controls. Texture paths come from the configured celestial bodies;
 missing images fall back to the body color. Body-fixed orientations are captured
 at each recorded epoch and replayed without consulting live engine objects.
+Orbit and ground-track playback has Start, Play/Pause, Latest and speed controls
+(0.25×–4×). Pause/resume retains the selected position; dragging the timeline
+pauses playback. Latest follows incoming data, and Play at the end restarts the
+retained history. The timeline occupies a separate row so it remains accessible
+in narrow tiled windows. Speeds describe a nominal three-second sweep of the
+retained history, not elapsed simulation seconds.
+
 Configured spacecraft models retain their texture materials, display scale,
 offset and rotation. Like wx, normalized spacecraft display size is exaggerated
 (1000 km at ModelScale=1), so it is visible on orbital scales. Fit includes that

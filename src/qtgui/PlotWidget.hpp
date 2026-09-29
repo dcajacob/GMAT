@@ -6,6 +6,7 @@
 class QAction;
 class QSlider;
 class QTimer;
+class QLabel;
 class OrbitRenderer;
 class PlotCanvas final : public QWidget
 {
@@ -46,6 +47,7 @@ private:
    QSlider *timeline;
    QTimer *timer;
    QAction *replay=nullptr;
+   QLabel *replayPosition=nullptr;
    QAction *saveProjection=nullptr;
    std::function<QString(bool,double)> projectionSaver;
    quint64 historyGeneration=0;
