@@ -566,3 +566,11 @@ remain pending until Apply. Filename browsing permits new output paths without
 creating files. Formation membership is editable and restricted to existing
 spacecraft. Text entry remains available for expressions and plugin-defined
 references whose choices cannot be enumerated.
+
+
+XY plots have a **Style…** toolbar action with per-curve visibility, line/marker
+controls, width, size, shape, color and error bars, plus plot grid and legend
+switches. Choices remain pending while switching between curves. OK applies
+them to the displayed plot, including existing samples; Cancel leaves it
+unchanged. These are display settings for the current plot, not saved script
+properties, and rebuilding the mission resets them.

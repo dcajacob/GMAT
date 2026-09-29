@@ -1,3 +1,14 @@
+#include <QDialog>
+#include <QLabel>
+#include <QDialogButtonBox>
+#include <QFormLayout>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QPushButton>
+#include <QStackedWidget>
+#include <QColorDialog>
+#include <functional>
 #include "PlotWidget.hpp"
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
@@ -279,6 +290,10 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       sunlight->setToolTip("Use the mission's Sun position; turn off for lighting from the camera");
       connect(sunlight,&QAction::toggled,this,[this](bool checked) { data->sunlight=checked; drawing->refresh(); });
    }
+   if (data->kind==PlotModel::Kind::XY) {
+      auto *style=bar->addAction("Style…"); style->setObjectName("plotStyleAction");
+      connect(style,&QAction::triggered,this,&PlotWidget::editPlotStyle);
+   }
    auto *save = bar->addAction("Save image…");
    connect(save,&QAction::triggered,this,[this] {
       const auto path=QFileDialog::getSaveFileName(this,"Save plot image",data->title+".png","PNG image (*.png)");
@@ -318,4 +333,65 @@ void PlotWidget::refresh()
    // The retained interval moves as MaxPlotPoints evicts old samples. Resolve
    // the slider against that interval on every update, not only mouse movement.
    updateReplayFrame();
+}
+
+void PlotWidget::editPlotStyle()
+{
+   QDialog dialog(this); dialog.setObjectName("plotStyleDialog"); dialog.setWindowTitle("XY plot style");
+   auto *layout=new QVBoxLayout(&dialog);
+   auto *grid=new QCheckBox("Show grid",&dialog),*legend=new QCheckBox("Show legend",&dialog);
+   grid->setObjectName("plotGrid"); legend->setObjectName("plotLegend");
+   grid->setChecked(data->grid); legend->setChecked(data->legend);
+   layout->addWidget(grid); layout->addWidget(legend);
+   layout->addWidget(new QLabel("Changes apply to this plot until the mission is rebuilt.",&dialog));
+   auto *selector=new QComboBox(&dialog); selector->setObjectName("styleCurve"); layout->addWidget(selector);
+   auto *pages=new QStackedWidget(&dialog); layout->addWidget(pages);
+   QVector<std::function<void()>> apply;
+   for (auto it=data->curves.cbegin();it!=data->curves.cend();++it) {
+      const auto key=it.key(); const auto &curve=it.value();
+      selector->addItem(curve.name);
+      auto *page=new QWidget(pages); page->setObjectName("curveStyle_"+QString::number(key));
+      auto *form=new QFormLayout(page); pages->addWidget(page);
+      auto check=[&](const QString &name,bool value) {
+         auto *box=new QCheckBox(page); box->setObjectName(name); box->setChecked(value); form->addRow(name,box); return box;
+      };
+      auto *visible=check("Visible",curve.visible),*lines=check("Lines",curve.lines),*markers=check("Markers",curve.markers),*errors=check("Error bars",curve.errorBars);
+      auto spin=[&](const QString &name,int value,int maximum) {
+         auto *box=new QSpinBox(page); box->setObjectName(name); box->setRange(1,maximum); box->setValue(value); form->addRow(name,box); return box;
+      };
+      auto *width=spin("Line width",curve.width,20),*size=spin("Marker size",curve.markerSize,30);
+      auto *style=new QComboBox(page); style->setObjectName("Line style");
+      const QStringList styles={"Solid","Dotted","Long dash","Short dash","Dash-dot","None"};
+      const int codes[]={100,101,102,103,104,106};
+      for (int i=0;i<styles.size();++i) style->addItem(styles[i],codes[i]);
+      if (style->findData(curve.lineStyle)<0) style->addItem("Current style",curve.lineStyle);
+      style->setCurrentIndex(style->findData(curve.lineStyle)); form->addRow("Line style",style);
+      auto *marker=new QComboBox(page); marker->setObjectName("Marker shape");
+      marker->addItems({"Cross","Circle","Plus","Star","Square","Diamond","Crossed square","Triangle up","Triangle down","Circled plus"});
+      marker->setCurrentIndex(curve.markerType); form->addRow("Marker shape",marker);
+      auto *color=new QPushButton(curve.color.name(),page); color->setObjectName("Curve color"); color->setProperty("selectedColor",curve.color); form->addRow("Color",color);
+      connect(color,&QPushButton::clicked,&dialog,[&dialog,color] {
+         const auto chosen=QColorDialog::getColor(color->property("selectedColor").value<QColor>(),&dialog,"Curve color");
+         if (chosen.isValid()) { color->setProperty("selectedColor",chosen); color->setText(chosen.name()); }
+      });
+      apply.append([=,this] {
+         auto found=data->curves.find(key); if (found==data->curves.end()) return;
+         auto &curve=found.value(); const auto chosen=color->property("selectedColor").value<QColor>();
+         for (auto &point:curve.points) {
+            if (chosen!=curve.color) point.color=chosen;
+            if (marker->currentIndex()!=curve.markerType) point.marker=marker->currentIndex();
+         }
+         curve.color=chosen; curve.markerType=marker->currentIndex(); curve.visible=visible->isChecked();
+         curve.lines=lines->isChecked(); curve.markers=markers->isChecked(); curve.errorBars=errors->isChecked();
+         curve.width=width->value(); curve.markerSize=size->value(); curve.lineStyle=style->currentData().toInt();
+      });
+   }
+   connect(selector,&QComboBox::currentIndexChanged,pages,&QStackedWidget::setCurrentIndex);
+   auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+   connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);
+   connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+   if (dialog.exec()!=QDialog::Accepted) return;
+   data->grid=grid->isChecked(); data->legend=legend->isChecked();
+   for (const auto &change:apply) change();
+   drawing->refresh();
 }

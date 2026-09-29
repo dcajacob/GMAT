@@ -129,7 +129,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Pending audit |
 | `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
 | `src/gui/app/TextEphemFileDialog.hpp` | Pending audit |
-| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | Pending audit |
+| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Pending audit |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
@@ -213,3 +213,21 @@ These results expand evidence; the remaining plugin and viewer gates stay open.
 
 The rebuilt Linux application passed all 11 tests in 19.07 seconds; evidence:
 `Qt6ParityValidation/check-qualification-2.txt`.
+
+## XY viewer control checkpoint
+
+Qt now exposes its implemented XY styles through a Style dialog. Each curve has
+its own controls, and changing the selected curve retains other pending edits.
+OK applies; Cancel changes neither model nor pixels. Color/marker changes update
+existing samples as well as the curve defaults. Styles are session-local and
+are reset by rebuilding the mission; the dialog states that scope explicitly.
+
+PlotTests verifies canceled edits preserve the captured image, accepted edits
+change the image and selected curve, and another curve stays unchanged. The
+same fixture runs under software-native and HiDPI configurations. Source audit
+also confirmed wx ignores the index argument for ChangeWidth/ChangeStyle
+(`GuiPlotReceiver.cpp`); Qt's whole-curve behavior matches that baseline.
+Camera projection, multiple views and OF-relative camera conversion remain open.
+
+All 11 tests passed in 19.53 seconds and GmatQt was rebuilt; evidence:
+`Qt6ParityValidation/check-xy-style.txt`.

@@ -46,4 +46,5 @@ private:
    QAction *replay=nullptr;
    quint64 historyGeneration=0;
    void updateReplayFrame();
+   void editPlotStyle();
 };

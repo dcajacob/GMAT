@@ -12,6 +12,10 @@
 #include "SolarSystem.hpp"
 #include "CelestialBody.hpp"
 #include <QDialogButtonBox>
+#include <QDialog>
+#include <QCheckBox>
+#include <QSpinBox>
+#include <QComboBox>
 #include <QPushButton>
 #include <QMenu>
 #include <QAction>
@@ -294,6 +298,37 @@ int main(int argc,char **argv)
          lineImages.append(stylePlot->canvas()->captureImage());
          for (int previous=0;previous<lineImages.size()-1;++previous) require(lineImages[previous]!=lineImages.back(),"Distinct XY line styles rendered identically");
       }
+      receiver->AddXyPlotCurve("IterationCheck",1,"unchanged",0x00ff00);
+      receiver->UpdateXyPlotCurve("IterationCheck",1,0,2);
+      receiver->UpdateXyPlotCurve("IterationCheck",1,2,3);
+      auto *styleAction=stylePlot->findChild<QAction *>("plotStyleAction");
+      require(styleAction,"XY style controls missing");
+      const auto beforeStyle=stylePlot->canvas()->captureImage();
+      auto editStyle=[&](bool accept) {
+         QTimer::singleShot(0,stylePlot,[&,accept] {
+            auto *dialog=stylePlot->findChild<QDialog *>("plotStyleDialog");
+            if (!dialog) return;
+            auto *page=dialog->findChild<QWidget *>("curveStyle_0");
+            page->findChild<QCheckBox *>("Lines")->setChecked(true);
+            page->findChild<QCheckBox *>("Markers")->setChecked(true);
+            page->findChild<QSpinBox *>("Line width")->setValue(4);
+            page->findChild<QComboBox *>("Line style")->setCurrentIndex(1);
+            page->findChild<QComboBox *>("Marker shape")->setCurrentIndex(5);
+            page->findChild<QPushButton *>("Curve color")->setProperty("selectedColor",QColor(Qt::magenta));
+            dialog->findChild<QCheckBox *>("plotLegend")->setChecked(false);
+            if (accept) dialog->accept(); else dialog->reject();
+         });
+         styleAction->trigger();
+      };
+      editStyle(false);
+      require(stylePlot->canvas()->captureImage()==beforeStyle,"Cancel altered XY appearance");
+      editStyle(true);
+      const auto modified=receiver->model("IterationCheck");
+      require(modified->curves[0].width==4 && modified->curves[0].markerType==5 && modified->curves[0].lineStyle==101 &&
+         modified->curves[0].points.front().color==QColor(Qt::magenta) && !modified->legend,
+         "XY style dialog did not apply selected settings to existing points");
+      require(modified->curves[1].width==1 && modified->curves[1].color!=QColor(Qt::magenta),"Style edit affected another curve");
+      require(stylePlot->canvas()->captureImage()!=beforeStyle,"XY style controls did not change rendered appearance");
       receiver->DeleteXyPlot("IterationCheck");
       // Direct callback compatibility: the public script factory routes
       // GroundTrackPlot to GroundTrack, so it cannot exercise this older path.
