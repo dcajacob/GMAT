@@ -591,7 +591,7 @@ unchanged. These are display settings for the current plot, not saved script
 properties, and rebuilding the mission resets them.
 
 
-Orbit plots now offer **Orthographic / Perspective** and a vertical field-of-view
+Orbit plots offer **Camera…**, with **Orthographic / Perspective** and a vertical field-of-view
 control (1–150 degrees, before wheel zoom). Orthographic remains the default.
 Perspective uses depth-dependent sizing and clips objects behind the camera;
 native stars retain translation invariance and follow perspective zoom. These
@@ -906,3 +906,11 @@ resource panel. Apply validates and saves the thruster changes.
 FindEvents also offers **Add default options** when Append is omitted. Its Append
 checkbox controls whether the event report keeps existing output or replaces it.
 Adding the option preserves the locator selection, command label and comments.
+
+### Camera controls in tiled viewers
+
+**Camera…** opens a separate panel for the imported camera selector, projection,
+field of view and **Keep projection**. These controls remain accessible when the
+plot is narrow or tiled. Changes preview immediately; Close dismisses the panel
+without reverting the preview. Reopening retains the current settings. Script
+view, Fit and Sunlight remain available on the viewer toolbar.

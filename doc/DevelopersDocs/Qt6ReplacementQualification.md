@@ -999,3 +999,23 @@ options or file-error recovery cases.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 33.68 seconds. Evidence:
 `Qt6ParityValidation/check-event-options.txt`.
+
+## Camera controls in narrow viewers
+
+Moved the embedded camera selector/projection/FOV widgets from the crowded plot
+toolbar into a nonmodal Camera panel. This avoids relying on toolbar widget
+availability at tiled widths. Keep projection is in the same panel and delegates
+to the existing undoable script edit; changes still preview live. Close explicitly
+dismisses the panel without reverting preview settings.
+
+PlotTests checks access from a 330-pixel viewer, panel bounds, reopen persistence,
+disabled script persistence for standalone plots, and the existing projection,
+FOV and named-camera rendered-image differences. WorkflowTests now invokes the
+panel's Keep projection button for unchanged-source preservation, selected-view
+metadata, undo and unbuilt-script rejection. This improves camera-control access;
+trajectory/segment-relative conversion and broader framing behavior remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 39.09 seconds. Evidence:
+`Qt6ParityValidation/check-camera-panel.txt`. An isolated Xvfb/native render run
+also passed; `Qt6ParityValidation/camera-panel.png` was visually inspected for
+label/control fit. This is not a hardware-driver qualification claim.

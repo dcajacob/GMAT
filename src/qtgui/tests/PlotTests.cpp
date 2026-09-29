@@ -64,6 +64,16 @@ int main(int argc,char **argv)
          auto *projection=view.findChild<QComboBox *>("orbitProjection");
          auto *fov=view.findChild<QDoubleSpinBox *>("orbitFieldOfView");
          require(projection && fov && !fov->isEnabled(),"Camera projection controls missing");
+         view.resize(330,480); QApplication::processEvents();
+         auto *cameraAction=view.findChild<QAction *>("orbitCameraAction"); require(cameraAction,"Camera panel action missing");
+         cameraAction->trigger(); QApplication::processEvents();
+         auto *cameraDialog=view.findChild<QDialog *>("orbitCameraDialog");
+         require(cameraDialog && cameraDialog->isVisible() && projection->isVisible() && fov->isVisible(),"Tiled camera controls inaccessible");
+         require(cameraDialog->rect().contains(projection->mapTo(cameraDialog,QPoint(0,0))) &&
+            cameraDialog->rect().contains(fov->mapTo(cameraDialog,fov->rect().bottomRight())),"Camera controls clipped");
+         require(!cameraDialog->findChild<QPushButton *>("keepOrbitProjection")->isEnabled(),"Standalone camera offered unavailable script save");
+         if (!image.isEmpty()) require(cameraDialog->grab().save(image+".camera.png"),"Camera panel screenshot failed");
+         cameraDialog->close(); view.resize(640,480); QApplication::processEvents();
          const auto orthographic=view.canvas()->captureImage();
          projection->setCurrentIndex(1);
          require(model->perspective && fov->isEnabled(),"Perspective selector did not update model");
@@ -74,6 +84,9 @@ int main(int argc,char **argv)
          require(view.canvas()->captureImage()!=perspective,"Perspective depth did not affect rendered view");
          model->curves[0].points.front().z=0; projection->setCurrentIndex(0);
          require(view.canvas()->captureImage()==orthographic,"Orthographic view was not restored after perspective");
+         cameraAction->trigger(); QApplication::processEvents();
+         require(cameraDialog->isVisible() && projection->currentIndex()==0 && fov->value()==50,"Camera panel reopen lost live settings");
+         cameraDialog->close();
       }
       {
          auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);

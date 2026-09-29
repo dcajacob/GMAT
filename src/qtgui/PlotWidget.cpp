@@ -329,12 +329,20 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    drawing = new PlotCanvas(data,this);
    auto *fit = bar->addAction("Fit"); connect(fit,&QAction::triggered,drawing,&PlotCanvas::fit);
    if (data->kind==PlotModel::Kind::Orbit) {
-      auto *projection=new QComboBox(bar); projection->setObjectName("orbitProjection");
+      auto *cameraDialog=new QDialog(this); cameraDialog->setObjectName("orbitCameraDialog");
+      cameraDialog->setWindowTitle(data->title+" — Camera");
+      auto *cameraLayout=new QVBoxLayout(cameraDialog);
+      auto *help=new QLabel("Changes preview immediately in this viewer. Keep projection writes the selected camera's projection and field of view to the script; save the script to retain them on disk.",cameraDialog);
+      help->setWordWrap(true); cameraLayout->addWidget(help);
+      auto *cameraForm=new QFormLayout; cameraLayout->addLayout(cameraForm);
+      auto *cameraAction=bar->addAction("Camera…"); cameraAction->setObjectName("orbitCameraAction");
+      connect(cameraAction,&QAction::triggered,this,[cameraDialog] { cameraDialog->show(); cameraDialog->raise(); cameraDialog->activateWindow(); });
+      auto *projection=new QComboBox(cameraDialog); projection->setObjectName("orbitProjection");
       projection->addItems({"Orthographic","Perspective"}); projection->setCurrentIndex(data->perspective ? 1 : 0);
-      projection->setToolTip("Camera projection"); auto *projectionAction=bar->addWidget(projection);
-      auto *fov=new QDoubleSpinBox(bar); fov->setObjectName("orbitFieldOfView"); fov->setRange(1,150);
+      projection->setToolTip("Camera projection"); cameraForm->addRow("Projection",projection);
+      auto *fov=new QDoubleSpinBox(cameraDialog); fov->setObjectName("orbitFieldOfView"); fov->setRange(1,150);
       fov->setSuffix("°"); fov->setValue(data->fieldOfView); fov->setEnabled(data->perspective);
-      fov->setToolTip("Vertical field of view before wheel zoom"); bar->addWidget(fov);
+      fov->setToolTip("Vertical field of view before wheel zoom"); cameraForm->addRow("Field of view",fov);
       connect(projection,&QComboBox::currentIndexChanged,this,[this,fov](int index) {
          data->perspective=index==1; fov->setEnabled(data->perspective);
          if (!data->cameraViews.isEmpty()) data->cameraViews[data->selectedCamera].perspective=data->perspective;
@@ -346,10 +354,10 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          drawing->refresh();
       });
       if (!data->cameraViews.isEmpty()) {
-         auto *views=new QComboBox(bar); views->setObjectName("orbitCameraView");
+         auto *views=new QComboBox(cameraDialog); views->setObjectName("orbitCameraView");
          views->setToolTip("Switch imported cameras without rerunning the mission; replay uses the selected camera's history");
          for (const auto &view:data->cameraViews) views->addItem(view.name);
-         views->setCurrentIndex(data->selectedCamera); bar->insertWidget(projectionAction,views);
+         views->setCurrentIndex(data->selectedCamera); cameraForm->insertRow(0,"Camera",views);
          connect(views,&QComboBox::currentIndexChanged,this,[this,projection,fov](int index) {
             if (index<0 || index>=data->cameraViews.size()) return;
             data->selectedCamera=index;
@@ -359,7 +367,7 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
             drawing->scriptView();
          });
       }
-      saveProjection=bar->addAction("Keep projection"); saveProjection->setObjectName("saveOrbitProjection");
+      saveProjection=new QAction("Keep projection",this); saveProjection->setObjectName("saveOrbitProjection");
       saveProjection->setEnabled(false);
       saveProjection->setToolTip("Write projection and field of view to the script as an undoable edit; save the script to keep them on disk");
       connect(saveProjection,&QAction::triggered,this,[this] {
@@ -367,6 +375,13 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          const auto error=projectionSaver(data->perspective,data->fieldOfView);
          if (!error.isEmpty()) QMessageBox::warning(this,"Could not keep projection",error);
       });
+      auto *buttons=new QDialogButtonBox(QDialogButtonBox::Close,cameraDialog); cameraLayout->addWidget(buttons);
+      auto *keep=buttons->addButton("Keep projection",QDialogButtonBox::ActionRole); keep->setObjectName("keepOrbitProjection");
+      keep->setEnabled(saveProjection->isEnabled()); keep->setToolTip(saveProjection->toolTip());
+      connect(saveProjection,&QAction::changed,keep,[this,keep] { keep->setEnabled(saveProjection->isEnabled()); });
+      connect(keep,&QPushButton::clicked,saveProjection,&QAction::trigger);
+      connect(buttons,&QDialogButtonBox::rejected,cameraDialog,&QDialog::reject);
+      cameraDialog->resize(430,240);
       auto *scriptView=bar->addAction("Script view");
       scriptView->setToolTip("Restore the scripted camera, tracking and scale");
       connect(scriptView,&QAction::triggered,drawing,&PlotCanvas::scriptView);
