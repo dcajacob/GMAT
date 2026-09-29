@@ -95,7 +95,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    const bool tank=object.IsOfType("FuelTank");
    const bool solver=object.IsOfType("Solver");
    const bool forces=object.IsOfType("ODEModel");
-   if (spacecraft || thruster || tank || solver || forces) {
+   const bool power=object.IsOfType("PowerSystem");
+   if (spacecraft || thruster || tank || solver || forces || power) {
       sections=new QTabBar(this);
       sections->setObjectName("propertySections");
       sections->setExpanding(false);
@@ -507,6 +508,10 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                if (name=="Tank" || name=="MixRatio" || name=="DecrementMass") section="Fuel";
                else if (name.startsWith("ThrustDirection") || name=="CoordinateSystem" || name=="Origin" || name=="Axes") section="Direction";
                else if (name.startsWith("C") || name.startsWith("K") || name.contains("Thrust") || name.contains("Isp") || name=="DutyCycle") section="Performance";
+            } else if (power) {
+               if (name.startsWith("BusCoeff")) section="Bus coefficients";
+               else if (name.startsWith("SolarCoeff")) section="Solar coefficients";
+               else if (name.startsWith("Shadow")) section="Shadow";
             } else if (tank) {
                if (name.contains("Mass") || name.contains("Density") || name=="Volume" || name.contains("Pressure") || name.contains("Temperature")) section="Fuel";
             } else if (solver) {
@@ -533,7 +538,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (!section.isEmpty()) present.insert(section);
       }
       for (const auto &section : {"Orbit","Attitude","Ballistic/Mass","Hardware","Power System","SPICE","Visualization",
-                                 "General","Bodies","Gravity field","Atmosphere","Radiation pressure","Perturbations","Direction","Fuel","Performance","Convergence","Output"})
+                                 "General","Bus coefficients","Solar coefficients","Shadow","Bodies","Gravity field","Atmosphere","Radiation pressure","Perturbations","Direction","Fuel","Performance","Convergence","Output"})
          if (present.contains(section)) sections->addTab(section);
       sections->addTab("All Properties");
    }

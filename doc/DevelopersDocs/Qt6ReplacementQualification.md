@@ -36,7 +36,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; finite-burn execution and electric configuration round trips covered; broader electric operating modes pending |
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
-| `src/gui/hardware/PowerSystemConfigPanel.hpp` | Pending audit |
+| `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion and runtime power/shadow qualification pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
@@ -1345,3 +1345,24 @@ After adding explicit shrink-cleanup/Cancel assertions, the updated Workflow tes
 passed in 8.20 seconds. Native checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-array-pending-size.txt` and
 `Qt6ParityValidation/check-array-shrink-ui.txt`.
+
+## Power-system field audit and shadow-body selector
+
+Audited wx PowerSystemConfigPanel's general settings (EpochFormat, InitialEpoch,
+InitialMaxPower, AnnualDecayRate, Margin), three bus coefficients, five solar
+coefficients, ShadowModel and ShadowBodies. Qt now groups these settings in
+General, Bus coefficients, Solar coefficients and Shadow tabs as applicable.
+The audit found ShadowBodies was omitted because STRINGARRAY_TYPE fields require
+explicit list support. It now uses the ordered resource selector populated with
+celestial bodies, and list Apply rejects non-body references.
+
+WorkflowTests checks that each wx field appears in its matching section, unrelated
+fields are hidden, and nuclear systems have no solar-only tabs. It exercises the
+shadow picker, pending selection, two-body reconstruction, invalid-body rollback
+and Undo. The wx behavior that converts InitialEpoch when EpochFormat changes is
+not yet implemented in Qt; power output and eclipse/shadow runtime qualification
+also remain pending. These tests establish configuration workflow coverage only.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 34.53 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-power-controls.txt`.

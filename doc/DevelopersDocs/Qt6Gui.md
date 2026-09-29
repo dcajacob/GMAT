@@ -1021,3 +1021,11 @@ The expression grid uses the pending numeric grid dimensions, so formulas can be
 entered in newly added cells before Apply. Existing formulas outside a pending
 shrink remain visible in highlighted cells. Clear those formulas to accept the
 expression edit, or Cancel and enlarge the numeric grid. Cancel preserves formulas.
+
+### Power-system properties
+
+Solar and nuclear power-system resources group general settings and bus
+coefficients into tabs. Solar systems also have Solar coefficients and Shadow
+tabs. ShadowBodies now has an ordered celestial-body selector; selections stay
+pending until Apply. Invalid names are rejected without changing the script.
+EpochFormat and InitialEpoch currently remain separately editable fields.

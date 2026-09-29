@@ -610,6 +610,52 @@ int main(int argc, char **argv)
       require(!window.applyResourceChanges("Formula",{{"RmatValue","7"}},expressionSource).isEmpty(),
          "Array shrink silently removed an expression cell");
       require(editor->toPlainText()==expressionSource && formulaResult()==20,"Rejected shrink changed array state");
+      editor->setPlainText("Create SolarPowerSystem SolarPower;\nCreate NuclearPowerSystem NuclearPower;\nBeginMissionSequence;\n");
+      require(window.buildScript(),"Power-system panel fixture failed");
+      for (const auto &name:{QString("SolarPower"),QString("NuclearPower")}) {
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject(name.toStdString()),[](const QMap<QString,QString>&) { return QString(); },&owner,editor->toPlainText());
+         auto *sections=panel.findChild<QTabBar *>("propertySections"); auto *grid=panel.findChild<QTableWidget *>();
+         require(sections && grid,"Power-system sections missing");
+         const auto checkSection=[&](const QString &section,const QStringList &fields) {
+            int tab=-1; for (int i=0;i<sections->count();++i) if (sections->tabText(i)==section) tab=i;
+            require(tab>=0,qPrintable("Missing power section: "+section)); sections->setCurrentIndex(tab);
+            for (const auto &field:fields) {
+               int row=-1; for (int i=0;i<grid->rowCount();++i) if (grid->item(i,0)->text()==field) row=i;
+               require(row>=0 && !grid->isRowHidden(row),qPrintable("Missing power control: "+field));
+            }
+            for (int row=0;row<grid->rowCount();++row)
+               require(grid->isRowHidden(row)==(grid->item(row,0)->data(Qt::UserRole).toString()!=section),"Power section displayed unrelated settings");
+         };
+         checkSection("General",{"EpochFormat","InitialEpoch","InitialMaxPower","AnnualDecayRate","Margin"});
+         checkSection("Bus coefficients",{"BusCoeff1","BusCoeff2","BusCoeff3"});
+         if (name=="SolarPower") {
+            checkSection("Solar coefficients",{"SolarCoeff1","SolarCoeff2","SolarCoeff3","SolarCoeff4","SolarCoeff5"});
+            checkSection("Shadow",{"ShadowModel","ShadowBodies"});
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("resourceSelectionDialog"); auto *list=dialog->findChild<QListWidget *>("resourceSelectionList");
+               bool earth=false,luna=false;
+               for (int i=0;i<list->count();++i) {
+                  earth=earth || list->item(i)->text()=="Earth"; luna=luna || list->item(i)->text()=="Luna";
+                  require(list->item(i)->text()!="SolarPower","Shadow picker included non-body resource");
+                  list->item(i)->setCheckState(list->item(i)->text()=="Luna" ? Qt::Checked : Qt::Unchecked);
+               }
+               require(earth && luna,"Shadow picker omitted celestial bodies"); dialog->accept();
+            }); panel.findChild<QPushButton *>("chooseProperty_ShadowBodies")->click();
+            bool selected=false; for (int row=0;row<grid->rowCount();++row)
+               if (grid->item(row,0)->text()=="ShadowBodies") selected=grid->item(row,1)->text()=="Luna";
+            require(selected && panel.hasChanges(),"Shadow picker did not update pending list"); panel.discardChanges();
+         } else for (int i=0;i<sections->count();++i)
+            require(sections->tabText(i)!="Solar coefficients" && sections->tabText(i)!="Shadow","Nuclear panel displayed solar-only sections");
+      }
+      const auto powerSource=editor->toPlainText();
+      require(window.applyResourceChanges("SolarPower",{{"ShadowBodies","Earth, Luna"}},powerSource).isEmpty(),"Shadow-body list Apply failed");
+      const auto powerEdited=editor->toPlainText();
+      const auto &shadowBodies=Moderator::Instance()->GetConfiguredObject("SolarPower")->GetStringArrayParameter("ShadowBodies");
+      require(shadowBodies.size()==2 && shadowBodies[0]=="Earth" && shadowBodies[1]=="Luna","Shadow-body list did not survive reconstruction");
+      require(!window.applyResourceChanges("SolarPower",{{"ShadowBodies","NuclearPower"}},powerEdited).isEmpty() && editor->toPlainText()==powerEdited,
+         "Invalid shadow-body edit was not rejected atomically");
+      editor->undo(); require(editor->toPlainText()==powerSource && window.buildScript(),"Shadow-body list Undo failed");
       editor->setPlainText("Create ChemicalTank FuelA FuelB;\nCreate ChemicalThruster Engine;\n"
          "GMAT Engine.Tank = {FuelA, FuelB};\nGMAT Engine.MixRatio = [2 3];\n"
          "Create ReportFile PickerReport;\nCreate Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");

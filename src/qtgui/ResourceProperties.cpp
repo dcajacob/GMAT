@@ -107,6 +107,8 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
          }
+         if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies")
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
          if (object.IsOfType("CoordinateSystem") && field.name=="Axes")
             for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM)) field.choices.append(QString::fromStdString(type));
          if (object.GetTypeName()=="ObjectReferenced" && (field.name=="XAxis" || field.name=="YAxis" || field.name=="ZAxis"))
@@ -183,6 +185,7 @@ bool isResourceList(GmatBase &object, const QString &name)
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       (object.IsOfType("Thruster") && name=="Tank") ||
       (type=="FiniteBurn" && name=="Thrusters") ||
+      (type=="SolarPowerSystem" && name=="ShadowBodies") ||
       ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses")) ||
       (object.IsOfType("EventLocator") && (name=="OccultingBodies" || name=="Observers" || name=="EclipseTypes"));
    const auto parameterType=object.GetParameterType(id);
@@ -230,6 +233,10 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
                throw std::runtime_error(("Unknown space point: "+entry).toStdString());
             if (target->GetName()!=entry.toStdString())
                throw std::runtime_error("Use the resource name "+target->GetName()+" instead of "+entry.toStdString());
+         }
+         if (object.IsOfType("SolarPowerSystem") && name=="ShadowBodies") {
+            const auto &bodies=Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY);
+            if (std::find(bodies.begin(),bodies.end(),entry.toStdString())==bodies.end()) throw std::runtime_error("Select an existing celestial body for solar shadows");
          }
          if (entries.contains(entry)) throw std::runtime_error("Each list entry must be unique");
          entries.append(entry);
