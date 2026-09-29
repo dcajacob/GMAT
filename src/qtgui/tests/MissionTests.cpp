@@ -23,6 +23,7 @@
 #include <QTimer>
 #include <QInputDialog>
 #include <QTemporaryDir>
+#include <QCheckBox>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -136,6 +137,20 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed,"Picked maneuver failed to execute");
          auto *after=Moderator::Instance()->GetInternalObject("SecondSat");
          require(std::abs(after->GetRealParameter("VX")-vx-.01)<1e-10,"Picked inertial burn did not change selected spacecraft velocity");
+         const auto forward=window.missionSnapshot(); const int maneuver=find(forward,"Maneuver");
+         form.setStatement(forward.nodes[maneuver].statement);
+         auto *backprop=form.findChild<QCheckBox *>("commandBackProp"); require(backprop && !backprop->isChecked(),"Backprop control missing or initially enabled");
+         backprop->setChecked(true);
+         require(replacement.contains("BackProp SecondBurn(SecondSat)") && replacement.contains("'Named burn'"),
+            "Backprop toggle displaced burn reference or command label");
+         require(window.applyMissionChange(forward,maneuver,MissionEdit::Replace,replacement).isEmpty(),"Backprop command edit failed");
+         require(window.saveScriptTo(selectedMission.filePath("backprop.script")) && window.loadScript(selectedMission.filePath("backprop.script")) &&
+            window.runMission()==MainWindow::RunResult::Completed,"Backprop save/reopen or execution failed");
+         require(std::abs(Moderator::Instance()->GetInternalObject("SecondSat")->GetRealParameter("VX")-vx+.01)<1e-10,
+            "Backprop did not reverse inertial delta-V");
+         form.setStatement(replacement); backprop=form.findChild<QCheckBox *>("commandBackProp");
+         require(backprop->isChecked(),"Existing BackProp keyword not reflected in control"); backprop->setChecked(false);
+         require(!replacement.contains("BackProp") && replacement.contains("SecondBurn(SecondSat)"),"Clearing Backprop damaged command");
          form.setStatement("BeginFiniteBurn Continuous(FirstSat);"); pick(form,"Burn","Continuous","SecondBurn");
          form.setStatement("Target DC;\nEndTarget;"); pick(form,"Solver","DC","Opt");
          form.setStatement("Optimize Opt;\nEndOptimize;"); pick(form,"Solver","Opt","DC");

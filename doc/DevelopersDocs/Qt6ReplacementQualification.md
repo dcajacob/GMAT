@@ -41,12 +41,12 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | CommandForm subscriber list and state controls; form coverage in MissionTests. Dedicated selection checklist pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
-| `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Back-propagation and full burn options pending. |
+| `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested; other frames and mass-decrement cases pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector tested; relation/expression fields remain editable. Full parameter selection workflow pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector tested; goal/value fields remain editable. Full parameter/tolerance workflow pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | CommandForm Global/Clear object controls; form coverage in MissionTests. Reference-selection workflow pending. |
-| `src/gui/command/BeginFiniteBurnPanel.hpp` | Finite-burn selector filters impulsive burns. Multi-spacecraft selection and execution qualification pending. |
+| `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector excludes optimizers; selector tested. Broader Target workflow pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; tested with DC and Yukon. Full variable/options workflow pending. |
@@ -54,7 +54,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/PropagatePanel.hpp` | Pending audit |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls; source-preservation tests. Parameter chooser and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
-| `src/gui/command/EndFiniteBurnPanel.hpp` | Shared finite-burn selector available. Full end-burn workflow qualification pending. |
+| `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector tested; objective field remains editable. Full parameter selection workflow pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
@@ -651,8 +651,9 @@ regression evidence, not a complete requalification of the shared engine.
 CommandForm now provides Select controls for impulsive/finite burns, Maneuver's
 spacecraft, solvers, event locators and functions. Choices are filtered by engine
 type: Target/Achieve use BoundaryValueSolver, Optimize/Minimize/constraints use
-Optimizer, and Vary accepts both. Finite-burn spacecraft lists remain text fields;
-a scalar picker must not replace an entire multi-spacecraft selection.
+Optimizer, and Vary accepts both. Finite-burn spacecraft fields initially remained
+text-only; the follow-up below verifies the engine single-spacecraft restriction
+and adds their picker.
 
 MissionTests uses the actual modal pickers to change an impulsive burn and its
 spacecraft, checks Cancel plus label/comment preservation, applies the command,
@@ -663,3 +664,27 @@ checks do not by themselves qualify every command's options or execution path.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 41.87 seconds. Evidence:
 `Qt6ParityValidation/check-command-pickers.txt`.
+
+
+### Finite-burn spacecraft and Backprop controls
+
+BeginFiniteBurn::SetRefObjectName explicitly rejects multiple spacecraft. Qt now
+provides a single-spacecraft selector in both BeginFiniteBurn and EndFiniteBurn,
+consistent with that engine restriction. CompatibilityTests selects BurnSat for
+both commands through the dialogs, saves/reopens, and runs ten seconds of constant
+100 N thrust at Isp 300 seconds followed by ten seconds of coast. Tank mass matches
+150 - thrust*time/(Isp*g0) within 1e-7 kg, and changes by less than 1e-10 kg after
+EndFiniteBurn. The configured thruster supplies g0 for the independent mass-flow
+calculation. Other thruster/tank models and coupled finite-burn workflows remain
+pending.
+
+Maneuver now exposes wx's Backprop control. It inserts/removes the keyword in its
+own source span, retaining labels, resource fields and surrounding text. Equal
+source offsets apply field replacement before keyword insertion. MissionTests
+checks forward and backward 0.01 km/s inertial X maneuvers through save/reopen,
+recognition of an existing BackProp keyword and disabling it without damaging the
+command. Non-inertial frames and mass-decrement/backward-mass behavior remain
+unqualified.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 50.28 seconds. Evidence:
+`Qt6ParityValidation/check-burn-controls.txt`.

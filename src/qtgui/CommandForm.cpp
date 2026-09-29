@@ -9,6 +9,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QInputDialog>
+#include <QCheckBox>
 
 CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *parent)
    : QGroupBox("Command settings",parent),layout(new QFormLayout(this)),changed(std::move(callback))
@@ -23,7 +24,7 @@ void CommandForm::updateSource()
    // Spans refer to the original snapshot. Replace from right to left so a
    // changed field length cannot displace another field, or a branch body.
    auto ordered=fields;
-   std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start>b.start; });
+   std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start==b.start ? a.length>b.length : a.start>b.start; });
    for (const auto &field:ordered) result.replace(field.start,field.length,field.input->text());
    synchronizing=true; changed(result); synchronizing=false;
 }
@@ -66,7 +67,7 @@ void CommandForm::setStatement(const QString &statement)
       QString resourceType;
       if (name=="Report file") resourceType="ReportFile";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
-      else if (name=="Spacecraft" && title()=="Maneuver") resourceType="Spacecraft";
+      else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
       else if (name=="Function") resourceType="Function";
       else if (name=="Solver") {
@@ -104,6 +105,20 @@ void CommandForm::setStatement(const QString &statement)
       const auto match=QRegularExpression("^\\s*"+spec.pattern).match(statement);
       if (!match.hasMatch()) continue;
       setTitle(spec.type);
+      if (spec.type=="Maneuver") {
+         const auto prefix=QRegularExpression("^\\s*Maneuver\\s+"+label).match(statement);
+         const auto keyword=QRegularExpression("^BackProp\\s+").match(statement.mid(prefix.capturedEnd()));
+         const QString originalKeyword=keyword.hasMatch() ? keyword.captured() : QString();
+         auto *value=new QLineEdit(originalKeyword,this); value->hide();
+         fields.append({value,prefix.capturedEnd(),originalKeyword.size()});
+         auto *backprop=new QCheckBox("Apply maneuver backwards in time",this); backprop->setObjectName("commandBackProp");
+         value->setParent(backprop);
+         backprop->setChecked(!originalKeyword.isEmpty()); layout->addRow("Backprop",backprop);
+         connect(value,&QLineEdit::textChanged,this,[this] { updateSource(); });
+         connect(backprop,&QCheckBox::toggled,this,[value,originalKeyword](bool checked) {
+            value->setText(checked ? (originalKeyword.isEmpty() ? "BackProp " : originalKeyword) : QString());
+         });
+      }
       for (int i=0;i<spec.labels.size();++i) add(spec.labels[i],match.capturedStart(i+1),match.capturedLength(i+1));
       // Optional keyword values can occur in any order. Only recognized keys
       // become controls; all other option text is retained verbatim.

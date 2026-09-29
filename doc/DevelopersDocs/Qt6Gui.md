@@ -780,4 +780,6 @@ solver, event-locator and function references. Pickers show compatible configure
 resources, and Cancel preserves the current field. Labels, comments and surrounding
 command text remain intact. Vary accepts targeting and optimization solvers;
 Target/Achieve and optimization commands filter to their respective solver types.
-Finite-burn spacecraft lists still use their existing text field.
+BeginFiniteBurn and EndFiniteBurn also provide a spacecraft picker; the engine
+supports one spacecraft per finite-burn command. Maneuver includes a Backprop
+checkbox for applying its burn backwards in time.
