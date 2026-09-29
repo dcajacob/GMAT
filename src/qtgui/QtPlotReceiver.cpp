@@ -4,6 +4,7 @@
 #include "CelestialBody.hpp"
 #include "Spacecraft.hpp"
 #include "SolarSystem.hpp"
+#include "FileManager.hpp"
 #include "CoordinateConverter.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
@@ -149,13 +150,28 @@ void QtPlotReceiver::SetGl2dDrawingOption(const std::string &name,const std::str
 {
    SetGroundTrackOption(name,"TextureMap",map); if (footprint!=0) warn(name,"footprints");
 }
-void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bool ec,bool xy,bool wire,bool axes,bool grid,bool sun,bool,bool,bool stars,bool constellations,Integer)
+void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bool ec,bool xy,bool wire,bool axes,bool grid,bool sun,bool,bool,bool stars,bool constellations,Integer count)
 {
-   if (auto *entry=find(name)) { entry->data->labels=labels; entry->data->axes=axes; entry->data->grid=grid; }
+   if (auto *entry=find(name)) {
+      auto &data=*entry->data;
+      data.labels=labels; data.axes=axes; data.grid=grid;
+      data.starsEnabled=stars; data.starCount=static_cast<int>(std::clamp<Integer>(count,0,std::numeric_limits<int>::max()));
+      if (stars && !data.starCatalogLoaded) {
+         data.starCatalogLoaded=true;
+         try {
+            const auto path=FileManager::Instance()->FindPath("","STAR_FILE",true,false,true);
+            data.starCatalog=StarCatalog::read(text(path));
+         } catch (BaseException &error) { data.starCatalog.error=text(error.GetFullMessage()); }
+         if (!data.starCatalog.error.isEmpty())
+            MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load star catalog: %s\n",name.c_str(),data.starCatalog.error.toStdString().c_str());
+         else if (data.starCatalog.rejectedLines)
+            MessageInterface::ShowMessage("Qt OrbitView '%s': skipped %d invalid star catalog lines.\n",name.c_str(),data.starCatalog.rejectedLines);
+      }
+   }
    if (ec || xy) warn(name,"reference planes");
    if (wire) warn(name,"body wireframe");
    if (sun) warn(name,"Sun direction line");
-   if (stars || constellations) warn(name,"star field");
+   if (constellations) warn(name,"constellation lines");
 }
 void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *,SpacePoint *,SpacePoint *,Real,const Rvector3 &,const Rvector3 &view,const Rvector3 &,const std::string &,bool,bool useVector,bool)
 {
@@ -240,8 +256,10 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             // Spacecraft attitude maps inertial to body, unlike celestial bodies.
             if (entry->points[i]->IsOfType(Gmat::SPACECRAFT)) attitude=attitude.Transpose();
             const auto rotation=viewToBase.Transpose()*attitude;
-            for (int row=0;row<3;++row) for (int col=0;col<3;++col)
+            for (int row=0;row<3;++row) for (int col=0;col<3;++col) {
                curve.points.back().bodyToView[row*3+col]=rotation(row,col);
+               curve.points.back().inertialToView[row*3+col]=viewToBase(col,row);
+            }
          }
       }
    }

@@ -327,6 +327,21 @@ lighting, including ambient fill, not an eclipse or radiometric simulation.
 The orientation regression compares a body-fixed surface point with an independent
 coordinate conversion at the first and last recorded epochs.
 
+OrbitView star fields honor `EnableStars` and `StarCount`. The startup file's
+`STAR_FILE` catalog supplies equatorial directions and magnitudes. Valid entries
+are sorted by brightness; the requested count selects the brightest entries,
+capped by the available catalog. Missing/empty catalogs and rejected malformed
+rows are reported without preventing a mission from running.
+
+Stars use a fixed 50-degree vertical celestial field of view, independent of the
+orthographic scene's pan and zoom. Camera rotation and the recorded inertial-to-
+plot-frame rotation determine their directions, including Earth-fixed replay.
+They draw behind bodies and spacecraft, without writing depth. Five magnitude
+bands control display brightness and point size; this is not a photometric
+simulation. The native tests verify count/disable behavior, magnitude, rear-sky
+rejection, occlusion, pan/zoom invariance, camera rotation and replay; the real
+mission tests independently check Earth-fixed frame conversion.
+
 The offscreen/minimal Qt platforms retain the earlier CPU body-disk renderer;
 they do not exercise the native renderer. When Xvfb is available on Linux,
 `check-qt` also runs native OpenGL tests at scale 1 and 2 using software Mesa.
@@ -337,7 +352,7 @@ missing-texture/model fallback, text overlays and repeated viewer lifetime.
 native renderer, including close during run, reopening and repeat missions.
 
 The view uses positions already converted by OrbitPlot; non-spacecraft bodies
-are converted from the internal frame separately. Star fields, reference planes,
+are converted from the internal frame separately. Constellation lines, reference planes,
 eclipse shadows, non-spherical celestial-body models and scripted camera
 tracking remain outstanding. Unsupported camera
 and drawing options are reported in Message Window. Advanced XY marker/style

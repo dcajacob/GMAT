@@ -80,6 +80,20 @@ int main(int argc,char **argv)
       const auto &o=curve(*orbit,"QtSat"),&g=curve(*ground,"QtSat");
       require(o.points.size()>100 && g.points.size()>100 && xy->curves[0].points.size()>100,"No real plot histories recorded");
       require(!ground->map.isNull(),"Resolved central body map did not load");
+      const auto fixedStars=receiver->model("QtFixedStars");
+      require(fixedStars && fixedStars->starsEnabled && fixedStars->starCount==1234 &&
+              fixedStars->starCatalog.stars.size()>40000,"Script star settings or catalog resolution failed");
+      require(!orbit->starsEnabled && !orbit->starCatalogLoaded,"Disabled stars unnecessarily loaded a catalog");
+      auto *inertial=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthMJ2000Eq"));
+      auto *earthFixed=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthFixed"));
+      CoordinateConverter skyReference;
+      const auto &fixedEarth=curve(*fixedStars,"Earth");
+      for (const auto *point:{&fixedEarth.points.front(),&fixedEarth.points.back()}) {
+         Rvector6 direction(1,0,0,0,0,0),converted;
+         skyReference.Convert(point->epoch,direction,inertial,converted,earthFixed);
+         for (int axis=0;axis<3;++axis)
+            require(std::abs(converted[axis]-point->inertialToView[axis*3])<1e-10,"Star frame differs from independent coordinate conversion");
+      }
       const auto &earth=curve(*orbit,"Earth");
       require(!QImage(earth.texturePath).isNull(),"Resolved orbit texture did not load");
       auto *fixed=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthFixed"));

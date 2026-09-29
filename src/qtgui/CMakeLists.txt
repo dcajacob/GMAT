@@ -8,6 +8,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    OrbitRenderer.cpp OrbitRenderer.hpp
+   StarCatalog.cpp StarCatalog.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets Qt6::OpenGLWidgets GmatBase GmatUtil ${OPENSCENEGRAPH_LIBRARIES})
 target_include_directories(GmatQtFrontend PRIVATE ${OPENSCENEGRAPH_INCLUDE_DIRS})

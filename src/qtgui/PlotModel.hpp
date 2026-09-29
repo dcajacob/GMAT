@@ -8,6 +8,7 @@
 #include <deque>
 #include <limits>
 #include <array>
+#include "StarCatalog.hpp"
 
 struct PlotPoint
 {
@@ -21,6 +22,7 @@ struct PlotPoint
    std::array<double,9> bodyToView = {1,0,0,0,1,0,0,0,1};
    std::array<double,3> sunPosition = {0,0,0};
    bool hasSun = false;
+   std::array<double,9> inertialToView = {1,0,0,0,1,0,0,0,1};
 };
 struct PlotCurve
 {
@@ -56,6 +58,9 @@ struct PlotModel
    bool grid = true, legend = true, labels = true, penDown = true, active = true;
    bool axes = true;
    bool sunlight = true;
+   bool starsEnabled = false, starCatalogLoaded = false;
+   int starCount = 7000;
+   StarCatalog starCatalog;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;

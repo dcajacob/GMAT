@@ -1,0 +1,38 @@
+[1/12] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/12] Building CXX object src/qtgui/CMakeFiles/GmatQtOrbitRendererTests.dir/tests/OrbitRendererTests.cpp.o
+[3/12] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[4/12] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[5/12] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[6/12] Linking CXX executable src/qtgui/GmatQtMissionTests
+[7/12] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[8/12] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[9/12] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[10/12] Linking CXX executable src/qtgui/GmatQtPlotTests
+[11/12] Linking CXX executable src/qtgui/GmatQtFileTests
+[11/12] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 1: QtGui.NativeOrbit
+1/9 Test #1: QtGui.NativeOrbit ................   Passed    0.81 sec
+    Start 2: QtGui.NativeOrbitHiDPI
+2/9 Test #2: QtGui.NativeOrbitHiDPI ...........   Passed    1.25 sec
+    Start 3: QtGui.NativePlots
+3/9 Test #3: QtGui.NativePlots ................   Passed    3.12 sec
+    Start 4: QtGui.Files
+4/9 Test #4: QtGui.Files ......................   Passed    0.11 sec
+    Start 5: QtGui.Workflow
+5/9 Test #5: QtGui.Workflow ...................   Passed    1.03 sec
+    Start 6: QtGui.Mission
+6/9 Test #6: QtGui.Mission ....................   Passed    0.67 sec
+    Start 7: QtGui.Plots
+7/9 Test #7: QtGui.Plots ......................   Passed    1.90 sec
+    Start 8: QtGui.PlotsHiDPI
+8/9 Test #8: QtGui.PlotsHiDPI .................   Passed    2.10 sec
+    Start 9: QtGui.Launch
+9/9 Test #9: QtGui.Launch .....................   Passed    1.15 sec
+
+100% tests passed, 0 tests failed out of 9
+
+Label Time Summary:
+qt-gui    =  12.14 sec*proc (9 tests)
+
+Total Test time (real) =  12.14 sec

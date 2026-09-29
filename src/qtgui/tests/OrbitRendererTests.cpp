@@ -110,7 +110,50 @@ int main(int argc,char **argv)
       const auto missingModel=viewer.captureImage();
       const auto fallback=missingModel.pixelColor(missingModel.width()/2,missingModel.height()/2);
       require(fallback.red()>200 && fallback.green()<60,"Missing model did not fall back to marker");
-      std::cout << "Native texture, depth, rotation, resize, model material, Sun illumination, fallback and repeated lifecycle checks passed\n";
+      QFile catalogFile(directory.filePath("stars.txt")); require(catalogFile.open(QIODevice::WriteOnly),"Catalog fixture failed");
+      catalogFile.write("# RA Dec magnitude\n0 0 5 trailing comment\n90 0 -1\n360 90 2\ninvalid\n5 91 1\n-1 0 2\nnan 0 2\n"); catalogFile.close();
+      const auto catalog=StarCatalog::read(catalogFile.fileName());
+      require(catalog.error.isEmpty() && catalog.stars.size()==3 && catalog.rejectedLines==4,"Catalog validation failed");
+      require(catalog.stars[0].magnitude==-1 && std::abs(catalog.stars[0].direction[1]-1)<1e-12 &&
+              std::abs(catalog.stars[1].direction[2]-1)<1e-12,"Catalog sorting or equatorial direction conversion failed");
+      require(!StarCatalog::read(directory.filePath("absent.txt")).error.isEmpty(),"Missing catalog not reported");
+      auto sky=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+      sky->labels=false; sky->legend=false; sky->axes=false; sky->grid=false;
+      sky->starCatalog.stars={{{0,0,-1},-1},{{.55,0,-1},0},{{0,0,1},1}};
+      sky->starCount=2; sky->curves[0].radius=1; sky->curves[0].color=Qt::green; sky->append(0,0,0,0);
+      OrbitRenderer starViewer(sky); starViewer.resize(640,480); starViewer.show(); starViewer.setView(1,0,0,{},0); app.processEvents();
+      const auto noStars=starViewer.captureImage();
+      sky->starsEnabled=true; sky->starCount=1;
+      require(starViewer.captureImage()==noStars,"Star behind planet leaked through its surface");
+      sky->starCount=2;
+      const auto withStars=starViewer.captureImage(); require(withStars!=noStars,"Visible catalog star was not rendered");
+      sky->curves[0].visible=false;
+      const auto skyOnly=starViewer.captureImage();
+      sky->starCount=3; require(starViewer.captureImage()==skyOnly,"Rear-hemisphere star was rendered");
+      starViewer.setView(5,0,0,{100,-30},0);
+      require(starViewer.captureImage()==skyOnly,"Stars moved with pan or orthographic zoom");
+      starViewer.setView(1,.5,.3,{},0);
+      require(starViewer.captureImage()!=skyOnly,"Stars did not rotate with camera");
+      sky->curves[0].points[0].inertialToView={0,-1,0,1,0,0,0,0,1};
+      starViewer.setView(1,0,0,{},0); const auto rotatedSky=starViewer.captureImage();
+      require(rotatedSky!=skyOnly,"Stars ignored the plot coordinate frame");
+      auto oldFrame=sky->curves[0].points[0]; oldFrame.frame=1; oldFrame.inertialToView={1,0,0,0,1,0,0,0,1};
+      sky->curves[0].points.push_back(oldFrame); starViewer.setView(1,0,0,{},1);
+      require(starViewer.captureImage()==skyOnly,"Star replay used the wrong frame orientation");
+      sky->starCatalog.stars[1].magnitude=8;
+      const auto dimStars=starViewer.captureImage();
+      auto starBrightness=[](const QImage &image) {
+         int maximum=0; const double scale=image.devicePixelRatio();
+         for (int y=qRound(236*scale);y<qRound(244*scale);++y)
+            for (int x=qRound(600*scale);x<qRound(608*scale);++x) maximum=std::max(maximum,qGray(image.pixel(x,y)));
+         return maximum;
+      };
+      require(starBrightness(skyOnly)>starBrightness(dimStars)+30,"Magnitude did not reduce star brightness");
+      sky->starsEnabled=false; const auto disabledSky=starViewer.captureImage();
+      require(disabledSky!=skyOnly,"Disabling stars had no effect");
+      sky->starsEnabled=true; sky->starCount=0;
+      require(starViewer.captureImage()==disabledSky,"Zero star count still rendered stars");
+      std::cout << "Native texture, depth, rotation, resize, model material, Sun illumination, star catalog/camera/replay/occlusion, fallback and lifecycle checks passed\n";
       return 0;
    } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }
 }

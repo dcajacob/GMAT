@@ -17,6 +17,7 @@
 #include <osg/Point>
 #include <osg/ComputeBoundsVisitor>
 #include <osg/LightSource>
+#include <osg/Depth>
 #include <osgDB/ReadFile>
 #include <osgDB/FileUtils>
 #include <osgDB/Registry>
@@ -29,6 +30,7 @@ namespace {
 osg::Vec4 color(const QColor &c) { return {float(c.redF()),float(c.greenF()),float(c.blueF()),1}; }
 osg::ref_ptr<osg::Image> readTexture(const QString &path)
 {
+   if (path.isEmpty()) return {};
    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
    if (pixels.isNull()) return {};
    osg::ref_ptr<osg::Image> image=new osg::Image;
@@ -134,6 +136,7 @@ struct OrbitRenderer::Scene
    osg::ref_ptr<osgViewer::GraphicsWindowEmbedded> context;
    osg::ref_ptr<osg::Group> root=new osg::Group;
    osg::ref_ptr<osg::Geode> guides=new osg::Geode;
+   osg::ref_ptr<osg::Geode> sky=new osg::Geode;
    osg::ref_ptr<osg::LightSource> illumination=new osg::LightSource;
    std::map<int,Curve> curves;
    double zoom=1,yaw=.55,pitch=.45;
@@ -154,6 +157,11 @@ struct OrbitRenderer::Scene
       // Point markers have a zero-size world-space bound but a visible pixel size.
       viewer.getCamera()->setSmallFeatureCullingPixelSize(-1);
       root->addChild(guides);
+      auto *skyState=sky->getOrCreateStateSet();
+      skyState->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+      skyState->setAttributeAndModes(new osg::Depth(osg::Depth::ALWAYS,0,1,false));
+      skyState->setRenderBinDetails(-100,"RenderBin");
+      root->addChild(sky);
       viewer.setSceneData(root);
    }
    void synchronize(int width,int height,double pixelRatio) {
@@ -179,6 +187,41 @@ struct OrbitRenderer::Scene
       const osg::Vec3d center=right*(-pan.x()*2*halfWidth/width)+up*(pan.y()*2*halfHeight/height);
       viewer.getCamera()->setViewMatrixAsLookAt(center+outward*(extent*4),center,up);
       viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,extent*.01,extent*10);
+      sky->removeDrawables(0,sky->getNumDrawables());
+      if (model->starsEnabled && model->starCount>0) {
+         std::array<double,9> inertialToView={1,0,0,0,1,0,0,0,1};
+         const PlotPoint *sample=nullptr;
+         for (const auto &source:model->curves) for (const auto &point:source.points)
+            if (point.frame<=frame && (!sample || point.frame>sample->frame)) sample=&point;
+         if (sample) inertialToView=sample->inertialToView;
+         osg::ref_ptr<osg::Vec3Array> positions[5];
+         for (auto &group:positions) group=new osg::Vec3Array;
+         // Fixed 50-degree celestial field: translations and orthographic zoom
+         // change nearby geometry, never a star's angular position at infinity.
+         constexpr double tangent=.4663076581549986;
+         const int count=std::min(model->starCount,static_cast<int>(model->starCatalog.stars.size()));
+         for (int i=0;i<count;++i) {
+            const auto &star=model->starCatalog.stars[i]; osg::Vec3d direction;
+            for (int row=0;row<3;++row) for (int col=0;col<3;++col)
+               direction[row]+=inertialToView[row*3+col]*star.direction[col];
+            const double forward=-(direction*outward);
+            if (forward<=0) continue;
+            const double x=(direction*right)/(forward*tangent*aspect),y=(direction*up)/(forward*tangent);
+            if (std::abs(x)>1 || std::abs(y)>1) continue;
+            const int group=static_cast<int>(std::clamp((star.magnitude+1)/2,0.0,4.0));
+            positions[group]->push_back(center+right*(x*halfWidth)+up*(y*halfHeight)-outward*(extent*3));
+         }
+         for (int group=0;group<5;++group) {
+            auto geometry=new osg::Geometry; isolateArrays(geometry);
+            geometry->setVertexArray(positions[group]);
+            auto colors=new osg::Vec4Array; const float brightness=1.0f-.14f*group;
+            colors->push_back({brightness,brightness,brightness,1});
+            geometry->setColorArray(colors,osg::Array::BIND_OVERALL);
+            geometry->addPrimitiveSet(new osg::DrawArrays(GL_POINTS,0,positions[group]->size()));
+            geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::Point((2.8-.45*group)*pixelRatio));
+            sky->addDrawable(geometry);
+         }
+      }
       auto guideGeometry=new osg::Geometry; isolateArrays(guideGeometry);
       auto guidePositions=new osg::Vec3Array; auto guideColors=new osg::Vec4Array;
       auto line=[&](const osg::Vec3d &a,const osg::Vec3d &b,const osg::Vec4 &c) {
