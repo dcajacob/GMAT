@@ -52,6 +52,19 @@ int main(int argc,char **argv)
       QTemporaryDir output;
       require(output.isValid(),"Temporary output directory unavailable");
       FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",(output.path()+"/").toStdString());
+      require(window.runMission()==MainWindow::RunResult::Completed,"Default mission failed");
+      QApplication::processEvents();
+      const auto *activePlot=window.findChild<QMdiArea *>()->activeSubWindow();
+      require(activePlot && !activePlot->property("plotName").toString().isEmpty(),
+              "Default mission left plots behind the script window");
+      for (const auto &name : {"DefaultOrbitView","DefaultGroundTrackPlot"}) {
+         const auto model=window.plotReceiver()->model(name);
+         require(model && !curve(*model,"DefaultSC").points.empty(),"Default mission plot history missing");
+         bool visible=false;
+         for (auto *child:window.findChildren<QMdiSubWindow *>())
+            if (child->property("plotName").toString()==name && child->isVisible()) visible=true;
+         require(visible,"Default mission plot window missing");
+      }
       require(window.loadScript(script),"Plot mission could not open");
       require(window.runMission()==MainWindow::RunResult::Completed,"Plot mission failed");
       auto *receiver=window.plotReceiver();

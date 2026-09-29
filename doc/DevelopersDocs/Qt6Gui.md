@@ -293,6 +293,12 @@ window lifetime; a rebuild starts a fresh recording. Body and coordinate
 system pointers are used only while receiving engine publications, never
 during drawing or replay.
 
+New and reopened plots receive focus after being shown, so activating the main
+window does not unexpectedly raise the script over them. The default-mission
+regression checks both retained samples and visible/frontmost plots after event
+processing. A native Linux X11 launch from an unrelated working directory also
+ran the default mission and captured its ground-track window in front.
+
 OrbitView is currently an orthographic trajectory view with body disks,
 rotation, pan, reversible wheel zoom, Fit, image export, and replay. It uses
 the view-coordinate positions already converted by OrbitPlot; non-spacecraft

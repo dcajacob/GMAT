@@ -54,6 +54,7 @@ bool QtPlotReceiver::show(const QString &name)
          entry.window=workspace->addSubWindow(entry.table);
       } else {
          entry.widget=new PlotWidget(entry.data);
+         entry.widget->setFocusPolicy(Qt::StrongFocus);
          entry.window=workspace->addSubWindow(entry.widget);
       }
       entry.window->setAttribute(Qt::WA_DeleteOnClose);
@@ -61,7 +62,8 @@ bool QtPlotReceiver::show(const QString &name)
       entry.window->setProperty("plotName",name);
       entry.window->resize(700,480);
    }
-   entry.window->show(); workspace->setActiveSubWindow(entry.window); return true;
+   entry.window->show(); workspace->setActiveSubWindow(entry.window);
+   entry.window->widget()->setFocus(); return true;
 }
 QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel::Kind kind,
       Real x, Real y, Real w, Real h, bool maximized)
@@ -76,6 +78,11 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
    const int top=std::clamp(static_cast<int>((std::isfinite(y) ? std::clamp(y,0.0,1.0) : 0)*bounds.height()),0,std::max(0,bounds.height()-height));
    entry.window->showNormal(); entry.window->setGeometry(left,top,width,height);
    if (maximized) entry.window->showMaximized();
+   // Restoring normal geometry can reactivate the formerly maximized script.
+   // Activate the plot only after its final window state has been applied.
+   workspace->setActiveSubWindow(entry.window);
+   entry.window->raise();
+   entry.window->widget()->setFocus();
    if (changed) changed(); return entry;
 }
 void QtPlotReceiver::refresh(Entry &entry, bool force)
