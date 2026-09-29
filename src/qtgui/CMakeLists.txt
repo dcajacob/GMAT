@@ -64,6 +64,8 @@ if(GMAT_QT_BUILD_TESTS)
          set_tests_properties(QtGui.NativeOrbitHiDPI PROPERTIES LABELS qt-gui TIMEOUT 60)
       endif()
    endif()
+   add_executable(GmatQtWindowTests tests/WindowTests.cpp)
+   target_link_libraries(GmatQtWindowTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
    target_link_libraries(GmatQtFileTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
@@ -85,6 +87,10 @@ if(GMAT_QT_BUILD_TESTS)
    endfunction()
    set(qt_test_startup "$<TARGET_FILE_DIR:GmatQt>/gmat_startup_qt.txt")
    if(UNIX AND NOT APPLE AND QT_XVFB_RUN)
+      add_test(NAME QtGui.NativeWindows COMMAND ${QT_XVFB_RUN} -a
+         ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
+         $<TARGET_FILE:GmatQtWindowTests> "${qt_test_startup}")
+      set_tests_properties(QtGui.NativeWindows PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
       add_test(NAME QtGui.NativePlots COMMAND ${QT_XVFB_RUN} -a
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
          $<TARGET_FILE:GmatQtPlotTests> "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -105,6 +111,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_custom_target(check-qt
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-      DEPENDS GmatQt GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests
+      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests
       USES_TERMINAL VERBATIM)
 endif()
