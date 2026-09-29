@@ -232,6 +232,70 @@ int main(int argc, char **argv)
       auto *createdArray=Moderator::Instance()->GetConfiguredObject("CreatedArray");
       require(createdArray && createdArray->GetIntegerParameter("NumRows")==3 && createdArray->GetIntegerParameter("NumCols")==2,
          "Created array dimensions wrong");
+      editor->setPlainText("Create Array Formula[1,2];\nCreate Variable result;\nCreate Spacecraft ExprSat;\n"
+         "BeginMissionSequence;\n% Keep this calculation exactly\nresult = Formula(1,1) + Formula(1,2);\n");
+      require(window.buildScript(),"Expression fixture failed to build");
+      const auto beforeExpressions=editor->toPlainText();
+      QString expressionError="Apply was not invoked";
+      {
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Formula"),[&](const QMap<QString,QString> &changes) {
+            expressionError=window.applyResourceChanges("Formula",changes,beforeExpressions); return expressionError;
+         },&owner,beforeExpressions);
+         auto *button=panel.findChild<QPushButton *>("arrayExpressions"); require(button,"Expression grid missing");
+         auto fill=[&](bool accept) {
+            QTimer::singleShot(0,&panel,[&,accept] {
+               auto *dialog=panel.findChild<QDialog *>("arrayExpressionDialog");
+               if (!dialog) return;
+               auto *grid=dialog->findChild<QTableWidget *>("arrayExpressionGrid");
+               grid->item(0,0)->setText("sqrt(16) + 1"); grid->item(0,1)->setText("Formula(1,1) * 3");
+               if (accept) dialog->accept(); else dialog->reject();
+            }); button->click();
+         };
+         fill(false); require(!panel.hasChanges(),"Cancel changed expression cells");
+         fill(true); require(panel.hasChanges() && editor->toPlainText()==beforeExpressions,"Expression grid applied before Apply");
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+      }
+      require(expressionError.isEmpty(),qPrintable("Expression Apply failed: "+expressionError));
+      const auto formulaScript=editor->toPlainText();
+      require(formulaScript.endsWith("% Keep this calculation exactly\nresult = Formula(1,1) + Formula(1,2);\n"),"Expression editor changed existing commands");
+      auto formulaResult=[&] {
+         require(window.runMission()==MainWindow::RunResult::Completed,"Array formula execution failed");
+         return Moderator::Instance()->GetInternalObject("result")->GetRealParameter("Value");
+      };
+      require(formulaResult()==20,"Array formulas did not execute in row order");
+      editor->undo(); require(editor->toPlainText()==beforeExpressions && formulaResult()==0,"Array expression Undo failed");
+      editor->redo(); require(editor->toPlainText()==formulaScript && formulaResult()==20,"Array expression Redo failed");
+      require(window.applyResourceChanges("ExprSat",{{"DryMass","850"}},formulaScript).isEmpty() &&
+         arrayExpressions(editor->toPlainText(),"Formula")==arrayExpressions(formulaScript,"Formula") && formulaResult()==20,
+         "Unrelated resource edit lost array expressions");
+      QTemporaryDir expressionFiles;
+      const auto expressionPath=expressionFiles.filePath("expressions.script");
+      require(window.saveScriptTo(expressionPath) && window.loadScript(expressionPath) && formulaResult()==20,"Expression save/reopen changed results");
+      {
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Formula"),[](const QMap<QString,QString>&) { return QString(); },&owner,editor->toPlainText());
+         bool restored=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("arrayExpressionDialog");
+            if (!dialog) return;
+            auto *grid=dialog->findChild<QTableWidget *>("arrayExpressionGrid");
+            restored=grid->item(0,0)->text()=="sqrt(16) + 1" && grid->item(0,1)->text()=="Formula(1,1) * 3";
+            dialog->reject();
+         });
+         panel.findChild<QPushButton *>("arrayExpressions")->click();
+         require(restored && !panel.hasChanges(),"Reopened expression grid lost formula text"); panel.discardChanges();
+      }
+      const auto withExpressions=editor->toPlainText();
+      require(window.applyResourceChanges("Formula",{{"@ArrayExpressions","[]"}},withExpressions).isEmpty() && formulaResult()==0,
+         "Clearing expression cells did not restore numeric initialization");
+      editor->undo(); require(editor->toPlainText()==withExpressions && formulaResult()==20,"Cleared expression Undo failed");
+      const auto expressionSource=editor->toPlainText();
+      require(!window.applyResourceChanges("Formula",{{"@ArrayExpressions",R"([{"row":1,"column":1,"expression":"1; Stop"}])"}},expressionSource).isEmpty(),
+         "Expression grid accepted an extra mission command");
+      require(!window.applyResourceChanges("Formula",{{"@ArrayExpressions",R"([{"row":1,"column":1,"expression":"MissingVariable + 2"}])"}},expressionSource).isEmpty(),
+         "Unknown expression variable was accepted");
+      require(editor->toPlainText()==expressionSource && formulaResult()==20,"Rejected formula changed source or engine state");
       editor->setPlainText("Create ChemicalTank FuelA FuelB;\nCreate ChemicalThruster Engine;\n"
          "GMAT Engine.Tank = {FuelA, FuelB};\nGMAT Engine.MixRatio = [2 3];\n"
          "Create ReportFile PickerReport;\nCreate Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");
@@ -630,6 +694,7 @@ int main(int argc, char **argv)
       require(!window.buildScript() && manualExplanation,"Unsupported OpenFrames script lacked a specific explanation");
       require(editor->toPlainText().startsWith("Create OpenFramesVector"),"Unsupported conversion changed source");
       require(window.loadScript(script) && window.buildScript(),"Normal script no longer builds without conversion");
+      std::cout<<"PASS: expression grid Cancel/Apply, formula order, source preservation, Undo/Redo, save/reopen, clear and failed-formula recovery\n";
       std::cout<<"PASS: automatic OpenFrames conversion offer, decline, accept, Run, undo, original-file preservation and unsupported-feature explanation\n";
       const auto capabilities=window.availableEngineTypes();
       require(capabilities.contains("OrbitView") && capabilities.contains("GmatFunction") && !capabilities.contains("OpenFramesInterface"),

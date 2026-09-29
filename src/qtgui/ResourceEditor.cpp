@@ -1,5 +1,9 @@
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "ScriptCompatibility.hpp"
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
 #include "TableColumns.hpp"
 #include <QTimer>
 #include "GmatBase.hpp"
@@ -26,7 +30,7 @@
 #include <cmath>
 #include <algorithm>
 
-ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) : EditablePanel(parent)
+ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
    layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
@@ -44,6 +48,37 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
       sections->setObjectName("propertySections");
       sections->setExpanding(false);
       layout->addWidget(sections);
+   }
+   if (object.IsOfType("Array")) {
+      auto *button=new QPushButton("Expressions…",this); button->setObjectName("arrayExpressions"); layout->addWidget(button);
+      const auto name=QString::fromStdString(object.GetName());
+      const int rows=object.GetIntegerParameter("NumRows"),columns=object.GetIntegerParameter("NumCols");
+      try { originalExpressions=expressions=arrayExpressions(script,name); setArrayExpressions(script,name,expressions,rows,columns); }
+      catch (const std::exception &error) { button->setEnabled(false); button->setToolTip(QString::fromUtf8(error.what())); }
+      connect(button,&QPushButton::clicked,this,[this,rows,columns] {
+         QDialog dialog(this); dialog.setObjectName("arrayExpressionDialog"); dialog.setWindowTitle("Array expressions");
+         auto *layout=new QVBoxLayout(&dialog);
+         auto *help=new QLabel("Nonempty cells run at mission start, in row order, before existing commands. Blank cells keep their numeric initial values. Apply validates formulas without running them. Apply numeric edits separately.",&dialog);
+         help->setWordWrap(true); layout->addWidget(help);
+         auto *grid=new QTableWidget(rows,columns,&dialog); grid->setObjectName("arrayExpressionGrid");
+         for (int r=0;r<rows;++r) for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem);
+         for (const auto &value:QJsonDocument::fromJson(expressions.toUtf8()).array()) {
+            const auto cell=value.toObject(); const int r=cell["row"].toInt()-1,c=cell["column"].toInt()-1;
+            if (r>=0 && r<rows && c>=0 && c<columns) grid->item(r,c)->setText(cell["expression"].toString());
+         }
+         configureTableColumns(grid); fitTableColumns(grid); layout->addWidget(grid);
+         auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+         connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+         connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);
+         dialog.resize(650,350);
+         if (dialog.exec()!=QDialog::Accepted) return;
+         QJsonArray cells;
+         for (int r=0;r<rows;++r) for (int c=0;c<columns;++c) {
+            const auto text=grid->item(r,c)->text().trimmed();
+            if (!text.isEmpty()) cells.append(QJsonObject{{"row",r+1},{"column",c+1},{"expression",text}});
+         }
+         expressions=QString::fromUtf8(QJsonDocument(cells).toJson(QJsonDocument::Compact));
+      });
    }
    layout->addWidget(search);
    table = new QTableWidget(this);
@@ -262,6 +297,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply] {
       QMap<QString, QString> changes;
+      if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
@@ -283,6 +319,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
+   if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
       const QString value = combo ? combo->currentText() : table->item(row, 1)->text();

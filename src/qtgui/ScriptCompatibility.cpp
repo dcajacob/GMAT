@@ -6,6 +6,7 @@
 #include <cmath>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <stdexcept>
 
 namespace {
@@ -201,4 +202,64 @@ QString setQtCameraSetting(const QString &source,const QString &plot,const QtCam
       }
    }
    return directive+source;
+}
+
+namespace {
+QPair<qsizetype,qsizetype> arrayBlock(const QString &source,const QString &name)
+{
+   const QString prefix="^[ \t]*% GMAT-Qt-Array-Expressions "+QRegularExpression::escape(name);
+   const QRegularExpression beginPattern(prefix+" begin[ \t]*(?:\n|$)",QRegularExpression::MultilineOption);
+   const QRegularExpression endPattern(prefix+" end[ \t]*(?:\n|$)",QRegularExpression::MultilineOption);
+   const auto begin=beginPattern.match(source),end=endPattern.match(source);
+   if (!begin.hasMatch() && !end.hasMatch()) return {-1,0};
+   if (!begin.hasMatch() || !end.hasMatch() || end.capturedStart()<begin.capturedEnd() ||
+       beginPattern.match(source,begin.capturedEnd()).hasMatch() || endPattern.match(source,end.capturedEnd()).hasMatch())
+      throw std::runtime_error("Array expression block is incomplete or duplicated; repair its begin/end comments before editing");
+   return {begin.capturedStart(),end.capturedEnd()-begin.capturedStart()};
+}
+}
+QString arrayExpressions(const QString &source,const QString &name)
+{
+   const auto block=arrayBlock(source,name); QJsonArray cells;
+   if (block.first<0) return "[]";
+   const auto lines=source.mid(block.first,block.second).split('\n');
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\(\\s*([0-9]+)\\s*,\\s*([0-9]+)\\s*\\)\\s*=\\s*([^;\\n]+);\\s*$");
+   for (int i=1;i<lines.size();++i) {
+      if (lines[i].trimmed()=="% GMAT-Qt-Array-Expressions "+name+" end") break;
+      const auto match=assignment.match(lines[i]);
+      if (!match.hasMatch()) throw std::runtime_error("Array expression block contains an unsupported statement; edit it in the script");
+      cells.append(QJsonObject{{"row",match.captured(1).toInt()},{"column",match.captured(2).toInt()},{"expression",match.captured(3).trimmed()}});
+   }
+   return QString::fromUtf8(QJsonDocument(cells).toJson(QJsonDocument::Compact));
+}
+QString setArrayExpressions(const QString &source,const QString &name,const QString &cells,int rows,int columns)
+{
+   const auto block=arrayBlock(source,name);
+   if (block.first>=0) arrayExpressions(source,name); // Never erase unrecognized commands.
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(cells.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isArray()) throw std::runtime_error("Invalid array expression grid");
+   QMap<QPair<int,int>,QString> expressions;
+   for (const auto &value:document.array()) {
+      const auto cell=value.toObject(); const auto row=cell.value("row").toInt(-1),col=cell.value("column").toInt(-1);
+      const auto expression=cell.value("expression").toString().trimmed();
+      if (row<1 || row>rows || col<1 || col>columns || expression.isEmpty() ||
+          expression.contains(QRegularExpression("[;\r\n%]")) || expressions.contains({row,col}))
+         throw std::runtime_error("Each expression needs a unique in-range cell and a single formula without semicolons or comments");
+      expressions.insert({row,col},expression);
+   }
+   QString replacement;
+   if (!expressions.isEmpty()) {
+      replacement="% GMAT-Qt-Array-Expressions "+name+" begin\n";
+      for (auto it=expressions.cbegin();it!=expressions.cend();++it)
+         replacement+=QString("GMAT %1(%2,%3) = %4;\n").arg(name).arg(it.key().first).arg(it.key().second).arg(it.value());
+      replacement+="% GMAT-Qt-Array-Expressions "+name+" end\n";
+   }
+   auto result=source;
+   if (block.first>=0) { result.replace(block.first,block.second,replacement); return result; }
+   if (replacement.isEmpty()) return result;
+   const auto mission=QRegularExpression("^[ \t]*BeginMissionSequence[ \t]*;?[^\n]*(?:\n|$)",QRegularExpression::MultilineOption).match(source);
+   if (!mission.hasMatch()) throw std::runtime_error("Build a mission sequence before adding array expressions");
+   const auto position=mission.capturedEnd();
+   result.insert(position,(position && source[position-1]!='\n' ? "\n" : "")+replacement);
+   return result;
 }

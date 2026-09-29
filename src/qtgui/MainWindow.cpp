@@ -330,7 +330,7 @@ MainWindow::MainWindow()
       }
       auto *panel = new ResourceEditor(*object, [this, name, snapshot](const QMap<QString, QString> &changes) {
          return applyResourceChanges(name, changes, snapshot);
-      });
+      },nullptr,snapshot);
       auto *child = new EditorSubWindow;
       child->setWidget(panel);
       workspace->addSubWindow(child);
@@ -710,6 +710,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   if (changes.contains("@ArrayExpressions")) {
+      if (!object->IsOfType("Array")) return "Cell expressions require an Array.";
+      if (changes.size()!=1) return "Apply numeric array changes separately from expression changes.";
+      try {
+         return applyModelScript(setArrayExpressions(expectedScript,name,changes["@ArrayExpressions"],
+            object->GetIntegerParameter("NumRows"),object->GetIntegerParameter("NumCols")));
+      } catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    QString candidate;
    try {
       std::unique_ptr<GmatBase> proposed(object->Clone());
@@ -729,6 +737,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
+      // Resource edits must not normalize/rewrite the existing mission commands,
+      // including cell formulas, labels and user comments.
+      const QRegularExpression missionStart("^[ \t]*BeginMissionSequence\\b",QRegularExpression::MultilineOption);
+      const auto originalMission=missionStart.match(expectedScript),rebuiltMission=missionStart.match(candidate);
+      if (originalMission.hasMatch() && rebuiltMission.hasMatch())
+         candidate=candidate.left(rebuiltMission.capturedStart())+expectedScript.mid(originalMission.capturedStart());
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    return applyModelScript(candidate);

@@ -11,12 +11,13 @@ class ResourceEditor final : public EditablePanel
 {
 public:
    using Apply = std::function<QString(const QMap<QString, QString> &)>;
-   ResourceEditor(GmatBase &object, Apply apply, QWidget *parent = nullptr);
+   ResourceEditor(GmatBase &object, Apply apply, QWidget *parent = nullptr, const QString &script = {});
    bool hasChanges() const override;
    void discardChanges() override { applied = true; }
 private:
    QTableWidget *table;
    QLabel *status;
    QMap<QString, QString> original;
+   QString originalExpressions="[]",expressions="[]";
    bool applied = false;
 };

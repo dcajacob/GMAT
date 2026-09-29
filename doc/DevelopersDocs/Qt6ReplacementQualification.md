@@ -287,3 +287,24 @@ outstanding, alongside the other workflow and plugin qualification gates.
 
 GmatQt rebuilt; all 11 tests passed in 20.17 seconds. Evidence:
 `Qt6ParityValidation/check-keep-projection.txt`.
+
+## Expression-cell checkpoint
+
+Added an Expressions grid to Array resources. General formulas are GMAT mission
+commands, so new formula blocks initialize cells at mission start in row order;
+the dialog states this timing explicitly. Numeric initial values stay separate.
+Formula blocks preserve text across Apply, Undo/Redo and save/reopen. Existing
+mission assignments remain untouched. Unrecognized statements inside a managed
+block are refused instead of erased; invalid cells/formulas restore the previous
+mission. Resource editing now preserves the original mission section verbatim.
+
+WorkflowTests opens the grid, exercises Cancel and Apply, evaluates dependent
+cells to an independently expected result, verifies Undo/Redo, unrelated resource
+editing, save/reopen and reopened grid text, clears formulas and undoes that,
+and verifies extra commands/unknown references are rejected without changing
+source or runtime results. Numeric and expression edits currently require
+separate Apply operations; arbitrary existing assignments use Mission editing.
+The remaining specialized-editor, multi-camera and plugin gates stay open.
+
+GmatQt rebuilt; all 11 tests passed in 21.53 seconds. Evidence:
+`Qt6ParityValidation/check-array-expressions.txt`.

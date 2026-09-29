@@ -160,7 +160,8 @@ keeps changes local until Apply. Cancel leaves the property unchanged. Array
 values serialize as indexed initial assignments and participate in the same
 validation, rollback and undo flow as scalar properties. Array grids offer row and column controls, preserve retained cells and fill
 new cells with zero. Apply validates the resized mission; Undo restores the
-prior dimensions and values. Expression-valued cells remain script work.
+prior dimensions and values. Use **Expressions…** for formulas evaluated at mission start; see the expression
+workflow below.
 
 Spacecraft panels open on Orbit and group the existing editable fields under
 the familiar Attitude, Ballistic/Mass, Hardware, Power System, SPICE and Visualization
@@ -590,3 +591,22 @@ as one undoable edit, then save the script normally. It preserves mission
 calculations and keeps the current viewer open. Unbuilt script edits and pending
 resource-panel changes must be resolved first. Orbit angles, pan and zoom are
 not included in this action.
+
+
+### Array expression cells
+
+Array resource panels offer **Expressions…**, separate from numeric initial
+values. Nonempty cells produce ordinary GMAT assignments immediately after
+BeginMissionSequence, evaluated in row order before existing commands. Blank
+cells have no generated assignment and keep the numeric initial value. Formula
+text is retained in a marked script block and shown when reopening the grid.
+Apply validates the candidate mission without executing it; Save keeps the
+formulas in the script, and Undo restores the previous block. Unknown references
+or extra statements are rejected without changing the previous mission.
+
+Apply numeric/dimension edits separately from expression edits. Existing
+assignments elsewhere in the mission are left untouched and can still override
+these initializations later; edit those assignments through the Mission tree.
+This grid does not reinterpret arbitrary existing assignment code as a formula
+block. Resource edits preserve the existing mission section, including comments
+and formula commands, rather than replacing it with engine-formatted output.
