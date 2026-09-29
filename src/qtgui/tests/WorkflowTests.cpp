@@ -17,6 +17,7 @@
 #include "ResourceEditor.hpp"
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
+#include "PropagationGroupsDialog.hpp"
 #include "CommandEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "ScriptCompatibility.hpp"
@@ -71,6 +72,14 @@ int main(int argc, char **argv)
    try {
       TestSettings isolatedSettings;
       {
+         const QString grouped="Propagate 'Groups' BackProp Synchronized Prop(Sat, OtherSat) {Sat.ElapsedSecs = -60, StopTolerance = 1e-8}; % keep groups";
+         PropagationGroupsDialog groups(grouped,{"Prop","Other"},{"Sat","OtherSat","Fleet"});
+         auto *groupTable=groups.findChild<QTableWidget *>("propagationGroupsTable");
+         require(groupTable->rowCount()==1 && groupTable->item(0,1)->text()=="Sat, OtherSat","Existing group objects lost");
+         groups.findChild<QComboBox *>("propagationGroupMode")->setCurrentIndex(0); groups.findChild<QCheckBox *>("propagationGroupBackwards")->setChecked(false);
+         groupTable->item(0,1)->setText("Fleet");
+         require(groups.statement()=="Propagate 'Groups' Prop(Fleet) {Sat.ElapsedSecs = -60, StopTolerance = 1e-8}; % keep groups","Group editing changed stopping conditions or comment");
+         require(!PropagationGroupsDialog::supports("Propagate Prop(Sat, 'STM') {Sat.ElapsedSecs = 60};"),"Variational flags offered lossy group edit");
          const QString stopSource="Propagate 'Keep' BackProp Prop(Sat) {Sat.ElapsedSecs = 60, StopTolerance = 1e-8, OrbitColor = Green}; % comment";
          PropagationStopsDialog stops(stopSource);
          stops.findChild<QTableWidget *>("propagationStopsTable")->item(0,1)->setText("120");

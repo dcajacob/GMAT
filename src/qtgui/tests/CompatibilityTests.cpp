@@ -418,7 +418,7 @@ int main(int argc,char **argv)
             "Electric coefficients lost during save/reopen");
       }
       {
-         editor->setPlainText("Create Spacecraft StopSat;\nCreate ForceModel StopForces;\nCreate Propagator StopProp;\nStopProp.FM = StopForces;\n"
+         editor->setPlainText("Create Spacecraft StopSat OtherStopSat;\nOtherStopSat.X = 8000;\nCreate ForceModel StopForces;\nCreate Propagator StopProp OtherStopProp;\nStopProp.FM = StopForces;\nOtherStopProp.FM = StopForces;\nOtherStopProp.InitialStepSize = 20;\n"
             "BeginMissionSequence;\nPropagate 'First satisfied' StopProp(StopSat) {StopSat.ElapsedSecs = 600, StopTolerance = 1e-8}; % retain multi stop\n");
          require(window.buildScript(),"Multiple-stop fixture failed");
          const auto snapshot=window.missionSnapshot(); int index=-1;
@@ -426,7 +426,27 @@ int main(int argc,char **argv)
          require(index>=0,"Multiple-stop command missing"); QWidget owner; QString error="Not applied";
          CommandEditor panel(snapshot.nodes[index].statement,false,{},[&](const auto &replacement) {
             error=window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement); return error;
-         },{"StopProp"},{"StopSat"},&owner);
+         },{"StopProp","OtherStopProp"},{"StopSat","OtherStopSat"},&owner);
+         const auto beforeGroups=panel.findChild<QPlainTextEdit *>("commandSource")->toPlainText();
+         QTimer::singleShot(0,[&] { auto *dialog=panel.findChild<QDialog *>("propagationGroupsDialog"); dialog->findChild<QPushButton *>("propagationGroupAdd")->click(); dialog->reject(); });
+         panel.findChild<QPushButton *>("editPropagationGroups")->click();
+         require(panel.findChild<QPlainTextEdit *>("commandSource")->toPlainText()==beforeGroups,"Group Cancel changed command");
+         QTimer::singleShot(0,[&] {
+            auto *dialog=panel.findChild<QDialog *>("propagationGroupsDialog"); auto *grid=dialog->findChild<QTableWidget *>("propagationGroupsTable");
+            dialog->findChild<QComboBox *>("propagationGroupMode")->setCurrentText("Synchronized");
+            dialog->findChild<QPushButton *>("propagationGroupAdd")->click();
+            auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+            require(!ok->isEnabled(),"Empty propagation group can be accepted");
+            qobject_cast<QComboBox *>(grid->cellWidget(1,0))->setCurrentText("OtherStopProp");
+            grid->item(1,1)->setText("StopSat"); require(!ok->isEnabled(),"Spacecraft assigned to two groups accepted");
+            QTimer::singleShot(0,[&] {
+               auto *picker=dialog->findChild<QDialog *>("propagationObjectsDialog"); auto *list=picker->findChild<QListWidget *>("propagationObjectsList");
+               require(list->count()==2,"Group picker contains wrong object types");
+               for (int i=0;i<list->count();++i) list->item(i)->setCheckState(list->item(i)->text()=="OtherStopSat" ? Qt::Checked : Qt::Unchecked);
+               picker->accept();
+            }); dialog->findChild<QPushButton *>("propagationGroupChoose")->click();
+            require(ok->isEnabled(),"Valid propagation groups rejected"); ok->click();
+         }); panel.findChild<QPushButton *>("editPropagationGroups")->click();
          QTimer::singleShot(0,[&] {
             auto *dialog=panel.findChild<QDialog *>("propagationStopsDialog"); auto *grid=dialog->findChild<QTableWidget *>("propagationStopsTable");
             dialog->findChild<QPushButton *>("propagationStopAdd")->click(); grid->item(1,0)->setText("StopSat.ElapsedDays"); grid->item(1,1)->setText("0.001");
@@ -438,6 +458,9 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed,"Multiple-stop execution failed");
          const double final=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("StopSat"))->GetEpoch();
          require(std::abs((final-initial)*86400.-86.4)<.01,"Multiple-stop mission did not stop at first satisfied condition");
+         auto *other=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("OtherStopSat"));
+         require(other && std::abs((other->GetEpoch()-final)*86400.)<1e-6 && std::abs(other->GetRealParameter("Y"))>1,
+            "Synchronized second propagator did not advance its selected spacecraft to the common stop");
       }
       {
          editor->setPlainText("Create Spacecraft ApsisSat;\nApsisSat.DisplayStateType = Keplerian;\n"

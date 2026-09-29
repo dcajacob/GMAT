@@ -296,8 +296,8 @@ commands. A Propagation form supports one spacecraft, one propagator, and a
 single parameter/value stop condition, including elapsed seconds or days. Resource
 selectors use the current mission; changing the spacecraft also changes an elapsed-
 time stop condition. The form and script text stay synchronized, preserving labels,
-comments and an existing BackProp modifier. Multiple stops are edited through Stopping conditions; propagator grouping still
-uses the script editor. Periapsis and apoapsis are supported by both stop editors.
+comments and an existing BackProp modifier. Multiple stops are edited through
+Stopping conditions; propagator assignments use Propagators and spacecraft. Periapsis and apoapsis are supported by both stop editors.
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
@@ -987,3 +987,15 @@ pickers. Periapsis/apoapsis rows have no editable goal. Columns are adjustable.
 Propagation stops when any condition is satisfied. OK updates the source as one
 undoable edit; Cancel leaves it unchanged, and Apply validates the mission.
 Existing StopTolerance and OrbitColor options remain in the command.
+
+### Propagator assignments
+
+**Propagators and spacecraft…** opens an adjustable table of propagators and their
+spacecraft or formations. Add/remove rows, select a propagator, and choose one or
+more objects for each row. The object picker also supports dragging to reorder.
+Each object must appear only once, and empty assignments prevent acceptance.
+Select Independent or Synchronized mode and optionally propagate backwards.
+OK changes the command source as one undoable edit; Cancel leaves it unchanged.
+Apply validates the complete mission. Existing stop conditions, options, labels
+and comments remain intact. Commands containing variational propagation flags
+(STM, AMatrix or Covariance) currently require the source editor.

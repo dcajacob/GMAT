@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator configuration pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; variational flags and broader formation/mode combinations pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -1244,3 +1244,27 @@ and broader stopping-expression combinations remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 54.61 seconds. Evidence:
 `Qt6ParityValidation/check-multiple-stops.txt`.
+
+## Propagator assignment editor
+
+CommandEditor now offers Propagators and spacecraft for representable Propagate
+headers. The dialog provides propagator selectors, editable object lists, an
+ordered spacecraft/formation picker, add/remove rows, engine-provided propagation
+modes and backward propagation. Empty or duplicate object assignments cannot be
+accepted. Formations are supplied separately from the simple spacecraft form so
+they cannot generate an invalid formation elapsed-time parameter there. Stop
+blocks, options, labels and comments are preserved when changing assignments.
+
+WorkflowTests covers modifier changes, multiple objects, a formation assignment,
+exact preservation of the command suffix, and source fallback for STM flags.
+CompatibilityTests exercises Cancel, invalid empty/duplicate rows, the nested
+object picker, and two distinct propagators in Synchronized mode. After Apply,
+save/Save As, failed-build recovery and reopen, both spacecraft advance to the
+same epoch, stopping at the earlier of the configured conditions (86.4 seconds).
+The second spacecraft also has a changed position. This is not full formation
+execution qualification or coverage of all mode/propagator combinations.
+Variational propagation flags still require the source editor.
+
+Validation: rebuilt the user's GmatQt and passed all 11 Qt tests in 41.68 seconds
+under the isolated test environment. Evidence:
+`Qt6ParityValidation/check-propagation-groups.txt`.

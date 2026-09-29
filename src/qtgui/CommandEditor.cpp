@@ -1,6 +1,7 @@
 #include "CommandEditor.hpp"
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
+#include "PropagationGroupsDialog.hpp"
 #include "CommandForm.hpp"
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -11,7 +12,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QString,QString> &templates,
-                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent)
+                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations)
    : EditablePanel(parent),original(statement),inserting(adding)
 {
    auto *layout=new QVBoxLayout(this);
@@ -27,6 +28,14 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    layout->addWidget(propagation);
    connect(source,&QPlainTextEdit::textChanged,propagation,[this,propagation] { propagation->setStatement(source->toPlainText()); });
    propagation->setStatement(statement);
+   auto *groups=new QPushButton("Propagators and spacecraft…",this); groups->setObjectName("editPropagationGroups"); layout->addWidget(groups);
+   auto showGroups=[this,groups] { groups->setVisible(PropagationGroupsDialog::supports(source->toPlainText())); };
+   connect(source,&QPlainTextEdit::textChanged,this,showGroups); showGroups();
+   connect(groups,&QPushButton::clicked,this,[this,propagators,spacecraft,formations] {
+      PropagationGroupsDialog dialog(source->toPlainText(),propagators,spacecraft+formations,this);
+      if (dialog.exec()!=QDialog::Accepted) return;
+      auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document); cursor.insertText(dialog.statement()); cursor.endEditBlock();
+   });
    auto *stops=new QPushButton("Stopping conditions…",this); stops->setObjectName("editPropagationStops"); layout->addWidget(stops);
    auto showStops=[this,stops] { stops->setVisible(PropagationStopsDialog::supports(source->toPlainText())); };
    connect(source,&QPlainTextEdit::textChanged,this,showStops); showStops();

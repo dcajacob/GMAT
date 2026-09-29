@@ -963,13 +963,14 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"Call function",QString("[OutputVariable] = %1(InputVariable);").arg(firstType(Gmat::FUNCTION,"GmatFunction","FunctionName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
-   QStringList propagationChoices,spacecraftChoices;
+   QStringList propagationChoices,spacecraftChoices,formationChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));
    for (const auto &value:spacecraft) spacecraftChoices.append(QString::fromStdString(value));
+   for (const auto &value:Moderator::Instance()->GetListOfObjects(Gmat::FORMATION)) formationChoices.append(QString::fromStdString(value));
    auto *panel=new CommandEditor(statement,operation!=MissionEdit::Replace,templates,
       [this,snapshot,index,operation](const QString &replacement) {
          return applyMissionChange(snapshot,index,operation,replacement);
-      },propagationChoices,spacecraftChoices);
+      },propagationChoices,spacecraftChoices,nullptr,formationChoices);
    auto *child=new EditorSubWindow;
    child->setWidget(panel); workspace->addSubWindow(child);
    child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
