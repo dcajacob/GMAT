@@ -10,6 +10,7 @@
 #include "ResourceProperties.hpp"
 #include "ResourceEditor.hpp"
 #include <QComboBox>
+#include <QCheckBox>
 #include <QTableWidget>
 #include <QHeaderView>
 #include <QLabel>
@@ -573,6 +574,32 @@ int main(int argc,char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed,"Eclipse locator execution failed");
       const auto events=read(eventPath);
       require(events.contains("Umbra") || events.contains("Penumbra"),"Eclipse locator found no expected shadow intervals");
+      require(window.applyResourceChanges("Eclipse",{{"RunMode","Manual"}},editor->toPlainText()).isEmpty(),"Manual locator mode failed");
+      require(window.applyMissionChange(window.missionSnapshot(),-1,MissionEdit::Append,
+         "FindEvents 'Manual search' Eclipse; % retain event comment").isEmpty(),"FindEvents insertion failed");
+      auto editAppend=[&](bool append) {
+         const auto snapshot=window.missionSnapshot(); int index=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="FindEvents") index=i;
+         require(index>=0,"FindEvents command missing");
+         QString replacement=snapshot.nodes[index].statement;
+         CommandForm form([&](const auto &value) { replacement=value; }); form.setStatement(replacement);
+         if (auto *defaults=form.findChild<QPushButton *>("commandAddOptions")) defaults->click();
+         auto *appendControl=form.findChild<QCheckBox *>("commandCheck_Append"); require(appendControl,"Append control absent");
+         appendControl->setChecked(append);
+         require(replacement.contains("'Manual search'") && replacement.contains("% retain event comment"),"Append editing lost label/comment");
+         require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty(),"Append option edit failed");
+      };
+      editAppend(false); roundTrip("manual-event-replace");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Manual FindEvents execution failed");
+      const auto replacedEvents=read(eventPath);
+      require(replacedEvents.contains("Umbra") || replacedEvents.contains("Penumbra"),"Manual FindEvents report has no intervals");
+      editAppend(true); roundTrip("manual-event-append");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Append FindEvents execution failed");
+      const auto appendedEvents=read(eventPath);
+      require(appendedEvents.startsWith(replacedEvents) && appendedEvents.size()>replacedEvents.size(),"Append did not preserve and extend event report");
+      editAppend(false);
+      require(window.runMission()==MainWindow::RunResult::Completed,"FindEvents replacement rerun failed");
+      require(read(eventPath)==replacedEvents,"Clearing Append did not restore replacement behavior");
       auto *resources=window.findChild<QTreeWidget *>("Resources");
       require(resources->findItems("Event Locators",Qt::MatchExactly|Qt::MatchRecursive).size()==1,"Event locator resource category missing");
       auto *outputs=window.findChild<QTreeWidget *>("Output");

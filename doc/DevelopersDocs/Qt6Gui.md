@@ -902,3 +902,7 @@ value and engine-provided unit. Columns start sized to their contents and can be
 resized. The dialog includes pending property edits; Cancel leaves them unchanged.
 OK checks every value is a finite number and returns the complete set to the
 resource panel. Apply validates and saves the thruster changes.
+
+FindEvents also offers **Add default options** when Append is omitted. Its Append
+checkbox controls whether the event report keeps existing output or replaces it.
+Adding the option preserves the locator selection, command label and comments.

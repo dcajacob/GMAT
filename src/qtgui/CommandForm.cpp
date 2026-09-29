@@ -2,6 +2,7 @@
 #include "ConditionDialog.hpp"
 #include "Target.hpp"
 #include "Optimize.hpp"
+#include "FindEvents.hpp"
 #include <memory>
 #include <QFormLayout>
 #include <QLineEdit>
@@ -231,20 +232,22 @@ void CommandForm::setStatement(const QString &statement)
             add(setting.captured(1),match.capturedStart(options)+setting.capturedStart(2),setting.capturedLength(2));
          }
       }
-      if (spec.type=="Solver branch") {
+      if (spec.type=="Solver branch" || spec.type=="Event search") {
          std::unique_ptr<GmatCommand> prototype;
-         if (QRegularExpression("^\\s*Optimize\\b").match(statement).hasMatch()) prototype=std::make_unique<Optimize>();
+         if (spec.type=="Event search") prototype=std::make_unique<FindEvents>();
+         else if (QRegularExpression("^\\s*Optimize\\b").match(statement).hasMatch()) prototype=std::make_unique<Optimize>();
          else prototype=std::make_unique<Target>();
          QStringList missing;
-         for (const auto &key:{QString("SolveMode"),QString("ExitMode"),QString("ShowProgressWindow")}) {
+         const QStringList keys=spec.type=="Event search" ? QStringList{"Append"} : QStringList{"SolveMode","ExitMode","ShowProgressWindow"};
+         for (const auto &key:keys) {
             if (findChild<QLineEdit *>("commandField_"+key)) continue;
-            const auto value=key=="ShowProgressWindow" ? (prototype->GetBooleanParameter(key.toStdString()) ? QString("true") : QString("false")) :
+            const auto value=(key=="ShowProgressWindow" || key=="Append") ? (prototype->GetBooleanParameter(key.toStdString()) ? QString("true") : QString("false")) :
                QString::fromStdString(prototype->GetStringParameter(key.toStdString()));
             missing.append(key+" = "+value);
          }
          if (!missing.isEmpty()) {
             auto *defaults=new QPushButton("Add default options",this); defaults->setObjectName("commandAddOptions");
-            defaults->setToolTip("Add omitted solver options using GMAT defaults; existing settings and branch contents are preserved"); layout->addRow(defaults);
+            defaults->setToolTip("Add omitted options using GMAT defaults; existing settings and command contents are preserved"); layout->addRow(defaults);
             connect(defaults,&QPushButton::clicked,this,[this,pattern=spec.pattern,options,missing] {
                auto result=currentStatement(); const auto match=QRegularExpression("^\\s*"+pattern).match(result);
                if (!match.hasMatch()) return;

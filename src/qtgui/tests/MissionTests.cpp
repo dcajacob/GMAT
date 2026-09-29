@@ -116,6 +116,11 @@ int main(int argc,char **argv)
          form.findChild<QLineEdit *>("commandField_Solver")->setText("OtherOpt");
          form.findChild<QPushButton *>("commandAddOptions")->click();
          require(result.contains("Optimize OtherOpt") && result.contains("ExitMode = Stop") && result.count("ExitMode")==1,"Adding missing options lost a pending field or replaced an existing option");
+         form.setStatement("FindEvents 'Find' Locator; % keep");
+         form.findChild<QLineEdit *>("commandField_Locator")->setText("OtherLocator");
+         form.findChild<QPushButton *>("commandAddOptions")->click();
+         require(result=="FindEvents 'Find' OtherLocator {Append = false}; % keep","Omitted Append lost pending locator or source");
+         require(!form.findChild<QPushButton *>("commandAddOptions"),"Existing Append offered duplicate insertion");
          form.setStatement("FindEvents 'Find' Locator {Append = false}; % keep");
          form.findChild<QCheckBox *>("commandCheck_Append")->setChecked(true);
          require(result=="FindEvents 'Find' Locator {Append = true}; % keep","Append checkbox changed unrelated command text");

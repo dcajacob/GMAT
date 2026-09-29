@@ -50,7 +50,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options in tests; full optimizer mode combinations pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
-| `src/gui/command/FindEventsPanel.hpp` | Event-locator selector tested with EclipseLocator; full execution/options workflow pending. |
+| `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Pending audit |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
@@ -947,8 +947,7 @@ MissionTests checks full and partial insertion, pending solver-name edits, branc
 labels/comments/bodies, dropdown/checkbox source updates and Append preservation.
 The real Target workflow selects RunInitialGuess, verifies x remains at 1, undoes
 the edit and continues through the existing saved/reopened Solve case reaching 8.
-This does not qualify every Optimize mode or Stop/Discard combination, and omitted
-FindEvents Append still requires source insertion.
+This does not qualify every Optimize mode or Stop/Discard combination, FindEvents omission was subsequently closed below.
 
 Switching modes exposed stale progress windows: engine listener keys include the
 command's generated source, so Initial Guess and Solve could leave separate
@@ -980,3 +979,23 @@ execution of every thrust model or power-dependent operating mode.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 29.68 seconds. Evidence:
 `Qt6ParityValidation/check-thruster-coefficients.txt`.
+
+## FindEvents omitted options and report behavior
+
+wx FindEventsPanel always exposes Append. Qt previously only exposed it when
+already written in source. Add default options now also handles event searches,
+reading the default from FindEvents itself. The resulting checkbox retains the
+existing source-preserving edit behavior. MissionTests checks omitted insertion,
+pending locator edits, label/comment preservation and no duplicate insertion.
+
+CompatibilityTests extends the EclipseLocator plugin case with Manual mode and a
+FindEvents command. It selects replacement through the form, saves/Save As,
+recovers from failed interpretation, reopens and runs to a report containing
+shadow intervals. Selecting Append through the form and repeating that lifecycle
+must preserve the previous report as a prefix and add new output. Clearing Append
+and rerunning must restore the original report exactly. This qualifies these
+manual EclipseLocator report modes, not all ContactLocator/IntrusionLocator
+options or file-error recovery cases.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 33.68 seconds. Evidence:
+`Qt6ParityValidation/check-event-options.txt`.
