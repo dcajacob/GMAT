@@ -10,6 +10,7 @@ struct ResourceProperty
    QString unit;
    QStringList choices;
    bool list = false;
+   int rows = 0, columns = 0;
 };
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);

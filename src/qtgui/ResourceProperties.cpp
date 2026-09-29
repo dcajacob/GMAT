@@ -2,6 +2,8 @@
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
+#include "Rmatrix.hpp"
+#include "Rvector.hpp"
 #include <QRegularExpression>
 #include <cmath>
 #include <algorithm>
@@ -13,11 +15,32 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    QVector<ResourceProperty> fields;
    for (Integer id = 0; id < object.GetParameterCount(); ++id) {
       try {
-         if (object.IsParameterReadOnly(id)) continue;
+         // Array values are marked read-only for ordinary property syntax;
+         // their specialized editor writes the array's indexed initial values.
+         const bool arrayValues=object.GetTypeName()=="Array" && object.GetParameterText(id)=="RmatValue";
+         if (object.IsParameterReadOnly(id) && !arrayValues) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          field.unit = QString::fromStdString(object.GetParameterUnit(id));
          switch (object.GetParameterType(id)) {
+         case Gmat::RVECTOR_TYPE: {
+            const auto &vector=object.GetRvectorParameter(id);
+            field.rows=1; field.columns=vector.GetSize();
+            QStringList values;
+            for (int i=0;i<field.columns;++i) values.append(QString::number(vector[i],'g',17));
+            field.value=values.join(" "); break;
+         }
+         case Gmat::RMATRIX_TYPE: {
+            const auto &matrix=object.GetRmatrixParameter(id);
+            field.rows=matrix.GetNumRows(); field.columns=matrix.GetNumColumns();
+            QStringList rows;
+            for (int r=0;r<field.rows;++r) {
+               QStringList values;
+               for (int c=0;c<field.columns;++c) values.append(QString::number(matrix(r,c),'g',17));
+               rows.append(values.join(" "));
+            }
+            field.value=rows.join("; "); break;
+         }
          case Gmat::REAL_TYPE: field.value = QString::number(object.GetRealParameter(id), 'g', 17); break;
          case Gmat::INTEGER_TYPE: field.value = QString::number(object.GetIntegerParameter(id)); break;
          case Gmat::UNSIGNED_INT_TYPE: field.value = QString::number(object.GetUnsignedIntParameter(id)); break;
@@ -48,9 +71,17 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
 
 bool isResourceList(GmatBase &object, const QString &name)
 {
+   // These lists use canonical {...} syntax. Other compound lists can carry
+   // additional positional settings and need their own replacement handling.
+   const auto id=object.GetParameterID(name.toStdString());
    const auto type=QString::fromStdString(object.GetTypeName());
-   return (name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile")) ||
-          (name=="YVariables" && type=="XYPlot");
+   const bool supported=(name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile")) ||
+      (name=="YVariables" && type=="XYPlot") ||
+      (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
+      (object.IsOfType("Thruster") && name=="Tank") ||
+      (type=="FiniteBurn" && name=="Thrusters") ||
+      ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses"));
+   return supported && object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE && !object.IsParameterReadOnly(id);
 }
 
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value)
@@ -65,7 +96,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       for (const auto &part : value.split(QRegularExpression("[,\\n]"))) {
          const auto entry=part.trimmed();
          if (!reference.match(entry).hasMatch()) throw std::runtime_error("Enter comma-separated resource or parameter names");
-         if (name=="Add" && object.GetTypeName()!="ReportFile") {
+         if (name=="Add" && (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="GroundTrack" || object.GetTypeName()=="GroundTrackPlot")) {
             auto *target=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!target || !target->IsOfType(Gmat::SPACE_POINT))
                throw std::runtime_error(("Unknown space point: "+entry).toStdString());
@@ -81,20 +112,40 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       "[ \\t]*=[ \\t]*\\{[^;]*?\\}[ \\t]*;",QRegularExpression::MultilineOption);
    auto matches=assignment.globalMatch(block);
    const QString replacement="GMAT "+key+" = {"+entries.join(", ")+"};";
+   QString result=block;
    if (!matches.hasNext()) {
       if (object.GetStringArrayParameter(id).empty())
-         return block+(block.endsWith('\n') ? "" : "\n")+replacement+"\n";
-      throw std::runtime_error("Cannot locate the list safely in this resource's script");
+         result+=(block.endsWith('\n') ? "" : "\n")+replacement+"\n";
+      else throw std::runtime_error("Cannot locate the list safely in this resource's script");
+   } else {
+      const auto match=matches.next();
+      if (matches.hasNext()) throw std::runtime_error("Multiple list assignments require the script editor");
+      if (entries.isEmpty() && object.GetTypeName()=="ReportFile") {
+         result.remove(match.capturedStart(),match.capturedLength());
+         return result;
+      }
+      result.replace(match.capturedStart(),match.capturedLength(),replacement);
    }
-   const auto match=matches.next();
-   if (matches.hasNext()) throw std::runtime_error("Multiple list assignments require the script editor");
-   QString result=block;
-   if (entries.isEmpty() && object.GetTypeName()=="ReportFile") {
-      result.remove(match.capturedStart(),match.capturedLength());
-      return result;
+   if (name=="Tank" && object.IsOfType("Thruster")) {
+      // Mixture ratios belong to tanks, not list positions. New tanks start
+      // with equal weighting and can be adjusted in the numeric cell editor.
+      const auto oldNames=object.GetStringArrayParameter(id);
+      const auto &ratios=object.GetRvectorParameter("MixRatio");
+      QStringList values;
+      for (const auto &entry:entries) {
+         const auto found=std::find(oldNames.begin(),oldNames.end(),entry.toStdString());
+         const auto position=std::distance(oldNames.begin(),found);
+         values.append(QString::number(position<ratios.GetSize() ? ratios[position] : 1.0,'g',17));
+      }
+      const QString ratioKey=QString::fromStdString(object.GetName())+".MixRatio";
+      const QRegularExpression ratioAssignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(ratioKey)+
+         "[ \\t]*=[ \\t]*\\[[^;]*?\\][ \\t]*;",QRegularExpression::MultilineOption);
+      const QString ratioValue="GMAT "+ratioKey+" = ["+values.join(" ")+"];";
+      const auto ratio=ratioAssignment.match(result);
+      if (ratio.hasMatch()) result.replace(ratio.capturedStart(),ratio.capturedLength(),ratioValue);
+      else if (!entries.isEmpty()) result+=(result.endsWith('\n') ? "" : "\n")+ratioValue+"\n";
    }
-   result.replace(match.capturedStart(),match.capturedLength(),replacement);
-   if (name=="Add" && object.GetTypeName()!="ReportFile") {
+   if (name=="Add" && (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="GroundTrack" || object.GetTypeName()=="GroundTrackPlot")) {
       // DrawObject is positional in scripts. Preserve visibility by name when
       // entries move or disappear, and show newly added objects.
       const auto oldNames=object.GetStringArrayParameter(id);
@@ -119,9 +170,34 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
    const auto id = object.GetParameterID(name.toStdString());
-   if (object.IsParameterReadOnly(id)) throw std::runtime_error("Property is read-only");
+   const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
+   if (object.IsParameterReadOnly(id) && !arrayValues) throw std::runtime_error("Property is read-only");
    bool valid = false;
    switch (object.GetParameterType(id)) {
+   case Gmat::RVECTOR_TYPE:
+   case Gmat::RMATRIX_TYPE: {
+      const bool vector=object.GetParameterType(id)==Gmat::RVECTOR_TYPE;
+      const int rows=vector ? 1 : object.GetRmatrixParameter(id).GetNumRows();
+      const int columns=vector ? object.GetRvectorParameter(id).GetSize() : object.GetRmatrixParameter(id).GetNumColumns();
+      const auto inputRows=value.trimmed().split(';');
+      if (inputRows.size()!=rows) throw std::runtime_error("Keep the existing number of rows; separate rows with semicolons");
+      Rmatrix matrix(rows,columns);
+      for (int r=0;r<rows;++r) {
+         const auto cells=inputRows[r].trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         if (cells.size()!=columns) throw std::runtime_error("Keep the existing number of columns");
+         for (int c=0;c<columns;++c) {
+            const double number=cells[c].toDouble(&valid);
+            if (!valid || !std::isfinite(number)) throw std::runtime_error("Every cell must contain a finite number");
+            matrix(r,c)=number;
+         }
+      }
+      if (vector) {
+         Rvector values(columns);
+         for (int c=0;c<columns;++c) values[c]=matrix(0,c);
+         object.SetRvectorParameter(id,values);
+      } else object.SetRmatrixParameter(id,matrix);
+      break;
+   }
    case Gmat::REAL_TYPE: {
       const double number = value.toDouble(&valid);
       if (!valid || !std::isfinite(number)) throw std::runtime_error("Enter a finite number");

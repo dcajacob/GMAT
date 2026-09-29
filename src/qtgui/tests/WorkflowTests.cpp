@@ -4,6 +4,8 @@
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
 #include "CommandEditor.hpp"
+#include "ResourceProperties.hpp"
+#include "Rvector.hpp"
 #include <QApplication>
 #include <QAction>
 #include <QDir>
@@ -83,6 +85,86 @@ int main(int argc, char **argv)
       editor->undo();
       require(editor->toPlainText() == beforeEdit, "Resource edit destroyed script undo history");
       require(window.buildScript() && dryMass() == originalMass, "Undo did not restore mission settings");
+      editor->setPlainText("Create Array QtMatrix[2,3];\nGMAT QtMatrix(1,1) = 4;\nGMAT QtMatrix(2,3) = 9;\nBeginMissionSequence;\n");
+      require(window.buildScript(), "Array fixture did not build");
+      const auto arrayScript=editor->toPlainText();
+      const auto fields=resourceProperties(*Moderator::Instance()->GetConfiguredObject("QtMatrix"));
+      bool foundMatrix=false;
+      for (const auto &field:fields) if (field.name=="RmatValue")
+         foundMatrix=field.rows==2 && field.columns==3 && field.value=="4 0 0; 0 0 9";
+      require(foundMatrix,"Array grid missing or transposed");
+      {
+         QWidget owner;
+         ResourceEditor gridPanel(*Moderator::Instance()->GetConfiguredObject("QtMatrix"),
+            [](const QMap<QString,QString>&) { return QString(); },&owner);
+         auto *editCells=gridPanel.findChild<QPushButton *>("editCells_RmatValue");
+         require(editCells,"Array has no cell editor button");
+         bool gridOpened=false,invalidRejected=false;
+         QTimer::singleShot(0,&gridPanel,[&] {
+            auto *dialog=gridPanel.findChild<QDialog *>("numericGridDialog");
+            if (!dialog) return;
+            auto *grid=dialog->findChild<QTableWidget *>("numericGrid");
+            gridOpened=grid && grid->rowCount()==2 && grid->columnCount()==3 && grid->item(1,2)->text()=="9";
+            if (!gridOpened) { dialog->reject(); return; }
+            auto *buttons=dialog->findChild<QDialogButtonBox *>();
+            grid->item(1,2)->setText("nan"); buttons->button(QDialogButtonBox::Ok)->click();
+            invalidRejected=dialog->isVisible();
+            grid->item(1,2)->setText("-12.5"); buttons->button(QDialogButtonBox::Ok)->click();
+         });
+         editCells->click();
+         require(gridOpened && invalidRejected && gridPanel.hasChanges(),"Array grid validation/edit failed");
+         require(Moderator::Instance()->GetConfiguredObject("QtMatrix")->GetRealParameter("SingleValue",1,2)==9,
+            "Grid mutated configured array before Apply");
+         const auto value=gridPanel.findChild<QTableWidget *>()->findItems("4 0 0; 0 0 -12.5",Qt::MatchExactly);
+         require(value.size()==1,"Grid did not preserve cell order");
+         QTimer::singleShot(0,&gridPanel,[&] {
+            auto *dialog=gridPanel.findChild<QDialog *>("numericGridDialog");
+            dialog->findChild<QTableWidget *>("numericGrid")->item(0,0)->setText("777");
+            dialog->reject();
+         });
+         editCells->click();
+         require(value.first()->text()=="4 0 0; 0 0 -12.5","Cancel changed matrix values");
+         gridPanel.discardChanges();
+      }
+      require(!window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2; 3 4"}},arrayScript).isEmpty(),
+         "Array dimension change was accepted");
+      require(!window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2 3; 4 nan 6"}},arrayScript).isEmpty(),
+         "Nonfinite array value was accepted");
+      require(editor->toPlainText()==arrayScript,"Rejected array edit changed script");
+      const auto arrayError=window.applyResourceChanges("QtMatrix",{{"RmatValue","0 -2 3.125; 4 5 6"}},arrayScript);
+      if (!arrayError.isEmpty()) std::cerr<<arrayError.toStdString()<<'\n';
+      require(arrayError.isEmpty(),"Array edit failed");
+      auto *array=Moderator::Instance()->GetConfiguredObject("QtMatrix");
+      require(array->GetRealParameter("SingleValue",0,0)==0 && array->GetRealParameter("SingleValue",0,2)==3.125 &&
+         array->GetRealParameter("SingleValue",1,2)==6,"Array values did not survive serialization");
+      editor->undo();
+      require(editor->toPlainText()==arrayScript && window.buildScript(),"Array edit was not one undoable change");
+      require(Moderator::Instance()->GetConfiguredObject("QtMatrix")->GetRealParameter("SingleValue",1,2)==9,
+         "Array undo failed to restore initial values");
+      require(!window.createResource("Array","InvalidDimensions",editor->toPlainText(),0,3).isEmpty(),
+         "Zero-sized array accepted");
+      require(window.createResource("Array","CreatedArray",editor->toPlainText(),3,2).isEmpty(),"Array creation failed");
+      auto *createdArray=Moderator::Instance()->GetConfiguredObject("CreatedArray");
+      require(createdArray && createdArray->GetIntegerParameter("NumRows")==3 && createdArray->GetIntegerParameter("NumCols")==2,
+         "Created array dimensions wrong");
+      editor->setPlainText("Create ChemicalTank FuelA FuelB;\nCreate ChemicalThruster Engine;\n"
+         "GMAT Engine.Tank = {FuelA, FuelB};\nGMAT Engine.MixRatio = [2 3];\n"
+         "Create Spacecraft Vehicle;\nGMAT Vehicle.Tanks = {FuelA, FuelB};\nGMAT Vehicle.Thrusters = {Engine};\nBeginMissionSequence;\n");
+      require(window.buildScript(),"Hardware fixture failed");
+      const auto hardwareScript=editor->toPlainText();
+      require(!window.applyResourceChanges("Vehicle",{{"Tanks","MissingTank"}},hardwareScript).isEmpty(),
+         "Missing hardware reference accepted");
+      require(editor->toPlainText()==hardwareScript,"Rejected hardware link changed script");
+      const auto tankError=window.applyResourceChanges("Engine",{{"Tank","FuelB, FuelA"}},hardwareScript);
+      if (!tankError.isEmpty()) std::cerr<<tankError.toStdString()<<'\n';
+      require(tankError.isEmpty(),"Tank reorder failed");
+      auto *engine=Moderator::Instance()->GetConfiguredObject("Engine");
+      require(engine->GetStringArrayParameter("Tank").front()=="FuelB" && engine->GetRvectorParameter("MixRatio")[0]==3 &&
+         engine->GetRvectorParameter("MixRatio")[1]==2,"Tank reorder detached mixture ratios from tanks");
+      require(window.applyResourceChanges("Engine",{{"MixRatio","4 5"}},editor->toPlainText()).isEmpty(),
+         "Mixture vector edit failed");
+      require(Moderator::Instance()->GetConfiguredObject("Engine")->GetRvectorParameter("MixRatio")[1]==5,
+         "Mixture vector did not survive script rebuild");
       editor->setPlainText("Create Variable count;\nBeginMissionSequence;\nWhile count < 1e12;\ncount = count + 1;\nEndWhile;\n");
       bool paused = false, resumed = false, protectedEdits = false;
       double countAtPause = 0;

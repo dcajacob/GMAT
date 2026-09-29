@@ -132,26 +132,39 @@ XY Y-parameter lists (`YVariables`), and report parameter lists (`Add`) accept
 comma-separated resource/parameter names. Apply replaces the complete list;
 orbit visibility follows object names when reordering, with new objects shown.
 Empty report lists can be populated and cleared. References use canonical
-resource names (for example, `Luna`). Other arrays, indexed expressions, and
-compound properties still require the script editor.
+resource names (for example, `Luna`). Spacecraft hardware lists, thruster tanks,
+finite-burn thrusters, and force-model primary/point-mass body lists are also
+editable. Tank reordering preserves mixture ratios by tank name; newly added
+tanks receive a ratio of 1, editable after Apply. Other compound lists and
+indexed expressions still require the script editor.
+
+Arrays and writable numeric vector/matrix properties have an **Edit cells…**
+grid. It preserves dimensions, rejects nonfinite or nonnumeric values, and
+keeps changes local until Apply. Cancel leaves the property unchanged. Array
+values serialize as indexed initial assignments and participate in the same
+validation, rollback and undo flow as scalar properties. Existing arrays keep
+their dimensions; resizing and expression-valued cells remain script work.
 
 Spacecraft panels open on Orbit and group the existing editable fields under
-the familiar Attitude, Ballistic/Mass, Power System, SPICE and Visualization
+the familiar Attitude, Ballistic/Mass, Hardware, Power System, SPICE and Visualization
 tabs when those fields are available. All Properties retains access to every
 supported field. Orbit uses the engine's current state-element labels. The
 filter applies within the selected section; switching sections preserves
 pending values and Apply validates changes across all sections together.
+Thrusters, tanks, solvers and force models also group their available fields
+into sections (for example Fuel, Direction, Convergence and Bodies).
 These are grouped property controls, not yet the full specialized wx forms.
 
 Use **Edit > New resource** or the Resources context menu to add a resource.
 The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
 force-model, coordinate-system, solver and subscriber types, plus Variable and
-String. Creation validates a complete candidate mission and is one undoable
+String and Array. Arrays have row/column controls (1–100 each in this dialog;
+larger declarations remain available through the script). Creation validates a complete candidate mission and is one undoable
 script edit. Duplicate names, invalid identifiers, stale script snapshots and
 pending panel changes are rejected. The resource appears in the tree and its
 property panel opens after successful creation. Some resource types require
-further configuration before they can execute; array dimensions and specialized
-forms remain future work. Force models now have their own Resources category.
+further configuration before they can execute; specialized force-model and
+attitude forms remain future work. Force models have their own Resources category.
 
 The Resources context menu can delete unused resources. GMAT's dependency
 checks protect resources referenced by other resources or mission commands;

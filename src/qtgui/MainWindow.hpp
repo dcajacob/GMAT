@@ -34,7 +34,7 @@ public:
                               MissionEdit operation, const QString &replacement);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
-   QString createResource(const QString &type, const QString &name, const QString &expectedScript);
+   QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1);
    QString deleteResource(const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;

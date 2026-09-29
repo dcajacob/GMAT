@@ -13,6 +13,7 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QSpinBox>
 #include <QPushButton>
 #include <QRegularExpression>
 #include "QtPlotReceiver.hpp"
@@ -54,7 +55,7 @@ QStringList creatableResourceTypes()
          Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER})
       for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
          result.append(QString::fromStdString(type));
-   result.append({"Variable","String"});
+   result.append({"Variable","String","Array"});
    result.removeDuplicates(); result.sort(); return result;
 }
 }
@@ -629,7 +630,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    return applyModelScript(candidate);
 }
 
-QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript)
+QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns)
 {
    if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
       return "Build the current script before creating a resource.";
@@ -640,7 +641,10 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
    if (!identifier.match(name).hasMatch()) return "Use a name starting with a letter, followed by letters, digits or underscores.";
    if (!creatableResourceTypes().contains(type)) return "Select an available resource type.";
    if (Moderator::Instance()->GetConfiguredObject(name.toStdString())) return "That resource name is already in use.";
-   return applyModelScript("Create "+type+" "+name+";\n"+builtScript);
+   if (type=="Array" && (rows<1 || columns<1 || rows>100 || columns>100))
+      return "Choose array dimensions from 1 to 100. Larger arrays can be created in the script editor.";
+   const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
+   return applyModelScript("Create "+type+" "+name+dimensions+";\n"+builtScript);
 }
 
 void MainWindow::showCreateResource()
@@ -655,12 +659,21 @@ void MainWindow::showCreateResource()
    type->addItems(creatableResourceTypes()); type->setCurrentText("Spacecraft");
    auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
    auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setWordWrap(true);
-   layout->addRow("Type",type); layout->addRow("Name",name); layout->addRow(status);
+   layout->addRow("Type",type); layout->addRow("Name",name);
+   auto *rows=new QSpinBox(&dialog); rows->setObjectName("arrayRows"); rows->setRange(1,100);
+   auto *columns=new QSpinBox(&dialog); columns->setObjectName("arrayColumns"); columns->setRange(1,100);
+   layout->addRow("Rows",rows); layout->addRow("Columns",columns);
+   const auto dimensions=[=] {
+      const bool array=type->currentText()=="Array";
+      layout->setRowVisible(rows,array); layout->setRowVisible(columns,array);
+   };
+   connect(type,&QComboBox::currentTextChanged,&dialog,dimensions); dimensions();
+   layout->addRow(status);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
    buttons->button(QDialogButtonBox::Ok)->setText("Create"); layout->addRow(buttons);
    connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
-      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot);
+      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value());
       if (error.isEmpty()) dialog.accept(); else status->setText(error);
    });
    dialog.resize(460,180); name->setFocus();
