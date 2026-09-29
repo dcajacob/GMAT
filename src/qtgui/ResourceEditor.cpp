@@ -32,7 +32,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
       auto *name = new QTableWidgetItem(field.name);
       name->setFlags(name->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 0, name);
-      if (field.choices.isEmpty()) table->setItem(row, 1, new QTableWidgetItem(field.value));
+      if (field.choices.isEmpty()) {
+         auto *value=new QTableWidgetItem(field.value);
+         if (field.list) value->setToolTip("Comma-separated resource or parameter names. Apply replaces the complete list.");
+         table->setItem(row, 1, value);
+      }
       else {
          auto *choices = new QComboBox(table);
          choices->addItems(field.choices);

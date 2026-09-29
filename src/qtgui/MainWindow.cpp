@@ -498,6 +498,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       std::unique_ptr<GmatBase> proposed(object->Clone());
       if (!proposed) return "This resource cannot be edited.";
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
+         if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
@@ -505,7 +506,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (!proposed->Validate()) return "The resource rejected these settings.";
       candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
       const auto oldBlock = QString::fromStdString(object->GetGeneratingString(Gmat::SCRIPTING));
-      const auto newBlock = QString::fromStdString(proposed->GetGeneratingString(Gmat::SCRIPTING));
+      auto newBlock = QString::fromStdString(proposed->GetGeneratingString(Gmat::SCRIPTING));
+      for (auto it=changes.cbegin();it!=changes.cend();++it)
+         if (isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value());
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);

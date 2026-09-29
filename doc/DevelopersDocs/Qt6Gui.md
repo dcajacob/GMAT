@@ -60,8 +60,13 @@ changes a clone, validates it, serializes it into the complete mission, and
 interprets that candidate. A rejected candidate restores the previous model
 without changing editor contents. Successful changes update the script as
 one undoable edit. Stale panels reject changes, and unapplied panel edits
-prevent Build/Run from silently using older values. Array/list and compound
-properties still require the script editor.
+prevent Build/Run from silently using older values. Plot object lists (`Add`),
+XY Y-parameter lists (`YVariables`), and report parameter lists (`Add`) accept
+comma-separated resource/parameter names. Apply replaces the complete list;
+orbit visibility follows object names when reordering, with new objects shown.
+Empty report lists can be populated and cleared. References use canonical
+resource names (for example, `Luna`). Other arrays, indexed expressions, and
+compound properties still require the script editor.
 
 ## Functional validation
 
@@ -164,3 +169,9 @@ replay retention, dynamic-table values/colors, and Output report opening.
 The test has passed at display scale 1 and 2. The existing Qt workflow suite
 continues to pass with the plot receiver installed. These checks do not
 establish complete graphics or cross-platform parity.
+
+The plot suite also exercises subscriber-list edits through the resource panel,
+verifies that replacing XY parameters publishes the selected Z values, checks
+added orbit-body data and reordered visibility, and rejects malformed,
+duplicate, unknown, or noncanonical object names. Report list population and
+clearing are checked against the rebuilt engine model.

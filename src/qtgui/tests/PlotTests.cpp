@@ -2,6 +2,11 @@
 #include "QtPlotReceiver.hpp"
 #include "PlotWidget.hpp"
 #include "FileManager.hpp"
+#include "Moderator.hpp"
+#include "ResourceProperties.hpp"
+#include "ResourceEditor.hpp"
+#include <QDialogButtonBox>
+#include <QPushButton>
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
@@ -120,6 +125,51 @@ int main(int argc,char **argv)
       const auto rendered=window.grab();
       require(std::abs(rendered.width()-window.width()*window.devicePixelRatioF())<=1,"Plot capture ignored physical display scale");
       if (!image.isEmpty()) require(rendered.save(image),"Plot screenshot failed");
+      auto *source=window.findChild<QPlainTextEdit *>("scriptEditor");
+      auto hiddenEarth=source->toPlainText();
+      hiddenEarth.replace("QtOrbit.Add = {QtSat, Earth};","QtOrbit.Add = {QtSat, Earth};\nQtOrbit.DrawObject = [true false];");
+      source->setPlainText(hiddenEarth); require(window.buildScript(),"Visibility setup failed");
+      auto change=[&](const QString &resource,const QString &property,const QString &value) {
+         const auto error=window.applyResourceChanges(resource,{{property,value}},source->toPlainText());
+         if (!error.isEmpty()) std::cerr<<resource.toStdString()<<": "<<error.toStdString()<<'\n';
+         require(error.isEmpty(),"Subscriber list edit failed");
+      };
+      change("QtOrbit","Add","Earth, QtSat, Luna");
+      require(Moderator::Instance()->GetConfiguredObject("QtOrbit")->GetStringArrayParameter("Add").size()==3,"Orbit list was not updated");
+      const auto visibility=Moderator::Instance()->GetConfiguredObject("QtOrbit")->GetBooleanArrayParameter("DrawObject");
+      require(visibility.size()==3 && !visibility[0] && visibility[1] && visibility[2],"List edit lost visibility by name");
+      change("QtReport","Add","QtSat.ElapsedSecs, QtSat.EarthMJ2000Eq.X");
+      const auto beforeInvalid=source->toPlainText();
+      for (const auto &bad : {"NoSuchSpacecraft", "Moon", "QtSat; Stop;", "QtSat, QtSat", "QtSat,"}) {
+         require(!window.applyResourceChanges("QtOrbit",{{"Add",bad}},beforeInvalid).isEmpty(),"Invalid list accepted");
+         require(source->toPlainText()==beforeInvalid,"Invalid list changed the script");
+      }
+      require(!window.applyResourceChanges("QtXY",{{"YVariables","QtSat.NoSuchParameter"}},beforeInvalid).isEmpty(),"Unknown plot parameter accepted");
+      require(source->toPlainText()==beforeInvalid,"Failed parameter validation lost prior script");
+      auto *resources=window.findChild<QTreeWidget *>("Resources");
+      const auto xyItems=resources->findItems("QtXY",Qt::MatchExactly|Qt::MatchRecursive);
+      require(xyItems.size()==1,"XY resource missing");
+      resources->itemDoubleClicked(xyItems.first(),0);
+      ResourceEditor *panel=nullptr;
+      for (auto *widget:window.findChildren<QWidget *>()) if (auto *candidate=dynamic_cast<ResourceEditor *>(widget)) panel=candidate;
+      require(panel!=nullptr,"XY resource panel missing");
+      auto *properties=panel->findChild<QTableWidget *>(); bool foundList=false;
+      for (int row=0;row<properties->rowCount();++row) if (properties->item(row,0)->text()=="YVariables") {
+         require(properties->item(row,1)->text().contains(".Y"),"List did not show current entries");
+         properties->item(row,1)->setText("QtSat.EarthMJ2000Eq.Z"); foundList=true;
+      }
+      require(foundList,"YVariables list unavailable in panel");
+      panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+      require(window.runMission()==MainWindow::RunResult::Completed,"Edited subscriber lists failed to run");
+      require(receiver->model("QtXY")->curves.size()==1,"List replacement appended to old XY entries");
+      const auto &edited=receiver->model("QtXY")->curves.constBegin().value().points.back();
+      require(std::abs(edited.y-z)<1e-7,"Edited XY list did not plot selected Z parameter");
+      require(curve(*receiver->model("QtOrbit"),"Luna").points.size()>0,"Added orbit body not published");
+      const auto reportNames=Moderator::Instance()->GetConfiguredObject("QtReport")->GetStringArrayParameter("Add");
+      require(reportNames.size()==2 && reportNames[0]=="QtSat.ElapsedSecs","Report parameter list not replaced");
+      change("QtReport","Add","");
+      require(Moderator::Instance()->GetConfiguredObject("QtReport")->GetStringArrayParameter("Add").empty(),"Clearing report list retained entries");
+      std::cout<<"PASS: subscriber lists, GUI Apply, actual XY Z output, added orbit body, visibility by name, empty lists and invalid inputs\n";
       std::cout<<"PASS: real orbit/XY/geodetic samples, map, dateline, sparse data, close-during-run/reopen/rerun, bounded history, replay retention, reversible zoom, dynamic values/colors, Output report viewer\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
