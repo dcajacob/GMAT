@@ -17,6 +17,7 @@
 #include <QTreeWidget>
 #include <QLineEdit>
 #include <QTableWidget>
+#include <QHeaderView>
 #include <QLabel>
 #include <QMdiSubWindow>
 #include <QTimer>
@@ -181,6 +182,11 @@ int main(int argc,char **argv)
       for (int row=0;row<progress->rowCount();++row) if (progress->item(row,0)->text()=="Goal =")
          goalSeen=progress->item(row,3)->text().toDouble()==8 && std::abs(progress->item(row,4)->text().toDouble())<1e-6;
       require(goalSeen,"Solver table did not show final goal/residual");
+      for (int column=0;column<progress->columnCount();++column)
+         require(progress->horizontalHeader()->sectionResizeMode(column)==QHeaderView::Interactive,"Solver column cannot be dragged");
+      progress->setColumnWidth(1,301); progress->setColumnWidth(4,177);
+      require(window.runMission()==MainWindow::RunResult::Completed,"Solver resize repeat mission failed");
+      require(progress->columnWidth(1)==301 && progress->columnWidth(4)==177,"Live solver updates overwrote adjusted widths");
       auto *progressWindow=qobject_cast<QMdiSubWindow *>(progress->parentWidget()->parentWidget());
       require(progressWindow,"Solver progress is not an MDI window"); progressWindow->close();
       QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);

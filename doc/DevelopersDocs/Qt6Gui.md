@@ -484,3 +484,11 @@ arguments, verify the Yukon algebraic sample against its analytic optimum,
 and locate eclipse intervals with editable event settings and an Output report.
 See [parity acceptance evidence](Qt6ParityValidation/README.md) for the complete
 scope and retained limits.
+
+
+Table columns start with font-aware, content-based widths bounded for long
+labels and values. Resource values receive spare initial space; empty numeric
+editor button columns are hidden. All visible columns remain manually
+resizable: drag a header border, or double-click it to fit the contents. Solver
+and dynamic-data updates preserve adjusted widths for the open table. Widths
+are not persisted after closing the table or restarting the application.

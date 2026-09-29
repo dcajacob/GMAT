@@ -1,5 +1,7 @@
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "TableColumns.hpp"
+#include <QTimer>
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include <QComboBox>
@@ -41,10 +43,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
    table = new QTableWidget(this);
    table->setColumnCount(4);
    table->setHorizontalHeaderLabels({"Property", "Value", "Unit", ""});
-   table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-   table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-   table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-   table->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+   configureTableColumns(table,{20,28,5,10});
    table->verticalHeader()->hide();
    for (const auto &field : resourceProperties(object)) {
       int row = table->rowCount(); table->insertRow(row);
@@ -76,6 +75,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
    }
+   bool hasCellEditor=false;
+   for (int row=0;row<table->rowCount();++row) hasCellEditor=hasCellEditor || table->cellWidget(row,3);
+   table->setColumnHidden(3,!hasCellEditor);
+   fitTableColumns(table);
+   QTimer::singleShot(0,table,[this] { fitTableColumns(table,1); });
    connect(table,&QTableWidget::itemDoubleClicked,this,[this](QTableWidgetItem *item) {
       const int rows=item->data(Qt::UserRole).toInt(), columns=item->data(Qt::UserRole+1).toInt();
       if (item->column()!=1 || rows<=0 || columns<=0) return;
@@ -90,6 +94,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
          const auto cells=values.value(r).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
          for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem(cells.value(c,"0")));
       }
+      configureTableColumns(grid);
+      fitTableColumns(grid);
       layout->addWidget(grid);
       auto *error=new QLabel(&dialog); error->setWordWrap(true); layout->addWidget(error);
       auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);

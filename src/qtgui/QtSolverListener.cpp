@@ -1,4 +1,5 @@
 #include "QtSolverListener.hpp"
+#include "TableColumns.hpp"
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QPointer>
@@ -27,6 +28,7 @@ public:
          auto *item=new QTableWidgetItem(cells[col]); item->setFlags(item->flags() & ~Qt::ItemIsEditable);
          table->setItem(rows[key],col,item);
       }
+      fitTableColumns(table);
    }
    void VariabledChanged(std::string name,Real number) override { value("Variable",name,QString::number(number,'g',16)); }
    void VariabledChanged(std::string name,std::string &text) override { value("Variable",name,QString::fromStdString(text)); }
@@ -64,13 +66,14 @@ ISolverListener *QtSolverListenerManager::CreateSolverListener(const std::string
       listener->table=new QTableWidget(panel); listener->table->setObjectName("solverProgress");
       listener->table->setColumnCount(5);
       listener->table->setHorizontalHeaderLabels({"Type","Name","Current","Desired","Residual"});
-      listener->table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-      listener->table->horizontalHeader()->setStretchLastSection(true);
+      configureTableColumns(listener->table,{9,22,18,18,18});
+      fitTableColumns(listener->table);
+      listener->table->verticalHeader()->hide();
       layout->addWidget(listener->table);
       listener->window=workspace->addSubWindow(panel);
       listener->window->setAttribute(Qt::WA_DeleteOnClose);
       listener->window->setWindowTitle("Solver — "+QString::fromStdString(name).section('\n',0,0));
-      listener->window->resize(740,320);
+      listener->window->resize(860,320);
       if (std::isfinite(width) && std::isfinite(height) && width>0 && height>0 && width<=1 && height<=1)
          listener->window->resize(std::max(300,int(width*workspace->width())),std::max(180,int(height*workspace->height())));
       if (std::isfinite(x) && std::isfinite(y) && x>=0 && x<=1 && y>=0 && y<=1)

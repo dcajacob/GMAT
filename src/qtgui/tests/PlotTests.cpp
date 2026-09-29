@@ -21,6 +21,7 @@
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QTableWidget>
+#include <QHeaderView>
 #include <QTreeWidget>
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
@@ -269,6 +270,18 @@ int main(int argc,char **argv)
       receiver->SetGlObject("CartesianTrack",{"SyntheticSat"},{});
       require(receiver->UpdateGlPlot("CartesianTrack","",{"SyntheticSat"},1,
          {1000},{1000},{1000},{0},{0},{0},{},{},false,0,true,true,false),"Cartesian track callback failed");
+      receiver->CreateDynamicDataDisplay("WidthCheck","","Widths",0,0,.5,.5);
+      std::vector<std::vector<DDD>> widthCells(1,std::vector<DDD>(2));
+      widthCells[0][0].paramName="Short"; widthCells[0][0].paramValue="1";
+      widthCells[0][1].paramName=std::string(300,'W');
+      receiver->UpdateDynamicDataDisplay("WidthCheck",widthCells); receiver->show("WidthCheck");
+      auto *widthTable=qobject_cast<QTableWidget *>(area->activeSubWindow()->widget());
+      require(widthTable && widthTable->columnWidth(1)<1000,"Long dynamic label produced an unbounded column");
+      require(widthTable->horizontalHeader()->sectionResizeMode(0)==QHeaderView::Interactive,"Dynamic column cannot be dragged");
+      widthTable->setColumnWidth(0,233);
+      widthCells[0][0].paramValue="123456789.123456789";
+      receiver->UpdateDynamicDataDisplay("WidthCheck",widthCells);
+      require(widthTable->columnWidth(0)==233,"Dynamic update overwrote adjusted column width");
       const auto &cartesian=curve(*receiver->model("CartesianTrack"),"SyntheticSat").points.back();
       require(std::abs(cartesian.x-45)<1e-10 && std::abs(cartesian.y-35.264389682754654)<1e-10,
          "Cartesian compatibility callback has incorrect spherical projection");

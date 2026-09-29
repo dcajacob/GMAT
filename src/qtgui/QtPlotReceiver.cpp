@@ -1,4 +1,5 @@
 #include "QtPlotReceiver.hpp"
+#include "TableColumns.hpp"
 #include "PlotWidget.hpp"
 #include "BodyFixedPoint.hpp"
 #include "CelestialBody.hpp"
@@ -44,6 +45,7 @@ bool QtPlotReceiver::show(const QString &name)
    if (!entry.window) {
       if (entry.data->kind==PlotModel::Kind::Table) {
          entry.table=new QTableWidget;
+         configureTableColumns(entry.table);
          entry.table->setEditTriggers(QAbstractItemView::NoEditTriggers);
          entry.table->setRowCount(entry.cells.size());
          int columns=0; for (const auto &row:entry.cells) columns=std::max(columns,static_cast<int>(row.size()));
@@ -54,7 +56,7 @@ bool QtPlotReceiver::show(const QString &name)
             item->setForeground(cell.foreground); item->setBackground(cell.background);
             entry.table->setItem(r,c,item);
          }
-         entry.table->resizeColumnsToContents();
+         fitTableColumns(entry.table);
          entry.window=workspace->addSubWindow(entry.table);
       } else {
          entry.widget=new PlotWidget(entry.data);
@@ -550,7 +552,7 @@ bool QtPlotReceiver::UpdateDynamicDataDisplay(const std::string &name,std::vecto
          }
       }
    }
-   if (entry->table) entry->table->resizeColumnsToContents(); return true;
+   if (entry->table) fitTableColumns(entry->table); return true;
 }
 bool QtPlotReceiver::DeleteDynamicData(const std::string &name,const std::string &) { return remove(name); }
 bool QtPlotReceiver::SetDynamicDataTextColor(const std::string &name,std::vector<std::vector<DDD>> rows)
