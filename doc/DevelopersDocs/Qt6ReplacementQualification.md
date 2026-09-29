@@ -36,7 +36,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; finite-burn execution and electric configuration round trips covered; broader electric operating modes pending |
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
-| `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion and runtime power/shadow qualification pending. |
+| `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; runtime power/shadow qualification pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
@@ -1366,3 +1366,23 @@ also remain pending. These tests establish configuration workflow coverage only.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 34.53 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-power-controls.txt`.
+
+## Power-system epoch-format conversion
+
+The power resource panel now offers the engine's valid time representations in an
+EpochFormat dropdown. Changing it converts the current pending InitialEpoch via
+TimeSystemConverter, preserving the represented instant. If conversion fails, the
+format selection is restored and the date text is retained for correction. The
+configured resource is unchanged until Apply.
+
+WorkflowTests exercises solar and nuclear panels, converting a known UTC date to
+TAI modified Julian time (including the 32-second offset at that date), converting
+back, and rejecting an invalid pending date without changing either field. Paired
+Apply reconstructs both settings through the script and Undo restores the source.
+Runtime power and shadow calculations remain a separate qualification gap.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.41 seconds.
+The subsequently extended Workflow test, including paired Apply/Undo, passed in
+18.51 seconds. Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-power-epoch.txt` and
+`Qt6ParityValidation/check-power-epoch-apply.txt`.

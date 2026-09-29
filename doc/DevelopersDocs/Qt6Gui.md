@@ -1028,4 +1028,6 @@ Solar and nuclear power-system resources group general settings and bus
 coefficients into tabs. Solar systems also have Solar coefficients and Shadow
 tabs. ShadowBodies now has an ordered celestial-body selector; selections stay
 pending until Apply. Invalid names are rejected without changing the script.
-EpochFormat and InitialEpoch currently remain separately editable fields.
+Changing EpochFormat converts the pending InitialEpoch while preserving the same
+instant. Invalid dates leave both pending fields unchanged, with an error message.
+Apply validates and stores the format and date together.

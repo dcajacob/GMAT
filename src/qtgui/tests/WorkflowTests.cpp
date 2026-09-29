@@ -629,6 +629,26 @@ int main(int argc, char **argv)
          };
          checkSection("General",{"EpochFormat","InitialEpoch","InitialMaxPower","AnnualDecayRate","Margin"});
          checkSection("Bus coefficients",{"BusCoeff1","BusCoeff2","BusCoeff3"});
+         auto *format=panel.findChild<QComboBox *>("powerEpochFormat"); QTableWidgetItem *epoch=nullptr;
+         for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()=="InitialEpoch") epoch=grid->item(row,1);
+         require(format && epoch,"Power epoch conversion controls missing");
+         const auto initialFormat=format->currentText(); const auto initialEpoch=epoch->text();
+         epoch->setText("01 Jan 2000 12:00:00.000"); format->setCurrentText("TAIModJulian");
+         require(std::abs(epoch->text().toDouble()-(21545.0+32.0/86400.0))<1e-9,"Power epoch conversion changed the represented instant");
+         const auto convertedEpoch=epoch->text();
+         const auto epochSource=editor->toPlainText();
+         require(window.applyResourceChanges(name,{{"EpochFormat",format->currentText()},{"InitialEpoch",convertedEpoch}},epochSource).isEmpty(),"Converted power epoch did not apply");
+         auto *convertedPower=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+         require(convertedPower->GetStringParameter("EpochFormat")=="TAIModJulian" &&
+            std::abs(QString::fromStdString(convertedPower->GetStringParameter("InitialEpoch")).remove("'").toDouble()-convertedEpoch.toDouble())<1e-9,
+            "Power epoch and format were not stored together");
+         editor->undo(); require(editor->toPlainText()==epochSource && window.buildScript(),"Power epoch Undo failed");
+         epoch->setText("invalid epoch"); format->setCurrentText("UTCGregorian");
+         require(format->currentText()=="TAIModJulian" && epoch->text()=="invalid epoch","Failed epoch conversion changed pending fields");
+         epoch->setText(convertedEpoch); format->setCurrentText("UTCGregorian");
+         require(epoch->text().contains("01 Jan 2000 12:00:00.000"),"Power epoch conversion did not round trip");
+         format->setCurrentText(initialFormat); epoch->setText(initialEpoch);
+
          if (name=="SolarPower") {
             checkSection("Solar coefficients",{"SolarCoeff1","SolarCoeff2","SolarCoeff3","SolarCoeff4","SolarCoeff5"});
             checkSection("Shadow",{"ShadowModel","ShadowBodies"});

@@ -1,6 +1,7 @@
 #include "ResourceEditor.hpp"
 #include "Moderator.hpp"
 #include "AxisSystem.hpp"
+#include "TimeSystemConverter.hpp"
 #include "BaseException.hpp"
 #include <memory>
 #include "ResourceProperties.hpp"
@@ -422,6 +423,33 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
+   }
+   if (power) {
+      int formatRow=-1; QTableWidgetItem *epoch=nullptr;
+      for (int row=0;row<table->rowCount();++row) {
+         if (table->item(row,0)->text()=="EpochFormat") formatRow=row;
+         if (table->item(row,0)->text()=="InitialEpoch") epoch=table->item(row,1);
+      }
+      if (formatRow>=0 && epoch) {
+         const auto initialFormat=original.value("EpochFormat");
+         auto *format=new QComboBox(table); format->setObjectName("powerEpochFormat");
+         for (const auto &value:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) format->addItem(QString::fromStdString(value));
+         if (format->findText(initialFormat)<0) format->addItem(initialFormat);
+         format->setCurrentText(initialFormat); table->setCellWidget(formatRow,1,format);
+         connect(format,&QComboBox::currentTextChanged,this,[this,format,epoch,previous=initialFormat](const QString &next) mutable {
+            auto text=epoch->text().trimmed();
+            if (text.startsWith("'") && text.endsWith("'")) text=text.mid(1,text.size()-2);
+            try {
+               Real mjd; std::string converted;
+               TimeSystemConverter::Instance()->Convert(previous.toStdString(),-999.999,text.toStdString(),next.toStdString(),mjd,converted);
+               epoch->setText(QString::fromStdString(converted)); previous=next;
+               status->setText("Epoch converted. Apply keeps the date and format together.");
+            } catch (BaseException &error) {
+               const QSignalBlocker blocker(format); format->setCurrentText(previous);
+               status->setText("Epoch conversion failed: "+QString::fromStdString(error.GetFullMessage()));
+            }
+         });
+      }
    }
    bool hasCellEditor=false;
    for (int row=0;row<table->rowCount();++row) hasCellEditor=hasCellEditor || table->cellWidget(row,3);
