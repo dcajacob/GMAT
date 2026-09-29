@@ -99,9 +99,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/asset/GroundStationPanel.hpp` | Pending audit |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Pending audit |
-| `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Pending audit |
-| `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Pending audit |
-| `src/gui/coordsystem/CoordPanel.hpp` | Pending audit |
+| `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; remaining origin/epoch and specialized-mode cases pending. |
+| `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
+| `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced primary/secondary pickers and R/V/N controls; radial-frame numerical check. LocalAlignedConstrained, epoch modes and remaining dependency cases pending. |
 | `src/gui/output/ReportFilePanel.hpp` | Pending audit |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
 | `src/gui/output/CompareReportPanel.hpp` | Pending audit |
@@ -457,3 +457,30 @@ Broader resource-type export and multi-snapshot reimport remain pending.
 
 GmatQt and the Save plugin were rebuilt; all 11 Qt tests passed in 26.55 seconds.
 Evidence: `Qt6ParityValidation/check-save-command.txt`.
+
+
+## Coordinate-system workflow checkpoint
+
+The audit found that CoordinateSystem::SetStringParameter("Axes", ...) accepts
+text without replacing the owned axes, and the generic Qt editor omitted owned
+axis properties. Qt now creates/replaces the owned AxisSystem on a proposal clone,
+exposes its writable fields and retains built-in protection. A dedicated Axes
+dialog lets type and dependent fields be edited together before applying; a type
+change rebuilds the pending form, and Cancel does not touch the configured model.
+Primary/secondary/reference objects get pickers and R/V/N directions get choices.
+
+As in the wx panel, ObjectReferenced changes require distinct primary/secondary
+objects and exactly two different directions. This is checked before accepting
+the edit because engine interpretation alone can defer geometry errors until an
+actual coordinate conversion. WorkflowTests covers creation, dialog Cancel,
+changing to ObjectReferenced with dependent fields, type-only MJ2000Ec edits,
+owned field exposure, invalid directions, protected built-ins and Undo. The edited
+R/N frame transforms the propagated spacecraft position to [radius,0,0], and that
+numerical result survives save/reopen and another mission run.
+
+The three wx coordinate-panel inventory rows are now partially audited. Additional
+origin/dependency combinations, epoch frames and LocalAlignedConstrained workflows
+remain pending and are not counted as fully qualified.
+
+GmatQt was rebuilt; all 11 Qt tests passed in 25.49 seconds. Evidence:
+`Qt6ParityValidation/check-coordinate-axes.txt`.

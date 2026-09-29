@@ -3,6 +3,7 @@
 #include "OrbitCamera.hpp"
 #include "CoordinateConverter.hpp"
 #include "CoordinateSystem.hpp"
+#include "AxisSystem.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
@@ -128,6 +129,101 @@ int main(int argc, char **argv)
       require(window.runMission() == MainWindow::RunResult::Completed, "Repeat execution failed");
       auto *editor = window.findChild<QPlainTextEdit *>("scriptEditor");
       require(editor != nullptr, "Script editor missing");
+      require(window.createResource("CoordinateSystem","UserFrame",editor->toPlainText()).isEmpty(),"Coordinate-system creation failed");
+      const auto beforeAxes=editor->toPlainText();
+      bool cancelledAxes=false;
+      {
+         QWidget parent;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("UserFrame"),[&](const QMap<QString,QString> &changes) {
+            return window.applyResourceChanges("UserFrame",changes,beforeAxes);
+         },&parent);
+         auto *button=panel.findChild<QPushButton *>("editCoordinateAxes"); require(button,"Dedicated coordinate axes editor missing");
+         QTimer::singleShot(0,&panel,[&] {
+            if (auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget())) {
+               auto *type=dialog->findChild<QComboBox *>("coordinateAxisType");
+               if (type) { type->setCurrentText("ObjectReferenced"); cancelledAxes=true; }
+               dialog->reject();
+            }
+         });
+         button->click();
+      }
+      require(cancelledAxes && editor->toPlainText()==beforeAxes &&
+         Moderator::Instance()->GetConfiguredObject("UserFrame")->GetStringParameter("Axes")=="MJ2000Eq","Axes Cancel changed the configured mission");
+      bool appliedAxes=false,axisPickers=false;
+      {
+         QWidget parent;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("UserFrame"),[&](const QMap<QString,QString> &changes) {
+            const auto error=window.applyResourceChanges("UserFrame",changes,beforeAxes); appliedAxes=error.isEmpty();
+            if (!error.isEmpty()) std::cerr<<error.toStdString()<<'\n'; return error;
+         },&parent);
+         QTimer::singleShot(0,&panel,[&] {
+            if (auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget())) {
+               dialog->findChild<QComboBox *>("coordinateAxisType")->setCurrentText("ObjectReferenced");
+               axisPickers=dialog->findChild<QPushButton *>("chooseProperty_Primary") && dialog->findChild<QPushButton *>("chooseProperty_Secondary");
+               auto *table=dialog->findChild<QTableWidget *>();
+               for (int row=0;row<table->rowCount();++row) {
+                  const auto name=table->item(row,0)->text();
+                  const QMap<QString,QString> values={{"Primary","Earth"},{"Secondary","QtSat"},{"XAxis","R"},{"ZAxis","N"}};
+                  if (values.contains(name)) {
+                     if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values[name]);
+                     else table->item(row,1)->setText(values[name]);
+                  }
+               }
+               auto *buttons=dialog->findChild<QDialogButtonBox *>();
+               buttons->button(QDialogButtonBox::Apply)->click();
+               if (!appliedAxes) dialog->reject();
+            }
+         });
+         panel.findChild<QPushButton *>("editCoordinateAxes")->click();
+      }
+      require(appliedAxes && axisPickers,"Dependent coordinate-axis settings or reference pickers are missing");
+      auto *userFrame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("UserFrame"));
+      require(userFrame && userFrame->GetStringParameter("Axes")=="ObjectReferenced" &&
+         userFrame->GetOwnedObject(0)->GetStringParameter("Secondary")=="QtSat","Axis type or secondary reference was not replaced");
+      bool secondaryExposed=false;
+      for (const auto &field:resourceProperties(*userFrame)) secondaryExposed=secondaryExposed || field.name=="Secondary";
+      require(secondaryExposed,"Owned coordinate-axis properties missing after reconstruction");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Mission with edited coordinate system failed");
+      auto checkRadialFrame=[&] {
+         auto *sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"));
+         auto *frame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("UserFrame"));
+         auto *inertial=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("EarthMJ2000Eq"));
+         const auto state=sat->GetMJ2000State(sat->GetEpoch());
+         Rvector6 radial; CoordinateConverter converter;
+         converter.Convert(sat->GetEpoch(),state,inertial,radial,frame);
+         const double radius=std::hypot(state[0],state[1],state[2]);
+         require(std::abs(radial[0]-radius)<1e-8 && std::abs(radial[1])<1e-8 && std::abs(radial[2])<1e-8,
+            "Edited radial frame changed the expected coordinate transform");
+      };
+      checkRadialFrame();
+      QTemporaryDir axesFiles;
+      require(window.saveScriptTo(axesFiles.filePath("axes.script")) && window.loadScript(axesFiles.filePath("axes.script")) && window.runMission()==MainWindow::RunResult::Completed,
+         "Coordinate axes save/reopen failed");
+      checkRadialFrame();
+      const auto configuredAxes=editor->toPlainText();
+      require(!window.applyResourceChanges("UserFrame",{{"XAxis","R"},{"YAxis","R"},{"ZAxis",""}},configuredAxes).isEmpty(),
+         "Invalid duplicate coordinate axes accepted");
+      require(editor->toPlainText()==configuredAxes,"Invalid axes changed the source");
+      require(!window.applyResourceChanges("EarthMJ2000Eq",{{"Axes","MJ2000Ec"}},configuredAxes).isEmpty(),"Built-in axes were modified");
+      editor->setPlainText(beforeAxes); require(window.buildScript(),"Restoring initial coordinate system failed");
+      bool appliedType=false;
+      {
+         QWidget parent;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("UserFrame"),[&](const QMap<QString,QString> &changes) {
+            const auto error=window.applyResourceChanges("UserFrame",changes,beforeAxes); appliedType=error.isEmpty(); return error;
+         },&parent);
+         QTimer::singleShot(0,&panel,[&] {
+            if (auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget())) {
+               dialog->findChild<QComboBox *>("coordinateAxisType")->setCurrentText("MJ2000Ec");
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+               if (!appliedType) dialog->reject();
+            }
+         });
+         panel.findChild<QPushButton *>("editCoordinateAxes")->click();
+      }
+      require(appliedType && Moderator::Instance()->GetConfiguredObject("UserFrame")->GetStringParameter("Axes")=="MJ2000Ec",
+         "Axes type-only dialog edit did not replace axes");
+      editor->undo(); require(editor->toPlainText()==beforeAxes && window.buildScript(),"Axes edit Undo failed");
       const QString beforeEdit = editor->toPlainText();
       auto dryMass = [] { return Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("DryMass"); };
       const double originalMass = dryMass();

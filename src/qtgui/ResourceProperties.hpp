@@ -15,6 +15,7 @@ struct ResourceProperty
    int rows = 0, columns = 0;
 };
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
+void validateResourceProperties(GmatBase &object);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
 bool isResourceList(GmatBase &object, const QString &name);
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value);

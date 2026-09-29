@@ -692,3 +692,21 @@ The plugin now reports output-open, write and close failures, including the file
 path, instead of reporting a successful mission with missing data. Rebuilding and
 running after correcting the output path recovers normally. Copying commands and
 reinitializing streams are safe, and export preserves each object's comment flags.
+
+
+### Coordinate-system axes
+
+Coordinate-system resource panels now offer **Axes…**. Choose an axis type and
+edit its dependent properties together, then Apply to validate the complete
+coordinate system. Changing the type resets pending axis edits; Cancel leaves
+the mission unchanged. Apply pending edits in the outer resource panel first.
+Primary/secondary objects use reference pickers, ObjectReferenced directions use
+R/V/N selectors, and epoch fields are labeled A1ModJulian. Type-only changes also
+apply correctly; previously the engine's generic Axes setter silently did nothing.
+
+The main resource table exposes the selected axis model's writable properties.
+ObjectReferenced settings require distinct primary/secondary objects and exactly
+two distinct directions, leaving the third blank. Built-in coordinate systems
+remain protected. Successful edits are undoable, and reopening reads the current
+axis model. LocalAlignedConstrained, epoch-dependent frames and other specialized
+axis modes still need broader qualification.

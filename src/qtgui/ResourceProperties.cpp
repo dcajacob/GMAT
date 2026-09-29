@@ -6,8 +6,11 @@
 #include "Array.hpp"
 #include "PropSetup.hpp"
 #include "Propagator.hpp"
+#include "AxisSystem.hpp"
+#include <memory>
 #include "Rvector.hpp"
 #include <QRegularExpression>
+#include <QSet>
 #include <cmath>
 #include <algorithm>
 #include <limits>
@@ -39,6 +42,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          field.unit = QString::fromStdString(object.GetParameterUnit(id));
+         if (object.IsOfType(Gmat::AXIS_SYSTEM) && field.name=="Epoch") field.unit="A1ModJulian";
          switch (object.GetParameterType(id)) {
          case Gmat::RVECTOR_TYPE: {
             const auto &vector=object.GetRvectorParameter(id);
@@ -82,12 +86,20 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          field.filename=object.GetParameterType(id)==Gmat::FILENAME_TYPE;
          if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
             try {
-               const auto type=object.IsOfType("Formation") && field.name=="Add" ? Gmat::SPACECRAFT : object.GetPropertyObjectType(id);
+               auto type=object.IsOfType("Formation") && field.name=="Add" ? Gmat::SPACECRAFT : object.GetPropertyObjectType(id);
+               if (object.IsOfType(Gmat::AXIS_SYSTEM)) {
+                  if (field.name=="Primary" || field.name=="Secondary" || field.name=="ReferenceObject") type=Gmat::SPACE_POINT;
+                  if (field.name=="ConstraintCoordinateSystem") type=Gmat::COORDINATE_SYSTEM;
+               }
                if (type!=Gmat::UNKNOWN_OBJECT) for (const auto &name:Moderator::Instance()->GetListOfObjects(type))
                   field.references.append(QString::fromStdString(name));
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
          }
+         if (object.IsOfType("CoordinateSystem") && field.name=="Axes")
+            for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM)) field.choices.append(QString::fromStdString(type));
+         if (object.GetTypeName()=="ObjectReferenced" && (field.name=="XAxis" || field.name=="YAxis" || field.name=="ZAxis"))
+            field.choices={"","R","-R","V","-V","N","-N"};
          fields.append(field);
       } catch (BaseException &) {
          // Some plugin and computed properties have no scalar editor.
@@ -95,6 +107,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    }
    if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
       for (const auto &field:resourceProperties(*propagator)) {
+         const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
+         if (!duplicate) fields.append(field);
+      }
+   }
+   if (object.IsOfType("CoordinateSystem")) if (auto *axes=object.GetOwnedObject(0)) {
+      for (const auto &field:resourceProperties(*axes)) {
          const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
          if (!duplicate) fields.append(field);
       }
@@ -132,6 +150,10 @@ bool isResourceList(GmatBase &object, const QString &name)
    if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
       try { if (propagator->GetParameterID(name.toStdString())>=0) return isResourceList(*propagator,name); }
       catch (BaseException &) {} // Parent-only fields such as FM and Type.
+   }
+   if (object.IsOfType("CoordinateSystem") && name!="Axes") if (auto *axes=object.GetOwnedObject(0)) {
+      try { if (axes->GetParameterID(name.toStdString())>=0) return isResourceList(*axes,name); }
+      catch (BaseException &) {}
    }
    // These lists use canonical {...} syntax. Other compound lists can carry
    // additional positional settings and need their own replacement handling.
@@ -240,8 +262,42 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    return result;
 }
 
+void validateResourceProperties(GmatBase &object)
+{
+   if (!object.IsOfType("CoordinateSystem")) return;
+   auto *axes=object.GetOwnedObject(0);
+   if (!axes || axes->GetTypeName()!="ObjectReferenced") return;
+   const auto primary=axes->GetStringParameter("Primary"),secondary=axes->GetStringParameter("Secondary");
+   if (primary.empty() || secondary.empty() || primary==secondary)
+      throw std::runtime_error("ObjectReferenced axes need distinct primary and secondary objects");
+   QSet<QString> directions; int count=0;
+   for (const auto *name:{"XAxis","YAxis","ZAxis"}) {
+      auto value=QString::fromStdString(axes->GetStringParameter(name));
+      if (value.isEmpty()) continue;
+      ++count; value.remove('-'); directions.insert(value);
+   }
+   if (count!=2 || directions.size()!=2)
+      throw std::runtime_error("Select exactly two different R, V or N directions; leave the third axis blank");
+}
+
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   if (object.IsOfType("CoordinateSystem")) {
+      // Even owned-axis edits must respect built-in coordinate-system protection.
+      object.SetStringParameter("Axes",object.GetStringParameter("Axes"));
+      if (name=="Axes") {
+         if (object.GetStringParameter("Axes")==value.toStdString()) return;
+         const auto &types=Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM);
+         if (std::find(types.begin(),types.end(),value.toStdString())==types.end()) throw std::runtime_error("Select a registered axis type");
+         std::unique_ptr<AxisSystem> axes(Moderator::Instance()->CreateAxisSystem(value.toStdString(),"",0));
+         if (!axes || !object.SetRefObject(axes.get(),Gmat::AXIS_SYSTEM,"")) throw std::runtime_error("Cannot replace axes");
+         return;
+      }
+      if (auto *axes=object.GetOwnedObject(0)) {
+         int id=-1; try { id=axes->GetParameterID(name.toStdString()); } catch (BaseException &) {}
+         if (id>=0 && !axes->IsParameterReadOnly(id)) { setResourceProperty(*axes,name,value); return; }
+      }
+   }
    if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
       int parameter=-1;
       try { parameter=propagator->GetParameterID(name.toStdString()); } catch (BaseException &) {}

@@ -728,6 +728,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
       }
+      validateResourceProperties(*proposed);
       if (!proposed->Validate()) return "The resource rejected these settings.";
       candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
       auto serialize=[](GmatBase &resource) {

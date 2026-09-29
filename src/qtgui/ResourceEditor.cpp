@@ -1,4 +1,8 @@
 #include "ResourceEditor.hpp"
+#include "Moderator.hpp"
+#include "AxisSystem.hpp"
+#include "BaseException.hpp"
+#include <memory>
 #include "ResourceProperties.hpp"
 #include "ScriptCompatibility.hpp"
 #include <QJsonDocument>
@@ -30,10 +34,43 @@
 #include <cmath>
 #include <algorithm>
 
-ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script) : EditablePanel(parent)
+ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script,bool applyUnchanged) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
    layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
+   if (object.IsOfType("CoordinateSystem") && object.GetOwnedObject(0)) {
+      // Retain a snapshot: applying any resource reconstructs the engine model.
+      auto initial=std::shared_ptr<GmatBase>(object.GetOwnedObject(0)->Clone());
+      auto *axesButton=new QPushButton("Axes…",this); axesButton->setObjectName("editCoordinateAxes");
+      layout->addWidget(axesButton);
+      connect(axesButton,&QPushButton::clicked,this,[this,initial,apply] {
+         if (hasChanges()) { status->setText("Apply or discard pending property changes before opening Axes."); return; }
+         QDialog dialog(this); dialog.setObjectName("coordinateAxesDialog"); dialog.setWindowTitle("Coordinate system axes");
+         auto *layout=new QVBoxLayout(&dialog);
+         auto *type=new QComboBox(&dialog); type->setObjectName("coordinateAxisType");
+         for (const auto &name:Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM)) type->addItem(QString::fromStdString(name));
+         type->setCurrentText(QString::fromStdString(initial->GetTypeName())); layout->addWidget(type);
+         auto *help=new QLabel("Choose an axis type and set its dependent properties. Changing type resets pending axis edits. Apply validates the complete coordinate system.",&dialog);
+         help->setWordWrap(true); layout->addWidget(help);
+         ResourceEditor *panel=nullptr; bool completed=false;
+         auto rebuild=[&] {
+            if (panel) { delete panel; panel=nullptr; }
+            try {
+               std::unique_ptr<GmatBase> axes(type->currentText()==QString::fromStdString(initial->GetTypeName()) ? initial->Clone() :
+                  Moderator::Instance()->CreateAxisSystem(type->currentText().toStdString(),"",0));
+               if (!axes) { help->setText("The engine could not create these axes."); return; }
+               panel=new ResourceEditor(*axes,[&,selected=type->currentText()](const QMap<QString,QString> &changes) {
+                  auto candidate=changes; candidate.insert("Axes",selected);
+                  const auto error=apply(candidate); completed=error.isEmpty(); return error;
+               },&dialog,{},true);
+               layout->addWidget(panel);
+            } catch (BaseException &error) { help->setText(QString::fromStdString(error.GetFullMessage())); }
+         };
+         connect(type,&QComboBox::currentTextChanged,&dialog,[&] { rebuild(); }); rebuild();
+         dialog.resize(700,600); dialog.exec();
+         if (completed) { applied=true; parentWidget()->close(); }
+      });
+   }
    auto *search = new QLineEdit(this);
    search->setObjectName("propertyFilter");
    search->setPlaceholderText("Filter properties…");
@@ -295,7 +332,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    connect(search, &QLineEdit::textChanged, this, filter);
    if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
    filter();
-   connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply] {
+   connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes;
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
@@ -304,7 +341,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          const QString value = combo ? combo->currentText() : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
       }
-      if (changes.isEmpty()) { status->setText("No changes to apply."); return; }
+      if (changes.isEmpty() && !applyUnchanged) { status->setText("No changes to apply."); return; }
       const QString error = apply(changes);
       if (error.isEmpty()) {
          // Model reconstruction can normalize dependent properties. Close this
