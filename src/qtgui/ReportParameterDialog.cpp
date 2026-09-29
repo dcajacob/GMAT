@@ -5,6 +5,8 @@
 #include "ParameterInfo.hpp"
 #include "BaseException.hpp"
 #include <QFormLayout>
+#include <QRegularExpression>
+#include <algorithm>
 #include <QGroupBox>
 #include <QMap>
 #include "Array.hpp"
@@ -19,7 +21,13 @@
 
 ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
-   const bool single=mode==Mode::Single;
+   const bool single=mode!=Mode::Multiple;
+   const bool writable=mode==Mode::Writable || mode==Mode::WritableReal;
+   const bool realOnly=mode==Mode::WritableReal;
+   auto writableParameter=[realOnly](const Parameter *parameter) {
+      const bool user=parameter->IsOfType("Variable") || parameter->IsOfType("Array") || parameter->IsOfType("String");
+      return (user || parameter->IsSettable()) && (!realOnly || parameter->GetReturnType()==Gmat::REAL_TYPE || parameter->IsOfType("Array"));
+   };
    setObjectName("reportParameterDialog"); setWindowTitle(single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
    auto *layout=new QVBoxLayout(this);
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
@@ -31,7 +39,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    QStringList names;
    for (const auto &name:moderator->GetListOfObjects(Gmat::PARAMETER)) {
       auto *parameter=moderator->GetParameter(name);
-      if (parameter && parameter->IsReportable()) names.append(QString::fromStdString(name));
+      if (parameter && (writable ? writableParameter(parameter) : parameter->IsReportable())) names.append(QString::fromStdString(name));
    }
    names.sort(); names.removeDuplicates(); entry->addItems(names); layout->addWidget(entry);
    auto *browser=new QGroupBox("Browse object properties",this);
@@ -46,7 +54,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    auto *info=ParameterInfo::Instance();
    QMap<QString,QStringList> properties;
    for (const auto &type:info->GetTypesOfParameters()) {
-      if (!info->IsReportable(type)) continue;
+      if (writable ? (!info->IsSettable(type) || (realOnly && !info->IsPlottable(type))) : !info->IsReportable(type)) continue;
       const auto ownerType=info->GetObjectType(type);
       if (ownerType==Gmat::UNKNOWN_OBJECT || ownerType==Gmat::PARAMETER) continue;
       for (const auto &name:moderator->GetListOfObjects(ownerType)) properties[QString::fromStdString(name)].append(QString::fromStdString(type));
@@ -158,10 +166,24 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    }
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,this); layout->addWidget(buttons);
    if (single) {
-      auto validate=[entry,buttons,moderator] {
+      auto validate=[entry,buttons,moderator,info,writable,realOnly,mode,writableParameter] {
          const auto value=entry->currentText().trimmed();
          const auto *object=moderator->GetConfiguredObject(value.toStdString());
-         buttons->button(QDialogButtonBox::Ok)->setEnabled(!value.isEmpty() && !(object && object->IsOfType("Array") && QString::fromStdString(object->GetName())==value));
+         const bool bareArray=object && object->IsOfType("Array") && QString::fromStdString(object->GetName())==value;
+         bool valid=!value.isEmpty() && (!bareArray || mode==Mode::Writable);
+         if (writable) {
+            static const QRegularExpression reference(R"(^[A-Za-z_][A-Za-z0-9_.]*(?:\(\s*[1-9][0-9]*\s*,\s*[1-9][0-9]*\s*\))?$)");
+            valid=valid && reference.match(value).hasMatch();
+            if (const auto *parameter=dynamic_cast<const Parameter *>(object)) valid=valid && writableParameter(parameter);
+            else if (object) valid=false;
+            else {
+               const auto type=value.section('.',-1).toStdString();
+               const auto &types=info->GetTypesOfParameters();
+               if (std::find(types.begin(),types.end(),type)!=types.end())
+                  valid=valid && info->IsSettable(type) && (!realOnly || info->IsPlottable(type));
+            }
+         }
+         buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
       };
       connect(entry,&QComboBox::currentTextChanged,this,[validate] { validate(); }); validate();
    }

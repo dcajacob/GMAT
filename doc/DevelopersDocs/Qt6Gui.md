@@ -850,3 +850,11 @@ element. OK uses that one entry directly; there is no report list to assemble.
 Empty entries and bare arrays disable OK. Report and ReportFile parameter lists
 retain their ordered multi-selection workflow. Command Apply still validates the
 chosen reference in its specific context.
+
+Vary's variable picker filters for writable numeric parameters and array elements.
+The assignment destination picker also offers user strings and whole arrays.
+User variables remain selectable even though their system-parameter metadata does
+not mark them as settable. Known read-only properties are omitted from property
+browsing and cannot be accepted by typing them into these writable pickers.
+Literal numbers cannot be selected as writable destinations. The original command
+text fields still support direct editing and engine validation on Apply.

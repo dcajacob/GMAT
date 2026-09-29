@@ -292,11 +292,35 @@ int main(int argc,char **argv)
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
       require(total()==15,"Mission panel Apply did not update the loop");
       editor->setPlainText("Create DifferentialCorrector DC;\nGMAT DC.MaximumIterations = 20;\n"
-         "Create Variable x goalValue;\nCreate Array Choice[2,3];\nGMAT x = 1;\nGMAT goalValue = 8;\nBeginMissionSequence;\n"
+         "Create Variable x goalValue;\nCreate String Note;\nCreate Spacecraft FilterSat;\nCreate Array Choice[2,3];\nGMAT x = 1;\nGMAT goalValue = 8;\nBeginMissionSequence;\n"
          "Target DC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};\n"
-         "Vary DC(x = 1, {Perturbation = 0.001, Lower = -20, Upper = 20, MaxStep = 10});\n"
+         "Vary DC(goalValue = 1, {Perturbation = 0.001, Lower = -20, Upper = 20, MaxStep = 10});\n"
          "Achieve DC(x = 7, {Tolerance = 0.000001});\nEndTarget;\n");
       require(window.buildScript(),"Targeting fixture did not build");
+      {
+         ReportParameterDialog numeric({"x"},&window,ReportParameterDialog::Mode::WritableReal);
+         auto *entry=numeric.findChild<QComboBox *>("reportParameterEntry");
+         auto *ok=numeric.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+         require(entry->findText("x")>=0 && entry->findText("Choice")>=0 && entry->findText("Note")<0,"Vary picker offers nonnumeric user values");
+         auto *owner=numeric.findChild<QComboBox *>("reportPropertyObject"); owner->setCurrentText("FilterSat");
+         auto *properties=numeric.findChild<QComboBox *>("reportPropertyType");
+         require(properties->findText("X")>=0 && properties->findText("ElapsedSecs")<0,"Writable property browser includes read-only elapsed time");
+         entry->setEditText("FilterSat.ElapsedSecs"); require(!ok->isEnabled(),"Read-only typed parameter was accepted");
+         entry->setEditText("42"); require(!ok->isEnabled(),"Numeric literal accepted as writable destination");
+         ReportParameterDialog destination({"Choice"},&window,ReportParameterDialog::Mode::Writable);
+         require(destination.findChild<QComboBox *>("reportParameterEntry")->findText("Note")>=0 &&
+            destination.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled(),"Assignment picker excluded string or whole array");
+         const auto current=window.missionSnapshot(); QString varied;
+         CommandForm varyForm([&](const QString &value) { varied=value; }); varyForm.setStatement(current.nodes[find(current,"Vary")].statement);
+         bool selected=false;
+         QTimer::singleShot(0,&varyForm,[&] {
+            auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+            auto *entry=dialog->findChild<QComboBox *>("reportParameterEntry"); selected=entry->findText("x")>=0;
+            entry->setCurrentText("x"); dialog->accept();
+         }); varyForm.findChild<QPushButton *>("commandChoose_Variable")->click();
+         require(selected && window.applyMissionChange(current,find(current,"Vary"),MissionEdit::Replace,varied).isEmpty(),"Selected Vary variable did not apply");
+      }
+
       snapshot=window.missionSnapshot();
       const int achieve=find(snapshot,"Achieve");
       QString replacement;

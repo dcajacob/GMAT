@@ -144,13 +144,16 @@ void CommandForm::setStatement(const QString &statement)
                input->setText(names.join(" "));
             }
          });
-      } else if ((title()=="Achieve" && (name=="Goal" || name=="Value")) ||
+      } else if ((title()=="Vary" && name=="Variable") || (title()=="Assignment" && name=="Destination") ||
+                 (title()=="Achieve" && (name=="Goal" || name=="Value")) ||
                  (title()=="Minimize" && name=="Objective") ||
                  (title()=="Constraint" && (name=="Left side" || name=="Right side"))) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select parameter…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
-         connect(choose,&QPushButton::clicked,this,[this,input] {
-            ReportParameterDialog dialog({input->text()},this,ReportParameterDialog::Mode::Single);
+         const auto mode=title()=="Vary" ? ReportParameterDialog::Mode::WritableReal :
+            title()=="Assignment" ? ReportParameterDialog::Mode::Writable : ReportParameterDialog::Mode::Single;
+         connect(choose,&QPushButton::clicked,this,[this,input,mode] {
+            ReportParameterDialog dialog({input->text()},this,mode);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.selection().first());
          });
       } else if (!resourceType.isEmpty() || (title()=="Report" && name=="Parameters")) {

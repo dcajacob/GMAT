@@ -49,10 +49,10 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector excludes optimizers; selector tested. Broader Target workflow pending. |
-| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; tested with DC and Yukon. Full variable/options workflow pending. |
+| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector tested with EclipseLocator; full execution/options workflow pending. |
 | `src/gui/command/PropagatePanel.hpp` | Pending audit |
-| `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls; source-preservation tests. Parameter chooser and complex syntax audit pending. |
+| `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
@@ -840,3 +840,25 @@ array. The browser now distinguishes exact array names from indexed references;
 Use element cannot append another index to an already indexed entry. GmatQt was
 rebuilt and all 11 Qt checks passed in 38.47 seconds. Evidence:
 `Qt6ParityValidation/check-single-parameter.txt`.
+
+## Writable mission parameter selection
+
+Vary and assignment destinations now use writable modes of the shared browser.
+Configured user Variable/Array/String resources are handled separately from
+system-parameter IsSettable metadata. Vary additionally restricts configured
+parameters to numeric results (and arrays for element construction), and property
+browsing to settable/plottable types, following wx's Vary selector. Assignment
+allows user strings and whole arrays. Known read-only typed references and numeric
+literals cannot be accepted as writable destinations; direct text editing remains
+available for unsupported assignment forms.
+
+MissionTests verifies Vary offers x/Choice but not a String, offers spacecraft X
+but not ElapsedSecs, and rejects typed read-only references/numeric literals. It
+checks assignment string/whole-array availability. The targeting fixture initially
+varies the wrong variable; the actual Vary picker selects x, then the existing
+Achieve picker selects goalValue. Save/reopen and subsequent solver runs must still
+achieve x=8 within 1e-6. Broader hardware/plugin parameter and destination execution
+cases remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 26.98 seconds. Evidence:
+`Qt6ParityValidation/check-writable-parameters.txt`.
