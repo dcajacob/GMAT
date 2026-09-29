@@ -755,5 +755,13 @@ The report selector now also offers **Browse object properties**. Select an obje
 a reportable property and, when needed, its coordinate system, central body or
 force model. **Use reference** fills the parameter entry; **Add parameter** adds it
 to the selected order. Body-fixed properties filter incompatible coordinate
-systems. Owned/attached hardware property browsing remains pending; typed
-references and already-configured parameters remain available.
+systems. Owned attitude properties and attached hardware are also available. Hardware
+choices include only direct attachments of the selected object; typed references
+and already-configured parameters remain available.
+
+
+Hardware browsing checks cover fuel mass and a chemical-thruster coefficient,
+including exclusion of unattached resources and a spacecraft with no attachments.
+Owned attitude parameters use `Spacecraft.Property`; attached hardware uses
+`Spacecraft.Hardware.Property`. The selector disables **Use reference** when a
+required hardware dependency has no valid choice.

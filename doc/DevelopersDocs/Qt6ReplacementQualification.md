@@ -56,7 +56,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/CallFunctionPanel.hpp` | Pending audit |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Pending audit |
 | `src/gui/command/MinimizePanel.hpp` | Pending audit |
-| `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned/attached hardware browsing pending. |
+| `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
@@ -135,7 +135,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned/attached hardware browsing and solver-iteration combinations pending. |
+| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
@@ -593,3 +593,27 @@ broader plugin-property coverage.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 28.72 seconds. Evidence:
 `Qt6ParityValidation/check-report-property-browser.txt`.
+
+
+### Attached hardware and owned attitude follow-up
+
+The property browser now includes attached hardware and owned attitude parameter
+types. Attached dependencies are filtered by both engine type and the selected
+owner's direct object-reference fields. Transitive references from a thruster do
+not establish spacecraft attachment. Missing hardware (or unknown required type)
+leaves Use reference disabled. Owned attitude properties generate Owner.Property
+without an unnecessary attitude object name.
+
+CompatibilityTests selects BrowserSat.Q4, BrowserSat.BrowserTank.FuelMass and
+BrowserSat.BrowserThruster.C1 alongside position/time parameters. It checks the
+expected unit scalar quaternion, fuel mass 123.5 and coefficient 12.5 in the
+actual report after save/Save As/reopen and invalid-build recovery. Spare tank
+and thruster resources are excluded; switching to an unattached spacecraft
+clears the dependency list and disables reference generation. Broader attitude
+models, power systems, plates, electric thrusters and plugin hardware scenarios
+remain unqualified.
+
+All 11 Qt checks passed in 58.32 seconds. After the unknown-hardware-type guard,
+GmatQt was rebuilt and Compatibility passed again in 2.25 seconds. Evidence:
+`Qt6ParityValidation/check-report-hardware-browser.txt` and
+`Qt6ParityValidation/report-hardware-browser-final.txt`.

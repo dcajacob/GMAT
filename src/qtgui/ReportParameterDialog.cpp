@@ -45,8 +45,6 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    QMap<QString,QStringList> properties;
    for (const auto &type:info->GetTypesOfParameters()) {
       if (!info->IsReportable(type)) continue;
-      const auto dep=info->GetDepObjectType(type);
-      if (dep==GmatParam::OWNED_OBJ || dep==GmatParam::ATTACHED_OBJ || info->IsForOwnedObject(type) || info->IsForAttachedObject(type)) continue;
       const auto ownerType=info->GetObjectType(type);
       if (ownerType==Gmat::UNKNOWN_OBJECT || ownerType==Gmat::PARAMETER) continue;
       for (const auto &name:moderator->GetListOfObjects(ownerType)) properties[QString::fromStdString(name)].append(QString::fromStdString(type));
@@ -60,11 +58,29 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       if (dep==GmatParam::COORD_SYS) { objectType=Gmat::COORDINATE_SYSTEM; dependencyLabel->setText("Coordinate system"); }
       else if (dep==GmatParam::ORIGIN) { objectType=Gmat::CELESTIAL_BODY; dependencyLabel->setText("Central body"); }
       else if (dep==GmatParam::ODE_MODEL) { objectType=Gmat::ODE_MODEL; dependencyLabel->setText("Force model"); }
-      const bool needed=objectType!=Gmat::UNKNOWN_OBJECT;
+      const bool attached=dep==GmatParam::ATTACHED_OBJ;
+      QStringList attachedNames;
+      if (attached) {
+         objectType=info->GetOwnedObjectType(type); dependencyLabel->setText("Attached hardware");
+         if (auto *object=moderator->GetConfiguredObject(owner->currentText().toStdString())) {
+            // Use direct resource references; a thruster's tank reference must
+            // not make that tank appear attached to an unrelated spacecraft.
+            for (int id=0;id<object->GetParameterCount();++id) {
+               try {
+                  const auto kind=object->GetParameterType(id);
+                  if (kind==Gmat::OBJECT_TYPE) attachedNames.append(QString::fromStdString(object->GetStringParameter(id)));
+                  else if (kind==Gmat::OBJECTARRAY_TYPE)
+                     for (const auto &name:object->GetStringArrayParameter(id)) attachedNames.append(QString::fromStdString(name));
+               } catch (BaseException &) {} // Plugin properties may lack a string getter.
+            }
+         }
+      }
+      const bool needed=attached || objectType!=Gmat::UNKNOWN_OBJECT;
       dependency->setVisible(needed); dependencyLabel->setVisible(needed);
-      if (needed) for (const auto &name:moderator->GetListOfObjects(objectType)) {
+      if (needed && objectType!=Gmat::UNKNOWN_OBJECT) for (const auto &name:moderator->GetListOfObjects(objectType)) {
          auto *object=moderator->GetConfiguredObject(name);
          if (!object) continue;
+         if (attached && !attachedNames.contains(QString::fromStdString(name))) continue;
          if (dep==GmatParam::COORD_SYS) {
             try {
                if (info->RequiresBodyFixedCS(type) && object->GetStringParameter("Axes")!="BodyFixed") continue;

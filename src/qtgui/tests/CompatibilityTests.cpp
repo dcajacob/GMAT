@@ -217,7 +217,10 @@ int main(int argc,char **argv)
       }
       {
          const auto path=output.filePath("browsed-properties.txt");
-         editor->setPlainText("Create Spacecraft BrowserSat;\nBrowserSat.DisplayStateType = Cartesian;\n"
+         editor->setPlainText("Create ChemicalTank BrowserTank SpareTank;\nBrowserTank.FuelMass = 123.5;\n"
+            "Create ChemicalThruster BrowserThruster SpareThruster;\nBrowserThruster.Tank = {BrowserTank};\n"
+            "BrowserThruster.C1 = 12.5;\nCreate Spacecraft BrowserSat EmptySat;\nBrowserSat.Tanks = {BrowserTank};\n"
+            "BrowserSat.Thrusters = {BrowserThruster};\nBrowserSat.DisplayStateType = Cartesian;\n"
             "BrowserSat.X = 7000;\nBrowserSat.Y = 0;\nBrowserSat.Z = 0;\n"
             "Create CoordinateSystem BrowserFixed;\nBrowserFixed.Origin = Earth;\nBrowserFixed.Axes = BodyFixed;\n"
             "Create ReportFile BrowserReport;\nBrowserReport.Filename = '"+path+"';\nBrowserReport.FixedWidth = false;\n"
@@ -246,6 +249,16 @@ int main(int argc,char **argv)
          choose("X","EarthMJ2000Eq","BrowserSat.EarthMJ2000Eq.X");
          choose("RMAG","Earth","BrowserSat.Earth.RMAG");
          choose("ElapsedSecs",{},"BrowserSat.ElapsedSecs");
+         choose("Q4",{},"BrowserSat.Q4");
+         choose("FuelMass","BrowserTank","BrowserSat.BrowserTank.FuelMass");
+         require(dependency->findText("SpareTank")<0,"Unattached tank offered by hardware browser");
+         choose("C1","BrowserThruster","BrowserSat.BrowserThruster.C1");
+         require(dependency->findText("SpareThruster")<0,"Unattached thruster offered by hardware browser");
+         owner->setCurrentText("EmptySat"); property->setCurrentText("FuelMass");
+         require(dependency->count()==0 && !browser.findChild<QPushButton *>("reportUseReference")->isEnabled(),
+            "Hardware reference remained selectable on a spacecraft without attachments");
+         owner->setCurrentText("BrowserSat");
+
          property->setCurrentText("PlanetodeticLAT");
          require(property->currentText()=="PlanetodeticLAT" && dependency->findText("BrowserFixed")>=0 &&
             dependency->findText("EarthMJ2000Eq")<0,"Body-fixed requirement was not applied to reference choices");
@@ -255,7 +268,7 @@ int main(int argc,char **argv)
          require(index>=0 && window.applyMissionChange(snapshot,index,MissionEdit::Replace,
             "Report BrowserReport "+browser.selection().join(" ")+";").isEmpty(),"Browsed references failed to apply");
          roundTrip("browsed-report");
-         require(window.runMission()==MainWindow::RunResult::Completed && read(path).trimmed()=="7000,7000,0",
+         require(window.runMission()==MainWindow::RunResult::Completed && read(path).trimmed()=="7000,7000,0,1,123.5,12.5",
             "Browsed coordinate, central-body or independent parameter calculation differs");
       }
       const auto types=window.availableEngineTypes();
