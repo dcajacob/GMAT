@@ -10,6 +10,20 @@
 #include <limits>
 #include <stdexcept>
 
+namespace {
+GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
+{
+   if (!object.IsOfType("ODEModel")) return nullptr;
+   for (int i=0;i<object.GetOwnedObjectCount();++i) {
+      auto *force=object.GetOwnedObject(i);
+      if (!force) continue;
+      const auto prefix=QString::fromStdString(object.BuildPropertyName(force))+".";
+      if (name.startsWith(prefix)) { leaf=name.mid(prefix.size()); return force; }
+   }
+   return nullptr;
+}
+}
+
 QVector<ResourceProperty> resourceProperties(GmatBase &object)
 {
    QVector<ResourceProperty> fields;
@@ -54,6 +68,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          case Gmat::STRING_TYPE:
          case Gmat::FILENAME_TYPE:
          case Gmat::OBJECT_TYPE: field.value = QString::fromStdString(object.GetStringParameter(id)); break;
+         case Gmat::STRINGARRAY_TYPE:
          case Gmat::OBJECTARRAY_TYPE:
             if (!isResourceList(object, field.name)) continue;
             for (const auto &entry : object.GetStringArrayParameter(id)) field.choices.append(QString::fromStdString(entry));
@@ -66,6 +81,31 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // Some plugin and computed properties have no scalar editor.
       }
    }
+   if (object.IsOfType("Spacecraft")) {
+      // Attitude parameters are delegated by name at IDs above the spacecraft
+      // parameter table. Enumerate the owned model rather than guessing IDs.
+      if (auto *attitude=object.GetOwnedObject(0)) {
+         for (const auto &field:resourceProperties(*attitude)) {
+            const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
+            if (!duplicate && !object.IsParameterReadOnly(object.GetParameterID(field.name.toStdString()))) fields.append(field);
+         }
+      }
+   }
+   if (object.IsOfType("ODEModel")) {
+      // Engine-owned force components have their own parameter tables and
+      // canonical prefixes (for example GravityField.Earth.Degree).
+      for (int i=0;i<object.GetOwnedObjectCount();++i) {
+         auto *force=object.GetOwnedObject(i); if (!force) continue;
+         const auto prefix=QString::fromStdString(object.BuildPropertyName(force));
+         if (prefix.isEmpty() || prefix=="UnknownForce") continue;
+         for (auto field:resourceProperties(*force)) {
+            if (field.list) continue;
+            field.name=prefix+"."+field.name;
+            const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
+            if (!duplicate) fields.append(field);
+         }
+      }
+   }
    return fields;
 }
 
@@ -73,6 +113,8 @@ bool isResourceList(GmatBase &object, const QString &name)
 {
    // These lists use canonical {...} syntax. Other compound lists can carry
    // additional positional settings and need their own replacement handling.
+   QString leaf;
+   if (forcePropertyOwner(object,name,leaf)) return false;
    const auto id=object.GetParameterID(name.toStdString());
    const auto type=QString::fromStdString(object.GetTypeName());
    const bool supported=(name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile")) ||
@@ -80,8 +122,10 @@ bool isResourceList(GmatBase &object, const QString &name)
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       (object.IsOfType("Thruster") && name=="Tank") ||
       (type=="FiniteBurn" && name=="Thrusters") ||
-      ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses"));
-   return supported && object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE && !object.IsParameterReadOnly(id);
+      ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses")) ||
+      (object.IsOfType("EventLocator") && (name=="OccultingBodies" || name=="Observers" || name=="EclipseTypes"));
+   const auto parameterType=object.GetParameterType(id);
+   return supported && (parameterType==Gmat::OBJECTARRAY_TYPE || parameterType==Gmat::STRINGARRAY_TYPE) && !object.IsParameterReadOnly(id);
 }
 
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value)
@@ -111,7 +155,10 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    const QRegularExpression assignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+
       "[ \\t]*=[ \\t]*\\{[^;]*?\\}[ \\t]*;",QRegularExpression::MultilineOption);
    auto matches=assignment.globalMatch(block);
-   const QString replacement="GMAT "+key+" = {"+entries.join(", ")+"};";
+   QStringList serialized=entries;
+   if (object.GetParameterType(id)==Gmat::STRINGARRAY_TYPE)
+      for (auto &entry:serialized) entry="'"+entry+"'";
+   const QString replacement="GMAT "+key+" = {"+serialized.join(", ")+"};";
    QString result=block;
    if (!matches.hasNext()) {
       if (object.GetStringArrayParameter(id).empty())
@@ -169,6 +216,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   QString leaf;
+   if (auto *force=forcePropertyOwner(object,name,leaf)) { setResourceProperty(*force,leaf,value); return; }
    const auto id = object.GetParameterID(name.toStdString());
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
    if (object.IsParameterReadOnly(id) && !arrayValues) throw std::runtime_error("Property is read-only");

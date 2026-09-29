@@ -23,6 +23,8 @@ public:
    bool loadScript(const QString &path);
    bool saveScriptTo(const QString &path);
    bool buildScript();
+   bool convertOpenFramesScript();
+   QStringList availableEngineTypes() const;
    enum class RunResult { Completed, Stopped, Failed, Busy };
    RunResult runMission();
    void pauseMission();

@@ -6,8 +6,11 @@
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "StartupCompatibility.hpp"
+#include "ScriptCompatibility.hpp"
 #include "ScriptEditor.hpp"
 #include <QDialog>
+#include <QDir>
+#include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QComboBox>
 #include <QFormLayout>
@@ -23,6 +26,7 @@
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
 #include "BaseException.hpp"
+#include "FileManager.hpp"
 #include <QAction>
 #include <QApplication>
 #include <QCloseEvent>
@@ -54,7 +58,7 @@ QStringList creatableResourceTypes()
 {
    QStringList result;
    for (const auto category : {Gmat::SPACECRAFT,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
-         Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER})
+         Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER,Gmat::FUNCTION,Gmat::EVENT_LOCATOR})
       for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
          result.append(QString::fromStdString(type));
    result.append({"Variable","String","Array"});
@@ -217,6 +221,9 @@ MainWindow::MainWindow()
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);
    connect(create,&QAction::triggered,this,&MainWindow::showCreateResource);
+   auto *convert=edit->addAction("Convert OpenFrames views for Qt");
+   convert->setObjectName("convertOpenFramesViews"); editingActions.append(convert);
+   connect(convert,&QAction::triggered,this,[this] { convertOpenFramesScript(); });
    resources->setContextMenuPolicy(Qt::CustomContextMenu);
    connect(resources,&QTreeWidget::customContextMenuRequested,this,[this,create](const QPoint &position) {
       auto *item=resources->itemAt(position);
@@ -273,6 +280,18 @@ MainWindow::MainWindow()
    });
    connect(help->addAction("&About GMAT"), &QAction::triggered, this, [this] {
       QMessageBox::about(this, "GMAT", "General Mission Analysis Tool\nQt 6 desktop interface");
+   });
+   auto *capabilities=help->addAction("Available engine types…");
+   capabilities->setObjectName("engineCapabilities");
+   connect(capabilities,&QAction::triggered,this,[this] {
+      QDialog dialog(this); dialog.setWindowTitle("Available engine types");
+      auto *layout=new QVBoxLayout(&dialog);
+      auto *description=new QLabel("These types are registered by this runtime and its loaded plugins. They are available to scripts; some properties still require the script editor. OpenFrames viewer definitions can be converted from the Edit menu. wx-only plugin panels are not loaded by Qt.",&dialog);
+      description->setWordWrap(true); layout->addWidget(description);
+      auto *types=new QPlainTextEdit(availableEngineTypes().join('\n'),&dialog); types->setReadOnly(true); layout->addWidget(types);
+      auto *buttons=new QDialogButtonBox(QDialogButtonBox::Close,&dialog); layout->addWidget(buttons);
+      connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+      dialog.resize(650,550); dialog.exec();
    });
    connect(resources, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       if (!ready || running || item->data(0, Qt::UserRole).toString().isEmpty()) return;
@@ -423,6 +442,29 @@ bool MainWindow::confirmDiscard()
    }
    return true;
 }
+QStringList MainWindow::availableEngineTypes() const
+{
+   QStringList result;
+   if (ready) for (const auto &name:Moderator::Instance()->GetListOfAllFactoryItems()) result.append(QString::fromStdString(name));
+   result.removeDuplicates(); result.sort(); return result;
+}
+bool MainWindow::convertOpenFramesScript()
+{
+   if (!ready || running) return false;
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges()) {
+         statusBar()->showMessage("Apply or discard the open panel changes before converting views"); return false;
+      }
+   const auto converted=convertOpenFramesViews(editor->toPlainText());
+   if (!converted.error.isEmpty()) { messages->appendPlainText(converted.error); return false; }
+   if (!converted.plots) { statusBar()->showMessage("No OpenFrames viewer definitions to convert"); return true; }
+   const auto error=applyModelScript(converted.script);
+   if (!error.isEmpty()) { messages->appendPlainText("View conversion rejected: "+error); return false; }
+   messages->appendPlainText(QString("Converted %1 OpenFrames viewer(s) for Qt. Review the visual differences listed in the script before saving.").arg(converted.plots));
+   for (const auto &note:converted.notes) messages->appendPlainText(note);
+   statusBar()->showMessage("Views converted — review the script; Undo restores the original");
+   return true;
+}
 bool MainWindow::buildScript()
 {
    if (!ready || running) return false;
@@ -457,7 +499,7 @@ void MainWindow::refreshTrees()
       {"Force Models", Gmat::ODE_MODEL},
       {"Coordinate Systems", Gmat::COORDINATE_SYSTEM}, {"Solvers", Gmat::SOLVER},
       {"Output", Gmat::SUBSCRIBER}, {"Variables, Arrays, Strings", Gmat::PARAMETER},
-      {"Functions", Gmat::FUNCTION}};
+      {"Functions", Gmat::FUNCTION}, {"Event Locators",Gmat::EVENT_LOCATOR}};
    for (const auto &group : groups) {
       auto *category = new QTreeWidgetItem(root, {group.first});
       for (const auto &name : Moderator::Instance()->GetListOfObjects(group.second)) {
@@ -465,6 +507,14 @@ void MainWindow::refreshTrees()
             auto *object = Moderator::Instance()->GetConfiguredObject(name);
             if (object && object->IsOfType(Gmat::REPORT_FILE))
                reportFiles.insert(QString::fromStdString(name), QString::fromStdString(object->GetStringParameter("FullPathFileName")));
+         }
+         if (group.second==Gmat::EVENT_LOCATOR || group.second==Gmat::SOLVER) {
+            auto *object=Moderator::Instance()->GetConfiguredObject(name);
+            try {
+               const auto filename=QString::fromStdString(object->GetStringParameter(group.second==Gmat::SOLVER ? "ReportFile" : "Filename"));
+               if (!filename.isEmpty()) reportFiles.insert(QString::fromStdString(name),QFileInfo(filename).isAbsolute() ? filename :
+                  QDir(QString::fromStdString(FileManager::Instance()->GetFullPathname("OUTPUT_PATH"))).filePath(filename));
+            } catch (BaseException &) {} // Plugins need not provide a report file.
          }
          if (group.second == Gmat::PARAMETER) {
             auto *parameter = dynamic_cast<Parameter *>(Moderator::Instance()->GetConfiguredObject(name));
@@ -809,6 +859,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"Minimize",QString("Minimize %1(ObjectiveVariable);").arg(optimizer)},
       {"NonlinearConstraint",QString("NonlinearConstraint %1(ConstraintVariable <= 1);").arg(optimizer)},
       {"FindEvents",QString("FindEvents %1 {Append = false};").arg(firstType(Gmat::EVENT_LOCATOR,"EventLocator","LocatorName"))},
+      {"Call function",QString("[OutputVariable] = %1(InputVariable);").arg(firstType(Gmat::FUNCTION,"GmatFunction","FunctionName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    QStringList propagationChoices,spacecraftChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));

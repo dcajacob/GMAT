@@ -5,6 +5,7 @@
 #include "ResourceEditor.hpp"
 #include "CommandEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "ScriptCompatibility.hpp"
 #include "Rvector.hpp"
 #include <QApplication>
 #include <QAction>
@@ -48,6 +49,21 @@ int main(int argc, char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      {
+         const QString dynamics="BeginMissionSequence;\nGMAT total = 2 + 3; % scientific code stays exact\n";
+         const QString input="% Create OpenFramesInterface ignored comment;\nCreate OpenFramesInterface Display;\n"
+            "Display.Add = {Sat, Earth};\nDisplay.View = {Camera};\nDisplay.DrawLabel = [true false];\n"
+            "Display.ShowVR = false;\nCreate OpenFramesView Camera;\nCamera.ViewFrame = CoordinateSystem;\n"
+            "Camera.SetDefaultLocation = On;\nCamera.DefaultEye = [100 200 300];\nCamera.DefaultUp = [1 0 1];\n"+dynamics;
+         const auto converted=convertOpenFramesViews(input);
+         require(converted.error.isEmpty() && converted.plots==1 && converted.script.endsWith(dynamics),"View conversion changed mission calculations");
+         require(converted.script.contains("Create OrbitView Display;") && converted.script.contains("Display.ViewPointVector = [100 200 300]") &&
+            converted.script.contains("retained as a comment") && converted.script.contains("non-axis up vector"),"View conversion lost settings or omitted limitations");
+         require(convertOpenFramesViews(dynamics).script==dynamics,"Converter changed a script without OFI");
+         require(!convertOpenFramesViews(input+"GMAT total = Camera.FOVy;\n").error.isEmpty(),"Converter removed a view used by calculations");
+         require(!convertOpenFramesViews("Create OpenFramesVector Vec;\n").error.isEmpty(),"Unsupported OFI declaration was silently removed");
+         require(!convertOpenFramesViews(input+"Display.Axes = Off;\n").error.isEmpty(),"Dynamic viewer setting was silently rewritten");
+      }
       MainWindow window;
       window.show();
       require(window.initialize(startup), "Runtime initialization failed");
@@ -85,6 +101,37 @@ int main(int argc, char **argv)
       editor->undo();
       require(editor->toPlainText() == beforeEdit, "Resource edit destroyed script undo history");
       require(window.buildScript() && dryMass() == originalMass, "Undo did not restore mission settings");
+      const auto forceScript=editor->toPlainText();
+      auto forceValue=[](const QString &name) {
+         for (const auto &field:resourceProperties(*Moderator::Instance()->GetConfiguredObject("QtForces")))
+            if (field.name==name) return field.value;
+         return QString();
+      };
+      require(!forceValue("GravityField.Earth.Degree").isEmpty(),"Owned gravity settings missing from force editor");
+      require(!window.applyResourceChanges("QtForces",{{"GravityField.Earth.Degree","-1"}},forceScript).isEmpty(),
+         "Invalid gravity degree accepted");
+      require(editor->toPlainText()==forceScript,"Rejected owned-force edit changed script");
+      const auto gravityError=window.applyResourceChanges("QtForces",{{"GravityField.Earth.Degree","6"},{"GravityField.Earth.Order","6"}},forceScript);
+      if (!gravityError.isEmpty()) std::cerr<<gravityError.toStdString()<<'\n';
+      require(gravityError.isEmpty() && forceValue("GravityField.Earth.Degree")=="6" && forceValue("GravityField.Earth.Order")=="6",
+         "Owned force edits did not survive model reconstruction");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Edited gravity model failed actual propagation");
+      editor->undo(); require(editor->toPlainText()==forceScript && window.buildScript(),"Owned force edit was not undoable");
+      require(window.applyResourceChanges("QtSat",{{"Attitude","Spinner"},{"AttitudeDisplayStateType","EulerAngles"}},forceScript).isEmpty(),
+         "Attitude representation change failed");
+      const auto attitudeScript=editor->toPlainText();
+      bool attitudeField=false;
+      for (const auto &field:resourceProperties(*Moderator::Instance()->GetConfiguredObject("QtSat")))
+         if (field.name=="EulerAngle1") attitudeField=true;
+      require(attitudeField,"Attitude state fields missing from spacecraft editor");
+      const auto attitudeError=window.applyResourceChanges("QtSat",{{"EulerAngle1","12.5"}},attitudeScript);
+      if (!attitudeError.isEmpty()) std::cerr<<attitudeError.toStdString()<<'\n';
+      require(attitudeError.isEmpty(),"Attitude state edit failed");
+      require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("EulerAngle1")-12.5)<1e-9,
+         "Attitude edit did not survive reconstruction");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Edited attitude failed propagation");
+      editor->undo(); require(editor->toPlainText()==attitudeScript && window.buildScript(),"Attitude edit was not undoable");
+      editor->undo(); require(editor->toPlainText()==forceScript && window.buildScript(),"Attitude representation was not undoable");
       editor->setPlainText("Create Array QtMatrix[2,3];\nGMAT QtMatrix(1,1) = 4;\nGMAT QtMatrix(2,3) = 9;\nBeginMissionSequence;\n");
       require(window.buildScript(), "Array fixture did not build");
       const auto arrayScript=editor->toPlainText();
@@ -396,6 +443,17 @@ int main(int argc, char **argv)
       });
       tree->customContextMenuRequested(tree->visualItemRect(scratchItems.first()).center());
       require(confirmedDeletion && !Moderator::Instance()->GetConfiguredObject("ScratchTwo"),"Context-menu deletion failed");
+      const auto sample=QFileInfo(startup).dir().filePath("../samples/Ex_HohmannTransfer.script");
+      require(window.loadScript(sample),"Could not load shipped OFI sample");
+      const auto originalSample=editor->toPlainText();
+      const auto dynamics=originalSample.mid(originalSample.indexOf("BeginMissionSequence;"));
+      require(window.convertOpenFramesScript(),"Shipped OFI sample conversion failed");
+      require(editor->toPlainText().endsWith(dynamics) && editor->document()->isModified(),"Conversion changed mission or failed to mark unsaved changes");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Converted Hohmann mission did not run");
+      editor->undo(); require(editor->toPlainText()==originalSample,"Conversion was not one undoable edit");
+      const auto capabilities=window.availableEngineTypes();
+      require(capabilities.contains("OrbitView") && capabilities.contains("GmatFunction") && !capabilities.contains("OpenFramesInterface"),
+         "Runtime engine capability inventory incorrect");
       std::cout<<"PASS: resource deletion, command/resource dependencies, target-panel protection, unrelated panels, undo and variable declarations\n";
       std::cout<<"PASS: propagation form, advanced-command preservation, invalid-input rollback and actual elapsed-days execution\n";
       std::cout<<"PASS: resource creation, name/type validation, pending/stale protection, undo, dialog/tree integration and actual propagation\n";

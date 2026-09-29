@@ -69,7 +69,8 @@ int main(int argc,char **argv)
          require(result==expected,"Solver form changed nested command source");
          for (const auto &statement:{"Maneuver 'Keep label' Burn(Sat);","BeginFiniteBurn Burn(Sat);",
               "Achieve DC(x = 7, {Tolerance = 0.001});","Minimize Opt(cost);",
-              "NonlinearConstraint Opt(x <= 4);","Report R x y;","FindEvents Locator {Append = true};"}) {
+              "NonlinearConstraint Opt(x <= 4);","Report R x y;","FindEvents Locator {Append = true};",
+              "[out] = cross(vec1, vec2);","myFunction(input);"}) {
             form.setStatement(statement); require(!form.isHidden(),"Command-specific form missing");
          }
          form.setStatement("% Preserve advanced script\nUnknown foo;"); require(form.isHidden(),"Unknown command was simplified");

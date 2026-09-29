@@ -448,3 +448,39 @@ verifies that replacing XY parameters publishes the selected Z values, checks
 added orbit-body data and reordered visibility, and rejects malformed,
 duplicate, unknown, or noncanonical object names. Report list population and
 clearing are checked against the rebuilt engine model.
+
+
+### Resource, function and plugin workflows
+
+Force-model editors expose owned gravity, atmosphere and radiation-pressure
+properties under their canonical names, such as `GravityField.Earth.Degree`.
+Spacecraft attitude controls follow the selected attitude model and display
+representation; Apply refreshes the fields available in that representation.
+Matrix/vector values use a cell editor. Hardware, force-body and supported
+event-locator lists validate through reconstruction of the whole mission.
+
+Function calls have argument/output controls beside their script source.
+Event locators and functions appear in the resource tree and creation menus.
+Solver and event-locator reports are accessible from Output. The Help menu's
+**Available engine types…** lists the types registered by this runtime; this
+separates actual plugin availability from dedicated Qt form coverage.
+
+For an OFI-based script, use **Edit > Convert OpenFrames views for Qt** or:
+
+```sh
+./application/bin/GmatQt application/samples/Ex_HohmannTransfer.script --convert-views
+```
+
+Conversion is explicit, validated, undoable and unsaved. Calculations remain
+unchanged; viewer differences are documented in comments and the message
+window. It imports common plot flags and the first supported camera view into
+Qt OrbitView. It does not import OFI perspective/FOV, multiple views,
+trajectory-relative orientation or body-relative camera rotation. Unsupported
+OpenFrames object kinds or dynamic viewer assignments require manual editing.
+Keep the original file if it will also be used with the OFI application.
+
+The Linux compatibility tests execute a GMAT function after editing its
+arguments, verify the Yukon algebraic sample against its analytic optimum,
+and locate eclipse intervals with editable event settings and an Output report.
+See [parity acceptance evidence](Qt6ParityValidation/README.md) for the complete
+scope and retained limits.

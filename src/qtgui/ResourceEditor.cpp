@@ -121,6 +121,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
          try { orbit.insert(QString::fromStdString(object.GetParameterText(object.GetParameterID("Element"+std::to_string(i))))); }
          catch (BaseException &) {} // Unrecognized labels remain accessible in All Properties.
       }
+      QSet<QString> attitudeFields;
+      if (spacecraft) if (auto *attitude=object.GetOwnedObject(0))
+         for (const auto &field:resourceProperties(*attitude)) attitudeFields.insert(field.name);
       QSet<QString> present;
       for (int row=0;row<table->rowCount();++row) {
          const auto name=table->item(row,0)->text();
@@ -137,13 +140,16 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
                if (name.contains("Report") || name.contains("Progress") || name.contains("Show")) section="Output";
                else if (name.contains("Tolerance") || name.contains("Iterations") || name.contains("Algorithm") || name.contains("Derivative")) section="Convergence";
             } else if (forces) {
-               if (name.contains("Bodies") || name=="PointMasses" || name=="CentralBody") section="Bodies";
+               if (name.startsWith("GravityField.")) section="Gravity field";
+               else if (name.startsWith("Drag.")) section="Atmosphere";
+               else if (name.startsWith("SRP.")) section="Radiation pressure";
+               else if (name.contains("Bodies") || name=="PointMasses" || name=="CentralBody") section="Bodies";
                else if (name.contains("Drag") || name.contains("SRP") || name.contains("Relativistic")) section="Perturbations";
             }
          }
          else if (orbit.contains(name)) section="Orbit";
          else if (name.startsWith("NAIF") || name.startsWith("Spice")) section="SPICE";
-         else if (name=="Attitude" || name.startsWith("Attitude")) section="Attitude";
+         else if (name=="Attitude" || name.startsWith("Attitude") || attitudeFields.contains(name)) section="Attitude";
          else if (name.startsWith("Model")) section="Visualization";
          else if (name.startsWith("Dry") || name.startsWith("System") || name.startsWith("SPAD") ||
                   name.startsWith("AtmosDensity") || name.contains("Mass") || name.contains("Inertia") ||
@@ -154,7 +160,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
          if (!section.isEmpty()) present.insert(section);
       }
       for (const auto &section : {"Orbit","Attitude","Ballistic/Mass","Hardware","Power System","SPICE","Visualization",
-                                 "General","Bodies","Perturbations","Direction","Fuel","Performance","Convergence","Output"})
+                                 "General","Bodies","Gravity field","Atmosphere","Radiation pressure","Perturbations","Direction","Fuel","Performance","Convergence","Output"})
          if (present.contains(section)) sections->addTab(section);
       sections->addTab("All Properties");
    }

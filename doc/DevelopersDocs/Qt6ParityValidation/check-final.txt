@@ -1,0 +1,30 @@
+[1/2] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[1/2] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/10 Test  #1: QtGui.NativeOrbit ................   Passed    1.16 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/10 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    2.03 sec
+      Start  3: QtGui.NativePlots
+ 3/10 Test  #3: QtGui.NativePlots ................   Passed    3.42 sec
+      Start  4: QtGui.Files
+ 4/10 Test  #4: QtGui.Files ......................   Passed    0.15 sec
+      Start  5: QtGui.Workflow
+ 5/10 Test  #5: QtGui.Workflow ...................   Passed    1.57 sec
+      Start  6: QtGui.Mission
+ 6/10 Test  #6: QtGui.Mission ....................   Passed    0.85 sec
+      Start  7: QtGui.Compatibility
+ 7/10 Test  #7: QtGui.Compatibility ..............   Passed    0.62 sec
+      Start  8: QtGui.Plots
+ 8/10 Test  #8: QtGui.Plots ......................   Passed    2.27 sec
+      Start  9: QtGui.PlotsHiDPI
+ 9/10 Test  #9: QtGui.PlotsHiDPI .................   Passed    2.40 sec
+      Start 10: QtGui.Launch
+10/10 Test #10: QtGui.Launch .....................   Passed    1.17 sec
+
+100% tests passed, 0 tests failed out of 10
+
+Label Time Summary:
+qt-gui    =  15.63 sec*proc (10 tests)
+
+Total Test time (real) =  15.63 sec

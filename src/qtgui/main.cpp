@@ -19,6 +19,7 @@ int main(int argc, char **argv)
    parser.addOption({"startup", "GMAT startup file", "file"});
    parser.addOption({"screenshot", "Save a startup screenshot and exit", "file"});
    parser.addOption({"run", "Run the loaded mission after opening the window"});
+   parser.addOption({"convert-views", "Convert supported OpenFrames viewer definitions to Qt OrbitView in memory; review before saving"});
    parser.addOption({"settings-dir", "Use an isolated INI settings directory", "directory"});
    parser.addPositionalArgument("script", "Optional GMAT script to open");
    parser.process(app);
@@ -46,7 +47,8 @@ int main(int argc, char **argv)
    window.show();
    const bool initialized = window.initialize(startup);
    bool loaded = true;
-   if (initialized && !script.isEmpty()) loaded = window.loadScript(script) && window.buildScript();
+   if (initialized && !script.isEmpty()) loaded = window.loadScript(script) &&
+      (!parser.isSet("convert-views") || window.convertOpenFramesScript()) && window.buildScript();
    QTimer::singleShot(0, &window, [&] {
       bool succeeded = initialized && loaded;
       if (parser.isSet("run") && succeeded)
