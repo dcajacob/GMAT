@@ -9,7 +9,9 @@ struct QtScriptConversion {
 QtScriptConversion convertOpenFramesViews(const QString &source);
 
 #include <QMap>
-struct QtCameraSetting { bool perspective=false; double fieldOfView=50; };
+#include <array>
+#include <optional>
+struct QtCameraSetting { bool perspective=false; double fieldOfView=50; std::optional<std::array<double,3>> up; };
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);
 QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting);
 QString retainQtCameraSettings(const QString &original,const QString &candidate);

@@ -751,6 +751,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto originalMission=missionStart.match(expectedScript),rebuiltMission=missionStart.match(candidate);
       if (originalMission.hasMatch() && rebuiltMission.hasMatch())
          candidate=candidate.left(rebuiltMission.capturedStart())+expectedScript.mid(originalMission.capturedStart());
+      // An explicit axis edit replaces an imported arbitrary roll vector.
+      if (object->IsOfType("OrbitView") && changes.contains("ViewUpAxis")) {
+         const auto settings=qtCameraSettings(expectedScript);
+         if (settings.contains(name)) {
+            auto setting=settings.value(name); setting.up.reset();
+            candidate=setQtCameraSetting(candidate,name,setting);
+         }
+      }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    return applyModelScript(candidate);
@@ -973,14 +981,19 @@ QString MainWindow::savePlotProjection(const QString &name,bool perspective,doub
    auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
    if (!object || !object->IsOfType("OrbitView")) return "This OrbitView no longer exists in the current mission.";
    QString candidate;
-   try { candidate=setQtCameraSetting(builtScript,name,{perspective,fov}); }
+   QtCameraSetting setting;
+   try {
+      setting=qtCameraSettings(builtScript).value(name);
+      setting.perspective=perspective; setting.fieldOfView=fov;
+      candidate=setQtCameraSetting(builtScript,name,setting);
+   }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    if (candidate==builtScript) return {};
    // This changes a validated comment only. Do not rebuild/delete the viewer
    // from within its own action callback or reconstruct scientific objects.
    auto cursor=editor->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
    cursor.insertText(candidate); cursor.endEditBlock();
-   builtScript=candidate; plots->cameraSettings[name]={perspective,fov};
+   builtScript=candidate; plots->cameraSettings[name]=setting;
    refreshTrees();
    statusBar()->showMessage("Projection added to script — save to keep it; Undo restores the previous settings");
    return {};

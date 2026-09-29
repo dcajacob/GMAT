@@ -618,3 +618,13 @@ force-model section for numerical propagators. TLE, BulirschStoer and
 PrinceDormand853 configuration, save/reopen, execution and recovery scenarios
 are covered by the compatibility suite; the qualification checklist records
 remaining plugin and specialized-editor gaps.
+
+
+OpenFrames conversion preserves arbitrary camera up vectors in the optional `up`
+array of the `% GMAT-Qt-Camera` comment. Qt applies that vector in the configured
+ViewUpCoordinateSystem, preserving camera roll; the standard ViewUpAxis remains
+a nearest-axis fallback for the base viewer. Keep projection retains this vector.
+An explicit ViewUpAxis edit in the resource panel removes the override, and Undo
+restores it. When editing raw script, remove the `up` member to use ViewUpAxis.
+Zero, malformed or nonfinite imported vectors are rejected with an explanation.
+Multiple-view switching and body-/trajectory-relative orientation remain open.

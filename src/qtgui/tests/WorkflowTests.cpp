@@ -66,11 +66,19 @@ int main(int argc, char **argv)
          const auto converted=convertOpenFramesViews(input);
          require(converted.error.isEmpty() && converted.plots==1 && converted.script.endsWith(dynamics),"View conversion changed mission calculations");
          require(converted.script.contains("Create OrbitView Display;") && converted.script.contains("Display.ViewPointVector = [100 200 300]") &&
-            converted.script.contains("retained as a comment") && converted.script.contains("non-axis up vector"),"View conversion lost settings or omitted limitations");
+            converted.script.contains("retained as a comment") && converted.script.contains("exact camera up vector"),"View conversion lost settings or omitted limitations");
          require(convertOpenFramesViews(dynamics).script==dynamics,"Converter changed a script without OFI");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
             "Conversion lost default OF perspective/FOV");
+         require(cameras["Display"].up==std::optional<std::array<double,3>>({1,0,1}),"Conversion changed non-axis up vector");
+         for (const auto &badUp:{QString("[0,0,0]"),QString("[1,2]"),QString("[1,2,\"z\"]"),QString("null")}) {
+            bool invalid=false;
+            try { qtCameraSettings("% GMAT-Qt-Camera {\"plot\":\"Display\",\"perspective\":true,\"fieldOfView\":45,\"up\":"+badUp+"}"); }
+            catch (const std::exception &) { invalid=true; }
+            require(invalid,"Invalid up vector accepted");
+         }
+         require(!convertOpenFramesViews(QString(input).replace("[1 0 1]","[0 0 0]")).error.isEmpty(),"Zero OF up vector accepted");
          const auto custom=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 37.5;\nCamera.ViewFrame"));
          require(custom.error.isEmpty() && qtCameraSettings(custom.script)["Display"].fieldOfView==37.5,"Conversion rounded the OF field of view");
          require(!convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 180;\nCamera.ViewFrame")).error.isEmpty(),
@@ -637,6 +645,17 @@ int main(int argc, char **argv)
       answerConversion(QMessageBox::Yes);
       require(window.runMission()==MainWindow::RunResult::Completed && conversionPrompts==3,
          "Run did not offer conversion after undo");
+      auto rolledCamera=qtCameraSettings(editor->toPlainText()).value("OFI_EarthView");
+      rolledCamera.up=std::array<double,3>{1,2,3};
+      editor->setPlainText(setQtCameraSetting(editor->toPlainText(),"OFI_EarthView",rolledCamera));
+      require(window.runMission()==MainWindow::RunResult::Completed,"Non-axis up mission failed");
+      auto checkCameraUp=[&] {
+         const auto model=window.plotReceiver()->model("OFI_EarthView");
+         require(model && !model->cameras.empty(),"Camera history missing for non-axis up vector");
+         for (const auto *camera:{&model->cameras.front(),&model->cameras.back()})
+            for (int i=0;i<3;++i) require(std::abs(camera->up[i]-(i+1))<1e-10,"Non-axis camera up changed during propagation");
+      };
+      checkCameraUp();
       const auto convertedSource=editor->toPlainText();
       require(window.applyResourceChanges("OFI_EarthView",{{"StarCount","321"}},convertedSource).isEmpty(),
          "Converted plot resource edit failed");
@@ -647,6 +666,7 @@ int main(int argc, char **argv)
       const auto savedCamera=cameraFiles.filePath("converted.script");
       require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
          "Converted camera save/reopen failed");
+      checkCameraUp();
       convertedView=window.plotReceiver()->model("OFI_EarthView");
       require(convertedView && convertedView->perspective && convertedView->fieldOfView==45,"Save/reopen changed imported camera projection");
       {
@@ -660,6 +680,7 @@ int main(int argc, char **argv)
          const auto after=editor->toPlainText(); const auto cameras=qtCameraSettings(after);
          require(cameras.size()==1 && !cameras["OFI_EarthView"].perspective && cameras["OFI_EarthView"].fieldOfView==37.5 &&
             after.endsWith(dynamics) && editor->document()->isModified(),"Keep projection changed calculations or failed to save selected settings");
+         require(cameras["OFI_EarthView"].up==rolledCamera.up,"Keep projection discarded camera roll");
          require(Moderator::Instance()->GetConfiguredObject("OFI_EarthView")==configured,
             "Saving a camera comment reconstructed the mission during the viewer callback");
          keep->trigger(); require(editor->toPlainText()==after,"Repeated Keep projection duplicated metadata");
@@ -677,9 +698,17 @@ int main(int argc, char **argv)
          editor->undo();
          require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
             "Interactive projection save/reopen failed");
+         checkCameraUp();
          const auto reopened=window.plotReceiver()->model("OFI_EarthView");
          require(reopened && !reopened->perspective && reopened->fieldOfView==37.5,"Saved interactive projection was not restored");
       }
+      const auto beforeAxis=editor->toPlainText();
+      require(window.applyResourceChanges("OFI_EarthView",{{"ViewUpAxis","Y"}},beforeAxis).isEmpty(),"Explicit camera up-axis edit failed");
+      require(!qtCameraSettings(editor->toPlainText())["OFI_EarthView"].up,"Imported roll overrode an explicit up-axis edit");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Edited camera up axis failed to run");
+      require(window.plotReceiver()->model("OFI_EarthView")->cameras.back().up==std::array<double,3>{0,1,0},"Edited up axis did not reach camera history");
+      editor->undo(); require(editor->toPlainText()==beforeAxis && window.runMission()==MainWindow::RunResult::Completed,"Up-axis Undo failed");
+      checkCameraUp();
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");

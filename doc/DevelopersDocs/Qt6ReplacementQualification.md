@@ -330,3 +330,23 @@ remain open.
 
 The user's GmatQt executable was rebuilt. All 11 Qt tests passed in 21.91 seconds.
 Evidence: `Qt6ParityValidation/check-plugin-propagators.txt`.
+
+
+## Camera roll checkpoint
+
+OF conversion now preserves the selected view's arbitrary up vector in validated
+Qt camera metadata. The receiver applies it in ViewUpCoordinateSystem to every
+camera-history sample, so playback uses the same roll as propagation. A nearest
+standard axis remains in the script as a base-viewer fallback. Invalid and zero
+vectors are rejected instead of approximated. Keep projection preserves the
+vector; an explicit resource-panel ViewUpAxis edit removes that override.
+
+WorkflowTests covers exact non-axis conversion, invalid metadata, real Hohmann
+propagation with an arbitrary up vector at the first and last camera frames,
+resource-edit retention, save/reopen, Keep projection retention, explicit axis
+override, and Undo restoring the imported vector. Multiple-view switching and
+body-/trajectory-relative orientation remain pending; this closes the arbitrary
+up-vector approximation only.
+
+GmatQt rebuilt; all 11 Qt tests passed in 31.38 seconds. Evidence:
+`Qt6ParityValidation/check-camera-up.txt`.

@@ -120,7 +120,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!validFov || !std::isfinite(fov) || fov<1 || fov>150) {
          result.error=plot+": field of view must be a finite number from 1 to 150 degrees for Qt conversion."; return result;
       }
-      cameras.append(qtCameraDirective(plot,{true,fov}).trimmed());
+      QtCameraSetting cameraSetting{true,fov};
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool body=frame!="CoordinateSystem";
       auto set=[&](const QString &key,const QString &value) { cameras.append("GMAT "+plot+"."+key+" = "+value+";"); };
@@ -136,12 +136,19 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          else if (center!=std::array<double,3>{0,0,0}) result.notes.append(plot+": body-relative center offset needs manual adjustment.");
       }
       if (values.contains("LookAtFrame")) set("ViewDirection",values["LookAtFrame"]);
+      if (stored && values.contains(prefix+"Up") && !vectorValue(values.value(prefix+"Up"),up)) {
+         result.error=plot+": camera up vector must contain three finite numbers."; return result;
+      }
       if (stored && vectorValue(values.value(prefix+"Up"),up)) {
          int axis=0; for (int i=1;i<3;++i) if (std::abs(up[i])>std::abs(up[axis])) axis=i;
          QString signedAxis=up[axis]<0 ? "-" : ""; signedAxis+="XYZ"[axis]; set("ViewUpAxis",signedAxis);
-         int nonzero=0; for (double component:up) if (std::abs(component)>1e-12) ++nonzero;
-         if (nonzero!=1) result.notes.append(plot+": non-axis up vector approximated by "+signedAxis+"; review camera roll.");
+         if (!std::isfinite(std::hypot(up[0],up[1],up[2])) || std::hypot(up[0],up[1],up[2])<1e-12) {
+            result.error=plot+": camera up vector must be nonzero."; return result;
+         }
+         cameraSetting.up=up;
+         result.notes.append(plot+": exact camera up vector retained in Qt metadata; the base viewer uses "+signedAxis+".");
       }
+      cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
       result.notes.append(plot+": uses first view "+view+" with perspective and its vertical field of view; OFI view switching and trajectory-relative orientation are not imported.");
       if (body) result.notes.append(plot+": object tracking uses plot-frame axes; body-relative view rotation is not imported.");
@@ -158,7 +165,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
 
 QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
 {
-   const QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
+   QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
+   if (setting.up) object.insert("up",QJsonArray{(*setting.up)[0],(*setting.up)[1],(*setting.up)[2]});
    return "% GMAT-Qt-Camera "+QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact))+"\n";
 }
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
@@ -175,7 +183,19 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
           !QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch() ||
           !object.value("perspective").isBool() || !std::isfinite(fov) || fov<1 || fov>150 || result.contains(name))
          throw std::runtime_error("Invalid or duplicate GMAT-Qt-Camera comment: expected a plot name, perspective boolean and fieldOfView from 1 to 150 degrees");
-      result.insert(name,{object.value("perspective").toBool(),fov});
+      QtCameraSetting setting{object.value("perspective").toBool(),fov};
+      if (object.contains("up")) {
+         const auto array=object.value("up").toArray();
+         std::array<double,3> up{};
+         bool valid=array.size()==3;
+         for (int i=0;valid && i<3;++i) {
+            up[i]=array[i].toDouble(); valid=array[i].isDouble() && std::isfinite(up[i]);
+         }
+         if (!valid || !std::isfinite(std::hypot(up[0],up[1],up[2])) || std::hypot(up[0],up[1],up[2])<1e-12)
+            throw std::runtime_error("Invalid GMAT-Qt-Camera up vector: expected three finite numbers and a nonzero length");
+         setting.up=up;
+      }
+      result.insert(name,setting);
    }
    return result;
 }

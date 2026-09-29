@@ -210,6 +210,7 @@ void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *refer
       entry->cameraScale=scale; entry->upVector={0,0,0};
       const auto axis=upAxis.empty() ? 'Z' : upAxis.back(); const int index=axis=='X' ? 0 : axis=='Y' ? 1 : 2;
       entry->upVector[index]=!upAxis.empty() && upAxis.front()=='-' ? -1 : 1;
+      if (const auto setting=cameraSettings.value(text(name));setting.up) entry->upVector=*setting.up;
       for (int i=0;i<3;++i) { entry->referenceVector[i]=referenceVector[i]; entry->positionVector[i]=positionVector[i]; entry->directionVector[i]=directionVector[i]; }
       entry->data->scriptedCamera=true;
       if (entry->widget) entry->widget->canvas()->scriptView();
