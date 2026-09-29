@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "TestSettings.hpp"
 #include "QtMessageReceiver.hpp"
+#include "StartupCompatibility.hpp"
 #include <QApplication>
 #include <QFile>
 #include <QDir>
@@ -24,10 +25,25 @@ int main(int argc,char **argv)
    try {
       TestSettings isolatedSettings;
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
+      const auto startup=temporary.path()+"/startup.txt";
+      for (const auto &plugin : {"../plugins/libOpenFramesInterface", "C:\\GMAT Test\\plugins\\libOVtoOFId.dll",
+                                "/opt/gmat/libOpenFramesInterface.so.1", "libOVtoOFI.dylib"}) {
+         write(startup,QByteArray("# test startup\n  PLUGIN = ")+plugin+"\r\n");
+         const auto issue=qtStartupCompatibilityError(startup);
+         require(issue.contains("wxWidgets-only") && issue.contains("line 2"),"wx plugin was not diagnosed");
+      }
+      write(startup,"# PLUGIN = libOpenFramesInterface\nPLUGIN = ../plugins/libGmatEstimation\nPLUGIN = libOpenFramesInterfaceHelper\n");
+      require(qtStartupCompatibilityError(startup).isEmpty(),"Comment or unrelated native plugin was rejected");
       const auto path=temporary.path()+QString::fromUtf8("/mission Δ.script");
       const auto original=QString::fromUtf8("% UTF-8: café Δ\nBeginMissionSequence;\n");
       write(path,original.toUtf8());
       MainWindow window; window.show();
+      write(startup,"PLUGIN = libOpenFramesInterface\n");
+      require(!window.initialize(startup),"Qt initialized a wx-only plugin configuration");
+      bool diagnosed=false;
+      for (auto *text : window.findChildren<QPlainTextEdit *>())
+         diagnosed=diagnosed || text->toPlainText().contains("wxWidgets-only");
+      require(diagnosed,"Startup compatibility error was not shown in the GUI");
       require(window.loadScript(path),"UTF-8 script did not open");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       require(editor && editor->toPlainText()==original,"UTF-8 script changed while loading");

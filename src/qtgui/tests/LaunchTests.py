@@ -32,6 +32,9 @@ def main():
         invalid = root / "invalid.script"
         invalid.write_text("Not a valid GMAT command;\n")
         run(["--run", "--screenshot", screenshot, invalid], 1)
+        incompatible = root / "wx startup.txt"
+        incompatible.write_text("PLUGIN = libOpenFramesInterface\n")
+        run(["--startup", incompatible, "--run", "--screenshot", screenshot, script], 1)
         assert not (root / "GmatLog.txt").exists(), "Launcher wrote a log in caller's directory"
     print("PASS: default startup, unrelated working directory, spaced paths, run/capture, and failure exit codes")
 

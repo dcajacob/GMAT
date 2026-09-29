@@ -45,7 +45,7 @@ int main(int argc, char **argv)
    window.show();
    const bool initialized = window.initialize(startup);
    bool loaded = true;
-   if (!script.isEmpty()) loaded = window.loadScript(script) && window.buildScript();
+   if (initialized && !script.isEmpty()) loaded = window.loadScript(script) && window.buildScript();
    QTimer::singleShot(0, &window, [&] {
       bool succeeded = initialized && loaded;
       if (parser.isSet("run") && succeeded)

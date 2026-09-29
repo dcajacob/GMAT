@@ -60,6 +60,12 @@ the separate debug directory. Use `--startup /absolute/path/to/file` to override
 this configuration explicitly. The wx OpenFrames and OVtoOFI adapters are excluded.
 The currently available OpenFrames plugin uses wx and must not be used as
 a Qt widget provider. No Qt OpenFrames support is claimed yet.
+Custom startup files are checked before engine initialization: active
+OpenFramesInterface or OVtoOFI plugin entries produce an error in the Message
+Window identifying the startup line. Commented entries and unrelated native
+plugins are unaffected. This detects these known wx providers; it is not a
+general compatibility check for arbitrary third-party plugins. Failed startup
+also prevents the command-line mission from being loaded or built.
 
 The `--screenshot /absolute/path.png` option captures the initialized window
 and exits with failure if initialization, optional script interpretation,

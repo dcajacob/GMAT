@@ -5,6 +5,7 @@
 #include "ResourceProperties.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
+#include "StartupCompatibility.hpp"
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QComboBox>
@@ -318,6 +319,12 @@ MainWindow::~MainWindow()
 }
 bool MainWindow::initialize(const QString &startup)
 {
+   const auto compatibilityError=qtStartupCompatibilityError(startup);
+   if (!compatibilityError.isEmpty()) {
+      messages->appendPlainText(compatibilityError);
+      statusBar()->showMessage("Runtime initialization failed");
+      return false;
+   }
    receiver = std::make_unique<QtMessageReceiver>();
    receiver->SetMessageCallback(this, [this](const QString &text) {
       messages->moveCursor(QTextCursor::End); messages->insertPlainText(text);
