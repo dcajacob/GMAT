@@ -41,21 +41,21 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | CommandForm subscriber list and state controls; form coverage in MissionTests. Dedicated selection checklist pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
-| `src/gui/command/ManeuverPanel.hpp` | Pending audit |
+| `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Back-propagation and full burn options pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
-| `src/gui/command/NonlinearConstraintPanel.hpp` | Pending audit |
-| `src/gui/command/AchievePanel.hpp` | Pending audit |
+| `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector tested; relation/expression fields remain editable. Full parameter selection workflow pending. |
+| `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector tested; goal/value fields remain editable. Full parameter/tolerance workflow pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | CommandForm Global/Clear object controls; form coverage in MissionTests. Reference-selection workflow pending. |
-| `src/gui/command/BeginFiniteBurnPanel.hpp` | Pending audit |
-| `src/gui/command/OptimizePanel.hpp` | Pending audit |
-| `src/gui/command/TargetPanel.hpp` | Pending audit |
-| `src/gui/command/VaryPanel.hpp` | Pending audit |
-| `src/gui/command/FindEventsPanel.hpp` | Pending audit |
+| `src/gui/command/BeginFiniteBurnPanel.hpp` | Finite-burn selector filters impulsive burns. Multi-spacecraft selection and execution qualification pending. |
+| `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
+| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector excludes optimizers; selector tested. Broader Target workflow pending. |
+| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; tested with DC and Yukon. Full variable/options workflow pending. |
+| `src/gui/command/FindEventsPanel.hpp` | Event-locator selector tested with EclipseLocator; full execution/options workflow pending. |
 | `src/gui/command/PropagatePanel.hpp` | Pending audit |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls; source-preservation tests. Parameter chooser and complex syntax audit pending. |
-| `src/gui/command/CallFunctionPanel.hpp` | Pending audit |
-| `src/gui/command/EndFiniteBurnPanel.hpp` | Pending audit |
-| `src/gui/command/MinimizePanel.hpp` | Pending audit |
+| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
+| `src/gui/command/EndFiniteBurnPanel.hpp` | Shared finite-burn selector available. Full end-burn workflow qualification pending. |
+| `src/gui/command/MinimizePanel.hpp` | Optimizer selector tested; objective field remains editable. Full parameter selection workflow pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
@@ -644,3 +644,22 @@ The original zero-rate failure is recorded in
 rebuilt; all 11 Qt checks passed in 27.23 seconds. Evidence:
 `Qt6ParityValidation/check-force-rates.txt`. This is targeted numerical and Qt
 regression evidence, not a complete requalification of the shared engine.
+
+
+## Typed command resource selectors
+
+CommandForm now provides Select controls for impulsive/finite burns, Maneuver's
+spacecraft, solvers, event locators and functions. Choices are filtered by engine
+type: Target/Achieve use BoundaryValueSolver, Optimize/Minimize/constraints use
+Optimizer, and Vary accepts both. Finite-burn spacecraft lists remain text fields;
+a scalar picker must not replace an entire multi-spacecraft selection.
+
+MissionTests uses the actual modal pickers to change an impulsive burn and its
+spacecraft, checks Cancel plus label/comment preservation, applies the command,
+saves/reopens it and verifies a 0.01 km/s inertial X velocity increment on the
+selected spacecraft. It checks inclusion/exclusion for finite burns, target and
+optimization solvers, Vary, constraints and eclipse locators. These selector
+checks do not by themselves qualify every command's options or execution path.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 41.87 seconds. Evidence:
+`Qt6ParityValidation/check-command-pickers.txt`.

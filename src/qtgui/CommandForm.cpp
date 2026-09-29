@@ -63,20 +63,33 @@ void CommandForm::setStatement(const QString &statement)
       if (start<0) return;
       auto *input=new QLineEdit(statement.mid(start,length),this);
       input->setObjectName("commandField_"+name);
-      if (title()=="Report" && (name=="Report file" || name=="Parameters")) {
+      QString resourceType;
+      if (name=="Report file") resourceType="ReportFile";
+      else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
+      else if (name=="Spacecraft" && title()=="Maneuver") resourceType="Spacecraft";
+      else if (name=="Locator") resourceType="EventLocator";
+      else if (name=="Function") resourceType="Function";
+      else if (name=="Solver") {
+         if (title()=="Minimize" || title()=="Constraint" || QRegularExpression("^\\s*Optimize\\b").match(statement).hasMatch()) resourceType="Optimizer";
+         else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
+         else resourceType="Solver";
+      }
+      if (!resourceType.isEmpty() || (title()=="Report" && name=="Parameters")) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0);
          row->addWidget(input); auto *choose=new QPushButton("Select…",container);
          choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
-         connect(choose,&QPushButton::clicked,this,[this,input,name] {
-            if (name=="Report file") {
-               QStringList reports;
-               for (const auto &value:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) {
+         connect(choose,&QPushButton::clicked,this,[this,input,name,resourceType] {
+            if (!resourceType.isEmpty()) {
+               QStringList resources;
+               for (const auto &value:Moderator::Instance()->GetListOfObjects(Gmat::UNKNOWN_OBJECT)) {
                   auto *object=Moderator::Instance()->GetConfiguredObject(value);
-                  if (object && object->GetTypeName()=="ReportFile") reports.append(QString::fromStdString(value));
+                  if (!object || !object->IsOfType(resourceType.toStdString())) continue;
+                  if (resourceType=="Solver" && !object->IsOfType("BoundaryValueSolver") && !object->IsOfType("Optimizer")) continue;
+                  resources.append(QString::fromStdString(value));
                }
-               reports.sort(); bool accepted=false;
-               const auto chosen=QInputDialog::getItem(this,"Select report file","Report file",reports,
-                  std::max(0,static_cast<int>(reports.indexOf(input->text()))),false,&accepted);
+               resources.sort(); bool accepted=false;
+               const auto chosen=QInputDialog::getItem(this,"Select "+name,name,resources,
+                  std::max(0,static_cast<int>(resources.indexOf(input->text()))),false,&accepted);
                if (accepted && !chosen.isEmpty()) input->setText(chosen);
             } else {
                ReportParameterDialog dialog(input->text().split(QRegularExpression("\\s+(?![^()]*\\))"),Qt::SkipEmptyParts),this);

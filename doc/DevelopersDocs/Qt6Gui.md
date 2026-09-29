@@ -771,3 +771,13 @@ Force-model property browsing includes **SMADot** and **TLONGDot**. Their select
 force-model references are checked through save/reopen and numerical reports.
 The shared engine also fixes TLONGDot's zero-perturbation case: an unperturbed
 orbit retains its nonzero instantaneous angular rate instead of reporting zero.
+
+
+### Mission command resource selection
+
+Mission command forms now offer **Select…** beside burn, Maneuver spacecraft,
+solver, event-locator and function references. Pickers show compatible configured
+resources, and Cancel preserves the current field. Labels, comments and surrounding
+command text remain intact. Vary accepts targeting and optimization solvers;
+Target/Achieve and optimization commands filter to their respective solver types.
+Finite-burn spacecraft lists still use their existing text field.

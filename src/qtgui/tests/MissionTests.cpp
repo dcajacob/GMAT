@@ -21,6 +21,8 @@
 #include <QLabel>
 #include <QMdiSubWindow>
 #include <QTimer>
+#include <QInputDialog>
+#include <QTemporaryDir>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -100,6 +102,51 @@ int main(int argc,char **argv)
       require(window.loadScript(script) && window.buildScript(),"Mission failed to build");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const QString original=editor->toPlainText();
+      {
+         editor->setPlainText("Create Spacecraft FirstSat SecondSat;\nCreate ImpulsiveBurn FirstBurn SecondBurn;\n"
+            "SecondBurn.CoordinateSystem = EarthMJ2000Eq;\nSecondBurn.Element1 = 0.01;\n"
+            "Create FiniteBurn Continuous;\nCreate DifferentialCorrector DC;\nCreate Yukon Opt;\n"
+            "Create EclipseLocator Eclipse;\nEclipse.Spacecraft = FirstSat;\nEclipse.RunMode = Manual;\n"
+            "BeginMissionSequence;\nManeuver 'Named burn' FirstBurn(FirstSat); % keep\n");
+         require(window.buildScript(),"Resource picker fixture failed");
+         auto pick=[&](CommandForm &form,const QString &field,const QString &chosen,const QString &excluded,bool accept=true) {
+            bool visited=false;
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QInputDialog *>();
+               require(dialog && dialog->comboBoxItems().contains(chosen),"Resource picker omitted compatible resource");
+               require(excluded.isEmpty() || !dialog->comboBoxItems().contains(excluded),"Resource picker included incompatible resource");
+               dialog->setTextValue(chosen); visited=true;
+               if (accept) dialog->accept(); else dialog->reject();
+            });
+            auto *button=form.findChild<QPushButton *>("commandChoose_"+field); require(button,"Command reference selector missing"); button->click();
+            require(visited,"Command resource dialog did not open");
+         };
+         QString replacement; CommandForm form([&](const auto &value) { replacement=value; });
+         form.setStatement("Maneuver 'Named burn' FirstBurn(FirstSat); % keep");
+         pick(form,"Burn","SecondBurn","Continuous"); pick(form,"Spacecraft","SecondSat","SecondBurn");
+         const auto accepted=replacement;
+         pick(form,"Burn","FirstBurn","Continuous",false);
+         require(replacement==accepted && replacement=="Maneuver 'Named burn' SecondBurn(SecondSat); % keep", "Resource pickers changed labels, comments or cancelled values");
+         const auto snapshot=window.missionSnapshot();
+         require(window.applyMissionChange(snapshot,find(snapshot,"Maneuver"),MissionEdit::Replace,replacement).isEmpty(),"Picked maneuver references failed to apply");
+         QTemporaryDir selectedMission;
+         require(selectedMission.isValid() && window.saveScriptTo(selectedMission.filePath("picked.script")) &&
+            window.loadScript(selectedMission.filePath("picked.script")) && window.buildScript(),"Picked command save/reopen failed");
+         auto *before=Moderator::Instance()->GetConfiguredObject("SecondSat"); const double vx=before->GetRealParameter("VX");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Picked maneuver failed to execute");
+         auto *after=Moderator::Instance()->GetInternalObject("SecondSat");
+         require(std::abs(after->GetRealParameter("VX")-vx-.01)<1e-10,"Picked inertial burn did not change selected spacecraft velocity");
+         form.setStatement("BeginFiniteBurn Continuous(FirstSat);"); pick(form,"Burn","Continuous","SecondBurn");
+         form.setStatement("Target DC;\nEndTarget;"); pick(form,"Solver","DC","Opt");
+         form.setStatement("Optimize Opt;\nEndOptimize;"); pick(form,"Solver","Opt","DC");
+         form.setStatement("Achieve DC(FirstSat.X = 1);"); pick(form,"Solver","DC","Opt");
+         form.setStatement("Minimize Opt(FirstSat.X);"); pick(form,"Solver","Opt","DC");
+         form.setStatement("NonlinearConstraint Opt(FirstSat.X >= 1);"); pick(form,"Solver","Opt","DC");
+         form.setStatement("Vary DC(FirstSat.X = 1);"); pick(form,"Solver","Opt",{}); pick(form,"Solver","DC",{});
+         form.setStatement("FindEvents Eclipse;"); pick(form,"Locator","Eclipse","DC");
+         editor->setPlainText(original); require(window.buildScript(),"Picker fixture restoration failed");
+      }
+
       auto snapshot=window.missionSnapshot();
       for (const auto &node:snapshot.nodes) {
          if (node.start<0) std::cerr<<"Unmapped "<<node.type.toStdString()<<": "<<node.statement.toStdString()<<'\n';
