@@ -1058,4 +1058,6 @@ discards the dialog's pending edits. Run rebuilds the mission before executing i
 Saving preserves UTF-8 BOMs and uniform CRLF line endings. If another program
 changes the file while it is open, Save leaves that file untouched and asks you to
 reopen it. Unreadable or invalid UTF-8 files cannot be saved through this editor.
-Function-file Save As is not yet provided.
+Save As writes a copy and updates FunctionPath as a pending resource change.
+Apply that change to make the mission use the copy. Existing-file replacement
+requires confirmation; failed saves leave the current path unchanged.

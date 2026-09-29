@@ -33,6 +33,7 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFileDialog>
 #include <QPlainTextEdit>
 #include <QLineEdit>
 #include <QTemporaryDir>
@@ -73,13 +74,31 @@ int main(int argc,char **argv)
          require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Function editor fixture failed");
          require(Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==6,"Initial function result wrong");
          {
-            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("ScaleInput"),[](const QMap<QString,QString>&) { return QString(); },&owner,editor->toPlainText());
+            const auto source=editor->toPlainText(); QString applyError="Apply not invoked";
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("ScaleInput"),[&](const QMap<QString,QString> &changes) {
+               applyError=window.applyResourceChanges("ScaleInput",changes,source); return applyError;
+            },&owner,source);
             auto *button=panel.findChild<QPushButton *>("editFunctionFile"); require(button,"Function resource edit button absent");
             QTimer::singleShot(0,&panel,[&] {
                auto *dialog=panel.findChild<QDialog *>("functionFileDialog"); auto *text=dialog->findChild<QPlainTextEdit *>("functionFileText");
                text->setPlainText(text->toPlainText().replace("x * 2","x * 4")); text->document()->setModified(true);
                dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Save)->click();
             }); button->click();
+            require(QDir().mkpath(output.filePath("function copy")),"Function destination folder failed");
+            const auto destination=output.filePath("function copy/ScaleInput.gmf");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("functionFileDialog");
+               QTimer::singleShot(0,&panel,[&] {
+                  auto *chooser=panel.findChild<QFileDialog *>("functionSaveAsDialog");
+                  require(chooser,"Function Save As chooser did not open"); chooser->selectFile(destination);
+                  QMetaObject::invokeMethod(chooser,"accept",Qt::DirectConnection);
+               }); dialog->findChild<QPushButton *>("functionSaveAs")->click();
+            }); button->click();
+            require(panel.hasChanges() && read(path).contains("x * 4") && read(destination).contains("x * 4"),"Save As failed to retain source and create copy");
+            require(QString::fromStdString(Moderator::Instance()->GetConfiguredObject("ScaleInput")->GetStringParameter("FunctionPath"))==path,
+               "Function Save As changed configured path before Apply");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(applyError.isEmpty(),qPrintable(applyError));
+            require(editor->toPlainText().contains(destination),"Function Save As path did not enter mission script");
          }
          roundTrip("edited-function-file");
          require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==12,

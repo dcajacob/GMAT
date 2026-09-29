@@ -37,6 +37,7 @@
 #include <QSpinBox>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QListWidget>
 #include <QFormLayout>
 #include <QRegularExpression>
@@ -230,7 +231,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          QString path;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") path=table->item(row,1)->text();
          if (path.trimmed().isEmpty()) { status->setText("Choose a function file first."); return; }
-         FunctionFileDialog dialog(path,this); dialog.exec();
+         FunctionFileDialog dialog(path,this);
+         if (dialog.exec()==QDialog::Accepted && dialog.savedPath()!=QFileInfo(path).absoluteFilePath()) {
+            for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") table->item(row,1)->setText(dialog.savedPath());
+            status->setText("Function saved to a new file. Apply to use its new path in the mission.");
+         }
       });
    }
    if (object.IsOfType("Array")) {

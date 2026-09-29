@@ -58,6 +58,10 @@ int main(int argc,char **argv)
       {
          const auto path=temporary.filePath("editable function.gmf");
          const QByteArray original="\xef\xbb\xbf% unicode: \xce\x94\r\nvalue = 1;\r\n"; write(path,original);
+         {
+            FunctionFileDialog cancelled(path); cancelled.findChild<QPlainTextEdit *>("functionFileText")->appendPlainText("discard this"); cancelled.reject();
+            QFile unchanged(path); require(unchanged.open(QIODevice::ReadOnly) && unchanged.readAll()==original,"Function Cancel wrote pending edits");
+         }
          FunctionFileDialog dialog(path); auto *text=dialog.findChild<QPlainTextEdit *>("functionFileText");
          text->selectAll(); text->insertPlainText("% unicode: Δ\nvalue = 2;\n");
          require(dialog.save().isEmpty(),"Function file save failed");
@@ -66,6 +70,11 @@ int main(int argc,char **argv)
          text->appendPlainText("value = 3;"); write(path,"external edit\n");
          require(!dialog.save().isEmpty(),"Function editor overwrote an external change");
          require(saved.open(QIODevice::ReadOnly) && saved.readAll()=="external edit\n","Conflict check modified external file"); saved.close();
+         const auto copied=temporary.filePath(QString::fromUtf8("function copy Δ.gmf"));
+         require(dialog.saveAs(copied).isEmpty() && dialog.savedPath()==copied,"Function Save As failed");
+         QFile copy(copied); require(copy.open(QIODevice::ReadOnly) && copy.readAll().contains("value = 3;"),"Function Save As lost pending edits"); copy.close();
+         require(!dialog.saveAs(path).isEmpty(),"Save As overwrote an existing file without confirmation");
+         require(!dialog.saveAs(temporary.filePath("missing/failed.gmf")).isEmpty() && dialog.savedPath()==copied,"Failed Save As changed current path");
          write(path,QByteArray(1,char(0xff))); FunctionFileDialog invalid(path);
          require(!invalid.save().isEmpty(),"Invalid UTF-8 function accepted for saving");
       }

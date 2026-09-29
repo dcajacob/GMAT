@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QFile>
 #include <QFileInfo>
+#include <QFileDialog>
 #include <QSaveFile>
 #include <QStringConverter>
 
@@ -20,6 +21,14 @@ FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent)
    editor=new ScriptEditor(this); editor->setObjectName("functionFileText"); layout->addWidget(editor);
    status=new QLabel(this); status->setWordWrap(true); layout->addWidget(status);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Save|QDialogButtonBox::Cancel,this); layout->addWidget(buttons);
+   auto *saveAsButton=buttons->addButton("Save As…",QDialogButtonBox::ActionRole); saveAsButton->setObjectName("functionSaveAs");
+   connect(saveAsButton,&QPushButton::clicked,this,[this] {
+      QFileDialog chooser(this,"Save function as",path,"GMAT functions (*.gmf);;All files (*)");
+      chooser.setObjectName("functionSaveAsDialog"); chooser.setAcceptMode(QFileDialog::AcceptSave); chooser.setDefaultSuffix("gmf");
+      if (chooser.exec()!=QDialog::Accepted || chooser.selectedFiles().isEmpty()) return;
+      const auto error=saveAs(chooser.selectedFiles().first(),true);
+      if (error.isEmpty()) accept(); else status->setText(error);
+   });
    auto *find=buttons->addButton("Find / replace…",QDialogButtonBox::ActionRole);
    connect(find,&QPushButton::clicked,this,[this] { auto *dialog=new FindReplaceDialog(editor,this); dialog->setAttribute(Qt::WA_DeleteOnClose); dialog->openSearch(); });
    connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
@@ -35,7 +44,7 @@ FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent)
       else if (decoder.hasError()) status->setText("The function file is not valid UTF-8. It has not been opened for editing.");
       else { loaded=true; editor->setPlainText(text); editor->document()->setModified(false); }
    }
-   editor->setReadOnly(!loaded); buttons->button(QDialogButtonBox::Save)->setEnabled(loaded); find->setEnabled(loaded);
+   editor->setReadOnly(!loaded); buttons->button(QDialogButtonBox::Save)->setEnabled(loaded); find->setEnabled(loaded); saveAsButton->setEnabled(loaded);
 }
 QString FunctionFileDialog::save()
 {
@@ -47,11 +56,24 @@ QString FunctionFileDialog::save()
    if (bytes!=original) return "The function file changed outside this editor. Cancel and reopen it before saving.";
    current.close();
    if (!editor->document()->isModified()) return {};
+   return writeTo(path);
+}
+QString FunctionFileDialog::saveAs(const QString &destination,bool replaceExisting)
+{
+   if (!loaded) return "Open a readable UTF-8 function file before saving.";
+   if (destination.trimmed().isEmpty()) return "Choose a destination file.";
+   const auto target=QFileInfo(destination).absoluteFilePath();
+   if (target==path || (!QFileInfo(target).canonicalFilePath().isEmpty() && QFileInfo(target).canonicalFilePath()==QFileInfo(path).canonicalFilePath())) return save();
+   if (QFileInfo::exists(target) && !replaceExisting) return "The destination already exists. Choose another file or confirm replacement.";
+   return writeTo(target);
+}
+QString FunctionFileDialog::writeTo(const QString &destination)
+{
    auto result=editor->toPlainText().toUtf8();
    if (original.contains("\r\n") && !QByteArray(original).replace("\r\n","").contains('\n')) result.replace("\n","\r\n");
    if (original.startsWith("\xef\xbb\xbf") && !result.startsWith("\xef\xbb\xbf")) result.prepend("\xef\xbb\xbf");
-   QSaveFile file(path);
+   QSaveFile file(destination);
    if (!file.open(QIODevice::WriteOnly)) return "Cannot save function file: "+file.errorString();
    if (file.write(result)!=result.size() || !file.commit()) return "Cannot save function file: "+file.errorString();
-   original=result; editor->document()->setModified(false); return {};
+   original=result; path=destination; setWindowTitle("Edit function — "+path); editor->document()->setModified(false); return {};
 }

@@ -58,7 +58,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
-| `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Function-file Save As remains pending. |
+| `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Save As, pending path Apply and execution from the copy covered. New empty function-file creation remains pending. |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverGoalsPanel.hpp` | Pending audit |
@@ -1487,3 +1487,29 @@ current Linux/no-MATLAB scope.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 40.50 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-function-editor.txt`.
+
+## Function-file Save As
+
+FunctionFileDialog now provides Save As with a native destination chooser and
+overwrite confirmation. Success writes the current editor contents to the new
+file, preserving encoding/line-ending behavior, and returns its path to the
+resource panel. FunctionPath remains pending until resource Apply rebuilds the
+mission. Failed saves do not change the current path; saving to the original path
+retains the external-change check.
+
+FileTests covers Unicode/spaced destinations, preservation of unsaved contents,
+existing-destination refusal without confirmation, failed destination writes,
+and Cancel leaving the original untouched. CompatibilityTests opens the actual
+Save As chooser, creates a copy in another directory, checks the old file remains,
+checks the engine path is unchanged before Apply, applies the new path, then
+saves/reopens the mission and executes the edited function. Creation of a new
+empty function file is still outside this existing-file editor workflow.
+
+Validation: rebuilt the user's GmatQt. The full run passed the other 10 Qt checks,
+including Compatibility's actual Save As/execution workflow. Files initially
+failed because its new assertion expected a trailing newline absent from the
+editor contents. After correcting that expectation and adding Cancel coverage,
+Files passed in 3.40 seconds. Thus every check has a passing result for the final
+implementation, across the full and targeted runs. Native viewers used Xvfb.
+Evidence: `Qt6ParityValidation/check-function-save-as.txt` and
+`Qt6ParityValidation/check-function-save-as-files.txt`.
