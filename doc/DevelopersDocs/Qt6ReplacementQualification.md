@@ -87,7 +87,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatPanel.hpp` | Pending audit |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/GmatColorPanel.hpp` | Pending audit |
+| `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | Shared numeric grid; see ArraySetupPanel. Full wx dialog audit pending. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
 | `src/gui/foundation/GmatSavePanel.hpp` | Pending audit |
@@ -914,3 +914,22 @@ remain pending.
 GmatQt was rebuilt; all 11 Qt checks passed in 27.54 seconds. Evidence:
 `Qt6ParityValidation/check-spice-runtime.txt`; the reproduced failure is retained
 in `Qt6ParityValidation/spice-recovery-before.txt`.
+
+## Spacecraft visualization colors
+
+The resource-property adapter previously skipped COLOR_TYPE fields. It now reads
+and applies GMAT color strings, preserving names when unchanged and accepting RGB
+triples via engine validation. ResourceEditor provides a color picker and preview
+swatch; spacecraft OrbitColor/TargetColor are placed in Visualization. SPICE
+classification also now includes every field containing Spice, so the four kernel
+lists appear together before attitude-specific grouping.
+
+PlotTests selects orbit/target colors, checks Cancel and deferred Apply, exercises
+Undo/Redo, rejects an out-of-range RGB component without source mutation, then
+saves/reopens/runs. The selected orbit color must reach both the viewer's curve
+and final trajectory sample, and the target color must remain in engine state.
+This qualifies spacecraft resource colors; solver-iteration target rendering,
+per-view overrides and other resource color types remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 30.89 seconds. Evidence:
+`Qt6ParityValidation/check-resource-colors.txt`.

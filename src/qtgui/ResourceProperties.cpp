@@ -73,6 +73,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          case Gmat::ENUMERATION_TYPE:
             for (const auto &choice : object.GetPropertyEnumStrings(id)) field.choices.append(QString::fromStdString(choice));
             [[fallthrough]];
+         case Gmat::COLOR_TYPE: field.color=true; [[fallthrough]];
          case Gmat::STRING_TYPE:
          case Gmat::FILENAME_TYPE:
          case Gmat::OBJECT_TYPE: field.value = QString::fromStdString(object.GetStringParameter(id)); break;
@@ -425,6 +426,7 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
       if (value != "On" && value != "Off") throw std::runtime_error("Select On or Off");
       if (!object.SetOnOffParameter(id, value.toStdString())) throw std::runtime_error("Property rejected value");
       break;
+   case Gmat::COLOR_TYPE:
    case Gmat::STRING_TYPE:
    case Gmat::FILENAME_TYPE:
    case Gmat::OBJECT_TYPE:

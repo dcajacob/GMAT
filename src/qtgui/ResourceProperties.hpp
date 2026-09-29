@@ -10,6 +10,7 @@ struct ResourceProperty
    QString unit;
    QStringList choices;
    QStringList references;
+   bool color = false;
    bool filename = false;
    bool fileList = false;
    bool fileInput = false;

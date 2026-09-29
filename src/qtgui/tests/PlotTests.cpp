@@ -13,6 +13,7 @@
 #include "CelestialBody.hpp"
 #include <QDialogButtonBox>
 #include <QDialog>
+#include <QColorDialog>
 #include <QCheckBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
@@ -458,6 +459,33 @@ int main(int argc,char **argv)
       require(curve(*receiver->model("QtOrbit"),"Luna").points.size()>0,"Added orbit body not published");
       const auto reportNames=Moderator::Instance()->GetConfiguredObject("QtReport")->GetStringArrayParameter("Add");
       require(reportNames.size()==2 && reportNames[0]=="QtSat.ElapsedSecs","Report parameter list not replaced");
+      {
+         const auto before=source->toPlainText(); QWidget owner; QString error="No Apply";
+         ResourceEditor colors(*Moderator::Instance()->GetConfiguredObject("QtSat"),
+            [&](const QMap<QString,QString> &changes) { error=window.applyResourceChanges("QtSat",changes,before); return error; },&owner);
+         auto pickColor=[&](const QString &field,const QColor &color,bool accept) {
+            auto *button=colors.findChild<QPushButton *>("chooseProperty_"+field); require(button,"Spacecraft color picker missing");
+            QTimer::singleShot(0,&colors,[&colors,color,accept] {
+               auto *dialog=colors.findChild<QColorDialog *>("resourceColorDialog"); if (!dialog) return;
+               dialog->setCurrentColor(color); if (accept) dialog->accept(); else dialog->reject();
+            }); button->click();
+         };
+         const QColor orbitColor(23,145,210),targetColor(180,30,90);
+         pickColor("OrbitColor",orbitColor,false); require(!colors.hasChanges(),"Color Cancel changed pending resource");
+         pickColor("OrbitColor",orbitColor,true); pickColor("TargetColor",targetColor,true);
+         require(colors.hasChanges() && source->toPlainText()==before,"Color picker applied prematurely");
+         colors.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(error.isEmpty(),qPrintable(error));
+         const auto selected=source->toPlainText();
+         source->undo(); require(source->toPlainText()==before && window.buildScript(),"Color Undo failed");
+         source->redo(); require(window.buildScript(),"Color Redo failed");
+         require(!window.applyResourceChanges("QtSat",{{"OrbitColor","[256 0 0]"}},selected).isEmpty() && source->toPlainText()==selected,"Invalid RGB color did not roll back");
+         require(window.saveScriptTo(output.filePath("colors.script")) && window.loadScript(output.filePath("colors.script")) &&
+            window.runMission()==MainWindow::RunResult::Completed,"Color save/reopen or run failed");
+         require(curve(*receiver->model("QtOrbit"),"QtSat").color==orbitColor &&
+            curve(*receiver->model("QtOrbit"),"QtSat").points.back().color==orbitColor,"Selected orbit color did not reach the viewer");
+         auto *sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+         require(sat && QColor::fromRgb(sat->GetCurrentTargetColor() & 0xffffff)==targetColor,"Target color changed during round trip");
+      }
       change("QtReport","Add","");
       require(Moderator::Instance()->GetConfiguredObject("QtReport")->GetStringArrayParameter("Add").empty(),"Clearing report list retained entries");
       {

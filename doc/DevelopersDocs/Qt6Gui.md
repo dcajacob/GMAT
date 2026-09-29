@@ -875,3 +875,12 @@ comparison. Restoring an unavailable clock kernel permits rerunning without
 restarting GMAT. The bundled example references a frame kernel absent from this
 checkout, so the qualification fixture omits that file; the unmodified example
 still requires its missing input.
+
+### Spacecraft colors
+
+OrbitColor and TargetColor now appear in the spacecraft Visualization section.
+Choose color opens a visual picker; its button previews the current color. You
+can also enter a GMAT color name or an RGB triple such as `[23 145 210]`. Selection
+is pending until Apply, and Cancel leaves the value unchanged. Colors persist in
+the mission script. Kernel-list properties are grouped together in the SPICE tab,
+including attitude and spacecraft-clock kernel fields.

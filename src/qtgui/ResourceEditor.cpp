@@ -5,6 +5,9 @@
 #include <memory>
 #include "ResourceProperties.hpp"
 #include "ReportParameterDialog.hpp"
+#include "RgbColor.hpp"
+#include <QColorDialog>
+#include <QPixmap>
 #include "ScriptCompatibility.hpp"
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -169,6 +172,26 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             connect(edit,&QPushButton::clicked,this,[this,value] { table->itemDoubleClicked(value); });
          }
          table->setItem(row, 1, value);
+         if (field.color) {
+            value->setToolTip("Enter a GMAT color name or [red green blue], or choose a color. Components range from 0 to 255.");
+            auto *choose=new QPushButton("Choose color…",table); choose->setObjectName("chooseProperty_"+field.name); table->setCellWidget(row,3,choose);
+            auto currentColor=[value] {
+               try { return QColor::fromRgb(RgbColor::ToIntColor(value->text().trimmed().toStdString()) & 0xffffff); }
+               catch (BaseException &) { return QColor(); }
+            };
+            auto preview=[choose,currentColor] {
+               const auto color=currentColor(); QPixmap swatch(24,16); swatch.fill(color.isValid() ? color : Qt::transparent);
+               choose->setIcon(QIcon(swatch)); choose->setToolTip(color.isValid() ? color.name() : "Invalid color; choose a replacement");
+            };
+            connect(table,&QTableWidget::itemChanged,choose,[value,preview](QTableWidgetItem *changed) { if (changed==value) preview(); }); preview();
+            connect(choose,&QPushButton::clicked,this,[this,value,currentColor] {
+               QColorDialog dialog(currentColor(),this); dialog.setObjectName("resourceColorDialog"); dialog.setWindowTitle("Choose color");
+               if (dialog.exec()==QDialog::Accepted) {
+                  const auto color=dialog.selectedColor();
+                  value->setText(QString("[%1 %2 %3]").arg(color.red()).arg(color.green()).arg(color.blue()));
+               }
+            });
+         }
          const bool reportParameters=object.GetTypeName()=="ReportFile" && field.name=="Add";
          if (field.filename || !field.references.isEmpty() || reportParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
@@ -354,9 +377,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             }
          }
          else if (orbit.contains(name)) section="Orbit";
-         else if (name.startsWith("NAIF") || name.startsWith("Spice")) section="SPICE";
+         else if (name.startsWith("NAIF") || name.contains("Spice")) section="SPICE";
          else if (name=="Attitude" || name.startsWith("Attitude") || attitudeFields.contains(name)) section="Attitude";
-         else if (name.startsWith("Model")) section="Visualization";
+         else if (name.startsWith("Model") || name=="OrbitColor" || name=="TargetColor") section="Visualization";
          else if (name.startsWith("Dry") || name.startsWith("System") || name.startsWith("SPAD") ||
                   name.startsWith("AtmosDensity") || name.contains("Mass") || name.contains("Inertia") ||
                   QSet<QString>{"Cd","Cr","CdSigma","CrSigma","DragArea","SRPArea"}.contains(name)) section="Ballistic/Mass";
