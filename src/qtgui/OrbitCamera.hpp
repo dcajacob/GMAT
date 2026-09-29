@@ -10,7 +10,20 @@ struct OrbitCameraBasis
    osg::Vec3d target,right,up,outward;
    double distance,extent;
 };
-inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double yaw,double pitch,double extent,double aspect=1.0)
+struct OrbitSceneBounds
+{
+   osg::Vec3d minimum,maximum;
+   bool empty=true;
+   void include(double x,double y,double z,double radius) {
+      if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z) || !std::isfinite(radius)) return;
+      const osg::Vec3d point(x,y,z),padding(std::max(0.0,radius),std::max(0.0,radius),std::max(0.0,radius));
+      if (empty) { minimum=point-padding; maximum=point+padding; empty=false; return; }
+      for (int i=0;i<3;++i) { minimum[i]=std::min(minimum[i],point[i]-padding[i]); maximum[i]=std::max(maximum[i],point[i]+padding[i]); }
+   }
+   osg::Vec3d center() const { return (minimum+maximum)*.5; }
+   double radius() const { return std::max(1e-6,(maximum-minimum).length()*.5); }
+};
+inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double yaw,double pitch,double extent,double aspect=1.0,const OrbitSceneBounds *bounds=nullptr)
 {
    double viewExtent=extent*1.1,distance=extent*4;
    osg::Vec3d target;
@@ -42,10 +55,15 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       // distance sets framing; pan/rotate are offsets from the tracked view.
       if (model.fitCamera) distance=4*(extent+target.length());
    }
+   if (model.fitCamera && bounds && !bounds->empty) {
+      target=bounds->center(); extent=bounds->radius();
+      viewExtent=extent*1.1; distance=extent*4;
+   }
    if (model.perspective && model.fitCamera) {
       const double halfVertical=std::clamp(model.fieldOfView,1.0,150.0)*3.14159265358979323846/360;
       const double halfHorizontal=std::atan(std::max(aspect,1e-6)*std::tan(halfVertical));
-      distance=(extent+target.length())*1.1/std::sin(std::min(halfVertical,halfHorizontal));
+      const double radius=bounds && !bounds->empty ? extent : extent+target.length();
+      distance=radius*1.1/std::sin(std::min(halfVertical,halfHorizontal));
    }
    return {target,right,up,outward,distance,viewExtent};
 }

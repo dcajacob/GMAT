@@ -187,6 +187,7 @@ struct OrbitRenderer::Scene
    }
    void synchronize(int width,int height,double pixelRatio) {
       double extent=1;
+      OrbitSceneBounds bounds;
       for (auto it=model->curves.cbegin();it!=model->curves.cend();++it) {
          const auto &source=it.value(); prepareCurve(it.key(),source);
          if (!source.visible) continue;
@@ -194,11 +195,14 @@ struct OrbitRenderer::Scene
          const double scale=std::abs(source.modelScale)*(source.radius==0 ? 1000 : 1);
          const double offset=std::hypot(source.modelOffset[0],source.modelOffset[1],source.modelOffset[2]);
          const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
-         for (const auto &p:source.points) extent=std::max(extent,std::hypot(p.x,p.y,p.z)+radius);
+         for (const auto &p:source.points) {
+            extent=std::max(extent,std::hypot(p.x,p.y,p.z)+radius);
+            bounds.include(p.x,p.y,p.z,source.showObject ? radius : 0);
+         }
       }
       // Preserve the orbit controls and stable replay framing in either projection.
       const double aspect=double(width)/height;
-      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect);
+      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect,&bounds);
       const auto &target=camera.target,&right=camera.right,&up=camera.up,&outward=camera.outward;
       const double distance=camera.distance,viewExtent=camera.extent;
       const double tangent=std::tan(std::clamp(model->fieldOfView,1.0,150.0)*osg::PI/360.0)/zoom;

@@ -1095,3 +1095,9 @@ The solver resource editor offers algorithm and derivative-method dropdowns in
 Convergence. Output contains report style, report destination and progress
 settings. Browse chooses a report output path; Apply stores the settings and
 running the mission writes the report.
+
+### Fit translated orbit scenes
+
+Fit centers the visible objects and retained trajectories, so scenes far from the
+coordinate origin use the window effectively. Hidden curves do not affect Fit.
+Framing stays stable during replay. Script view restores the scripted camera.

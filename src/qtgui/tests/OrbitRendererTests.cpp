@@ -1,4 +1,5 @@
 #include "OrbitRenderer.hpp"
+#include "OrbitCamera.hpp"
 #include <QApplication>
 #include <QTemporaryDir>
 #include <QPainter>
@@ -13,11 +14,12 @@ int main(int argc,char **argv)
 {
    QApplication app(argc,argv);
    try {
-      {
+      for (const double offset:{0.0,1e7}) for (const bool perspective:{false,true}) {
          auto fitModel=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
-         fitModel->perspective=true; fitModel->fitCamera=true; fitModel->fieldOfView=50;
+         fitModel->perspective=perspective; fitModel->fitCamera=true; fitModel->fieldOfView=50;
          fitModel->labels=false; fitModel->legend=false; fitModel->axes=false; fitModel->grid=false;
-         fitModel->curves[0].radius=1; fitModel->curves[0].color=Qt::green; fitModel->append(0,0,0,0);
+         fitModel->curves[0].radius=1; fitModel->curves[0].color=Qt::green; fitModel->append(0,offset,offset,offset);
+         fitModel->curves[1].visible=false; fitModel->append(1,-1e9,0,0);
          OrbitRenderer viewer(fitModel); viewer.show(); viewer.setView(1,0,0,{},0);
          for (const auto &size:{QSize(240,600),QSize(600,240),QSize(400,400)}) {
             viewer.resize(size); app.processEvents(); const auto image=viewer.captureImage();
@@ -29,9 +31,19 @@ int main(int argc,char **argv)
                }
             }
             require(count>1000,"Perspective Fit body missing");
+            require(std::abs((left+right)*.5-image.width()*.5)<5 && std::abs((top+bottom)*.5-image.height()*.5)<5,
+               "Fit did not center the translated visible body");
             require(left>image.width()*.025 && right<image.width()*.975 && top>image.height()*.025 && bottom<image.height()*.975,
                "Perspective Fit clipped the body at a viewport edge");
          }
+      }
+      {
+         PlotModel scripted(PlotModel::Kind::Orbit); scripted.scriptedCamera=true;
+         scripted.cameras.push_back({0,{10,20,30},{1,2,3},{0,0,1},false});
+         OrbitSceneBounds bounds; bounds.include(1e7,1e7,1e7,1);
+         const auto camera=orbitCamera(scripted,0,0,0,2e7,1,&bounds);
+         require((camera.target-osg::Vec3d(1,2,3)).length()<1e-12 && std::abs(camera.distance-std::sqrt(9*9+18*18+27*27))<1e-12,
+            "Scene bounds changed the stored Script camera without Fit");
       }
       QTemporaryDir directory;
       QImage texture(128,64,QImage::Format_RGB32);

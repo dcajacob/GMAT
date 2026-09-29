@@ -152,9 +152,13 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    double ymin = ground ? -90 : std::numeric_limits<double>::infinity();
    double ymax = ground ? 90 : -std::numeric_limits<double>::infinity();
    double extent = 1;
+   OrbitSceneBounds bounds;
    for (const auto &curve:data->curves) if (curve.visible)
-      for (const auto &point:curve.points) extent=std::max(extent,std::hypot(point.x,point.y,point.z)+curve.radius);
-   const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent,area.width()/area.height());
+      for (const auto &point:curve.points) {
+         extent=std::max(extent,std::hypot(point.x,point.y,point.z)+curve.radius);
+         bounds.include(point.x,point.y,point.z,curve.showObject ? curve.radius : 0);
+      }
+   const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent,area.width()/area.height(),&bounds);
    auto perspectiveScale=[&](const PlotPoint &point) {
       const auto relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
       const double depth=camera.distance-relative*camera.outward;

@@ -1616,3 +1616,26 @@ qualifies that combination; it does not establish all algorithm/derivative pairs
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 64.67 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-dc-controls.txt`.
+
+## Centered scene Fit
+
+Qt Fit previously used radius from the coordinate origin, making translated
+scenes unnecessarily small and leaving the camera aimed away from their center.
+Fit now centers the camera on the bounding box of visible curve history and uses
+a sphere enclosing that box. Native bounds include loaded model extents, scale
+and offsets, or body radii; hidden objects do not add body radius, and invisible
+curves do not contribute. The software renderer uses the same camera calculation
+with its displayed body radii. Script view retains the stored camera target and
+distance until the user selects Fit. Framing uses all retained history for stable
+replay, rather than changing with the playback frame.
+
+NativeOrbit tests render an origin-centered body and a body translated by ten
+million units, with an invisible distant curve, in perspective and orthographic
+projections and portrait, landscape and square windows. They require a visible,
+centered body with margins. A separate shared-camera check protects stored
+scripted target/distance. This improves Qt Fit; automatic OF trajectory/segment
+conversion remains a separate open requirement.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 62.63 seconds.
+Native checks ran under isolated Xvfb with software OpenGL, not the user's live
+Intel/Wayland session. Evidence: `Qt6ParityValidation/check-centered-fit.txt`.
