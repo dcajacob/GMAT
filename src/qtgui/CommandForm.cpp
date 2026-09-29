@@ -14,6 +14,7 @@
 #include <QListWidget>
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
+#include <QLabel>
 
 CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *parent)
    : QGroupBox("Command settings",parent),layout(new QFormLayout(this)),changed(std::move(callback))
@@ -84,16 +85,35 @@ void CommandForm::setStatement(const QString &statement)
          state->setCurrentText(input->text()); input->setParent(state); input->hide(); layout->addRow(name,state);
          connect(state,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
          connect(input,&QLineEdit::textChanged,state,&QComboBox::setCurrentText);
-      } else if (title()=="Toggle" && name=="Subscribers") {
+      } else if ((title()=="Toggle" && name=="Subscribers") || (title()=="Objects" && name=="Objects")) {
+         const bool subscribers=title()=="Toggle";
+         const bool global=QRegularExpression("^\\s*Global\\b").match(statement).hasMatch();
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
-         auto *choose=new QPushButton("Select…",container); choose->setObjectName("commandChoose_Subscribers"); row->addWidget(choose); layout->addRow(name,container);
-         connect(choose,&QPushButton::clicked,this,[this,input] {
-            QDialog dialog(this); dialog.setObjectName("toggleSubscriberDialog"); dialog.setWindowTitle("Select outputs"); dialog.resize(400,350);
-            auto *layout=new QVBoxLayout(&dialog); auto *list=new QListWidget(&dialog); list->setObjectName("toggleSubscriberList");
+         auto *choose=new QPushButton("Select…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
+         connect(choose,&QPushButton::clicked,this,[this,input,subscribers,global] {
+            QDialog dialog(this); dialog.setObjectName(subscribers ? "toggleSubscriberDialog" : "commandObjectDialog"); dialog.setWindowTitle(subscribers ? "Select outputs" : "Select objects"); dialog.resize(400,350);
+            auto *layout=new QVBoxLayout(&dialog); auto *list=new QListWidget(&dialog); list->setObjectName(subscribers ? "toggleSubscriberList" : "commandObjectList");
             list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
             const auto selected=input->text().split(QRegularExpression("\\s+"),Qt::SkipEmptyParts);
             QStringList names=selected,available;
-            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) available.append(QString::fromStdString(name));
+            auto *moderator=Moderator::Instance();
+            auto candidates=moderator->GetListOfObjects(subscribers ? Gmat::SUBSCRIBER : Gmat::UNKNOWN_OBJECT);
+            if (!subscribers) {
+               const auto bodies=moderator->GetListOfObjects(Gmat::CELESTIAL_BODY);
+               candidates.insert(candidates.end(),bodies.begin(),bodies.end());
+            }
+            for (const auto &name:candidates) {
+               auto *object=moderator->GetConfiguredObject(name); if (!object) continue;
+               if (global && object->IsAutomaticGlobal()) continue;
+               if (!subscribers && object->IsOfType(Gmat::PARAMETER) && !object->IsOfType("Variable") &&
+                  !object->IsOfType("Array") && !object->IsOfType("String")) continue;
+               available.append(QString::fromStdString(name));
+            }
+            available.removeDuplicates();
+            if (global) {
+               auto *note=new QLabel("Automatically global resources are omitted from new choices.",&dialog);
+               note->setWordWrap(true); layout->insertWidget(0,note);
+            }
             available.sort(); for (const auto &name:available) if (!names.contains(name)) names.append(name);
             for (const auto &name:names) {
                auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable);

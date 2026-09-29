@@ -45,7 +45,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector tested; relation/expression fields remain editable. Full parameter selection workflow pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector tested; goal/value fields remain editable. Full parameter/tolerance workflow pending. |
-| `src/gui/command/ManageObjectPanel.hpp` | CommandForm Global/Clear object controls; form coverage in MissionTests. Reference-selection workflow pending. |
+| `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector excludes optimizers; selector tested. Broader Target workflow pending. |
@@ -710,3 +710,24 @@ Plot/ephemeris subscribers and Toggle inside solver loops remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 27.66 seconds. Evidence:
 `Qt6ParityValidation/check-toggle-controls.txt`.
+
+
+## Object-management selection
+
+Global, Clear and Save now use the shared command checklist, with configured
+objects and user Variable/Array/String resources. Computed system parameters are
+not offered as objects. Save/Clear can offer automatic globals; Global excludes
+them from new choices and explains why, matching ManageObjectPanel's distinction.
+Existing source selections remain available so opening a dialog cannot silently
+remove a name. Empty selection disables OK and Cancel preserves prior fields.
+
+CompatibilityTests selects SavedSat/SavedNumber through the Save dialog and then
+runs the existing numerical export, exact save/reopen, export reimport, repeat-run,
+loop snapshot, invalid-output-path and disk-write recovery checks. It checks that
+Global excludes Earth/EarthMJ2000Eq while allowing a user variable, and that Clear
+Cancel preserves its object list. Global/Clear runtime scope/dependency behavior
+still requires separate qualification; checklist coverage alone is not counted as
+full command parity.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 27.96 seconds. Evidence:
+`Qt6ParityValidation/check-object-pickers.txt`.

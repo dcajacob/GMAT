@@ -789,3 +789,10 @@ Toggle commands offer a **Select…** checklist for outputs and an **On/Off** dr
 Choose one or more subscribers; Cancel leaves the command unchanged. The checklist
 supports dragging to retain your preferred order. Changes still go through command
 Apply before updating the mission.
+
+
+Global, Clear and Save command forms now have **Select…** object checklists.
+Choose configured resources or user variables, arrays and strings. Global omits
+resources that are automatically global from new choices; Save and Clear retain
+those choices. Computed parameter values are not objects in this selector.
+Cancel preserves the command, and Apply still validates it before execution.

@@ -541,7 +541,31 @@ int main(int argc,char **argv)
       QString saveStatement; CommandForm saveForm([&](const QString &value) { saveStatement=value; });
       saveForm.setStatement(saveSnapshot.nodes[saveIndex].statement);
       auto *objects=saveForm.findChild<QLineEdit *>("commandField_Objects"); require(objects,"Save object-list controls missing");
-      objects->setText("SavedSat SavedNumber");
+      QTimer::singleShot(0,[&] {
+         auto *dialog=saveForm.findChild<QDialog *>("commandObjectDialog");
+         auto *list=dialog->findChild<QListWidget *>("commandObjectList");
+         require(list->findItems("EarthMJ2000Eq",Qt::MatchExactly).size()==1,"Save picker excluded automatic global resources");
+         for (int i=0;i<list->count();++i) require(!list->item(i)->text().contains('.'),"Object picker included computed system parameters");
+         const auto number=list->findItems("SavedNumber",Qt::MatchExactly); require(number.size()==1,"Save picker omitted variable");
+         number.first()->setCheckState(Qt::Checked); dialog->accept();
+      });
+      saveForm.findChild<QPushButton *>("commandChoose_Objects")->click();
+      require(objects->text()=="SavedSat SavedNumber","Save picker lost object selection order");
+      {
+         QString chosen; CommandForm globalForm([&](const auto &value) { chosen=value; }); globalForm.setStatement("Global SavedSat;");
+         QTimer::singleShot(0,[&] {
+            auto *dialog=globalForm.findChild<QDialog *>("commandObjectDialog"); auto *list=dialog->findChild<QListWidget *>("commandObjectList");
+            require(list->findItems("EarthMJ2000Eq",Qt::MatchExactly).isEmpty() && list->findItems("Earth",Qt::MatchExactly).isEmpty(),
+               "Global picker includes automatically global objects");
+            const auto number=list->findItems("SavedNumber",Qt::MatchExactly); require(number.size()==1,"Global picker omitted user variable");
+            number.first()->setCheckState(Qt::Checked); dialog->accept();
+         }); globalForm.findChild<QPushButton *>("commandChoose_Objects")->click();
+         require(chosen=="Global SavedSat SavedNumber;","Global picker changed command syntax or order");
+         globalForm.setStatement("Clear SavedSat;");
+         QTimer::singleShot(0,[&] { auto *dialog=globalForm.findChild<QDialog *>("commandObjectDialog"); dialog->findChild<QListWidget *>("commandObjectList")->clear(); dialog->reject(); });
+         globalForm.findChild<QPushButton *>("commandChoose_Objects")->click();
+         require(globalForm.findChild<QLineEdit *>("commandField_Objects")->text()=="SavedSat","Clear selector Cancel changed objects");
+      }
       require(window.applyMissionChange(saveSnapshot,saveIndex,MissionEdit::Replace,saveStatement).isEmpty(),"Save object-list edit failed");
       roundTrip("save-command");
       const auto validSave=editor->toPlainText();
