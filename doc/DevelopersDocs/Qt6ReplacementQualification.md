@@ -47,8 +47,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; full tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
-| `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
-| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector excludes optimizers; selector tested. Broader Target workflow pending. |
+| `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options in tests; full optimizer mode combinations pending. |
+| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector tested with EclipseLocator; full execution/options workflow pending. |
 | `src/gui/command/PropagatePanel.hpp` | Pending audit |
@@ -933,3 +933,30 @@ per-view overrides and other resource color types remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 30.89 seconds. Evidence:
 `Qt6ParityValidation/check-resource-colors.txt`.
+
+## Solver option controls
+
+Audited TargetPanel/OptimizePanel mode dropdowns and progress checkbox, plus
+FindEventsPanel's Append checkbox. Qt uses engine-provided solver mode choices
+and typed controls for existing options. An explicit Add default options action
+adds only missing solver options using fresh command defaults; opening the form
+does not rewrite the script. Existing values (including unfamiliar values) and
+branch text remain preserved.
+
+MissionTests checks full and partial insertion, pending solver-name edits, branch
+labels/comments/bodies, dropdown/checkbox source updates and Append preservation.
+The real Target workflow selects RunInitialGuess, verifies x remains at 1, undoes
+the edit and continues through the existing saved/reopened Solve case reaching 8.
+This does not qualify every Optimize mode or Stop/Discard combination, and omitted
+FindEvents Append still requires source insertion.
+
+Switching modes exposed stale progress windows: engine listener keys include the
+command's generated source, so Initial Guess and Solve could leave separate
+windows and the earlier unconverged result remained visible. Qt now tracks which
+listeners were used by the current run and removes inactive windows when that run
+ends. Listener objects remain alive for engine-held pointers. The mode-switch test
+requires exactly one current progress window and successful convergence; existing
+repeat-run, close/recreate and user column-width checks remain in place.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 30.94 seconds. Evidence:
+`Qt6ParityValidation/check-solver-options.txt`.

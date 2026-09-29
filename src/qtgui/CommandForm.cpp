@@ -1,5 +1,8 @@
 #include "CommandForm.hpp"
 #include "ConditionDialog.hpp"
+#include "Target.hpp"
+#include "Optimize.hpp"
+#include <memory>
 #include <QFormLayout>
 #include <QLineEdit>
 #include <QRegularExpression>
@@ -23,15 +26,20 @@ CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *
    setObjectName("commandForm"); hide();
 }
 
-void CommandForm::updateSource()
+QString CommandForm::currentStatement() const
 {
-   if (synchronizing) return;
    QString result=original;
    // Spans refer to the original snapshot. Replace from right to left so a
    // changed field length cannot displace another field, or a branch body.
    auto ordered=fields;
    std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start==b.start ? a.length>b.length : a.start>b.start; });
    for (const auto &field:ordered) result.replace(field.start,field.length,field.input->text());
+   return result;
+}
+void CommandForm::updateSource()
+{
+   if (synchronizing) return;
+   const auto result=currentStatement();
    synchronizing=true; changed(result); synchronizing=false;
 }
 
@@ -81,7 +89,18 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="Condition" && name=="Condition") {
+      if (title()=="Solver branch" && (name=="SolveMode" || name=="ExitMode")) {
+         Target prototype;
+         auto *choice=new QComboBox(this); choice->setObjectName("commandChoice_"+name);
+         for (const auto &option:prototype.GetStringArrayParameter((name+"Options").toStdString())) choice->addItem(QString::fromStdString(option));
+         if (choice->findText(input->text())<0) choice->addItem(input->text());
+         choice->setCurrentText(input->text()); input->setParent(choice); input->hide(); layout->addRow(name,choice);
+         connect(choice,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
+      } else if ((name=="ShowProgressWindow" || name=="Append") && (input->text()=="true" || input->text()=="false")) {
+         auto *check=new QCheckBox(this); check->setObjectName("commandCheck_"+name); check->setChecked(input->text()=="true");
+         input->setParent(check); input->hide(); layout->addRow(name,check);
+         connect(check,&QCheckBox::toggled,input,[input](bool enabled) { input->setText(enabled ? "true" : "false"); });
+      } else if (title()=="Condition" && name=="Condition") {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *edit=new QPushButton("Edit conditions…",container); edit->setObjectName("commandChoose_Condition"); row->addWidget(edit); layout->addRow(name,container);
          auto available=[input,edit] {
@@ -210,6 +229,29 @@ void CommandForm::setStatement(const QString &statement)
          while (matches.hasNext()) {
             const auto setting=matches.next();
             add(setting.captured(1),match.capturedStart(options)+setting.capturedStart(2),setting.capturedLength(2));
+         }
+      }
+      if (spec.type=="Solver branch") {
+         std::unique_ptr<GmatCommand> prototype;
+         if (QRegularExpression("^\\s*Optimize\\b").match(statement).hasMatch()) prototype=std::make_unique<Optimize>();
+         else prototype=std::make_unique<Target>();
+         QStringList missing;
+         for (const auto &key:{QString("SolveMode"),QString("ExitMode"),QString("ShowProgressWindow")}) {
+            if (findChild<QLineEdit *>("commandField_"+key)) continue;
+            const auto value=key=="ShowProgressWindow" ? (prototype->GetBooleanParameter(key.toStdString()) ? QString("true") : QString("false")) :
+               QString::fromStdString(prototype->GetStringParameter(key.toStdString()));
+            missing.append(key+" = "+value);
+         }
+         if (!missing.isEmpty()) {
+            auto *defaults=new QPushButton("Add default options",this); defaults->setObjectName("commandAddOptions");
+            defaults->setToolTip("Add omitted solver options using GMAT defaults; existing settings and branch contents are preserved"); layout->addRow(defaults);
+            connect(defaults,&QPushButton::clicked,this,[this,pattern=spec.pattern,options,missing] {
+               auto result=currentStatement(); const auto match=QRegularExpression("^\\s*"+pattern).match(result);
+               if (!match.hasMatch()) return;
+               if (match.capturedStart(options)>=0) result.insert(match.capturedEnd(options),(match.captured(options).trimmed().isEmpty() ? "" : ", ")+missing.join(", "));
+               else result.insert(match.capturedEnd(1)," {"+missing.join(", ")+"}");
+               synchronizing=true; changed(result); synchronizing=false; setStatement(result);
+            });
          }
       }
       show(); return;

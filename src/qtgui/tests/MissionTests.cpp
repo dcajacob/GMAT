@@ -102,6 +102,23 @@ int main(int argc,char **argv)
          require(!builder->isEnabled(),"Unsupported grouped syntax was offered a lossy conversion");
          require(ConditionDialog::supports("A(1, 2) >= -1.2e-3 | total ~= 0"),"Array/numeric compound condition was rejected");
 
+         const QString bareBranch="Target 'Keep label' DC; % keep header\n   total = total + 1; % keep body\nEndTarget;";
+         form.setStatement(bareBranch);
+         auto *defaults=form.findChild<QPushButton *>("commandAddOptions"); require(defaults,"Omitted solver options cannot be exposed"); defaults->click();
+         require(result.contains("SolveMode = Solve") && result.contains("ExitMode = DiscardAndContinue") && result.contains("ShowProgressWindow = true") &&
+            result.endsWith("; % keep header\n   total = total + 1; % keep body\nEndTarget;"),"Default options damaged branch source");
+         auto *solveMode=form.findChild<QComboBox *>("commandChoice_SolveMode"),*exitChoice=form.findChild<QComboBox *>("commandChoice_ExitMode");
+         require(solveMode && solveMode->findText("RunInitialGuess")>=0 && exitChoice && exitChoice->findText("Stop")>=0,"Solver option choices missing");
+         solveMode->setCurrentText("RunInitialGuess"); exitChoice->setCurrentText("SaveAndContinue");
+         form.findChild<QCheckBox *>("commandCheck_ShowProgressWindow")->setChecked(false);
+         require(result.contains("SolveMode = RunInitialGuess") && result.contains("ExitMode = SaveAndContinue") && result.contains("ShowProgressWindow = false"),"Solver controls did not update source");
+         form.setStatement("Optimize Opt {ExitMode = Stop};\nEndOptimize;");
+         form.findChild<QLineEdit *>("commandField_Solver")->setText("OtherOpt");
+         form.findChild<QPushButton *>("commandAddOptions")->click();
+         require(result.contains("Optimize OtherOpt") && result.contains("ExitMode = Stop") && result.count("ExitMode")==1,"Adding missing options lost a pending field or replaced an existing option");
+         form.setStatement("FindEvents 'Find' Locator {Append = false}; % keep");
+         form.findChild<QCheckBox *>("commandCheck_Append")->setChecked(true);
+         require(result=="FindEvents 'Find' Locator {Append = true}; % keep","Append checkbox changed unrelated command text");
          const QString assignment="GMAT total = sqrt(4) + 3; % preserve comment\n";
          form.setStatement(assignment);
          auto *expression=form.findChild<QLineEdit *>("commandField_Expression");
@@ -353,12 +370,22 @@ int main(int argc,char **argv)
       }); goalForm.findChild<QPushButton *>("commandChoose_Value")->click();
       require(goal->text()=="goalValue","Cancel changed the selected target");
       require(window.applyMissionChange(snapshot,achieve,MissionEdit::Replace,replacement).isEmpty(),"Achieve form edit rejected");
+      {
+         const auto before=editor->toPlainText(); const auto current=window.missionSnapshot(); QString changed;
+         CommandForm modeForm([&](const QString &value) { changed=value; }); modeForm.setStatement(current.nodes[find(current,"Target")].statement);
+         modeForm.findChild<QComboBox *>("commandChoice_SolveMode")->setCurrentText("RunInitialGuess");
+         require(window.applyMissionChange(current,find(current,"Target"),MissionEdit::Replace,changed).isEmpty() &&
+            window.runMission()==MainWindow::RunResult::Completed,"Selected initial-guess mode failed");
+         require(std::abs(Moderator::Instance()->GetInternalObject("x")->GetRealParameter("Value")-1)<1e-12,"Initial-guess mode unexpectedly solved the target");
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Solver mode Undo failed");
+      }
       QTemporaryDir selectedGoal;
       require(selectedGoal.isValid() && window.saveScriptTo(selectedGoal.filePath("target.script")) &&
          window.loadScript(selectedGoal.filePath("target.script")) && window.buildScript(),"Selected target save/reopen failed");
       require(window.runMission()==MainWindow::RunResult::Completed,"Targeting did not execute");
       auto solved=[&] { return Moderator::Instance()->GetInternalObject("x")->GetRealParameter("Value"); };
       require(std::abs(solved()-8)<1e-6,"Targeting did not achieve edited goal");
+      require(window.findChildren<QTableWidget *>("solverProgress").size()==1,"Edited solver mode left a stale progress window");
       auto *progress=window.findChild<QTableWidget *>("solverProgress");
       auto *solverStatus=window.findChild<QLabel *>("solverStatus");
       require(progress && progress->rowCount()>=2 && solverStatus && solverStatus->property("converged").toBool(),

@@ -662,6 +662,7 @@ MainWindow::RunResult MainWindow::runMission()
 {
    if (running) return RunResult::Busy;
    if (!buildScript()) return RunResult::Failed;
+   solverListeners->missionStarted();
    paused = false;
    stopRequested = false;
    setRunning(true);

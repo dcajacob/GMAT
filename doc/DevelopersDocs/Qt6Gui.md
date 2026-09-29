@@ -884,3 +884,12 @@ can also enter a GMAT color name or an RGB triple such as `[23 145 210]`. Select
 is pending until Apply, and Cancel leaves the value unchanged. Colors persist in
 the mission script. Kernel-list properties are grouped together in the SPICE tab,
 including attitude and spacecraft-clock kernel fields.
+
+### Solver command options
+
+Target/Optimize forms use dropdowns for SolveMode and ExitMode and a checkbox for
+ShowProgressWindow. **Add default options** inserts only omitted settings using
+the engine defaults, preserving existing settings and pending solver edits. The
+action changes the command source for review; Apply validates it normally.
+FindEvents' explicit Append option also uses a checkbox. Unrecognized values
+remain represented rather than silently becoming a different setting.

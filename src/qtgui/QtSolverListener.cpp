@@ -17,6 +17,7 @@ public:
    QPointer<QTableWidget> table;
    QPointer<QLabel> status;
    QMap<QString,int> rows;
+   bool active=false;
    void value(const QString &kind,const std::string &name,const QString &current,
               const QString &desired={},const QString &residual={}) {
       if (!table) return;
@@ -48,16 +49,32 @@ public:
 
 QtSolverListenerManager::QtSolverListenerManager(QMdiArea *area) : workspace(area) {}
 QtSolverListenerManager::~QtSolverListenerManager()=default;
+void QtSolverListenerManager::missionStarted()
+{
+   for (auto &entry:listeners) entry.second->active=false;
+}
 void QtSolverListenerManager::missionFinished(bool stopped,bool failed)
 {
-   for (auto &entry:listeners) if (entry.second->status && !entry.second->status->property("converged").isValid())
-      entry.second->status->setText(stopped ? "Mission stopped" : failed ? "Mission failed" : "Finished without a convergence report");
+   for (auto &entry:listeners) {
+      auto &listener=*entry.second;
+      if (!listener.active) {
+         // Commands identify listeners by generated source. Editing a mode can
+         // produce a new key; retire its old window rather than leave stale
+         // results beside the new run. Keep the listener itself alive because
+         // engine commands hold non-owning pointers to it.
+         delete listener.window.data();
+         continue;
+      }
+      if (listener.status && !listener.status->property("converged").isValid())
+         listener.status->setText(stopped ? "Mission stopped" : failed ? "Mission failed" : "Finished without a convergence report");
+   }
 }
 ISolverListener *QtSolverListenerManager::CreateSolverListener(const std::string &name,const std::string &,
       Real x,Real y,Real width,Real height,bool maximized)
 {
    auto &listener=listeners[name];
    if (!listener) listener=std::make_unique<QtSolverListener>();
+   listener->active=true;
    if (!listener->window) {
       auto *panel=new QWidget;
       auto *layout=new QVBoxLayout(panel);

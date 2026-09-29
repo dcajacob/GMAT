@@ -18,5 +18,6 @@ private:
    QString original;
    std::function<void(const QString &)> changed;
    bool synchronizing=false;
+   QString currentStatement() const;
    void updateSource();
 };

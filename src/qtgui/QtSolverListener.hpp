@@ -10,6 +10,7 @@ class QtSolverListenerManager final : public ListenerManager
 public:
    explicit QtSolverListenerManager(QMdiArea *workspace);
    ~QtSolverListenerManager() override;
+   void missionStarted();
    void missionFinished(bool stopped,bool failed);
    ISolverListener *CreateSolverListener(const std::string &name,const std::string &oldName,
       Real x,Real y,Real width,Real height,bool maximized) override;
