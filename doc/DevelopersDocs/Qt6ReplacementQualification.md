@@ -784,3 +784,20 @@ GmatQt was rebuilt and all 11 Qt checks passed in 28.73 seconds. Evidence:
 `Qt6ParityValidation/check-find-replace.txt`. The broader editor audit (including
 other editing/navigation preferences) remains separate from this completed search
 workflow.
+
+## Resource input/output file browsing
+
+The generic filename picker previously used AnyFile for every field. Resource
+metadata now distinguishes known input files from output destinations: inputs use
+ExistingFile/Open and outputs use AnyFile/Save. Output browsing itself does not
+write a file and does not present an overwrite confirmation for an operation it
+is not performing. Unclassified plugin fields retain the prior general picker.
+
+WorkflowTests checks the ReportFile output mode and a new path with spaces without
+creating it. Spacecraft ModelFile browsing checks existing-input mode, Cancel,
+selection of a path with spaces, and deferred Apply (the live spacecraft remains
+unchanged). These checks qualify file selection only; function-source editing,
+SPICE kernel lists and broader spacecraft model configuration remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 27.66 seconds. Evidence:
+`Qt6ParityValidation/check-file-pickers.txt`.

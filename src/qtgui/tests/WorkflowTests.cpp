@@ -548,13 +548,38 @@ int main(int argc, char **argv)
          QTimer::singleShot(0,&panel,[&] {
             auto *dialog=qobject_cast<QFileDialog *>(QApplication::activeModalWidget());
             if (!dialog) return;
-            opened=true; dialog->selectFile(path); QMetaObject::invokeMethod(dialog,"accept",Qt::DirectConnection);
+            opened=dialog->acceptMode()==QFileDialog::AcceptSave && dialog->fileMode()==QFileDialog::AnyFile; dialog->selectFile(path); QMetaObject::invokeMethod(dialog,"accept",Qt::DirectConnection);
          });
          choose->click();
          require(opened && panel.hasChanges() && !QFileInfo::exists(path) &&
             panel.findChild<QTableWidget *>()->findItems(path,Qt::MatchExactly).size()==1,
             "Filename picker rejected a new output path or created the file prematurely");
          panel.discardChanges();
+      }
+      {
+         QWidget owner; QTemporaryDir source;
+         const auto path=source.filePath("spacecraft model.obj"); QFile model(path);
+         require(model.open(QIODevice::WriteOnly),"Input picker fixture failed"); model.write("v 0 0 0\n"); model.close();
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Vehicle"),
+            [](const QMap<QString,QString>&) { return QString(); },&owner);
+         auto *choose=panel.findChild<QPushButton *>("chooseProperty_ModelFile");
+         require(choose,"Spacecraft model file picker missing");
+         bool inputMode=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=qobject_cast<QFileDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+            inputMode=dialog->fileMode()==QFileDialog::ExistingFile && dialog->acceptMode()==QFileDialog::AcceptOpen;
+            dialog->selectFile(path); dialog->reject();
+         });
+         choose->click(); require(inputMode && !panel.hasChanges(),"Input picker mode or Cancel is incorrect");
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=qobject_cast<QFileDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+            dialog->selectFile(path); QMetaObject::invokeMethod(dialog,"accept",Qt::DirectConnection);
+         });
+         choose->click();
+         require(panel.hasChanges() && panel.findChild<QTableWidget *>()->findItems(path,Qt::MatchExactly).size()==1,
+            "Input picker did not preserve the selected path with spaces");
+         require(Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringParameter("ModelFile")!=path.toStdString(),
+            "Browsing input applied the resource prematurely"); panel.discardChanges();
       }
       const auto hardwareScript=editor->toPlainText();
       require(!window.applyResourceChanges("Vehicle",{{"Tanks","MissingTank"}},hardwareScript).isEmpty(),

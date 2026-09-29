@@ -11,6 +11,8 @@ struct ResourceProperty
    QStringList choices;
    QStringList references;
    bool filename = false;
+   bool fileInput = false;
+   bool fileOutput = false;
    bool list = false;
    int rows = 0, columns = 0;
 };

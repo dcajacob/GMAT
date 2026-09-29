@@ -177,8 +177,12 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   if (dialog.exec()==QDialog::Accepted) value->setText(dialog.selection().join(", "));
                } else if (field.filename) {
                   QFileDialog dialog(this,"Choose "+field.name,value->text());
-                  // Output files need not exist yet; validation belongs to Apply.
-                  dialog.setFileMode(QFileDialog::AnyFile);
+                  dialog.setObjectName("resourceFileDialog");
+                  dialog.setAcceptMode(field.fileOutput ? QFileDialog::AcceptSave : QFileDialog::AcceptOpen);
+                  dialog.setFileMode(field.fileInput ? QFileDialog::ExistingFile : QFileDialog::AnyFile);
+                  // Selecting an output path does not write it. Apply/run owns
+                  // file creation, so do not imply that browsing overwrites it.
+                  dialog.setOption(QFileDialog::DontConfirmOverwrite,true);
                   if (dialog.exec()==QDialog::Accepted && !dialog.selectedFiles().isEmpty())
                      value->setText(dialog.selectedFiles().first());
                } else if (!field.list) {

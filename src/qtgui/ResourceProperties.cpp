@@ -85,6 +85,14 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          default: continue;
          }
          field.filename=object.GetParameterType(id)==Gmat::FILENAME_TYPE;
+         if (field.filename) {
+            const auto type=object.GetTypeName();
+            field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
+               (object.IsOfType("Estimator") && (field.name=="MatlabFile" || field.name=="DataFile"));
+            field.fileInput=object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
+               type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
+               type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
+         }
          if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
             try {
                auto type=object.IsOfType("Formation") && field.name=="Add" ? Gmat::SPACECRAFT : object.GetPropertyObjectType(id);

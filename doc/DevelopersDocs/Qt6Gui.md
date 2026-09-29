@@ -819,3 +819,13 @@ selected matching occurrence, while Replace All is one Undo operation and never
 searches inside its newly inserted replacement text. Empty replacement deletes
 matches. Read-only scripts cannot be changed. Search actions bring the Script
 window forward, and failed searches report a visible message.
+
+### Resource file selection
+
+Browse uses an existing-file picker for known function, spacecraft model/SPAD,
+ground-map, data-interface, thrust-history, custom-FOV and file-ephemeris inputs.
+Report, ephemeris, event and estimator output paths use a Save-style picker and
+may name files that do not yet exist. Selecting a destination does not write or
+overwrite it; normal Apply/run handling still controls output creation. Cancel
+preserves the current property, and accepted selections remain pending until
+Apply. Unclassified plugin filename fields retain the general path picker.
