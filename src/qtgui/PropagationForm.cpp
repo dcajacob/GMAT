@@ -9,11 +9,12 @@
 #include <QSignalBlocker>
 
 namespace {
+bool eventStop(const QString &parameter) { return parameter.endsWith(".Periapsis") || parameter.endsWith(".Apoapsis"); }
 const QRegularExpression &propagationPattern()
 {
    static const QRegularExpression pattern(
       "^\\s*Propagate\\s+(?:'[^'\\n]*'\\s+)?(?:BackProp\\s+)?([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*([A-Za-z][A-Za-z0-9_]*)\\s*\\)"
-      "\\s*\\{\\s*([A-Za-z][A-Za-z0-9_.]*)\\s*=\\s*([^{};,%]+?)\\s*\\}\\s*;[ \\t]*(?:%[^\\n]*)?\\s*$");
+      "\\s*\\{\\s*([A-Za-z][A-Za-z0-9_.]*)(?:\\s*=\\s*([^{};,%]+?))?\\s*\\}\\s*;[ \\t]*(?:%[^\\n]*)?\\s*$");
    return pattern;
 }
 }
@@ -33,7 +34,7 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
       auto *row=new QWidget(this); auto *box=new QHBoxLayout(row); box->setContentsMargins(0,0,0,0); box->addWidget(input);
       auto *choose=new QPushButton("Choose…",row); choose->setObjectName(name); box->addWidget(choose); layout->addRow(label,row);
       connect(choose,&QPushButton::clicked,this,[this,input] {
-         ReportParameterDialog dialog({input->text()},this,ReportParameterDialog::Mode::Single); dialog.setObjectName("propagationParameterDialog");
+         ReportParameterDialog dialog({input->text()},this,input==stopParameter ? ReportParameterDialog::Mode::StopParameter : ReportParameterDialog::Mode::Single); dialog.setObjectName("propagationParameterDialog");
          if (dialog.exec()==QDialog::Accepted && !dialog.selection().isEmpty()) input->setText(dialog.selection().first());
       });
    };
@@ -42,8 +43,17 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
       if (synchronizing) return;
       const auto match=propagationPattern().match(original); if (!match.hasMatch()) return;
       QString result=original;
-      const QStringList values={propagator->currentText(),spacecraft->currentText(),stopParameter->text(),duration->text()};
-      for (int group=4;group>=1;--group) result.replace(match.capturedStart(group),match.capturedLength(group),values[group-1]);
+      const bool event=eventStop(stopParameter->text());
+      duration->setEnabled(!event); findChild<QPushButton *>("propagationChooseGoal")->setEnabled(!event);
+      if (event || match.capturedStart(4)<0) {
+         const int end=match.capturedStart(4)<0 ? match.capturedEnd(3) : match.capturedEnd(4);
+         result.replace(match.capturedStart(3),end-match.capturedStart(3),stopParameter->text()+(event ? QString() : " = "+duration->text()));
+      } else {
+         result.replace(match.capturedStart(4),match.capturedLength(4),duration->text());
+         result.replace(match.capturedStart(3),match.capturedLength(3),stopParameter->text());
+      }
+      result.replace(match.capturedStart(2),match.capturedLength(2),spacecraft->currentText());
+      result.replace(match.capturedStart(1),match.capturedLength(1),propagator->currentText());
       synchronizing=true; changed(result); synchronizing=false;
    };
    connect(propagator,&QComboBox::currentTextChanged,this,update);
@@ -67,14 +77,16 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
 void PropagationForm::setStatement(const QString &statement)
 {
    if (synchronizing) return;
-   // Multiple propagators/stops and event-only conditions stay in the source
+   // Multiple propagators/stops stay in the source
    // editor until their full structure is representable here.
    const auto match=propagationPattern().match(statement);
-   if (!match.hasMatch() || propagator->findText(match.captured(1))<0 || spacecraft->findText(match.captured(2))<0) { hide(); return; }
+   if (!match.hasMatch() || (match.capturedStart(4)<0 && !eventStop(match.captured(3))) || propagator->findText(match.captured(1))<0 || spacecraft->findText(match.captured(2))<0) { hide(); return; }
    synchronizing=true; original=statement;
    propagator->setCurrentText(match.captured(1)); spacecraft->setCurrentText(match.captured(2));
    stopParameter->setText(match.captured(3));
    const auto suffix=match.captured(3).section('.',-1);
    units->setCurrentIndex(suffix=="ElapsedSecs" ? 0 : suffix=="ElapsedDays" ? 1 : 2);
-   duration->setText(match.captured(4).trimmed()); synchronizing=false; show();
+   duration->setText(match.captured(4).trimmed());
+   duration->setEnabled(!eventStop(match.captured(3))); findChild<QPushButton *>("propagationChooseGoal")->setEnabled(duration->isEnabled());
+   synchronizing=false; show();
 }

@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; multi-propagator/multi-stop, event-only and tolerance controls pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; multi-propagator/multi-stop and tolerance controls pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -1184,3 +1184,23 @@ event-only controls, StopTolerance and other advanced modes remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 33.11 seconds. Evidence:
 `Qt6ParityValidation/check-propagation-stops.txt`.
+
+## Periapsis and apoapsis stop controls
+
+PropagationForm now handles scalar stops and the goal-free Periapsis/Apoapsis
+syntax. A dedicated parameter-browser mode includes these event parameters even
+when they are not reportable; report and writable-parameter modes remain unchanged.
+Selecting an event disables the numeric goal and its picker. Source edits retain
+labels, comments and modifiers, and switching back to a scalar restores editable
+goal controls. Other unrepresented propagation structures remain in source.
+
+WorkflowTests checks event syntax without a spurious equality/goal.
+CompatibilityTests selects both event types through the object/property/central-
+body browser, applies, saves/Save As, recovers from failed interpretation, reopens
+and executes. A two-body ellipse with SMA 10000 km and eccentricity 0.1 must stop
+at radius 9000 km for periapsis and 11000 km for apoapsis, within 0.01 km. These
+checks validate GUI choices against the unchanged propagation engine. Multiple
+stops, synchronized propagators and StopTolerance controls remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 32.56 seconds. Evidence:
+`Qt6ParityValidation/check-apsis-controls.txt`.

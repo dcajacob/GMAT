@@ -9,6 +9,7 @@
 #include "CelestialBody.hpp"
 #include "ResourceProperties.hpp"
 #include "ResourceEditor.hpp"
+#include "PropagationForm.hpp"
 #include <QComboBox>
 #include <QCheckBox>
 #include <QTableWidget>
@@ -414,6 +415,35 @@ int main(int argc,char **argv)
          auto *engine=Moderator::Instance()->GetConfiguredObject("ElectricEngine");
          require(engine->GetRealParameter("ThrustCoeff5")==0.0125 && engine->GetRealParameter("MassFlowCoeff5")==0.0125,
             "Electric coefficients lost during save/reopen");
+      }
+      {
+         editor->setPlainText("Create Spacecraft ApsisSat;\nApsisSat.DisplayStateType = Keplerian;\n"
+            "ApsisSat.SMA = 10000;\nApsisSat.ECC = 0.1;\nApsisSat.INC = 0;\nApsisSat.RAAN = 0;\nApsisSat.AOP = 0;\nApsisSat.TA = 90;\n"
+            "ApsisSat.DisplayStateType = Cartesian;\nCreate ForceModel ApsisForces;\nApsisForces.PrimaryBodies = {};\nApsisForces.PointMasses = {Earth};\n"
+            "Create Propagator ApsisProp;\nApsisProp.FM = ApsisForces;\nBeginMissionSequence;\n"
+            "Propagate 'Selected event' ApsisProp(ApsisSat) {ApsisSat.ElapsedSecs = 600}; % keep event comment\n");
+         require(window.buildScript(),"Apsis fixture failed");
+         for (const auto &event:{QString("Periapsis"),QString("Apoapsis")}) {
+            const auto snapshot=window.missionSnapshot(); int index=-1;
+            for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="Propagate") index=i;
+            require(index>=0,"Apsis Propagate missing"); QString replacement=snapshot.nodes[index].statement;
+            PropagationForm form({"ApsisProp"},{"ApsisSat"},[&](const QString &value) { replacement=value; }); form.setStatement(replacement);
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QDialog *>("propagationParameterDialog"); require(dialog,"Apsis browser missing");
+               dialog->findChild<QComboBox *>("reportPropertyObject")->setCurrentText("ApsisSat");
+               auto *property=dialog->findChild<QComboBox *>("reportPropertyType"); require(property->findText(event)>=0,"Apsis parameter missing from picker"); property->setCurrentText(event);
+               dialog->findChild<QComboBox *>("reportPropertyDependency")->setCurrentText("Earth");
+               dialog->findChild<QPushButton *>("reportUseReference")->click();
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+            }); form.findChild<QPushButton *>("propagationChooseStop")->click();
+            require(replacement.contains("ApsisSat.Earth."+event+"}") && replacement.contains("'Selected event'") && replacement.contains("% keep event comment") &&
+               !form.findChild<QLineEdit *>("propagationDuration")->isEnabled(),"Apsis GUI kept a goal or lost source");
+            require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty(),"Selected apsis stop rejected");
+            roundTrip("selected-"+event); require(window.runMission()==MainWindow::RunResult::Completed,"Selected apsis mission failed");
+            auto *sat=Moderator::Instance()->GetInternalObject("ApsisSat");
+            const double radius=std::hypot(sat->GetRealParameter("X"),sat->GetRealParameter("Y"),sat->GetRealParameter("Z"));
+            require(std::abs(radius-(event=="Periapsis" ? 9000. : 11000.))<0.01,"Selected apsis stopped at incorrect orbital radius");
+         }
       }
       {
          const auto path=output.filePath("finite-burn-mass.txt");

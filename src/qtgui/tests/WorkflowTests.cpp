@@ -77,7 +77,9 @@ int main(int argc, char **argv)
          auto expected=source; expected.replace("20000","20001"); require(changed==expected,"Propagation edit lost label, BackProp or comment");
          form.findChild<QLineEdit *>("propagationStopParameter")->setText("Sat.ElapsedSecs");
          expected.replace("Sat.A1ModJulian","Sat.ElapsedSecs"); require(changed==expected,"Stop parameter edit changed unrelated spans");
-         form.setStatement("Propagate Prop(Sat) {Sat.Earth.Periapsis};"); require(form.isHidden(),"Event-only propagation offered incomplete controls");
+         form.setStatement("Propagate Prop(Sat) {Sat.Earth.Periapsis};"); require(!form.isHidden() && !form.findChild<QLineEdit *>("propagationDuration")->isEnabled(),"Apsis propagation lacks event controls");
+         form.findChild<QLineEdit *>("propagationStopParameter")->setText("Sat.Earth.Apoapsis");
+         require(changed=="Propagate Prop(Sat) {Sat.Earth.Apoapsis};","Apsis stop acquired a spurious goal");
       }
       {
          const QString dynamics="BeginMissionSequence;\nGMAT total = 2 + 3; % scientific code stays exact\n";

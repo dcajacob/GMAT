@@ -296,8 +296,8 @@ commands. A Propagation form supports one spacecraft, one propagator, and a
 single parameter/value stop condition, including elapsed seconds or days. Resource
 selectors use the current mission; changing the spacecraft also changes an elapsed-
 time stop condition. The form and script text stay synchronized, preserving labels,
-comments and an existing BackProp modifier. Multiple propagators/stops and event-only
-conditions still use the script editor.
+comments and an existing BackProp modifier. Multiple propagators/stops still use the script editor; periapsis and apoapsis
+event conditions are supported by the form.
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
@@ -968,3 +968,8 @@ value. They use the parameter browser with its object and coordinate-system
 choices. Seconds/Days remain quick selections; another parameter is shown as
 Other parameter. Labels, comments and existing backward-propagation modifiers
 are retained when fields change. Apply validates the complete command.
+
+The stop-parameter picker includes **Periapsis** and **Apoapsis**, with a central
+body selector. Choosing either disables the stop-value field and removes the
+numeric goal from the command. Existing labels and comments remain intact. Choose
+a scalar stop parameter again to return to a parameter/value condition.

@@ -24,6 +24,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    const bool single=mode!=Mode::Multiple;
    const bool writable=mode==Mode::Writable || mode==Mode::WritableReal;
    const bool realOnly=mode==Mode::WritableReal;
+   const bool stop=mode==Mode::StopParameter;
    auto writableParameter=[realOnly](const Parameter *parameter) {
       const bool user=parameter->IsOfType("Variable") || parameter->IsOfType("Array") || parameter->IsOfType("String");
       return (user || parameter->IsSettable()) && (!realOnly || parameter->GetReturnType()==Gmat::REAL_TYPE || parameter->IsOfType("Array"));
@@ -39,7 +40,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    QStringList names;
    for (const auto &name:moderator->GetListOfObjects(Gmat::PARAMETER)) {
       auto *parameter=moderator->GetParameter(name);
-      if (parameter && (writable ? writableParameter(parameter) : parameter->IsReportable())) names.append(QString::fromStdString(name));
+      if (parameter && (writable ? writableParameter(parameter) : (parameter->IsReportable() || (stop && (parameter->GetTypeName()=="Periapsis" || parameter->GetTypeName()=="Apoapsis"))))) names.append(QString::fromStdString(name));
    }
    names.sort(); names.removeDuplicates(); entry->addItems(names); layout->addWidget(entry);
    auto *browser=new QGroupBox("Browse object properties",this);
@@ -54,7 +55,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    auto *info=ParameterInfo::Instance();
    QMap<QString,QStringList> properties;
    for (const auto &type:info->GetTypesOfParameters()) {
-      if (writable ? (!info->IsSettable(type) || (realOnly && !info->IsPlottable(type))) : !info->IsReportable(type)) continue;
+      if (writable ? (!info->IsSettable(type) || (realOnly && !info->IsPlottable(type))) : (!info->IsReportable(type) && !(stop && (type=="Periapsis" || type=="Apoapsis")))) continue;
       const auto ownerType=info->GetObjectType(type);
       if (ownerType==Gmat::UNKNOWN_OBJECT || ownerType==Gmat::PARAMETER) continue;
       for (const auto &name:moderator->GetListOfObjects(ownerType)) properties[QString::fromStdString(name)].append(QString::fromStdString(type));
