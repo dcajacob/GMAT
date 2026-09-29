@@ -35,6 +35,23 @@ cmake --build build/linux-gui --target GmatQt --parallel 6
 application/bin/GmatQt
 ```
 
+For Windows, use an x64 MSVC build and the matching Qt MSVC development package.
+Add `-DCMAKE_PREFIX_PATH=C:/path/to/Qt/6.x/msvc2022_64` to the GMAT configuration,
+along with the existing CSPICE and Xerces dependency options. The Qt frontend
+can be built with `GMAT_INCLUDE_GUI=OFF`; it does not require wxWidgets.
+After configuring, build and deploy the Qt runtime beside the executable:
+
+```
+cmake --build build/windows-qt --target deploy-qt --config Release --parallel 6
+application\bin\GmatQt.exe
+```
+
+The Windows-only `deploy-qt` target uses Qt's `windeployqt` tool to copy its
+libraries and platform/image plugins. It does not install the MSVC
+redistributable or provide GMAT's other third-party runtime dependencies.
+Those must already be available. This target prepares the build directory;
+it is not a standalone installer.
+
 The build generates `gmat_startup_qt.txt` beside the executable, including the
 enabled native plugin targets with their actual filenames. Building `GmatQt`
 also builds those plugins. The wx startup file is untouched. The Qt startup
@@ -55,7 +72,8 @@ spaces, and exercised from an unrelated directory without a startup override.
 The installed copy ran the plot
 fixture, loaded packaged maps, and resolved GmatBase/GmatUtil from the installed
 `bin`. Qt itself is currently a system runtime dependency on Linux; this is not
-a self-contained Qt distribution. Windows/macOS deployment remains unverified.
+a self-contained Qt distribution. Windows build-directory runtime deployment
+has been tested; standalone Windows packaging and macOS deployment remain unverified.
 The repeatable launcher check is:
 
 ```
@@ -134,8 +152,11 @@ CTest locks serialize access to shared engine outputs even under parallel CTest.
 Each GUI test uses temporary INI settings rather than normal platform settings;
 the launcher uses the new `--settings-dir` option for the same isolation.
 A small Python launcher supplies runtime DLL search directories on Windows.
-The six-test suite passes on Linux; this registration does not establish a
-Windows or macOS pass until it is built and run on those platforms.
+The six-test suite passes on Linux and native Windows with Qt 6.10.2.
+The Windows run uses MSVC 2022 with the wx GUI disabled. Its initial build
+exposed Windows min/max macro collisions; the Qt frontend and its consumers
+now define NOMINMAX. See [Windows evidence](Qt6WindowsValidation/README.md).
+macOS has not been built or tested.
 
 Enable and run the real-engine workflow executable with a host startup file:
 
@@ -176,7 +197,9 @@ This remains an implementation checkpoint, not a completed replacement.
 Still required: specialized resource and command forms, compound properties,
 plugin compatibility handling, advanced graphics and plot
 style parity, wider functional coverage, and platform build/package validation.
-Only Linux has been built and exercised so far.
+Linux and Windows have been built and exercised. Windows also passed a native
+desktop launch with the deployed Qt runtime and no Qt directory on PATH.
+macOS and a standalone Windows installer remain unverified.
 
 ### PR-fix audit
 

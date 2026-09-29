@@ -7,10 +7,26 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets GmatBase GmatUtil)
 target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+if(WIN32)
+   # Engine headers expose Windows headers; retain the C++ min/max functions.
+   target_compile_definitions(GmatQtFrontend PUBLIC NOMINMAX)
+endif()
 add_executable(GmatQt main.cpp)
 target_link_libraries(GmatQt PRIVATE GmatQtFrontend)
 _SETOUTPUTDIRECTORY(GmatQt bin)
 set_target_properties(GmatQt PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+if(WIN32 AND TARGET Qt6::windeployqt)
+   # Keep deployment explicit: normal builds do not copy a Qt installation.
+   # GMAT's non-Qt dependencies and the MSVC redistributable remain prerequisites.
+   add_custom_target(deploy-qt
+      COMMAND Qt6::windeployqt
+         $<IF:$<CONFIG:Debug>,--debug,--release>
+         --no-compiler-runtime --no-translations
+         "$<TARGET_FILE:GmatQt>"
+      DEPENDS GmatQt
+      COMMENT "Deploying Qt runtime libraries and plugins beside GmatQt"
+      USES_TERMINAL VERBATIM)
+endif()
 if(APPLE)
    set_target_properties(GmatQt PROPERTIES INSTALL_RPATH "@loader_path/../Frameworks")
    install(TARGETS GmatQt DESTINATION ${GMAT_MAC_APPBUNDLE_PATH}/MacOS)

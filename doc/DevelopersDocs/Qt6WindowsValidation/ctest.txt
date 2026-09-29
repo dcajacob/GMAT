@@ -1,0 +1,21 @@
+  Test project C:/GMAT-Test/qt6-f7b5d5e/build-qt
+      Start 1: QtGui.Files
+  1/6 Test #1: QtGui.Files ......................   Passed    2.64 sec
+      Start 2: QtGui.Workflow
+  2/6 Test #2: QtGui.Workflow ...................   Passed   17.69 sec
+      Start 3: QtGui.Mission
+  3/6 Test #3: QtGui.Mission ....................   Passed    1.75 sec
+      Start 4: QtGui.Plots
+  4/6 Test #4: QtGui.Plots ......................   Passed    2.90 sec
+      Start 5: QtGui.PlotsHiDPI
+  5/6 Test #5: QtGui.PlotsHiDPI .................   Passed    2.31 sec
+      Start 6: QtGui.Launch
+  6/6 Test #6: QtGui.Launch .....................   Passed    2.23 sec
+  
+  100% tests passed, 0 tests failed out of 6
+  
+  Label Time Summary:
+  qt-gui    =  29.51 sec*proc (6 tests)
+  
+  Total Test time (real) =  29.58 sec
+  Building Custom Rule C:/GMAT-Test/qt6-f7b5d5e/src/qtgui/CMakeLists.txt
