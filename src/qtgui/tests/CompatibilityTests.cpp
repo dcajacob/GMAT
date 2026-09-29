@@ -10,6 +10,9 @@
 #include "ResourceProperties.hpp"
 #include "ResourceEditor.hpp"
 #include <QComboBox>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QLabel>
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QMdiSubWindow>
@@ -388,10 +391,34 @@ int main(int argc,char **argv)
             std::abs(eccentric[1].toDouble()-expected*1.1)<1e-12,"Eccentric unperturbed rates differ from instantaneous angular velocity");
       }
       {
+         editor->setPlainText("Create ElectricThruster ElectricEngine;\nBeginMissionSequence;\n");
+         require(window.buildScript(),"Electric coefficient fixture failed");
+         QWidget owner; QString applyError="Not applied";
+         const auto before=editor->toPlainText();
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("ElectricEngine"),
+            [&](const auto &changes) { applyError=window.applyResourceChanges("ElectricEngine",changes,before); return applyError; },&owner);
+         QTimer::singleShot(0,[&] {
+            auto *dialog=panel.findChild<QDialog *>("thrusterCoefficientDialog"); require(dialog,"Electric coefficient dialog absent");
+            for (const auto *name:{"thrusterThrustCoefficients","thrusterSecondaryCoefficients"}) {
+               auto *grid=dialog->findChild<QTableWidget *>(name);
+               require(grid->rowCount()==5,"Electric coefficient count incorrect");
+               grid->item(4,1)->setText("0.0125");
+            }
+            dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+         });
+         panel.findChild<QPushButton *>("thrusterCoefficients")->click();
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         require(applyError.isEmpty(),qPrintable(applyError));
+         roundTrip("electric-coefficients");
+         auto *engine=Moderator::Instance()->GetConfiguredObject("ElectricEngine");
+         require(engine->GetRealParameter("ThrustCoeff5")==0.0125 && engine->GetRealParameter("MassFlowCoeff5")==0.0125,
+            "Electric coefficients lost during save/reopen");
+      }
+      {
          const auto path=output.filePath("finite-burn-mass.txt");
          editor->setPlainText("Create ChemicalTank BurnTank;\nBurnTank.FuelMass = 150;\n"
             "Create ChemicalThruster BurnEngine;\nBurnEngine.Tank = {BurnTank};\nBurnEngine.DecrementMass = true;\n"
-            "BurnEngine.C1 = 100;\nBurnEngine.K1 = 300;\nBurnEngine.CoordinateSystem = EarthMJ2000Eq;\n"
+            "BurnEngine.C1 = 90;\nBurnEngine.K1 = 290;\nBurnEngine.CoordinateSystem = EarthMJ2000Eq;\n"
             "Create Spacecraft BurnSat OtherSat;\nBurnSat.Tanks = {BurnTank};\nBurnSat.Thrusters = {BurnEngine};\n"
             "Create FiniteBurn Continuous;\nContinuous.Thrusters = {BurnEngine};\n"
             "Create ForceModel BurnForces;\nBurnForces.PrimaryBodies = {};\nBurnForces.PointMasses = {Earth};\n"
@@ -404,6 +431,44 @@ int main(int argc,char **argv)
             "Report BurnReport BurnSat.BurnTank.FuelMass;\n"
             "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\nReport BurnReport BurnSat.BurnTank.FuelMass;\n");
          require(window.buildScript(),"Finite-burn selector fixture failed");
+         {
+            QWidget owner; QString applyError="Not applied";
+            const auto before=editor->toPlainText();
+            ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("BurnEngine"),
+               [&](const auto &changes) { applyError=window.applyResourceChanges("BurnEngine",changes,before); return applyError; },&owner);
+            auto *button=panel.findChild<QPushButton *>("thrusterCoefficients"); require(button,"Thruster coefficient control absent");
+            auto *properties=panel.findChild<QTableWidget *>();
+            auto property=[&](const QString &name) -> QTableWidgetItem * {
+               for (int row=0;row<properties->rowCount();++row) if (properties->item(row,0)->text()==name) return properties->item(row,1);
+               throw std::runtime_error("Coefficient property missing");
+            };
+            property("C1")->setText("95");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=panel.findChild<QDialog *>("thrusterCoefficientDialog"); require(dialog,"Coefficient dialog missing");
+               auto *grid=dialog->findChild<QTableWidget *>("thrusterThrustCoefficients");
+               require(grid->rowCount()==16 && grid->item(0,1)->text()=="95","Coefficient dialog lost pending edits");
+               require(!grid->item(0,2)->text().isEmpty() && !(grid->item(0,2)->flags() & Qt::ItemIsEditable),"Coefficient units absent or editable");
+               require(grid->horizontalHeader()->sectionResizeMode(1)==QHeaderView::Interactive,"Coefficient widths locked");
+               grid->setColumnWidth(1,251); require(grid->columnWidth(1)==251,"Coefficient width cannot be adjusted");
+               grid->item(0,1)->setText("999"); dialog->reject();
+            }); button->click();
+            require(property("C1")->text()=="95","Coefficient Cancel changed pending properties");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=panel.findChild<QDialog *>("thrusterCoefficientDialog");
+               auto *thrust=dialog->findChild<QTableWidget *>("thrusterThrustCoefficients");
+               auto *impulse=dialog->findChild<QTableWidget *>("thrusterSecondaryCoefficients");
+               auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+               thrust->item(0,1)->setText("100"); impulse->item(0,1)->setText("1e999"); ok->click();
+               require(dialog->isVisible() && !dialog->findChild<QLabel *>("thrusterCoefficientError")->text().isEmpty(),"Nonfinite coefficient accepted");
+               require(property("C1")->text()=="95","Invalid coefficient partially copied to properties");
+               impulse->item(0,1)->setText("300"); ok->click();
+            }); button->click();
+            require(property("C1")->text()=="100" && property("K1")->text()=="300","Coefficient values not copied together");
+            require(Moderator::Instance()->GetConfiguredObject("BurnEngine")->GetRealParameter("C1")==90,"Coefficient dialog changed engine before Apply");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+            require(applyError.isEmpty(),qPrintable(applyError));
+         }
+
          for (const auto *command:{"BeginFiniteBurn","EndFiniteBurn"}) {
             const auto snapshot=window.missionSnapshot(); int index=-1;
             for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type==command) index=i;

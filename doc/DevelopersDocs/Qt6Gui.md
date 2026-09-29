@@ -893,3 +893,12 @@ the engine defaults, preserving existing settings and pending solver edits. The
 action changes the command source for review; Apply validates it normally.
 FindEvents' explicit Append option also uses a checkbox. Unrecognized values
 remain represented rather than silently becoming a different setting.
+
+### Thruster coefficients
+
+Chemical and electric thrusters have a **Coefficients…** editor with separate
+thrust and impulse/mass-flow tabs. Each row shows the coefficient name, editable
+value and engine-provided unit. Columns start sized to their contents and can be
+resized. The dialog includes pending property edits; Cancel leaves them unchanged.
+OK checks every value is a finite number and returns the complete set to the
+resource panel. Apply validates and saves the thruster changes.

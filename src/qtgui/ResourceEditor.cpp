@@ -27,6 +27,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QTabBar>
+#include <QTabWidget>
 #include <QSet>
 #include <QDialog>
 #include <QSpinBox>
@@ -98,6 +99,60 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       sections->setObjectName("propertySections");
       sections->setExpanding(false);
       layout->addWidget(sections);
+   }
+   if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
+      const bool electric=object.IsOfType("ElectricThruster");
+      QStringList names[2],units[2];
+      for (int family=0;family<2;++family) {
+         const auto values=object.GetStringArrayParameter(electric ? (family ? "MF_UNITS" : "T_UNITS") : (family ? "K_UNITS" : "C_UNITS"));
+         const QString prefix=electric ? (family ? "MassFlowCoeff" : "ThrustCoeff") : (family ? "K" : "C");
+         for (size_t i=0;i<values.size();++i) {
+            names[family].append(prefix+QString::number(i+1)); units[family].append(QString::fromStdString(values[i]));
+         }
+      }
+      auto *button=new QPushButton("Coefficients…",this); button->setObjectName("thrusterCoefficients"); layout->addWidget(button);
+      connect(button,&QPushButton::clicked,this,[this,electric,names,units] {
+         QDialog dialog(this); dialog.setObjectName("thrusterCoefficientDialog"); dialog.setWindowTitle("Thruster coefficients");
+         auto *layout=new QVBoxLayout(&dialog);
+         auto *help=new QLabel("Edit the coefficient sets below. OK keeps changes pending until you Apply the thruster properties.",&dialog);
+         help->setWordWrap(true); layout->addWidget(help);
+         auto *tabs=new QTabWidget(&dialog); layout->addWidget(tabs);
+         QTableWidget *grids[2];
+         QList<QTableWidgetItem *> targets[2];
+         for (int family=0;family<2;++family) {
+            auto *grid=new QTableWidget(names[family].size(),3,tabs); grids[family]=grid;
+            grid->setObjectName(family ? "thrusterSecondaryCoefficients" : "thrusterThrustCoefficients");
+            grid->setHorizontalHeaderLabels({"Coefficient","Value","Unit"}); grid->verticalHeader()->hide();
+            for (int row=0;row<names[family].size();++row) {
+               QTableWidgetItem *target=nullptr;
+               for (int r=0;r<table->rowCount();++r) if (table->item(r,0)->text()==names[family][row]) { target=table->item(r,1); break; }
+               targets[family].append(target);
+               grid->setItem(row,0,new QTableWidgetItem(names[family][row]));
+               grid->setItem(row,1,new QTableWidgetItem(target ? target->text() : QString()));
+               grid->setItem(row,2,new QTableWidgetItem(units[family][row]));
+               for (int column:{0,2}) grid->item(row,column)->setFlags(grid->item(row,column)->flags() & ~Qt::ItemIsEditable);
+            }
+            configureTableColumns(grid,{18,24,16}); fitTableColumns(grid);
+            tabs->addTab(grid,family ? (electric ? "Mass Flow Coefficients" : "Impulse Coefficients") : "Thrust Coefficients");
+         }
+         auto *error=new QLabel(&dialog); error->setObjectName("thrusterCoefficientError"); error->setWordWrap(true); layout->addWidget(error);
+         auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+         connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+         connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
+            for (int family=0;family<2;++family) for (int row=0;row<grids[family]->rowCount();++row) {
+               bool valid=false; const double value=grids[family]->item(row,1)->text().trimmed().toDouble(&valid);
+               if (!targets[family][row] || !valid || !std::isfinite(value)) {
+                  error->setText(names[family][row]+" must be a finite number."); tabs->setCurrentIndex(family);
+                  grids[family]->setCurrentCell(row,1); return;
+               }
+            }
+            dialog.accept();
+         });
+         dialog.resize(680,530);
+         if (dialog.exec()!=QDialog::Accepted) return;
+         for (int family=0;family<2;++family) for (int row=0;row<grids[family]->rowCount();++row)
+            if (targets[family][row]) targets[family][row]->setText(grids[family]->item(row,1)->text().trimmed());
+      });
    }
    if (object.IsOfType("Array")) {
       auto *button=new QPushButton("Expressions…",this); button->setObjectName("arrayExpressions"); layout->addWidget(button);

@@ -33,7 +33,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 
 | wx source | Qt mapping / missing operations / evidence |
 | --- | --- |
-| `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Pending audit |
+| `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; finite-burn execution and electric configuration round trips covered; broader electric operating modes pending |
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | Pending audit |
@@ -960,3 +960,23 @@ repeat-run, close/recreate and user column-width checks remain in place.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 30.94 seconds. Evidence:
 `Qt6ParityValidation/check-solver-options.txt`.
+
+## Thruster coefficient editor
+
+Audited wx ThrusterCoefficientDialog: two coefficient tables with read-only names
+and units. Qt now supplies matching chemical C1–C16 / K1–K16 and electric
+ThrustCoeff1–5 / MassFlowCoeff1–5 tables, deriving units and row counts from engine
+metadata. Columns remain adjustable. Values come from the resource panel's pending
+state; Cancel is local, all entries must be finite before OK, and engine changes
+wait for the parent Apply.
+
+CompatibilityTests checks pending-value initialization, Cancel, unit protection,
+resizing, overflow rejection without partial copying and deferred engine updates.
+The chemical fixture sets C1/K1 through the dialog before save/Save As, failed-build
+recovery, reopen and the existing finite-burn fuel-use/coasting assertion. Electric
+fifth coefficients are changed through both tabs, applied and checked after the
+same round trip. This electric case qualifies configuration persistence, not
+execution of every thrust model or power-dependent operating mode.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 29.68 seconds. Evidence:
+`Qt6ParityValidation/check-thruster-coefficients.txt`.
