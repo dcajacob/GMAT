@@ -152,11 +152,11 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEphemPropagator` | Pending qualification |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
-| `../plugins/libEventLocator` | Pending qualification |
+| `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. Contact and remaining locator workflows pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | Pending qualification |
 | `../plugins/libFormation` | Pending qualification |
-| `../plugins/libGmatFunction` | Pending qualification |
+| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
 | `../plugins/libMsise00` | Pending qualification |
 | `../plugins/libNewParameters` | Pending qualification |
 | `../plugins/libPolyhedronGravity` | Pending qualification |
@@ -167,7 +167,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libStation` | Pending qualification |
 | `../plugins/libThrustFile` | Pending qualification |
 | `../plugins/thinksys/libTLEPropagator` | Pending qualification |
-| `../plugins/libYukonOptimizer` | Pending qualification |
+| `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. Additional settings/error modes pending. |
 
 ## Implementation checkpoint 1
 
@@ -184,3 +184,12 @@ vector/matrix dimensions remain fixed. Expression cells are still pending.
 All 11 Qt tests passed (18.70 seconds), including the new workflow assertions;
 see `Qt6ParityValidation/check-qualification-1.txt`. This checkpoint does not
 close any of the three requested qualification areas.
+
+## Plugin/file checkpoint
+
+The function, optimizer and eclipse fixtures now save, Save As to a Unicode
+filename, deliberately fail interpretation, reopen and rebuild the saved script,
+and only then run their numerical/report checks. Both saved files must match
+the edited script exactly. The targeted compatibility test passed; see
+`Qt6ParityValidation/plugin-roundtrip.txt`. This establishes these workflows,
+not qualification of the remaining plugin inventory.

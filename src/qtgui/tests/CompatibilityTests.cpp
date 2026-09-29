@@ -26,6 +26,18 @@ int main(int argc,char **argv)
       TestSettings settings; QTemporaryDir output; require(output.isValid(),"Temporary output directory failed");
       MainWindow window; window.show(); require(window.initialize(startup),"Runtime failed");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
+      auto roundTrip=[&](const QString &label) {
+         const auto source=editor->toPlainText();
+         const auto first=output.filePath(label+" original.script");
+         const auto second=output.filePath(label+QString::fromUtf8(" saved Δ.script"));
+         require(window.saveScriptTo(first),"Plugin script save failed");
+         require(window.saveScriptTo(second),"Plugin script Save As failed");
+         require(read(first)==source && read(second)==source,"Plugin save changed script calculations or properties");
+         editor->setPlainText("Create MissingPluginType Broken;\nBeginMissionSequence;\n");
+         require(!window.buildScript(),"Invalid plugin type unexpectedly built");
+         require(window.loadScript(second) && editor->toPlainText()==source && window.buildScript(),
+            "Plugin script did not recover unchanged after failed interpretation and reopen");
+      };
       const auto types=window.availableEngineTypes();
       require(types.contains("GmatFunction") && types.contains("Yukon") && types.contains("EclipseLocator"),"Expected native plugins were not registered");
       auto function=read(samples.filePath("Ex_GMATFunction_Math.script"));
@@ -38,6 +50,7 @@ int main(int argc,char **argv)
       form.setStatement(snapshot.nodes[call].statement);
       auto *inputs=form.findChild<QLineEdit *>("commandField_Inputs"); require(inputs,"Function-call form missing"); inputs->setText("vec2, vec1");
       require(window.applyMissionChange(snapshot,call,MissionEdit::Replace,replacement).isEmpty(),"Function form change rejected");
+      roundTrip("function");
       require(window.runMission()==MainWindow::RunResult::Completed,"Function plugin execution failed");
       auto *product=Moderator::Instance()->GetInternalObject("crossProd");
       require(product && std::abs(product->GetRealParameter("SingleValue",0,0)+.25)<1e-12 &&
@@ -47,6 +60,8 @@ int main(int argc,char **argv)
       optimize.replace("'MinNLPadYukon1.data'","'"+output.filePath("optimizer.data")+"'");
       optimize.replace("'Ex_AlgebraicOptimization.report'","'"+output.filePath("optimize.txt")+"'");
       editor->setPlainText(optimize);
+      require(window.buildScript(),"Yukon sample did not build");
+      roundTrip("optimizer");
       require(window.runMission()==MainWindow::RunResult::Completed,"Yukon sample failed");
       for (const auto *name:{"X1","X2"}) {
          auto *variable=Moderator::Instance()->GetInternalObject(name);
@@ -61,6 +76,7 @@ int main(int argc,char **argv)
       require(window.buildScript(),"Eclipse fixture failed to build");
       require(window.applyResourceChanges("Eclipse",{{"EclipseTypes","Umbra, Penumbra"},{"OccultingBodies","Earth, Luna"}},editor->toPlainText()).isEmpty(),
          "Event locator list settings failed");
+      roundTrip("event");
       require(window.runMission()==MainWindow::RunResult::Completed,"Eclipse locator execution failed");
       const auto events=read(eventPath);
       require(events.contains("Umbra") || events.contains("Penumbra"),"Eclipse locator found no expected shadow intervals");
@@ -69,6 +85,7 @@ int main(int argc,char **argv)
       auto *outputs=window.findChild<QTreeWidget *>("Output");
       const auto reports=outputs->findItems("Eclipse",Qt::MatchExactly|Qt::MatchRecursive);
       require(reports.size()==1 && reports.first()->data(0,Qt::UserRole).toString()==eventPath,"Event report absent from Output");
+      std::cout<<"PASS: plugin save, Save As, exact source round trip and failed-build recovery before numerical execution\n";
       std::cout<<"PASS: registered native plugins, edited GMAT function arguments and cross product, Yukon analytic optimum, automatic eclipse events and report access\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
