@@ -2,6 +2,8 @@
 #include "PlotWidget.hpp"
 #include "BodyFixedPoint.hpp"
 #include "CelestialBody.hpp"
+#include "Spacecraft.hpp"
+#include "SolarSystem.hpp"
 #include "CoordinateConverter.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
@@ -109,7 +111,10 @@ bool QtPlotReceiver::CreateGlPlotWindow(const std::string &name,const std::strin
    if (entry.data->kind==PlotModel::Kind::GroundTrack) { entry.data->xLabel="Longitude (deg)"; entry.data->yLabel="Latitude (deg)"; }
    return true;
 }
-void QtPlotReceiver::SetGlSolarSystem(const std::string &, SolarSystem *) {}
+void QtPlotReceiver::SetGlSolarSystem(const std::string &name, SolarSystem *solarSystem)
+{
+   if (auto *entry=find(name)) entry->solarSystem=solarSystem;
+}
 void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &names,const std::vector<SpacePoint *> &points)
 {
    auto *entry=find(name); if (!entry) return;
@@ -122,6 +127,16 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
             curve.radius=body->GetEquatorialRadius();
             curve.texturePath=text(body->GetStringParameter(body->GetParameterID("TextureMapFullPath")));
             if (!curve.texturePath.isEmpty()) curve.texturePath=QFileInfo(curve.texturePath).absoluteFilePath();
+         }
+         if (auto *spacecraft=dynamic_cast<Spacecraft *>(points[i])) {
+            curve.modelPath=text(spacecraft->GetModelFileFullPath());
+            if (!curve.modelPath.isEmpty()) curve.modelPath=QFileInfo(curve.modelPath).absoluteFilePath();
+            const char *axes[]={"X","Y","Z"};
+            for (int axis=0;axis<3;++axis) {
+               curve.modelOffset[axis]=spacecraft->GetRealParameter(spacecraft->GetParameterID(std::string("ModelOffset")+axes[axis]));
+               curve.modelRotation[axis]=spacecraft->GetRealParameter(spacecraft->GetParameterID(std::string("ModelRotation")+axes[axis]));
+            }
+            curve.modelScale=spacecraft->GetRealParameter(spacecraft->GetParameterID("ModelScale"));
          }
       }
    }
@@ -172,6 +187,15 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
 {
    auto *entry=find(name); if (!entry) return false;
    auto &data=*entry->data; ++data.frame;
+   Rvector6 sunState;
+   const bool hasSun=data.kind==PlotModel::Kind::Orbit && entry->solarSystem && entry->internal && entry->view;
+   if (hasSun) {
+      sunState=entry->solarSystem->GetBody("Sun")->GetMJ2000State(epoch);
+      if (entry->internal!=entry->view) {
+         Rvector6 converted; CoordinateConverter converter;
+         converter.Convert(epoch,sunState,entry->internal,converted,entry->view); sunState=converted;
+      }
+   }
    if (!entry->ignoreTimeSequence && data.frame>1 && epoch<data.lastEpoch) data.breakLines();
    for (size_t i=0;i<entry->objects.size();++i) {
       const auto &object=entry->objects[i];
@@ -199,7 +223,11 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          data.append(static_cast<int>(i),lon,lat,0,epoch,drawing,solving);
       } else {
          data.append(static_cast<int>(i),px,py,pz,epoch,drawing,solving);
-         if (curve.radius>0 && !curve.points.empty() && curve.points.back().frame==data.frame &&
+         if (!curve.points.empty() && curve.points.back().frame==data.frame) {
+            curve.points.back().hasSun=hasSun;
+            for (int axis=0;axis<3;++axis) curve.points.back().sunPosition[axis]=sunState[axis];
+         }
+         if (!curve.points.empty() && curve.points.back().frame==data.frame &&
              i<entry->points.size() && entry->points[i]) {
             // Celestial-body GetAttitude returns body-fixed to MJ2000Eq.
             // The coordinate system rotation maps plot coordinates to that base.
@@ -208,7 +236,10 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
                entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
                viewToBase=entry->view->GetLastRotationMatrix();
             }
-            const auto rotation=viewToBase.Transpose()*entry->points[i]->GetAttitude(epoch);
+            auto attitude=entry->points[i]->GetAttitude(epoch);
+            // Spacecraft attitude maps inertial to body, unlike celestial bodies.
+            if (entry->points[i]->IsOfType(Gmat::SPACECRAFT)) attitude=attitude.Transpose();
+            const auto rotation=viewToBase.Transpose()*attitude;
             for (int row=0;row<3;++row) for (int col=0;col<3;++col)
                curve.points.back().bodyToView[row*3+col]=rotation(row,col);
          }

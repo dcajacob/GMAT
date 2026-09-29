@@ -181,6 +181,7 @@ private:
       StringArray objects;
       std::vector<SpacePoint *> points;
       CoordinateSystem *internal = nullptr, *view = nullptr;
+      SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
    };

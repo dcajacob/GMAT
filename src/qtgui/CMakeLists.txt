@@ -11,6 +11,9 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets Qt6::OpenGLWidgets GmatBase GmatUtil ${OPENSCENEGRAPH_LIBRARIES})
 target_include_directories(GmatQtFrontend PRIVATE ${OPENSCENEGRAPH_INCLUDE_DIRS})
+get_filename_component(qt_osg_library_dir "${OSG_LIBRARY_RELEASE}" DIRECTORY)
+target_compile_definitions(GmatQtFrontend PRIVATE
+   GMAT_QT_OSG_PLUGIN_DIR="${qt_osg_library_dir}/osgPlugins-${OPENSCENEGRAPH_VERSION}")
 target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
    # Engine headers expose Windows headers; retain the C++ min/max functions.
@@ -74,6 +77,12 @@ if(GMAT_QT_BUILD_TESTS)
          RESOURCE_LOCK gmat_qt_engine WORKING_DIRECTORY "$<TARGET_FILE_DIR:GmatQt>")
    endfunction()
    set(qt_test_startup "$<TARGET_FILE_DIR:GmatQt>/gmat_startup_qt.txt")
+   if(UNIX AND NOT APPLE AND QT_XVFB_RUN)
+      add_test(NAME QtGui.NativePlots COMMAND ${QT_XVFB_RUN} -a
+         ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
+         $<TARGET_FILE:GmatQtPlotTests> "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
+      set_tests_properties(QtGui.NativePlots PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
+   endif()
    add_qt_test(QtGui.Files GmatQtFileTests)
    add_qt_test(QtGui.Workflow GmatQtWorkflowTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/propagate.script")
    add_qt_test(QtGui.Mission GmatQtMissionTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/mission.script")

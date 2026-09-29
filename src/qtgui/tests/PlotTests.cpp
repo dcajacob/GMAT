@@ -8,6 +8,9 @@
 #include "ResourceEditor.hpp"
 #include "CoordinateConverter.hpp"
 #include "CoordinateSystem.hpp"
+#include "Spacecraft.hpp"
+#include "SolarSystem.hpp"
+#include "CelestialBody.hpp"
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QMenu>
@@ -89,6 +92,23 @@ int main(int argc,char **argv)
          for (int row=0;row<3;++row)
             require(std::abs(converted[row]-point->bodyToView[row*3])<1e-10,
                     "Texture orientation differs from body-fixed coordinate conversion");
+         require(point->hasSun,"Sun position was not recorded");
+         auto sun=Moderator::Instance()->GetSolarSystemInUse()->GetBody("Sun")->GetMJ2000State(point->epoch);
+         auto *internal=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthMJ2000Eq"));
+         orientationReference.Convert(point->epoch,sun,internal,converted,view);
+         for (int row=0;row<3;++row)
+            require(std::abs(converted[row]-point->sunPosition[row])<1e-7,"Recorded Sun position differs from ephemeris");
+      }
+      auto *spacecraft=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      require(spacecraft,"Spacecraft attitude reference missing");
+      for (const auto *point:{&o.points.front(),&o.points.back()}) {
+         view->ToBaseSystem(A1Mjd(point->epoch),Rvector6(),true);
+         const auto viewToBody=spacecraft->GetAttitude(point->epoch)*view->GetLastRotationMatrix();
+         for (int row=0;row<3;++row) for (int col=0;col<3;++col) {
+            double product=0;
+            for (int k=0;k<3;++k) product+=viewToBody(row,k)*point->bodyToView[k*3+col];
+            require(std::abs(product-(row==col ? 1.0 : 0.0))<1e-10,"Recorded spacecraft attitude has wrong orientation");
+         }
       }
       const auto sampled=receiver->model("QtSampledGround");
       require(sampled && sampled->frame==(ground->frame+6)/7,"Configured collection frequency was not honored");

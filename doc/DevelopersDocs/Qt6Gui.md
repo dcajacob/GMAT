@@ -36,6 +36,10 @@ Qt 6.4 or newer with Widgets and OpenGLWidgets development files, plus
 OpenSceneGraph 3.6 development libraries, are required. The native orbit view
 uses OSG rendering within Qt, without the OpenFrames viewer or its controls.
 Texture decoding uses Qt image readers; OSG JPEG plugins are not required.
+Spacecraft model files require the corresponding OSG reader plugins (3DS for
+the bundled Aura model, OBJ for the synthetic native test). The renderer searches
+the configured OSG library plugin directory and an `osgPlugins-<version>`
+directory beside the executable, in addition to OSG's usual search paths.
 In an existing configured GMAT build:
 
 ```
@@ -310,6 +314,16 @@ existing orthographic rotation, pan, reversible wheel zoom, Fit, image export,
 and replay controls. Texture paths come from the configured celestial bodies;
 missing images fall back to the body color. Body-fixed orientations are captured
 at each recorded epoch and replayed without consulting live engine objects.
+Configured spacecraft models retain their texture materials, display scale,
+offset and rotation. Like wx, normalized spacecraft display size is exaggerated
+(1000 km at ModelScale=1), so it is visible on orbital scales. Fit includes that
+size. Missing models fall back to a marker and report a diagnostic. Spacecraft
+attitude is recorded with its inertial-to-body convention correctly inverted.
+
+The Sunlight button selects illumination from the recorded Sun ephemeris;
+turning it off uses light from the camera for inspection. Sunlight direction
+and spacecraft/body orientation follow the replay frame. This is visual diffuse
+lighting, including ambient fill, not an eclipse or radiometric simulation.
 The orientation regression compares a body-fixed surface point with an independent
 coordinate conversion at the first and last recorded epochs.
 
@@ -317,11 +331,14 @@ The offscreen/minimal Qt platforms retain the earlier CPU body-disk renderer;
 they do not exercise the native renderer. When Xvfb is available on Linux,
 `check-qt` also runs native OpenGL tests at scale 1 and 2 using software Mesa.
 Those checks cover texture colors, foreground/background occlusion, body
-rotation, portrait resize, missing-texture fallback and repeated viewer lifetime.
+rotation, portrait resize, model materials, Sun/camera lighting, replay selection,
+missing-texture/model fallback, text overlays and repeated viewer lifetime.
+`QtGui.NativePlots` additionally runs the real-engine plot workflow with the
+native renderer, including close during run, reopening and repeat missions.
 
 The view uses positions already converted by OrbitPlot; non-spacecraft bodies
-are converted from the internal frame separately. Spacecraft models, physically
-Sun-directed lighting, star fields, reference planes, and scripted camera
+are converted from the internal frame separately. Star fields, reference planes,
+eclipse shadows, non-spherical celestial-body models and scripted camera
 tracking remain outstanding. Unsupported camera
 and drawing options are reported in Message Window. Advanced XY marker/style
 and solver-iteration behavior also needs parity work.

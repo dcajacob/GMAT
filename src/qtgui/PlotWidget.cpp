@@ -214,6 +214,11 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    auto *bar = new QToolBar(this); layout->addWidget(bar);
    drawing = new PlotCanvas(data,this);
    auto *fit = bar->addAction("Fit"); connect(fit,&QAction::triggered,drawing,&PlotCanvas::fit);
+   if (data->kind==PlotModel::Kind::Orbit) {
+      auto *sunlight=bar->addAction("Sunlight"); sunlight->setCheckable(true); sunlight->setChecked(data->sunlight);
+      sunlight->setToolTip("Use the mission's Sun position; turn off for lighting from the camera");
+      connect(sunlight,&QAction::toggled,this,[this](bool checked) { data->sunlight=checked; drawing->refresh(); });
+   }
    auto *save = bar->addAction("Save image…");
    connect(save,&QAction::triggered,this,[this] {
       const auto path=QFileDialog::getSaveFileName(this,"Save plot image",data->title+".png","PNG image (*.png)");

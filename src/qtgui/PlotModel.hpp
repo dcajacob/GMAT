@@ -19,6 +19,8 @@ struct PlotPoint
    double high = 0, low = 0;
    // Row-major body-fixed to plot-frame rotation, captured while engine objects live.
    std::array<double,9> bodyToView = {1,0,0,0,1,0,0,0,1};
+   std::array<double,3> sunPosition = {0,0,0};
+   bool hasSun = false;
 };
 struct PlotCurve
 {
@@ -30,6 +32,9 @@ struct PlotCurve
    bool showObject = true;
    double radius = 0;
    QString texturePath;
+   QString modelPath;
+   std::array<double,3> modelOffset = {0,0,0}, modelRotation = {0,0,0};
+   double modelScale = 1;
    int width = 1, markerSize = 4;
    Qt::PenStyle style = Qt::SolidLine;
 };
@@ -50,6 +55,7 @@ struct PlotModel
    QImage map;
    bool grid = true, legend = true, labels = true, penDown = true, active = true;
    bool axes = true;
+   bool sunlight = true;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;

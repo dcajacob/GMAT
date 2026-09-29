@@ -1,5 +1,6 @@
 #include "MainWindow.hpp"
 #include <QApplication>
+#include <QScreen>
 #include <QCommandLineParser>
 #include <QDir>
 #include <QFileInfo>
@@ -52,7 +53,11 @@ int main(int argc, char **argv)
          succeeded = window.runMission() == MainWindow::RunResult::Completed;
       if (!screenshot.isEmpty())
          QTimer::singleShot(200, &window, [&, succeeded] {
-            app.exit(window.grab().save(screenshot) && succeeded ? 0 : 1);
+            // QWidget::grab can repaint a QOpenGLWidget without its composed
+            // overlays. On X11 capture the displayed native window instead.
+            const auto image=QGuiApplication::platformName()=="xcb" && window.screen()
+               ? window.screen()->grabWindow(window.winId()) : window.grab();
+            app.exit(image.save(screenshot) && succeeded ? 0 : 1);
          });
    });
    return app.exec();
