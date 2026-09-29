@@ -5,6 +5,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
    PropagationForm.cpp PropagationForm.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
+   ScriptEditor.cpp ScriptEditor.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets GmatBase GmatUtil)
 target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

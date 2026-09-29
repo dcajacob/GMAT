@@ -2,6 +2,7 @@
 #include "TestSettings.hpp"
 #include "QtMessageReceiver.hpp"
 #include "StartupCompatibility.hpp"
+#include "ScriptEditor.hpp"
 #include <QApplication>
 #include <QFile>
 #include <QDir>
@@ -9,6 +10,8 @@
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
+#include <QTextBlock>
+#include <QTextLayout>
 #include <iostream>
 #include <stdexcept>
 
@@ -24,6 +27,26 @@ int main(int argc,char **argv)
    QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("QtFiles");
    try {
       TestSettings isolatedSettings;
+      ScriptEditor syntax;
+      syntax.resize(500,180); syntax.show();
+      const QString sample="Create Spacecraft Sat; % Propagate\nGMAT Sat.Label = '50% complete';\nTestCommand Sat;\n";
+      syntax.setPlainText(sample); syntax.document()->setModified(false);
+      syntax.setKeywords({"Spacecraft","TestCommand"}); QApplication::processEvents();
+      auto formatAt=[&](int line,int column) {
+         for (const auto &range:syntax.document()->findBlockByNumber(line).layout()->formats())
+            if (range.start<=column && column<range.start+range.length) return range.format;
+         return QTextCharFormat();
+      };
+      require(formatAt(0,0).fontWeight()==QFont::Bold && formatAt(2,0).fontWeight()==QFont::Bold,"GMAT or plugin keywords were not highlighted");
+      require(formatAt(0,26).fontWeight()!=QFont::Bold,"Comment text was highlighted as a command");
+      require(formatAt(1,20).foreground()!=formatAt(0,26).foreground(),"Percent inside quoted string became a comment");
+      require(syntax.toPlainText()==sample && !syntax.document()->isModified(),"Highlighting changed script text or dirty state");
+      auto *gutter=syntax.findChild<QWidget *>("lineNumbers");
+      require(gutter && gutter->isVisible(),"Script line numbers are missing");
+      const int narrow=gutter->width();
+      syntax.setPlainText(QString("% line\n").repeated(100)); QApplication::processEvents();
+      require(gutter->width()>narrow,"Line-number margin did not grow with the document");
+      syntax.close();
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
       const auto startup=temporary.path()+"/startup.txt";
       for (const auto &plugin : {"../plugins/libOpenFramesInterface", "C:\\GMAT Test\\plugins\\libOVtoOFId.dll",

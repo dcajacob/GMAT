@@ -6,6 +6,7 @@
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "StartupCompatibility.hpp"
+#include "ScriptEditor.hpp"
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QComboBox>
@@ -149,7 +150,7 @@ MainWindow::MainWindow()
    addDockWidget(Qt::BottomDockWidgetArea, console);
    resizeDocks({navigation}, {270}, Qt::Horizontal);
    resizeDocks({console}, {160}, Qt::Vertical);
-   editor = new QPlainTextEdit;
+   editor = new ScriptEditor;
    editor->setObjectName("scriptEditor");
    editor->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
    editor->setLineWrapMode(QPlainTextEdit::NoWrap);
@@ -334,6 +335,9 @@ bool MainWindow::initialize(const QString &startup)
    try {
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
       if (ready) {
+         QStringList keywords;
+         for (const auto &word:Moderator::Instance()->GetListOfAllFactoryItems()) keywords.append(QString::fromStdString(word));
+         static_cast<ScriptEditor *>(editor)->setKeywords(keywords);
          interpreter = std::make_unique<QtInterpreter>();
          Moderator::SetUiInterpreter(interpreter.get());
          newMission();

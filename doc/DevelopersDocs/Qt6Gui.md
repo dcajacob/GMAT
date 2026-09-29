@@ -13,6 +13,12 @@ Mission, and Output navigation tabs on the left, an MDI workspace in the
 center, messages below, menus and toolbar above. Retain platform palette and
 font defaults. Start with familiar workflows before introducing new ones.
 
+The script editor displays line numbers and colors GMAT commands/resource
+types, numbers, quoted strings and percent comments. Keyword names are refreshed
+from the loaded engine factories, including plugin types. Highlighting follows
+the light/dark palette and does not change saved text or undo history. The
+line-number margin grows with the document and follows scrolling/font changes.
+
 The Window menu lists open workspace views, marks the active view, and restores
 minimized windows when selected. Tile, Cascade, Next and Previous remain
 available. Reopening a resource focuses its existing panel and preserves pending
