@@ -167,6 +167,34 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("first")->GetRealParameter("Value")==-5 &&
             Moderator::Instance()->GetInternalObject("second")->GetRealParameter("Value")==9,"Ordered function inputs/outputs changed after reopen or executed incorrectly");
       }
+      {
+         editor->setPlainText("Create Spacecraft SegmentSat;\nCreate Propagator SegmentProp;\nCreate OrbitView Segments;\nSegments.Add = {SegmentSat, Earth};\n"
+            "BeginMissionSequence;\nPropagate 'FirstArc' SegmentProp(SegmentSat) {SegmentSat.ElapsedSecs = 60};\n"
+            "Propagate 'SecondArc' SegmentProp(SegmentSat) {SegmentSat.ElapsedSecs = 120};\n");
+         require(window.buildScript(),"Segment publication fixture failed"); roundTrip("segment-provider");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Segment publication mission failed");
+         const auto plot=window.plotReceiver()->model("Segments"); require(plot!=nullptr,"Segment plot missing");
+         bool first=false,second=false;
+         for (const auto &curve:plot->curves) if (curve.name=="SegmentSat") {
+            for (const auto &point:curve.points) { first=first || point.provider=="FirstArc"; second=second || point.provider=="SecondArc"; }
+         }
+         require(first && second,"Named propagation provider identity did not reach plot samples");
+         require(std::abs((Moderator::Instance()->GetInternalObject("SegmentSat")->GetRealParameter("A1Epoch")-
+            Moderator::Instance()->GetConfiguredObject("SegmentSat")->GetRealParameter("A1Epoch"))*86400-180)<.01,"Segment identity changed mission duration");
+         auto targeted=editor->toPlainText();
+         targeted.replace("BeginMissionSequence;","Create DifferentialCorrector SegmentDC;\nCreate Variable SegmentGoal;\nSegments.SolverIterations = Current;\n"
+            "BeginMissionSequence;\nTarget SegmentDC {ExitMode = SaveAndContinue};\nVary SegmentDC(SegmentGoal = 1);\n");
+         targeted+="Achieve SegmentDC(SegmentGoal = 2);\nEndTarget;\n"; editor->setPlainText(targeted);
+         require(window.buildScript(),"Buffered segment publication fixture failed"); roundTrip("solver-segment-provider");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Buffered segment publication mission failed");
+         const auto buffered=window.plotReceiver()->model("Segments"); first=false; second=false;
+         require(buffered!=nullptr,"Buffered segment plot missing");
+         for (const auto &curve:buffered->curves) if (curve.name=="SegmentSat") for (const auto &point:curve.points) {
+            first=first || point.provider=="FirstArc"; second=second || point.provider=="SecondArc";
+         }
+         require(first && second,"Buffered solver samples lost their individual publishing commands");
+         require(std::abs(Moderator::Instance()->GetInternalObject("SegmentGoal")->GetRealParameter("Value")-2)<.1,"Segment metadata changed solved result");
+      }
       for (const auto &type:{QString("NuclearPowerSystem"),QString("SolarPowerSystem")}) {
          const auto report=output.filePath(type+".csv");
          editor->setPlainText("Create Spacecraft PowerSat;\nCreate "+type+" Power;\nPowerSat.PowerSystem = Power;\n"

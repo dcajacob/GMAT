@@ -199,6 +199,7 @@ protected:
    
    // arrays for holding solver current data
    std::vector<StringArray> mCurrScArray;
+   StringArray mCurrProviderArray; // Publication identity retained with buffered solver samples.
    std::vector<Real> mCurrEpochArray;
    std::vector<RealArray> mCurrXArray;
    std::vector<RealArray> mCurrYArray;

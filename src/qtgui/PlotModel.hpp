@@ -25,6 +25,7 @@ struct PlotPoint
    std::array<double,9> inertialToView = {1,0,0,0,1,0,0,0,1};
    int marker=-1;
    bool highlighted=false;
+   QString provider;
 };
 struct PlotCurve
 {

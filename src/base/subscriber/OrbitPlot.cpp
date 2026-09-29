@@ -40,6 +40,20 @@
 #include "RgbColor.hpp"            // for Color::ToIntColor()
 #include <algorithm>               // for find(), distance()
 #include "ColorTypes.hpp"          // for namespace GmatColor::
+#include "GmatCommand.hpp"
+
+namespace {
+std::string PlotProviderName(GmatBase *provider)
+{
+   if (!provider) return "";
+   if (auto *command=dynamic_cast<GmatCommand *>(provider)) {
+      // Qt commands may retain the engine default instead of a wx tree label.
+      const auto summary=command->GetSummaryName();
+      if (!summary.empty() && summary != "Unnamed") return summary;
+   }
+   return provider->GetName();
+}
+}
 
 
 #define __REMOVE_OBJ_BY_SETTING_FLAG__
@@ -2248,6 +2262,7 @@ bool OrbitPlot::UpdateData(const Real *dat, Integer len)
          inFunction = true;
       
       bool update = (mNumCollected % mUpdatePlotFrequency) == 0;
+      PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + PlotProviderName(currentProvider));
       
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mScNameArray, dat[0], mScXArray,
@@ -2294,6 +2309,7 @@ bool OrbitPlot::UpdateSolverData()
       #endif
       
       // Just buffer data up to last point - 1
+      PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
@@ -2303,6 +2319,7 @@ bool OrbitPlot::UpdateSolverData()
    }
    
    // Buffer last point and Update the plot
+   PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
@@ -2312,6 +2329,7 @@ bool OrbitPlot::UpdateSolverData()
    
    // clear arrays
    mCurrScArray.clear();
+   mCurrProviderArray.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
    mCurrYArray.clear();
@@ -2529,6 +2547,7 @@ Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
       if (runstate == Gmat::SOLVING || runstate == Gmat::SOLVEDPASS)
       {
          mCurrScArray.push_back(mScNameArray);
+         mCurrProviderArray.push_back(PlotProviderName(currentProvider));
          mCurrEpochArray.push_back(dat[0]);
          mCurrXArray.push_back(mScXArray);
          mCurrYArray.push_back(mScYArray);

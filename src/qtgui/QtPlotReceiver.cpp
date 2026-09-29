@@ -456,11 +456,14 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          }
       }
    }
+   for (auto &curve:data.curves) if (!curve.points.empty() && curve.points.back().frame==data.frame)
+      curve.points.back().provider=entry->provider;
    if (update) refresh(*entry,true); return true;
 }
 bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &action)
 {
    auto *entry=find(name); if (!entry) return false;
+   if (action.compare(0,16,"SetDataProvider:")==0) { entry->provider=text(action.substr(16)); return true; }
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }
    else if (action=="PenDown") entry->data->penDown=true;
    else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }

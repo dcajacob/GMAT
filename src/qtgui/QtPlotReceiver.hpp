@@ -192,6 +192,7 @@ private:
       SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
+      QString provider;
    };
    Entry *find(const std::string &name);
    Entry &create(const std::string &name, PlotModel::Kind kind, Real x, Real y, Real w, Real h, bool maximized);

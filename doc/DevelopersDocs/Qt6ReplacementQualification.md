@@ -1773,3 +1773,26 @@ optional decoration bounds. Segment-relative camera conversion remains open.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 50.58 seconds.
 Native checks used isolated Xvfb/software OpenGL. Evidence:
 `Qt6ParityValidation/check-auto-body.txt`.
+
+## Named propagation publication metadata
+
+Orbit and ground-track publication now send the publishing command label with
+sample data. Qt retains it per plotted point. The engine's default `Unnamed`
+summary falls back to the script command name; explicit summary names retain
+precedence. Solver-current buffering records labels at collection time and
+replays them through the base, OrbitView and GroundTrackPlot implementations.
+This metadata does not change propagated values or introduce an OpenFrames
+runtime dependency. Existing wx canvases ignore the additional plot action.
+
+CompatibilityTests saves/reopens and executes two named propagation commands,
+checks both labels in the orbit samples and checks the total 180-second duration
+(60 seconds followed by 120 seconds). It repeats the label check inside a
+DifferentialCorrector with SolverIterations=Current and verifies the solved
+variable. This is a prerequisite for segment cameras, not completed segment
+camera support: anonymous command identity, segment boundaries, selection and
+conversion remain open.
+
+Validation: user's GmatQt rebuilt; all 11 Qt tests passed in 44.99 seconds.
+Native rendering/window checks used isolated Xvfb/software OpenGL and do not
+qualify the user's Intel/Wayland desktop. Evidence:
+`Qt6ParityValidation/check-provider-metadata.txt`.
