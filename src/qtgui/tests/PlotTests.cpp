@@ -26,6 +26,7 @@
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
+#include <QSlider>
 #include <fstream>
 #include <iostream>
 #include <cmath>
@@ -356,6 +357,27 @@ int main(int argc,char **argv)
       require(reportNames.size()==2 && reportNames[0]=="QtSat.ElapsedSecs","Report parameter list not replaced");
       change("QtReport","Add","");
       require(Moderator::Instance()->GetConfiguredObject("QtReport")->GetStringArrayParameter("Add").empty(),"Clearing report list retained entries");
+      {
+         auto history=std::make_shared<PlotModel>(PlotModel::Kind::GroundTrack);
+         history->maxPoints=3; history->legend=false; history->labels=false;
+         auto append=[&](int frame) { history->frame=frame; history->append(0,frame,0); };
+         for (int frame=1;frame<=3;++frame) append(frame);
+         PlotWidget replayPlot(history); replayPlot.resize(600,400); replayPlot.show(); app.processEvents();
+         auto *slider=replayPlot.findChild<QSlider *>(); slider->setValue(0);
+         for (int frame=4;frame<=6;++frame) append(frame);
+         replayPlot.refresh();
+         auto redPixels=[](const QImage &image) {
+            int count=0;
+            for (int y=0;y<image.height();++y) for (int x=0;x<image.width();++x) {
+               const auto color=image.pixelColor(x,y);
+               if (color.red()>180 && color.green()<80 && color.blue()<80) ++count;
+            }
+            return count;
+         };
+         require(redPixels(replayPlot.canvas()->captureImage())>10,"Trimmed replay selection left the viewer empty");
+         history->clear(); append(1); replayPlot.refresh();
+         require(slider->value()==1000,"Cleared plot retained a stale replay position");
+      }
       std::cout<<"PASS: subscriber lists, GUI Apply, actual XY Z output, added orbit body, visibility by name, empty lists and invalid inputs\n";
       std::cout<<"PASS: real orbit/XY/geodetic samples, map, dateline, sparse data, close-during-run/reopen/rerun, bounded history, replay retention, reversible zoom, dynamic values/colors, Output report viewer\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }

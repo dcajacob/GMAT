@@ -33,7 +33,7 @@ void PlotModel::append(int index, double x, double y, double z, double epoch,
 void PlotModel::clear()
 {
    for (auto &curve : curves) { curve.points.clear(); curve.breaks.clear(); curve.breakNext = true; }
-   frame = 0; pendingUpdates = 0;
+   frame = 0; pendingUpdates = 0; ++historyGeneration;
    cameras.clear();
 }
 void PlotModel::breakLines()

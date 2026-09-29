@@ -266,6 +266,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
 
 PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWidget(parent), data(std::move(model))
 {
+   historyGeneration=data->historyGeneration;
    auto *layout = new QVBoxLayout(this); layout->setContentsMargins(0,0,0,0);
    auto *bar = new QToolBar(this); layout->addWidget(bar);
    drawing = new PlotCanvas(data,this);
@@ -290,17 +291,31 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    timeline->hide();
    timer = new QTimer(this); timer->setInterval(30);
    if (data->kind != PlotModel::Kind::XY) {
-      auto *replay=bar->addAction("Replay"); replay->setCheckable(true);
+      replay=bar->addAction("Replay"); replay->setCheckable(true);
       connect(replay,&QAction::toggled,this,[this](bool checked) { if (checked) { timeline->setValue(0); timer->start(); } else timer->stop(); });
-      connect(timer,&QTimer::timeout,this,[this,replay] { timeline->setValue(std::min(1000,timeline->value()+10)); if (timeline->value()==1000) replay->setChecked(false); });
+      connect(timer,&QTimer::timeout,this,[this] { timeline->setValue(std::min(1000,timeline->value()+10)); if (timeline->value()==1000) replay->setChecked(false); });
       bar->addWidget(timeline);
       timeline->show();
    }
-   connect(timeline,&QSlider::valueChanged,this,[this](int value) {
-      quint64 first=data->frame;
-      for (const auto &curve:data->curves) if (!curve.points.empty()) first=std::min(first,curve.points.front().frame);
-      drawing->setFrame(value==1000 ? std::numeric_limits<quint64>::max() : first+static_cast<quint64>((data->frame-first)*(value/1000.0)));
-   });
+   connect(timeline,&QSlider::valueChanged,this,[this] { updateReplayFrame(); });
    layout->addWidget(drawing,1);
 }
-void PlotWidget::refresh() { drawing->refresh(); }
+void PlotWidget::updateReplayFrame()
+{
+   quint64 first=data->frame;
+   for (const auto &curve:data->curves) if (!curve.points.empty()) first=std::min(first,curve.points.front().frame);
+   const int value=timeline->value();
+   drawing->setFrame(value==1000 ? std::numeric_limits<quint64>::max() : first+static_cast<quint64>((data->frame-first)*(value/1000.0)));
+}
+void PlotWidget::refresh()
+{
+   if (historyGeneration!=data->historyGeneration) {
+      historyGeneration=data->historyGeneration;
+      timer->stop();
+      if (replay) replay->setChecked(false);
+      timeline->setValue(1000);
+   }
+   // The retained interval moves as MaxPlotPoints evicts old samples. Resolve
+   // the slider against that interval on every update, not only mouse movement.
+   updateReplayFrame();
+}

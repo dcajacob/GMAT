@@ -2,6 +2,7 @@
 #include "PlotModel.hpp"
 #include <QWidget>
 #include <memory>
+class QAction;
 class QSlider;
 class QTimer;
 class OrbitRenderer;
@@ -42,4 +43,7 @@ private:
    PlotCanvas *drawing;
    QSlider *timeline;
    QTimer *timer;
+   QAction *replay=nullptr;
+   quint64 historyGeneration=0;
+   void updateReplayFrame();
 };

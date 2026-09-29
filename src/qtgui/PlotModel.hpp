@@ -80,7 +80,7 @@ struct PlotModel
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;
-   quint64 frame = 0;
+   quint64 frame = 0, historyGeneration = 0;
    double lastEpoch = 0;
    void append(int curve, double x, double y, double z = 0, double epoch = 0,
                bool drawing = true, bool solver = false, double high = 0, double low = 0);
