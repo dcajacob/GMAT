@@ -71,3 +71,5 @@ __pycache__
 /application/data/navdata/thrusthistory/PredDv_Large.thrust
 /.clang-format
 /.clangd
+/application/bin/gmat_startup_qt.txt
+/application/debug/bin/gmat_startup_qt.txt

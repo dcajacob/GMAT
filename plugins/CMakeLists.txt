@@ -34,6 +34,9 @@ MACRO(_SETUPPLUGIN TargetName PLUGIN_DIRS PLUGIN_SRCS INSTALL_DIR)
   # add the install targets
   # headers are included here for IDE-based projects (VS, XCode, etc.)
   ADD_LIBRARY(${TargetName} SHARED ${PLUGIN_SRCS} ${PLUGIN_HEADERS})
+  # Record the actual target and location for frontend-specific startup files.
+  SET_PROPERTY(GLOBAL APPEND PROPERTY GMAT_PLUGIN_TARGETS ${TargetName})
+  SET_PROPERTY(TARGET ${TargetName} PROPERTY GMAT_PLUGIN_INSTALL_DIR "${INSTALL_DIR}")
 
   # ====================================================================
   # prepend include directories for header files

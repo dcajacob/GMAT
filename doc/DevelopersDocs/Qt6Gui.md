@@ -27,10 +27,15 @@ configured GMAT build:
 ```
 cmake -S . -B build/linux-gui -DGMAT_INCLUDE_QT_GUI=ON
 cmake --build build/linux-gui --target GmatQt --parallel 6
-application/bin/GmatQt --startup /absolute/path/to/host-startup.txt
+application/bin/GmatQt
 ```
 
-Use a host-specific startup file referencing the plugins actually built.
+The build generates `gmat_startup_qt.txt` beside the executable, including the
+enabled native plugin targets with their actual filenames. Building `GmatQt`
+also builds those plugins. The wx startup file is untouched. The Qt startup
+uses relative paths and is installed in `bin`; Debug build paths account for
+the separate debug directory. Use `--startup /absolute/path/to/file` to override
+this configuration explicitly. The wx OpenFrames and OVtoOFI adapters are excluded.
 The currently available OpenFrames plugin uses wx and must not be used as
 a Qt widget provider. No Qt OpenFrames support is claimed yet.
 
@@ -39,6 +44,22 @@ and exits with failure if initialization, optional script interpretation,
 or image writing failed. For headless layout inspection set
 `QT_QPA_PLATFORM=offscreen`.
 Add `--run` to execute the loaded mission before capturing it.
+
+Linux installation has been staged with CMake, relocated to a path containing
+spaces, and exercised from an unrelated directory without a startup override.
+The installed copy ran the plot
+fixture, loaded packaged maps, and resolved GmatBase/GmatUtil from the installed
+`bin`. Qt itself is currently a system runtime dependency on Linux; this is not
+a self-contained Qt distribution. Windows/macOS deployment remains unverified.
+The repeatable launcher check is:
+
+```
+python3 src/qtgui/tests/LaunchTests.py /path/to/installed/bin/GmatQt \
+  src/qtgui/tests/propagate.script
+```
+
+It checks default startup, paths containing spaces, execution and capture from
+an unrelated directory, and failure exit codes for missing or invalid inputs.
 
 ## Current evidence and remaining work
 

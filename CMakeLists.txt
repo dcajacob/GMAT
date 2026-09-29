@@ -582,6 +582,10 @@ endif()
 # Go to plugins directory and look for CMake instructions there
 ADD_SUBDIRECTORY(plugins)
 
+if(GMAT_INCLUDE_QT_GUI)
+  INCLUDE(src/qtgui/QtStartup.cmake)
+endif()
+
 # ====================================================================
 # Setup GMAT install process
 ADD_SUBDIRECTORY(build/install)

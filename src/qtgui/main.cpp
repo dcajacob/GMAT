@@ -19,7 +19,12 @@ int main(int argc, char **argv)
    parser.addOption({"run", "Run the loaded mission after opening the window"});
    parser.addPositionalArgument("script", "Optional GMAT script to open");
    parser.process(app);
-   const QString startup = parser.isSet("startup") ? QFileInfo(parser.value("startup")).absoluteFilePath() : QCoreApplication::applicationDirPath() + "/gmat_startup_file.txt";
+   QString defaultStartup=QCoreApplication::applicationDirPath()+"/gmat_startup_qt.txt";
+#ifdef Q_OS_MACOS
+   if (!QFileInfo::exists(defaultStartup))
+      defaultStartup=QCoreApplication::applicationDirPath()+"/../../../gmat_startup_qt.txt";
+#endif
+   const QString startup = parser.isSet("startup") ? QFileInfo(parser.value("startup")).absoluteFilePath() : defaultStartup;
    const QString script = parser.positionalArguments().isEmpty() ? QString() : QFileInfo(parser.positionalArguments().first()).absoluteFilePath();
    const QString screenshot = parser.isSet("screenshot") ? QFileInfo(parser.value("screenshot")).absoluteFilePath() : QString();
    if (!QFileInfo::exists(startup) || (!script.isEmpty() && !QFileInfo::exists(script))) {
