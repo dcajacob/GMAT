@@ -1697,3 +1697,22 @@ Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 54.93 seconds.
 Native checks used isolated Xvfb/software OpenGL. Evidence:
 `Qt6ParityValidation/check-auto-look-at.txt` and
 `Qt6ParityValidation/auto-look-at-reference.txt`.
+
+## Explicit camera edits after automatic conversion
+
+Explicit OrbitView resource edits now take precedence over imported automatic
+trajectory framing. Editing ViewPointReference, ViewPointVector, ViewScaleFactor,
+ViewDirection, ViewUpAxis or ViewUpCoordinateSystem clears the primary automatic
+mode and its imported LookAt/center override. Explicit up-axis or up-coordinate
+edits also remove the imported arbitrary up vector. Named camera presets retain
+their independent settings.
+
+WorkflowTests applies a manual primary position/direction, verifies independent
+named camera metadata, saves/reopens, runs and checks the resulting camera pose.
+It also checks all six individual pose controls and exact-source Undo, then runs
+the restored automatic camera. This closes a GUI conflict in which successful
+Apply could leave the imported automatic camera overriding explicit user values.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 38.11 seconds.
+Native checks used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-camera-overrides.txt`.

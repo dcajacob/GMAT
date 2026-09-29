@@ -1434,6 +1434,27 @@ int main(int argc, char **argv)
                }
             }
          }
+         const auto beforePose=editor->toPlainText();
+         const auto secondaryBefore=qtCameraSettings(beforePose).value("OFI_EarthView").views;
+         require(window.applyResourceChanges("OFI_EarthView",{{"ViewPointVector","[0 -12345 0]"},{"ViewDirection","[0 0 0]"}},beforePose).isEmpty(),"Explicit automatic-camera override failed");
+         const auto overridden=qtCameraSettings(editor->toPlainText()).value("OFI_EarthView");
+         require(overridden.automaticTrajectory.isEmpty() && !overridden.lookAtRotation &&
+            overridden.views[0].automaticTrajectory==secondaryBefore[0].automaticTrajectory && overridden.views[0].lookAtRotation,
+            "Explicit pose was still automatic or changed named views");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Manual camera override save/reopen failed");
+         const auto overriddenModel=window.plotReceiver()->model("OFI_EarthView");
+         const auto pose=orbitCamera(*overriddenModel,overriddenModel->frame,0,0,1,1);
+         require(pose.target.length()<1e-8 && std::abs(pose.distance-12345)<1e-8,"Explicit camera distance/target ignored after reopen");
+         editor->setPlainText(beforePose); require(window.buildScript(),"Automatic camera fixture restoration failed");
+         for (const auto &change:QList<QMap<QString,QString>>{
+               {{"ViewPointReference","Earth"}},{{"ViewPointVector","[0 -12345 0]"}},{{"ViewScaleFactor","2"}},
+               {{"ViewDirection","[0 0 0]"}},{{"ViewUpAxis","X"}},{{"ViewUpCoordinateSystem","EarthFixed"}}}) {
+            require(window.applyResourceChanges("OFI_EarthView",change,beforePose).isEmpty(),"Individual automatic-camera override failed");
+            require(qtCameraSettings(editor->toPlainText()).value("OFI_EarthView").automaticTrajectory.isEmpty(),"Individual pose field retained automatic framing");
+            editor->undo(); require(editor->toPlainText()==beforePose && window.buildScript(),"Automatic camera override Undo failed");
+         }
+         require(window.runMission()==MainWindow::RunResult::Completed && window.plotReceiver()->model("OFI_EarthView")->automaticTrajectory=="DefaultSC",
+            "Undo did not restore automatic trajectory mode");
       }
       {
          auto bodyScript=originalSample;

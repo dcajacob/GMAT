@@ -768,12 +768,18 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (object->IsOfType("Array") && (changes.contains("@ArrayExpressions") || changes.contains("RmatValue")))
          candidate=setArrayExpressions(candidate,name,changes.value("@ArrayExpressions",arrayExpressions(expectedScript,name)),
             proposed->GetIntegerParameter("NumRows"),proposed->GetIntegerParameter("NumCols"));
-      // An explicit axis edit replaces an imported arbitrary roll vector.
-      if (object->IsOfType("OrbitView") && (changes.contains("ViewUpAxis") || changes.contains("ViewDirection"))) {
+      // Explicit camera controls take precedence over imported primary-camera
+      // behavior. Named secondary views remain independent.
+      const QStringList cameraFields={"ViewPointReference","ViewPointVector","ViewScaleFactor","ViewDirection","ViewUpAxis","ViewUpCoordinateSystem"};
+      const bool cameraEdited=std::any_of(cameraFields.cbegin(),cameraFields.cend(),[&](const QString &field) { return changes.contains(field); });
+      if (object->IsOfType("OrbitView") && cameraEdited) {
          const auto settings=qtCameraSettings(expectedScript);
          if (settings.contains(name)) {
             auto setting=settings.value(name);
-            if (changes.contains("ViewUpAxis")) setting.up.reset();
+            if (!setting.automaticTrajectory.isEmpty()) {
+               setting.automaticTrajectory.clear(); setting.centerOffset.reset(); setting.lookAtRotation=false;
+            }
+            if (changes.contains("ViewUpAxis") || changes.contains("ViewUpCoordinateSystem")) setting.up.reset();
             if (changes.contains("ViewDirection")) { setting.centerOffset.reset(); setting.lookAtRotation=false; }
             candidate=setQtCameraSetting(candidate,name,setting);
          }

@@ -1113,3 +1113,8 @@ whole scene, and Script view restores the selected trajectory view. Automatic Lo
 bounding-center orientation. Segment cameras remain unsupported. Automatic
 CoordinateSystem framing requires a stored supported camera location before
 conversion.
+
+Editing the primary OrbitView camera's reference, position, scale, direction or
+up settings in the resource editor turns off imported automatic trajectory
+framing for that camera. Your explicit pose then takes effect. Additional named
+views retain their own settings, and Undo restores automatic framing.
