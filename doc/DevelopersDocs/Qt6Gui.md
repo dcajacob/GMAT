@@ -84,10 +84,38 @@ plotting, platform parity, or all property types. The separate wx/console
 exit regression checks shared-engine behavior.
 
 This remains an implementation checkpoint, not a completed replacement.
-Still required: specialized resource forms and compound properties, mission
-command editing, plugin compatibility handling, advanced graphics and plot
+Still required: specialized resource and command forms, compound properties,
+plugin compatibility handling, advanced graphics and plot
 style parity, wider functional coverage, and platform build/package validation.
 Only Linux has been built and exercised so far.
+
+## Mission sequence editing
+
+The Mission tree reflects the engine's nested command graph, including branch
+ends and Else blocks. Double-click opens a command statement editor. The
+context menu supports insertion before/after, append, and deletion of complete
+commands or branches. Structural end commands cannot be removed independently.
+Script events are edited as complete blocks. Templates help insert common
+commands; specialized command forms remain future work.
+
+Changes use an immutable snapshot of the complete mission with source ranges
+matched within each branch. This distinguishes identical statements in different
+branches. Applying validates the complete candidate before updating the script
+as one undoable edit. Invalid candidates restore the previous engine model;
+stale panels and unapplied changes receive the same protection as resource panels.
+
+Build `GmatQtMissionTests` with `GMAT_QT_BUILD_TESTS=ON`, then run:
+
+```
+QT_QPA_PLATFORM=offscreen build/linux-gui/src/qtgui/GmatQtMissionTests \
+  /absolute/path/to/host-startup.txt src/qtgui/tests/mission.script \
+  /tmp/gmat-qt-mission.png
+```
+
+This real-engine test verifies nested branches, repeated-command identity,
+replacement/insertion/deletion/append through numeric execution results,
+invalid-edit rollback, retry, stale panels, undo, and Mission-tree-to-Apply
+interaction. It has passed on Linux with Qt 6.10.2.
 
 ## Plotting and output
 

@@ -1,0 +1,21 @@
+% Repeated commands and nested branches must retain distinct identities.
+Create Variable count total;
+BeginMissionSequence;
+count = 0;
+total = 0;
+If count == 0;
+   total = total + 1;
+   If total == 1;
+      total = total + 1;
+   Else;
+      total = -100;
+   EndIf;
+Else;
+   total = -200;
+EndIf;
+For count = 1:1:3;
+   total = total + 1;
+EndFor;
+BeginScript;
+   total = total + 1;
+EndScript;

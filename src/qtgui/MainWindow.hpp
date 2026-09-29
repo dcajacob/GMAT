@@ -3,6 +3,7 @@
 #include <memory>
 #include <QList>
 #include <QMap>
+#include "MissionModel.hpp"
 class QMdiArea;
 class QPlainTextEdit;
 class QTreeWidget;
@@ -26,6 +27,9 @@ public:
    void stopMission();
    bool isRunning() const { return running; }
    QtPlotReceiver *plotReceiver() const { return plots.get(); }
+   const MissionSnapshot &missionSnapshot() const { return missionState; }
+   QString applyMissionChange(const MissionSnapshot &snapshot, int index,
+                              MissionEdit operation, const QString &replacement);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
 protected:
@@ -33,6 +37,8 @@ protected:
 private:
    void refreshTrees();
    void refreshOutput();
+   void openCommandEditor(int index, MissionEdit operation);
+   QString applyModelScript(const QString &candidate);
    void newMission();
    bool saveScript(bool saveAs = false);
    bool confirmDiscard();
@@ -54,6 +60,7 @@ private:
    QString scriptPath;
    QString builtScript;
    QMap<QString, QString> reportFiles;
+   MissionSnapshot missionState;
    bool modelValid = false;
    bool ready = false;
    bool running = false;

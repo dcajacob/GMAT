@@ -12,7 +12,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 
-ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) : QWidget(parent)
+ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
    layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
@@ -79,16 +79,4 @@ bool ResourceEditor::hasChanges() const
       if (value != original.value(table->item(row, 0)->text())) return true;
    }
    return false;
-}
-
-void ResourceSubWindow::closeEvent(QCloseEvent *event)
-{
-   const auto *panel = dynamic_cast<ResourceEditor *>(widget());
-   if (panel && panel->hasChanges() && QMessageBox::question(this, "Unapplied changes",
-       "Discard the changes in this resource panel?", QMessageBox::Discard | QMessageBox::Cancel,
-       QMessageBox::Cancel) != QMessageBox::Discard) {
-      event->ignore();
-      return;
-   }
-   QMdiSubWindow::closeEvent(event);
 }

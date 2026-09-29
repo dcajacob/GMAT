@@ -3,6 +3,8 @@
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "CommandEditor.hpp"
+#include "MissionModel.hpp"
 #include "QtPlotReceiver.hpp"
 #include "PlotInterface.hpp"
 #include "Moderator.hpp"
@@ -54,6 +56,39 @@ MainWindow::MainWindow()
    resources = makeTree("Resources");
    mission = makeTree("Mission");
    output = makeTree("Output");
+   mission->setContextMenuPolicy(Qt::CustomContextMenu);
+   connect(mission, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
+      if (item->data(0,Qt::UserRole).isValid()) openCommandEditor(item->data(0,Qt::UserRole).toInt(),MissionEdit::Replace);
+   });
+   connect(mission, &QTreeWidget::customContextMenuRequested, this, [this](const QPoint &position) {
+      if (!ready || running || !modelValid) return;
+      auto *item=mission->itemAt(position);
+      const int index=item && item->data(0,Qt::UserRole).isValid() ? item->data(0,Qt::UserRole).toInt() : -1;
+      QMenu menu(this);
+      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr;
+      if (index>=0 && index<missionState.nodes.size()) {
+         edit=menu.addAction("Edit command…"); edit->setEnabled(missionState.nodes[index].editable);
+         before=menu.addAction("Insert before…"); before->setEnabled(missionState.nodes[index].type!="BeginMissionSequence");
+         after=menu.addAction("Insert after…");
+         remove=menu.addAction("Delete command"); remove->setEnabled(missionState.nodes[index].editable);
+         menu.addSeparator();
+      }
+      auto *append=menu.addAction("Append command…");
+      auto *chosen=menu.exec(mission->viewport()->mapToGlobal(position));
+      if (!chosen) return;
+      if (chosen==append) openCommandEditor(-1,MissionEdit::Append);
+      else if (chosen==edit) openCommandEditor(index,MissionEdit::Replace);
+      else if (chosen==before) openCommandEditor(index,MissionEdit::InsertBefore);
+      else if (chosen==after) openCommandEditor(index,MissionEdit::InsertAfter);
+      else if (chosen==remove) {
+         const auto snapshot=missionState;
+         if (QMessageBox::question(this,"Delete command","Delete this command and any commands inside its branch?",
+             QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
+            const auto error=applyMissionChange(snapshot,index,MissionEdit::Remove,{});
+            if (!error.isEmpty()) statusBar()->showMessage(error);
+         }
+      }
+   });
    plots->changed = [this] { refreshOutput(); };
    connect(output, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       const auto name = item->data(0, Qt::UserRole).toString();
@@ -172,11 +207,11 @@ MainWindow::MainWindow()
       auto *panel = new ResourceEditor(*object, [this, name, snapshot](const QMap<QString, QString> &changes) {
          return applyResourceChanges(name, changes, snapshot);
       });
-      auto *child = new ResourceSubWindow;
+      auto *child = new EditorSubWindow;
       child->setWidget(panel);
       workspace->addSubWindow(child);
       child->setAttribute(Qt::WA_DeleteOnClose);
-      child->setProperty("resourcePanel", true);
+      child->setProperty("configurationPanel", true);
       child->setWindowTitle(name); child->resize(680, 540); child->show();
    });
    QSettings settings;
@@ -224,7 +259,7 @@ bool MainWindow::loadScript(const QString &path)
 {
    if (running) return false;
    for (auto *child : workspace->subWindowList()) {
-      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      auto *panel = dynamic_cast<EditablePanel *>(child->widget());
       if (panel && panel->hasChanges()) return false;
    }
    QFile file(path);
@@ -250,10 +285,10 @@ bool MainWindow::saveScript(bool saveAs)
 bool MainWindow::confirmDiscard()
 {
    for (auto *child : workspace->subWindowList()) {
-      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      auto *panel = dynamic_cast<EditablePanel *>(child->widget());
       if (panel && panel->hasChanges()) {
-         if (QMessageBox::question(this, "Unapplied resource changes",
-             "Resource panels contain unapplied changes. Discard them and continue?",
+         if (QMessageBox::question(this, "Unapplied panel changes",
+             "Panels contain unapplied changes. Discard them and continue?",
              QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Discard)
             return false;
          break;
@@ -264,7 +299,7 @@ bool MainWindow::confirmDiscard()
       if (answer != QMessageBox::Discard && !(answer == QMessageBox::Save && saveScript())) return false;
    }
    for (auto *child : workspace->subWindowList()) {
-      if (auto *panel = dynamic_cast<ResourceEditor *>(child->widget())) {
+      if (auto *panel = dynamic_cast<EditablePanel *>(child->widget())) {
          panel->discardChanges();
          child->close();
       }
@@ -275,9 +310,9 @@ bool MainWindow::buildScript()
 {
    if (!ready || running) return false;
    for (auto *child : workspace->subWindowList()) {
-      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      auto *panel = dynamic_cast<EditablePanel *>(child->widget());
       if (panel && panel->hasChanges()) {
-         statusBar()->showMessage("Apply or discard the open resource changes before building or running");
+         statusBar()->showMessage("Apply or discard the open panel changes before building or running");
          return false;
       }
    }
@@ -323,10 +358,24 @@ void MainWindow::refreshTrees()
    }
    root->setExpanded(true); resources->expandToDepth(1);
    auto *sequence = new QTreeWidgetItem(mission, {"Mission Sequence"});
-   std::set<GmatCommand *> seen;
-   for (auto *command = Moderator::Instance()->GetFirstCommand(); command && seen.insert(command).second; command = command->GetNext())
-      new QTreeWidgetItem(sequence, {QString::fromStdString(command->GetTypeName())});
-   sequence->setExpanded(true);
+   missionState = {};
+   if (modelValid) {
+      try {
+         missionState = snapshotMission(Moderator::Instance()->GetFirstCommand(),
+            QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)), builtScript);
+         std::function<void(int,QTreeWidgetItem *)> addNode = [&](int index, QTreeWidgetItem *parent) {
+            const auto &node = missionState.nodes[index];
+            auto *item = new QTreeWidgetItem(parent, {node.label});
+            item->setData(0, Qt::UserRole, index);
+            item->setData(0, Qt::UserRole+1, node.type);
+            item->setToolTip(0, node.statement);
+            for (const auto child : node.children) addNode(child,item);
+         };
+         for (const auto index : missionState.roots) addNode(index,sequence);
+      } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
+      catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
+   }
+   mission->expandToDepth(2);
    refreshOutput();
 }
 void MainWindow::refreshOutput()
@@ -369,7 +418,7 @@ void MainWindow::setRunning(bool value)
    for (auto *action : editingActions) action->setEnabled(!value);
    editor->setReadOnly(value);
    for (auto *child : workspace->subWindowList())
-      if (child->property("resourcePanel").toBool()) child->widget()->setEnabled(!value);
+      if (child->property("configurationPanel").toBool()) child->widget()->setEnabled(!value);
    resources->setEnabled(!value);
    mission->setEnabled(!value);
    runAction->setEnabled(!value);
@@ -462,6 +511,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   return applyModelScript(candidate);
+}
+
+QString MainWindow::applyModelScript(const QString &candidate)
+{
+   auto *moderator = Moderator::Instance();
    QString error;
    plots->clear();
    try {
@@ -489,6 +544,51 @@ QString MainWindow::applyResourceChanges(const QString &name,
    builtScript = candidate;
    modelValid = true;
    refreshTrees();
-   statusBar()->showMessage("Resource updated — save the script to keep changes");
+   statusBar()->showMessage("Mission updated — save the script to keep changes");
    return {};
+}
+
+void MainWindow::openCommandEditor(int index,MissionEdit operation)
+{
+   if (running || !modelValid || editor->toPlainText()!=builtScript) {
+      statusBar()->showMessage("Build the current script before editing mission commands"); return;
+   }
+   if (operation!=MissionEdit::Append && (index<0 || index>=missionState.nodes.size())) return;
+   if (operation==MissionEdit::Replace && !missionState.nodes[index].editable) return;
+   const auto snapshot=missionState;
+   QString statement=operation==MissionEdit::Replace ? snapshot.nodes[index].statement : QString();
+   const auto spacecraft=Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT);
+   const auto propagators=Moderator::Instance()->GetListOfObjects(Gmat::PROP_SETUP);
+   const auto burns=Moderator::Instance()->GetListOfObjects(Gmat::IMPULSIVE_BURN);
+   auto first=[](const StringArray &names,const char *fallback) { return QString::fromStdString(names.empty() ? fallback : names.front()); };
+   const auto sat=first(spacecraft,"SpacecraftName"),prop=first(propagators,"PropagatorName"),burn=first(burns,"BurnName");
+   const QMap<QString,QString> templates={
+      {"Propagate",QString("Propagate %1(%2) {%2.ElapsedSecs = 600};").arg(prop,sat)},
+      {"Maneuver",QString("Maneuver %1(%2);").arg(burn,sat)},
+      {"Report",QString("Report ReportName %1.ElapsedSecs %1.X %1.Y %1.Z;").arg(sat)},
+      {"Assignment","VariableName = 1;"},
+      {"If","If VariableName > 0;\n   % Insert commands here.\nElse;\n   % Insert alternate commands here.\nEndIf;"},
+      {"While","While VariableName < 10;\n   VariableName = VariableName + 1;\nEndWhile;"},
+      {"For","For VariableName = 1:1:10;\n   % Insert commands here.\nEndFor;"},
+      {"Target","Target SolverName;\n   % Add Vary, mission commands, and Achieve here.\nEndTarget;"},
+      {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
+   auto *panel=new CommandEditor(statement,operation!=MissionEdit::Replace,templates,
+      [this,snapshot,index,operation](const QString &replacement) {
+         return applyMissionChange(snapshot,index,operation,replacement);
+      });
+   auto *child=new EditorSubWindow;
+   child->setWidget(panel); workspace->addSubWindow(child);
+   child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
+   child->setWindowTitle(operation==MissionEdit::Replace ? snapshot.nodes[index].label : "Insert mission command");
+   child->resize(700,500); child->show();
+}
+QString MainWindow::applyMissionChange(const MissionSnapshot &snapshot,int index,MissionEdit operation,
+                                     const QString &replacement)
+{
+   if (running) return "Stop the mission before editing commands.";
+   if (!modelValid || snapshot.sourceScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "The mission has changed. Build the current script and reopen this panel.";
+   try { return applyModelScript(editMission(snapshot,index,operation,replacement)); }
+   catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
 }

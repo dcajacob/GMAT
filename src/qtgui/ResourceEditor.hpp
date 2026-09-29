@@ -1,5 +1,5 @@
 #pragma once
-#include <QWidget>
+#include "EditablePanel.hpp"
 #include <QMap>
 #include <QString>
 #include <functional>
@@ -7,22 +7,16 @@
 class GmatBase;
 class QTableWidget;
 class QLabel;
-class ResourceEditor final : public QWidget
+class ResourceEditor final : public EditablePanel
 {
 public:
    using Apply = std::function<QString(const QMap<QString, QString> &)>;
    ResourceEditor(GmatBase &object, Apply apply, QWidget *parent = nullptr);
-   bool hasChanges() const;
-   void discardChanges() { applied = true; }
+   bool hasChanges() const override;
+   void discardChanges() override { applied = true; }
 private:
    QTableWidget *table;
    QLabel *status;
    QMap<QString, QString> original;
    bool applied = false;
-};
-
-class ResourceSubWindow final : public QMdiSubWindow
-{
-protected:
-   void closeEvent(QCloseEvent *event) override;
 };
