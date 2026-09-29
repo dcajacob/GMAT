@@ -198,7 +198,7 @@ struct OrbitRenderer::Scene
       }
       // Preserve the orbit controls and stable replay framing in either projection.
       const double aspect=double(width)/height;
-      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent);
+      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect);
       const auto &target=camera.target,&right=camera.right,&up=camera.up,&outward=camera.outward;
       const double distance=camera.distance,viewExtent=camera.extent;
       const double tangent=std::tan(std::clamp(model->fieldOfView,1.0,150.0)*osg::PI/360.0)/zoom;

@@ -1079,3 +1079,27 @@ broader electric operating modes remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 41.78 seconds. Evidence:
 `Qt6ParityValidation/check-tank-mixture-dialog.txt`.
+
+## Perspective Fit in narrow windows
+
+The OpenFrames View::resetView audit found that automatic framing uses the
+minimum horizontal/vertical half-angle. Qt's Fit distance used only the vertical
+angle, allowing horizontal clipping in portrait windows. OrbitCamera now accepts
+the viewport aspect ratio and uses the smaller half-angle for perspective Fit;
+both native and QPainter paths pass their actual drawing-area aspect. Explicit
+scripted distances with Fit disabled remain unchanged.
+
+NativeOrbit tests render a green sphere in 240×600, 600×240 and 400×400 viewports,
+require visible body pixels and a margin on all four sides, at normal and high DPI.
+This qualifies perspective Fit containment, not equivalence of all OF automatic
+bounding-sphere centers or trajectory/segment framing.
+
+Further trajectory audit: OFScene::GetTrajectoryFrameByName returns
+OFSpaceObject::WholeTrajectory (mDrawTraj), while moving-object views use
+FrameOnWholeTrajectory (mViewRefFrame). Thus simply disabling body orientation
+while continuing to track object position is not a full trajectory-view mapping.
+The existing conversion warning remains; trajectory/segment framing is still an
+explicit open requirement.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 37.66 seconds. Evidence:
+`Qt6ParityValidation/check-perspective-fit.txt`.

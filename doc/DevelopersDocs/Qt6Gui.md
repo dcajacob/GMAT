@@ -931,3 +931,7 @@ Up/Down move the tank and ratio as a pair. Ratios must be finite and positive bu
 do not need to sum to one. Columns are adjustable. Cancel leaves pending values
 unchanged; OK returns both fields to the resource panel, and Apply updates the
 mission. The separate property controls remain available.
+
+Perspective **Fit** now uses the narrower of the horizontal and vertical viewing
+angles. Tall, narrow tiled windows therefore keep the fitted scene inside both
+edges. Stored camera distances remain unchanged unless Fit is selected.

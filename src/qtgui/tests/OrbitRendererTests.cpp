@@ -13,6 +13,26 @@ int main(int argc,char **argv)
 {
    QApplication app(argc,argv);
    try {
+      {
+         auto fitModel=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+         fitModel->perspective=true; fitModel->fitCamera=true; fitModel->fieldOfView=50;
+         fitModel->labels=false; fitModel->legend=false; fitModel->axes=false; fitModel->grid=false;
+         fitModel->curves[0].radius=1; fitModel->curves[0].color=Qt::green; fitModel->append(0,0,0,0);
+         OrbitRenderer viewer(fitModel); viewer.show(); viewer.setView(1,0,0,{},0);
+         for (const auto &size:{QSize(240,600),QSize(600,240),QSize(400,400)}) {
+            viewer.resize(size); app.processEvents(); const auto image=viewer.captureImage();
+            int left=image.width(),right=-1,top=image.height(),bottom=-1,count=0;
+            for (int y=0;y<image.height();++y) for (int x=0;x<image.width();++x) {
+               const auto pixel=image.pixelColor(x,y);
+               if (pixel.green()>40 && pixel.green()>pixel.red()*2 && pixel.green()>pixel.blue()*2) {
+                  left=std::min(left,x); right=std::max(right,x); top=std::min(top,y); bottom=std::max(bottom,y); ++count;
+               }
+            }
+            require(count>1000,"Perspective Fit body missing");
+            require(left>image.width()*.025 && right<image.width()*.975 && top>image.height()*.025 && bottom<image.height()*.975,
+               "Perspective Fit clipped the body at a viewport edge");
+         }
+      }
       QTemporaryDir directory;
       QImage texture(128,64,QImage::Format_RGB32);
       texture.fill(QColor(20,110,230));
