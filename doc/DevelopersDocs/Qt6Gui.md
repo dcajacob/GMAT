@@ -150,7 +150,12 @@ ends and Else blocks. Double-click opens a command statement editor. The
 context menu supports insertion before/after, append, and deletion of complete
 commands or branches. Structural end commands cannot be removed independently.
 Script events are edited as complete blocks. Templates help insert common
-commands; specialized command forms remain future work.
+commands. A Propagation form supports one spacecraft, one propagator, and a
+duration in elapsed seconds or days. Resource selectors use the current mission;
+changing the spacecraft also changes the elapsed-time stop condition. The form
+and script text stay synchronized. Advanced modes, multiple stop conditions,
+labels, or comments retain the script editor without a simplifying form.
+Other specialized command forms remain future work.
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
@@ -170,6 +175,11 @@ This real-engine test verifies nested branches, repeated-command identity,
 replacement/insertion/deletion/append through numeric execution results,
 invalid-edit rollback, retry, stale panels, undo, and Mission-tree-to-Apply
 interaction. It has passed on Linux with Qt 6.10.2.
+
+The workflow suite additionally opens a real Propagate command, verifies form
+population and spacecraft selection, preserves an advanced statement, rejects
+invalid duration input without changing the mission, and executes a form-selected
+0.01-day propagation (864 seconds). Its optional screenshot captures this panel.
 
 ## Plotting and output
 

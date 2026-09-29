@@ -2,6 +2,7 @@
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
+#include "CommandEditor.hpp"
 #include <QApplication>
 #include <QAction>
 #include <QDir>
@@ -18,6 +19,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QClipboard>
+#include <QTabWidget>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -192,6 +194,49 @@ int main(int argc, char **argv)
             if (properties->item(row,0)->text()=="DryMass") refreshedMass=properties->item(row,1)->text()=="932";
       }
       require(refreshedMass,"Reopening a clean stale resource panel did not refresh its values");
+      QApplication::processEvents();
+      auto *missionTree=window.findChild<QTreeWidget *>("Mission");
+      QTreeWidgetItem *propagationItem=nullptr;
+      for (QTreeWidgetItemIterator it(missionTree);*it;++it) {
+         if (!(*it)->data(0,Qt::UserRole).isValid()) continue;
+         const auto &node=window.missionSnapshot().nodes[(*it)->data(0,Qt::UserRole).toInt()];
+         if (node.type=="Propagate" && node.statement.contains("QtSat")) propagationItem=*it;
+      }
+      require(propagationItem!=nullptr,"Propagation command missing from tree");
+      window.findChild<QTabWidget *>()->setCurrentIndex(1);
+      missionTree->expandAll(); missionTree->itemDoubleClicked(propagationItem,0);
+      CommandEditor *commandPanel=nullptr;
+      for (auto *widget:window.findChildren<QWidget *>()) if (auto *candidate=dynamic_cast<CommandEditor *>(widget)) commandPanel=candidate;
+      require(commandPanel!=nullptr,"Propagation command panel missing");
+      auto *form=commandPanel->findChild<QWidget *>("propagationForm");
+      auto *commandText=commandPanel->findChild<QPlainTextEdit *>("commandSource");
+      require(form && !form->isHidden(),"Simple propagation form unavailable");
+      const QString originalCommand=commandText->toPlainText();
+      const QString advanced="Propagate QtProp(QtSat) {QtSat.ElapsedSecs = 600, QtSat.Earth.Periapsis};";
+      commandText->setPlainText(advanced);
+      require(form->isHidden() && commandText->toPlainText()==advanced,"Form simplified an advanced command");
+      commandText->setPlainText(originalCommand);
+      auto *duration=commandPanel->findChild<QLineEdit *>("propagationDuration");
+      auto *units=commandPanel->findChild<QComboBox *>("propagationUnits");
+      require(!form->isHidden() && duration->text().toDouble()==600,"Form did not load command duration");
+      auto *selectedSpacecraft=commandPanel->findChild<QComboBox *>("propagationSpacecraft");
+      selectedSpacecraft->setCurrentText("CreatedSat");
+      require(commandText->toPlainText().contains("QtProp(CreatedSat) {CreatedSat.ElapsedSecs"),"Spacecraft selection did not update its stop condition");
+      selectedSpacecraft->setCurrentText("QtSat");
+      const auto beforeForm=editor->toPlainText();
+      duration->setText("not-a-number");
+      auto *applyCommand=commandPanel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply);
+      applyCommand->click();
+      require(commandPanel->hasChanges() && editor->toPlainText()==beforeForm,"Invalid form input altered the mission");
+      units->setCurrentIndex(units->findData("ElapsedDays")); duration->setText("0.01");
+      require(commandText->toPlainText().contains("QtSat.ElapsedDays = 0.01"),"Form did not synchronize duration and units");
+      if (!screenshot.isEmpty()) { duration->setFocus(); QApplication::processEvents(); require(window.grab().save(screenshot+".propagation.png"),"Propagation form capture failed"); }
+      applyCommand->click();
+      const auto formEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetEpoch();
+      require(window.runMission()==MainWindow::RunResult::Completed,"Form-edited propagation failed");
+      const auto finalEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpoch();
+      require(std::abs((finalEpoch-formEpoch)*86400-864)<.01,"Form-selected duration did not propagate for 0.01 days");
+      std::cout<<"PASS: propagation form, advanced-command preservation, invalid-input rollback and actual elapsed-days execution\n";
       std::cout<<"PASS: resource creation, name/type validation, pending/stale protection, undo, dialog/tree integration and actual propagation\n";
       std::cout << "PASS: propagation, repeated runs, pause/resume/stop, edit protection, close protection, invalid-script recovery, resource apply/rollback/stale-panel protection/undo\n";
       return 0;

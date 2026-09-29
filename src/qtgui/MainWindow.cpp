@@ -696,15 +696,19 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"For","For VariableName = 1:1:10;\n   % Insert commands here.\nEndFor;"},
       {"Target","Target SolverName;\n   % Add Vary, mission commands, and Achieve here.\nEndTarget;"},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
+   QStringList propagationChoices,spacecraftChoices;
+   for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));
+   for (const auto &value:spacecraft) spacecraftChoices.append(QString::fromStdString(value));
    auto *panel=new CommandEditor(statement,operation!=MissionEdit::Replace,templates,
       [this,snapshot,index,operation](const QString &replacement) {
          return applyMissionChange(snapshot,index,operation,replacement);
-      });
+      },propagationChoices,spacecraftChoices);
    auto *child=new EditorSubWindow;
    child->setWidget(panel); workspace->addSubWindow(child);
    child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
    child->setWindowTitle(operation==MissionEdit::Replace ? snapshot.nodes[index].label : "Insert mission command");
    child->resize(700,500); child->show();
+   workspace->setActiveSubWindow(child);
 }
 QString MainWindow::applyMissionChange(const MissionSnapshot &snapshot,int index,MissionEdit operation,
                                      const QString &replacement)
