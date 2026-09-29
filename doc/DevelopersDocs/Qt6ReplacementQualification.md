@@ -108,7 +108,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
 | `src/gui/mission/TreeViewOptionDialog.hpp` | Pending audit |
 | `src/gui/view/ViewTextDialog.hpp` | Pending audit |
-| `src/gui/view/FindReplaceDialog.hpp` | Pending audit |
+| `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Pending audit |
 | `src/gui/view/EditorPanel.hpp` | Pending audit |
 | `src/gui/app/CompareFilesDialog.hpp` | Pending audit |
@@ -765,3 +765,22 @@ title, while orbit and ground-track playback controls remain visible. This is a
 chart-layout improvement, not qualification of all plot interaction workflows.
 GmatQt was rebuilt and all 11 Qt checks passed in 25.89 seconds. Evidence:
 `Qt6ParityValidation/check-chart-layout.txt`.
+
+## Script Find/Replace workflow
+
+Audited wx FindReplaceDialog's next/previous, replacement, Replace All and history
+controls. Qt now provides these through the Edit menu and standard shortcuts,
+with optional case/whole-word matching. Searching brings the Script window forward
+and retains the dialog for subsequent searches. No-match feedback is nonblocking;
+replacement checks the script's read-only state before modifying text.
+
+WorkflowTests opens the integrated menu action, verifies forward/backward wrap,
+case and word boundaries, selected replacement, history retention, no-match
+feedback and read-only protection. Replacing Sat with SatSat proves Replace All
+does not repeatedly replace its own insertions; one Undo restores all original
+text. Search itself does not normalize or reconstruct script source.
+
+GmatQt was rebuilt and all 11 Qt checks passed in 28.73 seconds. Evidence:
+`Qt6ParityValidation/check-find-replace.txt`. The broader editor audit (including
+other editing/navigation preferences) remains separate from this completed search
+workflow.

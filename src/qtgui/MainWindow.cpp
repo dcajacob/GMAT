@@ -8,6 +8,7 @@
 #include "StartupCompatibility.hpp"
 #include "ScriptCompatibility.hpp"
 #include "ScriptEditor.hpp"
+#include "FindReplaceDialog.hpp"
 #include <QDialog>
 #include <QDir>
 #include <QVBoxLayout>
@@ -230,6 +231,20 @@ MainWindow::MainWindow()
    editAction("Cu&t", QKeySequence::Cut, "cut");
    editAction("&Copy", QKeySequence::Copy, "copy");
    editAction("&Paste", QKeySequence::Paste, "paste");
+   edit->addSeparator();
+   auto *searchDialog=new FindReplaceDialog(editor,this);
+   auto searchAction=[&](const QString &label,const QString &name,QKeySequence key,auto callback) {
+      auto *action=edit->addAction(label); action->setObjectName(name); action->setShortcut(key);
+      connect(action,&QAction::triggered,this,[this,document,callback] {
+         if (document->isMinimized()) document->showNormal();
+         workspace->setActiveSubWindow(document); callback();
+      });
+   };
+   searchAction("&Find…","scriptFind",QKeySequence::Find,[searchDialog] { searchDialog->openSearch(); });
+   searchAction("&Replace…","scriptReplace",QKeySequence::Replace,[searchDialog] { searchDialog->openSearch(); });
+   searchAction("Find next","scriptFindNext",QKeySequence::FindNext,[searchDialog] { searchDialog->findNext(); });
+   searchAction("Find previous","scriptFindPrevious",QKeySequence::FindPrevious,[searchDialog] { searchDialog->findNext(true); });
+
    edit->addSeparator();
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);

@@ -808,3 +808,14 @@ Choose configured resources or user variables, arrays and strings. Global omits
 resources that are automatically global from new choices; Save and Clear retain
 those choices. Computed parameter values are not objects in this selector.
 Cancel preserves the command, and Apply still validates it before execution.
+
+### Script search and replacement
+
+Edit → Find/Replace opens a reusable, nonmodal script search dialog. Find next
+and previous use the standard shortcuts and wrap at document boundaries. Search
+and replacement histories retain the last 12 entries for the session. Match case
+and Whole words are optional; searches are literal text. Replace affects the
+selected matching occurrence, while Replace All is one Undo operation and never
+searches inside its newly inserted replacement text. Empty replacement deletes
+matches. Read-only scripts cannot be changed. Search actions bring the Script
+window forward, and failed searches report a visible message.

@@ -1,4 +1,7 @@
 #include "MainWindow.hpp"
+#include "FindReplaceDialog.hpp"
+#include <QCheckBox>
+#include <QLabel>
 #include "QtPlotReceiver.hpp"
 #include "OrbitCamera.hpp"
 #include "CoordinateConverter.hpp"
@@ -131,6 +134,31 @@ int main(int argc, char **argv)
       require(window.runMission() == MainWindow::RunResult::Completed, "Repeat execution failed");
       auto *editor = window.findChild<QPlainTextEdit *>("scriptEditor");
       require(editor != nullptr, "Script editor missing");
+      {
+         window.findChild<QAction *>("scriptFind")->trigger();
+         auto *integrated=window.findChild<QDialog *>("findReplaceDialog");
+         require(integrated && integrated->isVisible(),"Find menu did not open script search"); integrated->hide();
+         QPlainTextEdit text; const QString original="Sat Satellite sat Sat\nSat"; text.setPlainText(original);
+         FindReplaceDialog search(&text,&window);
+         auto *find=search.findChild<QComboBox *>("findText"),*replace=search.findChild<QComboBox *>("replaceText");
+         find->setEditText("Sat"); replace->setEditText("SatSat");
+         search.findChild<QCheckBox *>("findMatchCase")->setChecked(true);
+         search.findChild<QCheckBox *>("findWholeWords")->setChecked(true);
+         require(search.findNext() && text.textCursor().selectionStart()==0,"Find skipped first match");
+         require(search.findNext(true) && text.textCursor().selectionEnd()==original.size(),"Previous did not wrap to last match");
+         search.findChild<QPushButton *>("replaceAll")->click();
+         require(text.toPlainText()=="SatSat Satellite sat SatSat\nSatSat","Replace all ignored case/word boundaries or reprocessed inserted text");
+         text.undo(); require(text.toPlainText()==original,"Replace all was not a single undo operation");
+         text.setTextCursor(QTextCursor(text.document())); search.findNext(); replace->setEditText("Probe");
+         search.findChild<QPushButton *>("replaceCurrent")->click();
+         require(text.toPlainText()=="Probe Satellite sat Sat\nSat","Replace current changed the wrong occurrence");
+         text.undo(); require(text.toPlainText()==original,"Single replacement could not undo");
+         text.setReadOnly(true); search.findChild<QPushButton *>("replaceAll")->click();
+         require(text.toPlainText()==original,"Search modified read-only script"); text.setReadOnly(false);
+         find->setEditText("Missing"); require(!search.findNext() && search.findChild<QLabel *>("findStatus")->text()=="No matches found.","Missing search did not report status");
+         require(find->findText("Sat")>=0,"Search history was lost");
+      }
+
       require(window.createResource("CoordinateSystem","UserFrame",editor->toPlainText()).isEmpty(),"Coordinate-system creation failed");
       const auto beforeAxes=editor->toPlainText();
       bool cancelledAxes=false;
