@@ -37,7 +37,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | Pending audit |
-| `src/gui/hardware/TankAndMixDialog.hpp` | Pending audit |
+| `src/gui/hardware/TankAndMixDialog.hpp` | Paired tank/ratio Apply semantics audited and fixed; combined selector UI still pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
@@ -1038,3 +1038,23 @@ GmatQt was rebuilt; all 11 Qt checks passed in 38.90 seconds. Evidence:
 `Qt6ParityValidation/check-display-controls.txt`. An isolated native/Xvfb run
 also passed, and `Qt6ParityValidation/display-panel.png` was visually inspected.
 Hardware-specific viewer qualification remains separate.
+
+## Paired tank and mixture Apply
+
+Auditing wx TankAndMixDialog exposed a Qt Apply ordering defect: changing Tank and
+MixRatio together applied ratios against the old list first, then remapped those
+new values by old tank name. A reorder could silently assign different ratios
+than the user entered; a resized list could reject otherwise valid new ratios.
+The Qt adapter now treats explicit simultaneous ratios as positional in the new
+ordered list, validating one finite positive value per tank before interpretation.
+A Tank-only edit continues to preserve existing ratios by tank name.
+
+WorkflowTests covers simultaneous reorder/new ratios, count mismatch, zero,
+negative and overflow rejection with unchanged source, removal/addition with ratio
+resizing, and save/reopen preserving the resulting tank/value pairs. The existing
+Tank-only GUI picker test still checks association preservation. This fixes the
+Apply layer; a dedicated combined tank/mixture selector and multi-tank fuel-use
+execution remain pending, so the wx dialog row is not marked complete.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 34.30 seconds. Evidence:
+`Qt6ParityValidation/check-paired-mixtures.txt`.

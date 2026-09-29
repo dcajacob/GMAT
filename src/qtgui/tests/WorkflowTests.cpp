@@ -663,6 +663,24 @@ int main(int argc, char **argv)
          "Mixture vector edit failed");
       require(Moderator::Instance()->GetConfiguredObject("Engine")->GetRvectorParameter("MixRatio")[1]==5,
          "Mixture vector did not survive script rebuild");
+      require(window.applyResourceChanges("Engine",{{"Tank","FuelA, FuelB"},{"MixRatio","7 11"}},editor->toPlainText()).isEmpty(),
+         "Combined tank and mixture edit failed");
+      engine=Moderator::Instance()->GetConfiguredObject("Engine");
+      require(engine->GetStringArrayParameter("Tank").front()=="FuelA" && engine->GetRvectorParameter("MixRatio")[0]==7 &&
+         engine->GetRvectorParameter("MixRatio")[1]==11,"Combined edit reassigned ratios by old tank order");
+      const auto pairedSource=editor->toPlainText();
+      for (const auto &invalid:{QString("7"),QString("0 2"),QString("1 -2"),QString("1 1e999")})
+         require(!window.applyResourceChanges("Engine",{{"Tank","FuelB, FuelA"},{"MixRatio",invalid}},pairedSource).isEmpty() &&
+            editor->toPlainText()==pairedSource,"Invalid combined tank/mixture edit changed source");
+      require(window.applyResourceChanges("Engine",{{"Tank","FuelB"},{"MixRatio","13"}},editor->toPlainText()).isEmpty(),
+         "Combined tank removal and ratio resize failed");
+      require(window.applyResourceChanges("Engine",{{"Tank","FuelB, FuelA"},{"MixRatio","17 19"}},editor->toPlainText()).isEmpty(),
+         "Combined tank addition and ratio resize failed");
+      QTemporaryDir mixtureFiles; const auto mixturePath=mixtureFiles.filePath("tank-mixtures.script");
+      require(window.saveScriptTo(mixturePath) && window.loadScript(mixturePath) && window.buildScript(),"Combined mixture save/reopen failed");
+      engine=Moderator::Instance()->GetConfiguredObject("Engine");
+      require(engine->GetStringArrayParameter("Tank").front()=="FuelB" && engine->GetRvectorParameter("MixRatio").GetSize()==2 &&
+         engine->GetRvectorParameter("MixRatio")[0]==17 && engine->GetRvectorParameter("MixRatio")[1]==19,"Combined mixture did not survive round trip");
       editor->setPlainText("Create Variable count;\nBeginMissionSequence;\nWhile count < 1e12;\ncount = count + 1;\nEndWhile;\n");
       bool paused = false, resumed = false, protectedEdits = false;
       double countAtPause = 0;

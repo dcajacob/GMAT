@@ -204,7 +204,7 @@ QStringList splitResourceReferences(const QString &value)
    return entries;
 }
 
-QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value)
+QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value, const QString *mixture)
 {
    const auto id=object.GetParameterID(name.toStdString());
    if (!isResourceList(object,name) || object.IsParameterReadOnly(id)) throw std::runtime_error("This list cannot be edited here");
@@ -267,6 +267,17 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
          const auto found=std::find(oldNames.begin(),oldNames.end(),entry.toStdString());
          const auto position=std::distance(oldNames.begin(),found);
          values.append(QString::number(position<ratios.GetSize() ? ratios[position] : 1.0,'g',17));
+      }
+      // An explicit ratio edit belongs to the new ordered tank list. Otherwise
+      // preserve existing associations by tank name as above.
+      if (mixture) {
+         values=mixture->trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         if (values.size()!=entries.size()) throw std::runtime_error("Enter one mixture ratio for each selected tank");
+         for (auto &value:values) {
+            bool valid=false; const double number=value.toDouble(&valid);
+            if (!valid || !std::isfinite(number) || number<=0) throw std::runtime_error("Mixture ratios must be finite numbers greater than zero");
+            value=QString::number(number,'g',17);
+         }
       }
       const QString ratioKey=QString::fromStdString(object.GetName())+".MixRatio";
       const QRegularExpression ratioAssignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(ratioKey)+

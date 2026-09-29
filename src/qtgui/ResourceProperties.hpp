@@ -24,4 +24,4 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);
-QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value);
+QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value, const QString *mixture = nullptr);

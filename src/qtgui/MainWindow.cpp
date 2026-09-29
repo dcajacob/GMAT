@@ -739,7 +739,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
    try {
       std::unique_ptr<GmatBase> proposed(object->Clone());
       if (!proposed) return "This resource cannot be edited.";
+      const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
+      const QString mixture=changes.value("MixRatio");
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
+         if (pairedMixture && it.key()=="MixRatio") continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -759,7 +762,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = serialize(*object);
       auto newBlock = serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value());
+         if (isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
