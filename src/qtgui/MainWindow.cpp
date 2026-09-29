@@ -930,7 +930,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    const auto optimizer=firstType(Gmat::SOLVER,"Optimizer","OptimizerName");
    const auto finite=firstType(Gmat::BURN,"FiniteBurn","FiniteBurnName");
    const auto report=firstType(Gmat::SUBSCRIBER,"ReportFile","ReportName");
-   const QMap<QString,QString> templates={
+   QMap<QString,QString> templates={
       {"Propagate",QString("Propagate %1(%2) {%2.ElapsedSecs = 600};").arg(prop,sat)},
       {"Maneuver",QString("Maneuver %1(%2);").arg(burn,sat)},
       {"BeginFiniteBurn",QString("BeginFiniteBurn %1(%2);").arg(finite,sat)},
@@ -949,6 +949,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"FindEvents",QString("FindEvents %1 {Append = false};").arg(firstType(Gmat::EVENT_LOCATOR,"EventLocator","LocatorName"))},
       {"Call function",QString("[OutputVariable] = %1(InputVariable);").arg(firstType(Gmat::FUNCTION,"GmatFunction","FunctionName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
+   if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
    QStringList propagationChoices,spacecraftChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));
    for (const auto &value:spacecraft) spacecraftChoices.append(QString::fromStdString(value));

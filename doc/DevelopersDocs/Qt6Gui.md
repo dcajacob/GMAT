@@ -676,3 +676,19 @@ standard OrbitView direction semantics, and Undo restores the imported alignment
 against an installed OpenFrames library, not a dependency of GmatQt. It compares
 the shared alignment helper with the actual FollowingTrackball transforms in
 absolute/body-relative modes, both rotation modes and singular directions.
+
+
+### Save command
+
+When the Save plugin is loaded, the mission editor offers a Save command template
+and an Objects field. This command exports the current values of named resources
+into the configured output directory; it does not save the mission script.
+The shipped plugin writes one file named from the selected objects (for example,
+`SavedSat_SavedNumber.data`). Repeated execution of the same Save command within
+a loop appends snapshots; starting a new mission run replaces its previous file.
+Exported resource definitions can be opened through File > Open.
+
+The plugin now reports output-open, write and close failures, including the file
+path, instead of reporting a successful mission with missing data. Rebuilding and
+running after correcting the output path recovers normally. Copying commands and
+reinitializing streams are safe, and export preserves each object's comment flags.

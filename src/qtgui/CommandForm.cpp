@@ -44,7 +44,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
       {"Toggle","Toggle\\s+"+label+"([A-Za-z][A-Za-z0-9_]*(?:\\s+[A-Za-z][A-Za-z0-9_]*)*)\\s+(On|Off)"+end,{"Subscribers","State"}},
-      {"Objects","(?:Global|Clear)\\s+"+label+"([^;%\\n]+?)"+end,{"Objects"}},
+      {"Objects","(?:Global|Clear|Save)\\s+"+label+"([^;%\\n]+?)"+end,{"Objects"}},
       {"Assignment","(?:GMAT\\s+)?"+label+"([A-Za-z][A-Za-z0-9_.]*(?:\\([^;\\n]*?\\))?)\\s*=\\s*([^;\\n]+?)"+end,{"Destination","Expression"}},
       // Branch forms replace only header spans, never their nested commands.
       {"For loop","For\\s+"+label+name+"\\s*=\\s*([^:;\\n]+?)\\s*:\\s*([^:;\\n]+?)\\s*:\\s*([^;\\n]+?)\\s*;[\\s\\S]*$",{"Index","Start","Step","End"}},

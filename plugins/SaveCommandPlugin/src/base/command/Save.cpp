@@ -106,6 +106,8 @@ Save::Save(const Save& sv) :
    writeVerbose  (sv.writeVerbose)
 {
    objArray.clear();
+   fileArray = NULL;
+   fileNameArray.clear();
 }
 
 
@@ -125,7 +127,10 @@ Save& Save::operator=(const Save& sv)
    if (this == &sv)
       return *this;
         
-   fileNameArray = sv.fileNameArray;
+   GmatCommand::operator=(sv);
+   delete [] fileArray;
+   fileArray = NULL;
+   fileNameArray.clear();
    appendData    = sv.appendData;
    wasWritten    = sv.wasWritten;
    objNameArray  = sv.objNameArray;
@@ -394,6 +399,10 @@ bool Save::Initialize()
    
    wasWritten = false;
    appendData = false;
+   delete [] fileArray;
+   fileArray = NULL;
+   fileNameArray.clear();
+   objArray.clear();
    
    FileManager *fm = FileManager::Instance();
    std::string outPath = fm->GetAbsPathname(FileManager::OUTPUT_PATH);
@@ -512,57 +521,41 @@ bool Save::Execute()
    if (!objArray[0])
       throw CommandException("Object not set for Save command");
    
-   #ifndef __USE_SINGLE_FILE__
-   
-      for (UnsignedInt i=0; i<objArray.size(); i++)
+   try
+   {
+      for (UnsignedInt i = 0; i < fileNameArray.size(); ++i)
       {
-         if (appendData && wasWritten)
-            fileArray[i].open(fileNameArray[i].c_str(), std::ios::app);
-         else
-            fileArray[i].open(fileNameArray[i].c_str());
-         
+         fileArray[i].clear();
+#ifdef __USE_SINGLE_FILE__
+         const bool append = appendData || wasWritten;
+#else
+         const bool append = appendData && wasWritten;
+#endif
+         fileArray[i].open(fileNameArray[i].c_str(), append ? std::ios::app : std::ios::out);
+         if (!fileArray[i].is_open())
+            throw CommandException("Save command cannot open output file \"" + fileNameArray[i] + "\"");
          fileArray[i].precision(prec);
       }
-      
-   #else
-
-      // Changed to append the data once data was written so that saving data
-      // within a loop won't overwrite old data (loj: 4/24/07)
-      //if (appendData && wasWritten)
-      if (appendData || wasWritten)
+      for (UnsignedInt i = 0; i < objArray.size(); ++i)
+         WriteObject(i, objArray[i]);
+      for (UnsignedInt i = 0; i < fileNameArray.size(); ++i)
       {
-         #ifdef DEBUG_SAVE_EXEC
-         MessageInterface::ShowMessage("   open %s as append\n", fileNameArray[0].c_str());
-         #endif
-         
-         fileArray[0].open(fileNameArray[0].c_str(), std::ios::app);
-      }
-      else
-      {
-         #ifdef DEBUG_SAVE_EXEC
-         MessageInterface::ShowMessage("   open %s as new\n", fileNameArray[0].c_str());
-         #endif
-         
-         fileArray[0].open(fileNameArray[0].c_str());
-      }
-      
-      fileArray[0].precision(prec);
-      
-   #endif
-      
-      
-   for (UnsignedInt i=0; i<objArray.size(); i++)
-      WriteObject(i, objArray[i]);
-   
-   wasWritten = true;
-   
-   #ifndef __USE_SINGLE_FILE__   
-      for (UnsignedInt i=0; i<objArray.size(); i++)
+         fileArray[i].flush();
+         if (!fileArray[i])
+            throw CommandException("Save command failed writing output file \"" + fileNameArray[i] + "\"");
          fileArray[i].close();
-   #else
-      fileArray[0].close();
-   #endif
-   
+         if (fileArray[i].fail())
+            throw CommandException("Save command failed closing output file \"" + fileNameArray[i] + "\"");
+      }
+      wasWritten = true;
+   }
+   catch (...)
+   {
+      for (UnsignedInt i = 0; i < fileNameArray.size(); ++i)
+         if (fileArray[i].is_open()) fileArray[i].close();
+      throw;
+   }
+
    BuildCommandSummary(true);
    
    return true;
@@ -752,6 +745,12 @@ void Save::WriteObject(UnsignedInt i, GmatBase *o)
    if (o->GetTypeName() == "Variable" || o->GetTypeName() == "String")
       prefix = "Create " + o->GetTypeName() + " " + o->GetName() + "\n";
 
+   struct RestoreComments
+   {
+      GmatBase *object;
+      bool preface, inLine;
+      ~RestoreComments() { object->SetShowPrefaceComment(preface); object->SetShowInlineComment(inLine); }
+   } restore{o, o->GetShowPrefaceComment(), o->GetShowInlineComment()};
    // Do not write comments
    o->SetShowPrefaceComment(false);
    o->SetShowInlineComment(false);
@@ -764,9 +763,7 @@ void Save::WriteObject(UnsignedInt i, GmatBase *o)
       fileArray[i] << std::endl;
    #endif
    
-   // Set back to write comments
-   o->SetShowPrefaceComment(true);
-   o->SetShowInlineComment(true);
+   // The guard restores the original comment settings.
       
    #ifdef DEBUG_SAVE_OUTPUT
       MessageInterface::ShowMessage("Save:WriteObject() leaving\n");

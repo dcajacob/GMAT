@@ -6,6 +6,7 @@
 #include "SolarSystem.hpp"
 #include "CelestialBody.hpp"
 #include "ResourceProperties.hpp"
+#include "FileManager.hpp"
 #include <QRegularExpression>
 #include <array>
 #include <QApplication>
@@ -185,6 +186,48 @@ int main(int argc,char **argv)
             "Plugin integrator differs from analytic circular-orbit solution");
          require(!read(integratorReport).trimmed().isEmpty(),"Plugin integrator report missing");
       }
+      FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",output.path().toStdString());
+      require(types.contains("Save"),"Save plugin is missing from available command types");
+      const QString saveFixture="Create Spacecraft SavedSat;\nCreate Variable SavedNumber;\n"
+         "BeginMissionSequence;\nSavedSat.DryMass = 825.25;\nSavedNumber = 42.5;\nSave SavedSat;\n";
+      editor->setPlainText(saveFixture); require(window.buildScript(),"Save command fixture failed to build");
+      const auto saveSnapshot=window.missionSnapshot(); int saveIndex=-1;
+      for (int i=0;i<saveSnapshot.nodes.size();++i) if (saveSnapshot.nodes[i].type=="Save") saveIndex=i;
+      require(saveIndex>=0,"Save command missing from mission tree");
+      QString saveStatement; CommandForm saveForm([&](const QString &value) { saveStatement=value; });
+      saveForm.setStatement(saveSnapshot.nodes[saveIndex].statement);
+      auto *objects=saveForm.findChild<QLineEdit *>("commandField_Objects"); require(objects,"Save object-list controls missing");
+      objects->setText("SavedSat SavedNumber");
+      require(window.applyMissionChange(saveSnapshot,saveIndex,MissionEdit::Replace,saveStatement).isEmpty(),"Save object-list edit failed");
+      roundTrip("save-command");
+      const auto validSave=editor->toPlainText();
+      require(window.runMission()==MainWindow::RunResult::Completed,"Save command execution failed");
+      const auto exportPath=output.filePath("SavedSat_SavedNumber.data");
+      const auto savedObjects=read(exportPath);
+      require(savedObjects.contains("SavedSat.DryMass = 825.25") && savedObjects.contains("SavedNumber = 42.5"),
+         "Save exported initial rather than current object values");
+      require(window.loadScript(exportPath) && window.buildScript(),"Saved object definitions could not reopen in Qt");
+      require(std::abs(Moderator::Instance()->GetConfiguredObject("SavedSat")->GetRealParameter("DryMass")-825.25)<1e-12 &&
+         std::abs(Moderator::Instance()->GetConfiguredObject("SavedNumber")->GetRealParameter("Value")-42.5)<1e-12,
+         "Saved object reload changed numeric values");
+      editor->setPlainText(validSave);
+      require(window.runMission()==MainWindow::RunResult::Completed && read(exportPath)==savedObjects,"Repeat mission appended stale Save output");
+      FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",output.filePath("missing/nested").toStdString());
+      require(window.runMission()==MainWindow::RunResult::Failed,"Save silently accepted an invalid output path");
+      FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",output.path().toStdString());
+      require(window.runMission()==MainWindow::RunResult::Completed && read(exportPath)==savedObjects,"Save did not recover unchanged after file failure");
+#ifdef __linux__
+      require(QFile::remove(exportPath) && QFile::link("/dev/full",exportPath),"Cannot construct write-failure fixture");
+      require(window.runMission()==MainWindow::RunResult::Failed,"Save silently accepted a disk write failure");
+      require(QFile::remove(exportPath),"Cannot remove write-failure fixture");
+      require(window.runMission()==MainWindow::RunResult::Completed && read(exportPath)==savedObjects,"Save did not recover after a disk write failure");
+#endif
+      editor->setPlainText("Create Variable SavedNumber Step;\nBeginMissionSequence;\nFor Step = 1:1:2;\nSavedNumber = Step * 10;\nSave SavedNumber;\nEndFor;\n");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Save inside a loop failed");
+      const auto loopSaved=read(output.filePath("SavedNumber.Variable.data"));
+      require(loopSaved.count("Create Variable SavedNumber")==2 && loopSaved.contains("SavedNumber = 10") && loopSaved.contains("SavedNumber = 20"),
+         "Repeated Save command did not retain both snapshots");
+      std::cout<<"PASS: Save object controls, exact round trips, exported runtime values, reopen, repeat execution, loop snapshots, bad-path and disk-write recovery\n";
       std::cout<<"PASS: BulirschStoer and PrinceDormand853 configuration, round trips and analytic circular-orbit checks\n";
       std::cout<<"PASS: TLE sample, step configuration, report epoch/state, sampling invariance and missing-file recovery\n";
       std::cout<<"PASS: Python cross product and report, configured formation members and simultaneous propagation\n";

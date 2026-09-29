@@ -162,7 +162,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libPolyhedronGravity` | Pending qualification |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
-| `../plugins/libSaveCommand` | Pending qualification |
+| `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
 | `../plugins/libScriptTools` | Pending qualification |
 | `../plugins/libStation` | Pending qualification |
 | `../plugins/libThrustFile` | Pending qualification |
@@ -434,3 +434,26 @@ workflow/plugin qualification gates.
 The user executable was rebuilt; all 11 Qt tests passed in 25.27 seconds.
 Evidence: `Qt6ParityValidation/check-look-at.txt` and
 `Qt6ParityValidation/look-at-reference.txt`.
+
+
+## Save-command workflow/plugin checkpoint
+
+Qt exposes Save in the command templates when its plugin is registered and edits
+its object list through CommandForm. Actual export qualification found two plugin
+defects: stream failures were ignored, and copied Save commands left fileArray
+uninitialized. Save now initializes copied stream ownership, disposes prior
+streams before reinitialization/assignment, checks open/flush/close results, and
+closes streams on exceptions. Export restores original object comment flags even
+when serialization fails. These fixes apply to the shared Save plugin, including
+its use outside Qt.
+
+CompatibilityTests edits a Save command to export a spacecraft and variable,
+saves/reopens the mission exactly, executes it, then opens the exported resource
+file through Qt and checks current numeric values. Repeated runs replace previous
+output; a loop retains both snapshots. A nonexistent output path must fail, then
+recover to identical output. On Linux, a temporary symlink to /dev/full verifies
+post-open write failure and recovery. The fixture only modifies temporary outputs.
+Broader resource-type export and multi-snapshot reimport remain pending.
+
+GmatQt and the Save plugin were rebuilt; all 11 Qt tests passed in 26.55 seconds.
+Evidence: `Qt6ParityValidation/check-save-command.txt`.
