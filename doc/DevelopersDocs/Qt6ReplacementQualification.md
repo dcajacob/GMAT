@@ -404,3 +404,33 @@ notes and are not counted as completed parity.
 
 The user executable was rebuilt; all 11 Qt tests passed in 24.63 seconds.
 Evidence: `Qt6ParityValidation/check-body-cameras.txt`.
+
+
+## Two-frame look-at checkpoint
+
+LookAtFrame now imports OF's full camera-pose alignment instead of setting only
+the target position. ShortestAngle On maps to direct shortest rotation; Off maps
+to azimuth then elevation, with OF's singular-case threshold. Both primary and
+additional views combine this alignment with their body-relative/absolute frame.
+The stored center remains local to the reference frame. Explicit ViewDirection
+editing clears the primary alignment; Undo restores it. Mode values and metadata
+booleans are validated rather than silently interpreted as Off.
+
+The optional OpenFramesCameraReference probe compares the shared Qt alignment
+helper to actual OpenFrames FollowingTrackball transforms: 48 frame/mode/direction
+cases, four points each, including coincident origins, near-pole cases and reverse
+directions. Maximum point error was 2.06801e-12 scene units. The reference library
+is `/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib/libOpenFrames.so`;
+the source checkout HEAD inspected was `037643090d42c3ff804584f69b13b3b6511a8b66`.
+This probe adds no OpenFrames dependency to the Qt application.
+
+WorkflowTests exercises primary and additional Earth/spacecraft look-at views
+in both modes, checks complete eye/center orientation and perpendicular up vectors
+at the first and last samples, confirms the modes produce different roll, and
+verifies save/reopen, explicit-direction override and Undo. Trajectory/segment
+views and original automatic framing remain pending, along with the other
+workflow/plugin qualification gates.
+
+The user executable was rebuilt; all 11 Qt tests passed in 25.27 seconds.
+Evidence: `Qt6ParityValidation/check-look-at.txt` and
+`Qt6ParityValidation/look-at-reference.txt`.

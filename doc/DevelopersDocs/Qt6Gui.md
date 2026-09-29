@@ -487,7 +487,8 @@ unchanged; viewer differences are documented in comments and the message
 window. It imports common plot flags and named camera views into Qt OrbitView,
 including perspective projection and vertical FOV. A camera selector switches
 views during playback. Body-relative cameras follow object orientation;
-trajectory-relative and two-frame look-at orientation remain pending. Unsupported
+two-frame look-at orientation is retained in both rotation modes. Trajectory views
+remain pending. Unsupported
 OpenFrames object kinds or dynamic viewer assignments require manual editing.
 Keep the original file if it will also be used with the OFI application.
 
@@ -627,7 +628,7 @@ a nearest-axis fallback for the base viewer. Keep projection retains this vector
 An explicit ViewUpAxis edit in the resource panel removes the override, and Undo
 restores it. When editing raw script, remove the `up` member to use ViewUpAxis.
 Zero, malformed or nonfinite imported vectors are rejected with an explanation.
-Trajectory-relative and two-frame look-at orientation remain open.
+Trajectory-relative orientation remains open.
 
 
 ### Named camera views
@@ -643,8 +644,8 @@ camera, and normal Save preserves all named definitions.
 Additional views preserve stored Current/Default eye, center and up vectors.
 Object references track positions, including center offsets. With InertialFrame
 Off, body-relative views also follow object orientation; InertialFrame On retains
-plot-frame axes. Trajectory/segment views, two-frame look-at orientation and OF's
-automatic framing are still pending. Views without a stored location currently use a 30000 km offset;
+plot-frame axes. Trajectory/segment views and OF's automatic framing are still
+pending. Views without a stored location currently use a 30000 km offset;
 conversion reports this explicitly. Duplicate/unknown view names, invalid poses
 and missing reference objects are rejected before execution. The base viewer
 uses the first camera and ignores the additional Qt metadata.
@@ -660,3 +661,18 @@ OF defaults, and malformed vectors are rejected. An explicit ViewDirection edit
 clears an imported primary center offset. A body-relative primary view requires
 an object reference and a vector eye offset; incompatible edits are rejected and
 the previous mission is restored.
+
+
+Two-frame LookAtFrame conversion rotates the entire stored eye/center/up pose
+so its local +Y direction follows the reference-to-target vector. ShortestAngle
+On uses the direct rotation; Off uses azimuth then elevation. The reference frame
+can follow body attitude or retain plot-frame axes. This preserves the OF roll
+behavior and differs from simply moving the center to the target object.
+Coincident origins use the unaligned reference frame. Keep projection and
+save/reopen preserve alignment modes; explicitly editing ViewDirection restores
+standard OrbitView direction semantics, and Undo restores the imported alignment.
+
+`tests/OpenFramesCameraReference.cpp` is an optional developer qualification probe
+against an installed OpenFrames library, not a dependency of GmatQt. It compares
+the shared alignment helper with the actual FollowingTrackball transforms in
+absolute/body-relative modes, both rotation modes and singular directions.

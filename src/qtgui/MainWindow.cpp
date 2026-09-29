@@ -757,7 +757,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (settings.contains(name)) {
             auto setting=settings.value(name);
             if (changes.contains("ViewUpAxis")) setting.up.reset();
-            if (changes.contains("ViewDirection")) setting.centerOffset.reset();
+            if (changes.contains("ViewDirection")) { setting.centerOffset.reset(); setting.lookAtRotation=false; }
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }

@@ -98,6 +98,8 @@ int main(int argc, char **argv)
          const auto absolute=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame = CoordinateSystem","Camera.InertialFrame = On;\nCamera.ViewFrame = Earth"));
          require(absolute.error.isEmpty() && !qtCameraSettings(absolute.script).value("Display").bodyRelative,"InertialFrame On incorrectly follows body rotation");
          require(!convertOpenFramesViews(QString(input).replace("[100 200 300]","[invalid]")).error.isEmpty(),"Invalid primary eye silently replaced");
+         require(!convertOpenFramesViews(QString(input).replace("Camera.ViewFrame","Camera.ShortestAngle = Invalid;\nCamera.ViewFrame")).error.isEmpty(),
+            "Invalid camera alignment mode silently changed");
          const auto custom=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 37.5;\nCamera.ViewFrame"));
          require(custom.error.isEmpty() && qtCameraSettings(custom.script)["Display"].fieldOfView==37.5,"Conversion rounded the OF field of view");
          require(!convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 180;\nCamera.ViewFrame")).error.isEmpty(),
@@ -840,6 +842,64 @@ int main(int argc, char **argv)
             "Body-relative mode accepted a reference with no attitude");
          require(editor->toPlainText()==good && window.runMission()==MainWindow::RunResult::Completed,"Invalid body-camera edit lost the mission");
          checkBodyCamera();
+      }
+      {
+         std::array<double,3> azimuthUp{};
+         auto checkLookAt=[&] {
+            const auto model=window.plotReceiver()->model("OFI_EarthView");
+            require(model && !model->cameras.empty(),"Aligned camera history missing");
+            for (int view=0;view<3;++view) {
+               const auto &history=view==0 ? model->cameras : model->cameraViews[view].cameras;
+               require(history.size()==model->cameras.size(),"Aligned secondary history incomplete");
+               for (const auto *camera:{&history.front(),&history.back()}) {
+                  std::array<double,3> earth{},sat{};
+                  for (const auto &curve:model->curves) for (const auto &point:curve.points) if (point.frame==camera->frame) {
+                     if (curve.name=="Earth") earth={point.x,point.y,point.z};
+                     if (curve.name=="DefaultSC") sat={point.x,point.y,point.z};
+                  }
+                  const auto origin=view==2 ? sat : earth, target=view==2 ? earth : sat;
+                  const double length=std::hypot(target[0]-origin[0],target[1]-origin[1],target[2]-origin[2]);
+                  const double distance=view==0 ? 50000 : 30000;
+                  double upDot=0;
+                  for (int axis=0;axis<3;++axis) {
+                     const double direction=(target[axis]-origin[axis])/length;
+                     require(std::abs(camera->eye[axis]-origin[axis]+distance*direction)<1e-7 &&
+                        std::abs(camera->target[axis]-origin[axis])<1e-8,"Two-frame camera did not rotate the entire stored pose");
+                     upDot+=camera->up[axis]*direction;
+                  }
+                  require(std::abs(upDot)<1e-10,"Aligned camera up is not perpendicular to its direction");
+               }
+            }
+         };
+         for (bool shortest:{false,true}) {
+            auto lookScript=originalSample;
+            lookScript.replace(QRegularExpression("TheView\\.ViewFrame\\s*=\\s*CoordinateSystem"),"TheView.ViewFrame = Earth");
+            lookScript.replace(QRegularExpression("TheView\\.DefaultEye\\s*=\\s*\\[[^\\]]*\\]"),"TheView.DefaultEye = [0 -50000 0]");
+            lookScript.replace(QRegularExpression("TheView\\.DefaultUp\\s*=\\s*\\[[^\\]]*\\]"),"TheView.DefaultUp = [0 0 1]");
+            const auto mode=shortest ? QString("On") : QString("Off");
+            lookScript.replace("BeginMissionSequence;",QString("TheView.LookAtFrame = DefaultSC;\nTheView.ShortestAngle = %1;\n"
+               "Earth_View.LookAtFrame = DefaultSC;\nEarth_View.ShortestAngle = %1;\n"
+               "DefaultSC_View.LookAtFrame = Earth;\nDefaultSC_View.ShortestAngle = %1;\nBeginMissionSequence;").arg(mode));
+            const auto converted=convertOpenFramesViews(lookScript);
+            require(converted.error.isEmpty(),"Look-at conversion failed");
+            const auto setting=qtCameraSettings(converted.script).value("OFI_EarthView");
+            require(setting.lookAtRotation && setting.shortestAngle==shortest && setting.views[1].lookAtRotation && setting.views[1].shortestAngle==shortest,
+               "Conversion lost two-frame alignment mode");
+            editor->setPlainText(converted.script);
+            require(window.runMission()==MainWindow::RunResult::Completed,"Two-frame camera mission failed");
+            checkLookAt();
+            const auto up=window.plotReceiver()->model("OFI_EarthView")->cameras.front().up;
+            if (!shortest) azimuthUp=up;
+            else require(std::hypot(up[0]-azimuthUp[0],up[1]-azimuthUp[1],up[2]-azimuthUp[2])>1e-4,"ShortestAngle did not change camera roll");
+         }
+         require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
+            "Two-frame camera save/reopen failed");
+         checkLookAt();
+         const auto beforeDirection=editor->toPlainText();
+         require(window.applyResourceChanges("OFI_EarthView",{{"ViewDirection","Earth"}},beforeDirection).isEmpty(),"Explicit direction edit failed");
+         require(!qtCameraSettings(editor->toPlainText()).value("OFI_EarthView").lookAtRotation,"Explicit direction edit retained hidden alignment");
+         editor->undo(); require(editor->toPlainText()==beforeDirection && window.runMission()==MainWindow::RunResult::Completed,"Look-at override Undo failed");
+         checkLookAt();
       }
       editor->setPlainText("Create OpenFramesVector Vec;\nBeginMissionSequence;\n");
       bool manualExplanation=false;

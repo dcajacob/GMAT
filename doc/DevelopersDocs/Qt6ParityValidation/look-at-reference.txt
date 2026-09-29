@@ -1,0 +1,8 @@
+Optional OpenFrames reference comparison
+Source: src/qtgui/tests/OpenFramesCameraReference.cpp
+
+Command:
+c++ -std=c++17 src/qtgui/tests/OpenFramesCameraReference.cpp -Isrc/qtgui -I/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/include -L/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib -Wl,-rpath,/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib -lOpenFrames -losg -losgGA -o /tmp/gmat-camera-reference
+/tmp/gmat-camera-reference
+
+PASS: 48 OpenFrames frame/mode/direction cases; maximum point error=2.06801e-12

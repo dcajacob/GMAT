@@ -81,6 +81,13 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          }
       }
    }
+   for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesView") {
+      const auto values=properties.value(it.key());
+      for (const auto *key:{"SetDefaultLocation","SetCurrentLocation","InertialFrame","ViewTrajectory","ShortestAngle"})
+         if (values.contains(key) && values.value(key)!="On" && values.value(key)!="Off") {
+            result.error=it.key()+"."+key+": expected On or Off."; return result;
+         }
+   }
    const QSet<QString> common={"Add","CoordinateSystem","DrawObject","SolverIterations","Maximized","ShowPlot","Size","UpperLeft",
       "RelativeZOrder","Axes","XYPlane","EclipticPlane","EnableStars","StarCount","EnableConstellations",
       "DataCollectFrequency","UpdatePlotFrequency","MaxPlotPoints"};
@@ -150,7 +157,11 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          if (!body) set("ViewDirection",formatVector(center));
          else cameraSetting.centerOffset=center;
       }
-      if (values.contains("LookAtFrame")) set("ViewDirection",values["LookAtFrame"]);
+      if (values.contains("LookAtFrame")) {
+         set("ViewDirection",values["LookAtFrame"]=="CoordinateSystem" ? "[0 0 0]" : values["LookAtFrame"]);
+         cameraSetting.lookAtRotation=true; cameraSetting.shortestAngle=values.value("ShortestAngle","Off")=="On";
+         cameraSetting.centerOffset=center;
+      }
       if (stored) {
          int axis=0; for (int i=1;i<3;++i) if (std::abs(up[i])>std::abs(up[axis])) axis=i;
          QString signedAxis=up[axis]<0 ? "-" : ""; signedAxis+="XYZ"[axis]; set("ViewUpAxis",signedAxis);
@@ -171,6 +182,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          const auto extraFrame=extra.value("ViewFrame","CoordinateSystem");
          if (extraFrame!="CoordinateSystem") preset.reference=extraFrame;
          preset.target=extra.value("LookAtFrame");
+         preset.lookAtRotation=!preset.target.isEmpty(); preset.shortestAngle=extra.value("ShortestAngle","Off")=="On";
          preset.bodyRelative=!preset.reference.isEmpty() && extra.value("InertialFrame","Off")=="Off" && extra.value("ViewTrajectory","Off")=="Off";
          const auto location=extra.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
          if (extra.value("Set"+location+"Location")=="On") {
@@ -184,7 +196,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          } else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
          cameraSetting.views.append(preset);
          if (!preset.reference.isEmpty()) result.notes.append(preset.name+(preset.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
-         if (!preset.target.isEmpty()) result.notes.append(preset.name+": look-at target is tracked directly; OF ShortestAngle/AZEL orientation is not imported.");
+         if (!preset.target.isEmpty()) result.notes.append(preset.name+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
          if (extra.value("ViewTrajectory")=="On") result.notes.append(preset.name+": trajectory-relative orientation is not imported.");
       }
       try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
@@ -193,7 +205,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
       result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views; trajectory-relative orientation is not imported.");
       if (body) result.notes.append(plot+(cameraSetting.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
-      if (values.contains("LookAtFrame")) result.notes.append(plot+": look-at target is tracked directly; OF ShortestAngle/AZEL orientation is not imported.");
+      if (values.contains("LookAtFrame")) result.notes.append(plot+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
    }
    int insertion=output.size();
    for (int i=0;i<output.size();++i) if (codePart(output[i]).startsWith("BeginMissionSequence")) { insertion=i; break; }
@@ -210,6 +222,7 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
    if (setting.up) object.insert("up",QJsonArray{(*setting.up)[0],(*setting.up)[1],(*setting.up)[2]});
    if (setting.bodyRelative) object.insert("bodyRelative",true);
+   if (setting.lookAtRotation) { object.insert("lookAtRotation",true); object.insert("shortestAngle",setting.shortestAngle); }
    if (setting.centerOffset) object.insert("centerOffset",QJsonArray{(*setting.centerOffset)[0],(*setting.centerOffset)[1],(*setting.centerOffset)[2]});
    if (!setting.primaryName.isEmpty()) object.insert("primaryName",setting.primaryName);
    if (!setting.views.isEmpty()) {
@@ -217,7 +230,7 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
       for (const auto &view:setting.views) views.append(QJsonObject{{"name",view.name},{"reference",view.reference},{"target",view.target},
          {"eye",vector(view.eye)},{"center",vector(view.center)},{"up",vector(view.up)},
-         {"perspective",view.perspective},{"fieldOfView",view.fieldOfView},{"bodyRelative",view.bodyRelative}});
+         {"perspective",view.perspective},{"fieldOfView",view.fieldOfView},{"bodyRelative",view.bodyRelative},{"lookAtRotation",view.lookAtRotation},{"shortestAngle",view.shortestAngle}});
       object.insert("views",views);
    }
    return "% GMAT-Qt-Camera "+QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact))+"\n";
@@ -250,6 +263,9 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       }
       if (object.contains("bodyRelative") && !object.value("bodyRelative").isBool()) throw std::runtime_error("Camera bodyRelative must be a boolean");
       setting.bodyRelative=object.value("bodyRelative").toBool();
+      for (const auto *key:{"lookAtRotation","shortestAngle"})
+         if (object.contains(key) && !object.value(key).isBool()) throw std::runtime_error("Camera alignment modes must be booleans");
+      setting.lookAtRotation=object.value("lookAtRotation").toBool(); setting.shortestAngle=object.value("shortestAngle").toBool();
       if (object.contains("centerOffset")) {
          const auto array=object.value("centerOffset").toArray(); std::array<double,3> center{};
          if (array.size()!=3) throw std::runtime_error("Camera centerOffset must have three numbers");
@@ -287,6 +303,10 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
                throw std::runtime_error("Invalid or duplicate named camera: check names, reference objects, projection and field of view");
             if (value.contains("bodyRelative") && !value.value("bodyRelative").isBool()) throw std::runtime_error("Named camera bodyRelative must be a boolean");
             view.bodyRelative=value.value("bodyRelative").toBool();
+            for (const auto *key:{"lookAtRotation","shortestAngle"})
+               if (value.contains(key) && !value.value(key).isBool()) throw std::runtime_error("Named camera alignment modes must be booleans");
+            view.lookAtRotation=value.value("lookAtRotation").toBool(); view.shortestAngle=value.value("shortestAngle").toBool();
+            if (view.lookAtRotation && view.target.isEmpty()) throw std::runtime_error("Aligned camera needs a target");
             if (view.bodyRelative && (view.reference.isEmpty() || view.reference=="CoordinateSystem")) throw std::runtime_error("Body-relative camera needs an object reference");
             view.eye=vector(value.value("eye")); view.center=vector(value.value("center")); view.up=vector(value.value("up"));
             const auto upLength=std::hypot(view.up[0],view.up[1],view.up[2]);

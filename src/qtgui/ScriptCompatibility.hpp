@@ -18,6 +18,7 @@ struct QtCameraPreset {
    bool perspective=true;
    double fieldOfView=45;
    bool bodyRelative=false;
+   bool lookAtRotation=false, shortestAngle=false;
 };
 struct QtCameraSetting {
    bool perspective=false; double fieldOfView=50;
@@ -25,6 +26,7 @@ struct QtCameraSetting {
    QString primaryName;
    QVector<QtCameraPreset> views;
    bool bodyRelative=false;
+   bool lookAtRotation=false, shortestAngle=false;
    std::optional<std::array<double,3>> centerOffset;
 };
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);

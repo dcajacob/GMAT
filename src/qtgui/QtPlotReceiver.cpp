@@ -1,4 +1,5 @@
 #include "QtPlotReceiver.hpp"
+#include "CameraAlignment.hpp"
 #include "TableColumns.hpp"
 #include "PlotWidget.hpp"
 #include "BodyFixedPoint.hpp"
@@ -26,11 +27,11 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
 {
    auto *moderator=Moderator::Instance();
    for (auto it=settings.cbegin();it!=settings.cend();++it) {
-      if (it->bodyRelative) {
+      if (it->bodyRelative || it->lookAtRotation) {
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
-         if (!plot || !plot->IsOfType("OrbitView") || plot->GetStringParameter("ViewPointRefType")=="Vector" ||
+         if (!plot || !plot->IsOfType("OrbitView") || (it->bodyRelative && plot->GetStringParameter("ViewPointRefType")=="Vector") ||
              plot->GetStringParameter("ViewPointVectorType")!="Vector")
-            throw std::runtime_error((it.key()+": body-relative camera requires an object ViewPointReference and a vector ViewPointVector").toStdString());
+            throw std::runtime_error((it.key()+": relative camera needs a vector ViewPointVector; body-relative mode also needs an object ViewPointReference").toStdString());
       }
       for (const auto &view:it->views) {
       for (const auto &name:{view.reference,view.target}) {
@@ -278,38 +279,46 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          return std::array<double,3>{state[0],state[1],state[2]};
       };
       const auto settings=cameraSettings.value(text(name));
-      auto rotate=[&](const std::array<double,3> &vector,SpacePoint *object) {
-         if (!object) throw std::runtime_error("Missing body-relative camera reference");
-         Rmatrix33 viewToBase;
-         if (entry->view) {
-            entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
-            viewToBase=entry->view->GetLastRotationMatrix();
+      auto transform=[&](SpacePoint *object,const std::array<double,3> &origin,const std::array<double,3> &target,bool aligned,bool shortest) {
+         Rmatrix33 frame;
+         if (object) {
+            Rmatrix33 viewToBase;
+            if (entry->view) {
+               entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
+               viewToBase=entry->view->GetLastRotationMatrix();
+            }
+            auto bodyToBase=object->GetAttitude(epoch);
+            if (object->IsOfType(Gmat::SPACECRAFT)) bodyToBase=bodyToBase.Transpose();
+            frame=viewToBase.Transpose()*bodyToBase;
          }
-         auto bodyToBase=object->GetAttitude(epoch);
-         if (object->IsOfType(Gmat::SPACECRAFT)) bodyToBase=bodyToBase.Transpose();
-         const auto rotated=viewToBase.Transpose()*bodyToBase*Rvector3(vector[0],vector[1],vector[2]);
-         return std::array<double,3>{rotated[0],rotated[1],rotated[2]};
+         const auto direction=frame.Transpose()*Rvector3(target[0]-origin[0],target[1]-origin[1],target[2]-origin[2]);
+         const auto alignment=aligned ? cameraAlignment(osg::Vec3d(direction[0],direction[1],direction[2]),shortest) : osg::Quat();
+         return [frame,alignment](const std::array<double,3> &vector) {
+            const auto local=alignment*osg::Vec3d(vector[0],vector[1],vector[2]);
+            const auto world=frame*Rvector3(local.x(),local.y(),local.z());
+            return std::array<double,3>{world[0],world[1],world[2]};
+         };
       };
       try {
          PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
          const auto reference=resolve(entry->referenceIsVector,entry->cameraReference,entry->referenceVector);
-         auto position=resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector);
-         if (settings.bodyRelative) {
-            if (!entry->positionIsVector) throw std::runtime_error("Body-relative camera position must be a vector");
-            position=rotate(position,entry->cameraReference);
-         }
-         camera.target=resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
-         Rvector3 up(entry->upVector[0],entry->upVector[1],entry->upVector[2]);
-         if (settings.bodyRelative) {
-            const auto bodyUp=rotate(entry->upVector,entry->cameraReference); up=Rvector3(bodyUp[0],bodyUp[1],bodyUp[2]);
-         } else if (entry->viewUp && entry->view && entry->viewUp!=entry->view) {
+         const auto target=resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
+         if ((settings.bodyRelative || settings.lookAtRotation) && !entry->positionIsVector)
+            throw std::runtime_error("Relative camera position must be a vector");
+         if (settings.bodyRelative && !entry->cameraReference) throw std::runtime_error("Missing body-relative camera reference");
+         const auto orient=transform(settings.bodyRelative ? entry->cameraReference : nullptr,reference,target,settings.lookAtRotation,settings.shortestAngle);
+         const auto position=orient(resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector));
+         camera.target=settings.lookAtRotation ? reference : target;
+         const auto orientedUp=orient(entry->upVector);
+         Rvector3 up(orientedUp[0],orientedUp[1],orientedUp[2]);
+         if (!settings.bodyRelative && !settings.lookAtRotation && entry->viewUp && entry->view && entry->viewUp!=entry->view) {
             entry->viewUp->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
             const auto upToBase=entry->viewUp->GetLastRotationMatrix();
             entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
             up=entry->view->GetLastRotationMatrix().Transpose()*upToBase*up;
          }
          if (settings.centerOffset) {
-            const auto offset=settings.bodyRelative ? rotate(*settings.centerOffset,entry->cameraReference) : *settings.centerOffset;
+            const auto offset=orient(*settings.centerOffset);
             for (int i=0;i<3;++i) camera.target[i]+=offset[i];
          }
          for (int i=0;i<3;++i) {
@@ -341,13 +350,14 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             const auto origin=position(view.reference);
             const auto target=view.target.isEmpty() ? origin : position(view.target);
             auto *reference=view.bodyRelative ? findObject(view.reference) : nullptr;
-            const auto eye=view.bodyRelative ? rotate(view.eye,reference) : view.eye;
-            const auto center=view.bodyRelative ? rotate(view.center,reference) : view.center;
+            if (view.bodyRelative && !reference) throw std::runtime_error("Missing body-relative camera reference");
+            const auto orient=transform(reference,origin,target,view.lookAtRotation,view.shortestAngle);
+            const auto eye=orient(view.eye),center=orient(view.center);
             PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
-            camera.up=view.bodyRelative ? rotate(view.up,reference) : view.up;
+            camera.up=orient(view.up);
             for (int axis=0;axis<3;++axis) {
                camera.eye[axis]=origin[axis]+eye[axis];
-               camera.target[axis]=target[axis]+center[axis];
+               camera.target[axis]=(view.lookAtRotation ? origin[axis] : target[axis])+center[axis];
                if (!std::isfinite(camera.eye[axis]) || !std::isfinite(camera.target[axis]) || !std::isfinite(camera.up[axis])) throw std::runtime_error("Nonfinite camera position");
             }
             if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
