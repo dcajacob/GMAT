@@ -783,3 +783,9 @@ Target/Achieve and optimization commands filter to their respective solver types
 BeginFiniteBurn and EndFiniteBurn also provide a spacecraft picker; the engine
 supports one spacecraft per finite-burn command. Maneuver includes a Backprop
 checkbox for applying its burn backwards in time.
+
+
+Toggle commands offer a **Select…** checklist for outputs and an **On/Off** dropdown.
+Choose one or more subscribers; Cancel leaves the command unchanged. The checklist
+supports dragging to retain your preferred order. Changes still go through command
+Apply before updating the mission.

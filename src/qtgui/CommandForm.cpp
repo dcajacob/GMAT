@@ -10,6 +10,10 @@
 #include <QHBoxLayout>
 #include <QInputDialog>
 #include <QCheckBox>
+#include <QComboBox>
+#include <QListWidget>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
 
 CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *parent)
    : QGroupBox("Command settings",parent),layout(new QFormLayout(this)),changed(std::move(callback))
@@ -75,7 +79,39 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (!resourceType.isEmpty() || (title()=="Report" && name=="Parameters")) {
+      if (title()=="Toggle" && name=="State") {
+         auto *state=new QComboBox(this); state->setObjectName("commandToggleState"); state->addItems({"On","Off"});
+         state->setCurrentText(input->text()); input->setParent(state); input->hide(); layout->addRow(name,state);
+         connect(state,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
+         connect(input,&QLineEdit::textChanged,state,&QComboBox::setCurrentText);
+      } else if (title()=="Toggle" && name=="Subscribers") {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
+         auto *choose=new QPushButton("Select…",container); choose->setObjectName("commandChoose_Subscribers"); row->addWidget(choose); layout->addRow(name,container);
+         connect(choose,&QPushButton::clicked,this,[this,input] {
+            QDialog dialog(this); dialog.setObjectName("toggleSubscriberDialog"); dialog.setWindowTitle("Select outputs"); dialog.resize(400,350);
+            auto *layout=new QVBoxLayout(&dialog); auto *list=new QListWidget(&dialog); list->setObjectName("toggleSubscriberList");
+            list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
+            const auto selected=input->text().split(QRegularExpression("\\s+"),Qt::SkipEmptyParts);
+            QStringList names=selected,available;
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) available.append(QString::fromStdString(name));
+            available.sort(); for (const auto &name:available) if (!names.contains(name)) names.append(name);
+            for (const auto &name:names) {
+               auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable);
+               item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked);
+            }
+            auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+            auto validate=[list,buttons] {
+               bool any=false; for (int i=0;i<list->count();++i) any=any || list->item(i)->checkState()==Qt::Checked;
+               buttons->button(QDialogButtonBox::Ok)->setEnabled(any);
+            };
+            connect(list,&QListWidget::itemChanged,&dialog,[validate] { validate(); }); validate();
+            connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+            if (dialog.exec()==QDialog::Accepted) {
+               QStringList names; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) names.append(list->item(i)->text());
+               input->setText(names.join(" "));
+            }
+         });
+      } else if (!resourceType.isEmpty() || (title()=="Report" && name=="Parameters")) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0);
          row->addWidget(input); auto *choose=new QPushButton("Select…",container);
          choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);

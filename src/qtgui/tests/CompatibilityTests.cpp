@@ -325,7 +325,7 @@ int main(int argc,char **argv)
             "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\n"
             "EndFiniteBurn 'Stop engine' Continuous(OtherSat); % retain end\n"
             "Report BurnReport BurnSat.BurnTank.FuelMass;\n"
-            "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 20};\nReport BurnReport BurnSat.BurnTank.FuelMass;\n");
+            "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\nReport BurnReport BurnSat.BurnTank.FuelMass;\n");
          require(window.buildScript(),"Finite-burn selector fixture failed");
          for (const auto *command:{"BeginFiniteBurn","EndFiniteBurn"}) {
             const auto snapshot=window.missionSnapshot(); int index=-1;
@@ -350,6 +350,44 @@ int main(int argc,char **argv)
          const double expected=150.-100.*10./(300.*gravity);
          require(mass.size()==2 && std::abs(mass[0].toDouble()-expected)<1e-7 &&
             std::abs(mass[1].toDouble()-mass[0].toDouble())<1e-10,"Finite-burn fuel use or EndFiniteBurn shutdown differs from constant-thrust mass flow");
+      }
+      {
+         const auto first=output.filePath("toggle-first.txt"),second=output.filePath("toggle-second.txt");
+         editor->setPlainText("Create Spacecraft ToggleSat;\nCreate ForceModel ToggleForces;\nCreate Propagator ToggleProp;\nToggleProp.FM = ToggleForces;\n"
+            "Create ReportFile FirstOutput SecondOutput;\nFirstOutput.Filename = '"+first+"';\nSecondOutput.Filename = '"+second+"';\n"
+            "FirstOutput.Add = {ToggleSat.ElapsedSecs};\nSecondOutput.Add = {ToggleSat.ElapsedSecs};\n"
+            "FirstOutput.WriteHeaders = false;\nSecondOutput.WriteHeaders = false;\n"
+            "BeginMissionSequence;\nToggle 'Quiet' FirstOutput On; % pause outputs\n"
+            "Propagate ToggleProp(ToggleSat) {ToggleSat.ElapsedSecs = 10};\n"
+            "Toggle 'Resume' FirstOutput On; % resume outputs\nPropagate ToggleProp(ToggleSat) {ToggleSat.ElapsedSecs = 10};\n");
+         require(window.buildScript(),"Toggle fixture failed");
+         for (int ordinal=0;ordinal<2;++ordinal) {
+            const auto snapshot=window.missionSnapshot(); int index=-1,seen=0;
+            for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="Toggle" && seen++==ordinal) { index=i; break; }
+            require(index>=0,"Toggle command absent");
+            QString replacement; CommandForm form([&](const auto &value) { replacement=value; }); form.setStatement(snapshot.nodes[index].statement);
+            auto *button=form.findChild<QPushButton *>("commandChoose_Subscribers"); require(button,"Toggle subscriber selector absent");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QDialog *>("toggleSubscriberDialog"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList");
+               require(list->findItems("ToggleSat",Qt::MatchExactly).isEmpty(),"Toggle picker includes a spacecraft");
+               for (int i=0;i<list->count();++i) list->item(i)->setCheckState(Qt::Unchecked);
+               require(!dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled(),"Empty Toggle selection can be accepted");
+               for (const auto *name:{"FirstOutput","SecondOutput"}) {
+                  const auto items=list->findItems(name,Qt::MatchExactly); require(items.size()==1,"Report absent from Toggle picker"); items.first()->setCheckState(Qt::Checked);
+               }
+               dialog->accept();
+            }); button->click();
+            auto *state=form.findChild<QComboBox *>("commandToggleState"); require(state,"Toggle state control absent"); state->setCurrentText(ordinal==0 ? "Off" : "On");
+            const auto accepted=replacement;
+            QTimer::singleShot(0,[&] { auto *dialog=form.findChild<QDialog *>("toggleSubscriberDialog"); dialog->findChild<QListWidget *>("toggleSubscriberList")->clear(); dialog->reject(); }); button->click();
+            require(replacement==accepted && replacement.contains("FirstOutput SecondOutput"),"Toggle Cancel or selection lost references");
+            require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty(),"Toggle picker edit failed");
+         }
+         roundTrip("toggle-selected-outputs"); require(window.runMission()==MainWindow::RunResult::Completed,"Selected Toggle mission failed");
+         require(read(first)==read(second),"Toggled outputs recorded different intervals");
+         const auto rows=read(first).trimmed().split('\n'); require(rows.size()>=2,"Toggle On did not resume recording");
+         for (const auto &row:rows) { bool ok=false; const double time=row.trimmed().toDouble(&ok); require(ok && time>=10.-1e-6 && time<=20.+1e-6,"Toggle Off failed to suppress first interval"); }
+         require(std::abs(rows.last().trimmed().toDouble()-20)<1e-6,"Toggled report did not reach final epoch");
       }
       const auto types=window.availableEngineTypes();
       require(types.contains("GmatFunction") && types.contains("Yukon") && types.contains("EclipseLocator"),"Expected native plugins were not registered");

@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | Pending audit |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Pending audit |
 | `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
-| `src/gui/command/TogglePanel.hpp` | CommandForm subscriber list and state controls; form coverage in MissionTests. Dedicated selection checklist pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested; other frames and mass-decrement cases pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
@@ -688,3 +688,25 @@ unqualified.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 50.28 seconds. Evidence:
 `Qt6ParityValidation/check-burn-controls.txt`.
+
+
+## Toggle output selection and execution
+
+Toggle now provides a subscriber checklist and an On/Off dropdown. Existing
+selection/order is retained; additional configured subscribers can be checked and
+rows dragged. Non-subscriber resources are excluded, empty selection disables OK,
+and Cancel discards pending checklist changes. The dropdown updates only the state
+source span, retaining the command's other text.
+
+CompatibilityTests edits both Toggle commands through the controls, selects two
+ReportFiles, checks exclusion of spacecraft, empty-selection rejection and Cancel,
+then saves/reopens with invalid-build recovery. Both reports remain silent for
+the first ten-second propagation and record the same interval after reactivation,
+ending at twenty seconds total (epoch tolerance 1e-6 seconds). ElapsedSecs stop
+conditions are relative to each Propagate command; the second command requests
+ten additional seconds. The finite-burn coast fixture was aligned to the same
+semantics so its documented ten-second coast is now exactly what it requests.
+Plot/ephemeris subscribers and Toggle inside solver loops remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 27.66 seconds. Evidence:
+`Qt6ParityValidation/check-toggle-controls.txt`.
