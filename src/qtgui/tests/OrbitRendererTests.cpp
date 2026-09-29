@@ -153,6 +153,42 @@ int main(int argc,char **argv)
       require(disabledSky!=skyOnly,"Disabling stars had no effect");
       sky->starsEnabled=true; sky->starCount=0;
       require(starViewer.captureImage()==disabledSky,"Zero star count still rendered stars");
+      auto tracking=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+      tracking->labels=false; tracking->legend=false; tracking->axes=false; tracking->grid=false; tracking->scriptedCamera=true;
+      tracking->curves[0].radius=1; tracking->curves[0].color=Qt::green; tracking->curves[0].lines=false;
+      tracking->curves[1].color=Qt::red; tracking->curves[1].lines=false;
+      tracking->frame=1; tracking->append(0,10,0,0); tracking->append(1,11.5,0,0);
+      tracking->cameras.push_back({1,{10,0,6},{10,0,0},{0,1,0}});
+      tracking->frame=2; tracking->append(0,20,0,0); tracking->append(1,21.5,0,0);
+      tracking->cameras.push_back({2,{20,0,6},{20,0,0},{0,-1,0}});
+      OrbitRenderer trackedViewer(tracking); trackedViewer.resize(640,480); trackedViewer.show();
+      trackedViewer.setView(1,0,0,{},1); app.processEvents();
+      const auto firstCamera=trackedViewer.captureImage();
+      auto redX=[](const QImage &image) {
+         double sum=0,count=0;
+         for (int y=0;y<image.height();++y) for (int x=0;x<image.width();++x) {
+            const auto c=image.pixelColor(x,y);
+            if (c.red()>200 && c.green()<60) { sum+=x; ++count; }
+         }
+         require(count>0,"Tracked marker missing"); return sum/count;
+      };
+      require(redX(firstCamera)>firstCamera.width()/2,"Script camera did not center on tracked target");
+      trackedViewer.setView(1,0,0,{},2); const auto secondCamera=trackedViewer.captureImage();
+      require(redX(secondCamera)<secondCamera.width()/2,"Script up direction or replay tracking failed");
+      auto greenCount=[](const QImage &image) {
+         int count=0;
+         for (int y=0;y<image.height();++y) for (int x=0;x<image.width();++x) {
+            const auto c=image.pixelColor(x,y); if (c.green()>80 && c.green()>c.red()*2) ++count;
+         }
+         return count;
+      };
+      require(greenCount(secondCamera)>1000,"Tracked body missing");
+      tracking->cameras.back().eye[2]=12;
+      require(greenCount(trackedViewer.captureImage())<greenCount(secondCamera)/2,"Script camera scale ignored");
+      trackedViewer.setView(2,0,0,{},2);
+      require(greenCount(trackedViewer.captureImage())>greenCount(secondCamera)*.9,"Manual zoom no longer works with tracking");
+      trackedViewer.setView(1,0,0,{},1);
+      require(trackedViewer.captureImage()==firstCamera,"Replay did not restore camera snapshot");
       std::cout << "Native texture, depth, rotation, resize, model material, Sun illumination, star catalog/camera/replay/occlusion, fallback and lifecycle checks passed\n";
       return 0;
    } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }

@@ -381,10 +381,20 @@ missing-texture/model fallback, text overlays and repeated viewer lifetime.
 native renderer, including close during run, reopening and repeat missions.
 
 The view uses positions already converted by OrbitPlot; non-spacecraft bodies
-are converted from the internal frame separately. Constellation lines, reference planes,
-eclipse shadows, non-spherical celestial-body models and scripted camera
-tracking remain outstanding. Unsupported camera
-and drawing options are reported in Message Window. Advanced XY marker/style
+are converted from the internal frame separately. Scripted cameras support
+object or vector references, viewpoints and directions, viewpoint scale, and
+signed up axes in the configured view-up coordinate system. Camera states are
+captured numerically with the mission frames; replay and reopened plots need no
+live engine pointers. Drag/pan/zoom remain offsets from the tracked camera.
+**Fit** frames the mission; **Script view** restores the scripted framing.
+Native and fallback rendering share the camera basis. The projection remains
+orthographic, using camera distance to set scale, rather than adopting the
+OpenFrames perspective/navigation interface. Degenerate eye/target settings
+are reported; a parallel up vector gets a stable fallback roll.
+
+Constellation lines, reference planes, eclipse shadows and non-spherical
+celestial-body models remain outstanding. Unsupported drawing options are
+reported in Message Window. Advanced XY marker/style
 and solver-iteration behavior also needs parity work.
 
 GroundTrack uses the engine's geodetic longitude/latitude, resolved body map,

@@ -84,10 +84,34 @@ int main(int argc,char **argv)
       require(fixedStars && fixedStars->starsEnabled && fixedStars->starCount==1234 &&
               fixedStars->starCatalog.stars.size()>40000,"Script star settings or catalog resolution failed");
       require(!orbit->starsEnabled && !orbit->starCatalogLoaded,"Disabled stars unnecessarily loaded a catalog");
+      require(orbit->cameras.size()==o.points.size(),"Object camera history length differs from orbit");
+      for (const auto *camera:{&orbit->cameras.front(),&orbit->cameras.back()}) {
+         const PlotPoint *position=nullptr;
+         for (const auto &point:o.points) if (point.frame==camera->frame) position=&point;
+         require(position,"Object camera frame missing");
+         const double coordinates[]={position->x,position->y,position->z};
+         for (int axis=0;axis<3;++axis) require(std::abs(camera->eye[axis]-(axis+1)*100-3*coordinates[axis])<1e-9 && camera->target[axis]==0,
+            "Object viewpoint/vector reference or direction vector ignored");
+      }
       auto *inertial=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthMJ2000Eq"));
       auto *earthFixed=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthFixed"));
       CoordinateConverter skyReference;
       const auto &fixedEarth=curve(*fixedStars,"Earth");
+      require(fixedStars->scriptedCamera && fixedStars->cameras.size()>100,"Scripted camera history missing");
+      const auto &fixedSat=curve(*fixedStars,"QtSat");
+      for (const auto *camera:{&fixedStars->cameras.front(),&fixedStars->cameras.back()}) {
+         const PlotPoint *position=nullptr;
+         for (const auto &point:fixedSat.points) if (point.frame==camera->frame) position=&point;
+         require(position,"Camera frame has no matching spacecraft state");
+         const double coordinates[]={position->x,position->y,position->z},offset[]={20000,4000,6000};
+         Rvector6 up(1,0,0,0,0,0),converted;
+         skyReference.Convert(position->epoch,up,inertial,converted,earthFixed);
+         for (int axis=0;axis<3;++axis) {
+            require(std::abs(camera->target[axis]-coordinates[axis])<1e-9,"Camera target did not track spacecraft");
+            require(std::abs(camera->eye[axis]-coordinates[axis]-offset[axis])<1e-9,"Camera reference/scale incorrect");
+            require(std::abs(camera->up[axis]-converted[axis])<1e-10,"Camera up frame differs from independent conversion");
+         }
+      }
       for (const auto *point:{&fixedEarth.points.front(),&fixedEarth.points.back()}) {
          Rvector6 direction(1,0,0,0,0,0),converted;
          skyReference.Convert(point->epoch,direction,inertial,converted,earthFixed);

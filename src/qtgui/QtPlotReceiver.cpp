@@ -142,9 +142,9 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
       }
    }
 }
-void QtPlotReceiver::SetGlCoordSystem(const std::string &name,CoordinateSystem *internal,CoordinateSystem *view,CoordinateSystem *)
+void QtPlotReceiver::SetGlCoordSystem(const std::string &name,CoordinateSystem *internal,CoordinateSystem *view,CoordinateSystem *viewUp)
 {
-   if (auto *entry=find(name)) { entry->internal=internal; entry->view=view; entry->data->coordinates=view ? text(view->GetName()) : QString(); }
+   if (auto *entry=find(name)) { entry->internal=internal; entry->view=view; entry->viewUp=viewUp; entry->data->coordinates=view ? text(view->GetName()) : QString(); }
 }
 void QtPlotReceiver::SetGl2dDrawingOption(const std::string &name,const std::string &,const std::string &map,Integer footprint)
 {
@@ -173,14 +173,20 @@ void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bo
    if (sun) warn(name,"Sun direction line");
    if (constellations) warn(name,"constellation lines");
 }
-void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *,SpacePoint *,SpacePoint *,Real,const Rvector3 &,const Rvector3 &view,const Rvector3 &,const std::string &,bool,bool useVector,bool)
+void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *reference,SpacePoint *position,SpacePoint *direction,Real scale,
+      const Rvector3 &referenceVector,const Rvector3 &positionVector,const Rvector3 &directionVector,const std::string &upAxis,
+      bool referenceIsVector,bool positionIsVector,bool directionIsVector)
 {
-   if (auto *entry=find(name)) if (entry->widget && useVector) {
-      const double length=std::hypot(view[0],view[1]);
-      if (std::hypot(length,view[2])>0)
-         entry->widget->canvas()->setViewAngles(std::atan2(view[0],view[1]),std::atan2(length,view[2]));
+   if (auto *entry=find(name)) {
+      entry->cameraReference=reference; entry->cameraPosition=position; entry->cameraDirection=direction;
+      entry->referenceIsVector=referenceIsVector; entry->positionIsVector=positionIsVector; entry->directionIsVector=directionIsVector;
+      entry->cameraScale=scale; entry->upVector={0,0,0};
+      const auto axis=upAxis.empty() ? 'Z' : upAxis.back(); const int index=axis=='X' ? 0 : axis=='Y' ? 1 : 2;
+      entry->upVector[index]=!upAxis.empty() && upAxis.front()=='-' ? -1 : 1;
+      for (int i=0;i<3;++i) { entry->referenceVector[i]=referenceVector[i]; entry->positionVector[i]=positionVector[i]; entry->directionVector[i]=directionVector[i]; }
+      entry->data->scriptedCamera=true;
+      if (entry->widget) entry->widget->canvas()->scriptView();
    }
-   warn(name,"scripted camera tracking (use mouse rotation, zoom and Fit)");
 }
 void QtPlotReceiver::SetGlDrawOrbitFlag(const std::string &name,const std::vector<bool> &flags)
 {
@@ -203,6 +209,46 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
 {
    auto *entry=find(name); if (!entry) return false;
    auto &data=*entry->data; ++data.frame;
+   if (data.kind==PlotModel::Kind::Orbit && data.scriptedCamera) {
+      auto resolve=[&](bool vector,SpacePoint *object,const std::array<double,3> &value) {
+         if (vector) return value;
+         if (!object) throw std::runtime_error("Missing camera reference object");
+         const auto found=std::find(names.begin(),names.end(),object->GetName());
+         if (found!=names.end()) {
+            const auto index=static_cast<size_t>(found-names.begin());
+            if (index<x.size() && index<y.size() && index<z.size()) return std::array<double,3>{x[index],y[index],z[index]};
+         }
+         auto state=object->GetMJ2000State(epoch);
+         if (entry->internal && entry->view && entry->internal!=entry->view) {
+            Rvector6 converted; CoordinateConverter converter;
+            converter.Convert(epoch,state,entry->internal,converted,entry->view); state=converted;
+         }
+         return std::array<double,3>{state[0],state[1],state[2]};
+      };
+      try {
+         PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
+         const auto reference=resolve(entry->referenceIsVector,entry->cameraReference,entry->referenceVector);
+         const auto position=resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector);
+         camera.target=resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
+         Rvector3 up(entry->upVector[0],entry->upVector[1],entry->upVector[2]);
+         if (entry->viewUp && entry->view && entry->viewUp!=entry->view) {
+            entry->viewUp->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
+            const auto upToBase=entry->viewUp->GetLastRotationMatrix();
+            entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
+            up=entry->view->GetLastRotationMatrix().Transpose()*upToBase*up;
+         }
+         for (int i=0;i<3;++i) {
+            camera.eye[i]=reference[i]+entry->cameraScale*position[i]; camera.up[i]=up[i];
+            if (!std::isfinite(camera.eye[i]) || !std::isfinite(camera.target[i]) || !std::isfinite(camera.up[i]))
+               throw std::runtime_error("Nonfinite camera coordinates");
+         }
+         if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
+            throw std::runtime_error("Camera eye and target coincide");
+         data.cameras.push_back(camera);
+         while (data.cameras.size()>static_cast<size_t>(data.maxPoints)) data.cameras.pop_front();
+      } catch (BaseException &) { warn(name,"unresolved scripted camera (using available camera or manual view)"); }
+      catch (const std::exception &) { warn(name,"invalid scripted camera (using available camera or manual view)"); }
+   }
    Rvector6 sunState;
    const bool hasSun=data.kind==PlotModel::Kind::Orbit && entry->solarSystem && entry->internal && entry->view;
    if (hasSun) {
@@ -270,8 +316,10 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
    auto *entry=find(name); if (!entry) return false;
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }
    else if (action=="PenDown") entry->data->penDown=true;
-   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); }
+   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); }
    else if (action=="ClearSolverData") {
+      auto &cameras=entry->data->cameras;
+      cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
       for (auto &curve:entry->data->curves) {
          curve.points.erase(std::remove_if(curve.points.begin(),curve.points.end(),[](const PlotPoint &point) { return point.solver; }),curve.points.end());
          curve.breakNext=true;

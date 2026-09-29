@@ -1,4 +1,5 @@
 #include "OrbitRenderer.hpp"
+#include "OrbitCamera.hpp"
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
@@ -170,10 +171,10 @@ struct OrbitRenderer::Scene
          for (const auto &p:curve.points) extent=std::max(extent,std::hypot(std::hypot(p.x,p.y),p.z)+std::max(curve.radius,curve.modelPath.isEmpty() ? 0.0 : std::abs(curve.modelScale)*1000*(1+std::hypot(curve.modelOffset[0],curve.modelOffset[1],curve.modelOffset[2]))));
       // Keep the previous orthographic orbit controls and a stable replay fit.
       const double aspect=double(width)/height;
-      const double halfHeight=extent*1.1/zoom/std::min(1.0,aspect),halfWidth=halfHeight*aspect;
-      const osg::Vec3d right(std::cos(yaw),-std::sin(yaw),0);
-      const osg::Vec3d up(std::cos(pitch)*std::sin(yaw),std::cos(pitch)*std::cos(yaw),-std::sin(pitch));
-      const osg::Vec3d outward=right^up;
+      const auto camera=orbitCamera(*model,frame,yaw,pitch,extent);
+      const auto &target=camera.target,&right=camera.right,&up=camera.up,&outward=camera.outward;
+      const double distance=camera.distance,viewExtent=camera.extent;
+      const double halfHeight=viewExtent/zoom/std::min(1.0,aspect),halfWidth=halfHeight*aspect;
       osg::Vec4 lightPosition(outward.x(),outward.y(),outward.z(),0);
       for (const auto &source:model->curves) {
          const PlotPoint *last=nullptr;
@@ -184,9 +185,11 @@ struct OrbitRenderer::Scene
          }
       }
       illumination->getLight()->setPosition(lightPosition);
-      const osg::Vec3d center=right*(-pan.x()*2*halfWidth/width)+up*(pan.y()*2*halfHeight/height);
-      viewer.getCamera()->setViewMatrixAsLookAt(center+outward*(extent*4),center,up);
-      viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,extent*.01,extent*10);
+      const osg::Vec3d center=target+right*(-pan.x()*2*halfWidth/width)+up*(pan.y()*2*halfHeight/height);
+      const double farPlane=std::max(extent*10,distance+center.length()+extent*4);
+      viewer.getCamera()->setViewMatrixAsLookAt(center+outward*distance,center,up);
+      viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,
+         std::max(1e-6,std::min(extent*.01,distance*.001)),farPlane);
       sky->removeDrawables(0,sky->getNumDrawables());
       if (model->starsEnabled && model->starCount>0) {
          std::array<double,9> inertialToView={1,0,0,0,1,0,0,0,1};
@@ -209,7 +212,7 @@ struct OrbitRenderer::Scene
             const double x=(direction*right)/(forward*tangent*aspect),y=(direction*up)/(forward*tangent);
             if (std::abs(x)>1 || std::abs(y)>1) continue;
             const int group=static_cast<int>(std::clamp((star.magnitude+1)/2,0.0,4.0));
-            positions[group]->push_back(center+right*(x*halfWidth)+up*(y*halfHeight)-outward*(extent*3));
+            positions[group]->push_back(center+right*(x*halfWidth)+up*(y*halfHeight)-outward*((farPlane-distance)*.9));
          }
          for (int group=0;group<5;++group) {
             auto geometry=new osg::Geometry; isolateArrays(geometry);

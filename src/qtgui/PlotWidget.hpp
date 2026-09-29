@@ -10,6 +10,7 @@ class PlotCanvas final : public QWidget
 public:
    explicit PlotCanvas(std::shared_ptr<PlotModel> data, QWidget *parent = nullptr);
    void fit();
+   void scriptView();
    void setFrame(quint64 value);
    double zoomFactor() const { return zoom; }
    void zoomBy(double wheelSteps);

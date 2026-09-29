@@ -180,7 +180,11 @@ private:
       QPointer<QTableWidget> table;
       StringArray objects;
       std::vector<SpacePoint *> points;
-      CoordinateSystem *internal = nullptr, *view = nullptr;
+      CoordinateSystem *internal = nullptr, *view = nullptr, *viewUp = nullptr;
+      SpacePoint *cameraReference=nullptr,*cameraPosition=nullptr,*cameraDirection=nullptr;
+      std::array<double,3> referenceVector{},positionVector{},directionVector{},upVector{0,0,1};
+      bool referenceIsVector=true,positionIsVector=true,directionIsVector=true;
+      double cameraScale=1;
       SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;

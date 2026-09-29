@@ -1,5 +1,6 @@
 #include "PlotWidget.hpp"
 #include "OrbitRenderer.hpp"
+#include "OrbitCamera.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
 #include <QAction>
@@ -26,11 +27,16 @@ PlotCanvas::PlotCanvas(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    setToolTip("Wheel: zoom · Drag: rotate orbit or pan chart · Shift-drag: pan orbit · Double-click: fit");
    if (data->kind==PlotModel::Kind::Orbit && QGuiApplication::platformName()!="offscreen" && QGuiApplication::platformName()!="minimal")
       renderer=new OrbitRenderer(data,this);
+   if (data->scriptedCamera) scriptView();
 }
 void PlotCanvas::refresh() { if (renderer) renderer->setView(zoom,yaw,pitch,pan,visibleFrame); else update(); }
 QImage PlotCanvas::captureImage() { return renderer ? renderer->captureImage() : grab().toImage(); }
 void PlotCanvas::resizeEvent(QResizeEvent *event) { QWidget::resizeEvent(event); if (renderer) renderer->setGeometry(rect()); }
-void PlotCanvas::fit() { zoom = 1; pan = {}; refresh(); }
+void PlotCanvas::fit() { zoom = 1; pan = {}; data->fitCamera=true; refresh(); }
+void PlotCanvas::scriptView() {
+   if (!data->scriptedCamera) return;
+   zoom=1; pan={}; yaw=0; pitch=0; data->fitCamera=false; refresh();
+}
 void PlotCanvas::setFrame(quint64 value) { visibleFrame = value; refresh(); }
 void PlotCanvas::zoomBy(double steps) { zoom = std::clamp(zoom * std::pow(1.15, steps), 0.02, 200.0); refresh(); }
 void PlotCanvas::setViewAngles(double azimuth, double elevation) { yaw = azimuth; pitch = elevation; refresh(); }
@@ -67,13 +73,15 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    double xmax = ground ? 180 : -std::numeric_limits<double>::infinity();
    double ymin = ground ? -90 : std::numeric_limits<double>::infinity();
    double ymax = ground ? 90 : -std::numeric_limits<double>::infinity();
+   double extent = 1;
+   for (const auto &curve:data->curves) if (curve.visible)
+      for (const auto &point:curve.points) extent=std::max(extent,std::hypot(point.x,point.y,point.z)+curve.radius);
+   const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent);
    auto project = [&](const PlotPoint &point) {
       if (!orbit) return QPointF(point.x, point.y);
-      const double a = std::cos(yaw)*point.x - std::sin(yaw)*point.y;
-      const double b = std::sin(yaw)*point.x + std::cos(yaw)*point.y;
-      return QPointF(a, std::cos(pitch)*b - std::sin(pitch)*point.z);
+      const osg::Vec3d relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
+      return QPointF(relative*camera.right,relative*camera.up);
    };
-   double extent = 1;
    if (!ground) for (const auto &curve : data->curves) {
       if (!curve.visible) continue;
       for (const auto &point : curve.points) {
@@ -85,7 +93,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       }
    }
    if (orbit) {
-      xmin = -extent * 1.1; xmax = extent * 1.1; ymin = xmin; ymax = xmax;
+      xmin = -camera.extent; xmax = camera.extent; ymin = xmin; ymax = xmax;
       const double aspect = area.width()/area.height();
       if (aspect > 1) { xmin *= aspect; xmax *= aspect; } else { ymin /= aspect; ymax /= aspect; }
    } else if (!ground) {
@@ -121,7 +129,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       const char *names[] = {"X","Y","Z"};
       for (int i=0;i<3;++i) {
          PlotPoint p; if (i==0) p.x=extent; if (i==1) p.y=extent; if (i==2) p.z=extent;
-         const auto end=screen(project(p)); painter.setPen(colors[i]); painter.drawLine(screen({0,0}),end); painter.drawText(end+QPointF(4,-4),names[i]);
+         const auto end=screen(project(p)); painter.setPen(colors[i]); painter.drawLine(screen(project(PlotPoint{})),end); painter.drawText(end+QPointF(4,-4),names[i]);
       }
    }
    if (orbit) {
@@ -129,7 +137,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       // over the central body, while the far side is occluded by its disk.
       struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; };
       QVector<Primitive> objects;
-      auto depth=[&](const PlotPoint &p) { return std::sin(pitch)*std::sin(yaw)*p.x + std::sin(pitch)*std::cos(yaw)*p.y + std::cos(pitch)*p.z; };
+      auto depth=[&](const PlotPoint &p) { return osg::Vec3d(p.x,p.y,p.z)*camera.outward; };
       for (const auto &curve:data->curves) {
          if (!curve.visible) continue;
          const PlotPoint *previous=nullptr,*last=nullptr;
@@ -215,6 +223,9 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    drawing = new PlotCanvas(data,this);
    auto *fit = bar->addAction("Fit"); connect(fit,&QAction::triggered,drawing,&PlotCanvas::fit);
    if (data->kind==PlotModel::Kind::Orbit) {
+      auto *scriptView=bar->addAction("Script view");
+      scriptView->setToolTip("Restore the scripted camera, tracking and scale");
+      connect(scriptView,&QAction::triggered,drawing,&PlotCanvas::scriptView);
       auto *sunlight=bar->addAction("Sunlight"); sunlight->setCheckable(true); sunlight->setChecked(data->sunlight);
       sunlight->setToolTip("Use the mission's Sun position; turn off for lighting from the camera");
       connect(sunlight,&QAction::toggled,this,[this](bool checked) { data->sunlight=checked; drawing->refresh(); });

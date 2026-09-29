@@ -45,6 +45,27 @@ including native/HiDPI rendering, files, workflow, mission, plots and launch.
 
 1. Deeper specialized resource forms and compound-property coverage.
 2. Function/optimizer/event workflow coverage and acceptance.
-3. Scripted reference/direction/up-frame/scale/tracking cameras.
+3. Scripted cameras are implemented; continue real-mission acceptance alongside the remaining graphics work.
 4. Remaining graphics and solver-iteration plot features.
 5. Explicit OFI-script compatibility strategy and plugin capability coverage.
+
+## Scripted camera milestone
+
+Object/vector reference points, viewpoint objects/vectors, target objects/vectors,
+scale and signed view-up axes are recorded at publication time. A shared camera
+basis serves the native renderer and headless fallback. Tracking continues under
+manual orbit/pan/zoom offsets; Script view resets the offsets and Fit frames the
+mission. Projection remains orthographic by design. Replay uses retained numeric
+camera states, and clearing solver data also clears its camera snapshots.
+
+The real-engine plot tests compare both ends of moving-object camera histories
+and independently convert an inertial X up axis into EarthFixed. Native normal
+and high-DPI checks cover target centering, reversed up axes, scale, manual zoom
+and exact replay restoration. `tracking.script` supplies a real Aura-model
+camera centered on a propagated spacecraft in EarthMJ2000Eq (optional Aura
+asset required, as in the earlier model validation).
+
+![Native spacecraft tracking view](tracking.png)
+
+The native mission completed successfully. `check-camera.txt` records all nine
+Linux Qt tests passing after the camera changes.

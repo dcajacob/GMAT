@@ -27,6 +27,7 @@ void PlotModel::clear()
 {
    for (auto &curve : curves) { curve.points.clear(); curve.breaks.clear(); curve.breakNext = true; }
    frame = 0; pendingUpdates = 0;
+   cameras.clear();
 }
 void PlotModel::breakLines()
 {
@@ -35,6 +36,7 @@ void PlotModel::breakLines()
 void PlotModel::trim()
 {
    maxPoints = std::max(2, maxPoints);
+   while (cameras.size()>static_cast<size_t>(maxPoints)) cameras.pop_front();
    for (auto &curve : curves) {
       while (curve.points.size() > static_cast<size_t>(maxPoints)) curve.points.pop_front();
       if (!curve.points.empty()) curve.points.front().connect = false;

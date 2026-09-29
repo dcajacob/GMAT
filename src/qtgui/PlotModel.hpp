@@ -46,6 +46,12 @@ struct PlotStation
    double longitude = 0, latitude = 0;
    QColor color;
 };
+struct PlotCamera
+{
+   quint64 frame=0;
+   std::array<double,3> eye{},target{},up{0,0,1};
+   bool solver=false;
+};
 struct PlotModel
 {
    enum class Kind { Orbit, GroundTrack, XY, Table };
@@ -61,6 +67,8 @@ struct PlotModel
    bool starsEnabled = false, starCatalogLoaded = false;
    int starCount = 7000;
    StarCatalog starCatalog;
+   bool scriptedCamera=false, fitCamera=false;
+   std::deque<PlotCamera> cameras;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;
