@@ -67,7 +67,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
-| `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Remaining orbit-state and coordinate-selection workflows pending audit. |
+| `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Cartesian/Keplerian pending-state conversion and label refresh covered; remaining representations and coordinate-selection workflows pending audit. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/TankPanel.hpp` | Pending audit |
@@ -1423,3 +1423,30 @@ state-representation and coordinate-system interactions remain under audit.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 58.11 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-spacecraft-epoch.txt`.
+
+## Pending spacecraft state representation
+
+DisplayStateType choices now come from StateConversionUtil, filtered using wx's
+celestial-body-origin and fixed-coordinate requirements. The selector converts a
+cloned spacecraft with the six pending element values, then updates all six
+labels, values and units only after successful conversion. Failures restore the
+previous selector and keep the inputs intact. Pending coordinate, epoch or anomaly
+changes must be applied first so conversion uses the intended reference settings.
+
+WorkflowTests switches Cartesian to Keplerian, checks SMA against the configured
+state, rejects invalid input without losing it, edits SMA, switches back to
+Cartesian and then Keplerian, and applies the result. The configured spacecraft
+remains unchanged until Apply; the reconstructed state retains the SMA edit and
+Undo restores the original script. Other representations and combined coordinate
+changes still need dedicated qualification.
+
+The audit also exposed a generic state-editing failure: spacecraft element aliases
+resolve to IDs outside the normal property range, where read-only validation
+throws. Resource assignment now resolves current display labels to their six
+writable Element IDs. Apply establishes DisplayStateType before assigning
+elements, avoiding alphabetical ordering that could apply AOP before the new
+representation. Both fixes are exercised by the pending-state conversion test.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 50.20 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-state-representation.txt`.

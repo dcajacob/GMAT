@@ -7,6 +7,8 @@
 #include "PropSetup.hpp"
 #include "Propagator.hpp"
 #include "AxisSystem.hpp"
+#include "CoordinateSystem.hpp"
+#include "StateConversionUtil.hpp"
 #include <memory>
 #include <array>
 #include "Rvector.hpp"
@@ -106,6 +108,16 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                   field.references.append(QString::fromStdString(name));
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
+         }
+         if (object.IsOfType("Spacecraft") && field.name=="DisplayStateType") {
+            auto *frame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject(object.GetStringParameter("CoordinateSystem")));
+            auto *origin=frame ? Moderator::Instance()->GetConfiguredObject(frame->GetStringParameter("Origin")) : nullptr;
+            const auto *types=StateConversionUtil::GetStateTypeList();
+            for (int i=0;i<StateConversionUtil::GetTypeCount();++i) {
+               if (StateConversionUtil::RequiresCelestialBodyOrigin(types[i]) && (!origin || !origin->IsOfType(Gmat::CELESTIAL_BODY))) continue;
+               if (StateConversionUtil::RequiresFixedCoordinateSystem(types[i]) && (!frame || !frame->AreAxesOfType("BodyFixedAxes"))) continue;
+               field.choices.append(QString::fromStdString(types[i]));
+            }
          }
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowModel") field.choices={"None","DualCone"};
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies")
@@ -383,7 +395,13 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
    if (object.GetTypeName()=="ReportFile" && name=="Delimiter" &&
        (value.size()!=1 || value=="'" || value[0].unicode()>126 || (value[0].unicode()<32 && value!="\t")))
       throw std::runtime_error("Choose one delimiter character (space, tab or printable ASCII other than a quote)");
-   const auto id = object.GetParameterID(name.toStdString());
+   auto id = object.GetParameterID(name.toStdString());
+   // Spacecraft element names also have alias IDs outside the ordinary property
+   // range. Use the writable displayed-element ID for validation and assignment.
+   if (object.IsOfType("Spacecraft")) for (int element=1;element<=6;++element) {
+      const auto elementId=object.GetParameterID("Element"+std::to_string(element));
+      if (QString::fromStdString(object.GetParameterText(elementId))==name) { id=elementId; break; }
+   }
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
    if (object.IsParameterReadOnly(id) && !arrayValues) throw std::runtime_error("Property is read-only");
    bool valid = false;

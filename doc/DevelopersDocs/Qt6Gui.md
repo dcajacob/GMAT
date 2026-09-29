@@ -1039,3 +1039,11 @@ Spacecraft DateFormat uses the same conversion behavior: choosing a new format
 converts the pending Epoch instead of reinterpreting its text. Invalid dates
 restore the previous format and stay available for correction. Apply stores the
 converted epoch and format together.
+
+### Spacecraft state representation
+
+DisplayStateType offers the engine's representations compatible with the current
+coordinate frame. Changing it converts the six pending element values and updates
+their labels and units. Invalid values leave the selection and fields unchanged.
+Apply coordinate-system, epoch or anomaly changes before converting the state
+representation. Other pending properties remain available for the same Apply.

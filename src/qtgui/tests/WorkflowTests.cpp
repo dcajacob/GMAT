@@ -215,6 +215,41 @@ int main(int argc, char **argv)
       }
 
       {
+         const auto before=editor->toPlainText(); QString error="Apply not invoked";
+         const double initialSma=Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("SMA");
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const QMap<QString,QString> &changes) {
+               error=window.applyResourceChanges("QtSat",changes,before); return error;
+            },&owner,before);
+            auto *choice=panel.findChild<QComboBox *>("spacecraftStateRepresentation"); auto *grid=panel.findChild<QTableWidget *>();
+            require(choice,"State representation conversion control absent");
+            const auto field=[&](const QString &name)->QTableWidgetItem * {
+               for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()==name) return grid->item(row,1);
+               return nullptr;
+            };
+            choice->setCurrentText("Keplerian");
+            if (!field("SMA") || !field("ECC") || field("X")) {
+               std::cerr<<"Representation: "<<choice->currentText().toStdString()<<'\n';
+               for (auto *label:panel.findChildren<QLabel *>()) std::cerr<<label->text().toStdString()<<'\n';
+            }
+            require(field("SMA") && field("ECC") && !field("X"),"State conversion did not update element labels");
+            require(std::abs(field("SMA")->text().toDouble()-initialSma)<1e-6,"State conversion changed the initial orbit");
+            field("SMA")->setText("invalid"); choice->setCurrentText("Cartesian");
+            require(choice->currentText()=="Keplerian" && field("SMA") && field("SMA")->text()=="invalid","Failed state conversion changed pending fields");
+            field("SMA")->setText(QString::number(initialSma+100,'g',17)); choice->setCurrentText("Cartesian");
+            require(field("X") && field("VX") && !field("SMA"),"Cartesian conversion did not refresh fields");
+            require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("SMA")-initialSma)<1e-6,
+               "State preview changed configured spacecraft before Apply");
+            choice->setCurrentText("Keplerian");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error));
+         require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("SMA")-initialSma-100)<1e-6,
+            "Converted pending state edit was lost during Apply");
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Converted state edit Undo failed");
+         sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      }
+      {
          window.findChild<QAction *>("scriptFind")->trigger();
          auto *integrated=window.findChild<QDialog *>("findReplaceDialog");
          require(integrated && integrated->isVisible(),"Find menu did not open script search"); integrated->hide();

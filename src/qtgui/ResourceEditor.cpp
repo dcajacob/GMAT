@@ -4,6 +4,7 @@
 #include "TimeSystemConverter.hpp"
 #include "BaseException.hpp"
 #include <memory>
+#include <stdexcept>
 #include "ResourceProperties.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -449,6 +450,52 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             } catch (BaseException &error) {
                const QSignalBlocker blocker(format); format->setCurrentText(previous);
                status->setText("Epoch conversion failed: "+QString::fromStdString(error.GetFullMessage()));
+            }
+         });
+      }
+   }
+   if (spacecraft) {
+      QComboBox *representation=nullptr; QVector<int> elementRows;
+      for (int row=0;row<table->rowCount();++row)
+         if (table->item(row,0)->text()=="DisplayStateType") representation=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+      for (int element=1;element<=6;++element) {
+         const auto label=QString::fromStdString(object.GetParameterText(object.GetParameterID("Element"+std::to_string(element))));
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()==label) { elementRows.append(row); break; }
+      }
+      if (representation && elementRows.size()==6) {
+         representation->setObjectName("spacecraftStateRepresentation");
+         const auto resourceName=object.GetName();
+         connect(representation,&QComboBox::currentTextChanged,this,
+            [this,representation,elementRows,resourceName,previous=representation->currentText()](const QString &next) mutable {
+            try {
+               for (int row=0;row<table->rowCount();++row) {
+                  const auto name=table->item(row,0)->text();
+                  if (name!="CoordinateSystem" && name!="Epoch" && name!="DateFormat" && name!="AnomalyType") continue;
+                  const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+                  const auto value=choice ? comboValue(choice) : table->item(row,1)->text();
+                  if (value!=original.value(name)) throw std::runtime_error("Apply the pending coordinate, epoch or anomaly settings before converting the state representation.");
+               }
+               auto *current=Moderator::Instance()->GetConfiguredObject(resourceName);
+               if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
+               std::unique_ptr<GmatBase> preview(current->Clone());
+               preview->SetStringParameter("DisplayStateType",previous.toStdString());
+               for (const auto row:elementRows) setResourceProperty(*preview,table->item(row,0)->text(),table->item(row,1)->text());
+               preview->SetStringParameter("DisplayStateType",next.toStdString());
+               QStringList labels,values,units;
+               for (int element=1;element<=6;++element) {
+                  const auto id=preview->GetParameterID("Element"+std::to_string(element));
+                  labels.append(QString::fromStdString(preview->GetParameterText(id)));
+                  values.append(QString::number(preview->GetRealParameter(id),'g',17));
+                  units.append(QString::fromStdString(preview->GetStringParameter("Element"+std::to_string(element)+"Units")));
+               }
+               for (int i=0;i<6;++i) {
+                  table->item(elementRows[i],0)->setText(labels[i]); table->item(elementRows[i],1)->setText(values[i]); table->item(elementRows[i],2)->setText(units[i]);
+               }
+               previous=next; status->setText("State values converted. Apply validates and stores the selected representation.");
+            } catch (BaseException &error) {
+               const QSignalBlocker blocker(representation); representation->setCurrentText(previous); status->setText(QString::fromStdString(error.GetFullMessage()));
+            } catch (const std::exception &error) {
+               const QSignalBlocker blocker(representation); representation->setCurrentText(previous); status->setText(QString::fromUtf8(error.what()));
             }
          });
       }

@@ -732,8 +732,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (!proposed) return "This resource cannot be edited.";
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
       const QString mixture=changes.value("MixRatio");
+      const bool stateRepresentation=proposed->IsOfType("Spacecraft") && changes.contains("DisplayStateType");
+      if (stateRepresentation) setResourceProperty(*proposed,"DisplayStateType",changes.value("DisplayStateType"));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio") || (stateRepresentation && it.key()=="DisplayStateType")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
