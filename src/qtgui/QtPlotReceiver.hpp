@@ -18,6 +18,7 @@ public:
    explicit QtPlotReceiver(QMdiArea *workspace);
    ~QtPlotReceiver() override;
    void clear();
+   static void validateCameraReferences(const QMap<QString,QtCameraSetting> &settings);
    QStringList names() const;
    bool show(const QString &name);
    std::shared_ptr<const PlotModel> model(const QString &name) const;

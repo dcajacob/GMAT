@@ -1,5 +1,6 @@
 #include "MainWindow.hpp"
 #include "QtPlotReceiver.hpp"
+#include "OrbitCamera.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
@@ -68,6 +69,19 @@ int main(int argc, char **argv)
          require(converted.script.contains("Create OrbitView Display;") && converted.script.contains("Display.ViewPointVector = [100 200 300]") &&
             converted.script.contains("retained as a comment") && converted.script.contains("exact camera up vector"),"View conversion lost settings or omitted limitations");
          require(convertOpenFramesViews(dynamics).script==dynamics,"Converter changed a script without OFI");
+         auto multiple=input; multiple.replace("Display.View = {Camera}","Display.View = {Camera, Close}");
+         multiple.replace("BeginMissionSequence;","Create OpenFramesView Close;\nClose.SetCurrentLocation = On;\nClose.CurrentEye = [0 -9000 500];\nClose.CurrentCenter = [1 2 3];\nClose.CurrentUp = [1 1 0];\nClose.FOVy = 22.5;\nBeginMissionSequence;");
+         const auto multi=convertOpenFramesViews(multiple);
+         require(multi.error.isEmpty() && multi.script.endsWith(dynamics),"Multiple-view conversion changed mission commands");
+         const auto multiSetting=qtCameraSettings(multi.script).value("Display");
+         require(multiSetting.primaryName=="Camera" && multiSetting.views.size()==1 && multiSetting.views[0].name=="Close" &&
+            multiSetting.views[0].eye==std::array<double,3>{0,-9000,500} && multiSetting.views[0].center==std::array<double,3>{1,2,3} &&
+            multiSetting.views[0].up==std::array<double,3>{1,1,0} && multiSetting.views[0].fieldOfView==22.5,"Additional current camera pose/FOV lost");
+         for (const auto &invalid:{QString(multiple).replace("Close.FOVy = 22.5","Close.FOVy = 180"),
+               QString(multiple).replace("{Camera, Close}","{Camera, Missing}"),QString(multiple).replace("{Camera, Close}","{Camera, Camera}"),
+               QString(multiple).replace("Close.CurrentUp = [1 1 0]","Close.CurrentUp = [0 0 0]")})
+            require(!convertOpenFramesViews(invalid).error.isEmpty(),"Invalid secondary view silently accepted");
+
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
             "Conversion lost default OF perspective/FOV");
@@ -646,6 +660,8 @@ int main(int argc, char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed && conversionPrompts==3,
          "Run did not offer conversion after undo");
       auto rolledCamera=qtCameraSettings(editor->toPlainText()).value("OFI_EarthView");
+      require(rolledCamera.views.size()==2 && rolledCamera.views[0].name=="Earth_View" && rolledCamera.views[1].name=="DefaultSC_View",
+         "Shipped example lost additional named views");
       rolledCamera.up=std::array<double,3>{1,2,3};
       editor->setPlainText(setQtCameraSetting(editor->toPlainText(),"OFI_EarthView",rolledCamera));
       require(window.runMission()==MainWindow::RunResult::Completed,"Non-axis up mission failed");
@@ -656,6 +672,25 @@ int main(int argc, char **argv)
             for (int i=0;i<3;++i) require(std::abs(camera->up[i]-(i+1))<1e-10,"Non-axis camera up changed during propagation");
       };
       checkCameraUp();
+      auto checkViewHistories=[&] {
+         const auto model=window.plotReceiver()->model("OFI_EarthView");
+         require(model && model->cameraViews.size()==3,"Named camera histories missing");
+         for (int index=1;index<3;++index) {
+            const auto &view=model->cameraViews[index];
+            require(view.cameras.size()==model->cameras.size(),"Secondary camera history is incomplete");
+            const QString reference=index==1 ? "Earth" : "DefaultSC";
+            for (const auto *camera:{&view.cameras.front(),&view.cameras.back()}) {
+               const PlotPoint *point=nullptr;
+               for (const auto &curve:model->curves) if (curve.name==reference)
+                  for (const auto &sample:curve.points) if (sample.frame==camera->frame) point=&sample;
+               require(point,"Named camera reference frame is absent");
+               require(std::abs(camera->target[0]-point->x)<1e-8 && std::abs(camera->target[1]-point->y)<1e-8 &&
+                  std::abs(camera->target[2]-point->z)<1e-8 && std::abs(camera->eye[1]-point->y+30000)<1e-8,
+                  "Additional camera failed to track its reference object");
+            }
+         }
+      };
+      checkViewHistories();
       const auto convertedSource=editor->toPlainText();
       require(window.applyResourceChanges("OFI_EarthView",{{"StarCount","321"}},convertedSource).isEmpty(),
          "Converted plot resource edit failed");
@@ -709,6 +744,42 @@ int main(int argc, char **argv)
       require(window.plotReceiver()->model("OFI_EarthView")->cameras.back().up==std::array<double,3>{0,1,0},"Edited up axis did not reach camera history");
       editor->undo(); require(editor->toPlainText()==beforeAxis && window.runMission()==MainWindow::RunResult::Completed,"Up-axis Undo failed");
       checkCameraUp();
+      checkViewHistories();
+      {
+         auto *selector=window.findChild<QComboBox *>("orbitCameraView");
+         auto *projection=window.findChild<QComboBox *>("orbitProjection");
+         auto *fov=window.findChild<QDoubleSpinBox *>("orbitFieldOfView");
+         auto *keep=window.findChild<QAction *>("saveOrbitProjection");
+         require(selector && selector->count()==3,"Named camera selector missing");
+         const auto model=window.plotReceiver()->model("OFI_EarthView");
+         const auto frameCount=model->frame;
+         auto *spacecraft=Moderator::Instance()->GetInternalObject("DefaultSC");
+         selector->setCurrentIndex(2);
+         require(model->selectedCamera==2 && model->perspective && model->fieldOfView==45,"Selecting camera failed to restore its projection");
+         const auto first=orbitCamera(*model,model->cameraViews[2].cameras.front().frame,0,0,10000);
+         const auto last=orbitCamera(*model,model->cameraViews[2].cameras.back().frame,0,0,10000);
+         require((first.target-last.target).length()>1,"Selected camera does not follow replay history");
+         fov->setValue(28.5); projection->setCurrentIndex(0); keep->trigger();
+         const auto saved=qtCameraSettings(editor->toPlainText()).value("OFI_EarthView");
+         require(!saved.views[1].perspective && saved.views[1].fieldOfView==28.5 && saved.fieldOfView==37.5,
+            "Keep projection changed the wrong camera");
+         selector->setCurrentIndex(0); require(model->fieldOfView==37.5,"Primary camera projection was lost during switching");
+         selector->setCurrentIndex(2); require(model->fieldOfView==28.5 && !model->perspective,"Secondary camera projection was lost during switching");
+         require(model->frame==frameCount && Moderator::Instance()->GetInternalObject("DefaultSC")==spacecraft,
+            "Switching cameras reran or reconstructed the mission");
+         require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
+            "Multiple camera save/reopen failed");
+         checkViewHistories();
+         selector=window.findChild<QComboBox *>("orbitCameraView"); selector->setCurrentIndex(2);
+         const auto reopened=window.plotReceiver()->model("OFI_EarthView");
+         require(!reopened->perspective && reopened->fieldOfView==28.5,"Saved secondary projection did not reopen");
+         const auto good=editor->toPlainText(); auto broken=qtCameraSettings(good).value("OFI_EarthView");
+         broken.views[0].reference="NoSuchObject";
+         editor->setPlainText(setQtCameraSetting(good,"OFI_EarthView",broken));
+         require(!window.buildScript(),"Unknown camera reference silently built");
+         editor->setPlainText(good); require(window.runMission()==MainWindow::RunResult::Completed,"Invalid camera reference recovery failed");
+         checkViewHistories();
+      }
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");

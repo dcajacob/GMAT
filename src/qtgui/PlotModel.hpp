@@ -56,6 +56,13 @@ struct PlotCamera
    std::array<double,3> eye{},target{},up{0,0,1};
    bool solver=false;
 };
+struct PlotCameraView
+{
+   QString name;
+   bool perspective=true;
+   double fieldOfView=45;
+   std::deque<PlotCamera> cameras;
+};
 struct PlotModel
 {
    enum class Kind { Orbit, GroundTrack, XY, Table };
@@ -79,6 +86,8 @@ struct PlotModel
    bool perspective=false;
    double fieldOfView=50;
    std::deque<PlotCamera> cameras;
+   QVector<PlotCameraView> cameraViews; // Index zero uses the standard scripted history above.
+   int selectedCamera=0;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;

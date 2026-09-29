@@ -18,7 +18,9 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
    osg::Vec3d up(std::cos(pitch)*std::sin(yaw),std::cos(pitch)*std::cos(yaw),-std::sin(pitch));
    osg::Vec3d outward=right^up;
    const PlotCamera *camera=nullptr;
-   if (model.scriptedCamera) for (const auto &sample:model.cameras) if (sample.frame<=frame) camera=&sample;
+   const auto &history=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
+      ? model.cameraViews[model.selectedCamera].cameras : model.cameras;
+   if (model.scriptedCamera) for (const auto &sample:history) if (sample.frame<=frame) camera=&sample;
    if (camera) {
       target.set(camera->target[0],camera->target[1],camera->target[2]);
       outward.set(camera->eye[0]-target.x(),camera->eye[1]-target.y(),camera->eye[2]-target.z());

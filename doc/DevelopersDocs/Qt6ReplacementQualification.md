@@ -350,3 +350,31 @@ up-vector approximation only.
 
 GmatQt rebuilt; all 11 Qt tests passed in 31.38 seconds. Evidence:
 `Qt6ParityValidation/check-camera-up.txt`.
+
+
+## Multiple-camera checkpoint
+
+Conversion now retains the full ordered OF View list as a first standard
+OrbitView camera plus named Qt camera definitions. Each additional view has
+projection/FOV, eye/center/up vectors, reference and target objects. Qt validates
+all views and references before execution. The receiver records bounded histories
+for each view and clears them on mission/solver reset. The camera selector uses
+those histories for replay and does not reinterpret or rerun the mission.
+Keep projection edits the selected view only, preserving the others.
+
+WorkflowTests covers stored Current camera vectors, malformed secondary views,
+the shipped Hohmann three-view list, per-frame Earth/spacecraft tracking,
+replay basis changes, unchanged mission object identity/frame count on selection,
+independent projection settings, save/reopen, invalid-reference build rejection
+and recovery. PlotTests verifies visible switching and exact restoration in both
+fallback and native/HiDPI renderers, plus history cleanup. Existing resource edits
+and Undo retain the full camera metadata.
+
+This implements named view switching and translation tracking. Body-relative
+rotation, trajectory/segment views and original automatic framing remain open.
+The current unstored-location fallback is explicitly reported as 30000 km; it is
+not counted as OF automatic-framing parity. Base viewer compatibility retains
+the first camera; additional definitions are Qt comments.
+
+The user executable was rebuilt; all 11 Qt tests passed in 22.99 seconds.
+Evidence: `Qt6ParityValidation/check-multiple-cameras.txt`.

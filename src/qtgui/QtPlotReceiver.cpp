@@ -22,6 +22,18 @@ QString text(const std::string &value) { return QString::fromStdString(value); }
 QColor rgb(UnsignedInt color) { return QColor::fromRgb(static_cast<QRgb>(color & 0xffffff)); }
 constexpr double degrees = 57.2957795130823208768;
 }
+void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting> &settings)
+{
+   auto *moderator=Moderator::Instance();
+   for (auto it=settings.cbegin();it!=settings.cend();++it) for (const auto &view:it->views) {
+      for (const auto &name:{view.reference,view.target}) {
+         if (name.isEmpty() || name=="CoordinateSystem") continue;
+         auto *object=moderator->GetConfiguredObject(name.toStdString());
+         if (!object) object=moderator->GetSolarSystemInUse()->GetBody(name.toStdString());
+         if (!dynamic_cast<SpacePoint *>(object)) throw std::runtime_error((it.key()+" camera "+view.name+": unknown space point "+name).toStdString());
+      }
+   }
+}
 QtPlotReceiver::QtPlotReceiver(QMdiArea *area) : workspace(area) {}
 QtPlotReceiver::~QtPlotReceiver() { changed = {}; clear(); }
 QtPlotReceiver::Entry *QtPlotReceiver::find(const std::string &name)
@@ -85,6 +97,10 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
    if (kind==PlotModel::Kind::Orbit && cameraSettings.contains(text(name))) {
       const auto setting=cameraSettings.value(text(name));
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
+      if (!setting.views.isEmpty()) {
+         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{}});
+         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{}});
+      }
    }
    show(text(name));
    const auto bounds=workspace->viewport()->rect();
@@ -276,6 +292,33 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          while (data.cameras.size()>static_cast<size_t>(data.maxPoints)) data.cameras.pop_front();
       } catch (BaseException &) { warn(name,"unresolved scripted camera (using available camera or manual view)"); }
       catch (const std::exception &) { warn(name,"invalid scripted camera (using available camera or manual view)"); }
+      const auto settings=cameraSettings.value(text(name));
+      for (int index=0;index<settings.views.size();++index) {
+         const auto &view=settings.views[index];
+         try {
+            auto position=[&](const QString &objectName) {
+               if (objectName.isEmpty() || objectName=="CoordinateSystem") return std::array<double,3>{};
+               SpacePoint *object=nullptr;
+               for (auto *point:entry->points) if (point && text(point->GetName())==objectName) { object=point; break; }
+               if (!object && entry->solarSystem) object=entry->solarSystem->GetBody(objectName.toStdString());
+               if (!object) object=dynamic_cast<SpacePoint *>(Moderator::Instance()->GetInternalObject(objectName.toStdString()));
+               return resolve(false,object,{});
+            };
+            const auto origin=position(view.reference);
+            const auto target=view.target.isEmpty() ? origin : position(view.target);
+            PlotCamera camera; camera.frame=data.frame; camera.solver=solving; camera.up=view.up;
+            for (int axis=0;axis<3;++axis) {
+               camera.eye[axis]=origin[axis]+view.eye[axis];
+               camera.target[axis]=target[axis]+view.center[axis];
+               if (!std::isfinite(camera.eye[axis]) || !std::isfinite(camera.target[axis])) throw std::runtime_error("Nonfinite camera position");
+            }
+            if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
+               throw std::runtime_error("Camera eye and target coincide");
+            auto &history=data.cameraViews[index+1].cameras;
+            history.push_back(camera);
+            while (history.size()>static_cast<size_t>(data.maxPoints)) history.pop_front();
+         } catch (...) { warn(name,("unresolved camera "+view.name+" (using its available history or manual view)").toStdString()); }
+      }
    }
    Rvector6 sunState;
    const bool hasSun=data.kind==PlotModel::Kind::Orbit && entry->solarSystem && entry->internal && entry->view;
@@ -344,10 +387,13 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
    auto *entry=find(name); if (!entry) return false;
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }
    else if (action=="PenDown") entry->data->penDown=true;
-   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); }
+   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
    else if (action=="ClearSolverData") {
-      auto &cameras=entry->data->cameras;
-      cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
+      auto clearSolver=[](std::deque<PlotCamera> &cameras) {
+         cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
+      };
+      clearSolver(entry->data->cameras);
+      for (auto &view:entry->data->cameraViews) clearSolver(view.cameras);
       for (auto &curve:entry->data->curves) {
          curve.points.erase(std::remove_if(curve.points.begin(),curve.points.end(),[](const PlotPoint &point) { return point.solver; }),curve.points.end());
          curve.breakNext=true;

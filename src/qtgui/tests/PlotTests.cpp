@@ -74,6 +74,21 @@ int main(int argc,char **argv)
          model->curves[0].points.front().z=0; projection->setCurrentIndex(0);
          require(view.canvas()->captureImage()==orthographic,"Orthographic view was not restored after perspective");
       }
+      {
+         auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+         model->scriptedCamera=true; model->axes=false; model->grid=false; model->labels=false; model->legend=false;
+         model->curves[0].radius=1; model->curves[0].color=Qt::green;
+         model->append(0,0,0,0); model->cameras.push_back({0,{0,0,6},{0,0,0},{0,1,0}});
+         model->cameraViews={{"Wide",false,50,{}},{"Close",true,35,{{0,{0,0,4},{0,0,0},{0,1,0}}}}};
+         PlotWidget view(model); view.resize(640,480); view.show(); QApplication::processEvents();
+         auto *selector=view.findChild<QComboBox *>("orbitCameraView");
+         require(selector && selector->count()==2,"Camera selector absent");
+         const auto primary=view.canvas()->captureImage();
+         selector->setCurrentIndex(1); const auto close=view.canvas()->captureImage();
+         require(primary!=close && model->selectedCamera==1 && model->perspective,"Named camera selection did not affect rendering");
+         selector->setCurrentIndex(0); require(view.canvas()->captureImage()==primary,"Camera switching failed to restore initial render");
+         model->clear(); require(model->cameras.empty() && model->cameraViews[1].cameras.empty(),"Clear left secondary camera history behind");
+      }
       PlotModel sample(PlotModel::Kind::GroundTrack);
       sample.maxPoints=3; sample.append(0,170,2); sample.append(0,175,4);
       sample.append(0,std::numeric_limits<double>::quiet_NaN(),8); sample.append(0,-175,8);

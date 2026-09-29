@@ -110,11 +110,20 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
    for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesInterface") {
       const auto plot=it.key();
       const auto views=properties[plot].value("View");
-      const auto match=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*)(?:\\s*,[^{}]*)?\\s*\\}$").match(views);
-      if (!match.hasMatch() || types.value(match.captured(1))!="OpenFramesView") {
+      const auto match=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z][A-Za-z0-9_]*)*)\\s*\\}$").match(views);
+      if (!match.hasMatch()) {
+         if (!views.isEmpty()) { result.error=plot+": invalid camera view list."; return result; }
          result.notes.append(plot+": no supported view selection; review the default OrbitView camera."); continue;
       }
-      const auto view=match.captured(1); const auto values=properties.value(view);
+      const auto viewNames=match.captured(1).split(QRegularExpression("\\s*,\\s*"));
+      QSet<QString> seen;
+      for (const auto &viewName:viewNames) {
+         if (types.value(viewName)!="OpenFramesView" || seen.contains(viewName)) {
+            result.error=plot+": unknown or duplicate camera view "+viewName+"."; return result;
+         }
+         seen.insert(viewName);
+      }
+      const auto view=viewNames.first(); const auto values=properties.value(view);
       bool validFov=false;
       const double fov=values.value("FOVy","45").toDouble(&validFov);
       if (!validFov || !std::isfinite(fov) || fov<1 || fov>150) {
@@ -148,9 +157,36 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          cameraSetting.up=up;
          result.notes.append(plot+": exact camera up vector retained in Qt metadata; the base viewer uses "+signedAxis+".");
       }
+      cameraSetting.primaryName=view;
+      for (int index=1;index<viewNames.size();++index) {
+         QtCameraPreset preset; preset.name=viewNames[index];
+         const auto extra=properties.value(preset.name);
+         bool valid=false; preset.fieldOfView=extra.value("FOVy","45").toDouble(&valid);
+         if (!valid || !std::isfinite(preset.fieldOfView) || preset.fieldOfView<1 || preset.fieldOfView>150) {
+            result.error=preset.name+": field of view must be a finite number from 1 to 150 degrees."; return result;
+         }
+         const auto extraFrame=extra.value("ViewFrame","CoordinateSystem");
+         if (extraFrame!="CoordinateSystem") preset.reference=extraFrame;
+         preset.target=extra.value("LookAtFrame");
+         const auto location=extra.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
+         if (extra.value("Set"+location+"Location")=="On") {
+            // OF defaults for omitted stored components.
+            preset.eye={0,-1,0};
+            for (auto component:{qMakePair(QString("Eye"),&preset.eye),qMakePair(QString("Center"),&preset.center),qMakePair(QString("Up"),&preset.up)}) {
+               if (extra.contains(location+component.first) && !vectorValue(extra.value(location+component.first),*component.second)) {
+                  result.error=preset.name+": invalid stored camera "+component.first+" vector."; return result;
+               }
+            }
+         } else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
+         cameraSetting.views.append(preset);
+         if (!preset.reference.isEmpty()) result.notes.append(preset.name+": tracks the object using plot-frame axes; body-relative rotation is not imported.");
+         if (extra.value("ViewTrajectory")=="On") result.notes.append(preset.name+": trajectory-relative orientation is not imported.");
+      }
+      try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
+      catch (const std::exception &error) { result.error=QString::fromUtf8(error.what()); return result; }
       cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
-      result.notes.append(plot+": uses first view "+view+" with perspective and its vertical field of view; OFI view switching and trajectory-relative orientation are not imported.");
+      result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views; trajectory-relative orientation is not imported.");
       if (body) result.notes.append(plot+": object tracking uses plot-frame axes; body-relative view rotation is not imported.");
    }
    int insertion=output.size();
@@ -167,6 +203,15 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
 {
    QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
    if (setting.up) object.insert("up",QJsonArray{(*setting.up)[0],(*setting.up)[1],(*setting.up)[2]});
+   if (!setting.primaryName.isEmpty()) object.insert("primaryName",setting.primaryName);
+   if (!setting.views.isEmpty()) {
+      QJsonArray views;
+      auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
+      for (const auto &view:setting.views) views.append(QJsonObject{{"name",view.name},{"reference",view.reference},{"target",view.target},
+         {"eye",vector(view.eye)},{"center",vector(view.center)},{"up",vector(view.up)},
+         {"perspective",view.perspective},{"fieldOfView",view.fieldOfView}});
+      object.insert("views",views);
+   }
    return "% GMAT-Qt-Camera "+QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact))+"\n";
 }
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
@@ -194,6 +239,40 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          if (!valid || !std::isfinite(std::hypot(up[0],up[1],up[2])) || std::hypot(up[0],up[1],up[2])<1e-12)
             throw std::runtime_error("Invalid GMAT-Qt-Camera up vector: expected three finite numbers and a nonzero length");
          setting.up=up;
+      }
+      const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+      if (object.contains("primaryName")) {
+         setting.primaryName=object.value("primaryName").toString();
+         if (!identifier.match(setting.primaryName).hasMatch()) throw std::runtime_error("Invalid primary camera name");
+      }
+      if (object.contains("views")) {
+         if (!object.value("views").isArray()) throw std::runtime_error("Camera views must be an array");
+         QSet<QString> names; names.insert(setting.primaryName);
+         auto vector=[](const QJsonValue &value) {
+            const auto array=value.toArray(); std::array<double,3> result{};
+            if (array.size()!=3) throw std::runtime_error("Camera vector must have three numbers");
+            for (int i=0;i<3;++i) {
+               if (!array[i].isDouble() || !std::isfinite(array[i].toDouble())) throw std::runtime_error("Camera vector must have finite numbers");
+               result[i]=array[i].toDouble();
+            }
+            return result;
+         };
+         for (const auto &item:object.value("views").toArray()) {
+            const auto value=item.toObject(); QtCameraPreset view;
+            view.name=value.value("name").toString(); view.reference=value.value("reference").toString(); view.target=value.value("target").toString();
+            view.fieldOfView=value.value("fieldOfView").toDouble(-1); view.perspective=value.value("perspective").toBool();
+            if (!identifier.match(view.name).hasMatch() || names.contains(view.name) ||
+                !value.value("reference").isString() || (!view.reference.isEmpty() && !identifier.match(view.reference).hasMatch()) ||
+                !value.value("target").isString() || (!view.target.isEmpty() && !identifier.match(view.target).hasMatch()) ||
+                !value.value("perspective").isBool() || !std::isfinite(view.fieldOfView) || view.fieldOfView<1 || view.fieldOfView>150)
+               throw std::runtime_error("Invalid or duplicate named camera: check names, reference objects, projection and field of view");
+            view.eye=vector(value.value("eye")); view.center=vector(value.value("center")); view.up=vector(value.value("up"));
+            const auto upLength=std::hypot(view.up[0],view.up[1],view.up[2]);
+            const auto distance=std::hypot(view.eye[0]-view.center[0],view.eye[1]-view.center[1],view.eye[2]-view.center[2]);
+            if (!std::isfinite(upLength) || upLength<1e-12 || !std::isfinite(distance) || (view.target.isEmpty() && distance<1e-9))
+               throw std::runtime_error("Named camera needs a nonzero up vector and distinct eye and center");
+            names.insert(view.name); setting.views.append(view);
+         }
       }
       result.insert(name,setting);
    }

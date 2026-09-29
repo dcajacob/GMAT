@@ -527,9 +527,9 @@ bool MainWindow::buildScript()
       const auto cameras=qtCameraSettings(editor->toPlainText());
       std::istringstream stream(editor->toPlainText().toStdString());
       success = Moderator::Instance()->InterpretScript(&stream, true);
-      if (success) plots->cameraSettings=cameras;
+      if (success) { QtPlotReceiver::validateCameraReferences(cameras); plots->cameraSettings=cameras; }
    } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
-   catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
+   catch (const std::exception &error) { success=false; messages->appendPlainText(QString::fromUtf8(error.what())); }
    catch (...) { messages->appendPlainText("Unexpected error while building the script."); }
    modelValid = success;
    if (success) builtScript = editor->toPlainText();
@@ -880,6 +880,7 @@ QString MainWindow::applyModelScript(const QString &requested)
    try {
       std::istringstream stream(candidate.toStdString());
       if (!moderator->InterpretScript(&stream, true)) error = "The mission rejected these changes. See Message Window.";
+      else QtPlotReceiver::validateCameraReferences(cameras);
    } catch (BaseException &exception) { error = QString::fromStdString(exception.GetFullMessage()); }
    catch (const std::exception &exception) { error = QString::fromUtf8(exception.what()); }
    if (!error.isEmpty()) {
@@ -984,7 +985,10 @@ QString MainWindow::savePlotProjection(const QString &name,bool perspective,doub
    QtCameraSetting setting;
    try {
       setting=qtCameraSettings(builtScript).value(name);
-      setting.perspective=perspective; setting.fieldOfView=fov;
+      const auto model=plots->model(name);
+      if (model && model->selectedCamera>0 && model->selectedCamera<=setting.views.size()) {
+         auto &view=setting.views[model->selectedCamera-1]; view.perspective=perspective; view.fieldOfView=fov;
+      } else { setting.perspective=perspective; setting.fieldOfView=fov; }
       candidate=setQtCameraSetting(builtScript,name,setting);
    }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }

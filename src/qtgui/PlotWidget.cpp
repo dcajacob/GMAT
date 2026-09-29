@@ -11,6 +11,7 @@
 #include <QColorDialog>
 #include <functional>
 #include "PlotWidget.hpp"
+#include <QSignalBlocker>
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
 #include <QGuiApplication>
@@ -298,14 +299,34 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    if (data->kind==PlotModel::Kind::Orbit) {
       auto *projection=new QComboBox(bar); projection->setObjectName("orbitProjection");
       projection->addItems({"Orthographic","Perspective"}); projection->setCurrentIndex(data->perspective ? 1 : 0);
-      projection->setToolTip("Camera projection"); bar->addWidget(projection);
+      projection->setToolTip("Camera projection"); auto *projectionAction=bar->addWidget(projection);
       auto *fov=new QDoubleSpinBox(bar); fov->setObjectName("orbitFieldOfView"); fov->setRange(1,150);
       fov->setSuffix("°"); fov->setValue(data->fieldOfView); fov->setEnabled(data->perspective);
       fov->setToolTip("Vertical field of view before wheel zoom"); bar->addWidget(fov);
       connect(projection,&QComboBox::currentIndexChanged,this,[this,fov](int index) {
-         data->perspective=index==1; fov->setEnabled(data->perspective); drawing->refresh();
+         data->perspective=index==1; fov->setEnabled(data->perspective);
+         if (!data->cameraViews.isEmpty()) data->cameraViews[data->selectedCamera].perspective=data->perspective;
+         drawing->refresh();
       });
-      connect(fov,&QDoubleSpinBox::valueChanged,this,[this](double value) { data->fieldOfView=value; drawing->refresh(); });
+      connect(fov,&QDoubleSpinBox::valueChanged,this,[this](double value) {
+         data->fieldOfView=value;
+         if (!data->cameraViews.isEmpty()) data->cameraViews[data->selectedCamera].fieldOfView=value;
+         drawing->refresh();
+      });
+      if (!data->cameraViews.isEmpty()) {
+         auto *views=new QComboBox(bar); views->setObjectName("orbitCameraView");
+         views->setToolTip("Switch imported cameras without rerunning the mission; replay uses the selected camera's history");
+         for (const auto &view:data->cameraViews) views->addItem(view.name);
+         views->setCurrentIndex(data->selectedCamera); bar->insertWidget(projectionAction,views);
+         connect(views,&QComboBox::currentIndexChanged,this,[this,projection,fov](int index) {
+            if (index<0 || index>=data->cameraViews.size()) return;
+            data->selectedCamera=index;
+            const auto &view=data->cameraViews[index]; data->perspective=view.perspective; data->fieldOfView=view.fieldOfView;
+            const QSignalBlocker blockProjection(projection),blockFov(fov);
+            projection->setCurrentIndex(data->perspective ? 1 : 0); fov->setValue(data->fieldOfView); fov->setEnabled(data->perspective);
+            drawing->scriptView();
+         });
+      }
       saveProjection=bar->addAction("Keep projection"); saveProjection->setObjectName("saveOrbitProjection");
       saveProjection->setEnabled(false);
       saveProjection->setToolTip("Write projection and field of view to the script as an undoable edit; save the script to keep them on disk");
