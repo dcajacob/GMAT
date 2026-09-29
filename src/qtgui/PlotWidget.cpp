@@ -83,7 +83,16 @@ PlotCanvas::PlotCanvas(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       renderer=new OrbitRenderer(data,this);
    if (data->scriptedCamera) scriptView();
 }
-void PlotCanvas::refresh() { if (renderer) renderer->setView(zoom,yaw,pitch,pan,visibleFrame); else update(); }
+void PlotCanvas::refresh()
+{
+   QStringList details{data->title};
+   if (!data->xLabel.isEmpty()) details << "X: "+data->xLabel;
+   if (!data->yLabel.isEmpty()) details << "Y: "+data->yLabel;
+   if (data->legend) for (const auto &curve:data->curves) if (curve.visible) details << curve.name;
+   details << "Wheel: zoom · Drag: rotate orbit or pan chart · Shift-drag: pan orbit · Double-click: fit";
+   setToolTip(details.join('\n').toHtmlEscaped().replace("\n","<br>"));
+   if (renderer) renderer->setView(zoom,yaw,pitch,pan,visibleFrame); else update();
+}
 QImage PlotCanvas::captureImage() { return renderer ? renderer->captureImage() : grab().toImage(); }
 void PlotCanvas::resizeEvent(QResizeEvent *event) { QWidget::resizeEvent(event); if (renderer) renderer->setGeometry(rect()); }
 void PlotCanvas::fit() { zoom = 1; pan = {}; data->fitCamera=true; refresh(); }
@@ -118,8 +127,22 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    const QColor foreground = orbit ? QColor(226, 235, 248) : QColor(25, 35, 45);
    painter.fillRect(rect(), background);
    painter.setPen(foreground);
-   painter.drawText(QRectF(10, 4, width()-20, 22), Qt::AlignCenter, data->title);
-   QRectF area(orbit ? 35 : 74, 54, width()-(orbit ? 70 : 100), height()-110);
+   const auto metrics=painter.fontMetrics();
+   painter.drawText(QRectF(10,4,width()-20,22),Qt::AlignCenter,metrics.elidedText(data->title,Qt::ElideRight,width()-20));
+   // Wrap legend entries before reserving chart space. Keep enough height for
+   // the plot itself; the tooltip retains full labels when space is exhausted.
+   QList<const PlotCurve *> legendCurves;
+   int preferredWidth=1;
+   if (data->legend) for (const auto &curve:data->curves) if (curve.visible) {
+      legendCurves << &curve;
+      preferredWidth=std::max(preferredWidth,metrics.horizontalAdvance(curve.name)+34);
+   }
+   const int legendWidth=width()-24, lineHeight=std::max(20,metrics.height()+4);
+   const int columns=std::max(1,legendWidth/preferredWidth);
+   const int maxRows=std::max(1,std::min(4,(height()-130)/lineHeight));
+   const int rows=std::min(maxRows,(static_cast<int>(legendCurves.size())+columns-1)/columns);
+   const int top=32+rows*lineHeight;
+   QRectF area(orbit ? 35 : 74,top,width()-(orbit ? 70 : 100),height()-top-56);
    if (ground && area.width() > 2 * area.height()) { const double w = area.height()*2; area.setLeft(area.center().x()-w/2); area.setWidth(w); }
    if (ground && area.height() > area.width()/2) { const double h = area.width()/2; area.setTop(area.center().y()-h/2); area.setHeight(h); }
    if (area.width() <= 0 || area.height() <= 0) return;
@@ -277,16 +300,23 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          painter.drawText(QRectF(xp-38,area.bottom()+4,76,20),Qt::AlignCenter,QString::number(x,'g',5));
          painter.drawText(QRectF(24,yp-10,area.left()-31,20),Qt::AlignRight|Qt::AlignVCenter,QString::number(y,'g',5));
       }
-      painter.drawText(QRectF(area.left(),height()-28,area.width(),22),Qt::AlignCenter,data->xLabel);
+      painter.drawText(QRectF(area.left(),height()-28,area.width(),22),Qt::AlignCenter,metrics.elidedText(data->xLabel,Qt::ElideMiddle,static_cast<int>(area.width())));
       painter.save(); painter.translate(1,area.center().y()); painter.rotate(-90); painter.drawText(QRectF(-area.height()/2,0,area.height(),20),Qt::AlignCenter,painter.fontMetrics().elidedText(data->yLabel,Qt::ElideRight,static_cast<int>(area.height()))); painter.restore();
    } else painter.drawText(QRectF(10,height()-28,width()-20,22),Qt::AlignCenter,data->coordinates + " · km");
-   if (data->legend) {
-      int x=12;
-      for (const auto &curve : data->curves) {
-         if (!curve.visible) continue;
-         painter.setPen(QPen(curve.color,2)); painter.drawLine(x,37,x+15,37);
-         painter.setPen(foreground); painter.drawText(x+20,42,curve.name);
-         x += 34+painter.fontMetrics().horizontalAdvance(curve.name);
+   const int cells=rows*columns, cellWidth=legendWidth/columns;
+   for (int i=0;i<std::min(cells,static_cast<int>(legendCurves.size()));++i) {
+      const int x=12+(i%columns)*cellWidth, y=28+(i/columns)*lineHeight;
+      const bool overflow=i==cells-1 && legendCurves.size()>cells;
+      if (overflow) {
+         painter.setPen(foreground);
+         painter.drawText(QRect(x,y,cellWidth,lineHeight),Qt::AlignVCenter,
+            metrics.elidedText(QString("+ %1 more (hover for names)").arg(legendCurves.size()-i),Qt::ElideRight,cellWidth));
+      } else {
+         const auto &curve=*legendCurves[i];
+         painter.setPen(QPen(curve.color,2)); painter.drawLine(x,y+lineHeight/2,x+15,y+lineHeight/2);
+         painter.setPen(foreground);
+         painter.drawText(QRect(x+20,y,cellWidth-28,lineHeight),Qt::AlignVCenter,
+            metrics.elidedText(curve.name,Qt::ElideMiddle,cellWidth-28));
       }
    }
 }

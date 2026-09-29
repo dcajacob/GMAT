@@ -750,3 +750,18 @@ OpenFrames trajectory/segment cameras or actual Intel/Wayland stability.
 GmatQt was rebuilt; all 11 Qt checks passed in 50.01 seconds. Evidence:
 `Qt6ParityValidation/check-playback-controls.txt`. A separate native tiled-window
 capture confirms the timeline and speed selector remain visible beside the plots.
+
+## Chart text in tiled windows
+
+The XY/ground-track painter now measures legend entries and wraps them into rows,
+reserving chart space below. Long titles and horizontal axis labels elide rather
+than clipping through window edges. Legend rows are bounded to retain plot area;
+when entries exceed that budget, a remaining-entry count replaces the last cell.
+Hover text preserves full titles, axis labels and visible curve names.
+
+The native six-window PlotTests capture was inspected at 1280x850: the narrow XY
+window shows both complete legend entries on separate rows and a cleanly shortened
+title, while orbit and ground-track playback controls remain visible. This is a
+chart-layout improvement, not qualification of all plot interaction workflows.
+GmatQt was rebuilt and all 11 Qt checks passed in 25.89 seconds. Evidence:
+`Qt6ParityValidation/check-chart-layout.txt`.

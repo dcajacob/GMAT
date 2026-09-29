@@ -345,6 +345,11 @@ existing orthographic rotation, pan, reversible wheel zoom, Fit, image export,
 and replay controls. Texture paths come from the configured celestial bodies;
 missing images fall back to the body color. Body-fixed orientations are captured
 at each recorded epoch and replayed without consulting live engine objects.
+XY and ground-track chart headings shorten to fit narrow windows. Legends wrap
+into rows and reserve space above the chart; excess entries use a count instead
+of drawing over the data. Hover over the chart for complete title, axis labels
+and visible curve names. Wider windows restore full labels automatically.
+
 Orbit and ground-track playback has Start, Play/Pause, Latest and speed controls
 (0.25×–4×). Pause/resume retains the selected position; dragging the timeline
 pauses playback. Latest follows incoming data, and Play at the end restarts the
