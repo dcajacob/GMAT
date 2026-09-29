@@ -293,11 +293,11 @@ context menu supports insertion before/after, append, and deletion of complete
 commands or branches. Structural end commands cannot be removed independently.
 Script events are edited as complete blocks. Templates help insert common
 commands. A Propagation form supports one spacecraft, one propagator, and a
-duration in elapsed seconds or days. Resource selectors use the current mission;
-changing the spacecraft also changes the elapsed-time stop condition. The form
-and script text stay synchronized. Advanced modes, multiple stop conditions,
-labels, or comments retain the script editor without a simplifying form.
-Other specialized command forms remain future work.
+single parameter/value stop condition, including elapsed seconds or days. Resource
+selectors use the current mission; changing the spacecraft also changes an elapsed-
+time stop condition. The form and script text stay synchronized, preserving labels,
+comments and an existing BackProp modifier. Multiple propagators/stops and event-only
+conditions still use the script editor.
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
@@ -960,3 +960,11 @@ match** continues after the current result; **Stop** cancels a scan. Searches ru
 in bounded chunks, navigate to the matching page, and highlight the visible part
 of the result. A message identifies matches continuing on the next page. The
 existing **Find…** control remains available for richer searches within one page.
+
+### Propagate stop-condition selectors
+
+The Propagation form has **Choose…** controls for the stop parameter and stop
+value. They use the parameter browser with its object and coordinate-system
+choices. Seconds/Days remain quick selections; another parameter is shown as
+Other parameter. Labels, comments and existing backward-propagation modifiers
+are retained when fields change. Apply validates the complete command.

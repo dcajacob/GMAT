@@ -12,6 +12,7 @@ public:
    void setStatement(const QString &statement);
 private:
    QComboBox *propagator, *spacecraft, *units;
-   QLineEdit *duration;
+   QLineEdit *duration,*stopParameter;
+   QString original;
    bool synchronizing=false;
 };

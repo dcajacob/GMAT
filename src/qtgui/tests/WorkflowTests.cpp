@@ -1,3 +1,4 @@
+#include "ReportParameterDialog.hpp"
 #include "MainWindow.hpp"
 #include "FindReplaceDialog.hpp"
 #include <QCheckBox>
@@ -14,6 +15,7 @@
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
+#include "PropagationForm.hpp"
 #include "CommandEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "ScriptCompatibility.hpp"
@@ -67,6 +69,16 @@ int main(int argc, char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      {
+         QString changed; PropagationForm form({"Prop"},{"Sat"},[&](const QString &value) { changed=value; });
+         const QString source="  Propagate 'Keep label' BackProp Prop(Sat) {Sat.A1ModJulian = 20000}; % keep comment\n";
+         form.setStatement(source); require(!form.isHidden(),"Labeled custom propagation hidden");
+         form.findChild<QLineEdit *>("propagationDuration")->setText("20001");
+         auto expected=source; expected.replace("20000","20001"); require(changed==expected,"Propagation edit lost label, BackProp or comment");
+         form.findChild<QLineEdit *>("propagationStopParameter")->setText("Sat.ElapsedSecs");
+         expected.replace("Sat.A1ModJulian","Sat.ElapsedSecs"); require(changed==expected,"Stop parameter edit changed unrelated spans");
+         form.setStatement("Propagate Prop(Sat) {Sat.Earth.Periapsis};"); require(form.isHidden(),"Event-only propagation offered incomplete controls");
+      }
       {
          const QString dynamics="BeginMissionSequence;\nGMAT total = 2 + 3; % scientific code stays exact\n";
          const QString input="% Create OpenFramesInterface ignored comment;\nCreate OpenFramesInterface Display;\n"
@@ -900,8 +912,27 @@ int main(int argc, char **argv)
       require(commandPanel->hasChanges() && editor->toPlainText()==beforeForm,"Invalid form input altered the mission");
       units->setCurrentIndex(units->findData("ElapsedDays")); duration->setText("0.01");
       require(commandText->toPlainText().contains("QtSat.ElapsedDays = 0.01"),"Form did not synchronize duration and units");
+      commandText->setPlainText("Propagate 'GUI stop' QtProp(QtSat) {QtSat.ElapsedDays = 0.01}; % retain stop comment");
+      QTimer::singleShot(0,[&] {
+         auto *dialog=commandPanel->findChild<QDialog *>("propagationParameterDialog");
+         require(dialog,"Stop parameter browser missing");
+         dialog->findChild<QComboBox *>("reportPropertyObject")->setCurrentText("QtSat");
+         auto *property=dialog->findChild<QComboBox *>("reportPropertyType");
+         require(property->findText("A1ModJulian")>=0,"Epoch stop parameter absent from browser"); property->setCurrentText("A1ModJulian");
+         dialog->findChild<QPushButton *>("reportUseReference")->click();
+         dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+      }); commandPanel->findChild<QPushButton *>("propagationChooseStop")->click();
+      const auto epochGoal=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetEpoch()+.01;
+      duration->setText(QString::number(epochGoal,'g',17));
+      require(units->currentData().toString().isEmpty() && commandText->toPlainText().contains("QtSat.A1ModJulian") &&
+         commandText->toPlainText().contains("'GUI stop'") && commandText->toPlainText().contains("% retain stop comment"),"Selected epoch stop lost source or type");
+      const auto selectedStop=commandText->toPlainText();
+      QTimer::singleShot(0,[&] { commandPanel->findChild<QDialog *>("propagationParameterDialog")->reject(); });
+      commandPanel->findChild<QPushButton *>("propagationChooseGoal")->click(); require(commandText->toPlainText()==selectedStop,"Stop goal picker Cancel changed source");
       if (!screenshot.isEmpty()) { duration->setFocus(); QApplication::processEvents(); require(window.grab().save(screenshot+".propagation.png"),"Propagation form capture failed"); }
       applyCommand->click();
+      QTemporaryDir propagationFiles; const auto propagationPath=propagationFiles.filePath("selected-stop.script");
+      require(window.saveScriptTo(propagationPath) && window.loadScript(propagationPath) && window.buildScript(),"Selected stop condition save/reopen failed");
       const auto formEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetEpoch();
       require(window.runMission()==MainWindow::RunResult::Completed,"Form-edited propagation failed");
       const auto finalEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpoch();
