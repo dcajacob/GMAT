@@ -35,6 +35,7 @@ public:
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
    QString createResource(const QString &type, const QString &name, const QString &expectedScript);
+   QString deleteResource(const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
 private:
@@ -43,6 +44,7 @@ private:
    void openCommandEditor(int index, MissionEdit operation);
    void showCreateResource();
    QString applyModelScript(const QString &candidate);
+   bool restoreBuiltModel();
    void newMission();
    bool saveScript(bool saveAs = false);
    bool confirmDiscard();

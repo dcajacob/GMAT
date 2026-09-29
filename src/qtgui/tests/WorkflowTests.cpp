@@ -20,6 +20,9 @@
 #include <QLineEdit>
 #include <QClipboard>
 #include <QTabWidget>
+#include <QMenu>
+#include <QMessageBox>
+#include <QKeyEvent>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -236,6 +239,60 @@ int main(int argc, char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed,"Form-edited propagation failed");
       const auto finalEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpoch();
       require(std::abs((finalEpoch-formEpoch)*86400-864)<.01,"Form-selected duration did not propagate for 0.01 days");
+      const auto beforeDeletion=editor->toPlainText();
+      require(!window.deleteResource("QtSat",beforeDeletion).isEmpty(),"Deletion removed a spacecraft used by a command");
+      require(!window.deleteResource("QtForces",beforeDeletion).isEmpty(),"Deletion removed a force model used by a propagator");
+      require(!window.deleteResource("EarthMJ2000Eq",beforeDeletion).isEmpty(),"Deletion removed a built-in coordinate system");
+      require(editor->toPlainText()==beforeDeletion,"Rejected deletion changed the script");
+      require(window.createResource("Spacecraft","UnusedSat",beforeDeletion).isEmpty(),"Deletion fixture creation failed");
+      const auto beforeUnusedDelete=editor->toPlainText();
+      const auto unusedItems=tree->findItems("UnusedSat",Qt::MatchExactly|Qt::MatchRecursive);
+      require(unusedItems.size()==1,"Unused resource missing from tree");
+      tree->itemDoubleClicked(unusedItems.first(),0);
+      ResourceEditor *unusedPanel=nullptr;
+      for (auto *widget:window.findChildren<QWidget *>()) if (auto *resource=dynamic_cast<ResourceEditor *>(widget))
+         if (resource->parentWidget()->property("resourceName").toString()=="UnusedSat") unusedPanel=resource;
+      require(unusedPanel!=nullptr,"Unused resource panel missing");
+      auto *unusedTable=unusedPanel->findChild<QTableWidget *>(); QTableWidgetItem *unusedMass=nullptr;
+      for (int row=0;row<unusedTable->rowCount();++row) if (unusedTable->item(row,0)->text()=="DryMass") unusedMass=unusedTable->item(row,1);
+      require(unusedMass!=nullptr,"Unused spacecraft mass missing");
+      const auto oldMass=unusedMass->text(); unusedMass->setText("999");
+      require(!window.deleteResource("UnusedSat",beforeUnusedDelete).isEmpty(),"Deletion discarded its panel changes");
+      unusedMass->setText(oldMass);
+      require(window.deleteResource("UnusedSat",beforeUnusedDelete).isEmpty(),"Unrelated open resource panel blocked deletion");
+      require(!Moderator::Instance()->GetConfiguredObject("UnusedSat") && tree->findItems("UnusedSat",Qt::MatchExactly|Qt::MatchRecursive).isEmpty(),"Deleted resource remained in model or tree");
+      require(!window.deleteResource("CreatedSat",beforeUnusedDelete).isEmpty(),"Stale deletion snapshot accepted");
+      editor->undo(); require(editor->toPlainText()==beforeUnusedDelete && window.buildScript(),"Deletion undo failed");
+      require(Moderator::Instance()->GetConfiguredObject("UnusedSat")!=nullptr,"Deletion undo did not restore resource");
+      require(window.deleteResource("UnusedSat",editor->toPlainText()).isEmpty(),"Repeated deletion failed");
+      require(window.createResource("Variable","ScratchOne",editor->toPlainText()).isEmpty() &&
+         window.createResource("Variable","ScratchTwo",editor->toPlainText()).isEmpty(),"Variable deletion fixtures failed");
+      require(window.deleteResource("ScratchOne",editor->toPlainText()).isEmpty() &&
+         !Moderator::Instance()->GetConfiguredObject("ScratchOne") && Moderator::Instance()->GetConfiguredObject("ScratchTwo"),
+         "Variable deletion affected a different declaration");
+      require(window.runMission()==MainWindow::RunResult::Completed,"Mission failed after unused-resource deletion");
+      window.findChild<QTabWidget *>()->setCurrentIndex(0); tree->expandAll();
+      const auto scratchItems=tree->findItems("ScratchTwo",Qt::MatchExactly|Qt::MatchRecursive);
+      require(scratchItems.size()==1,"Deletion menu fixture missing"); tree->scrollToItem(scratchItems.first());
+      bool confirmedDeletion=false;
+      QTimer::singleShot(0,&window,[&] {
+         auto *menu=qobject_cast<QMenu *>(QApplication::activePopupWidget());
+         if (!menu) return;
+         for (auto *action:menu->actions()) if (action->text()=="Delete resource…") {
+            menu->setActiveAction(action);
+            QTimer::singleShot(0,&window,[&] {
+               if (auto *confirmation=qobject_cast<QMessageBox *>(QApplication::activeModalWidget())) {
+                  confirmedDeletion=true; confirmation->button(QMessageBox::Yes)->click();
+               }
+            });
+            QKeyEvent activate(QEvent::KeyPress,Qt::Key_Return,Qt::NoModifier);
+            QApplication::sendEvent(menu,&activate); return;
+         }
+         menu->close();
+      });
+      tree->customContextMenuRequested(tree->visualItemRect(scratchItems.first()).center());
+      require(confirmedDeletion && !Moderator::Instance()->GetConfiguredObject("ScratchTwo"),"Context-menu deletion failed");
+      std::cout<<"PASS: resource deletion, command/resource dependencies, target-panel protection, unrelated panels, undo and variable declarations\n";
       std::cout<<"PASS: propagation form, advanced-command preservation, invalid-input rollback and actual elapsed-days execution\n";
       std::cout<<"PASS: resource creation, name/type validation, pending/stale protection, undo, dialog/tree integration and actual propagation\n";
       std::cout << "PASS: propagation, repeated runs, pause/resume/stop, edit protection, close protection, invalid-script recovery, resource apply/rollback/stale-panel protection/undo\n";

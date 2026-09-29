@@ -108,6 +108,14 @@ property panel opens after successful creation. Some resource types require
 further configuration before they can execute; array dimensions and specialized
 forms remain future work. Force models now have their own Resources category.
 
+The Resources context menu can delete unused resources. GMAT's dependency
+checks protect resources referenced by other resources or mission commands;
+built-in resources and generated parameters are protected separately. Pending
+changes in the target's own panel must be resolved first. Unrelated open panels
+do not block deletion. The serialized result is interpreted before committing
+one undoable script change; a failure restores the prior engine model.
+Unrelated panels retain their existing stale-snapshot protection after a change.
+
 ## Functional validation
 
 Enable and run the real-engine workflow executable with a host startup file:
@@ -131,6 +139,10 @@ exit regression checks shared-engine behavior.
 The workflow suite also creates a spacecraft through the New resource dialog,
 checks name/type validation and undo, inserts a propagation command using the
 created object, and verifies that it advances by the requested 60 seconds.
+It also exercises deletion through the context menu and confirmation, rejects
+resource/command dependencies, protects pending target edits, permits unrelated
+open panels, restores deletion with Undo, checks independent variable declarations,
+and runs the mission after deleting unused resources.
 
 The Edit menu routes text actions to the focused editor, including resource
 table cells and command panels. It retains the originating editor while a menu

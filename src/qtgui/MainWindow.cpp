@@ -213,7 +213,18 @@ MainWindow::MainWindow()
    connect(create,&QAction::triggered,this,&MainWindow::showCreateResource);
    resources->setContextMenuPolicy(Qt::CustomContextMenu);
    connect(resources,&QTreeWidget::customContextMenuRequested,this,[this,create](const QPoint &position) {
-      QMenu menu(this); menu.addAction(create); menu.exec(resources->viewport()->mapToGlobal(position));
+      auto *item=resources->itemAt(position);
+      const QString name=item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString();
+      const QString snapshot=builtScript;
+      QMenu menu(this); menu.addAction(create);
+      auto *remove=menu.addAction("Delete resource…");
+      remove->setEnabled(ready && !running && modelValid && !name.isEmpty());
+      if (menu.exec(resources->viewport()->mapToGlobal(position))==remove &&
+          QMessageBox::question(this,"Delete resource","Delete "+name+" from this mission?",
+             QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
+         const auto error=deleteResource(name,snapshot);
+         if (!error.isEmpty()) QMessageBox::warning(this,"Cannot delete resource",error);
+      }
    });
    view->addAction(navigation->toggleViewAction());
    view->addAction(console->toggleViewAction());
@@ -650,6 +661,53 @@ void MainWindow::showCreateResource()
    }
 }
 
+QString MainWindow::deleteResource(const QString &name,const QString &expectedScript)
+{
+   if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "Build the current script before deleting a resource.";
+   for (auto *child:workspace->subWindowList()) {
+      auto *panel=dynamic_cast<EditablePanel *>(child->widget());
+      if (child->property("resourceName").toString()==name && panel && panel->hasChanges())
+         return "Apply or discard this resource's panel changes before deleting it.";
+   }
+   auto *moderator=Moderator::Instance();
+   auto *object=moderator->GetConfiguredObject(name.toStdString());
+   if (!object) return "This resource no longer exists.";
+   QString candidate;
+   try {
+      const auto canonical=QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      const QRegularExpression declaration("^[ \\t]*Create[ \\t]+[A-Za-z0-9_]+[ \\t]+[^;\\n]*\\b"+
+         QRegularExpression::escape(name)+"\\b[^;\\n]*;",QRegularExpression::MultilineOption);
+      if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch() || !declaration.match(canonical).hasMatch())
+         return "Built-in resources and generated parameters cannot be deleted here.";
+      if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
+         return "This resource is used by another resource or mission command. See Message Window for details.";
+      candidate=QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+   } catch (BaseException &error) {
+      const auto detail=QString::fromStdString(error.GetFullMessage());
+      return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
+   } catch (const std::exception &error) {
+      const auto detail=QString::fromUtf8(error.what());
+      return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
+   }
+   const auto error=applyModelScript(candidate);
+   if (error.isEmpty()) {
+      for (auto *child:workspace->subWindowList()) if (child->property("resourceName").toString()==name) child->close();
+      statusBar()->showMessage("Resource deleted — Undo restores it; save to keep changes");
+   }
+   return error;
+}
+
+bool MainWindow::restoreBuiltModel()
+{
+   plots->clear(); modelValid=false;
+   try {
+      std::istringstream previous(builtScript.toStdString());
+      modelValid=Moderator::Instance()->InterpretScript(&previous,true);
+   } catch (...) { }
+   refreshTrees(); return modelValid;
+}
+
 QString MainWindow::applyModelScript(const QString &candidate)
 {
    auto *moderator = Moderator::Instance();
@@ -663,12 +721,7 @@ QString MainWindow::applyModelScript(const QString &candidate)
    if (!error.isEmpty()) {
       // Interpretation reconstructs the model. Restore the entire prior model,
       // not just the last field, without touching the editor or its undo stack.
-      modelValid = false;
-      try {
-         std::istringstream previous(builtScript.toStdString());
-         modelValid = moderator->InterpretScript(&previous, true);
-      } catch (...) { }
-      refreshTrees();
+      restoreBuiltModel();
       if (!modelValid) error += " Restoration failed; rebuild the script before continuing.";
       return error;
    }
