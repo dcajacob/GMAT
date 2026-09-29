@@ -934,6 +934,10 @@ Rvector6 OrbitData::GetEquinState()
 Rvector6 OrbitData::GetEquinDot(Rvector3 &pos, Rvector3 &vel, Real rMag)
 {
    Rvector6 rateState(0.0,0.0,0.0,0.0,0.0,0.0);
+   // Keplerian motion still advances true longitude when perturbations vanish.
+   // h/r^2 is the instantaneous angular rate for circular and eccentric orbits.
+   rateState[5] = Cross(pos, vel).GetMagnitude() / (rMag * rMag) *
+         GmatMathConstants::DEG_PER_RAD;
 
    if (!ode)
    {

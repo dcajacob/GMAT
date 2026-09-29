@@ -1,0 +1,24 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 8: QtGui.Compatibility
+1/1 Test #8: QtGui.Compatibility ..............***Failed    1.17 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Unperturbed true-longitude rate differs from circular angular velocity
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.17 sec*proc (1 test)
+
+Total Test time (real) =   1.17 sec
+
+The following tests FAILED:
+	  8 - QtGui.Compatibility (Failed)                      qt-gui
+Errors while running CTest

@@ -617,3 +617,30 @@ All 11 Qt checks passed in 58.32 seconds. After the unknown-hardware-type guard,
 GmatQt was rebuilt and Compatibility passed again in 2.25 seconds. Evidence:
 `Qt6ParityValidation/check-report-hardware-browser.txt` and
 `Qt6ParityValidation/report-hardware-browser-final.txt`.
+
+
+### Force-model rate browser and engine corrections
+
+Force-model parameter testing exposed an internal/script name mismatch: the
+SMADot constructor registered EquinoctialSMADot, while the factory and dependency
+metadata use SMADot. The constructor now uses the public factory name, allowing
+the browser to offer a valid property and populate force-model choices.
+
+The next numerical check failed because OrbitData returned zero TLONGDot when
+perturbing acceleration was exactly zero. The shared engine now initializes that
+rate to |r cross v|/r^2 in degrees/second; the existing perturbed calculation remains
+in place. This corrects an engine result, not merely Qt display behavior.
+
+CompatibilityTests selects SMADot and TLONGDot with RateForces through the browser,
+applies the Report command, saves/reopens with invalid-build recovery and runs an
+Earth point-mass mission. At radius 7000 km it checks zero semimajor-axis rate and
+true-longitude rate v/r for circular motion, then edits tangential speed to 1.1
+times circular speed and repeats the round trip and numerical checks. Rate
+component tolerances are 1e-10 for SMADot and 1e-12 degrees/second for TLONGDot.
+Perturbed-rate scenarios and other force-model rate components remain pending.
+
+The original zero-rate failure is recorded in
+`Qt6ParityValidation/force-rates-before.txt`. GmatQt and the shared engine were
+rebuilt; all 11 Qt checks passed in 27.23 seconds. Evidence:
+`Qt6ParityValidation/check-force-rates.txt`. This is targeted numerical and Qt
+regression evidence, not a complete requalification of the shared engine.

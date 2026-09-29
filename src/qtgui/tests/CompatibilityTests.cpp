@@ -271,6 +271,45 @@ int main(int argc,char **argv)
          require(window.runMission()==MainWindow::RunResult::Completed && read(path).trimmed()=="7000,7000,0,1,123.5,12.5",
             "Browsed coordinate, central-body or independent parameter calculation differs");
       }
+      {
+         const auto path=output.filePath("force-model-rates.txt");
+         const double mu=Moderator::Instance()->GetSolarSystemInUse()->GetBody("Earth")->GetGravitationalConstant();
+         const double speed=std::sqrt(mu/7000.);
+         editor->setPlainText("Create Spacecraft RateSat;\nRateSat.DisplayStateType = Cartesian;\n"
+            "RateSat.X = 7000;\nRateSat.Y = 0;\nRateSat.Z = 0;\nRateSat.VX = 0;\nRateSat.VY = "+QString::number(speed,'g',17)+";\nRateSat.VZ = 0;\n"
+            "Create ForceModel RateForces;\nRateForces.PrimaryBodies = {};\nRateForces.PointMasses = {Earth};\n"
+            "Create Propagator RateProp;\nRateProp.FM = RateForces;\n"
+            "Create ReportFile RateReport;\nRateReport.Filename = '"+path+"';\nRateReport.FixedWidth = false;\n"
+            "RateReport.WriteHeaders = false;\nRateReport.Delimiter = ',';\nRateReport.Precision = 16;\n"
+            "BeginMissionSequence;\nReport RateReport RateSat.X;\nPropagate RateProp(RateSat) {RateSat.ElapsedSecs = 1};\n");
+         require(window.buildScript(),"Force-model rate fixture failed");
+         ReportParameterDialog browser({});
+         auto *owner=browser.findChild<QComboBox *>("reportPropertyObject"); owner->setCurrentText("RateSat");
+         auto *property=browser.findChild<QComboBox *>("reportPropertyType");
+         auto *dependency=browser.findChild<QComboBox *>("reportPropertyDependency");
+         for (const auto *name:{"SMADot","TLONGDot"}) {
+            require(property->findText(name)>=0,"Force-model rate absent from browser"); property->setCurrentText(name);
+            require(dependency->findText("RateForces")>=0,"Force-model reference missing from browser"); dependency->setCurrentText("RateForces");
+            browser.findChild<QPushButton *>("reportUseReference")->click(); browser.findChild<QPushButton *>("reportAddParameter")->click();
+         }
+         const auto snapshot=window.missionSnapshot(); int index=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.startsWith("Report ")) index=i;
+         require(index>=0 && window.applyMissionChange(snapshot,index,MissionEdit::Replace,
+            "Report RateReport "+browser.selection().join(" ")+";").isEmpty(),"Force-model parameter references rejected");
+         roundTrip("force-model-rates");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Force-model rates mission failed");
+         const auto values=read(path).trimmed().split(',');
+         require(values.size()==2 && std::abs(values[0].toDouble())<1e-10,"Unperturbed semimajor-axis rate is not zero");
+         const double expected=speed/7000.*180./std::acos(-1.);
+         require(std::abs(values[1].toDouble()-expected)<1e-12,"Unperturbed true-longitude rate differs from circular angular velocity");
+         const auto velocityError=window.applyResourceChanges("RateSat",{{"Element5",QString::number(speed*1.1,'g',17)}},editor->toPlainText());
+         if (!velocityError.isEmpty()) throw std::runtime_error("Eccentric-orbit velocity edit failed: "+velocityError.toStdString());
+         roundTrip("eccentric-force-model-rates");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Eccentric force-model rates mission failed");
+         const auto eccentric=read(path).trimmed().split(',');
+         require(eccentric.size()==2 && std::abs(eccentric[0].toDouble())<1e-10 &&
+            std::abs(eccentric[1].toDouble()-expected*1.1)<1e-12,"Eccentric unperturbed rates differ from instantaneous angular velocity");
+      }
       const auto types=window.availableEngineTypes();
       require(types.contains("GmatFunction") && types.contains("Yukon") && types.contains("EclipseLocator"),"Expected native plugins were not registered");
       auto function=read(samples.filePath("Ex_GMATFunction_Math.script"));

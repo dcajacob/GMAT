@@ -765,3 +765,9 @@ including exclusion of unattached resources and a spacecraft with no attachments
 Owned attitude parameters use `Spacecraft.Property`; attached hardware uses
 `Spacecraft.Hardware.Property`. The selector disables **Use reference** when a
 required hardware dependency has no valid choice.
+
+
+Force-model property browsing includes **SMADot** and **TLONGDot**. Their selected
+force-model references are checked through save/reopen and numerical reports.
+The shared engine also fixes TLONGDot's zero-perturbation case: an unperturbed
+orbit retains its nonzero instantaneous angular rate instead of reporting zero.

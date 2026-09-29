@@ -111,7 +111,7 @@ GmatBase* EquinSma::Clone(void) const
 // SMADot(const std::string &name, GmatBase *obj)
 //------------------------------------------------------------------------------
 SMADot::SMADot(const std::string &name, GmatBase *obj)
-   : OrbitReal(name, "EquinoctialSMADot", obj, "Equinoctial SMA dot", "?",
+   : OrbitReal(name, "SMADot", obj, "Equinoctial SMA dot", "?",
          GmatParam::ODE_MODEL, EQ_K_DOT, false)
 {
    mDepObjectName = "";
