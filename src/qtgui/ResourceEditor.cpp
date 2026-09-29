@@ -1,5 +1,6 @@
 #include "ResourceEditor.hpp"
 #include "FunctionFileDialog.hpp"
+#include "BallisticsMassDialog.hpp"
 #include "Moderator.hpp"
 #include "AxisSystem.hpp"
 #include "TimeSystemConverter.hpp"
@@ -453,6 +454,27 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
+   }
+   if (spacecraft) {
+      auto *button=new QPushButton("Ballistics and mass…",this); button->setObjectName("spacecraftBallisticsMass");
+      layout->addWidget(button);
+      connect(button,&QPushButton::clicked,this,[this] {
+         QMap<QString,QString> values; QMap<QString,QStringList> options;
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text();
+            auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+            values.insert(name,combo ? comboValue(combo) : table->item(row,1)->text());
+            if (combo) for (int i=0;i<combo->count();++i) options[name].append(combo->itemText(i));
+         }
+         BallisticsMassDialog dialog(values,options,this);
+         if (dialog.exec()!=QDialog::Accepted) return;
+         const auto edited=dialog.values();
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text(); if (!edited.contains(name)) continue;
+            if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(edited.value(name));
+            else table->item(row,1)->setText(edited.value(name));
+         }
+      });
    }
    if (power || spacecraft) {
       const QString formatProperty=power ? "EpochFormat" : "DateFormat";

@@ -32,6 +32,7 @@
 #include <QListWidget>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QGroupBox>
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
@@ -262,6 +263,92 @@ int main(int argc, char **argv)
          require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("SMA")-initialSma-100)<1e-6,
             "Converted pending state edit was lost during Apply");
          editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Converted state edit Undo failed");
+         sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      }
+      {
+         const auto before=editor->toPlainText(); QTemporaryDir files;
+         const auto reportPath=files.filePath("ballistics.txt");
+         const auto spadPath=QFileInfo("../data/vehicle/spad/SphericalModel.spo").absoluteFilePath();
+         require(QFileInfo::exists(spadPath),"SPAD qualification fixture missing");
+         editor->setPlainText("Create Spacecraft MassSat;\nCreate ForceModel MassFM;\nMassFM.SRP = On;\nMassFM.SRP.SRPModel = SPADFile;\n"
+            "Create Propagator MassProp;\nMassProp.FM = MassFM;\nCreate ReportFile MassReport;\nMassReport.Filename = '"+reportPath+"';\n"
+            "MassReport.WriteHeaders = false;\nMassReport.FixedWidth = false;\nMassReport.Delimiter = ',';\nMassReport.Precision = 16;\n"
+            "BeginMissionSequence;\nPropagate MassProp(MassSat) {MassSat.ElapsedSecs = 60}; % retain mass mission\n"
+            "Report MassReport MassSat.DryMass MassSat.Cd MassSat.Cr MassSat.DragArea MassSat.SRPArea;\n");
+         require(window.buildScript(),"Ballistics GUI fixture failed to build");
+         const auto source=editor->toPlainText(); QString error="Apply not called";
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("MassSat"),[&](const QMap<QString,QString> &changes) {
+               error=window.applyResourceChanges("MassSat",changes,source); return error;
+            },&owner,source);
+            auto *button=panel.findChild<QPushButton *>("spacecraftBallisticsMass"); require(button,"Ballistics editor missing");
+            auto *grid=panel.findChild<QTableWidget *>();
+            const auto value=[&](const QString &name) {
+               for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()==name) {
+                  if (auto *combo=qobject_cast<QComboBox *>(grid->cellWidget(row,1))) return combo->currentText();
+                  return grid->item(row,1)->text();
+               }
+               return QString();
+            };
+            const auto original=value("DryMass");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("ballisticsMassDialog"); require(dialog,"Ballistics dialog missing");
+               dialog->findChild<QLineEdit *>("ballistics_DryMass")->setText("999"); dialog->reject();
+            }); button->click();
+            require(value("DryMass")==original && !panel.hasChanges(),"Cancelled ballistics edits leaked into properties");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("ballisticsMassDialog");
+               require(dialog->findChildren<QGroupBox *>().size()==2,"wx ballistics groups missing");
+               auto *mass=dialog->findChild<QLineEdit *>("ballistics_DryMass"); auto *buttons=dialog->findChild<QDialogButtonBox *>();
+               mass->setText("-1"); buttons->button(QDialogButtonBox::Ok)->click();
+               require(!dialog->findChild<QLabel *>("ballisticsError")->text().isEmpty() && value("DryMass")==original,
+                  "Invalid ballistics mass accepted or partially applied");
+               const QMap<QString,QString> numeric={{"DryMass","975.5"},{"Cd","2.4"},{"Cr","1.7"},{"DragArea","18"},{"SRPArea","14"},
+                  {"SPADSRPScaleFactor","1.25"},{"SPADDragScaleFactor","1.5"}};
+               for (auto it=numeric.cbegin();it!=numeric.cend();++it) dialog->findChild<QLineEdit *>("ballistics_"+it.key())->setText(it.value());
+               for (const auto &name:{QString("SPADSRPInterpolationMethod"),QString("SPADDragInterpolationMethod")}) {
+                  auto *combo=dialog->findChild<QComboBox *>("ballistics_"+name);
+                  require(combo && combo->findText("Bicubic")>=0,"SPAD interpolation choices missing"); combo->setCurrentText("Bicubic");
+               }
+               auto *file=dialog->findChild<QLineEdit *>("ballistics_SPADSRPFile");
+               const auto previous=file->text();
+               QTimer::singleShot(0,dialog,[&] { dialog->findChild<QFileDialog *>("ballisticsFileDialog")->reject(); });
+               dialog->findChild<QPushButton *>("ballisticsBrowse_SPADSRPFile")->click();
+               require(file->text()==previous,"Cancelled SPAD chooser changed the path");
+               QTimer::singleShot(0,dialog,[&] {
+                  auto *picker=dialog->findChild<QFileDialog *>("ballisticsFileDialog");
+                  require(picker->fileMode()==QFileDialog::ExistingFile,"SPAD chooser is not an input picker");
+                  picker->selectFile(spadPath); QMetaObject::invokeMethod(picker,"accept",Qt::DirectConnection);
+               }); dialog->findChild<QPushButton *>("ballisticsBrowse_SPADSRPFile")->click();
+               require(file->text()==spadPath,"SPAD file selection lost its path");
+               dialog->findChild<QLineEdit *>("ballistics_SPADDragFile")->setText(spadPath);
+               buttons->button(QDialogButtonBox::Ok)->click();
+            }); button->click();
+            require(panel.hasChanges() && value("DryMass")=="975.5" && value("SPADSRPInterpolationMethod")=="Bicubic" &&
+               editor->toPlainText()==source && Moderator::Instance()->GetConfiguredObject("MassSat")->GetRealParameter("DryMass")!=975.5,
+               "Ballistics OK failed to preserve pending edits or mutated mission before Apply");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error));
+         require(editor->toPlainText().contains("% retain mass mission"),"Ballistics Apply lost mission comments");
+         const auto appliedMassSource=editor->toPlainText();
+         editor->undo(); require(editor->toPlainText()==source && window.buildScript(),"Ballistics Apply was not one reversible source edit");
+         require(Moderator::Instance()->GetConfiguredObject("MassSat")->GetRealParameter("DryMass")!=975.5,"Ballistics Undo retained the edited mass");
+         editor->redo(); require(editor->toPlainText()==appliedMassSource && window.buildScript(),"Ballistics Redo lost applied settings");
+         const auto path=files.filePath("mass.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Ballistics save/reopen failed");
+         require(window.runMission()==MainWindow::RunResult::Completed,"GUI-configured SPAD mission failed");
+         QFile report(reportPath); require(report.open(QIODevice::ReadOnly),"Ballistics report missing");
+         const auto numbers=QString::fromUtf8(report.readAll()).trimmed().split(',');
+         require(numbers.size()==5,"Ballistics report fields missing");
+         const double expected[]={975.5,2.4,1.7,18,14};
+         for (int i=0;i<5;++i) require(std::abs(numbers[i].toDouble()-expected[i])<1e-10,"Reopened ballistics settings changed report results");
+         auto *configured=Moderator::Instance()->GetConfiguredObject("MassSat");
+         require(configured->GetStringParameter("SPADSRPFile")==spadPath.toStdString() &&
+            configured->GetStringParameter("SPADDragInterpolationMethod")=="Bicubic" &&
+            configured->GetRealParameter("SPADSRPScaleFactor")==1.25 && configured->GetRealParameter("SPADDragScaleFactor")==1.5,
+            "Reopened SPAD configuration lost settings");
+         editor->setPlainText(before); require(window.buildScript(),"Ballistics fixture restoration failed");
          sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
       }
       {

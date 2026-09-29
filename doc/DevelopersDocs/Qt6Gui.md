@@ -1130,3 +1130,10 @@ frame that object's displayed size. Native model framing includes model scale,
 rotation and offset, while retaining Qt's model display convention. Relative and
 LookAt orientation continue to follow the selected view. Manual primary-camera
 pose edits override automatic body framing; Undo restores it.
+
+
+The spacecraft property panel offers **Ballistics and mass…** for the compact
+Spherical and SPAD file controls from the wx interface. Enter mass, coefficients,
+areas and SPAD scales; use Browse for the input files and the interpolation
+choices for each file. OK keeps changes pending in the property panel. Apply
+updates the mission, and Cancel leaves the pending values unchanged.

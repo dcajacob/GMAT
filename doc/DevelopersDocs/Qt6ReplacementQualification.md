@@ -69,7 +69,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Cartesian/Keplerian pending-state conversion and label refresh covered; remaining representations and coordinate-selection workflows pending audit. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
-| `src/gui/spacecraft/BallisticsMassPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution and broader interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | Pending audit |
@@ -1796,3 +1796,43 @@ Validation: user's GmatQt rebuilt; all 11 Qt tests passed in 44.99 seconds.
 Native rendering/window checks used isolated Xvfb/software OpenGL and do not
 qualify the user's Intel/Wayland desktop. Evidence:
 `Qt6ParityValidation/check-provider-metadata.txt`.
+
+
+## Focused spacecraft ballistics and mass editor
+
+Audited all controls in wx BallisticsMassPanel: DryMass, Cd, Cr, DragArea,
+SRPArea, both SPAD files, both scale factors and both interpolation methods.
+The spacecraft property panel now offers **Ballistics and mass…**, with the wx
+Spherical and SPAD files groups, numeric units, existing-input file choosers and
+engine-provided Bilinear/Bicubic choices. Nonnegative mass/area/scale fields and
+finite coefficients are validated together before OK. Cancel leaves the pending
+property table unchanged; OK updates that table, and Apply remains the single
+mission-edit operation. Other spacecraft properties stay pending alongside it.
+
+WorkflowTests edits all eleven controls, cancels a dialog and file chooser,
+recovers from a negative mass, selects the supplied SphericalModel.spo file,
+checks pending/configured-state isolation, applies, performs exact-source
+Undo/Redo, saves/reopens, and executes a 60-second SPAD SRP mission. Its report
+contains the edited mass, coefficients and areas; the reopened SPAD paths,
+Bicubic settings and scales are also checked. SPAD drag dynamics and the full
+matrix of interpolation/scale settings remain open qualification cases.
+
+Validation: rebuilt application/bin/GmatQt; all 11 Qt suites passed in 39.07
+seconds. Evidence: `Qt6ParityValidation/check-ballistics.txt`.
+
+## Wayland default-viewer interaction check
+
+Ran the existing GmatQtWindowTests harness directly on the current Wayland
+session with QT_QPA_PLATFORM=wayland and temporary QSettings. No forced software
+OpenGL variable was set. This is a separate process with isolated output and
+settings; it does not close or change another running GMAT instance. It uses the
+same frontend library and startup configuration as the rebuilt GmatQt.
+
+The default mission completed, the ground view minimized, the OrbitView opened
+from Output, the ground view restored and minimized again. The test captured
+29,380 blue ocean pixels and 953 red trajectory pixels and reported a responsive
+event loop after 3.016 seconds. The captured scene was visually inspected and
+shows textured Earth, trajectory, starfield and constellation lines. This proves
+that sequence on the current desktop in this run, not extended-session or all
+viewer lifecycle qualification. Evidence: `Qt6ParityValidation/wayland-windows.txt`
+and `Qt6ParityValidation/wayland-orbit.png`.

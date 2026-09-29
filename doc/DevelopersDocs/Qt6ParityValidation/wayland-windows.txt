@@ -1,0 +1,10 @@
+33 ms: run default mission
+402 ms: mission completed
+927 ms: minimize ground
+927 ms: minimize click sent
+1452 ms: open orbit from Output
+1453 ms: open returned
+Rendered ocean=29380 trajectory=953
+2052 ms: restore ground
+2502 ms: minimize ground again
+3016 ms: PASS: desktop event loop remains responsive
