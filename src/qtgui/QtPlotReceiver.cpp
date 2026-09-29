@@ -9,6 +9,7 @@
 #include <QMdiSubWindow>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QFileInfo>
 #include <algorithm>
 #include <cmath>
 
@@ -117,7 +118,11 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
       auto &curve=entry->data->curves[static_cast<int>(i)]; curve.name=text(names[i]);
       if (i<points.size() && points[i]) {
          curve.color=rgb(points[i]->GetCurrentOrbitColor());
-         if (auto *body=dynamic_cast<CelestialBody *>(points[i])) curve.radius=body->GetEquatorialRadius();
+         if (auto *body=dynamic_cast<CelestialBody *>(points[i])) {
+            curve.radius=body->GetEquatorialRadius();
+            curve.texturePath=text(body->GetStringParameter(body->GetParameterID("TextureMapFullPath")));
+            if (!curve.texturePath.isEmpty()) curve.texturePath=QFileInfo(curve.texturePath).absoluteFilePath();
+         }
       }
    }
 }
@@ -192,7 +197,22 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          if (curve.radius>0 || (px==0 && py==0 && pz==0)) continue;
          const double lon=std::atan2(py,px)*degrees, lat=std::atan2(pz,std::hypot(px,py))*degrees;
          data.append(static_cast<int>(i),lon,lat,0,epoch,drawing,solving);
-      } else data.append(static_cast<int>(i),px,py,pz,epoch,drawing,solving);
+      } else {
+         data.append(static_cast<int>(i),px,py,pz,epoch,drawing,solving);
+         if (curve.radius>0 && !curve.points.empty() && curve.points.back().frame==data.frame &&
+             i<entry->points.size() && entry->points[i]) {
+            // Celestial-body GetAttitude returns body-fixed to MJ2000Eq.
+            // The coordinate system rotation maps plot coordinates to that base.
+            Rmatrix33 viewToBase;
+            if (entry->view) {
+               entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
+               viewToBase=entry->view->GetLastRotationMatrix();
+            }
+            const auto rotation=viewToBase.Transpose()*entry->points[i]->GetAttitude(epoch);
+            for (int row=0;row<3;++row) for (int col=0;col<3;++col)
+               curve.points.back().bodyToView[row*3+col]=rotation(row,col);
+         }
+      }
    }
    if (update) refresh(*entry,true); return true;
 }

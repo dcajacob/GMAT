@@ -1,0 +1,2 @@
+PASS: subscriber lists, GUI Apply, actual XY Z output, added orbit body, visibility by name, empty lists and invalid inputs
+PASS: real orbit/XY/geodetic samples, map, dateline, sparse data, close-during-run/reopen/rerun, bounded history, replay retention, reversible zoom, dynamic values/colors, Output report viewer

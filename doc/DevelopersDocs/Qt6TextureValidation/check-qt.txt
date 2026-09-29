@@ -1,0 +1,47 @@
+[1/12] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/12] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitRenderer.cpp.o
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp: In function ‘osg::ref_ptr<osg::Geode> {anonymous}::sphere(double, const QString&, const QColor&)’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:53:86: warning: ‘QImage QImage::mirrored(bool, bool) &&’ is deprecated: Use flipped(Qt::Orientations) instead [-Wdeprecated-declarations]
+   53 |    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/QImage:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/PlotModel.hpp:3,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qimage.h:223:26: note: declared here
+  223 |     [[nodiscard]] QImage mirrored(bool horizontally = false, bool vertically = true) &&
+      |                          ^~~~~~~~
+[3/12] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[4/12] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[5/12] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[6/12] Linking CXX executable src/qtgui/GmatQtMissionTests
+[7/12] Linking CXX executable src/qtgui/GmatQtFileTests
+[8/12] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[9/12] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[10/12] Linking CXX executable src/qtgui/GmatQtPlotTests
+[11/12] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[11/12] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 1: QtGui.NativeOrbit
+1/8 Test #1: QtGui.NativeOrbit ................   Passed    0.77 sec
+    Start 2: QtGui.NativeOrbitHiDPI
+2/8 Test #2: QtGui.NativeOrbitHiDPI ...........   Passed    0.97 sec
+    Start 3: QtGui.Files
+3/8 Test #3: QtGui.Files ......................   Passed    0.13 sec
+    Start 4: QtGui.Workflow
+4/8 Test #4: QtGui.Workflow ...................   Passed    0.99 sec
+    Start 5: QtGui.Mission
+5/8 Test #5: QtGui.Mission ....................   Passed    0.63 sec
+    Start 6: QtGui.Plots
+6/8 Test #6: QtGui.Plots ......................   Passed    1.92 sec
+    Start 7: QtGui.PlotsHiDPI
+7/8 Test #7: QtGui.PlotsHiDPI .................   Passed    1.89 sec
+    Start 8: QtGui.Launch
+8/8 Test #8: QtGui.Launch .....................   Passed    1.16 sec
+
+100% tests passed, 0 tests failed out of 8
+
+Label Time Summary:
+qt-gui    =   8.47 sec*proc (8 tests)
+
+Total Test time (real) =   8.47 sec

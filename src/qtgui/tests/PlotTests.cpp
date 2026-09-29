@@ -6,6 +6,8 @@
 #include "Moderator.hpp"
 #include "ResourceProperties.hpp"
 #include "ResourceEditor.hpp"
+#include "CoordinateConverter.hpp"
+#include "CoordinateSystem.hpp"
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QMenu>
@@ -75,6 +77,19 @@ int main(int argc,char **argv)
       const auto &o=curve(*orbit,"QtSat"),&g=curve(*ground,"QtSat");
       require(o.points.size()>100 && g.points.size()>100 && xy->curves[0].points.size()>100,"No real plot histories recorded");
       require(!ground->map.isNull(),"Resolved central body map did not load");
+      const auto &earth=curve(*orbit,"Earth");
+      require(!QImage(earth.texturePath).isNull(),"Resolved orbit texture did not load");
+      auto *fixed=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthFixed"));
+      auto *view=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject(orbit->coordinates.toStdString()));
+      require(fixed && view && !earth.points.empty(),"Body orientation reference missing");
+      CoordinateConverter orientationReference;
+      for (const auto *point:{&earth.points.front(),&earth.points.back()}) {
+         Rvector6 surface(1,0,0,0,0,0),converted;
+         orientationReference.Convert(point->epoch,surface,fixed,converted,view);
+         for (int row=0;row<3;++row)
+            require(std::abs(converted[row]-point->bodyToView[row*3])<1e-10,
+                    "Texture orientation differs from body-fixed coordinate conversion");
+      }
       const auto sampled=receiver->model("QtSampledGround");
       require(sampled && sampled->frame==(ground->frame+6)/7,"Configured collection frequency was not honored");
       require(curve(*sampled,"QtSat").points.size()==50 && curve(*sampled,"QtSat").width==3,

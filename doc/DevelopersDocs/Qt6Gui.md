@@ -32,8 +32,11 @@ placeholder plotting implementation.
 
 ## Build and first launch
 
-Qt 6.4 or newer with Widgets development files is required. In an existing
-configured GMAT build:
+Qt 6.4 or newer with Widgets and OpenGLWidgets development files, plus
+OpenSceneGraph 3.6 development libraries, are required. The native orbit view
+uses OSG rendering within Qt, without the OpenFrames viewer or its controls.
+Texture decoding uses Qt image readers; OSG JPEG plugins are not required.
+In an existing configured GMAT build:
 
 ```
 cmake -S . -B build/linux-gui -DGMAT_INCLUDE_QT_GUI=ON
@@ -301,12 +304,25 @@ regression checks both retained samples and visible/frontmost plots after event
 processing. A native Linux X11 launch from an unrelated working directory also
 ran the default mission and captured its ground-track window in front.
 
-OrbitView is currently an orthographic trajectory view with body disks,
-rotation, pan, reversible wheel zoom, Fit, image export, and replay. It uses
-the view-coordinate positions already converted by OrbitPlot; non-spacecraft
-bodies are converted from the internal frame separately. This is not yet the
-full wx 3D renderer: body textures, spacecraft models, star fields, reference
-planes, and scripted camera tracking remain outstanding. Unsupported camera
+OrbitView uses a native OpenGL surface with textured spherical bodies, shaded
+lighting and depth-tested trajectories and spacecraft markers. It retains the
+existing orthographic rotation, pan, reversible wheel zoom, Fit, image export,
+and replay controls. Texture paths come from the configured celestial bodies;
+missing images fall back to the body color. Body-fixed orientations are captured
+at each recorded epoch and replayed without consulting live engine objects.
+The orientation regression compares a body-fixed surface point with an independent
+coordinate conversion at the first and last recorded epochs.
+
+The offscreen/minimal Qt platforms retain the earlier CPU body-disk renderer;
+they do not exercise the native renderer. When Xvfb is available on Linux,
+`check-qt` also runs native OpenGL tests at scale 1 and 2 using software Mesa.
+Those checks cover texture colors, foreground/background occlusion, body
+rotation, portrait resize, missing-texture fallback and repeated viewer lifetime.
+
+The view uses positions already converted by OrbitPlot; non-spacecraft bodies
+are converted from the internal frame separately. Spacecraft models, physically
+Sun-directed lighting, star fields, reference planes, and scripted camera
+tracking remain outstanding. Unsupported camera
 and drawing options are reported in Message Window. Advanced XY marker/style
 and solver-iteration behavior also needs parity work.
 

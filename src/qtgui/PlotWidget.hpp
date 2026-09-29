@@ -4,6 +4,7 @@
 #include <memory>
 class QSlider;
 class QTimer;
+class OrbitRenderer;
 class PlotCanvas final : public QWidget
 {
 public:
@@ -13,7 +14,10 @@ public:
    double zoomFactor() const { return zoom; }
    void zoomBy(double wheelSteps);
    void setViewAngles(double azimuth, double elevation);
+   void refresh();
+   QImage captureImage();
 protected:
+   void resizeEvent(QResizeEvent *) override;
    void paintEvent(QPaintEvent *) override;
    void mousePressEvent(QMouseEvent *) override;
    void mouseMoveEvent(QMouseEvent *) override;
@@ -24,6 +28,7 @@ private:
    QPointF lastMouse, pan;
    double zoom = 1, yaw = 0.55, pitch = 0.45;
    quint64 visibleFrame = std::numeric_limits<quint64>::max();
+   OrbitRenderer *renderer=nullptr;
 };
 class PlotWidget final : public QWidget
 {

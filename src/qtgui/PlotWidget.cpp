@@ -1,4 +1,7 @@
 #include "PlotWidget.hpp"
+#include "OrbitRenderer.hpp"
+#include <QGuiApplication>
+#include <QResizeEvent>
 #include <QAction>
 #include <QFileDialog>
 #include <QLabel>
@@ -21,11 +24,16 @@ PlotCanvas::PlotCanvas(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    setMinimumSize(200, 140);
    setMouseTracking(true);
    setToolTip("Wheel: zoom · Drag: rotate orbit or pan chart · Shift-drag: pan orbit · Double-click: fit");
+   if (data->kind==PlotModel::Kind::Orbit && QGuiApplication::platformName()!="offscreen" && QGuiApplication::platformName()!="minimal")
+      renderer=new OrbitRenderer(data,this);
 }
-void PlotCanvas::fit() { zoom = 1; pan = {}; update(); }
-void PlotCanvas::setFrame(quint64 value) { visibleFrame = value; update(); }
-void PlotCanvas::zoomBy(double steps) { zoom = std::clamp(zoom * std::pow(1.15, steps), 0.02, 200.0); update(); }
-void PlotCanvas::setViewAngles(double azimuth, double elevation) { yaw = azimuth; pitch = elevation; update(); }
+void PlotCanvas::refresh() { if (renderer) renderer->setView(zoom,yaw,pitch,pan,visibleFrame); else update(); }
+QImage PlotCanvas::captureImage() { return renderer ? renderer->captureImage() : grab().toImage(); }
+void PlotCanvas::resizeEvent(QResizeEvent *event) { QWidget::resizeEvent(event); if (renderer) renderer->setGeometry(rect()); }
+void PlotCanvas::fit() { zoom = 1; pan = {}; refresh(); }
+void PlotCanvas::setFrame(quint64 value) { visibleFrame = value; refresh(); }
+void PlotCanvas::zoomBy(double steps) { zoom = std::clamp(zoom * std::pow(1.15, steps), 0.02, 200.0); refresh(); }
+void PlotCanvas::setViewAngles(double azimuth, double elevation) { yaw = azimuth; pitch = elevation; refresh(); }
 void PlotCanvas::mousePressEvent(QMouseEvent *event) { lastMouse = event->position(); }
 void PlotCanvas::mouseMoveEvent(QMouseEvent *event)
 {
@@ -35,12 +43,13 @@ void PlotCanvas::mouseMoveEvent(QMouseEvent *event)
       yaw = std::remainder(yaw + delta.x() * 0.008, 6.283185307179586);
       pitch = std::remainder(pitch + delta.y() * 0.008, 6.283185307179586);
    } else pan += delta;
-   update();
+   refresh();
 }
 void PlotCanvas::mouseDoubleClickEvent(QMouseEvent *) { fit(); }
 void PlotCanvas::wheelEvent(QWheelEvent *event) { zoomBy(event->angleDelta().y() / 120.0); event->accept(); }
 void PlotCanvas::paintEvent(QPaintEvent *)
 {
+   if (renderer) return;
    QPainter painter(this);
    painter.setRenderHint(QPainter::Antialiasing);
    const bool orbit = data->kind == PlotModel::Kind::Orbit;
@@ -210,7 +219,7 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       const auto path=QFileDialog::getSaveFileName(this,"Save plot image",data->title+".png","PNG image (*.png)");
       if (path.isEmpty()) return;
       QSaveFile file(path);
-      if (!file.open(QIODevice::WriteOnly) || !drawing->grab().save(&file,"PNG") || !file.commit())
+      if (!file.open(QIODevice::WriteOnly) || !drawing->captureImage().save(&file,"PNG") || !file.commit())
          QMessageBox::warning(this,"Could not save plot",file.errorString());
    });
    timeline = new QSlider(Qt::Horizontal,this); timeline->setRange(0,1000); timeline->setValue(1000);
@@ -230,4 +239,4 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    });
    layout->addWidget(drawing,1);
 }
-void PlotWidget::refresh() { drawing->update(); }
+void PlotWidget::refresh() { drawing->refresh(); }

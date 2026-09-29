@@ -7,6 +7,7 @@
 #include <QString>
 #include <deque>
 #include <limits>
+#include <array>
 
 struct PlotPoint
 {
@@ -16,6 +17,8 @@ struct PlotPoint
    bool connect = false;
    bool solver = false;
    double high = 0, low = 0;
+   // Row-major body-fixed to plot-frame rotation, captured while engine objects live.
+   std::array<double,9> bodyToView = {1,0,0,0,1,0,0,0,1};
 };
 struct PlotCurve
 {
@@ -26,6 +29,7 @@ struct PlotCurve
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
    double radius = 0;
+   QString texturePath;
    int width = 1, markerSize = 4;
    Qt::PenStyle style = Qt::SolidLine;
 };

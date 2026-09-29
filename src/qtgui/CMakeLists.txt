@@ -1,4 +1,5 @@
-find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets OpenGLWidgets)
+find_package(OpenSceneGraph 3.6 REQUIRED COMPONENTS osg osgDB osgViewer osgGA osgUtil osgText)
 add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
    ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
@@ -6,8 +7,10 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    PropagationForm.cpp PropagationForm.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptEditor.cpp ScriptEditor.hpp
+   OrbitRenderer.cpp OrbitRenderer.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
-target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets GmatBase GmatUtil)
+target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets Qt6::OpenGLWidgets GmatBase GmatUtil ${OPENSCENEGRAPH_LIBRARIES})
+target_include_directories(GmatQtFrontend PRIVATE ${OPENSCENEGRAPH_INCLUDE_DIRS})
 target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(WIN32)
    # Engine headers expose Windows headers; retain the C++ min/max functions.
@@ -38,6 +41,21 @@ else()
 endif()
 
 if(GMAT_QT_BUILD_TESTS)
+   add_executable(GmatQtOrbitRendererTests tests/OrbitRendererTests.cpp)
+   target_link_libraries(GmatQtOrbitRendererTests PRIVATE GmatQtFrontend)
+   if(UNIX AND NOT APPLE)
+      find_program(QT_XVFB_RUN xvfb-run)
+      if(QT_XVFB_RUN)
+         add_test(NAME QtGui.NativeOrbit COMMAND ${QT_XVFB_RUN} -a
+            ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
+            $<TARGET_FILE:GmatQtOrbitRendererTests>)
+         set_tests_properties(QtGui.NativeOrbit PROPERTIES LABELS qt-gui TIMEOUT 60)
+         add_test(NAME QtGui.NativeOrbitHiDPI COMMAND ${QT_XVFB_RUN} -a
+            ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1 QT_SCALE_FACTOR=2
+            $<TARGET_FILE:GmatQtOrbitRendererTests>)
+         set_tests_properties(QtGui.NativeOrbitHiDPI PROPERTIES LABELS qt-gui TIMEOUT 60)
+      endif()
+   endif()
    add_executable(GmatQtFileTests tests/FileTests.cpp)
    target_link_libraries(GmatQtFileTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
@@ -70,6 +88,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_custom_target(check-qt
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-      DEPENDS GmatQt GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests
+      DEPENDS GmatQt GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests
       USES_TERMINAL VERBATIM)
 endif()
