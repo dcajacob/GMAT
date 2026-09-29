@@ -87,8 +87,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.error=it.key()+"."+key+": segment-relative cameras are not yet supported by Qt conversion. The original script is unchanged."; return result;
       }
       if (values.value("ViewTrajectory")=="On" && values.value("SetCurrentLocation")!="On" && values.value("SetDefaultLocation")!="On") {
-         if (values.value("ViewFrame","CoordinateSystem")=="CoordinateSystem" || !values.value("LookAtFrame").isEmpty()) {
-            result.error=it.key()+": automatic trajectory framing with CoordinateSystem or LookAtFrame is not yet supported. Use a named object without LookAtFrame, or a stored camera location."; return result;
+         if (values.value("ViewFrame","CoordinateSystem")=="CoordinateSystem") {
+            result.error=it.key()+": automatic trajectory framing with CoordinateSystem is not yet supported. Use a named object or a stored camera location."; return result;
          }
       }
       for (const auto *key:{"SetDefaultLocation","SetCurrentLocation","InertialFrame","ViewTrajectory","ShortestAngle"})
@@ -302,8 +302,8 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
       if (object.contains("automaticTrajectory")) {
          setting.automaticTrajectory=object.value("automaticTrajectory").toString();
-         if (!identifier.match(setting.automaticTrajectory).hasMatch() || setting.bodyRelative || setting.lookAtRotation)
-            throw std::runtime_error("Automatic trajectory camera needs an object name without body-relative or look-at rotation");
+         if (!identifier.match(setting.automaticTrajectory).hasMatch() || setting.bodyRelative)
+            throw std::runtime_error("Automatic trajectory camera needs an object name without body-relative rotation");
       }
       if (object.contains("primaryName")) {
          setting.primaryName=object.value("primaryName").toString();
@@ -339,8 +339,8 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
             for (const auto *key:{"lookAtRotation","shortestAngle"})
                if (value.contains(key) && !value.value(key).isBool()) throw std::runtime_error("Named camera alignment modes must be booleans");
             view.lookAtRotation=value.value("lookAtRotation").toBool(); view.shortestAngle=value.value("shortestAngle").toBool();
-            if (!view.automaticTrajectory.isEmpty() && (view.bodyRelative || view.lookAtRotation || !view.reference.isEmpty()))
-               throw std::runtime_error("Automatic trajectory camera cannot use body-relative or look-at rotation");
+            if (!view.automaticTrajectory.isEmpty() && (view.bodyRelative || !view.reference.isEmpty() || (!view.target.isEmpty() && !view.lookAtRotation)))
+               throw std::runtime_error("Automatic trajectory camera needs a plot-frame reference and LookAt rotation for any target");
             if (view.lookAtRotation && view.target.isEmpty()) throw std::runtime_error("Aligned camera needs a target");
             if (view.bodyRelative && (view.reference.isEmpty() || view.reference=="CoordinateSystem")) throw std::runtime_error("Body-relative camera needs an object reference");
             view.eye=vector(value.value("eye")); view.center=vector(value.value("center")); view.up=vector(value.value("up"));

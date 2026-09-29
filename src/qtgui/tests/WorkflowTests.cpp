@@ -144,7 +144,8 @@ int main(int argc, char **argv)
          require(automatic.error.isEmpty() && qtCameraSettings(automatic.script).value("Display").automaticTrajectory=="Sat" && automatic.script.endsWith(dynamics),"Automatic trajectory metadata or dynamics lost");
          const auto automaticSecondary=convertOpenFramesViews(QString(secondary).replace("Close.SetCurrentLocation = On","Close.SetCurrentLocation = Off"));
          require(automaticSecondary.error.isEmpty() && qtCameraSettings(automaticSecondary.script).value("Display").views[0].automaticTrajectory=="Sat","Automatic named trajectory lost");
-         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off;\nCamera.LookAtFrame = Sat")).error.contains("automatic trajectory framing"),"Unsupported automatic LookAt lacks the intended diagnostic");
+         const auto automaticLookAt=convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off;\nCamera.LookAtFrame = Sat"));
+         require(automaticLookAt.error.isEmpty() && qtCameraSettings(automaticLookAt.script).value("Display").lookAtRotation,"Automatic LookAt mode lost in conversion");
          require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop")).error.contains("segment-relative"),"Segment camera lacks specific diagnostic");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
@@ -1407,6 +1408,32 @@ int main(int argc, char **argv)
          const auto good=editor->toPlainText(); auto invalid=qtCameraSettings(good).value("OFI_EarthView"); invalid.automaticTrajectory="Missing";
          editor->setPlainText(setQtCameraSetting(good,"OFI_EarthView",invalid)); require(!window.buildScript(),"Unknown automatic trajectory accepted");
          editor->setPlainText(good); require(window.runMission()==MainWindow::RunResult::Completed,"Automatic trajectory error recovery failed");
+         osg::Vec3d azimuthUp;
+         for (bool shortest:{false,true}) {
+            auto aligned=trajectoryScript;
+            aligned.replace("BeginMissionSequence;",QString("TheView.LookAtFrame = DefaultSC;\nTheView.ShortestAngle = %1;\n"
+               "Earth_View.ViewFrame = DefaultSC;\nEarth_View.ViewTrajectory = On;\nEarth_View.SetDefaultLocation = Off;\nEarth_View.SetCurrentLocation = Off;\n"
+               "Earth_View.LookAtFrame = DefaultSC;\nEarth_View.ShortestAngle = %1;\nBeginMissionSequence;").arg(shortest ? "On" : "Off"));
+            const auto converted=convertOpenFramesViews(aligned); require(converted.error.isEmpty(),"Automatic trajectory LookAt conversion failed");
+            editor->setPlainText(converted.script);
+            require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Automatic LookAt save/reopen failed");
+            const auto model=window.plotReceiver()->model("OFI_EarthView");
+            require(model && model->cameraViews[1].automaticTrajectory=="DefaultSC","Named automatic LookAt did not reach viewer");
+            auto *selector=window.findChild<QComboBox *>("orbitCameraView"); require(selector,"Automatic named camera selector missing");
+            for (int selected:{0,1}) {
+               selector->setCurrentIndex(selected);
+               const auto camera=orbitCamera(*model,model->frame,0,0,1,1);
+               osg::Vec3d direction;
+               for (const auto &curve:model->curves) if (curve.name=="DefaultSC") {
+                  const auto &point=curve.points.back(); direction.set(point.x,point.y,point.z); direction.normalize();
+               }
+               require((camera.outward+direction).length()<1e-8 && std::abs(camera.up*direction)<1e-8,"Automatic LookAt ignored target direction");
+               if (selected==0) {
+                  if (!shortest) azimuthUp=camera.up;
+                  else require((camera.up-azimuthUp).length()>1e-4,"Automatic ShortestAngle did not change roll");
+               }
+            }
+         }
       }
       {
          auto bodyScript=originalSample;

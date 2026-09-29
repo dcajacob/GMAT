@@ -30,6 +30,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
    osg::Vec3d right(std::cos(yaw),-std::sin(yaw),0);
    osg::Vec3d up(std::cos(pitch)*std::sin(yaw),std::cos(pitch)*std::cos(yaw),-std::sin(pitch));
    osg::Vec3d outward=right^up;
+   osg::Vec3d automaticOrigin,automaticRight(1,0,0),automaticUp(0,0,1),automaticOutward(0,-1,0);
    const PlotCamera *camera=nullptr;
    const auto &history=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
       ? model.cameraViews[model.selectedCamera].cameras : model.cameras;
@@ -46,6 +47,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
          right=up^outward; right.normalize();
       }
       up=outward^right;
+      automaticOrigin=target; automaticRight=right; automaticUp=up; automaticOutward=outward;
       const osg::Quat azimuth(-yaw,up);
       outward=azimuth*outward; right=azimuth*right;
       const osg::Quat elevation(-pitch,right);
@@ -72,7 +74,9 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       for (const auto &curve:model.curves) if (curve.name==trajectory)
          for (const auto &point:curve.points) path.include(point.x,point.y,point.z,0);
       if (!path.empty) {
-         target=path.center(); const double span=(path.maximum-path.minimum).length();
+         const auto center=path.center();
+         target=automaticOrigin+automaticRight*center.x()-automaticOutward*center.y()+automaticUp*center.z();
+         const double span=(path.maximum-path.minimum).length();
          const double radius=span>0 ? span*.5 : 1.0;
          distance=2*radius; viewExtent=radius;
          if (model.perspective) {
@@ -80,7 +84,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
             const double halfHorizontal=std::atan(std::max(aspect,1e-6)*std::tan(halfVertical));
             distance=radius/std::sin(std::min(halfVertical,halfHorizontal));
          }
-         right.set(1,0,0); up.set(0,0,1); outward.set(0,-1,0);
+         right=automaticRight; up=automaticUp; outward=automaticOutward;
          const osg::Quat azimuth(-yaw,up); outward=azimuth*outward; right=azimuth*right;
          const osg::Quat elevation(-pitch,right); outward=elevation*outward; up=elevation*up;
       }

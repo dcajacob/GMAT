@@ -1671,3 +1671,29 @@ After improving the unsupported-LookAt fixture to use valid syntax, the targeted
 Workflow rerun passed in 21.85 seconds. Native checks used isolated Xvfb/software
 OpenGL. Evidence: `Qt6ParityValidation/check-auto-trajectory.txt` and
 `Qt6ParityValidation/check-auto-trajectory-workflow.txt`.
+
+## Automatic trajectory LookAt orientation
+
+Automatic named whole-trajectory conversion now supports LookAtFrame with both
+ShortestAngle modes. The shared camera calculation transforms the trajectory
+bounding center as well as eye/up orientation, using the published camera frame.
+User rotation remains an offset around that transformed center. Primary and
+secondary named views retain the mode through save/reopen. CoordinateSystem
+automatic framing and segment-relative views remain open.
+
+The optional OpenFramesCameraReference probe now compares complete automatic
+world-to-view transforms against the installed OpenFrames library: a translated
+bounding sphere, 12 target directions, both DIRECT/AZEL modes and three aspect
+ratios (72 cases). Maximum transformed-point difference is 8.92633e-06 scene
+units, within the 1e-4 tolerance for the reference's float bounding sphere. The
+original 48 stored-frame alignment cases still pass. This adds no OpenFrames
+dependency to the Qt application.
+
+WorkflowTests converts primary and named automatic LookAt cameras, saves/reopens
+and runs them, switches cameras, verifies target direction and orthogonal up,
+and checks that ShortestAngle changes roll.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 54.93 seconds.
+Native checks used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-auto-look-at.txt` and
+`Qt6ParityValidation/auto-look-at-reference.txt`.

@@ -1109,6 +1109,7 @@ When an OpenFrames view selects ViewTrajectory for a named plotted object and ha
 no stored camera location, conversion now creates an automatic trajectory camera.
 It frames that object's retained path and updates while the mission runs. Named
 views retain their own target paths. Replay keeps framing stable; Fit frames the
-whole scene, and Script view restores the selected trajectory view. Segment
-cameras remain unsupported. Automatic LookAt/CoordinateSystem combinations
-require a stored supported camera location before conversion.
+whole scene, and Script view restores the selected trajectory view. Automatic LookAt targets retain both ShortestAngle modes, including roll and
+bounding-center orientation. Segment cameras remain unsupported. Automatic
+CoordinateSystem framing requires a stored supported camera location before
+conversion.
