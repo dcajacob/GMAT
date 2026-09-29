@@ -78,7 +78,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/ThrusterPanel.hpp` | Pending audit |
-| `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. CK/SCLK/FK runtime use and NAIF combinations pending. |
+| `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatDialog.hpp` | Pending audit |
@@ -149,7 +149,7 @@ Every row requires real-engine evidence, not just registration.
 | Plugin | Configuration / execution / reports / recovery evidence |
 | --- | --- |
 | `../plugins/libDataInterface` | Pending qualification |
-| `../plugins/libEphemPropagator` | Pending qualification |
+| `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. Other ephemeris formats and coverage-boundary cases pending. |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. Contact and remaining locator workflows pending. |
@@ -882,3 +882,35 @@ CK/SCLK/FK loading or SPICE propagation/attitude execution.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 27.83 seconds. Evidence:
 `Qt6ParityValidation/check-kernel-lists.txt`.
+
+## SPICE orbit/attitude execution and file recovery
+
+CompatibilityTests adapts Ex_SPICEOrbitAndAttitudePropagation.script to a 60-second
+run, converts its two OF views through MainWindow's Qt converter, and configures
+the bundled SPK, CK and SCLK files through the kernel-list dialogs. The sample's
+referenced MarsExpress_MEX_V10.TF is absent from this checkout; the fixture omits
+that FK and does not claim unmodified-sample or FK qualification. SpiceAttitude
+works with the available files and explicit spacecraft/frame NAIF IDs in this case.
+
+After exact save/Save As/reopen and invalid-build recovery, the mission must produce
+at least 13 report/view samples and reach 60 seconds. Plotted Mars-frame positions
+match report values within 1e-5 km. Recorded body-to-view orientation matches the
+engine's transposed inertial-to-body matrix within 1e-10 and is orthonormal within
+1e-8. This short fixture's attitude is effectively stationary (change about 1.6e-15),
+so it qualifies orientation capture, not visibly changing SPICE attitude playback.
+
+Removing a copied clock file after a successful run reproduced a recovery defect:
+CSPICE may reread remaining text kernels while unloading another kernel. A missing
+file left its pool and GMAT's loaded-file map inconsistent, so restoring the file
+was insufficient. Shared SpiceInterface cleanup now clears the entire pool using
+[KEEPER reset](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/cspice/kclear_c.html)
+for UnloadAllKernels. A failed individual unload rebuilds the available remaining
+kernels and their cache, leaving unavailable files eligible for later reload.
+This is shared engine cleanup and also affects non-Qt callers; propagation math is
+unchanged. Restoring the clock must recover and produce an identical report, as
+must a further repeat run. Full FK, coverage-boundary and changing-attitude cases
+remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 27.54 seconds. Evidence:
+`Qt6ParityValidation/check-spice-runtime.txt`; the reproduced failure is retained
+in `Qt6ParityValidation/spice-recovery-before.txt`.

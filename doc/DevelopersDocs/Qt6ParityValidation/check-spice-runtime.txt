@@ -1,0 +1,85 @@
+[1/55] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/55] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceInterface.cpp.o
+[3/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/bin/libGmatBase.so.R2026a
+[4/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/bin/libGmatBase.so
+[5/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEphemPropagator.so.R2026a
+[6/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so.R2026a
+[7/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so
+[8/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEventLocator.so.R2026a
+[9/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libDataInterface.so.R2026a
+[10/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libDataInterface.so
+[11/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExtraPropagators.so.R2026a
+[12/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so.R2026a
+[13/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatFunction.so.R2026a
+[14/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatEstimation.so.R2026a
+[15/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatEstimation.so
+[16/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libFormation.so.R2026a
+[17/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libMsise00.so.R2026a
+[18/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libNewParameters.so.R2026a
+[19/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPolyhedronGravity.so.R2026a
+[20/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libProductionPropagators.so.R2026a
+[21/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEKF.so.R2026a
+[22/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libSaveCommand.so.R2026a
+[23/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libScriptTools.so.R2026a
+[24/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEphemPropagator.so
+[25/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libThrustFile.so.R2026a
+[26/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEKF.so
+[27/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEventLocator.so
+[28/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so
+[29/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExtraPropagators.so
+[30/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libFormation.so
+[31/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatFunction.so
+[32/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libMsise00.so
+[33/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libStation.so.R2026a
+[34/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libNewParameters.so
+[35/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPolyhedronGravity.so
+[36/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libProductionPropagators.so
+[37/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libSaveCommand.so
+[38/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libScriptTools.so
+[39/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libStation.so
+[40/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/thinksys/libTLEPropagator.so.R2026a
+[41/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libThrustFile.so
+[42/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/thinksys/libTLEPropagator.so
+[43/55] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libYukonOptimizer.so.R2026a
+[44/55] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libYukonOptimizer.so
+[45/55] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[46/55] Linking CXX executable src/qtgui/GmatQtWindowTests
+[47/55] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[48/55] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[49/55] Linking CXX executable src/qtgui/GmatQtFileTests
+[50/55] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[51/55] Linking CXX executable src/qtgui/GmatQtPlotTests
+[52/55] Linking CXX executable src/qtgui/GmatQtMissionTests
+[53/55] Building CXX object src/qtgui/CMakeFiles/GmatQtCompatibilityTests.dir/tests/CompatibilityTests.cpp.o
+[54/55] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[54/55] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/11 Test  #1: QtGui.NativeOrbit ................   Passed    1.12 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/11 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    1.87 sec
+      Start  3: QtGui.NativeWindows
+ 3/11 Test  #3: QtGui.NativeWindows ..............   Passed    3.11 sec
+      Start  4: QtGui.NativePlots
+ 4/11 Test  #4: QtGui.NativePlots ................   Passed    3.91 sec
+      Start  5: QtGui.Files
+ 5/11 Test  #5: QtGui.Files ......................   Passed    0.17 sec
+      Start  6: QtGui.Workflow
+ 6/11 Test  #6: QtGui.Workflow ...................   Passed    6.68 sec
+      Start  7: QtGui.Mission
+ 7/11 Test  #7: QtGui.Mission ....................   Passed    1.47 sec
+      Start  8: QtGui.Compatibility
+ 8/11 Test  #8: QtGui.Compatibility ..............   Passed    3.33 sec
+      Start  9: QtGui.Plots
+ 9/11 Test  #9: QtGui.Plots ......................   Passed    2.31 sec
+      Start 10: QtGui.PlotsHiDPI
+10/11 Test #10: QtGui.PlotsHiDPI .................   Passed    2.38 sec
+      Start 11: QtGui.Launch
+11/11 Test #11: QtGui.Launch .....................   Passed    1.17 sec
+
+100% tests passed, 0 tests failed out of 11
+
+Label Time Summary:
+qt-gui    =  27.53 sec*proc (11 tests)
+
+Total Test time (real) =  27.54 sec

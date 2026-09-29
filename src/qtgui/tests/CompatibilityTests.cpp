@@ -1,4 +1,6 @@
 #include "MainWindow.hpp"
+#include "QtPlotReceiver.hpp"
+#include "PlotModel.hpp"
 #include "TestSettings.hpp"
 #include "CommandForm.hpp"
 #include "Moderator.hpp"
@@ -56,6 +58,81 @@ int main(int argc,char **argv)
          require(window.loadScript(second) && editor->toPlainText()==source && window.buildScript(),
             "Plugin script did not recover unchanged after failed interpretation and reopen");
       };
+      {
+         const auto kernelRoot=QFileInfo(startup).dir().absoluteFilePath("../data/vehicle/ephem/spk/");
+         QMap<QString,QString> kernels;
+         for (const auto &pair:QList<QPair<QString,QString>>{
+               {"OrbitSpiceKernelName","MarsExpress_Short.bsp"},
+               {"AttitudeSpiceKernelName","MarsExpress_ATNM_PTR00012_100531_002.BC"},
+               {"SCClockSpiceKernelName","MarsExpress_MEX_100921_STEP.TSC"}}) {
+            const auto path=output.filePath(pair.second);
+            require(QFile::copy(QDir(kernelRoot).filePath(pair.second),path),"Mars Express kernel fixture unavailable"); kernels[pair.first]=path;
+         }
+         auto source=read(samples.filePath("Ex_SPICEOrbitAndAttitudePropagation.script"));
+         source.remove(QRegularExpression("^MarsExpress\\.(?:OrbitSpiceKernelName|AttitudeSpiceKernelName|SCClockSpiceKernelName|FrameSpiceKernelName|Attitude)[ \\t]*=[^\\n]*\\n",QRegularExpression::MultilineOption));
+         source.replace("MarsExpress.ElapsedDays = 1.0","MarsExpress.ElapsedSecs = 60");
+         const auto report=output.filePath("spice-view.csv");
+         source.replace("BeginMissionSequence;","Create ReportFile SpiceReport;\nSpiceReport.Filename = '"+report+"';\n"
+            "SpiceReport.Add = {MarsExpress.ElapsedSecs, MarsExpress.MarsMJ2000Eq.X, MarsExpress.MarsMJ2000Eq.Y, MarsExpress.MarsMJ2000Eq.Z};\n"
+            "SpiceReport.FixedWidth = false;\nSpiceReport.WriteHeaders = false;\nSpiceReport.Delimiter = ',';\nSpiceReport.Precision = 16;\nBeginMissionSequence;");
+         editor->setPlainText(source);
+         require(window.convertOpenFramesScript(),"SPICE example Qt view conversion failed");
+         const auto before=editor->toPlainText(); QString applyError="No Apply";
+         {
+            QWidget owner;
+            ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("MarsExpress"),
+               [&](const QMap<QString,QString> &changes) { applyError=window.applyResourceChanges("MarsExpress",changes,before); return applyError; },&owner);
+            for (auto it=kernels.cbegin();it!=kernels.cend();++it) {
+               const auto path=it.value();
+               QTimer::singleShot(0,&panel,[&panel,path] {
+                  auto *dialog=panel.findChild<QDialog *>("kernelFileDialog"); if (!dialog) return;
+                  dialog->findChild<QListWidget *>("kernelFileList")->addItem(path); dialog->accept();
+               });
+               auto *button=panel.findChild<QPushButton *>("chooseProperty_"+it.key()); require(button,"SPICE input list control absent"); button->click();
+            }
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(applyError.isEmpty(),qPrintable(applyError));
+         require(window.applyResourceChanges("MarsExpress",{{"Attitude","SpiceAttitude"}},editor->toPlainText()).isEmpty(),"SpiceAttitude selection rejected");
+         roundTrip("spice-kernels");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Configured SPICE orbit/attitude example failed");
+         const auto expectedReport=read(report);
+         const auto rows=expectedReport.trimmed().split('\n'); require(rows.size()>=13,"SPICE report lacks propagated samples");
+         const auto final=rows.last().split(','); require(final.size()==4 && std::abs(final[0].toDouble()-60)<1e-5,"SPICE run did not reach requested stop");
+         auto model=window.plotReceiver()->model("OFI_Mars3DView"); require(model!=nullptr,"Converted SPICE view absent");
+         const PlotCurve *curve=nullptr; for (const auto &candidate:model->curves) if (candidate.name=="MarsExpress") curve=&candidate;
+         require(curve && curve->points.size()>=13,"SPICE viewer has no orbit samples");
+         const auto &last=curve->points.back();
+         require(std::abs(last.x-final[1].toDouble())<1e-5 && std::abs(last.y-final[2].toDouble())<1e-5 && std::abs(last.z-final[3].toDouble())<1e-5,
+            "SPICE viewer trajectory disagrees with mission report");
+         double changed=0;
+         for (int i=0;i<9;++i) { require(std::isfinite(last.bodyToView[i]),"SPICE attitude viewer matrix is invalid"); changed+=std::abs(last.bodyToView[i]-curve->points.front().bodyToView[i]); }
+         auto *runtime=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("MarsExpress"));
+         require(runtime && runtime->GetStringParameter("Attitude")=="SpiceAttitude","Mission lost selected SPICE attitude model");
+         const auto firstAttitude=runtime->GetAttitude(curve->points.front().epoch);
+         const auto finalAttitude=runtime->GetAttitude(last.epoch);
+         double engineChange=0;
+         for (int i=0;i<3;++i) for (int j=0;j<3;++j) {
+            engineChange+=std::abs(finalAttitude(i,j)-firstAttitude(i,j));
+            require(std::abs(last.bodyToView[3*i+j]-finalAttitude(j,i))<1e-10,"SPICE viewer attitude disagrees with engine orientation");
+         }
+         std::cout<<"SPICE attitude change: engine="<<engineChange<<" viewer="<<changed<<'\n';
+         require(engineChange<=1e-8 || changed>1e-8,"Changing SPICE attitude was not recorded by the viewer");
+         for (int i=0;i<3;++i) for (int j=0;j<3;++j) {
+            double dot=0; for (int k=0;k<3;++k) dot+=last.bodyToView[3*i+k]*last.bodyToView[3*j+k];
+            require(std::abs(dot-(i==j ? 1. : 0.))<1e-8,"SPICE attitude matrix is not orthonormal");
+         }
+         const auto clock=kernels.value("SCClockSpiceKernelName");
+         require(QFile::rename(clock,clock+".away"),"Cannot stage unavailable clock kernel");
+         require(window.runMission()==MainWindow::RunResult::Failed,"Missing clock kernel was silently accepted");
+         require(QFile::rename(clock+".away",clock),"Cannot restore clock fixture");
+         const auto recovered=window.runMission();
+         if (recovered!=MainWindow::RunResult::Completed) for (auto *log:window.findChildren<QPlainTextEdit *>()) if (log!=editor) std::cerr<<log->toPlainText().right(9000).toStdString()<<'\n';
+         require(recovered==MainWindow::RunResult::Completed,"SPICE mission did not recover after clock restoration");
+         require(read(report)==expectedReport,"Recovered SPICE run changed report values");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(report)==expectedReport,"Repeated SPICE run after recovery changed output");
+         std::cout<<"PASS: SPICE kernel GUI lists, Qt OF conversion, orbit/attitude samples, report agreement, round trips and unavailable-clock recovery\n";
+      }
       {
          const auto reportPath=output.filePath("configured-report.txt");
          editor->setPlainText("Create Variable Number;\nCreate Array Values[2,2];\n"

@@ -473,6 +473,21 @@ bool SpiceInterface::UnloadKernel(const std::string &fileName)
       reset_c();
 //      throw UtilityException(errmsg);
       MessageInterface::ShowMessage("%s", errmsg.c_str());
+      // A failed text-kernel unload may already have cleared/rebuilt part of
+      // CSPICE's pool. Reconstruct the remaining available kernels and rebuild
+      // our cache, so restored files will not be mistaken for loaded kernels.
+      const auto previous = loadedKernels;
+      UnloadAllKernels();
+      for (const auto &kernel : previous)
+      {
+         if (kernel.first == fileName) continue;
+         try { LoadKernel(kernel.first); }
+         catch (BaseException &error)
+         {
+            MessageInterface::ShowMessage("*** WARNING *** %s", error.GetFullMessage().c_str());
+         }
+      }
+
    }
 
    #ifdef DEBUG_SPK_LOADING
@@ -518,38 +533,20 @@ bool SpiceInterface::UnloadKernels(const StringArray &fileNames)
 //------------------------------------------------------------------------------
 bool SpiceInterface::UnloadAllKernels()
 {
-   std::string kName;
-   std::map<std::string, std::string>::iterator ii;
-   for (ii = loadedKernels.begin(); ii != loadedKernels.end(); ++ii)
+   // Unloading text kernels individually can make CSPICE re-read the other
+   // loaded text files. If one has disappeared, that leaves its kernel pool
+   // and our loaded-file cache inconsistent during mission reconstruction.
+   // This operation discards the entire pool, so use KEEPER's full reset.
+   // https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/cspice/kclear_c.html
+   reset_c();
+   kclear_c();
+   if (failed_c())
    {
-      kName = (*ii).second;
-      #ifdef DEBUG_SPK_LOADING
-         MessageInterface::ShowMessage("Now attempting to unload kernel %s\n",
-               kName.c_str());
-      #endif
-      kernelNameSPICE = kName.c_str();
-      unload_c(kernelNameSPICE);
-      if (failed_c())
-      {
-//         ConstSpiceChar option[] = "SHORT"; // retrieve short error message, for now
-//         SpiceInt       numChar  = MAX_SHORT_MESSAGE;
-//         SpiceChar      err[MAX_SHORT_MESSAGE];
-         ConstSpiceChar option[] = "LONG"; // retrieve long error message, for now
-         SpiceInt       numChar  = MAX_LONG_MESSAGE;
-         SpiceChar      err[MAX_LONG_MESSAGE];
-         getmsg_c(option, numChar, err);
-         std::string errStr(err);
-         std::string errmsg = "Error unloading kernel \"";
-         errmsg += kName + "\".  Message received from CSPICE is: ";
-         errmsg += errStr + "\n";
-         reset_c();
-         throw UtilityException(errmsg);
-      }
-      // @todo - handle exceptional conditions (SPICE signals) here ...
-      #ifdef DEBUG_SPK_LOADING
-         MessageInterface::ShowMessage("Successfully unloaded kernel %s\n",
-               kName.c_str());
-      #endif
+      SpiceChar err[MAX_LONG_MESSAGE];
+      getmsg_c("LONG", MAX_LONG_MESSAGE, err);
+      const std::string message(err);
+      reset_c();
+      throw UtilityException("Error clearing SPICE kernels: " + message + "\n");
    }
    loadedKernels.clear();
    return true;

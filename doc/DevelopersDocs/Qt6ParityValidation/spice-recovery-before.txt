@@ -1,0 +1,202 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 8: QtGui.Compatibility
+1/1 Test #8: QtGui.Compatibility ..............***Failed    0.53 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+SPICE attitude change: engine=1.55431e-15 viewer=1.55431e-15
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+ SPICE(FILEOPENFAILED)
+  
+ WRLINE: An error occurred while attempting to open ../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.                                                                                                                  
+Converted 1 OpenFrames viewer(s) for Qt. Review the visual differences listed in the script before saving.
+OFI_Mars3DView.DrawXYPlane: retained as a comment; no direct Qt equivalent.
+OFI_Mars3DView.DrawLabel: per-object flags combined into one plot setting.
+OFI_Mars3DView.DrawGrid: per-object flags combined into one plot setting.
+OFI_Mars3DView: exact camera up vector retained in Qt metadata; the base viewer uses Z.
+Express_View: camera follows the object position using plot-frame axes.
+Express_View: two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.
+OFI_Mars3DView: camera selector retains 2 named views; trajectory-relative orientation is not imported.HELP_PATH directory does not exist: ../docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to ../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to ../data/time/tai-utc.dat
+2026-09-29 14:44:57 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+"StateType" is deprecated as the string specifying the state type for display, and will be removed from a future build; please use "DisplayStateType" instead.
+
+FAIL: SPICE mission did not recover after clock restoration
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.53 sec*proc (1 test)
+
+Total Test time (real) =   0.54 sec
+
+The following tests FAILED:
+	  8 - QtGui.Compatibility (Failed)                      qt-gui
+Errors while running CTest

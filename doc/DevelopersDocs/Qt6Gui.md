@@ -868,3 +868,10 @@ not added twice. Cancel discards dialog edits; OK leaves them pending in the
 resource editor until Apply. Applying replaces the complete list, so removal and
 clearing work as expected. Paths with spaces or commas are retained; paths with
 apostrophes, semicolons or embedded line breaks are not accepted by this editor.
+
+SPICE orbit/attitude qualification now includes a shortened Mars Express example
+configured through the kernel lists, Qt view conversion, save/reopen and report
+comparison. Restoring an unavailable clock kernel permits rerunning without
+restarting GMAT. The bundled example references a frame kernel absent from this
+checkout, so the qualification fixture omits that file; the unmodified example
+still requires its missing input.
