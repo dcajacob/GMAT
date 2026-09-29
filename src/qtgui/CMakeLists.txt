@@ -6,6 +6,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
    PropagationForm.cpp PropagationForm.hpp
    CommandForm.cpp CommandForm.hpp
+   ConditionDialog.cpp ConditionDialog.hpp
    ReportParameterDialog.cpp ReportParameterDialog.hpp
    QtSolverListener.cpp QtSolverListener.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp

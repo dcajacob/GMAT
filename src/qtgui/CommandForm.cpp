@@ -1,4 +1,5 @@
 #include "CommandForm.hpp"
+#include "ConditionDialog.hpp"
 #include <QFormLayout>
 #include <QLineEdit>
 #include <QRegularExpression>
@@ -80,7 +81,19 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="Toggle" && name=="State") {
+      if (title()=="Condition" && name=="Condition") {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
+         auto *edit=new QPushButton("Edit conditions…",container); edit->setObjectName("commandChoose_Condition"); row->addWidget(edit); layout->addRow(name,container);
+         auto available=[input,edit] {
+            edit->setEnabled(ConditionDialog::supports(input->text()));
+            edit->setToolTip(edit->isEnabled() ? "Edit comparisons and logical joins" : "This syntax remains editable directly in the condition field");
+         };
+         connect(input,&QLineEdit::textChanged,edit,[available] { available(); }); available();
+         connect(edit,&QPushButton::clicked,this,[this,input] {
+            ConditionDialog dialog(input->text(),this);
+            if (dialog.exec()==QDialog::Accepted) input->setText(dialog.condition());
+         });
+      } else if (title()=="Toggle" && name=="State") {
          auto *state=new QComboBox(this); state->setObjectName("commandToggleState"); state->addItems({"On","Off"});
          state->setCurrentText(input->text()); input->setParent(state); input->hide(); layout->addRow(name,state);
          connect(state,&QComboBox::currentTextChanged,input,&QLineEdit::setText);

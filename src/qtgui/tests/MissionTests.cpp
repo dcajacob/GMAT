@@ -2,6 +2,8 @@
 #include "TestSettings.hpp"
 #include "CommandEditor.hpp"
 #include "CommandForm.hpp"
+#include "ConditionDialog.hpp"
+#include <QComboBox>
 #include "Moderator.hpp"
 #include <QApplication>
 #include <QAction>
@@ -74,9 +76,30 @@ int main(int argc,char **argv)
          const QString condition="If 'Choose' total > 2 & i < 9;\n total = 8;\nElse;\n total = 4;\nEndIf;";
          form.setStatement(condition);
          auto *predicate=form.findChild<QLineEdit *>("commandField_Condition");
-         require(predicate,"Conditional controls missing"); predicate->setText("total >= 3");
+         require(predicate,"Conditional controls missing");
+         auto *builder=form.findChild<QPushButton *>("commandChoose_Condition");
+         require(builder && builder->isEnabled(),"Compound condition builder missing");
+         QTimer::singleShot(0,&form,[&] {
+            if (auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget())) {
+               dialog->findChild<QTableWidget *>("conditionTable")->item(0,1)->setText("discarded"); dialog->reject();
+            }
+         }); builder->click(); require(predicate->text()=="total > 2 & i < 9","Cancel changed the condition");
+         bool emptyRejected=false;
+         QTimer::singleShot(0,&form,[&] {
+            auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+            auto *table=dialog->findChild<QTableWidget *>("conditionTable");
+            table->setCurrentCell(1,1); dialog->findChild<QPushButton *>("conditionRemove")->click();
+            dialog->findChild<QPushButton *>("conditionAdd")->click();
+            emptyRejected=!dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled();
+            dialog->findChild<QPushButton *>("conditionRemove")->click();
+            static_cast<QComboBox *>(table->cellWidget(0,2))->setCurrentText(">="); table->item(0,3)->setText("3"); dialog->accept();
+         }); builder->click(); require(emptyRejected,"Incomplete condition row was accepted");
          expected=condition; expected.replace("total > 2 & i < 9","total >= 3");
          require(result==expected,"Condition editor changed branch bodies");
+         predicate->setText("(total > 2 | i < 9)");
+         require(!builder->isEnabled(),"Unsupported grouped syntax was offered a lossy conversion");
+         require(ConditionDialog::supports("A(1, 2) >= -1.2e-3 | total ~= 0"),"Array/numeric compound condition was rejected");
+
          const QString assignment="GMAT total = sqrt(4) + 3; % preserve comment\n";
          form.setStatement(assignment);
          auto *expression=form.findChild<QLineEdit *>("commandField_Expression");
@@ -191,7 +214,13 @@ int main(int argc,char **argv)
          form.setStatement(snapshot.nodes[condition].statement);
          auto *predicate=form.findChild<QLineEdit *>("commandField_Condition");
          if (!predicate) std::cerr<<"Condition source: "<<snapshot.nodes[condition].statement.toStdString()<<std::endl;
-         require(predicate,"Real mission If header has no condition control"); predicate->setText("count ~= 0");
+         require(predicate,"Real mission If header has no condition control");
+         QTimer::singleShot(0,&form,[&] {
+            auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+            auto *table=dialog->findChild<QTableWidget *>("conditionTable");
+            table->item(0,1)->setText("count"); static_cast<QComboBox *>(table->cellWidget(0,2))->setCurrentText("~=");
+            table->item(0,3)->setText("0"); dialog->accept();
+         }); form.findChild<QPushButton *>("commandChoose_Condition")->click();
          require(window.applyMissionChange(snapshot,condition,MissionEdit::Replace,changed).isEmpty() && total()==-196,
             "Condition form edit did not execute the correct branch");
          editor->undo(); require(window.buildScript() && total()==6,"Condition form undo changed mission results");

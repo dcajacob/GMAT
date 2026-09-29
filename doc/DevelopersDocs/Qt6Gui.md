@@ -829,3 +829,14 @@ may name files that do not yet exist. Selecting a destination does not write or
 overwrite it; normal Apply/run handling still controls output creation. Cancel
 preserves the current property, and accepted selections remain pending until
 Apply. Unclassified plugin filename fields retain the general path picker.
+
+### If/While condition builder
+
+The Condition field includes **Edit conditions…** for comparisons of numeric
+values, parameters and positive numeric array indices. Rows provide left/right
+operands, all six GMAT comparison operators and AND/OR joins. Add and remove rows
+as needed; Choose operand opens the shared parameter browser for the selected
+operand cell. Incomplete rows disable OK. Cancel leaves the header untouched.
+Accepting updates only the condition span; the command editor's Apply still
+validates the mission and supplies Undo. Unsupported grouped or expression syntax
+remains in the editable text field and is never flattened into rows.

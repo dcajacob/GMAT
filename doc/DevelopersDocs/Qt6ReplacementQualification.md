@@ -66,7 +66,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SolverCreatePanel.hpp` | Pending audit |
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end; real-engine step edit and Undo tested. Parameter selection audit pending. |
-| `src/gui/controllogic/ConditionPanel.hpp` | CommandForm If/While condition; real-engine branch result and Undo tested. Structured compound-condition builder pending. |
+| `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | Pending audit |
@@ -801,3 +801,21 @@ SPICE kernel lists and broader spacecraft model configuration remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 27.66 seconds. Evidence:
 `Qt6ParityValidation/check-file-pickers.txt`.
+
+## Structured mission conditions
+
+Audited wx ConditionPanel's comparison columns and logical joins. Qt now provides
+a local condition dialog with left/right operands, relation and AND/OR controls,
+add/remove rows and a shared parameter browser. Numeric values (including signed
+scientific notation), parameter references and positive numeric array indices are
+recognized. Unsupported grouped/expression syntax stays available verbatim in the
+text field rather than being silently transformed. Table columns are adjustable.
+
+MissionTests exercises Cancel, removal/addition, incomplete-row rejection, relation
+and operand edits, branch/label preservation and non-conversion of grouped syntax.
+The real-engine If test now edits through the dialog, executes the changed branch
+and restores the original result with Undo. Dedicated While execution, compound
+join outcomes and all parameter-picker combinations still need broader coverage.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 28.35 seconds. Evidence:
+`Qt6ParityValidation/check-condition-builder.txt`.
