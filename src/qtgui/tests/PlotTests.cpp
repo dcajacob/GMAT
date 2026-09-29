@@ -27,6 +27,8 @@
 #include <QTemporaryDir>
 #include <QTimer>
 #include <QSlider>
+#include <QTabWidget>
+#include <QMouseEvent>
 #include <fstream>
 #include <iostream>
 #include <cmath>
@@ -72,6 +74,36 @@ int main(int argc,char **argv)
             if (child->property("plotName").toString()==name && child->isVisible()) visible=true;
          require(visible,"Default mission plot window missing");
       }
+      auto *defaultArea=window.findChild<QMdiArea *>("workspace");
+      auto *defaultOutput=window.findChild<QTreeWidget *>("Output");
+      for (auto *tabs:window.findChildren<QTabWidget *>())
+         if (tabs->indexOf(defaultOutput)>=0) tabs->setCurrentWidget(defaultOutput);
+      auto openDefaultOrbit=[&] {
+         const auto items=defaultOutput->findItems("DefaultOrbitView",Qt::MatchExactly|Qt::MatchRecursive);
+         require(items.size()==1,"Default orbit absent from Output");
+         defaultOutput->scrollToItem(items.first()); QApplication::processEvents();
+         const QPointF position=defaultOutput->visualItemRect(items.first()).center();
+         for (auto type:{QEvent::MouseButtonPress,QEvent::MouseButtonRelease,QEvent::MouseButtonDblClick,QEvent::MouseButtonRelease}) {
+            QMouseEvent event(type,position,defaultOutput->viewport()->mapToGlobal(position.toPoint()),Qt::LeftButton,
+               type==QEvent::MouseButtonRelease ? Qt::NoButton : Qt::LeftButton,Qt::NoModifier);
+            QApplication::sendEvent(defaultOutput->viewport(),&event);
+         }
+         QApplication::processEvents();
+         auto *opened=defaultArea->activeSubWindow();
+         require(opened && opened->property("plotName")=="DefaultOrbitView","Output double-click did not activate default OrbitView");
+         require(!opened->isMinimized() && opened->widget()->isVisible(),"Output activation left OrbitView minimized or hidden");
+         require(defaultArea->subWindowList(QMdiArea::StackingOrder).last()==opened,"Output activation left OrbitView behind another window");
+         return opened;
+      };
+      auto *defaultOrbit=openDefaultOrbit();
+      for (auto *child:defaultArea->subWindowList()) if (child->property("plotName")=="DefaultGroundTrackPlot") {
+         child->showMaximized(); defaultArea->setActiveSubWindow(child); child->raise();
+      }
+      QApplication::processEvents(); openDefaultOrbit();
+      defaultOrbit->showMinimized(); QApplication::processEvents();
+      openDefaultOrbit();
+      defaultOrbit->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+      openDefaultOrbit();
       require(window.loadScript(script),"Plot mission could not open");
       require(window.runMission()==MainWindow::RunResult::Completed,"Plot mission failed");
       auto *receiver=window.plotReceiver();

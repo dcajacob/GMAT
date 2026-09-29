@@ -68,7 +68,12 @@ bool QtPlotReceiver::show(const QString &name)
       entry.window->setProperty("plotName",name);
       entry.window->resize(700,480);
    }
-   entry.window->show(); workspace->setActiveSubWindow(entry.window);
+   // show() alone leaves a minimized MDI child minimized. Activation also
+   // needs an explicit raise when another child covers this plot.
+   if (entry.window->isMinimized()) entry.window->showNormal();
+   else entry.window->show();
+   workspace->setActiveSubWindow(entry.window);
+   entry.window->raise();
    entry.window->widget()->setFocus(); return true;
 }
 QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel::Kind kind,
