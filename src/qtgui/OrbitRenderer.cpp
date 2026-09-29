@@ -1,5 +1,6 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
+#include <osg/PolygonMode>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
@@ -61,7 +62,7 @@ public:
       traverse(node);
    }
 };
-osg::ref_ptr<osg::Node> readModel(const QString &path)
+osg::ref_ptr<osg::Node> readModel(const QString &path,bool normalize)
 {
    // Include build dependencies and an adjacent deployed plugin directory.
    auto &paths=osgDB::Registry::instance()->getLibraryFilePathList();
@@ -72,11 +73,14 @@ osg::ref_ptr<osg::Node> readModel(const QString &path)
    options->setReadFileCallback(new TextureReader);
    options->getDatabasePathList().push_back(QFileInfo(path).absolutePath().toStdString());
    auto model=osgDB::readRefNodeFile(path.toStdString(),options);
-   if (!model) { qWarning().noquote()<<"Qt orbit: could not load spacecraft model"<<path<<"; using a marker."; return {}; }
+   if (!model) { qWarning().noquote()<<"Qt orbit: could not load model"<<path<<"; using the default body or marker."; return {}; }
    ModelArrays arrays; model->accept(arrays);
    osg::ComputeBoundsVisitor bounds; model->accept(bounds);
    const auto box=bounds.getBoundingBox();
    if (!box.valid() || box.radius()<=0) return {};
+   // Celestial-body meshes retain their physical dimensions. Only spacecraft
+   // use wx's normalized, exaggerated display-size convention.
+   if (!normalize) return model;
    auto normalized=new osg::MatrixTransform;
    normalized->setMatrix(osg::Matrixd::translate(-osg::Vec3d(box.center()))*osg::Matrixd::scale(1.0/box.radius(),1.0/box.radius(),1.0/box.radius()));
    normalized->addChild(model);
@@ -129,7 +133,7 @@ struct OrbitRenderer::Scene
       QString texture,modelPath;
       osg::ref_ptr<osg::MatrixTransform> modelPose=new osg::MatrixTransform;
       bool modelLoaded=false;
-      double radius=-1;
+      double radius=-1,assetExtent=1;
       Curve() { root->addChild(track); root->addChild(body); }
    };
    std::shared_ptr<PlotModel> model;
@@ -165,10 +169,33 @@ struct OrbitRenderer::Scene
       root->addChild(sky);
       viewer.setSceneData(root);
    }
+   void prepareCurve(int key,const PlotCurve &source) {
+      auto added=curves.try_emplace(key); auto &curve=added.first->second;
+      if (added.second) root->addChild(curve.root);
+         if (curve.radius!=source.radius || curve.texture!=source.texturePath || curve.modelPath!=source.modelPath) {
+            curve.body->removeChildren(0,curve.body->getNumChildren());
+            if (source.name=="Sun") curve.body->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+            curve.modelPose->removeChildren(0,curve.modelPose->getNumChildren());
+            curve.modelLoaded=false;
+            if (!source.modelPath.isEmpty()) {
+               auto model=readModel(source.modelPath,source.radius==0);
+               if (model) { curve.modelPose->addChild(model); curve.body->addChild(curve.modelPose); curve.modelLoaded=true; curve.assetExtent=model->getBound().center().length()+model->getBound().radius(); }
+            }
+            if (source.radius>0 && !curve.modelLoaded) curve.body->addChild(sphere(source.radius,source.texturePath,source.color));
+            curve.radius=source.radius; curve.texture=source.texturePath; curve.modelPath=source.modelPath;
+         }
+   }
    void synchronize(int width,int height,double pixelRatio) {
       double extent=1;
-      for (const auto &curve:model->curves) if (curve.visible)
-         for (const auto &p:curve.points) extent=std::max(extent,std::hypot(std::hypot(p.x,p.y),p.z)+std::max(curve.radius,curve.modelPath.isEmpty() ? 0.0 : std::abs(curve.modelScale)*1000*(1+std::hypot(curve.modelOffset[0],curve.modelOffset[1],curve.modelOffset[2]))));
+      for (auto it=model->curves.cbegin();it!=model->curves.cend();++it) {
+         const auto &source=it.value(); prepareCurve(it.key(),source);
+         if (!source.visible) continue;
+         const auto &prepared=curves.at(it.key());
+         const double scale=std::abs(source.modelScale)*(source.radius==0 ? 1000 : 1);
+         const double offset=std::hypot(source.modelOffset[0],source.modelOffset[1],source.modelOffset[2]);
+         const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
+         for (const auto &p:source.points) extent=std::max(extent,std::hypot(p.x,p.y,p.z)+radius);
+      }
       // Keep the previous orthographic orbit controls and a stable replay fit.
       const double aspect=double(width)/height;
       const auto camera=orbitCamera(*model,frame,yaw,pitch,extent);
@@ -191,12 +218,22 @@ struct OrbitRenderer::Scene
       viewer.getCamera()->setProjectionMatrixAsOrtho(-halfWidth,halfWidth,-halfHeight,halfHeight,
          std::max(1e-6,std::min(extent*.01,distance*.001)),farPlane);
       sky->removeDrawables(0,sky->getNumDrawables());
+      std::array<double,9> inertialToView={1,0,0,0,1,0,0,0,1};
+      const PlotPoint *sample=nullptr;
+      for (const auto &source:model->curves) for (const auto &point:source.points)
+         if (point.frame<=frame && (!sample || point.frame>sample->frame)) sample=&point;
+      if (sample) inertialToView=sample->inertialToView;
+      auto rotateSky=[&](const std::array<double,3> &value) {
+         osg::Vec3d result;
+         for (int row=0;row<3;++row) for (int col=0;col<3;++col) result[row]+=inertialToView[row*3+col]*value[col];
+         return result;
+      };
+      auto skyPosition=[&](const osg::Vec3d &direction) {
+         const double forward=-(direction*outward),tangent=.4663076581549986;
+         const double x=(direction*right)/(forward*tangent*aspect),y=(direction*up)/(forward*tangent);
+         return center+right*(x*halfWidth)+up*(y*halfHeight)-outward*((farPlane-distance)*.9);
+      };
       if (model->starsEnabled && model->starCount>0) {
-         std::array<double,9> inertialToView={1,0,0,0,1,0,0,0,1};
-         const PlotPoint *sample=nullptr;
-         for (const auto &source:model->curves) for (const auto &point:source.points)
-            if (point.frame<=frame && (!sample || point.frame>sample->frame)) sample=&point;
-         if (sample) inertialToView=sample->inertialToView;
          osg::ref_ptr<osg::Vec3Array> positions[5];
          for (auto &group:positions) group=new osg::Vec3Array;
          // Fixed 50-degree celestial field: translations and orthographic zoom
@@ -225,6 +262,26 @@ struct OrbitRenderer::Scene
             sky->addDrawable(geometry);
          }
       }
+      if (model->constellationsEnabled) {
+         auto geometry=new osg::Geometry; isolateArrays(geometry);
+         auto positions=new osg::Vec3Array;
+         for (const auto &segment:model->constellationCatalog.segments) {
+            auto a=rotateSky(segment.first),b=rotateSky(segment.second);
+            const double fa=-(a*outward),fb=-(b*outward),near=.001;
+            if (fa<near && fb<near) continue;
+            // Clip against the forward celestial hemisphere before projection.
+            // Frustum clipping handles segments crossing a screen edge.
+            if (fa<near) a=a+(b-a)*((near-fa)/(fb-fa));
+            else if (fb<near) b=b+(a-b)*((near-fb)/(fa-fb));
+            positions->push_back(skyPosition(a)); positions->push_back(skyPosition(b));
+         }
+         geometry->setVertexArray(positions);
+         auto colors=new osg::Vec4Array; colors->push_back({.25f,.42f,.62f,1});
+         geometry->setColorArray(colors,osg::Array::BIND_OVERALL);
+         geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINES,0,positions->size()));
+         geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(pixelRatio));
+         sky->addDrawable(geometry);
+      }
       auto guideGeometry=new osg::Geometry; isolateArrays(guideGeometry);
       auto guidePositions=new osg::Vec3Array; auto guideColors=new osg::Vec4Array;
       auto line=[&](const osg::Vec3d &a,const osg::Vec3d &b,const osg::Vec4 &c) {
@@ -235,6 +292,22 @@ struct OrbitRenderer::Scene
          line({0,0,0},{extent,0,0},{.92f,.35f,.31f,1});
          line({0,0,0},{0,extent,0},{.39f,.84f,.53f,1});
          line({0,0,0},{0,0,extent},{.41f,.59f,1,1});
+      }
+      auto plane=[&](bool ecliptic,const osg::Vec4 &color) {
+         constexpr double obliquity=23.439291111*3.14159265358979323846/180;
+         auto position=[&](double radius,double angle) {
+            const double x=radius*std::cos(angle),y=radius*std::sin(angle);
+            return ecliptic ? rotateSky({x,y*std::cos(obliquity),y*std::sin(obliquity)}) : osg::Vec3d(x,y,0);
+         };
+         for (int ring=1;ring<=4;++ring) for (int i=0;i<96;++i)
+            line(position(extent*ring/4,2*3.14159265358979323846*i/96),position(extent*ring/4,2*3.14159265358979323846*(i+1)/96),color);
+         for (int i=0;i<12;++i) line({0,0,0},position(extent,2*3.14159265358979323846*i/12),color);
+      };
+      if (model->xyPlane) plane(false,{.25f,.3f,.42f,1});
+      if (model->eclipticPlane) plane(true,{.42f,.3f,.18f,1});
+      if (model->sunLine && sample && sample->hasSun) {
+         osg::Vec3d sun(sample->sunPosition[0],sample->sunPosition[1],sample->sunPosition[2]);
+         if (sun.normalize()>0) line({0,0,0},sun*(extent*1.25),{1,.82f,.2f,1});
       }
       if (model->grid) for (int i=0;i<=5;++i) {
          const double x=halfWidth*(-1+2.0*i/5),y=halfHeight*(-1+2.0*i/5);
@@ -257,26 +330,18 @@ struct OrbitRenderer::Scene
          if (added.second) root->addChild(curve.root);
          curve.root->setNodeMask(source.visible ? ~0u : 0);
          if (!source.visible) continue;
-         if (curve.radius!=source.radius || curve.texture!=source.texturePath || curve.modelPath!=source.modelPath) {
-            curve.body->removeChildren(0,curve.body->getNumChildren());
-            if (source.radius>0) curve.body->addChild(sphere(source.radius,source.texturePath,source.color));
-            if (source.name=="Sun") curve.body->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-            curve.modelPose->removeChildren(0,curve.modelPose->getNumChildren());
-            curve.modelLoaded=false;
-            if (source.radius==0 && !source.modelPath.isEmpty()) {
-               auto model=readModel(source.modelPath);
-               if (model) { curve.modelPose->addChild(model); curve.body->addChild(curve.modelPose); curve.modelLoaded=true; }
-            }
-            curve.radius=source.radius; curve.texture=source.texturePath; curve.modelPath=source.modelPath;
-         }
+         curve.body->getOrCreateStateSet()->setAttributeAndModes(
+            new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK,model->wireframe ? osg::PolygonMode::LINE : osg::PolygonMode::FILL),
+            osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
          if (curve.modelLoaded) {
             const auto &r=source.modelRotation,&offset=source.modelOffset;
             constexpr double radians=3.14159265358979323846/180;
             // Match wx's normalized model display scale (1000 km at ModelScale=1).
-            const double scale=source.modelScale*1000;
-            curve.modelPose->setMatrix(osg::Matrixd::translate(offset[0],offset[1],offset[2])*
+            const double scale=source.modelScale*(source.radius==0 ? 1000 : 1);
+            const auto rotation=osg::Matrixd::rotate(r[0]*radians,osg::Vec3d(1,0,0),r[1]*radians,osg::Vec3d(0,1,0),r[2]*radians,osg::Vec3d(0,0,1));
+            curve.modelPose->setMatrix(source.radius==0 ? osg::Matrixd::translate(offset[0],offset[1],offset[2])*
                osg::Matrixd::scale(scale,scale,scale)*
-               osg::Matrixd::rotate(r[0]*radians,osg::Vec3d(1,0,0),r[1]*radians,osg::Vec3d(0,1,0),r[2]*radians,osg::Vec3d(0,0,1)));
+               rotation : osg::Matrixd::scale(scale,scale,scale)*rotation*osg::Matrixd::translate(offset[0],offset[1],offset[2]));
             curve.modelPose->getOrCreateStateSet()->setMode(GL_NORMALIZE,osg::StateAttribute::ON);
          }
          auto geometry=new osg::Geometry; isolateArrays(geometry);

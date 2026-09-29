@@ -83,6 +83,10 @@ int main(int argc,char **argv)
       const auto fixedStars=receiver->model("QtFixedStars");
       require(fixedStars && fixedStars->starsEnabled && fixedStars->starCount==1234 &&
               fixedStars->starCatalog.stars.size()>40000,"Script star settings or catalog resolution failed");
+      require(fixedStars->constellationsEnabled && fixedStars->constellationCatalog.segments.size()>500 &&
+         fixedStars->xyPlane && fixedStars->eclipticPlane && fixedStars->wireframe && fixedStars->sunLine,
+         "Scripted drawing settings or constellation catalog missing");
+      require(receiver->model("QtLegacyGround")->footprints,"Ground-track footprint setting ignored");
       require(!orbit->starsEnabled && !orbit->starCatalogLoaded,"Disabled stars unnecessarily loaded a catalog");
       require(orbit->cameras.size()==o.points.size(),"Object camera history length differs from orbit");
       for (const auto *camera:{&orbit->cameras.front(),&orbit->cameras.back()}) {
@@ -216,6 +220,47 @@ int main(int argc,char **argv)
       require(sparse->curves[0].points.size()==3 && sparse->curves[1].points.size()==2 && !sparse->curves[1].points.back().connect,"Absent satellite corrupted track slots");
       require(!receiver->TakeGroundTrackAction("Sparse","AddStation=QtSat"),"Non-station object accepted as station");
       receiver->DeleteGlPlot("Sparse");
+      const auto footprint=PlotModel::groundFootprint({179,87});
+      require(footprint.size()==73,"Ground footprint missing");
+      constexpr double radians=3.14159265358979323846/180;
+      for (const auto &point:footprint) {
+         const double cosine=std::sin(87*radians)*std::sin(point.y()*radians)+std::cos(87*radians)*std::cos(point.y()*radians)*std::cos((point.x()-179)*radians);
+         require(std::abs(cosine-std::cos(5*radians))<1e-12,"Footprint does not maintain angular radius near a pole");
+      }
+      require(PlotModel::groundSegments({180,0},{-180,0}).isEmpty(),"Equivalent dateline endpoints produce an invalid segment");
+      require(receiver->CreateXyPlotWindow("IterationCheck","",0,0,.5,.5,false,"Iterations","x","y"),"XY callback fixture failed");
+      receiver->AddXyPlotCurve("IterationCheck",0,"value",0xff0000);
+      receiver->UpdateXyPlotCurve("IterationCheck",0,0,0);
+      receiver->XyPlotMarkBreak("IterationCheck"); receiver->XyPlotMarkBreak("IterationCheck");
+      for (int iteration=0;iteration<3;++iteration) {
+         receiver->UpdateXyPlotCurve("IterationCheck",0,1,iteration+1);
+         receiver->UpdateXyPlotCurve("IterationCheck",0,2,iteration+2);
+         receiver->XyPlotClearFromBreak("IterationCheck",-1);
+         const auto &c=receiver->model("IterationCheck")->curves[0];
+         require(c.points.size()==1 && c.breaks.size()==1,"Repeated solver clear lost its anchor or retained old iterations");
+      }
+      receiver->UpdateXyPlotCurve("IterationCheck",0,1,1);
+      receiver->XyPlotChangeMarker("IterationCheck",1,5,0);
+      receiver->XyPlotMarkPoint("IterationCheck",1,0);
+      const auto &styled=receiver->model("IterationCheck")->curves[0];
+      require(styled.points[0].marker==0 && styled.points[1].marker==5 && !styled.points[0].highlighted && styled.points[1].highlighted,
+         "Indexed marker/highlight changed unrelated points");
+      receiver->UpdateXyPlotCurve("IterationCheck",0,2,1.5);
+      receiver->show("IterationCheck");
+      auto *stylePlot=dynamic_cast<PlotWidget *>(area->activeSubWindow()->widget());
+      QVector<QImage> markerImages;
+      for (int marker=0;marker<10;++marker) {
+         receiver->XyPlotCurveSettings("IterationCheck",false,1,100,true,14,marker,false,0);
+         markerImages.append(stylePlot->canvas()->captureImage());
+         for (int previous=0;previous<marker;++previous) require(markerImages[previous]!=markerImages.back(),"Distinct XY marker shapes rendered identically");
+      }
+      QVector<QImage> lineImages;
+      for (int style:{100,101,102,103,104,106}) {
+         receiver->XyPlotCurveSettings("IterationCheck",true,1,style,false,14,0,false,0);
+         lineImages.append(stylePlot->canvas()->captureImage());
+         for (int previous=0;previous<lineImages.size()-1;++previous) require(lineImages[previous]!=lineImages.back(),"Distinct XY line styles rendered identically");
+      }
+      receiver->DeleteXyPlot("IterationCheck");
       // Direct callback compatibility: the public script factory routes
       // GroundTrackPlot to GroundTrack, so it cannot exercise this older path.
       const auto previousView=receiver->GetViewType();

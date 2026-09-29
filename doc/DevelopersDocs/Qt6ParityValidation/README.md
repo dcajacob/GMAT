@@ -46,7 +46,7 @@ including native/HiDPI rendering, files, workflow, mission, plots and launch.
 1. Deeper specialized resource forms and compound-property coverage.
 2. Function/optimizer/event workflow coverage and acceptance.
 3. Scripted cameras are implemented; continue real-mission acceptance alongside the remaining graphics work.
-4. Remaining graphics and solver-iteration plot features.
+4. Graphics features below are implemented; continue representative mission acceptance and polish.
 5. Explicit OFI-script compatibility strategy and plugin capability coverage.
 
 ## Scripted camera milestone
@@ -69,3 +69,19 @@ asset required, as in the earlier model validation).
 
 The native mission completed successfully. `check-camera.txt` records all nine
 Linux Qt tests passing after the camera changes.
+
+## Drawing and chart milestone
+
+Native constellation outlines, XY/ecliptic reference grids, wireframe, Sun
+direction lines and non-spherical body meshes are implemented. Native tests
+check catalog units/ranges, forward/rear hemisphere behavior, pan/zoom
+invariance, guide toggles, wireframe restoration, unexaggerated celestial mesh
+dimensions and missing-mesh sphere fallback. The real-engine plot fixture
+verifies scripted drawing flags and reads the bundled constellation catalog.
+
+Ground-track footprints follow wx's five-degree reference-circle convention;
+polar geometry and the dateline are checked. They do not claim sensor or
+horizon coverage. XY markers and line styles have distinct image checks, and
+indexed highlights leave unrelated samples unchanged. Repeated current-iteration
+clearing is tested against a retained break anchor; the previous implementation
+discarded that anchor after the first clear.

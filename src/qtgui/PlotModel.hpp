@@ -23,6 +23,8 @@ struct PlotPoint
    std::array<double,3> sunPosition = {0,0,0};
    bool hasSun = false;
    std::array<double,9> inertialToView = {1,0,0,0,1,0,0,0,1};
+   int marker=-1;
+   bool highlighted=false;
 };
 struct PlotCurve
 {
@@ -38,6 +40,8 @@ struct PlotCurve
    std::array<double,3> modelOffset = {0,0,0}, modelRotation = {0,0,0};
    double modelScale = 1;
    int width = 1, markerSize = 4;
+   int markerType=0,lineStyle=100;
+   bool errorBars=true;
    Qt::PenStyle style = Qt::SolidLine;
 };
 struct PlotStation
@@ -63,10 +67,14 @@ struct PlotModel
    QImage map;
    bool grid = true, legend = true, labels = true, penDown = true, active = true;
    bool axes = true;
+   bool xyPlane=false,eclipticPlane=false,wireframe=false,sunLine=false;
+   bool footprints=false;
    bool sunlight = true;
    bool starsEnabled = false, starCatalogLoaded = false;
    int starCount = 7000;
    StarCatalog starCatalog;
+   bool constellationsEnabled=false,constellationCatalogLoaded=false;
+   ConstellationCatalog constellationCatalog;
    bool scriptedCamera=false, fitCamera=false;
    std::deque<PlotCamera> cameras;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
@@ -80,4 +88,5 @@ struct PlotModel
    void breakLines();
    void trim();
    static QVector<QPair<QPointF, QPointF>> groundSegments(const QPointF &a, const QPointF &b);
+   static QVector<QPointF> groundFootprint(QPointF center,double radiusDegrees=5);
 };

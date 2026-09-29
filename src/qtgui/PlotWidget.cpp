@@ -20,6 +20,45 @@
 #include <algorithm>
 #include <cmath>
 
+namespace {
+void drawMarker(QPainter &painter,QPointF p,int type,double size,const QColor &color,bool highlight)
+{
+   painter.save(); painter.setPen(QPen(color,1)); painter.setBrush(Qt::NoBrush);
+   const double r=size/2;
+   auto cross=[&] { painter.drawLine(p+QPointF(-r,-r),p+QPointF(r,r)); painter.drawLine(p+QPointF(-r,r),p+QPointF(r,-r)); };
+   auto plus=[&] { painter.drawLine(p+QPointF(-r,0),p+QPointF(r,0)); painter.drawLine(p+QPointF(0,-r),p+QPointF(0,r)); };
+   switch (type) {
+   case 0: cross(); break;
+   case 1: painter.drawEllipse(p,r,r); break;
+   case 2: plus(); break;
+   case 3: cross(); plus(); break;
+   case 4: painter.drawRect(QRectF(p-QPointF(r,r),QSizeF(size,size))); break;
+   case 5: painter.drawPolygon(QPolygonF({p+QPointF(0,-r),p+QPointF(r,0),p+QPointF(0,r),p+QPointF(-r,0)})); break;
+   case 6: cross(); painter.drawRect(QRectF(p-QPointF(r,r),QSizeF(size,size))); break;
+   case 7: case 8: {
+      const double sign=type==7 ? 1 : -1;
+      painter.drawPolygon(QPolygonF({p+QPointF(0,-r*sign),p+QPointF(r,r*sign),p+QPointF(-r,r*sign)})); break;
+   }
+   case 9: painter.drawEllipse(p,r,r); plus(); break;
+   }
+   if (highlight) painter.drawEllipse(p,r+3,r+3);
+   painter.restore();
+}
+QPen curvePen(const PlotCurve &curve,const QColor &color)
+{
+   QPen pen(color,curve.width,curve.style);
+   switch (curve.lineStyle) {
+   case 101: pen.setStyle(Qt::DotLine); break;
+   case 102: pen.setDashPattern({8,4}); break;
+   case 103: pen.setDashPattern({4,2}); break;
+   case 104: pen.setStyle(Qt::DashDotLine); break;
+   case 106: pen.setStyle(Qt::NoPen); break;
+   default: break;
+   }
+   return pen;
+}
+}
+
 PlotCanvas::PlotCanvas(std::shared_ptr<PlotModel> model, QWidget *parent) : QWidget(parent), data(std::move(model))
 {
    setMinimumSize(200, 140);
@@ -171,16 +210,25 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       for (const auto &point : curve.points) {
          if (point.frame > visibleFrame) continue;
          const QPointF position=project(point), pixel=screen(position);
-         painter.setPen(QPen(point.color, curve.width, curve.style));
+         painter.setPen(curvePen(curve,point.color));
+         if (ground && data->footprints) {
+            // Match wx's legacy five-degree reference circles; these are not
+            // computed sensor coverage or horizon visibility footprints.
+            const auto footprint=PlotModel::groundFootprint(position);
+            for (int i=1;i<footprint.size();++i)
+               for (const auto &segment:PlotModel::groundSegments(footprint[i-1],footprint[i]))
+                  painter.drawLine(screen(segment.first),screen(segment.second));
+         }
          if (curve.lines && previous && point.connect) {
             if (ground) for (const auto &segment : PlotModel::groundSegments(project(*previous),position)) painter.drawLine(screen(segment.first),screen(segment.second));
             else painter.drawLine(screen(project(*previous)),pixel);
          }
-         if (!orbit && !ground && (point.high != 0 || point.low != 0)) {
+         if (!orbit && !ground && curve.errorBars && (point.high != 0 || point.low != 0)) {
             const auto high=screen({point.x, point.y+point.high}), low=screen({point.x,point.y-point.low});
             painter.drawLine(high,low); painter.drawLine(high-QPointF(3,0),high+QPointF(3,0)); painter.drawLine(low-QPointF(3,0),low+QPointF(3,0));
          }
-         if (curve.markers) { painter.setBrush(point.color); painter.drawEllipse(pixel, curve.markerSize/2.0,curve.markerSize/2.0); }
+         if (curve.markers || point.highlighted) drawMarker(painter,pixel,point.marker<0 ? curve.markerType : point.marker,
+            curve.markerSize,point.color,point.highlighted);
          previous=&point; last=&point;
       }
       if (last && curve.showObject && (orbit || ground)) {

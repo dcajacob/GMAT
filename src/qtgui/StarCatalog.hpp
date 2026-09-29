@@ -13,3 +13,13 @@ struct StarCatalog {
    int rejectedLines=0;
    static StarCatalog read(const QString &path);
 };
+struct ConstellationSegment {
+   QString name;
+   std::array<double,3> first,second;
+};
+struct ConstellationCatalog {
+   QVector<ConstellationSegment> segments;
+   QString error;
+   int rejectedLines=0;
+   static ConstellationCatalog read(const QString &path);
+};

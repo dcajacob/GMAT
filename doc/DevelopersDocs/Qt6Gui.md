@@ -392,10 +392,20 @@ orthographic, using camera distance to set scale, rather than adopting the
 OpenFrames perspective/navigation interface. Degenerate eye/target settings
 are reported; a parallel up vector gets a stable fallback roll.
 
-Constellation lines, reference planes, eclipse shadows and non-spherical
-celestial-body models remain outstanding. Unsupported drawing options are
-reported in Message Window. Advanced XY marker/style
-and solver-iteration behavior also needs parity work.
+Native rendering also honors constellation outlines from `CONSTELLATION_FILE`,
+XY/ecliptic reference grids, body wireframe and Sun-direction lines. Catalog
+directions follow the recorded plot frame and remain fixed under pan/zoom;
+rear-hemisphere segments are clipped. Celestial-body `3DModelFile` assets retain
+their physical dimensions and configured scale/offset/rotation, with a sphere
+fallback when loading fails. Constellation borders/names and eclipse shadows
+remain outside this milestone; constellation outlines are implemented.
+
+XY plots support the ten standard marker shapes, indexed marker changes and
+point highlights, distinct dotted/long-dash/short-dash/dash-dot/transparent line
+styles, and the error-bar visibility setting. Current-iteration clearing retains
+its break anchor for subsequent iterations and bounds old anchors with history
+trimming. Tests exercise repeated clears, indexed changes and distinct rendered
+styles at normal and high display scales.
 
 GroundTrack uses the engine's geodetic longitude/latitude, resolved body map,
 collection/update frequencies, configured point limit and line width. Missing
@@ -408,6 +418,9 @@ known spherical projection; the current script factory cannot exercise it.
 Ground station
 markers reject objects that are not body-fixed points. Replay does not mutate
 the retained histories. QPainter handles physical display scaling.
+`ShowFootPrints = All` draws the legacy five-degree reference circles, with
+spherical geometry and dateline splitting even near a pole. These are not
+computed sensor coverage or visibility-horizon footprints.
 
 Dynamic tables preserve displayed values and cell colors when closed and
 reopened. Output also lists report files and opens a read-only preview of up

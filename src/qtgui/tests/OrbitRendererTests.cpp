@@ -153,6 +153,32 @@ int main(int argc,char **argv)
       require(disabledSky!=skyOnly,"Disabling stars had no effect");
       sky->starsEnabled=true; sky->starCount=0;
       require(starViewer.captureImage()==disabledSky,"Zero star count still rendered stars");
+      QFile constellationFile(directory.filePath("constellations.txt"));
+      require(constellationFile.open(QIODevice::WriteOnly),"Constellation fixture failed");
+      constellationFile.write("# declination and RA hours\nN Test\n0 0 90 6\n-91 0 0 1\n0 25 0 1\ninvalid\n"); constellationFile.close();
+      const auto constellation=ConstellationCatalog::read(constellationFile.fileName());
+      require(constellation.error.isEmpty() && constellation.segments.size()==1 && constellation.rejectedLines==3 &&
+         constellation.segments[0].name=="Test" && std::abs(constellation.segments[0].first[0]-1)<1e-12 &&
+         std::abs(constellation.segments[0].second[2]-1)<1e-12,"Constellation units or validation incorrect");
+      sky->constellationCatalog.segments={{"Test",{-.5,.2,-1},{.5,.2,-1}}};
+      sky->constellationsEnabled=true;
+      const auto outlines=starViewer.captureImage(); require(outlines!=disabledSky,"Constellation line not rendered");
+      starViewer.setView(5,0,0,{100,-30},1);
+      require(starViewer.captureImage()==outlines,"Constellations moved under pan/zoom");
+      starViewer.setView(1,0,0,{},1);
+      sky->constellationCatalog.segments={{"Rear",{-.5,.2,1},{.5,.2,1}}};
+      require(starViewer.captureImage()==disabledSky,"Rear constellation line leaked into view");
+      sky->constellationsEnabled=false; sky->xyPlane=true;
+      const auto xyPlane=starViewer.captureImage(); require(xyPlane!=disabledSky,"XY plane not rendered");
+      sky->xyPlane=false; sky->eclipticPlane=true;
+      require(starViewer.captureImage()!=xyPlane,"Ecliptic plane did not differ from XY plane");
+      sky->eclipticPlane=false; sky->sunLine=true;
+      sky->curves[0].points.back().hasSun=true; sky->curves[0].points.back().sunPosition={100,0,0};
+      require(starViewer.captureImage()!=disabledSky,"Sun direction line not rendered");
+      sky->sunLine=false; sky->curves[0].visible=true;
+      const auto solidBody=starViewer.captureImage(); sky->wireframe=true;
+      require(starViewer.captureImage()!=solidBody,"Wireframe ignored");
+      sky->wireframe=false; require(starViewer.captureImage()==solidBody,"Wireframe could not be disabled");
       auto tracking=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
       tracking->labels=false; tracking->legend=false; tracking->axes=false; tracking->grid=false; tracking->scriptedCamera=true;
       tracking->curves[0].radius=1; tracking->curves[0].color=Qt::green; tracking->curves[0].lines=false;
@@ -189,6 +215,19 @@ int main(int argc,char **argv)
       require(greenCount(trackedViewer.captureImage())>greenCount(secondCamera)*.9,"Manual zoom no longer works with tracking");
       trackedViewer.setView(1,0,0,{},1);
       require(trackedViewer.captureImage()==firstCamera,"Replay did not restore camera snapshot");
+      auto bodyMesh=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+      bodyMesh->labels=false; bodyMesh->legend=false; bodyMesh->axes=false; bodyMesh->grid=false; bodyMesh->scriptedCamera=true;
+      bodyMesh->curves[0].radius=1; bodyMesh->curves[0].modelPath=mesh.fileName(); bodyMesh->curves[0].color=Qt::green;
+      bodyMesh->append(0,0,0,0); bodyMesh->cameras.push_back({0,{0,0,6},{0,0,0},{0,1,0}});
+      OrbitRenderer bodyViewer(bodyMesh); bodyViewer.resize(640,480); bodyViewer.show(); bodyViewer.setView(1,0,0,{},0); app.processEvents();
+      const auto physicalMesh=bodyViewer.captureImage();
+      const int cx=physicalMesh.width()/2,cy=physicalMesh.height()/2;
+      const auto outside=physicalMesh.pixelColor(cx+qRound(180*bodyViewer.devicePixelRatioF()),cy);
+      const auto corner=physicalMesh.pixelColor(cx+qRound(70*bodyViewer.devicePixelRatioF()),cy+qRound(70*bodyViewer.devicePixelRatioF()));
+      require(outside.red()<30 && outside.blue()<30,"Celestial model was exaggerated like a spacecraft");
+      require(corner.red()>60 || corner.blue()>60,"Celestial model was normalized or replaced by a sphere");
+      bodyMesh->curves[0].modelPath=directory.filePath("missing-body.3ds");
+      require(greenCount(bodyViewer.captureImage())>1000,"Missing celestial mesh did not fall back to a sphere");
       std::cout << "Native texture, depth, rotation, resize, model material, Sun illumination, star catalog/camera/replay/occlusion, fallback and lifecycle checks passed\n";
       return 0;
    } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }

@@ -128,6 +128,14 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
             curve.radius=body->GetEquatorialRadius();
             curve.texturePath=text(body->GetStringParameter(body->GetParameterID("TextureMapFullPath")));
             if (!curve.texturePath.isEmpty()) curve.texturePath=QFileInfo(curve.texturePath).absoluteFilePath();
+            curve.modelPath=text(body->GetStringParameter(body->GetParameterID("3DModelFileFullPath")));
+            if (!curve.modelPath.isEmpty()) curve.modelPath=QFileInfo(curve.modelPath).absoluteFilePath();
+            for (int axis=0;axis<3;++axis) {
+               const std::string suffix(1,"XYZ"[axis]);
+               curve.modelOffset[axis]=body->GetRealParameter(body->GetParameterID("3DModelOffset"+suffix));
+               curve.modelRotation[axis]=body->GetRealParameter(body->GetParameterID("3DModelRotation"+suffix));
+            }
+            curve.modelScale=body->GetRealParameter(body->GetParameterID("3DModelScale"));
          }
          if (auto *spacecraft=dynamic_cast<Spacecraft *>(points[i])) {
             curve.modelPath=text(spacecraft->GetModelFileFullPath());
@@ -148,13 +156,24 @@ void QtPlotReceiver::SetGlCoordSystem(const std::string &name,CoordinateSystem *
 }
 void QtPlotReceiver::SetGl2dDrawingOption(const std::string &name,const std::string &,const std::string &map,Integer footprint)
 {
-   SetGroundTrackOption(name,"TextureMap",map); if (footprint!=0) warn(name,"footprints");
+   SetGroundTrackOption(name,"TextureMap",map);
+   if (auto *entry=find(name)) entry->data->footprints=footprint!=0;
 }
 void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bool ec,bool xy,bool wire,bool axes,bool grid,bool sun,bool,bool,bool stars,bool constellations,Integer count)
 {
    if (auto *entry=find(name)) {
       auto &data=*entry->data;
       data.labels=labels; data.axes=axes; data.grid=grid;
+      data.xyPlane=xy; data.eclipticPlane=ec; data.wireframe=wire; data.sunLine=sun;
+      data.constellationsEnabled=constellations;
+      if (constellations && !data.constellationCatalogLoaded) {
+         data.constellationCatalogLoaded=true;
+         try {
+            data.constellationCatalog=ConstellationCatalog::read(text(FileManager::Instance()->FindPath("","CONSTELLATION_FILE",true,false,true)));
+         } catch (BaseException &error) { data.constellationCatalog.error=text(error.GetFullMessage()); }
+         if (!data.constellationCatalog.error.isEmpty())
+            MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load constellations: %s\n",name.c_str(),data.constellationCatalog.error.toStdString().c_str());
+      }
       data.starsEnabled=stars; data.starCount=static_cast<int>(std::clamp<Integer>(count,0,std::numeric_limits<int>::max()));
       if (stars && !data.starCatalogLoaded) {
          data.starCatalogLoaded=true;
@@ -168,10 +187,6 @@ void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bo
             MessageInterface::ShowMessage("Qt OrbitView '%s': skipped %d invalid star catalog lines.\n",name.c_str(),data.starCatalog.rejectedLines);
       }
    }
-   if (ec || xy) warn(name,"reference planes");
-   if (wire) warn(name,"body wireframe");
-   if (sun) warn(name,"Sun direction line");
-   if (constellations) warn(name,"constellation lines");
 }
 void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *reference,SpacePoint *position,SpacePoint *direction,Real scale,
       const Rvector3 &referenceVector,const Rvector3 &positionVector,const Rvector3 &directionVector,const std::string &upAxis,
@@ -340,7 +355,7 @@ bool QtPlotReceiver::DeleteXyPlot(const std::string &name) { return remove(name)
 bool QtPlotReceiver::AddXyPlotCurve(const std::string &name,int index,const std::string &title,UnsignedInt color)
 {
    auto *entry=find(name); if (!entry || index<0) return false;
-   auto &curve=entry->data->curves[index]; curve.name=text(title); curve.color=rgb(color); return true;
+   auto &curve=entry->data->curves[index]; curve.name=text(title); curve.color=rgb(color); curve.markerType=index%10; return true;
 }
 bool QtPlotReceiver::DeleteAllXyPlotCurves(const std::string &name,const std::string &) { if (auto *entry=find(name)) { entry->data->curves.clear(); return true; } return false; }
 bool QtPlotReceiver::DeleteXyPlotCurve(const std::string &name,int index) { if (auto *entry=find(name)) return entry->data->curves.remove(index)>0; return false; }
@@ -355,37 +370,59 @@ void QtPlotReceiver::XyPlotLighten(const std::string &name,Integer factor,Intege
 {
    curves(name,curve,[&](PlotCurve &c) { for (size_t i=0;i<c.points.size();++i) if (index<0 || static_cast<Integer>(i)>=index) c.points[i].color=c.points[i].color.lighter(std::max(100,static_cast<int>(factor))); });
 }
-void QtPlotReceiver::XyPlotMarkPoint(const std::string &name,Integer,Integer curve) { curves(name,curve,[](PlotCurve &c) { c.markers=true; }); }
+void QtPlotReceiver::XyPlotMarkPoint(const std::string &name,Integer index,Integer curve) {
+   curves(name,curve,[&](PlotCurve &c) {
+      const auto position=index<0 ? static_cast<Integer>(c.points.size())-1 : index;
+      if (position>=0 && position<static_cast<Integer>(c.points.size())) c.points[position].highlighted=true;
+   });
+}
 void QtPlotReceiver::XyPlotMarkBreak(const std::string &name,Integer index,Integer curve)
 {
    curves(name,curve,[&](PlotCurve &c) {
       const size_t position=index<0 ? c.points.size() : std::min(c.points.size(),static_cast<size_t>(index));
-      c.breaks.append(position<c.points.size() ? c.points[position].frame : c.points.empty() ? 0 : c.points.back().frame+1);
+      const auto frame=position<c.points.size() ? c.points[position].frame : c.points.empty() ? 0 : c.points.back().frame+1;
+      if (!c.breaks.contains(frame)) c.breaks.append(frame);
       c.breakNext=true;
    });
 }
-void QtPlotReceiver::XyPlotClearFromBreak(const std::string &name,Integer which,Integer,Integer curve)
+void QtPlotReceiver::XyPlotClearFromBreak(const std::string &name,Integer which,Integer end,Integer curve)
 {
    curves(name,curve,[&](PlotCurve &c) {
       if (c.breaks.isEmpty()) return;
       const int index=which<0 ? c.breaks.size()-1 : static_cast<int>(which);
-      if (index>=c.breaks.size()) return;
+      if (index<0 || index>=c.breaks.size()) return;
       const auto frame=c.breaks[index];
-      while (!c.points.empty() && c.points.back().frame>=frame) c.points.pop_back();
-      c.breaks.resize(index); c.breakNext=true;
+      const auto last=end>=0 && end<c.breaks.size() ? c.breaks[end] : std::numeric_limits<quint64>::max();
+      if (last<frame) return;
+      c.points.erase(std::remove_if(c.points.begin(),c.points.end(),[&](const PlotPoint &point) { return point.frame>=frame && point.frame<last; }),c.points.end());
+      for (auto &point:c.points) if (point.frame>=last) { point.connect=false; break; }
+      if (end<0) c.breaks.resize(index+1); // Retain the anchor for the next solver iteration.
+      else if (end>index) c.breaks.remove(index+1,end-index);
+      c.breakNext=true;
    });
 }
 void QtPlotReceiver::XyPlotChangeColor(const std::string &name,Integer index,UnsignedInt color,Integer curve)
 {
    curves(name,curve,[&](PlotCurve &c) { c.color=rgb(color); if (index>=0) for (size_t i=index;i<c.points.size();++i) c.points[i].color=c.color; });
 }
-void QtPlotReceiver::XyPlotChangeMarker(const std::string &name,Integer,Integer marker,int curve) { curves(name,curve,[&](PlotCurve &c) { c.markers=marker>=0; }); }
+void QtPlotReceiver::XyPlotChangeMarker(const std::string &name,Integer index,Integer marker,int curve) {
+   curves(name,curve,[&](PlotCurve &c) {
+      const int type=marker<0 ? c.markerType : marker%10;
+      for (size_t i=std::max<Integer>(0,index);i<c.points.size();++i) c.points[i].marker=type;
+      c.markerType=type;
+   });
+}
 void QtPlotReceiver::XyPlotChangeWidth(const std::string &name,Integer,Integer width,int curve) { curves(name,curve,[&](PlotCurve &c) { c.width=std::clamp(static_cast<int>(width),1,20); }); }
-void QtPlotReceiver::XyPlotChangeStyle(const std::string &name,Integer,Integer style,int curve) { curves(name,curve,[&](PlotCurve &c) { c.style=style==100 ? Qt::SolidLine : Qt::DashLine; }); }
+void QtPlotReceiver::XyPlotChangeStyle(const std::string &name,Integer,Integer style,int curve) { curves(name,curve,[&](PlotCurve &c) { if (style>=0) c.lineStyle=style; }); }
 void QtPlotReceiver::XyPlotRescale(const std::string &name) { if (auto *entry=find(name)) if (entry->widget) entry->widget->canvas()->fit(); }
-void QtPlotReceiver::XyPlotCurveSettings(const std::string &name,bool lines,Integer width,Integer style,bool markers,Integer size,Integer,bool,Integer curve)
+void QtPlotReceiver::XyPlotCurveSettings(const std::string &name,bool lines,Integer width,Integer style,bool markers,Integer size,Integer marker,bool hiLo,Integer curve)
 {
-   curves(name,curve,[&](PlotCurve &c) { c.lines=lines; c.width=std::clamp(static_cast<int>(width),1,20); c.style=style==100 ? Qt::SolidLine : Qt::DashLine; c.markers=markers; c.markerSize=std::clamp(static_cast<int>(size),1,30); });
+   curves(name,curve,[&](PlotCurve &c) {
+      c.lines=lines; c.width=std::clamp(static_cast<int>(width),1,20); if (style>=0) c.lineStyle=style;
+      c.markers=markers; c.markerSize=std::clamp(static_cast<int>(size),1,30); c.errorBars=hiLo;
+      if (marker>=0) c.markerType=marker%10;
+      for (auto &point:c.points) point.marker=c.markerType;
+   });
 }
 void QtPlotReceiver::SetXyPlotTitle(const std::string &name,const std::string &title) { if (auto *entry=find(name)) entry->data->title=text(title); }
 void QtPlotReceiver::ShowXyPlotLegend(const std::string &name) { if (auto *entry=find(name)) entry->data->legend=true; }
@@ -431,6 +468,7 @@ bool QtPlotReceiver::CreateGroundTrackWindow(const std::string &name,const std::
       if (configured->IsOfType("GroundTrack")) {
          SetMaxGlDataPoints(name,configured->GetIntegerParameter("MaxPlotPoints"));
          entry.data->defaultLineWidth=std::clamp(static_cast<int>(configured->GetIntegerParameter("LineWidth")),1,20);
+         entry.data->footprints=configured->GetStringParameter("ShowFootPrints")=="All";
       }
    }
    entry.data->title=text(title.empty() ? name : title); entry.data->xLabel="Longitude (deg)"; entry.data->yLabel="Latitude (deg)"; return true;

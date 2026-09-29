@@ -16,11 +16,18 @@ void PlotModel::append(int index, double x, double y, double z, double epoch,
    high = std::isfinite(high) && high >= 0 ? high : 0;
    low = std::isfinite(low) && low >= 0 ? low : 0;
    curve.points.push_back({x, y, z, epoch, frame, curve.color, connect, solver, high, low});
+   curve.points.back().marker=curve.markerType;
    curve.breakNext = !penDown || !drawing;
    while (curve.points.size() > static_cast<size_t>(maxPoints)) curve.points.pop_front();
    if (!curve.points.empty()) curve.points.front().connect = false;
-   if (!curve.points.empty()) curve.breaks.erase(std::remove_if(curve.breaks.begin(),curve.breaks.end(),
-      [&](quint64 point) { return point < curve.points.front().frame; }),curve.breaks.end());
+   // A solver's break anchor must survive trimming: ClearFromBreak can be
+   // called repeatedly, including after an entire iteration was trimmed.
+   if (!curve.points.empty()) {
+      const auto first=curve.points.front().frame;
+      int lastOlder=-1;
+      for (int i=0;i<curve.breaks.size();++i) if (curve.breaks[i]<first) lastOlder=i;
+      for (int i=lastOlder-1;i>=0;--i) if (curve.breaks[i]<first) curve.breaks.remove(i);
+   }
    lastEpoch = epoch;
 }
 void PlotModel::clear()
@@ -46,8 +53,25 @@ QVector<QPair<QPointF, QPointF>> PlotModel::groundSegments(const QPointF &a, con
 {
    if (std::abs(b.x() - a.x()) <= 180.0) return {{a, b}};
    const double adjusted = b.x() + (b.x() > a.x() ? -360.0 : 360.0);
+   if (std::abs(adjusted-a.x())<1e-12) return {};
    const double edge = adjusted > a.x() ? 180.0 : -180.0;
    const double fraction = (edge - a.x()) / (adjusted - a.x());
    const double latitude = a.y() + fraction * (b.y() - a.y());
    return {{a, {edge, latitude}}, {{-edge, latitude}, b}};
+}
+
+QVector<QPointF> PlotModel::groundFootprint(QPointF center,double radiusDegrees)
+{
+   QVector<QPointF> result;
+   if (!std::isfinite(center.x()) || !std::isfinite(center.y()) || std::abs(center.y())>90 ||
+       !std::isfinite(radiusDegrees) || radiusDegrees<=0 || radiusDegrees>=180) return result;
+   constexpr double radians=3.14159265358979323846/180;
+   const double latitude=center.y()*radians,longitude=center.x()*radians,radius=radiusDegrees*radians;
+   for (int i=0;i<=72;++i) {
+      const double bearing=i*5*radians;
+      const double lat=std::asin(std::clamp(std::sin(latitude)*std::cos(radius)+std::cos(latitude)*std::sin(radius)*std::cos(bearing),-1.0,1.0));
+      const double lon=longitude+std::atan2(std::sin(bearing)*std::sin(radius)*std::cos(latitude),std::cos(radius)-std::sin(latitude)*std::sin(lat));
+      result.append({std::remainder(lon/radians,360.0),lat/radians});
+   }
+   return result;
 }
