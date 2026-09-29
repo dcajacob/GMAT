@@ -16,6 +16,7 @@ int main(int argc, char **argv)
    parser.addHelpOption();
    parser.addOption({"startup", "GMAT startup file", "file"});
    parser.addOption({"screenshot", "Save a startup screenshot and exit", "file"});
+   parser.addOption({"run", "Run the loaded mission after opening the window"});
    parser.addPositionalArgument("script", "Optional GMAT script to open");
    parser.process(app);
    const QString startup = parser.isSet("startup") ? QFileInfo(parser.value("startup")).absoluteFilePath() : QCoreApplication::applicationDirPath() + "/gmat_startup_file.txt";
@@ -31,7 +32,14 @@ int main(int argc, char **argv)
    const bool initialized = window.initialize(startup);
    bool loaded = true;
    if (!script.isEmpty()) loaded = window.loadScript(script) && window.buildScript();
-   if (!screenshot.isEmpty())
-      QTimer::singleShot(700, &window, [&] { app.exit(window.grab().save(screenshot) && initialized && loaded ? 0 : 1); });
+   QTimer::singleShot(0, &window, [&] {
+      bool succeeded = initialized && loaded;
+      if (parser.isSet("run") && succeeded)
+         succeeded = window.runMission() == MainWindow::RunResult::Completed;
+      if (!screenshot.isEmpty())
+         QTimer::singleShot(200, &window, [&, succeeded] {
+            app.exit(window.grab().save(screenshot) && succeeded ? 0 : 1);
+         });
+   });
    return app.exec();
 }

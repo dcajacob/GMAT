@@ -1298,8 +1298,11 @@ ScriptInterpreter* Moderator::GetScriptInterpreter()
 void Moderator::SetUiInterpreter(ScriptInterpreter *uiInterp)
 {
    theUiInterpreter = uiInterp;
-   theUiInterpreter->BuildCreatableObjectMaps();
-   SetScriptInterpreter(uiInterp);
+   if (theUiInterpreter != NULL)
+   {
+      theUiInterpreter->BuildCreatableObjectMaps();
+      SetScriptInterpreter(uiInterp);
+   }
 }
 
 

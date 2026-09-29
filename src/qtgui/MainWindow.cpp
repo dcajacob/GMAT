@@ -1,5 +1,8 @@
 #include "MainWindow.hpp"
 #include "QtMessageReceiver.hpp"
+#include "QtInterpreter.hpp"
+#include "ResourceEditor.hpp"
+#include "ResourceProperties.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
 #include "BaseException.hpp"
@@ -83,6 +86,7 @@ MainWindow::MainWindow()
       action->setShortcut(key);
       connect(action, &QAction::triggered, this, callback);
       toolbar->addAction(action);
+      editingActions.append(action);
       return action;
    };
    add(file, "&New mission", QStyle::SP_FileIcon, QKeySequence::New, [this] { if (confirmDiscard()) newMission(); });
@@ -93,12 +97,14 @@ MainWindow::MainWindow()
    add(file, "&Save", QStyle::SP_DialogSaveButton, QKeySequence::Save, [this] { saveScript(); });
    auto *saveAs = file->addAction("Save &As…");
    saveAs->setShortcut(QKeySequence::SaveAs);
+   editingActions.append(saveAs);
    connect(saveAs, &QAction::triggered, this, [this] { saveScript(true); });
    file->addSeparator();
    connect(file->addAction("E&xit"), &QAction::triggered, this, &QWidget::close);
    auto editAction = [edit, this](const QString &label, const QKeySequence &key, auto slot) {
       auto *action = edit->addAction(label); action->setShortcut(key);
       connect(action, &QAction::triggered, editor, slot);
+      editingActions.append(action);
    };
    editAction("&Undo", QKeySequence::Undo, &QPlainTextEdit::undo);
    editAction("&Redo", QKeySequence::Redo, &QPlainTextEdit::redo);
@@ -110,29 +116,42 @@ MainWindow::MainWindow()
    view->addAction(console->toggleViewAction());
    toolbar->addSeparator();
    add(run, "&Build script", QStyle::SP_BrowserReload, QKeySequence("F7"), [this] { buildScript(); });
-   auto *runAction = add(run, "&Run mission", QStyle::SP_MediaPlay, QKeySequence("F5"), [this] {
-      if (!buildScript()) return;
-      try {
-         const auto result = Moderator::Instance()->RunMission();
-         statusBar()->showMessage(result == 1 ? "Mission completed" : "Mission failed");
-      } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
+   runAction = add(run, "&Run mission", QStyle::SP_MediaPlay, QKeySequence("F5"), [this] {
+      if (paused) resumeMission(); else runMission();
    });
    runAction->setObjectName("runMission");
+   editingActions.removeOne(runAction);
+   pauseAction = add(run, "&Pause", QStyle::SP_MediaPause, QKeySequence("F6"), [this] { pauseMission(); });
+   pauseAction->setObjectName("pauseMission");
+   editingActions.removeOne(pauseAction);
+   stopAction = add(run, "&Stop", QStyle::SP_MediaStop, QKeySequence("Shift+F5"), [this] { stopMission(); });
+   stopAction->setObjectName("stopMission");
+   editingActions.removeOne(stopAction);
+   setRunning(false);
    connect(windows->addAction("&Tile"), &QAction::triggered, workspace, &QMdiArea::tileSubWindows);
    connect(windows->addAction("&Cascade"), &QAction::triggered, workspace, &QMdiArea::cascadeSubWindows);
    connect(help->addAction("&About GMAT"), &QAction::triggered, this, [this] {
       QMessageBox::about(this, "GMAT", "General Mission Analysis Tool\nQt 6 desktop interface");
    });
    connect(resources, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
-      if (!ready || item->data(0, Qt::UserRole).toString().isEmpty()) return;
+      if (!ready || running || item->data(0, Qt::UserRole).toString().isEmpty()) return;
       auto *object = Moderator::Instance()->GetConfiguredObject(item->text(0).toStdString());
       if (!object) return;
-      auto *text = new QPlainTextEdit;
-      text->setReadOnly(true);
-      text->setPlainText(QString::fromStdString(object->GetGeneratingString(Gmat::SCRIPTING)));
-      auto *child = workspace->addSubWindow(text);
+      if (!modelValid || editor->toPlainText() != builtScript) {
+         statusBar()->showMessage("Build the edited script before opening a resource panel");
+         return;
+      }
+      const QString name = item->text(0);
+      const QString snapshot = builtScript;
+      auto *panel = new ResourceEditor(*object, [this, name, snapshot](const QMap<QString, QString> &changes) {
+         return applyResourceChanges(name, changes, snapshot);
+      });
+      auto *child = new ResourceSubWindow;
+      child->setWidget(panel);
+      workspace->addSubWindow(child);
       child->setAttribute(Qt::WA_DeleteOnClose);
-      child->setWindowTitle(item->text(0)); child->resize(650, 450); child->show();
+      child->setProperty("resourcePanel", true);
+      child->setWindowTitle(name); child->resize(680, 540); child->show();
    });
    QSettings settings;
    restoreGeometry(settings.value("geometry").toByteArray());
@@ -141,6 +160,7 @@ MainWindow::MainWindow()
 }
 MainWindow::~MainWindow()
 {
+   Moderator::SetUiInterpreter(nullptr);
    if (ready) Moderator::Instance()->Finalize();
    MessageInterface::SetMessageReceiver(nullptr);
 }
@@ -153,20 +173,30 @@ bool MainWindow::initialize(const QString &startup)
    MessageInterface::SetMessageReceiver(receiver.get());
    try {
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
-      if (ready) newMission();
+      if (ready) {
+         interpreter = std::make_unique<QtInterpreter>();
+         Moderator::SetUiInterpreter(interpreter.get());
+         newMission();
+      }
    } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
    statusBar()->showMessage(ready ? "Ready" : "Runtime initialization failed");
    return ready;
 }
 void MainWindow::newMission()
 {
-   if (!ready) return;
+   if (!ready || running) return;
    Moderator::Instance()->LoadDefaultMission();
    editor->setPlainText(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)));
+   builtScript = editor->toPlainText(); modelValid = true;
    scriptPath.clear(); editor->document()->setModified(false); refreshTrees(); updateTitle();
 }
 bool MainWindow::loadScript(const QString &path)
 {
+   if (running) return false;
+   for (auto *child : workspace->subWindowList()) {
+      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      if (panel && panel->hasChanges()) return false;
+   }
    QFile file(path);
    if (!file.open(QIODevice::ReadOnly)) { QMessageBox::warning(this, "Open failed", file.errorString()); return false; }
    const QByteArray bytes = file.readAll();
@@ -176,6 +206,7 @@ bool MainWindow::loadScript(const QString &path)
 }
 bool MainWindow::saveScript(bool saveAs)
 {
+   if (running) return false;
    QString path = scriptPath;
    if (saveAs || path.isEmpty()) path = QFileDialog::getSaveFileName(this, "Save GMAT script", path, "GMAT scripts (*.script)");
    if (path.isEmpty()) return false;
@@ -188,18 +219,47 @@ bool MainWindow::saveScript(bool saveAs)
 }
 bool MainWindow::confirmDiscard()
 {
-   if (!editor->document()->isModified()) return true;
-   const auto answer = QMessageBox::question(this, "Unsaved script", "Save your changes before continuing?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-   return answer == QMessageBox::Discard || (answer == QMessageBox::Save && saveScript());
+   for (auto *child : workspace->subWindowList()) {
+      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      if (panel && panel->hasChanges()) {
+         if (QMessageBox::question(this, "Unapplied resource changes",
+             "Resource panels contain unapplied changes. Discard them and continue?",
+             QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Cancel) != QMessageBox::Discard)
+            return false;
+         break;
+      }
+   }
+   if (editor->document()->isModified()) {
+      const auto answer = QMessageBox::question(this, "Unsaved script", "Save your changes before continuing?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+      if (answer != QMessageBox::Discard && !(answer == QMessageBox::Save && saveScript())) return false;
+   }
+   for (auto *child : workspace->subWindowList()) {
+      if (auto *panel = dynamic_cast<ResourceEditor *>(child->widget())) {
+         panel->discardChanges();
+         child->close();
+      }
+   }
+   return true;
 }
 bool MainWindow::buildScript()
 {
-   if (!ready) return false;
+   if (!ready || running) return false;
+   for (auto *child : workspace->subWindowList()) {
+      auto *panel = dynamic_cast<ResourceEditor *>(child->widget());
+      if (panel && panel->hasChanges()) {
+         statusBar()->showMessage("Apply or discard the open resource changes before building or running");
+         return false;
+      }
+   }
    bool success = false;
    try {
       std::istringstream stream(editor->toPlainText().toStdString());
       success = Moderator::Instance()->InterpretScript(&stream, true);
    } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
+   catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
+   catch (...) { messages->appendPlainText("Unexpected error while building the script."); }
+   modelValid = success;
+   if (success) builtScript = editor->toPlainText();
    refreshTrees(); statusBar()->showMessage(success ? "Build succeeded" : "Build failed — see Message Window"); return success;
 }
 void MainWindow::refreshTrees()
@@ -238,7 +298,142 @@ void MainWindow::updateTitle()
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+   if (running) {
+      stopMission();
+      statusBar()->showMessage("Stopping mission — close again after execution ends");
+      event->ignore();
+      return;
+   }
    if (!confirmDiscard()) { event->ignore(); return; }
    QSettings settings; settings.setValue("geometry", saveGeometry()); settings.setValue("windowState", saveState());
    event->accept();
+}
+
+void MainWindow::setRunning(bool value)
+{
+   running = value;
+   for (auto *action : editingActions) action->setEnabled(!value);
+   editor->setReadOnly(value);
+   for (auto *child : workspace->subWindowList())
+      if (child->property("resourcePanel").toBool()) child->widget()->setEnabled(!value);
+   resources->setEnabled(!value);
+   mission->setEnabled(!value);
+   runAction->setEnabled(!value);
+   runAction->setText("&Run mission");
+   pauseAction->setEnabled(value);
+   stopAction->setEnabled(value);
+}
+MainWindow::RunResult MainWindow::runMission()
+{
+   if (running) return RunResult::Busy;
+   if (!buildScript()) return RunResult::Failed;
+   paused = false;
+   stopRequested = false;
+   setRunning(true);
+   statusBar()->showMessage("Running mission…");
+   RunResult result = RunResult::Failed;
+   try {
+      const auto status = Moderator::Instance()->RunMission();
+      if (status == 1) result = RunResult::Completed;
+      else if (status == -4 && stopRequested) result = RunResult::Stopped;
+   } catch (BaseException &error) {
+      messages->appendPlainText(QString::fromStdString(error.GetFullMessage()));
+   } catch (const std::exception &error) {
+      messages->appendPlainText(QString::fromUtf8(error.what()));
+   } catch (...) {
+      messages->appendPlainText("Unexpected error during mission execution.");
+   }
+   paused = false;
+   setRunning(false);
+   statusBar()->showMessage(result == RunResult::Completed ? "Mission completed" :
+      result == RunResult::Stopped ? "Mission stopped" : "Mission failed — see Message Window");
+   return result;
+}
+void MainWindow::pauseMission()
+{
+   if (!running || paused || stopRequested) return;
+   Moderator::Instance()->ChangeRunState("Pause");
+   paused = true;
+   runAction->setText("&Resume mission");
+   runAction->setEnabled(true);
+   pauseAction->setEnabled(false);
+   statusBar()->showMessage("Mission paused");
+}
+void MainWindow::resumeMission()
+{
+   if (!running || !paused || stopRequested) return;
+   Moderator::Instance()->ChangeRunState("Resume");
+   paused = false;
+   runAction->setText("&Run mission");
+   runAction->setEnabled(false);
+   pauseAction->setEnabled(true);
+   statusBar()->showMessage("Running mission…");
+}
+void MainWindow::stopMission()
+{
+   if (!running || stopRequested) return;
+   stopRequested = true;
+   Moderator::Instance()->ChangeRunState("Stop");
+   runAction->setEnabled(false);
+   pauseAction->setEnabled(false);
+   stopAction->setEnabled(false);
+   statusBar()->showMessage("Stopping mission…");
+}
+
+QString MainWindow::applyResourceChanges(const QString &name,
+      const QMap<QString, QString> &changes, const QString &expectedScript)
+{
+   if (running) return "Stop the mission before editing resources.";
+   if (!modelValid || expectedScript != builtScript || editor->toPlainText() != builtScript)
+      return "The mission has changed. Build the current script and reopen this panel.";
+   if (changes.isEmpty()) return {};
+   auto *moderator = Moderator::Instance();
+   auto *object = moderator->GetConfiguredObject(name.toStdString());
+   if (!object) return "This resource no longer exists. Reopen the panel.";
+   QString candidate;
+   try {
+      std::unique_ptr<GmatBase> proposed(object->Clone());
+      if (!proposed) return "This resource cannot be edited.";
+      for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
+         try { setResourceProperty(*proposed, it.key(), it.value()); }
+         catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
+         catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
+      }
+      if (!proposed->Validate()) return "The resource rejected these settings.";
+      candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      const auto oldBlock = QString::fromStdString(object->GetGeneratingString(Gmat::SCRIPTING));
+      const auto newBlock = QString::fromStdString(proposed->GetGeneratingString(Gmat::SCRIPTING));
+      if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
+         return "This resource requires a specialized editor. Use its script settings for now.";
+      candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
+   } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   QString error;
+   try {
+      std::istringstream stream(candidate.toStdString());
+      if (!moderator->InterpretScript(&stream, true)) error = "The mission rejected these changes. See Message Window.";
+   } catch (BaseException &exception) { error = QString::fromStdString(exception.GetFullMessage()); }
+   catch (const std::exception &exception) { error = QString::fromUtf8(exception.what()); }
+   if (!error.isEmpty()) {
+      // Interpretation reconstructs the model. Restore the entire prior model,
+      // not just the last field, without touching the editor or its undo stack.
+      modelValid = false;
+      try {
+         std::istringstream previous(builtScript.toStdString());
+         modelValid = moderator->InterpretScript(&previous, true);
+      } catch (...) { }
+      refreshTrees();
+      if (!modelValid) error += " Restoration failed; rebuild the script before continuing.";
+      return error;
+   }
+   auto cursor = editor->textCursor();
+   cursor.beginEditBlock();
+   cursor.select(QTextCursor::Document);
+   cursor.insertText(candidate);
+   cursor.endEditBlock();
+   builtScript = candidate;
+   modelValid = true;
+   refreshTrees();
+   statusBar()->showMessage("Resource updated — save the script to keep changes");
+   return {};
 }

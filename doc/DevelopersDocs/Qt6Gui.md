@@ -38,6 +38,7 @@ The `--screenshot /absolute/path.png` option captures the initialized window
 and exits with failure if initialization, optional script interpretation,
 or image writing failed. For headless layout inspection set
 `QT_QPA_PLATFORM=offscreen`.
+Add `--run` to execute the loaded mission before capturing it.
 
 ## Current evidence and remaining work
 
@@ -46,10 +47,44 @@ loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only
 changes document identity and modified state after successful commit.
 
-This is an implementation checkpoint, not a completed replacement. Still
-required: responsive mission execution and stop/pause, actual orbit/ground
-track/XY plots, editable resource and mission panels, output navigation,
-script/GUI synchronization, plugin compatibility handling, automated
-functional tests, and platform build/package validation. The initial Run
-action is synchronous and the initial resource inspector is read-only.
-Only Linux compilation and startup have been verified so far.
+Mission execution now services Qt events through GMAT's existing interruption
+checkpoints. Engine and UI access remain on one thread. Run, Pause, Resume,
+and Stop update the toolbar; active execution prevents script/model edits
+and nested runs. Closing an active mission requests Stop and retains the
+window until execution has unwound. `Moderator::SetUiInterpreter(nullptr)`
+now safely detaches the Qt adapter during shutdown.
+
+Double-clicking a resource opens an editable property panel. Scalar numbers,
+booleans, strings, enumerations and references are supported. Applying edits
+changes a clone, validates it, serializes it into the complete mission, and
+interprets that candidate. A rejected candidate restores the previous model
+without changing editor contents. Successful changes update the script as
+one undoable edit. Stale panels reject changes, and unapplied panel edits
+prevent Build/Run from silently using older values. Array/list and compound
+properties still require the script editor.
+
+## Functional validation
+
+Enable and run the real-engine workflow executable with a host startup file:
+
+```
+cmake -S . -B build/linux-gui -DGMAT_INCLUDE_QT_GUI=ON -DGMAT_QT_BUILD_TESTS=ON
+cmake --build build/linux-gui --target GmatQt GmatQtWorkflowTests --parallel 6
+QT_QPA_PLATFORM=offscreen build/linux-gui/src/qtgui/GmatQtWorkflowTests \
+  /absolute/path/to/host-startup.txt src/qtgui/tests/propagate.script \
+  /tmp/gmat-qt-resource-editor.png
+```
+
+The screenshot argument is optional. The test has passed on Linux with Qt
+6.10.2 and verifies actual 600-second propagation, repeat execution,
+pause/resume/stop, exclusion of nested execution and editing, close-during-run,
+invalid-script recovery, resource validation/rollback, stale panel rejection,
+script undo, and resource-tree-to-Apply-button interaction. It does not prove
+plotting, platform parity, or all property types. The separate wx/console
+exit regression checks shared-engine behavior.
+
+This remains an implementation checkpoint, not a completed replacement.
+Still required: actual orbit/ground-track/XY plots, specialized resource
+forms and compound properties, mission command editing, output navigation,
+plugin compatibility handling, wider functional coverage, and platform
+build/package validation. Only Linux has been built and exercised so far.

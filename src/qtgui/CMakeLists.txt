@@ -1,7 +1,11 @@
 find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets)
-add_executable(GmatQt main.cpp MainWindow.cpp MainWindow.hpp
-   QtMessageReceiver.cpp QtMessageReceiver.hpp)
-target_link_libraries(GmatQt PRIVATE Qt6::Widgets GmatBase GmatUtil)
+add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
+   QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
+   ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp)
+target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets GmatBase GmatUtil)
+target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_executable(GmatQt main.cpp)
+target_link_libraries(GmatQt PRIVATE GmatQtFrontend)
 _SETOUTPUTDIRECTORY(GmatQt bin)
 set_target_properties(GmatQt PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 if(APPLE)
@@ -10,4 +14,10 @@ if(APPLE)
 else()
    set_target_properties(GmatQt PROPERTIES INSTALL_RPATH "$ORIGIN")
    install(TARGETS GmatQt DESTINATION bin)
+endif()
+
+option(GMAT_QT_BUILD_TESTS "Build Qt frontend integration tests" OFF)
+if(GMAT_QT_BUILD_TESTS)
+   add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
+   target_link_libraries(GmatQtWorkflowTests PRIVATE GmatQtFrontend)
 endif()
