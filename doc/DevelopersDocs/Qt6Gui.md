@@ -747,5 +747,13 @@ reportable parameter or enter a reference, then add it to the ordered list. For
 arrays, choose a row and column and use **Add element**, or use **Add parameter**
 for the whole array. Remove, Up/Down and dragging control the selected order.
 Cancel preserves the previous selection; applying the command or resource validates
-references. Object/property/coordinate-system browsing is not yet implemented;
-new property references can be entered directly.
+references. New property references can also be constructed with the browser below
+or entered directly.
+
+
+The report selector now also offers **Browse object properties**. Select an object,
+a reportable property and, when needed, its coordinate system, central body or
+force model. **Use reference** fills the parameter entry; **Add parameter** adds it
+to the selected order. Body-fixed properties filter incompatible coordinate
+systems. Owned/attached hardware property browsing remains pending; typed
+references and already-configured parameters remain available.

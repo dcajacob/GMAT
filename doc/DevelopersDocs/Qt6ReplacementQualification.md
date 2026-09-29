@@ -56,7 +56,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/CallFunctionPanel.hpp` | Pending audit |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Pending audit |
 | `src/gui/command/MinimizePanel.hpp` | Pending audit |
-| `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property/dependency browsing pending. |
+| `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned/attached hardware browsing pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
@@ -135,7 +135,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; object/property/dependency browsing and solver-iteration combinations pending. |
+| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned/attached hardware browsing and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
@@ -563,11 +563,33 @@ remove/add/reorder, Cancel, exact label/comment preservation, application to the
 mission and numerical results after save/reopen. It also verifies the resource
 panel opens the shared dialog without splitting indexed parameters and receives
 the reordered list. Property references not already configured can be entered,
-but wx's object/property/dependency browser is still pending and this does not
-qualify the full ParameterSelectDialog workflow. Drag ordering uses Qt's standard
+but this checkpoint did not yet include object/property/dependency browsing (added
+in the follow-up below) or qualify the full ParameterSelectDialog workflow. Drag ordering uses Qt's standard
 InternalMove implementation; the executable test uses explicit Up/Down controls.
 
 All 11 Qt checks passed in 27.49 seconds. After wrapping the selector's help text
 for a reasonable dialog width, GmatQt was rebuilt and Compatibility passed again
 in 2.39 seconds. Evidence: `Qt6ParityValidation/check-report-picker.txt` and
 `Qt6ParityValidation/report-picker-final.txt`.
+
+
+### Report object/property browser
+
+The shared selector now builds object/property choices from ParameterInfo's
+reportable types and registered owner objects. Independent properties generate
+Owner.Property references. Coordinate-system, central-body and force-model
+properties expose the corresponding dependency selection. Coordinate choices
+honor metadata requirements for BodyFixed axes and celestial-body origins. Use
+reference fills the editable parameter entry; Add parameter commits it only to
+the dialog's local list. Browsing does not reconstruct or mutate the mission.
+
+CompatibilityTests selects BrowserSat.EarthMJ2000Eq.X, BrowserSat.Earth.RMAG and
+BrowserSat.ElapsedSecs using the browser controls, applies the resulting Report
+command and verifies [7000,7000,0] after exact save/Save As/reopen and invalid-build
+recovery. PlanetodeticLAT choices include a user-created Earth BodyFixed frame and
+exclude EarthMJ2000Eq. Force-model dependency choices are implemented but their
+numerical scenarios remain pending, as do owned/attached hardware parameters and
+broader plugin-property coverage.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 28.72 seconds. Evidence:
+`Qt6ParityValidation/check-report-property-browser.txt`.

@@ -215,6 +215,49 @@ int main(int argc,char **argv)
 
 
       }
+      {
+         const auto path=output.filePath("browsed-properties.txt");
+         editor->setPlainText("Create Spacecraft BrowserSat;\nBrowserSat.DisplayStateType = Cartesian;\n"
+            "BrowserSat.X = 7000;\nBrowserSat.Y = 0;\nBrowserSat.Z = 0;\n"
+            "Create CoordinateSystem BrowserFixed;\nBrowserFixed.Origin = Earth;\nBrowserFixed.Axes = BodyFixed;\n"
+            "Create ReportFile BrowserReport;\nBrowserReport.Filename = '"+path+"';\nBrowserReport.FixedWidth = false;\n"
+            "BrowserReport.Delimiter = ',';\nBrowserReport.WriteHeaders = false;\nBeginMissionSequence;\n"
+            "Report BrowserReport BrowserSat.X;\n");
+         require(window.buildScript(),"Property browser fixture failed");
+         const auto before=editor->toPlainText();
+         ReportParameterDialog browser({});
+         auto *owner=browser.findChild<QComboBox *>("reportPropertyObject");
+         auto *property=browser.findChild<QComboBox *>("reportPropertyType");
+         auto *dependency=browser.findChild<QComboBox *>("reportPropertyDependency");
+         auto *entry=browser.findChild<QComboBox *>("reportParameterEntry");
+         require(owner->findText("BrowserSat")>=0,"Property browser omitted spacecraft");
+         owner->setCurrentText("BrowserSat");
+         auto choose=[&](const QString &type,const QString &reference,const QString &expected) {
+            require(property->findText(type)>=0,"Property browser omitted reportable parameter type");
+            property->setCurrentText(type);
+            if (!reference.isEmpty()) {
+               require(dependency->findText(reference)>=0,"Property browser omitted required reference");
+               dependency->setCurrentText(reference);
+            } else require(dependency->isHidden(),"Independent property asks for a reference");
+            browser.findChild<QPushButton *>("reportUseReference")->click();
+            require(entry->currentText()==expected,"Property browser constructed wrong parameter name");
+            browser.findChild<QPushButton *>("reportAddParameter")->click();
+         };
+         choose("X","EarthMJ2000Eq","BrowserSat.EarthMJ2000Eq.X");
+         choose("RMAG","Earth","BrowserSat.Earth.RMAG");
+         choose("ElapsedSecs",{},"BrowserSat.ElapsedSecs");
+         property->setCurrentText("PlanetodeticLAT");
+         require(property->currentText()=="PlanetodeticLAT" && dependency->findText("BrowserFixed")>=0 &&
+            dependency->findText("EarthMJ2000Eq")<0,"Body-fixed requirement was not applied to reference choices");
+         require(editor->toPlainText()==before,"Browsing mutated the mission before Apply");
+         const auto snapshot=window.missionSnapshot(); int index=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.startsWith("Report ")) index=i;
+         require(index>=0 && window.applyMissionChange(snapshot,index,MissionEdit::Replace,
+            "Report BrowserReport "+browser.selection().join(" ")+";").isEmpty(),"Browsed references failed to apply");
+         roundTrip("browsed-report");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(path).trimmed()=="7000,7000,0",
+            "Browsed coordinate, central-body or independent parameter calculation differs");
+      }
       const auto types=window.availableEngineTypes();
       require(types.contains("GmatFunction") && types.contains("Yukon") && types.contains("EclipseLocator"),"Expected native plugins were not registered");
       auto function=read(samples.filePath("Ex_GMATFunction_Math.script"));
