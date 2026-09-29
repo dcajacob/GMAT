@@ -8,6 +8,7 @@
 #include "Propagator.hpp"
 #include "AxisSystem.hpp"
 #include <memory>
+#include <array>
 #include "Rvector.hpp"
 #include <QRegularExpression>
 #include <QSet>
@@ -266,7 +267,27 @@ void validateResourceProperties(GmatBase &object)
 {
    if (!object.IsOfType("CoordinateSystem")) return;
    auto *axes=object.GetOwnedObject(0);
-   if (!axes || axes->GetTypeName()!="ObjectReferenced") return;
+   if (!axes) return;
+   if (axes->GetTypeName()=="LocalAlignedConstrained") {
+      if (axes->GetStringParameter("ReferenceObject")==object.GetStringParameter("Origin"))
+         throw std::runtime_error("Alignment reference must differ from the coordinate-system origin");
+      if (axes->GetStringParameter("ConstraintCoordinateSystem")==object.GetName())
+         throw std::runtime_error("A coordinate system cannot constrain itself");
+      auto vector=[&](const std::string &prefix) {
+         std::array<double,3> value{};
+         for (int i=0;i<3;++i) value[i]=axes->GetRealParameter(prefix+"XYZ"[i]);
+         const double length=std::hypot(value[0],value[1],value[2]);
+         if (!std::isfinite(length) || length<1e-9) throw std::runtime_error(prefix+" must be finite and nonzero");
+         return value;
+      };
+      const auto alignment=vector("AlignmentVector"),constraint=vector("ConstraintVector");
+      vector("ConstraintReferenceVector");
+      const double cross=std::hypot(alignment[1]*constraint[2]-alignment[2]*constraint[1],
+         alignment[2]*constraint[0]-alignment[0]*constraint[2],alignment[0]*constraint[1]-alignment[1]*constraint[0]);
+      if (!std::isfinite(cross) || cross<1e-9) throw std::runtime_error("Alignment and constraint vectors must be nonparallel and large enough to define axes");
+      return;
+   }
+   if (axes->GetTypeName()!="ObjectReferenced") return;
    const auto primary=axes->GetStringParameter("Primary"),secondary=axes->GetStringParameter("Secondary");
    if (primary.empty() || secondary.empty() || primary==secondary)
       throw std::runtime_error("ObjectReferenced axes need distinct primary and secondary objects");

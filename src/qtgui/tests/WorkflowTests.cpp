@@ -4,6 +4,8 @@
 #include "CoordinateConverter.hpp"
 #include "CoordinateSystem.hpp"
 #include "AxisSystem.hpp"
+#include "SolarSystem.hpp"
+#include "CelestialBody.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
@@ -224,6 +226,70 @@ int main(int argc, char **argv)
       require(appliedType && Moderator::Instance()->GetConfiguredObject("UserFrame")->GetStringParameter("Axes")=="MJ2000Ec",
          "Axes type-only dialog edit did not replace axes");
       editor->undo(); require(editor->toPlainText()==beforeAxes && window.buildScript(),"Axes edit Undo failed");
+      {
+         const auto base=editor->toPlainText();
+         require(window.applyResourceChanges("UserFrame",{{"Axes","MOEEq"},{"Epoch","30000"}},base).isEmpty(),"Epoch-based axes edit failed");
+         auto *frame=Moderator::Instance()->GetConfiguredObject("UserFrame");
+         bool epochField=false;
+         for (const auto &field:resourceProperties(*frame)) epochField=epochField || (field.name=="Epoch" && field.unit=="A1ModJulian" && field.value=="30000");
+         require(epochField && frame->GetOwnedObject(0)->GetRealParameter("Epoch")==30000,"Epoch field is missing or was silently ignored");
+         auto epochTransform=[&](double time) {
+            auto *inertial=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("EarthMJ2000Eq"));
+            auto *epochFrame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("UserFrame"));
+            Rvector6 transformed; CoordinateConverter converter;
+            converter.Convert(time,Rvector6(7000,1000,200,0,0,0),epochFrame,transformed,inertial);
+            return transformed;
+         };
+         require(window.runMission()==MainWindow::RunResult::Completed,"Epoch frame mission failed");
+         const auto first=epochTransform(31000),later=epochTransform(32000);
+         for (int axis=0;axis<3;++axis) require(std::abs(first[axis]-later[axis])<1e-10,"Mean-of-epoch axes changed with evaluation time");
+         require(std::abs(std::hypot(first[0],first[1],first[2])-std::hypot(7000.,1000.,200.))<1e-8,"Epoch rotation changed vector length");
+         require(window.applyResourceChanges("UserFrame",{{"Epoch","40000"}},editor->toPlainText()).isEmpty() &&
+            window.runMission()==MainWindow::RunResult::Completed,"Editing an existing owned epoch failed");
+         const auto changed=epochTransform(31000);
+         require(std::hypot(first[0]-changed[0],first[1]-changed[1],first[2]-changed[2])>1,"Epoch edit did not change the coordinate transform");
+         const auto path=axesFiles.filePath("epoch.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Epoch axes save/reopen failed");
+         const auto reopened=epochTransform(31000);
+         for (int axis=0;axis<3;++axis) require(std::abs(changed[axis]-reopened[axis])<1e-10,"Epoch save/reopen changed calculations");
+         require(window.applyResourceChanges("UserFrame",{{"Axes","LocalAlignedConstrained"},{"ReferenceObject","Sun"},
+            {"ConstraintCoordinateSystem","EarthMJ2000Eq"}},editor->toPlainText()).isEmpty(),"Constrained axes configuration failed");
+         bool referencePicker=false,constraintPicker=false;
+         for (const auto &field:resourceProperties(*Moderator::Instance()->GetConfiguredObject("UserFrame"))) {
+            if (field.name=="ReferenceObject") referencePicker=field.references.contains("Sun");
+            if (field.name=="ConstraintCoordinateSystem") constraintPicker=field.references.contains("EarthMJ2000Eq");
+         }
+         require(referencePicker && constraintPicker,"Constrained axes reference choices missing");
+         auto checkConstraint=[&] {
+            require(window.runMission()==MainWindow::RunResult::Completed,"Constrained axes mission failed");
+            auto *inertial=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("EarthMJ2000Eq"));
+            auto *local=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetInternalObject("UserFrame"));
+            auto *solar=Moderator::Instance()->GetSolarSystemInUse();
+            const double time=30000;
+            const auto direction=solar->GetBody("Sun")->GetMJ2000State(time)-solar->GetBody("Earth")->GetMJ2000State(time);
+            const double length=std::hypot(direction[0],direction[1],direction[2]);
+            Rvector6 x,z; CoordinateConverter converter;
+            converter.Convert(time,Rvector6(1,0,0,0,0,0),local,x,inertial);
+            converter.Convert(time,Rvector6(0,0,1,0,0,0),local,z,inertial);
+            const double ux=direction[0]/length,uy=direction[1]/length,uz=direction[2]/length;
+            const double vertical=std::sqrt(1-uz*uz);
+            const double expectedZ[]={-uz*ux/vertical,-uz*uy/vertical,(1-uz*uz)/vertical};
+            for (int axis=0;axis<3;++axis) require(std::abs(x[axis]-direction[axis]/length)<1e-10 && std::abs(z[axis]-expectedZ[axis])<1e-10,
+               "Constrained axes differ from independently constructed Sun alignment and projected Z constraint");
+         };
+         checkConstraint();
+         const auto valid=editor->toPlainText();
+         for (const auto &invalid:QVector<QMap<QString,QString>>{
+            {{"AlignmentVectorX","0"}},{{"ConstraintVectorX","1"},{"ConstraintVectorZ","0"}},
+            {{"ConstraintReferenceVectorZ","0"}},{{"ReferenceObject","Earth"}},{{"ConstraintCoordinateSystem","UserFrame"}}}) {
+            require(!window.applyResourceChanges("UserFrame",invalid,valid).isEmpty() && editor->toPlainText()==valid,
+               "Invalid constrained geometry was accepted or changed the script");
+         }
+         require(window.saveScriptTo(axesFiles.filePath("constrained.script")) && window.loadScript(axesFiles.filePath("constrained.script")),
+            "Constrained axes save/reopen failed");
+         checkConstraint();
+         editor->setPlainText(base); require(window.buildScript(),"Coordinate fixture restoration failed");
+      }
       const QString beforeEdit = editor->toPlainText();
       auto dryMass = [] { return Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("DryMass"); };
       const double originalMass = dryMass();

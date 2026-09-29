@@ -708,5 +708,12 @@ The main resource table exposes the selected axis model's writable properties.
 ObjectReferenced settings require distinct primary/secondary objects and exactly
 two distinct directions, leaving the third blank. Built-in coordinate systems
 remain protected. Successful edits are undoable, and reopening reads the current
-axis model. LocalAlignedConstrained, epoch-dependent frames and other specialized
-axis modes still need broader qualification.
+axis model. LocalAlignedConstrained edits reject zero or nonfinite vectors,
+parallel alignment/constraint vectors, an alignment reference equal to the origin,
+and a constraint coordinate system that references itself. Runtime geometry can
+still become singular as objects move.
+
+Workflow checks now cover MOEEq epoch edits and a Sun-aligned
+LocalAlignedConstrained frame, including numerical transforms after save/reopen.
+Other axis modes, dependency combinations and time-varying singularities still
+need broader qualification.

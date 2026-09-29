@@ -99,9 +99,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/asset/GroundStationPanel.hpp` | Pending audit |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Pending audit |
-| `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; remaining origin/epoch and specialized-mode cases pending. |
+| `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
-| `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced primary/secondary pickers and R/V/N controls; radial-frame numerical check. LocalAlignedConstrained, epoch modes and remaining dependency cases pending. |
+| `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
 | `src/gui/output/ReportFilePanel.hpp` | Pending audit |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
 | `src/gui/output/CompareReportPanel.hpp` | Pending audit |
@@ -479,8 +479,30 @@ R/N frame transforms the propagated spacecraft position to [radius,0,0], and tha
 numerical result survives save/reopen and another mission run.
 
 The three wx coordinate-panel inventory rows are now partially audited. Additional
-origin/dependency combinations, epoch frames and LocalAlignedConstrained workflows
-remain pending and are not counted as fully qualified.
+origin/dependency combinations and specialized axis modes remain pending and are
+not counted as fully qualified.
 
 GmatQt was rebuilt; all 11 Qt tests passed in 25.49 seconds. Evidence:
 `Qt6ParityValidation/check-coordinate-axes.txt`.
+
+### Epoch and constrained-frame follow-up
+
+WorkflowTests edits MOEEq's owned Epoch in A1ModJulian, verifies that its orientation
+is fixed across evaluation times, preserves vector length, and changes when the
+configured epoch changes. Save/reopen preserves the calculated transform.
+
+A LocalAlignedConstrained frame uses Sun as its alignment reference and
+EarthMJ2000Eq as its constraint frame. Its transformed X direction matches the
+independently calculated Earth-to-Sun unit vector; Z matches inertial Z projected
+perpendicular to that direction (component tolerance 1e-10). The same checks pass
+after save/reopen and another run. Reference choices are checked as well.
+
+Qt now rejects static degenerate geometry before applying an edit: zero or
+nonfinite vectors, parallel alignment/constraint vectors, reference equal to
+origin, and self-referencing constraint frames. Rejected edits preserve the script.
+The vector thresholds match the engine's 1e-9 geometry tolerance. Other epoch
+models, indirect dependency cycles, non-Earth origins and time-varying constraint
+singularities remain unqualified.
+
+GmatQt was rebuilt; all 11 Qt tests passed in 26.08 seconds. Evidence:
+`Qt6ParityValidation/check-constrained-axes.txt`.
