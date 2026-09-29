@@ -7,6 +7,8 @@
 #include "ResourceEditor.hpp"
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QMenu>
+#include <QAction>
 #include <QApplication>
 #include <QFileInfo>
 #include <QDir>
@@ -121,6 +123,23 @@ int main(int argc,char **argv)
       receiver->DeleteDynamicData("QtData","");
       receiver->DeleteGlPlot("QtSampledGround");
       for (const auto &name:receiver->names()) receiver->show(name);
+      auto *windowMenu=window.findChild<QMenu *>("windowMenu");
+      require(windowMenu!=nullptr,"Window menu missing");
+      windowMenu->aboutToShow();
+      QAction *orbitEntry=nullptr;
+      for (auto *action:windowMenu->actions())
+         if (action->objectName()=="windowEntry" && action->data().toString()=="QtOrbit") orbitEntry=action;
+      require(orbitEntry!=nullptr,"Orbit window not listed");
+      orbitEntry->trigger();
+      require(area->activeSubWindow()->property("plotName").toString()=="QtOrbit","Window menu did not activate selected plot");
+      area->activeSubWindow()->showMinimized();
+      orbitEntry->trigger();
+      require(!area->activeSubWindow()->isMinimized(),"Window menu did not restore minimized plot");
+      area->activeSubWindow()->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+      orbitEntry->trigger(); // Menu entries may outlive a window closed by another event.
+      windowMenu->aboutToShow();
+      for (auto *action:windowMenu->actions()) require(action->data().toString()!="QtOrbit","Closed plot remained listed");
+      require(receiver->show("QtOrbit"),"Plot could not reopen after menu selection");
       area->tileSubWindows(); QApplication::processEvents();
       const auto rendered=window.grab();
       require(std::abs(rendered.width()-window.width()*window.devicePixelRatioF())<=1,"Plot capture ignored physical display scale");

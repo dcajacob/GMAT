@@ -135,6 +135,11 @@ int main(int argc, char **argv)
          }
       }
       require(massFound && panel->hasChanges(), "Mass is not editable in the panel");
+      tree->itemDoubleClicked(items.first(),0);
+      int resourcePanelCount=0;
+      for (auto *widget:window.findChildren<QWidget *>())
+         if (dynamic_cast<ResourceEditor *>(widget)) ++resourcePanelCount;
+      require(resourcePanelCount==1 && panel->hasChanges(),"Reopening a resource duplicated its panel or lost pending edits");
       require(!window.buildScript() && window.runMission() == MainWindow::RunResult::Failed,
          "Unapplied resource settings were silently ignored during run");
       require(!window.loadScript(script), "Loading discarded pending resource settings");
@@ -175,6 +180,18 @@ int main(int argc, char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed,"Mission with created spacecraft failed");
       auto *createdResult=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("CreatedSat"));
       require(createdResult && std::abs((createdResult->GetEpoch()-createdEpoch)*86400-60)<.01,"Created spacecraft did not propagate");
+      require(window.applyResourceChanges("CreatedSat",{{"DryMass","932"}},editor->toPlainText()).isEmpty(),"Could not update resource behind clean panel");
+      const auto currentCreated=tree->findItems("CreatedSat",Qt::MatchExactly|Qt::MatchRecursive);
+      tree->itemDoubleClicked(currentCreated.first(),0);
+      QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+      bool refreshedMass=false;
+      for (auto *widget:window.findChildren<QWidget *>()) if (auto *resource=dynamic_cast<ResourceEditor *>(widget)) {
+         if (resource->parentWidget()->property("resourceName").toString()!="CreatedSat") continue;
+         auto *properties=resource->findChild<QTableWidget *>();
+         for (int row=0;row<properties->rowCount();++row)
+            if (properties->item(row,0)->text()=="DryMass") refreshedMass=properties->item(row,1)->text()=="932";
+      }
+      require(refreshedMass,"Reopening a clean stale resource panel did not refresh its values");
       std::cout<<"PASS: resource creation, name/type validation, pending/stale protection, undo, dialog/tree integration and actual propagation\n";
       std::cout << "PASS: propagation, repeated runs, pause/resume/stop, edit protection, close protection, invalid-script recovery, resource apply/rollback/stale-panel protection/undo\n";
       return 0;

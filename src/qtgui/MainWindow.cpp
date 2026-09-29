@@ -230,8 +230,29 @@ MainWindow::MainWindow()
    stopAction->setObjectName("stopMission");
    editingActions.removeOne(stopAction);
    setRunning(false);
-   connect(windows->addAction("&Tile"), &QAction::triggered, workspace, &QMdiArea::tileSubWindows);
-   connect(windows->addAction("&Cascade"), &QAction::triggered, workspace, &QMdiArea::cascadeSubWindows);
+   windows->setObjectName("windowMenu");
+   connect(windows,&QMenu::aboutToShow,this,[this,windows] {
+      windows->clear();
+      connect(windows->addAction("&Tile"),&QAction::triggered,workspace,&QMdiArea::tileSubWindows);
+      connect(windows->addAction("&Cascade"),&QAction::triggered,workspace,&QMdiArea::cascadeSubWindows);
+      connect(windows->addAction("&Next window"),&QAction::triggered,workspace,&QMdiArea::activateNextSubWindow);
+      connect(windows->addAction("&Previous window"),&QAction::triggered,workspace,&QMdiArea::activatePreviousSubWindow);
+      windows->addSeparator();
+      for (auto *child:workspace->subWindowList()) {
+         if (!child->isVisible()) continue;
+         auto *action=windows->addAction(child->windowTitle().replace("&","&&"));
+         action->setObjectName("windowEntry"); action->setCheckable(true);
+         action->setChecked(child==workspace->activeSubWindow());
+         action->setData(child->windowTitle());
+         const QPointer<QMdiSubWindow> guarded=child;
+         connect(action,&QAction::triggered,this,[this,guarded] {
+            if (!guarded) return;
+            if (guarded->isMinimized()) guarded->showNormal();
+            workspace->setActiveSubWindow(guarded); guarded->raise();
+            guarded->widget()->setFocus();
+         });
+      }
+   });
    connect(help->addAction("&About GMAT"), &QAction::triggered, this, [this] {
       QMessageBox::about(this, "GMAT", "General Mission Analysis Tool\nQt 6 desktop interface");
    });
@@ -245,6 +266,19 @@ MainWindow::MainWindow()
       }
       const QString name = item->text(0);
       const QString snapshot = builtScript;
+      for (auto *child:workspace->subWindowList()) {
+         if (child->property("resourceName").toString()!=name) continue;
+         auto *panel=dynamic_cast<ResourceEditor *>(child->widget());
+         if (!panel) continue;
+         if (child->property("sourceScript").toString()==snapshot || panel->hasChanges()) {
+            if (child->isMinimized()) child->showNormal();
+            workspace->setActiveSubWindow(child); child->raise(); panel->setFocus();
+            if (child->property("sourceScript").toString()!=snapshot)
+               statusBar()->showMessage("This panel has changes from an older mission. Close and discard them before reopening.");
+            return;
+         }
+         child->close();
+      }
       auto *panel = new ResourceEditor(*object, [this, name, snapshot](const QMap<QString, QString> &changes) {
          return applyResourceChanges(name, changes, snapshot);
       });
@@ -253,6 +287,8 @@ MainWindow::MainWindow()
       workspace->addSubWindow(child);
       child->setAttribute(Qt::WA_DeleteOnClose);
       child->setProperty("configurationPanel", true);
+      child->setProperty("resourceName",name);
+      child->setProperty("sourceScript",snapshot);
       child->setWindowTitle(name); child->resize(680, 540); child->show();
    });
    QSettings settings;

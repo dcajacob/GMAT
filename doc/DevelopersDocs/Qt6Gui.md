@@ -13,6 +13,11 @@ Mission, and Output navigation tabs on the left, an MDI workspace in the
 center, messages below, menus and toolbar above. Retain platform palette and
 font defaults. Start with familiar workflows before introducing new ones.
 
+The Window menu lists open workspace views, marks the active view, and restores
+minimized windows when selected. Tile, Cascade, Next and Previous remain
+available. Reopening a resource focuses its existing panel and preserves pending
+edits; a clean panel from an older model is replaced with current values.
+
 The old Qt experiment was inspected as reference. Only its message adapter
 was reused initially, with changes to preserve UTF-8/local encoding fallback
 and avoid indefinitely accumulating already delivered messages. The new
@@ -128,6 +133,9 @@ table cells and command panels. It retains the originating editor while a menu
 is open, and does not fall back to the script when a navigation tree has focus.
 Workflow and Mission tests exercise Paste/Undo/Redo in those panels and verify
 that the mission script stays unchanged until Apply.
+They also check repeated resource opening and refreshing stale clean panels.
+The plotting suite checks Window-menu activation, minimized-window restoration,
+closed-window removal, and safe handling of an entry whose window was closed.
 
 This remains an implementation checkpoint, not a completed replacement.
 Still required: specialized resource and command forms, compound properties,
