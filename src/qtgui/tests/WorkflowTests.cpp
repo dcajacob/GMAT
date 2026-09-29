@@ -79,7 +79,11 @@ int main(int argc, char **argv)
          groups.findChild<QComboBox *>("propagationGroupMode")->setCurrentIndex(0); groups.findChild<QCheckBox *>("propagationGroupBackwards")->setChecked(false);
          groupTable->item(0,1)->setText("Fleet");
          require(groups.statement()=="Propagate 'Groups' Prop(Fleet) {Sat.ElapsedSecs = -60, StopTolerance = 1e-8}; % keep groups","Group editing changed stopping conditions or comment");
-         require(!PropagationGroupsDialog::supports("Propagate Prop(Sat, 'STM') {Sat.ElapsedSecs = 60};"),"Variational flags offered lossy group edit");
+         PropagationGroupsDialog variational("Propagate Prop(Sat, 'STM', 'AMatrix') {Sat.ElapsedSecs = 60};",{"Prop"},{"Sat"});
+         require(variational.findChild<QCheckBox *>("propagationGroupSTM")->isChecked() && variational.findChild<QCheckBox *>("propagationGroupAMatrix")->isChecked(),"Variational flags not loaded");
+         variational.findChild<QCheckBox *>("propagationGroupSTM")->setChecked(false);
+         require(variational.statement()=="Propagate Prop(Sat, 'AMatrix') {Sat.ElapsedSecs = 60};","Variational flags not independently editable");
+         require(!PropagationGroupsDialog::supports("Propagate Prop(Sat, 'Covariance') {Sat.ElapsedSecs = 60};"),"Covariance flag offered lossy group edit");
          const QString stopSource="Propagate 'Keep' BackProp Prop(Sat) {Sat.ElapsedSecs = 60, StopTolerance = 1e-8, OrbitColor = Green}; % comment";
          PropagationStopsDialog stops(stopSource);
          stops.findChild<QTableWidget *>("propagationStopsTable")->item(0,1)->setText("120");

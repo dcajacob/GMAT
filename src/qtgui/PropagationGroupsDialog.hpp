@@ -16,4 +16,6 @@ private:
    QTableWidget *table;
    QComboBox *mode;
    QCheckBox *backward;
+   QCheckBox *stm;
+   QCheckBox *aMatrix;
 };

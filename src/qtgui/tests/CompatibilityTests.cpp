@@ -434,6 +434,8 @@ int main(int argc,char **argv)
          QTimer::singleShot(0,[&] {
             auto *dialog=panel.findChild<QDialog *>("propagationGroupsDialog"); auto *grid=dialog->findChild<QTableWidget *>("propagationGroupsTable");
             dialog->findChild<QComboBox *>("propagationGroupMode")->setCurrentText("Synchronized");
+            dialog->findChild<QCheckBox *>("propagationGroupSTM")->setChecked(true);
+            dialog->findChild<QCheckBox *>("propagationGroupAMatrix")->setChecked(true);
             dialog->findChild<QPushButton *>("propagationGroupAdd")->click();
             auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
             require(!ok->isEnabled(),"Empty propagation group can be accepted");
@@ -461,6 +463,15 @@ int main(int argc,char **argv)
          auto *other=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("OtherStopSat"));
          require(other && std::abs((other->GetEpoch()-final)*86400.)<1e-6 && std::abs(other->GetRealParameter("Y"))>1,
             "Synchronized second propagator did not advance its selected spacecraft to the common stop");
+         for (const auto &name:{"StopSat","OtherStopSat"}) {
+            auto *sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject(name));
+            const auto &stm=sat->GetRmatrixParameter(sat->GetParameterID("FullSTM"));
+            const auto &aMatrix=sat->GetRmatrixParameter(sat->GetParameterID("FullAMatrix"));
+            require(stm.GetNumRows()>=6 && std::abs(stm(0,3))>1,
+               "GUI STM option did not propagate the state transition matrix");
+            require(aMatrix.GetNumRows()>=6 && std::abs(aMatrix(0,3))>1 && std::abs(aMatrix(3,0))>1e-10,
+               qPrintable(QString("GUI A-matrix option for %1: A03=%2 A30=%3").arg(name).arg(aMatrix(0,3),0,'g',17).arg(aMatrix(3,0),0,'g',17)));
+         }
       }
       {
          editor->setPlainText("Create Spacecraft ApsisSat;\nApsisSat.DisplayStateType = Keplerian;\n"

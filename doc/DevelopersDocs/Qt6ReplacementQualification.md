@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; variational flags and broader formation/mode combinations pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered; covariance controls and broader formation/mode combinations pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -1268,3 +1268,24 @@ Variational propagation flags still require the source editor.
 Validation: rebuilt the user's GmatQt and passed all 11 Qt tests in 41.68 seconds
 under the isolated test environment. Evidence:
 `Qt6ParityValidation/check-propagation-groups.txt`.
+
+## STM and A-matrix propagation controls
+
+The propagator assignment dialog now includes Propagate STM and Compute A-matrix,
+matching the command-wide checkboxes in wx PropagatePanel. Quoted and unquoted
+flags are parsed separately from spacecraft names. Selecting or clearing a flag
+updates the command while retaining the stop block, label and comment. The engine
+applies these flags to all groups; serialization places selected flags in the
+first group. Covariance flags continue to use source editing without a lossy
+structured rewrite.
+
+WorkflowTests loads both flags and independently clears STM while retaining
+A-matrix. CompatibilityTests enables both through the dialog before save/Save As,
+failed-build recovery and reopen, then runs the synchronized two-propagator
+fixture. Both spacecraft reach the expected stop epoch and have nontrivial
+FullSTM and FullAMatrix values. This verifies GUI-to-engine option delivery, not
+an independent mathematical validation of GMAT's matrix implementation.
+
+Validation: rebuilt the user's GmatQt and passed all 11 Qt tests in 34.45 seconds.
+Native rendering tests ran under isolated Xvfb, not the user's live display.
+Evidence: `Qt6ParityValidation/check-propagation-variational.txt`.

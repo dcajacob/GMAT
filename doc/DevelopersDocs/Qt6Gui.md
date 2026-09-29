@@ -997,5 +997,7 @@ Each object must appear only once, and empty assignments prevent acceptance.
 Select Independent or Synchronized mode and optionally propagate backwards.
 OK changes the command source as one undoable edit; Cancel leaves it unchanged.
 Apply validates the complete mission. Existing stop conditions, options, labels
-and comments remain intact. Commands containing variational propagation flags
-(STM, AMatrix or Covariance) currently require the source editor.
+and comments remain intact. **Propagate STM** and **Compute A-matrix** apply to
+all spacecraft in the command, matching the wx controls. Existing quoted or
+unquoted STM/AMatrix flags load into these checkboxes. Covariance propagation
+currently requires the source editor.

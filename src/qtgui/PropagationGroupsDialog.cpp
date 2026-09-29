@@ -14,7 +14,7 @@
 #include <QSet>
 
 namespace {
-struct Groups { bool valid=false,backward=false,synchronized=false; int start=0,length=0; QList<QPair<QString,QString>> rows; };
+struct Groups { bool valid=false,backward=false,synchronized=false,stm=false,aMatrix=false; int start=0,length=0; QList<QPair<QString,QString>> rows; };
 QStringList names(const QString &text) { return text.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); }
 Groups parse(const QString &source)
 {
@@ -25,11 +25,18 @@ Groups parse(const QString &source)
    result.length=end.capturedStart()-result.start; QString header=source.mid(result.start,result.length).trimmed();
    if (header.startsWith("BackProp ")) { result.backward=true; header=header.mid(9).trimmed(); }
    if (header.startsWith("Synchronized ")) { result.synchronized=true; header=header.mid(13).trimmed(); }
-   const QRegularExpression group("^([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*([A-Za-z][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z][A-Za-z0-9_]*)*)\\s*\\)");
+   const QRegularExpression group("^([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*((?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix')(?:\\s*,\\s*(?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'))*)\\s*\\)");
    while (!header.isEmpty()) {
       const auto match=group.match(header); if (!match.hasMatch()) return result;
-      for (const auto &name:names(match.captured(2))) if (name=="STM" || name=="AMatrix" || name=="Covariance") return result;
-      result.rows.append({match.captured(1),names(match.captured(2)).join(", ")}); header=header.mid(match.capturedLength()).trimmed();
+      QStringList objects;
+      for (const auto &name:names(match.captured(2))) {
+         if (name=="STM" || name=="'STM'") result.stm=true;
+         else if (name=="AMatrix" || name=="'AMatrix'") result.aMatrix=true;
+         else if (name=="Covariance") return result;
+         else objects.append(name);
+      }
+      if (objects.isEmpty()) return result;
+      result.rows.append({match.captured(1),objects.join(", ")}); header=header.mid(match.capturedLength()).trimmed();
    }
    result.valid=!result.rows.isEmpty(); return result;
 }
@@ -47,6 +54,9 @@ PropagationGroupsDialog::PropagationGroupsDialog(const QString &source,const QSt
    for (const auto &name:defaults.GetStringArrayParameter(defaults.GetParameterID("AvailablePropModes"))) if (name!="BackProp") mode->addItem(name.empty() ? "Independent" : QString::fromStdString(name),QString::fromStdString(name));
    mode->setCurrentIndex(mode->findData(parsed.synchronized ? "Synchronized" : "")); settings->addWidget(mode);
    backward=new QCheckBox("Propagate backwards",this); backward->setObjectName("propagationGroupBackwards"); backward->setChecked(parsed.backward); settings->addWidget(backward); settings->addStretch();
+   auto *variational=new QHBoxLayout; layout->addLayout(variational);
+   stm=new QCheckBox("Propagate STM",this); stm->setObjectName("propagationGroupSTM"); stm->setChecked(parsed.stm); variational->addWidget(stm);
+   aMatrix=new QCheckBox("Compute A-matrix",this); aMatrix->setObjectName("propagationGroupAMatrix"); aMatrix->setChecked(parsed.aMatrix); variational->addWidget(aMatrix); variational->addStretch();
    table=new QTableWidget(0,2,this); table->setObjectName("propagationGroupsTable"); table->setHorizontalHeaderLabels({"Propagator","Spacecraft / formations"}); table->verticalHeader()->hide();
    table->setSelectionBehavior(QAbstractItemView::SelectRows); table->setSelectionMode(QAbstractItemView::SingleSelection); configureTableColumns(table,{24,40}); layout->addWidget(table);
    auto addRow=[=](const QString &prop,const QString &sats) {
@@ -97,6 +107,12 @@ PropagationGroupsDialog::PropagationGroupsDialog(const QString &source,const QSt
 QString PropagationGroupsDialog::statement() const
 {
    QStringList groups; if (backward->isChecked()) groups.append("BackProp"); if (!mode->currentData().toString().isEmpty()) groups.append(mode->currentData().toString());
-   for (int row=0;row<table->rowCount();++row) groups.append(qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()+"("+names(table->item(row,1)->text()).join(", ")+")");
+   for (int row=0;row<table->rowCount();++row) {
+      auto objects=names(table->item(row,1)->text());
+      // These flags apply to the whole command in GMAT, including all groups.
+      if (row==0 && stm->isChecked()) objects.append("'STM'");
+      if (row==0 && aMatrix->isChecked()) objects.append("'AMatrix'");
+      groups.append(qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()+"("+objects.join(", ")+")");
+   }
    QString result=source; result.replace(start,length,groups.join(" ")+" "); return result;
 }
