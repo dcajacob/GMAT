@@ -1047,3 +1047,15 @@ coordinate frame. Changing it converts the six pending element values and update
 their labels and units. Invalid values leave the selection and fields unchanged.
 Apply coordinate-system, epoch or anomaly changes before converting the state
 representation. Other pending properties remain available for the same Apply.
+
+### Editing GMAT function files
+
+Open a GmatFunction resource and choose **Edit function file…** to edit the file
+at its FunctionPath inside Qt. The editor provides syntax highlighting, line
+numbers, find/replace, Save and Cancel. Save updates the function file; Cancel
+discards the dialog's pending edits. Run rebuilds the mission before executing it.
+
+Saving preserves UTF-8 BOMs and uniform CRLF line endings. If another program
+changes the file while it is open, Save leaves that file untouched and asks you to
+reopen it. Unreadable or invalid UTF-8 files cannot be saved through this editor.
+Function-file Save As is not yet provided.

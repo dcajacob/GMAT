@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "FunctionFileDialog.hpp"
 #include "ReportViewer.hpp"
 #include <QPushButton>
 #include <QSpinBox>
@@ -54,6 +55,21 @@ int main(int argc,char **argv)
       require(gutter->width()>narrow,"Line-number margin did not grow with the document");
       syntax.close();
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
+      {
+         const auto path=temporary.filePath("editable function.gmf");
+         const QByteArray original="\xef\xbb\xbf% unicode: \xce\x94\r\nvalue = 1;\r\n"; write(path,original);
+         FunctionFileDialog dialog(path); auto *text=dialog.findChild<QPlainTextEdit *>("functionFileText");
+         text->selectAll(); text->insertPlainText("% unicode: Δ\nvalue = 2;\n");
+         require(dialog.save().isEmpty(),"Function file save failed");
+         QFile saved(path); require(saved.open(QIODevice::ReadOnly),"Saved function missing"); const auto bytes=saved.readAll(); saved.close();
+         require(bytes.startsWith("\xef\xbb\xbf") && bytes.contains("value = 2;\r\n"),"Function save lost BOM or CRLF");
+         text->appendPlainText("value = 3;"); write(path,"external edit\n");
+         require(!dialog.save().isEmpty(),"Function editor overwrote an external change");
+         require(saved.open(QIODevice::ReadOnly) && saved.readAll()=="external edit\n","Conflict check modified external file"); saved.close();
+         write(path,QByteArray(1,char(0xff))); FunctionFileDialog invalid(path);
+         require(!invalid.save().isEmpty(),"Invalid UTF-8 function accepted for saving");
+      }
+
       {
          const auto report=temporary.filePath("paged-report.txt");
          constexpr int chunk=1024*1024;

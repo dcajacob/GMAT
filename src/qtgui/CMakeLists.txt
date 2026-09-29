@@ -12,6 +12,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptCompatibility.cpp ScriptCompatibility.hpp
    ScriptEditor.cpp ScriptEditor.hpp
+   FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
    ReportViewer.cpp ReportViewer.hpp
    PropagationStopsDialog.cpp PropagationStopsDialog.hpp

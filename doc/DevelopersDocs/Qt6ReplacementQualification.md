@@ -58,7 +58,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
-| `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
+| `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Function-file Save As remains pending. |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverGoalsPanel.hpp` | Pending audit |
@@ -1467,3 +1467,23 @@ Apply, rollback and rendered trajectory color.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.00 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-enum-controls.txt`.
+
+## GMAT function-file editor
+
+Audited wx FunctionSetupPanel and added an Edit function file button to Qt
+GmatFunction resources. It opens the selected FunctionPath in ScriptEditor with
+find/replace, Save and Cancel. Saving uses QSaveFile and checks the current file
+against the loaded bytes before writing, preventing silent overwrite of external
+edits. Failed reads and invalid UTF-8 disable saving; BOM and uniform CRLF style
+are retained. Run already rebuilds the mission before executing functions.
+
+FileTests exercises content changes, BOM/CRLF retention, external-change conflict
+and invalid UTF-8. CompatibilityTests runs a temporary GMAT function, edits its
+multiplier through the resource button and dialog Save, then saves/reopens the
+mission with failed-build recovery and verifies the changed output. wx's separate
+function-file Save As workflow remains pending; MATLAB editing is outside the
+current Linux/no-MATLAB scope.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 40.50 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-function-editor.txt`.

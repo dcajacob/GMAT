@@ -1,4 +1,5 @@
 #include "ResourceEditor.hpp"
+#include "FunctionFileDialog.hpp"
 #include "Moderator.hpp"
 #include "AxisSystem.hpp"
 #include "TimeSystemConverter.hpp"
@@ -221,6 +222,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          QStringList names,mixes;
          for (int row=0;row<grid->rowCount();++row) { names.append(grid->item(row,0)->text()); mixes.append(grid->item(row,1)->text().trimmed()); }
          tanks->setText(names.join(", ")); ratios->setText(mixes.join(" ")); ratios->setData(Qt::UserRole+1,mixes.size()); pairedTankEdits=true;
+      });
+   }
+   if (object.IsOfType("GmatFunction")) {
+      auto *edit=new QPushButton("Edit function file…",this); edit->setObjectName("editFunctionFile"); layout->addWidget(edit);
+      connect(edit,&QPushButton::clicked,this,[this] {
+         QString path;
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") path=table->item(row,1)->text();
+         if (path.trimmed().isEmpty()) { status->setText("Choose a function file first."); return; }
+         FunctionFileDialog dialog(path,this); dialog.exec();
       });
    }
    if (object.IsOfType("Array")) {

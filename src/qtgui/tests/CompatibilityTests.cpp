@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "FunctionFileDialog.hpp"
 #include "QtPlotReceiver.hpp"
 #include "PlotModel.hpp"
 #include "TestSettings.hpp"
@@ -64,6 +65,26 @@ int main(int argc,char **argv)
          require(window.loadScript(second) && editor->toPlainText()==source && window.buildScript(),
             "Plugin script did not recover unchanged after failed interpretation and reopen");
       };
+      {
+         const auto path=output.filePath("ScaleInput.gmf");
+         QFile file(path); require(file.open(QIODevice::WriteOnly),"Function fixture write failed");
+         file.write("function [y] = ScaleInput(x)\nCreate Variable y;\nBeginMissionSequence;\ny = x * 2;\n"); file.close();
+         editor->setPlainText("Create GmatFunction ScaleInput;\nScaleInput.FunctionPath = '"+path+"';\nCreate Variable x y;\nBeginMissionSequence;\nx = 3;\n[y] = ScaleInput(x);\n");
+         require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Function editor fixture failed");
+         require(Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==6,"Initial function result wrong");
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("ScaleInput"),[](const QMap<QString,QString>&) { return QString(); },&owner,editor->toPlainText());
+            auto *button=panel.findChild<QPushButton *>("editFunctionFile"); require(button,"Function resource edit button absent");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("functionFileDialog"); auto *text=dialog->findChild<QPlainTextEdit *>("functionFileText");
+               text->setPlainText(text->toPlainText().replace("x * 2","x * 4")); text->document()->setModified(true);
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Save)->click();
+            }); button->click();
+         }
+         roundTrip("edited-function-file");
+         require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==12,
+            "Saved function editor change did not reach reopened mission execution");
+      }
       for (const auto &type:{QString("NuclearPowerSystem"),QString("SolarPowerSystem")}) {
          const auto report=output.filePath(type+".csv");
          editor->setPlainText("Create Spacecraft PowerSat;\nCreate "+type+" Power;\nPowerSat.PowerSystem = Power;\n"
