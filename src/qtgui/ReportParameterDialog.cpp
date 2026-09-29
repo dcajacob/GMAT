@@ -17,13 +17,15 @@
 #include <QListWidget>
 #include <QDialogButtonBox>
 
-ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent) : QDialog(parent)
+ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
-   setObjectName("reportParameterDialog"); setWindowTitle("Report parameters"); resize(600,450);
+   const bool single=mode==Mode::Single;
+   setObjectName("reportParameterDialog"); setWindowTitle(single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
    auto *layout=new QVBoxLayout(this);
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
    help->setWordWrap(true); layout->addWidget(help);
    auto *entry=new QComboBox(this); entry->setObjectName("reportParameterEntry");
+   if (single) singleEntry=entry;
    entry->setEditable(true); entry->setInsertPolicy(QComboBox::NoInsert);
    auto *moderator=Moderator::Instance();
    QStringList names;
@@ -120,6 +122,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
    auto addName=[this](const QString &name) {
       if (name.isEmpty()) return;
+      if (singleEntry) { singleEntry->setEditText(name); return; }
       list->addItem(name); list->setCurrentRow(list->count()-1);
    };
    connect(add,&QPushButton::clicked,this,[entry,addName] { addName(entry->currentText().trimmed()); });
@@ -128,6 +131,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    });
    auto updateArray=[entry,row,column,element,moderator] {
       auto *array=dynamic_cast<Array *>(moderator->GetConfiguredObject(entry->currentText().toStdString()));
+      if (array && QString::fromStdString(array->GetName())!=entry->currentText().trimmed()) array=nullptr;
       row->setEnabled(array); column->setEnabled(array); element->setEnabled(array);
       if (array) {
          row->setMaximum(array->GetIntegerParameter("NumRows"));
@@ -147,12 +151,26 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       });
    }
    layout->addLayout(actions);
+   if (single) {
+      list->hide(); add->hide(); element->setText("Use element");
+      for (int i=0;i<actions->count();++i) if (auto *widget=actions->itemAt(i)->widget()) widget->hide();
+      entry->setEditText(selected.value(0));
+   }
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,this); layout->addWidget(buttons);
+   if (single) {
+      auto validate=[entry,buttons,moderator] {
+         const auto value=entry->currentText().trimmed();
+         const auto *object=moderator->GetConfiguredObject(value.toStdString());
+         buttons->button(QDialogButtonBox::Ok)->setEnabled(!value.isEmpty() && !(object && object->IsOfType("Array") && QString::fromStdString(object->GetName())==value));
+      };
+      connect(entry,&QComboBox::currentTextChanged,this,[validate] { validate(); }); validate();
+   }
    connect(buttons,&QDialogButtonBox::accepted,this,&QDialog::accept);
    connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
 }
 QStringList ReportParameterDialog::selection() const
 {
+   if (singleEntry) return singleEntry->currentText().trimmed().isEmpty() ? QStringList() : QStringList{singleEntry->currentText().trimmed()};
    QStringList names;
    for (int i=0;i<list->count();++i) names.append(list->item(i)->text());
    return names;

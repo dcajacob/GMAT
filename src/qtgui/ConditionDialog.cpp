@@ -40,9 +40,8 @@ ConditionDialog::ConditionDialog(const QString &value,QWidget *parent) : QDialog
    addButton("Choose operand…","conditionChoose",[this] {
       const int row=table->currentRow(),column=table->currentColumn();
       if (row<0 || (column!=1 && column!=3)) { status->setText("Select a left or right operand cell first."); return; }
-      ReportParameterDialog dialog({},this);
+      ReportParameterDialog dialog({table->item(row,column)->text()},this,ReportParameterDialog::Mode::Single);
       if (dialog.exec()!=QDialog::Accepted) return;
-      if (dialog.selection().size()!=1) { status->setText("Choose exactly one parameter for this operand."); return; }
       table->item(row,column)->setText(dialog.selection().first());
    });
    actions->addStretch();

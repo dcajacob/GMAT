@@ -840,3 +840,13 @@ operand cell. Incomplete rows disable OK. Cancel leaves the header untouched.
 Accepting updates only the condition span; the command editor's Apply still
 validates the mission and supplies Undo. Unsupported grouped or expression syntax
 remains in the editable text field and is never flattened into rows.
+
+### Single-parameter mission selection
+
+Condition operands, Achieve goals/values, Minimize objectives and nonlinear
+constraint operands now use a single-choice parameter browser. Select a configured
+parameter, browse an object's property and reference frame, or choose an array
+element. OK uses that one entry directly; there is no report list to assemble.
+Empty entries and bare arrays disable OK. Report and ReportFile parameter lists
+retain their ordered multi-selection workflow. Command Apply still validates the
+chosen reference in its specific context.

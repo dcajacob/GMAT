@@ -43,8 +43,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested; other frames and mass-decrement cases pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
-| `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector tested; relation/expression fields remain editable. Full parameter selection workflow pending. |
-| `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector tested; goal/value fields remain editable. Full parameter/tolerance workflow pending. |
+| `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector and single-parameter left/right operand browser provided. Solver selector tested; constraint operand execution combinations pending. |
+| `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; full tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector excludes boundary-value solvers; selector tested. Broader Optimize workflow pending. |
@@ -55,7 +55,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls; source-preservation tests. Parameter chooser and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
-| `src/gui/command/MinimizePanel.hpp` | Optimizer selector tested; objective field remains editable. Full parameter selection workflow pending. |
+| `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
@@ -819,3 +819,24 @@ join outcomes and all parameter-picker combinations still need broader coverage.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 28.35 seconds. Evidence:
 `Qt6ParityValidation/check-condition-builder.txt`.
+
+## Single-parameter command selection
+
+The shared parameter browser now supports a scalar selection mode for condition
+operands, Achieve goals/values, Minimize objectives and nonlinear constraints. It
+uses the current entry directly, hides report-list management, and offers array
+element construction. Empty text and bare arrays cannot be accepted. The ordered
+report mode and its existing tests are retained unchanged.
+
+MissionTests checks initial selection, hidden report-list controls, empty/bare-array
+rejection and Choice(2,3) selection. It chooses a configured goalValue variable in
+an Achieve command, verifies Cancel, saves/reopens and executes the target to x=8
+(tolerance 1e-6). Existing repeated-run and solver-window lifecycle checks also run
+with this selected parameter. Minimize/constraint execution combinations and more
+property types remain pending; a shared widget is not counted as all-context proof.
+
+The array-element check exposed that Moderator resolves indexed names to the base
+array. The browser now distinguishes exact array names from indexed references;
+Use element cannot append another index to an already indexed entry. GmatQt was
+rebuilt and all 11 Qt checks passed in 38.47 seconds. Evidence:
+`Qt6ParityValidation/check-single-parameter.txt`.

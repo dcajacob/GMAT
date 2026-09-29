@@ -3,6 +3,8 @@
 #include "CommandEditor.hpp"
 #include "CommandForm.hpp"
 #include "ConditionDialog.hpp"
+#include "ReportParameterDialog.hpp"
+#include <QSpinBox>
 #include <QComboBox>
 #include "Moderator.hpp"
 #include <QApplication>
@@ -290,7 +292,7 @@ int main(int argc,char **argv)
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
       require(total()==15,"Mission panel Apply did not update the loop");
       editor->setPlainText("Create DifferentialCorrector DC;\nGMAT DC.MaximumIterations = 20;\n"
-         "Create Variable x;\nGMAT x = 1;\nBeginMissionSequence;\n"
+         "Create Variable x goalValue;\nCreate Array Choice[2,3];\nGMAT x = 1;\nGMAT goalValue = 8;\nBeginMissionSequence;\n"
          "Target DC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};\n"
          "Vary DC(x = 1, {Perturbation = 0.001, Lower = -20, Upper = 20, MaxStep = 10});\n"
          "Achieve DC(x = 7, {Tolerance = 0.000001});\nEndTarget;\n");
@@ -301,8 +303,35 @@ int main(int argc,char **argv)
       CommandForm goalForm([&](const QString &text) { replacement=text; });
       goalForm.setStatement(snapshot.nodes[achieve].statement);
       auto *goal=goalForm.findChild<QLineEdit *>("commandField_Value");
-      require(goal,"Engine-generated Achieve command has no form"); goal->setText("8");
+      require(goal,"Engine-generated Achieve command has no form");
+      {
+         ReportParameterDialog selector({"x"},&window,ReportParameterDialog::Mode::Single);
+         auto *entry=selector.findChild<QComboBox *>("reportParameterEntry");
+         auto *ok=selector.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+         require(selector.selection()==QStringList{"x"} && selector.findChild<QWidget *>("reportSelectedParameters")->isHidden(),"Single chooser displayed a report list or lost initial value");
+         entry->setEditText(""); require(!ok->isEnabled(),"Empty single selection enabled OK");
+         entry->setEditText("Choice"); require(!ok->isEnabled(),"Bare array accepted as a scalar operand");
+         selector.findChild<QSpinBox *>("reportArrayRow")->setValue(2);
+         selector.findChild<QSpinBox *>("reportArrayColumn")->setValue(3);
+         selector.findChild<QPushButton *>("reportAddElement")->click();
+         require(ok->isEnabled() && selector.selection()==QStringList{"Choice(2,3)"},"Single array-element selection failed");
+      }
+      bool picked=false;
+      QTimer::singleShot(0,&goalForm,[&] {
+         auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+         auto *entry=dialog->findChild<QComboBox *>("reportParameterEntry");
+         picked=entry && entry->findText("goalValue")>=0; if (entry) entry->setCurrentText("goalValue"); dialog->accept();
+      }); goalForm.findChild<QPushButton *>("commandChoose_Value")->click();
+      require(picked && goal->text()=="goalValue","Achieve target parameter was not selected");
+      QTimer::singleShot(0,&goalForm,[&] {
+         auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget()); if (!dialog) return;
+         dialog->findChild<QComboBox *>("reportParameterEntry")->setCurrentText("x"); dialog->reject();
+      }); goalForm.findChild<QPushButton *>("commandChoose_Value")->click();
+      require(goal->text()=="goalValue","Cancel changed the selected target");
       require(window.applyMissionChange(snapshot,achieve,MissionEdit::Replace,replacement).isEmpty(),"Achieve form edit rejected");
+      QTemporaryDir selectedGoal;
+      require(selectedGoal.isValid() && window.saveScriptTo(selectedGoal.filePath("target.script")) &&
+         window.loadScript(selectedGoal.filePath("target.script")) && window.buildScript(),"Selected target save/reopen failed");
       require(window.runMission()==MainWindow::RunResult::Completed,"Targeting did not execute");
       auto solved=[&] { return Moderator::Instance()->GetInternalObject("x")->GetRealParameter("Value"); };
       require(std::abs(solved()-8)<1e-6,"Targeting did not achieve edited goal");

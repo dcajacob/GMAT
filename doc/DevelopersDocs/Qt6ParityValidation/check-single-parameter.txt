@@ -1,0 +1,43 @@
+[1/13] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ReportParameterDialog.cpp.o
+[3/13] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[4/13] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[5/13] Linking CXX executable src/qtgui/GmatQtWindowTests
+[6/13] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[7/13] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[8/13] Linking CXX executable src/qtgui/GmatQtPlotTests
+[9/13] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[10/13] Linking CXX executable src/qtgui/GmatQtFileTests
+[11/13] Linking CXX executable src/qtgui/GmatQtMissionTests
+[12/13] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[12/13] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/11 Test  #1: QtGui.NativeOrbit ................   Passed    1.99 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/11 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    3.07 sec
+      Start  3: QtGui.NativeWindows
+ 3/11 Test  #3: QtGui.NativeWindows ..............   Passed    3.91 sec
+      Start  4: QtGui.NativePlots
+ 4/11 Test  #4: QtGui.NativePlots ................   Passed    5.44 sec
+      Start  5: QtGui.Files
+ 5/11 Test  #5: QtGui.Files ......................   Passed    0.25 sec
+      Start  6: QtGui.Workflow
+ 6/11 Test  #6: QtGui.Workflow ...................   Passed   10.40 sec
+      Start  7: QtGui.Mission
+ 7/11 Test  #7: QtGui.Mission ....................   Passed    1.90 sec
+      Start  8: QtGui.Compatibility
+ 8/11 Test  #8: QtGui.Compatibility ..............   Passed    3.62 sec
+      Start  9: QtGui.Plots
+ 9/11 Test  #9: QtGui.Plots ......................   Passed    3.35 sec
+      Start 10: QtGui.PlotsHiDPI
+10/11 Test #10: QtGui.PlotsHiDPI .................   Passed    3.15 sec
+      Start 11: QtGui.Launch
+11/11 Test #11: QtGui.Launch .....................   Passed    1.38 sec
+
+100% tests passed, 0 tests failed out of 11
+
+Label Time Summary:
+qt-gui    =  38.46 sec*proc (11 tests)
+
+Total Test time (real) =  38.47 sec
