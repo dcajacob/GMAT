@@ -140,7 +140,11 @@ int main(int argc, char **argv)
          const auto secondaryTrajectory=convertOpenFramesViews(secondary);
          require(secondaryTrajectory.error.isEmpty() && qtCameraSettings(secondaryTrajectory.script).value("Display").views[0].reference.isEmpty(),"Secondary trajectory camera still follows object");
          require(!convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Missing")).error.isEmpty(),"Unknown trajectory object silently accepted");
-         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off")).error.contains("automatic trajectory framing"),"Automatic trajectory framing silently approximated");
+         const auto automatic=convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off"));
+         require(automatic.error.isEmpty() && qtCameraSettings(automatic.script).value("Display").automaticTrajectory=="Sat" && automatic.script.endsWith(dynamics),"Automatic trajectory metadata or dynamics lost");
+         const auto automaticSecondary=convertOpenFramesViews(QString(secondary).replace("Close.SetCurrentLocation = On","Close.SetCurrentLocation = Off"));
+         require(automaticSecondary.error.isEmpty() && qtCameraSettings(automaticSecondary.script).value("Display").views[0].automaticTrajectory=="Sat","Automatic named trajectory lost");
+         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off;\nCamera.LookAtFrame = Sat")).error.contains("automatic trajectory framing"),"Unsupported automatic LookAt lacks the intended diagnostic");
          require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop")).error.contains("segment-relative"),"Segment camera lacks specific diagnostic");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
@@ -1392,6 +1396,17 @@ int main(int argc, char **argv)
             require(std::abs(camera.eye[axis]-first.eye[axis])<1e-8 && std::abs(camera.target[axis]-first.target[axis])<1e-8,
                "Stored trajectory camera moves with spacecraft");
          require(std::abs(first.eye[0]-150000)<1e-8 && std::abs(first.target[0])<1e-8,"Stored trajectory camera pose was not retained");
+         trajectoryScript.replace(QRegularExpression("TheView\\.SetDefaultLocation\\s*=\\s*On"),"TheView.SetDefaultLocation = Off");
+         const auto automatic=convertOpenFramesViews(trajectoryScript); require(automatic.error.isEmpty(),"Automatic trajectory runtime conversion failed");
+         editor->setPlainText(automatic.script);
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Automatic trajectory save/reopen/run failed");
+         const auto autoModel=window.plotReceiver()->model("OFI_EarthView");
+         require(autoModel && autoModel->automaticTrajectory=="DefaultSC","Automatic trajectory did not reach viewer");
+         const auto autoCamera=orbitCamera(*autoModel,autoModel->frame,0,0,1,1);
+         require(autoCamera.distance>1 && autoCamera.outward.y()<-.99,"Automatic trajectory camera direction missing");
+         const auto good=editor->toPlainText(); auto invalid=qtCameraSettings(good).value("OFI_EarthView"); invalid.automaticTrajectory="Missing";
+         editor->setPlainText(setQtCameraSetting(good,"OFI_EarthView",invalid)); require(!window.buildScript(),"Unknown automatic trajectory accepted");
+         editor->setPlainText(good); require(window.runMission()==MainWindow::RunResult::Completed,"Automatic trajectory error recovery failed");
       }
       {
          auto bodyScript=originalSample;

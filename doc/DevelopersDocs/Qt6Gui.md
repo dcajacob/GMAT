@@ -656,9 +656,9 @@ camera, and normal Save preserves all named definitions.
 Additional views preserve stored Current/Default eye, center and up vectors.
 Object references track positions, including center offsets. With InertialFrame
 Off, body-relative views also follow object orientation; InertialFrame On retains
-plot-frame axes. Trajectory/segment views and OF's automatic framing are still
-pending. Views without a stored location currently use a 30000 km offset;
-conversion reports this explicitly. Duplicate/unknown view names, invalid poses
+plot-frame axes. Named whole-trajectory views support stored and automatic
+framing; segment views remain pending. Other views without a stored location
+currently use a default offset, reported during conversion. Duplicate/unknown view names, invalid poses
 and missing reference objects are rejected before execution. The base viewer
 uses the first camera and ignores the additional Qt metadata.
 
@@ -942,8 +942,9 @@ Conversion now preserves whole-trajectory views with a stored Current or Default
 camera location in the plot frame. They no longer track the spacecraft position.
 The named trajectory object must be in the plot's Add list (or use
 CoordinateSystem). Primary and additional named cameras are supported.
-Automatic trajectory framing and segment-relative views still require further
-implementation; conversion explains those cases and leaves the script unchanged.
+Automatic named whole-trajectory framing is also supported as described below.
+Segment-relative views still require further implementation; conversion explains
+those cases and leaves the script unchanged.
 
 ### Large report navigation
 
@@ -1101,3 +1102,13 @@ running the mission writes the report.
 Fit centers the visible objects and retained trajectories, so scenes far from the
 coordinate origin use the window effectively. Hidden curves do not affect Fit.
 Framing stays stable during replay. Script view restores the scripted camera.
+
+### Automatic whole-trajectory views
+
+When an OpenFrames view selects ViewTrajectory for a named plotted object and has
+no stored camera location, conversion now creates an automatic trajectory camera.
+It frames that object's retained path and updates while the mission runs. Named
+views retain their own target paths. Replay keeps framing stable; Fit frames the
+whole scene, and Script view restores the selected trajectory view. Segment
+cameras remain unsupported. Automatic LookAt/CoordinateSystem combinations
+require a stored supported camera location before conversion.

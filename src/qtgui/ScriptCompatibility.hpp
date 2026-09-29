@@ -14,6 +14,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source);
 #include <optional>
 struct QtCameraPreset {
    QString name,reference,target;
+   QString automaticTrajectory;
    std::array<double,3> eye{0,-30000,0},center{},up{0,0,1};
    bool perspective=true;
    double fieldOfView=45;
@@ -28,6 +29,7 @@ struct QtCameraSetting {
    bool bodyRelative=false;
    bool lookAtRotation=false, shortestAngle=false;
    std::optional<std::array<double,3>> centerOffset;
+   QString automaticTrajectory;
 };
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);
 QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting);

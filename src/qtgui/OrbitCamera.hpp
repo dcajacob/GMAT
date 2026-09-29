@@ -65,5 +65,25 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       const double radius=bounds && !bounds->empty ? extent : extent+target.length();
       distance=radius*1.1/std::sin(std::min(halfVertical,halfHorizontal));
    }
+   const auto trajectory=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
+      ? model.cameraViews[model.selectedCamera].automaticTrajectory : model.automaticTrajectory;
+   if (!model.fitCamera && !trajectory.isEmpty()) {
+      OrbitSceneBounds path;
+      for (const auto &curve:model.curves) if (curve.name==trajectory)
+         for (const auto &point:curve.points) path.include(point.x,point.y,point.z,0);
+      if (!path.empty) {
+         target=path.center(); const double span=(path.maximum-path.minimum).length();
+         const double radius=span>0 ? span*.5 : 1.0;
+         distance=2*radius; viewExtent=radius;
+         if (model.perspective) {
+            const double halfVertical=std::clamp(model.fieldOfView,1.0,150.0)*3.14159265358979323846/360;
+            const double halfHorizontal=std::atan(std::max(aspect,1e-6)*std::tan(halfVertical));
+            distance=radius/std::sin(std::min(halfVertical,halfHorizontal));
+         }
+         right.set(1,0,0); up.set(0,0,1); outward.set(0,-1,0);
+         const osg::Quat azimuth(-yaw,up); outward=azimuth*outward; right=azimuth*right;
+         const osg::Quat elevation(-pitch,right); outward=elevation*outward; up=elevation*up;
+      }
+   }
    return {target,right,up,outward,distance,viewExtent};
 }

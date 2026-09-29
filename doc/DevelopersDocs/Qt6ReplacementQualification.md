@@ -1639,3 +1639,35 @@ conversion remains a separate open requirement.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 62.63 seconds.
 Native checks ran under isolated Xvfb with software OpenGL, not the user's live
 Intel/Wayland session. Evidence: `Qt6ParityValidation/check-centered-fit.txt`.
+
+## Automatic named whole-trajectory cameras
+
+Audited OFScene::ProcessOpenFramesView/UpdateSegmentViews and OpenFrames
+View::resetView. Automatic trajectory views center a bounding sphere and place
+the eye on negative Y with positive Z up; perspective distance uses the smaller
+horizontal/vertical half-angle. Qt conversion now retains a named object's
+automatic whole-trajectory camera in primary and secondary camera metadata.
+Stored camera locations continue to take precedence. Unknown trajectory names
+or names absent from OrbitView.Add fail Build with a diagnostic.
+
+The shared camera calculation uses a sphere enclosing the selected curve's
+retained path bounds, independently of unrelated bodies and trajectories. Qt
+refreshes these bounds as samples arrive and uses complete retained history
+during replay. This preserves Qt's live viewer behavior; OF refreshes automatic
+trajectory views after completed segments. Fit still frames the whole visible
+scene and Script view restores automatic trajectory framing. CoordinateSystem
+automatic framing, automatic LookAt combinations and segment-specific cameras
+remain unsupported by this conversion and receive explicit errors. Bounding
+spheres of OF scene decorations are not claimed to match Qt path bounds.
+
+WorkflowTests covers primary/secondary conversion metadata, unchanged mission
+commands, a real converted sample after save/reopen, plot-model delivery, invalid
+trajectory recovery and stored-camera precedence. OrbitRendererTests checks
+translated path centers and aspect-aware camera distance against explicit
+geometric expectations, unrelated-object isolation and named-camera selection.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 39.98 seconds.
+After improving the unsupported-LookAt fixture to use valid syntax, the targeted
+Workflow rerun passed in 21.85 seconds. Native checks used isolated Xvfb/software
+OpenGL. Evidence: `Qt6ParityValidation/check-auto-trajectory.txt` and
+`Qt6ParityValidation/check-auto-trajectory-workflow.txt`.

@@ -27,6 +27,15 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
 {
    auto *moderator=Moderator::Instance();
    for (auto it=settings.cbegin();it!=settings.cend();++it) {
+      auto validateTrajectory=[&](const QString &name) {
+         if (name.isEmpty()) return;
+         auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+         if (!plot || !plot->IsOfType("OrbitView")) throw std::runtime_error("Automatic trajectory camera requires an OrbitView");
+         const auto &objects=plot->GetStringArrayParameter("Add");
+         if (std::find(objects.begin(),objects.end(),name.toStdString())==objects.end())
+            throw std::runtime_error((it.key()+": automatic trajectory object must be in Add: "+name).toStdString());
+      };
+      validateTrajectory(it->automaticTrajectory);
       if (it->bodyRelative || it->lookAtRotation) {
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
          if (!plot || !plot->IsOfType("OrbitView") || (it->bodyRelative && plot->GetStringParameter("ViewPointRefType")=="Vector") ||
@@ -34,6 +43,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
             throw std::runtime_error((it.key()+": relative camera needs a vector ViewPointVector; body-relative mode also needs an object ViewPointReference").toStdString());
       }
       for (const auto &view:it->views) {
+      validateTrajectory(view.automaticTrajectory);
       for (const auto &name:{view.reference,view.target}) {
          if (name.isEmpty() || name=="CoordinateSystem") continue;
          auto *object=moderator->GetConfiguredObject(name.toStdString());
@@ -106,9 +116,10 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
    if (kind==PlotModel::Kind::Orbit && cameraSettings.contains(text(name))) {
       const auto setting=cameraSettings.value(text(name));
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
+      entry.data->automaticTrajectory=setting.automaticTrajectory;
       if (!setting.views.isEmpty()) {
-         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{}});
-         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{}});
+         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory});
+         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory});
       }
    }
    show(text(name));

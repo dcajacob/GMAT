@@ -46,6 +46,20 @@ int main(int argc,char **argv)
             "Scene bounds changed the stored Script camera without Fit");
       }
       QTemporaryDir directory;
+      {
+         PlotModel model(PlotModel::Kind::Orbit); model.automaticTrajectory="Path"; model.perspective=true; model.fieldOfView=60;
+         model.curves[0].name="Path"; model.append(0,100,200,300); model.append(0,110,220,330);
+         model.curves[1].name="Other"; model.append(1,-1e9,1e9,0);
+         for (const double aspect:{.4,1.0,2.5}) {
+            const auto camera=orbitCamera(model,model.frame,0,0,1,aspect);
+            const double halfAngle=std::min(std::atan(aspect/std::sqrt(3.0)),3.14159265358979323846/6);
+            require((camera.target-osg::Vec3d(105,210,315)).length()<1e-10 &&
+               std::abs(camera.distance-std::sqrt(350.0)/std::sin(halfAngle))<1e-9,"Automatic trajectory center or aspect-aware distance incorrect");
+         }
+         model.cameraViews.append({"Primary",true,60,{},"Path"});
+         model.cameraViews.append({"Other",true,60,{},"Other"}); model.selectedCamera=1;
+         require((orbitCamera(model,model.frame,0,0,1).target-osg::Vec3d(-1e9,1e9,0)).length()<1e-6,"Named automatic camera did not select its own trajectory");
+      }
       QImage texture(128,64,QImage::Format_RGB32);
       texture.fill(QColor(20,110,230));
       { QPainter p(&texture); p.fillRect(64,0,64,64,QColor(240,230,170)); }

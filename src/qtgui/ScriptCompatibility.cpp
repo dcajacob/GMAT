@@ -87,7 +87,9 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.error=it.key()+"."+key+": segment-relative cameras are not yet supported by Qt conversion. The original script is unchanged."; return result;
       }
       if (values.value("ViewTrajectory")=="On" && values.value("SetCurrentLocation")!="On" && values.value("SetDefaultLocation")!="On") {
-         result.error=it.key()+": automatic trajectory framing is not yet supported. Set a stored Current or Default camera location before converting this view."; return result;
+         if (values.value("ViewFrame","CoordinateSystem")=="CoordinateSystem" || !values.value("LookAtFrame").isEmpty()) {
+            result.error=it.key()+": automatic trajectory framing with CoordinateSystem or LookAtFrame is not yet supported. Use a named object without LookAtFrame, or a stored camera location."; return result;
+         }
       }
       for (const auto *key:{"SetDefaultLocation","SetCurrentLocation","InertialFrame","ViewTrajectory","ShortestAngle"})
          if (values.contains(key) && values.value(key)!="On" && values.value(key)!="Off") {
@@ -159,6 +161,10 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       set("ViewDirection",body ? frame : "[0 0 0]");
       const auto prefix=values.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
       const bool stored=values.value("Set"+prefix+"Location")=="On";
+      if (trajectory && !stored) {
+         cameraSetting.automaticTrajectory=frame;
+         set("ViewPointVector","[0 -30000 0]"); cameraSetting.up=std::array<double,3>{0,0,1};
+      }
       std::array<double,3> eye{0,-1,0},center{},up{0,0,1};
       if (stored) for (auto component:{qMakePair(QString("Eye"),&eye),qMakePair(QString("Center"),&center),qMakePair(QString("Up"),&up)}) {
          if (values.contains(prefix+component.first) && !vectorValue(values.value(prefix+component.first),*component.second)) {
@@ -166,7 +172,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          }
       }
       if (stored) set("ViewPointVector",formatVector(eye));
-      else result.notes.append(plot+": default camera distance used; review Script view or Fit.");
+      else if (!trajectory) result.notes.append(plot+": default camera distance used; review Script view or Fit.");
       if (stored) {
          if (!body) set("ViewDirection",formatVector(center));
          else cameraSetting.centerOffset=center;
@@ -208,18 +214,19 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
                   result.error=preset.name+": invalid stored camera "+component.first+" vector."; return result;
                }
             }
-         } else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
+         } else if (trajectory) preset.automaticTrajectory=extraFrame;
+         else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
          cameraSetting.views.append(preset);
          if (!preset.reference.isEmpty()) result.notes.append(preset.name+(preset.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
          if (!preset.target.isEmpty()) result.notes.append(preset.name+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
-         if (trajectory) result.notes.append(preset.name+": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object.");
+         if (trajectory) result.notes.append(preset.name+(preset.automaticTrajectory.isEmpty() ? ": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object." : ": automatic whole-trajectory camera uses retained trajectory bounds, refreshed as points arrive."));
       }
       try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
       catch (const std::exception &error) { result.error=QString::fromUtf8(error.what()); return result; }
       cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
       result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views.");
-      if (trajectory) result.notes.append(plot+": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object.");
+      if (trajectory) result.notes.append(plot+(stored ? ": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object." : ": automatic whole-trajectory camera uses retained trajectory bounds, refreshed as points arrive."));
       if (body) result.notes.append(plot+(cameraSetting.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
       if (values.contains("LookAtFrame")) result.notes.append(plot+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
    }
@@ -241,11 +248,12 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (setting.lookAtRotation) { object.insert("lookAtRotation",true); object.insert("shortestAngle",setting.shortestAngle); }
    if (setting.centerOffset) object.insert("centerOffset",QJsonArray{(*setting.centerOffset)[0],(*setting.centerOffset)[1],(*setting.centerOffset)[2]});
    if (!setting.primaryName.isEmpty()) object.insert("primaryName",setting.primaryName);
+   if (!setting.automaticTrajectory.isEmpty()) object.insert("automaticTrajectory",setting.automaticTrajectory);
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
       for (const auto &view:setting.views) views.append(QJsonObject{{"name",view.name},{"reference",view.reference},{"target",view.target},
-         {"eye",vector(view.eye)},{"center",vector(view.center)},{"up",vector(view.up)},
+         {"eye",vector(view.eye)},{"center",vector(view.center)},{"up",vector(view.up)},{"automaticTrajectory",view.automaticTrajectory},
          {"perspective",view.perspective},{"fieldOfView",view.fieldOfView},{"bodyRelative",view.bodyRelative},{"lookAtRotation",view.lookAtRotation},{"shortestAngle",view.shortestAngle}});
       object.insert("views",views);
    }
@@ -292,6 +300,11 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          setting.centerOffset=center;
       }
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+      if (object.contains("automaticTrajectory")) {
+         setting.automaticTrajectory=object.value("automaticTrajectory").toString();
+         if (!identifier.match(setting.automaticTrajectory).hasMatch() || setting.bodyRelative || setting.lookAtRotation)
+            throw std::runtime_error("Automatic trajectory camera needs an object name without body-relative or look-at rotation");
+      }
       if (object.contains("primaryName")) {
          setting.primaryName=object.value("primaryName").toString();
          if (!identifier.match(setting.primaryName).hasMatch()) throw std::runtime_error("Invalid primary camera name");
@@ -311,6 +324,10 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          for (const auto &item:object.value("views").toArray()) {
             const auto value=item.toObject(); QtCameraPreset view;
             view.name=value.value("name").toString(); view.reference=value.value("reference").toString(); view.target=value.value("target").toString();
+            view.automaticTrajectory=value.value("automaticTrajectory").toString();
+            if (value.contains("automaticTrajectory") && (!value.value("automaticTrajectory").isString() ||
+                (!view.automaticTrajectory.isEmpty() && !identifier.match(view.automaticTrajectory).hasMatch())))
+               throw std::runtime_error("Invalid automatic trajectory object name");
             view.fieldOfView=value.value("fieldOfView").toDouble(-1); view.perspective=value.value("perspective").toBool();
             if (!identifier.match(view.name).hasMatch() || names.contains(view.name) ||
                 !value.value("reference").isString() || (!view.reference.isEmpty() && !identifier.match(view.reference).hasMatch()) ||
@@ -322,6 +339,8 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
             for (const auto *key:{"lookAtRotation","shortestAngle"})
                if (value.contains(key) && !value.value(key).isBool()) throw std::runtime_error("Named camera alignment modes must be booleans");
             view.lookAtRotation=value.value("lookAtRotation").toBool(); view.shortestAngle=value.value("shortestAngle").toBool();
+            if (!view.automaticTrajectory.isEmpty() && (view.bodyRelative || view.lookAtRotation || !view.reference.isEmpty()))
+               throw std::runtime_error("Automatic trajectory camera cannot use body-relative or look-at rotation");
             if (view.lookAtRotation && view.target.isEmpty()) throw std::runtime_error("Aligned camera needs a target");
             if (view.bodyRelative && (view.reference.isEmpty() || view.reference=="CoordinateSystem")) throw std::runtime_error("Body-relative camera needs an object reference");
             view.eye=vector(value.value("eye")); view.center=vector(value.value("center")); view.up=vector(value.value("up"));

@@ -62,6 +62,7 @@ struct PlotCameraView
    bool perspective=true;
    double fieldOfView=45;
    std::deque<PlotCamera> cameras;
+   QString automaticTrajectory;
 };
 struct PlotModel
 {
@@ -88,6 +89,7 @@ struct PlotModel
    std::deque<PlotCamera> cameras;
    QVector<PlotCameraView> cameraViews; // Index zero uses the standard scripted history above.
    int selectedCamera=0;
+   QString automaticTrajectory;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;
