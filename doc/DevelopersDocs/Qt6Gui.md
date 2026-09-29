@@ -1034,3 +1034,8 @@ Apply validates and stores the format and date together.
 
 Solar ShadowModel offers None and DualCone in a dropdown, matching GMAT's supported
 choices. Selecting None disables shadow attenuation when the mission runs.
+
+Spacecraft DateFormat uses the same conversion behavior: choosing a new format
+converts the pending Epoch instead of reinterpreting its text. Invalid dates
+restore the previous format and stay available for correction. Apply stores the
+converted epoch and format together.

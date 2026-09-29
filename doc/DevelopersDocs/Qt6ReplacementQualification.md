@@ -67,7 +67,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
-| `src/gui/spacecraft/OrbitPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Remaining orbit-state and coordinate-selection workflows pending audit. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/TankPanel.hpp` | Pending audit |
@@ -1405,3 +1405,21 @@ separate qualification cases.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.43 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-power-runtime.txt`.
+
+## Spacecraft epoch display conversion
+
+The spacecraft DateFormat selector now shares the pending-epoch conversion
+behavior with power systems. A successful change updates Epoch through GMAT's
+time converter; failed conversion restores the prior selector value and retains
+the invalid text for correction. This addresses a wx OrbitPanel interaction gap
+without changing the propagation engine.
+
+WorkflowTests converts a spacecraft epoch through UTC Gregorian and TAI modified
+Julian formats, checks invalid-date recovery, applies the pair, and compares the
+configured epoch with the original instant. After save/reopen, the mission must
+finish at the original epoch plus the requested 600 seconds. Other OrbitPanel
+state-representation and coordinate-system interactions remain under audit.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 58.11 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-spacecraft-epoch.txt`.

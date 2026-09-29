@@ -187,6 +187,34 @@ int main(int argc, char **argv)
       auto *editor = window.findChild<QPlainTextEdit *>("scriptEditor");
       require(editor != nullptr, "Script editor missing");
       {
+         const auto before=editor->toPlainText(); QString error="Apply not invoked";
+         const double initial=Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("A1Epoch");
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const QMap<QString,QString> &changes) {
+               error=window.applyResourceChanges("QtSat",changes,before); return error;
+            },&owner,before);
+            auto *format=panel.findChild<QComboBox *>("spacecraftEpochFormat"); auto *grid=panel.findChild<QTableWidget *>(); QTableWidgetItem *date=nullptr;
+            for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()=="Epoch") date=grid->item(row,1);
+            require(format && date,"Spacecraft epoch conversion controls absent");
+            format->setCurrentText("UTCGregorian"); const auto converted=date->text();
+            date->setText("bad date"); format->setCurrentText("TAIModJulian");
+            require(format->currentText()=="UTCGregorian" && date->text()=="bad date","Invalid spacecraft date changed format");
+            date->setText(converted); format->setCurrentText("TAIModJulian");
+            format->setCurrentText("UTCGregorian");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error));
+         require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("A1Epoch")-initial)*86400.<.001,"Format change moved spacecraft epoch");
+         QTemporaryDir files; const auto path=files.filePath("epoch-converted.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Converted spacecraft epoch did not reopen");
+         require(window.runMission()==MainWindow::RunResult::Completed &&
+            std::abs((dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpoch()-initial)*86400.-600)<.01,
+            "Converted epoch changed reopened propagation");
+         editor->setPlainText(before); require(window.buildScript(),"Epoch fixture restoration failed");
+         sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      }
+
+      {
          window.findChild<QAction *>("scriptFind")->trigger();
          auto *integrated=window.findChild<QDialog *>("findReplaceDialog");
          require(integrated && integrated->isVisible(),"Find menu did not open script search"); integrated->hide();

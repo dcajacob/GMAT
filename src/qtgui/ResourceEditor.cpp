@@ -424,15 +424,17 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
    }
-   if (power) {
+   if (power || spacecraft) {
+      const QString formatProperty=power ? "EpochFormat" : "DateFormat";
+      const QString epochProperty=power ? "InitialEpoch" : "Epoch";
       int formatRow=-1; QTableWidgetItem *epoch=nullptr;
       for (int row=0;row<table->rowCount();++row) {
-         if (table->item(row,0)->text()=="EpochFormat") formatRow=row;
-         if (table->item(row,0)->text()=="InitialEpoch") epoch=table->item(row,1);
+         if (table->item(row,0)->text()==formatProperty) formatRow=row;
+         if (table->item(row,0)->text()==epochProperty) epoch=table->item(row,1);
       }
       if (formatRow>=0 && epoch) {
-         const auto initialFormat=original.value("EpochFormat");
-         auto *format=new QComboBox(table); format->setObjectName("powerEpochFormat");
+         const auto initialFormat=original.value(formatProperty);
+         auto *format=new QComboBox(table); format->setObjectName(power ? "powerEpochFormat" : "spacecraftEpochFormat");
          for (const auto &value:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) format->addItem(QString::fromStdString(value));
          if (format->findText(initialFormat)<0) format->addItem(initialFormat);
          format->setCurrentText(initialFormat); table->setCellWidget(formatRow,1,format);
