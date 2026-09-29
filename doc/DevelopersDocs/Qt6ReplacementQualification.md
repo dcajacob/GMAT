@@ -269,3 +269,21 @@ orientation, or saving camera changes made with the interactive controls.
 
 Rebuilt GmatQt and passed all 11 tests in 20.59 seconds; evidence:
 `Qt6ParityValidation/check-fov-import.txt`.
+
+## Interactive projection persistence checkpoint
+
+OrbitView now has Keep projection. It adds/replaces that plot's validated camera
+comment as one undoable editor change and updates the built-source snapshot,
+without interpreting the mission or deleting the viewer during its callback.
+The file is not written until the normal Save action. Running missions, unbuilt
+script edits, pending panel edits and missing/non-OrbitView resources are rejected.
+
+WorkflowTests exercises the actual toolbar action, fractional FOV, switching to
+orthographic, repeated clicks without duplicate directives, unchanged mission
+sequence, unchanged engine object identity, Undo/Redo, protection of unbuilt
+edits, and save/reopen/run restoration. This closes projection/FOV persistence;
+manual orbit angles/pan/zoom, multiple views and relative camera modes are still
+outstanding, alongside the other workflow and plugin qualification gates.
+
+GmatQt rebuilt; all 11 tests passed in 20.17 seconds. Evidence:
+`Qt6ParityValidation/check-keep-projection.txt`.

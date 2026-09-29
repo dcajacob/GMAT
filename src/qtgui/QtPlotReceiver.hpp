@@ -22,6 +22,7 @@ public:
    bool show(const QString &name);
    std::shared_ptr<const PlotModel> model(const QString &name) const;
    std::function<void()> changed;
+   std::function<QString(const QString &,bool,double)> saveProjection;
    QMap<QString,QtCameraSetting> cameraSettings;
 virtual bool CreateGlPlotWindow(const std::string &plotName,
                         const std::string &oldName,

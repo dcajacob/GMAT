@@ -42,6 +42,7 @@ public:
 protected:
    void closeEvent(QCloseEvent *event) override;
 private:
+   QString savePlotProjection(const QString &name,bool perspective,double fov);
    void refreshTrees();
    void refreshOutput();
    void openCommandEditor(int index, MissionEdit operation);

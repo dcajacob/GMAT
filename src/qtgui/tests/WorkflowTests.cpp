@@ -14,6 +14,7 @@
 #include <QFileInfo>
 #include <QFile>
 #include <QSpinBox>
+#include <QDoubleSpinBox>
 #include <QListWidget>
 #include <QInputDialog>
 #include <QFileDialog>
@@ -584,6 +585,37 @@ int main(int argc, char **argv)
          "Converted camera save/reopen failed");
       convertedView=window.plotReceiver()->model("OFI_EarthView");
       require(convertedView && convertedView->perspective && convertedView->fieldOfView==45,"Save/reopen changed imported camera projection");
+      {
+         const auto before=editor->toPlainText();
+         auto *keep=window.findChild<QAction *>("saveOrbitProjection");
+         auto *projection=window.findChild<QComboBox *>("orbitProjection");
+         auto *fov=window.findChild<QDoubleSpinBox *>("orbitFieldOfView");
+         require(keep && keep->isEnabled() && projection && fov,"Projection persistence controls missing");
+         auto *configured=Moderator::Instance()->GetConfiguredObject("OFI_EarthView");
+         projection->setCurrentIndex(0); fov->setValue(37.5); keep->trigger();
+         const auto after=editor->toPlainText(); const auto cameras=qtCameraSettings(after);
+         require(cameras.size()==1 && !cameras["OFI_EarthView"].perspective && cameras["OFI_EarthView"].fieldOfView==37.5 &&
+            after.endsWith(dynamics) && editor->document()->isModified(),"Keep projection changed calculations or failed to save selected settings");
+         require(Moderator::Instance()->GetConfiguredObject("OFI_EarthView")==configured,
+            "Saving a camera comment reconstructed the mission during the viewer callback");
+         keep->trigger(); require(editor->toPlainText()==after,"Repeated Keep projection duplicated metadata");
+         editor->undo(); require(editor->toPlainText()==before,"Keep projection was not one undoable edit");
+         editor->redo(); require(editor->toPlainText()==after,"Projection Redo failed");
+         editor->moveCursor(QTextCursor::End); editor->insertPlainText("% unbuilt edit\n");
+         const auto dirty=editor->toPlainText();
+         bool refused=false;
+         QTimer::singleShot(0,&window,[&] {
+            if (auto *warning=qobject_cast<QMessageBox *>(QApplication::activeModalWidget())) {
+               refused=warning->text().contains("Build the current script"); warning->accept();
+            }
+         });
+         keep->trigger(); require(refused && editor->toPlainText()==dirty,"Keep projection overwrote an unbuilt script");
+         editor->undo();
+         require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
+            "Interactive projection save/reopen failed");
+         const auto reopened=window.plotReceiver()->model("OFI_EarthView");
+         require(reopened && !reopened->perspective && reopened->fieldOfView==37.5,"Saved interactive projection was not restored");
+      }
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");

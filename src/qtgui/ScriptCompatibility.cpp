@@ -186,3 +186,19 @@ QString retainQtCameraSettings(const QString &original,const QString &candidate)
       if (!after.contains(it.key())) result.prepend(qtCameraDirective(it.key(),it.value()));
    return result;
 }
+
+QString setQtCameraSetting(const QString &source,const QString &plot,const QtCameraSetting &setting)
+{
+   qtCameraSettings(source); // Reject ambiguity rather than overwriting malformed settings.
+   const auto directive=qtCameraDirective(plot,setting);
+   qtCameraSettings(directive);
+   const QRegularExpression line("^[ \t]*% GMAT-Qt-Camera [^\n]*(?:\n|$)",QRegularExpression::MultilineOption);
+   auto matches=line.globalMatch(source);
+   while (matches.hasNext()) {
+      const auto match=matches.next();
+      if (qtCameraSettings(match.captured()).contains(plot)) {
+         auto result=source; result.replace(match.capturedStart(),match.capturedLength(),directive); return result;
+      }
+   }
+   return directive+source;
+}

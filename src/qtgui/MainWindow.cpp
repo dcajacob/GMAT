@@ -135,6 +135,7 @@ MainWindow::MainWindow()
       }
    });
    plots->changed = [this] { refreshOutput(); };
+   plots->saveProjection=[this](const QString &name,bool perspective,double fov) { return savePlotProjection(name,perspective,fov); };
    connect(output, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       const auto name = item->data(0, Qt::UserRole).toString();
       if (item->data(0, Qt::UserRole+1).toString()=="report") {
@@ -938,4 +939,27 @@ QString MainWindow::applyMissionChange(const MissionSnapshot &snapshot,int index
    try { return applyModelScript(editMission(snapshot,index,operation,replacement)); }
    catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+}
+
+QString MainWindow::savePlotProjection(const QString &name,bool perspective,double fov)
+{
+   if (!ready || running) return "Stop the mission before saving projection settings.";
+   if (!modelValid || editor->toPlainText()!=builtScript) return "Build the current script before saving projection settings.";
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges())
+         return "Apply or discard panel changes before saving projection settings.";
+   auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+   if (!object || !object->IsOfType("OrbitView")) return "This OrbitView no longer exists in the current mission.";
+   QString candidate;
+   try { candidate=setQtCameraSetting(builtScript,name,{perspective,fov}); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   if (candidate==builtScript) return {};
+   // This changes a validated comment only. Do not rebuild/delete the viewer
+   // from within its own action callback or reconstruct scientific objects.
+   auto cursor=editor->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
+   cursor.insertText(candidate); cursor.endEditBlock();
+   builtScript=candidate; plots->cameraSettings[name]={perspective,fov};
+   refreshTrees();
+   statusBar()->showMessage("Projection added to script — save to keep it; Undo restores the previous settings");
+   return {};
 }

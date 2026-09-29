@@ -306,6 +306,14 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          data->perspective=index==1; fov->setEnabled(data->perspective); drawing->refresh();
       });
       connect(fov,&QDoubleSpinBox::valueChanged,this,[this](double value) { data->fieldOfView=value; drawing->refresh(); });
+      saveProjection=bar->addAction("Keep projection"); saveProjection->setObjectName("saveOrbitProjection");
+      saveProjection->setEnabled(false);
+      saveProjection->setToolTip("Write projection and field of view to the script as an undoable edit; save the script to keep them on disk");
+      connect(saveProjection,&QAction::triggered,this,[this] {
+         if (!projectionSaver) return;
+         const auto error=projectionSaver(data->perspective,data->fieldOfView);
+         if (!error.isEmpty()) QMessageBox::warning(this,"Could not keep projection",error);
+      });
       auto *scriptView=bar->addAction("Script view");
       scriptView->setToolTip("Restore the scripted camera, tracking and scale");
       connect(scriptView,&QAction::triggered,drawing,&PlotCanvas::scriptView);
@@ -417,4 +425,10 @@ void PlotWidget::editPlotStyle()
    data->grid=grid->isChecked(); data->legend=legend->isChecked();
    for (const auto &change:apply) change();
    drawing->refresh();
+}
+
+void PlotWidget::setProjectionSaver(std::function<QString(bool,double)> callback)
+{
+   projectionSaver=std::move(callback);
+   if (saveProjection) saveProjection->setEnabled(bool(projectionSaver));
 }

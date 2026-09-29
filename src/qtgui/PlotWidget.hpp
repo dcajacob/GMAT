@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "PlotModel.hpp"
 #include <QWidget>
 #include <memory>
@@ -37,6 +38,7 @@ class PlotWidget final : public QWidget
 public:
    explicit PlotWidget(std::shared_ptr<PlotModel> data, QWidget *parent = nullptr);
    void refresh();
+   void setProjectionSaver(std::function<QString(bool,double)> callback);
    PlotCanvas *canvas() const { return drawing; }
 private:
    std::shared_ptr<PlotModel> data;
@@ -44,6 +46,8 @@ private:
    QSlider *timeline;
    QTimer *timer;
    QAction *replay=nullptr;
+   QAction *saveProjection=nullptr;
+   std::function<QString(bool,double)> projectionSaver;
    quint64 historyGeneration=0;
    void updateReplayFrame();
    void editPlotStyle();

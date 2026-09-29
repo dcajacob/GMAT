@@ -585,4 +585,8 @@ interactive controls currently affect the displayed plot only. Conversion import
 the selected OpenFrames view’s perspective/FOV into a `% GMAT-Qt-Camera` JSON
 comment. Qt validates and restores it when running a saved script; the base
 engine treats it as a comment. Resource/mission edits retain these settings.
-Saving interactive camera adjustments remains on the qualification checklist.
+Use **Keep projection** to write the displayed projection/FOV into the script
+as one undoable edit, then save the script normally. It preserves mission
+calculations and keeps the current viewer open. Unbuilt script edits and pending
+resource-panel changes must be resolved first. Orbit angles, pan and zoom are
+not included in this action.
