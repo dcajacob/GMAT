@@ -158,8 +158,9 @@ Arrays and writable numeric vector/matrix properties have an **Edit cells…**
 grid. It preserves dimensions, rejects nonfinite or nonnumeric values, and
 keeps changes local until Apply. Cancel leaves the property unchanged. Array
 values serialize as indexed initial assignments and participate in the same
-validation, rollback and undo flow as scalar properties. Existing arrays keep
-their dimensions; resizing and expression-valued cells remain script work.
+validation, rollback and undo flow as scalar properties. Array grids offer row and column controls, preserve retained cells and fill
+new cells with zero. Apply validates the resized mission; Undo restores the
+prior dimensions and values. Expression-valued cells remain script work.
 
 Spacecraft panels open on Orbit and group the existing editable fields under
 the familiar Attitude, Ballistic/Mass, Hardware, Power System, SPICE and Visualization
@@ -547,3 +548,12 @@ build/linux-gui/src/qtgui/GmatQtWindowTests application/bin/gmat_startup_qt.txt 
 See [desktop GPU validation](Qt6ParityValidation/README.md#desktop-gpu-regression)
 for the reproduction and validation evidence. Software-rendered Xvfb tests
 alone did not expose this hardware failure.
+
+
+### Replacement qualification in progress
+
+The [workflow/viewer/plugin checklist](Qt6ReplacementQualification.md) tracks
+remaining wx replacement work. Command settings now include For loop bounds
+and step, If/While conditions, assignment destinations/expressions, Toggle
+subscribers/state, and Global/Clear object lists. Editing branch headers leaves
+nested commands unchanged; Apply validates the complete mission.

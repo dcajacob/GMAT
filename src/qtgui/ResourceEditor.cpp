@@ -17,8 +17,11 @@
 #include <QTabBar>
 #include <QSet>
 #include <QDialog>
+#include <QSpinBox>
+#include <QFormLayout>
 #include <QRegularExpression>
 #include <cmath>
+#include <algorithm>
 
 ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) : EditablePanel(parent)
 {
@@ -58,6 +61,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
             value->setFlags(value->flags() & ~Qt::ItemIsEditable);
             value->setData(Qt::UserRole,field.rows);
             value->setData(Qt::UserRole+1,field.columns);
+            value->setData(Qt::UserRole+2,object.IsOfType("Array") && field.name=="RmatValue");
             value->setToolTip("Double-click to edit the numeric cells.");
             auto *edit=new QPushButton("Edit cells…",table);
             edit->setObjectName("editCells_"+field.name);
@@ -94,6 +98,24 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
          const auto cells=values.value(r).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
          for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem(cells.value(c,"0")));
       }
+      if (item->data(Qt::UserRole+2).toBool()) {
+         auto *dimensions=new QFormLayout;
+         auto *rowCount=new QSpinBox(&dialog),*columnCount=new QSpinBox(&dialog);
+         rowCount->setObjectName("arrayRows"); columnCount->setObjectName("arrayColumns");
+         rowCount->setRange(1,100); columnCount->setRange(1,100);
+         rowCount->setMaximum(std::max(100,rows)); columnCount->setMaximum(std::max(100,columns));
+         rowCount->setValue(rows); columnCount->setValue(columns);
+         dimensions->addRow("Rows",rowCount); dimensions->addRow("Columns",columnCount);
+         layout->addLayout(dimensions);
+         layout->addWidget(new QLabel("New cells start at zero. Shrinking removes cells outside the new dimensions.",&dialog));
+         auto resize=[=] {
+            grid->setRowCount(rowCount->value()); grid->setColumnCount(columnCount->value());
+            for (int r=0;r<grid->rowCount();++r) for (int c=0;c<grid->columnCount();++c)
+               if (!grid->item(r,c)) grid->setItem(r,c,new QTableWidgetItem("0"));
+         };
+         connect(rowCount,&QSpinBox::valueChanged,&dialog,resize);
+         connect(columnCount,&QSpinBox::valueChanged,&dialog,resize);
+      }
       configureTableColumns(grid);
       fitTableColumns(grid);
       layout->addWidget(grid);
@@ -103,9 +125,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
       connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
       connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
          QStringList output;
-         for (int r=0;r<rows;++r) {
+         for (int r=0;r<grid->rowCount();++r) {
             QStringList cells;
-            for (int c=0;c<columns;++c) {
+            for (int c=0;c<grid->columnCount();++c) {
                bool valid=false;
                const double value=grid->item(r,c)->text().toDouble(&valid);
                if (!valid || !std::isfinite(value)) {
@@ -116,6 +138,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent) :
             }
             output.append(cells.join(" "));
          }
+         item->setData(Qt::UserRole,grid->rowCount());
+         item->setData(Qt::UserRole+1,grid->columnCount());
          item->setText(output.join("; ")); dialog.accept();
       });
       dialog.resize(560,320); dialog.exec();

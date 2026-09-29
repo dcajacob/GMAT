@@ -12,6 +12,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QFile>
+#include <QSpinBox>
 #include <QPlainTextEdit>
 #include <QTemporaryDir>
 #include <QTimer>
@@ -172,10 +173,23 @@ int main(int argc, char **argv)
          });
          editCells->click();
          require(value.first()->text()=="4 0 0; 0 0 -12.5","Cancel changed matrix values");
+         bool resized=false;
+         QTimer::singleShot(0,&gridPanel,[&] {
+            auto *dialog=gridPanel.findChild<QDialog *>("numericGridDialog");
+            auto *rows=dialog->findChild<QSpinBox *>("arrayRows");
+            auto *columns=dialog->findChild<QSpinBox *>("arrayColumns");
+            if (!rows || !columns) { dialog->reject(); return; }
+            rows->setValue(3); columns->setValue(2);
+            auto *grid=dialog->findChild<QTableWidget *>("numericGrid");
+            resized=grid->rowCount()==3 && grid->columnCount()==2 && grid->item(0,0)->text()=="4" && grid->item(2,1)->text()=="0";
+            dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+         });
+         editCells->click();
+         require(resized && value.first()->text()=="4 0; 0 0; 0 0","Array resize controls lost retained cells or failed to initialize new cells");
          gridPanel.discardChanges();
       }
-      require(!window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2; 3 4"}},arrayScript).isEmpty(),
-         "Array dimension change was accepted");
+      require(!window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2; 3"}},arrayScript).isEmpty(),
+         "Ragged array dimensions were accepted");
       require(!window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2 3; 4 nan 6"}},arrayScript).isEmpty(),
          "Nonfinite array value was accepted");
       require(editor->toPlainText()==arrayScript,"Rejected array edit changed script");
@@ -189,6 +203,12 @@ int main(int argc, char **argv)
       require(editor->toPlainText()==arrayScript && window.buildScript(),"Array edit was not one undoable change");
       require(Moderator::Instance()->GetConfiguredObject("QtMatrix")->GetRealParameter("SingleValue",1,2)==9,
          "Array undo failed to restore initial values");
+      require(window.applyResourceChanges("QtMatrix",{{"RmatValue","1 2; 3 4; 5 6"}},arrayScript).isEmpty(),
+         "Array resize failed");
+      array=Moderator::Instance()->GetConfiguredObject("QtMatrix");
+      require(array->GetIntegerParameter("NumRows")==3 && array->GetIntegerParameter("NumCols")==2 &&
+         array->GetRealParameter("SingleValue",2,1)==6,"Array resize did not survive engine reconstruction");
+      editor->undo(); require(editor->toPlainText()==arrayScript && window.buildScript(),"Array resize undo failed");
       require(!window.createResource("Array","InvalidDimensions",editor->toPlainText(),0,3).isEmpty(),
          "Zero-sized array accepted");
       require(window.createResource("Array","CreatedArray",editor->toPlainText(),3,2).isEmpty(),"Array creation failed");

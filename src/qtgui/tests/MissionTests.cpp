@@ -62,6 +62,24 @@ int main(int argc,char **argv)
          require(result==expected,"Vary form changed unrelated source");
          form.findChild<QLineEdit *>("commandField_Initial value")->setText("3.5");
          expected.replace("x = 1","x = 3.5"); require(result==expected,"Multiple field edits lost a value");
+         const QString loop="For 'Keep loop' i = 1:2:7;\n   total = total + i; % body stays exact\nEndFor;";
+         form.setStatement(loop);
+         auto *step=form.findChild<QLineEdit *>("commandField_Step");
+         require(step && !form.isHidden(),"For controls missing");
+         step->setText("3"); expected=loop; expected.replace("1:2:7","1:3:7");
+         require(result==expected,"For control changed branch contents or label");
+         const QString condition="If 'Choose' total > 2 & i < 9;\n total = 8;\nElse;\n total = 4;\nEndIf;";
+         form.setStatement(condition);
+         auto *predicate=form.findChild<QLineEdit *>("commandField_Condition");
+         require(predicate,"Conditional controls missing"); predicate->setText("total >= 3");
+         expected=condition; expected.replace("total > 2 & i < 9","total >= 3");
+         require(result==expected,"Condition editor changed branch bodies");
+         const QString assignment="GMAT total = sqrt(4) + 3; % preserve comment\n";
+         form.setStatement(assignment);
+         auto *expression=form.findChild<QLineEdit *>("commandField_Expression");
+         require(expression,"Assignment controls missing"); expression->setText("sqrt(9) + 4");
+         expected=assignment; expected.replace("sqrt(4) + 3","sqrt(9) + 4");
+         require(result==expected,"Assignment control changed other source");
          const QString branch="Target 'Keep label' DC {ExitMode = SaveAndContinue, SolveMode = Solve};\n   Vary DC(x = 1);\nEndTarget;";
          form.setStatement(branch);
          auto *exitMode=form.findChild<QLineEdit *>("commandField_ExitMode");
@@ -71,7 +89,9 @@ int main(int argc,char **argv)
          for (const auto &statement:{"Maneuver 'Keep label' Burn(Sat);","BeginFiniteBurn Burn(Sat);",
               "Achieve DC(x = 7, {Tolerance = 0.001});","Minimize Opt(cost);",
               "NonlinearConstraint Opt(x <= 4);","Report R x y;","FindEvents Locator {Append = true};",
-              "[out] = cross(vec1, vec2);","myFunction(input);"}) {
+              "[out] = cross(vec1, vec2);","myFunction(input);",
+              "Toggle PlotA PlotB Off;","Global Sat total;","Clear Sat total;",
+              "For i = 1:3;\nEndFor;","While total < 3;\nEndWhile;"}) {
             form.setStatement(statement); require(!form.isHidden(),"Command-specific form missing");
          }
          form.setStatement("% Preserve advanced script\nUnknown foo;"); require(form.isHidden(),"Unknown command was simplified");
@@ -93,6 +113,27 @@ int main(int argc,char **argv)
          return value->GetRealParameter("Value");
       };
       require(total()==6,"Initial mission result incorrect");
+      {
+         QString changed;
+         CommandForm form([&](const QString &value) { changed=value; });
+         snapshot=window.missionSnapshot();
+         const auto index=find(snapshot,"For");
+         form.setStatement(snapshot.nodes[index].statement);
+         auto *step=form.findChild<QLineEdit *>("commandField_Step");
+         require(step,"Real mission For header has no step control"); step->setText("2");
+         require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,changed).isEmpty() && total()==5,
+            "For form edit did not execute with the new step");
+         editor->undo(); require(window.buildScript() && total()==6,"For form undo changed mission results");
+         snapshot=window.missionSnapshot();
+         const auto condition=find(snapshot,"If");
+         form.setStatement(snapshot.nodes[condition].statement);
+         auto *predicate=form.findChild<QLineEdit *>("commandField_Condition");
+         if (!predicate) std::cerr<<"Condition source: "<<snapshot.nodes[condition].statement.toStdString()<<std::endl;
+         require(predicate,"Real mission If header has no condition control"); predicate->setText("count ~= 0");
+         require(window.applyMissionChange(snapshot,condition,MissionEdit::Replace,changed).isEmpty() && total()==-196,
+            "Condition form edit did not execute the correct branch");
+         editor->undo(); require(window.buildScript() && total()==6,"Condition form undo changed mission results");
+      }
       snapshot=window.missionSnapshot();
       const int assignment=forAssignment(snapshot);
       const auto error=window.applyMissionChange(snapshot,assignment,MissionEdit::Replace,"total = total + 2;");

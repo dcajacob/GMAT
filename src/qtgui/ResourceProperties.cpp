@@ -3,6 +3,7 @@
 #include "BaseException.hpp"
 #include "Moderator.hpp"
 #include "Rmatrix.hpp"
+#include "Array.hpp"
 #include "Rvector.hpp"
 #include <QRegularExpression>
 #include <cmath>
@@ -226,9 +227,15 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
    case Gmat::RVECTOR_TYPE:
    case Gmat::RMATRIX_TYPE: {
       const bool vector=object.GetParameterType(id)==Gmat::RVECTOR_TYPE;
-      const int rows=vector ? 1 : object.GetRmatrixParameter(id).GetNumRows();
-      const int columns=vector ? object.GetRvectorParameter(id).GetSize() : object.GetRmatrixParameter(id).GetNumColumns();
+      int rows=vector ? 1 : object.GetRmatrixParameter(id).GetNumRows();
+      int columns=vector ? object.GetRvectorParameter(id).GetSize() : object.GetRmatrixParameter(id).GetNumColumns();
       const auto inputRows=value.trimmed().split(';');
+      if (arrayValues) {
+         rows=inputRows.size();
+         columns=inputRows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
+         if (rows<1 || columns<1 || rows>1000 || columns>1000 || rows*columns>100000)
+            throw std::runtime_error("Array dimensions must be positive and contain at most 100000 cells");
+      }
       if (inputRows.size()!=rows) throw std::runtime_error("Keep the existing number of rows; separate rows with semicolons");
       Rmatrix matrix(rows,columns);
       for (int r=0;r<rows;++r) {
@@ -244,7 +251,10 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
          Rvector values(columns);
          for (int c=0;c<columns;++c) values[c]=matrix(0,c);
          object.SetRvectorParameter(id,values);
-      } else object.SetRmatrixParameter(id,matrix);
+      } else {
+         if (arrayValues) static_cast<Array &>(object).SetSize(rows,columns);
+         object.SetRmatrixParameter(id,matrix);
+      }
       break;
    }
    case Gmat::REAL_TYPE: {
