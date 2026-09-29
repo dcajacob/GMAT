@@ -20,6 +20,7 @@ public:
    ~MainWindow() override;
    bool initialize(const QString &startup);
    bool loadScript(const QString &path);
+   bool saveScriptTo(const QString &path);
    bool buildScript();
    enum class RunResult { Completed, Stopped, Failed, Busy };
    RunResult runMission();

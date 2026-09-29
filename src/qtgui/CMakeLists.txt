@@ -21,6 +21,8 @@ endif()
 
 option(GMAT_QT_BUILD_TESTS "Build Qt frontend integration tests" OFF)
 if(GMAT_QT_BUILD_TESTS)
+   add_executable(GmatQtFileTests tests/FileTests.cpp)
+   target_link_libraries(GmatQtFileTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
    target_link_libraries(GmatQtWorkflowTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtPlotTests tests/PlotTests.cpp)

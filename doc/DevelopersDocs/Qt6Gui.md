@@ -72,6 +72,10 @@ The initial shell compiles with Qt 6.10.2 on Linux, initializes the engine,
 loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only
 changes document identity and modified state after successful commit.
+Script files use UTF-8. Malformed or truncated UTF-8 is rejected before replacing
+the current document, instead of silently substituting or dropping bytes.
+GUI messages retain the UTF-8-first, locale-fallback behavior of the earlier fix,
+including incomplete sequences at the end of a message.
 
 Mission execution now services Qt events through GMAT's existing interruption
 checkpoints. Engine and UI access remain on one thread. Run, Pause, Resume,
@@ -142,6 +146,30 @@ Still required: specialized resource and command forms, compound properties,
 plugin compatibility handling, advanced graphics and plot
 style parity, wider functional coverage, and platform build/package validation.
 Only Linux has been built and exercised so far.
+
+### PR-fix audit
+
+The integration baseline `0ef9a8a` is an ancestor of the Qt branch. Existing
+non-Qt fixes remain present; Qt equivalents have separate runtime checks:
+
+| Earlier fix | Qt evidence |
+| --- | --- |
+| Failed reload retains edits and undo (`bfe0c35`) | `GmatQtFileTests`: missing/malformed files leave text, dirty state and undo/redo intact |
+| Failed save retains identity (`d8f14d4`) | `GmatQtFileTests`: failed new destination leaves title/dirty state/original bytes intact; later save succeeds |
+| UTF-8 messages with locale fallback (`916d796`) | `GmatQtFileTests`: valid Unicode and incomplete trailing sequence |
+| Reversible zoom and retained replay (`19dd83b`, `cd2eaca`, `34140f6`) | `GmatQtPlotTests`: inverse zoom and replay without history mutation |
+| GroundTrack sampling, sparse data, station validation | `GmatQtPlotTests`: numerical report comparison, collection/retention settings, absent satellites, invalid station |
+| Close/reopen and mixed plot safety | `GmatQtPlotTests`: mixed subscribers, close during execution, reopen and repeat run |
+
+Build `GmatQtFileTests` with the other Qt tests and run it without a startup file:
+
+```
+QT_QPA_PLATFORM=offscreen build/linux-gui/src/qtgui/GmatQtFileTests
+```
+
+These tests exercise the real editor and atomic save implementation in temporary
+directories. They do not initialize a mission engine or alter user scripts.
+The existing wx/console exit regression remains a separate shared-engine check.
 
 ## Mission sequence editing
 

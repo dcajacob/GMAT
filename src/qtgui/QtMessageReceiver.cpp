@@ -171,7 +171,7 @@ void QtMessageReceiver::DeliverMessage(const std::string &msg)
    if (!context || !callback)
       return;
 
-   QStringDecoder decoder(QStringDecoder::Utf8);
+   QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless);
    QString text = decoder(QByteArrayView(msg.data(), static_cast<qsizetype>(msg.size())));
    if (decoder.hasError())
       text = QString::fromLocal8Bit(msg.data(), static_cast<qsizetype>(msg.size()));

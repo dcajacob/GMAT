@@ -32,6 +32,7 @@
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QSaveFile>
+#include <QStringDecoder>
 #include <QSettings>
 #include <QStatusBar>
 #include <QTabWidget>
@@ -343,7 +344,13 @@ bool MainWindow::loadScript(const QString &path)
    if (!file.open(QIODevice::ReadOnly)) { QMessageBox::warning(this, "Open failed", file.errorString()); return false; }
    const QByteArray bytes = file.readAll();
    if (file.error() != QFileDevice::NoError) { QMessageBox::warning(this, "Read failed", file.errorString()); return false; }
-   editor->setPlainText(QString::fromUtf8(bytes));
+   QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless);
+   const QString text=decoder(bytes);
+   if (decoder.hasError()) {
+      QMessageBox::warning(this,"Open failed","This script is not valid UTF-8. Convert its encoding before opening it.");
+      return false;
+   }
+   editor->setPlainText(text);
    scriptPath = path; editor->document()->setModified(false); updateTitle(); return true;
 }
 bool MainWindow::saveScript(bool saveAs)
@@ -351,6 +358,11 @@ bool MainWindow::saveScript(bool saveAs)
    if (running) return false;
    QString path = scriptPath;
    if (saveAs || path.isEmpty()) path = QFileDialog::getSaveFileName(this, "Save GMAT script", path, "GMAT scripts (*.script)");
+   return saveScriptTo(path);
+}
+bool MainWindow::saveScriptTo(const QString &path)
+{
+   if (running) return false;
    if (path.isEmpty()) return false;
    QSaveFile file(path);
    const QByteArray bytes = editor->toPlainText().toUtf8();
