@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance controls covered; multi-propagator/multi-stop pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator configuration pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -1223,3 +1223,24 @@ synchronized propagators or other advanced Propagate options.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 34.38 seconds. Evidence:
 `Qt6ParityValidation/check-propagation-options.txt`.
+
+## Multiple stopping-condition table
+
+CommandEditor now offers Stopping conditions for representable Propagate stop
+blocks, independently of the single-stop quick form. The two-column dialog adds,
+removes and reorders paired parameter/goal rows; shared parameter browsers support
+both scalar and apsis conditions. Apsis goals are blank/read-only, blank rows cannot
+be accepted, and source-only expressions remain protected by parsing checks.
+StopTolerance/OrbitColor options, the propagation header, labels and comments are
+retained. OK makes one source undo step, with engine validation deferred to Apply.
+
+WorkflowTests covers the multiple-stop button, Cancel, editable column widths,
+blank-row rejection, paired movement/removal, apsis goal protection and source Undo.
+CompatibilityTests adds an elapsed-days stop through the new table to a 600-second
+command with a tolerance and comment. After save/Save As, failed-build recovery and
+reopen, execution must end at 86.4 seconds (0.001 days), the earlier condition.
+This qualifies multi-stop editing; synchronized/multiple-propagator configuration
+and broader stopping-expression combinations remain pending.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 54.61 seconds. Evidence:
+`Qt6ParityValidation/check-multiple-stops.txt`.

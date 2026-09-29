@@ -296,8 +296,8 @@ commands. A Propagation form supports one spacecraft, one propagator, and a
 single parameter/value stop condition, including elapsed seconds or days. Resource
 selectors use the current mission; changing the spacecraft also changes an elapsed-
 time stop condition. The form and script text stay synchronized, preserving labels,
-comments and an existing BackProp modifier. Multiple propagators/stops still use the script editor; periapsis and apoapsis
-event conditions are supported by the form.
+comments and an existing BackProp modifier. Multiple stops are edited through Stopping conditions; propagator grouping still
+uses the script editor. Periapsis and apoapsis are supported by both stop editors.
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
@@ -978,3 +978,12 @@ Propagation controls also include **Propagate backwards** and **Stop tolerance**
 The tolerance field shows GMAT's current default as its placeholder; leaving it
 blank omits the option. Enter a positive tolerance to override it. Existing option
 formatting, labels and comments are preserved when editing represented commands.
+
+### Multiple propagation stops
+
+**Stopping conditions…** opens an editable parameter/goal table in the command
+editor. Add or remove conditions, move rows with their goals, or use the parameter
+pickers. Periapsis/apoapsis rows have no editable goal. Columns are adjustable.
+Propagation stops when any condition is satisfied. OK updates the source as one
+undoable edit; Cancel leaves it unchanged, and Apply validates the mission.
+Existing StopTolerance and OrbitColor options remain in the command.

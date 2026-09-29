@@ -1,5 +1,6 @@
 #include "CommandEditor.hpp"
 #include "PropagationForm.hpp"
+#include "PropagationStopsDialog.hpp"
 #include "CommandForm.hpp"
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -26,6 +27,14 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    layout->addWidget(propagation);
    connect(source,&QPlainTextEdit::textChanged,propagation,[this,propagation] { propagation->setStatement(source->toPlainText()); });
    propagation->setStatement(statement);
+   auto *stops=new QPushButton("Stopping conditions…",this); stops->setObjectName("editPropagationStops"); layout->addWidget(stops);
+   auto showStops=[this,stops] { stops->setVisible(PropagationStopsDialog::supports(source->toPlainText())); };
+   connect(source,&QPlainTextEdit::textChanged,this,showStops); showStops();
+   connect(stops,&QPushButton::clicked,this,[this] {
+      PropagationStopsDialog dialog(source->toPlainText(),this);
+      if (dialog.exec()!=QDialog::Accepted) return;
+      auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document); cursor.insertText(dialog.statement()); cursor.endEditBlock();
+   });
    auto *command=new CommandForm([this](const QString &text) {
       auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
       cursor.insertText(text); cursor.endEditBlock();

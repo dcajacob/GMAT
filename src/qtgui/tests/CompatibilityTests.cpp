@@ -10,6 +10,7 @@
 #include "ResourceProperties.hpp"
 #include "ResourceEditor.hpp"
 #include "PropagationForm.hpp"
+#include "CommandEditor.hpp"
 #include <QComboBox>
 #include <QCheckBox>
 #include <QTableWidget>
@@ -415,6 +416,28 @@ int main(int argc,char **argv)
          auto *engine=Moderator::Instance()->GetConfiguredObject("ElectricEngine");
          require(engine->GetRealParameter("ThrustCoeff5")==0.0125 && engine->GetRealParameter("MassFlowCoeff5")==0.0125,
             "Electric coefficients lost during save/reopen");
+      }
+      {
+         editor->setPlainText("Create Spacecraft StopSat;\nCreate ForceModel StopForces;\nCreate Propagator StopProp;\nStopProp.FM = StopForces;\n"
+            "BeginMissionSequence;\nPropagate 'First satisfied' StopProp(StopSat) {StopSat.ElapsedSecs = 600, StopTolerance = 1e-8}; % retain multi stop\n");
+         require(window.buildScript(),"Multiple-stop fixture failed");
+         const auto snapshot=window.missionSnapshot(); int index=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="Propagate") index=i;
+         require(index>=0,"Multiple-stop command missing"); QWidget owner; QString error="Not applied";
+         CommandEditor panel(snapshot.nodes[index].statement,false,{},[&](const auto &replacement) {
+            error=window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement); return error;
+         },{"StopProp"},{"StopSat"},&owner);
+         QTimer::singleShot(0,[&] {
+            auto *dialog=panel.findChild<QDialog *>("propagationStopsDialog"); auto *grid=dialog->findChild<QTableWidget *>("propagationStopsTable");
+            dialog->findChild<QPushButton *>("propagationStopAdd")->click(); grid->item(1,0)->setText("StopSat.ElapsedDays"); grid->item(1,1)->setText("0.001");
+            dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+         }); panel.findChild<QPushButton *>("editPropagationStops")->click();
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(error.isEmpty(),qPrintable(error));
+         require(QRegularExpression("StopTolerance\\s*=\\s*([^,}]+)").match(editor->toPlainText()).captured(1).toDouble()==1e-8 && editor->toPlainText().contains("% retain multi stop"),"Stop editor lost tolerance or comment");
+         roundTrip("multiple-stops"); const double initial=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("StopSat"))->GetEpoch();
+         require(window.runMission()==MainWindow::RunResult::Completed,"Multiple-stop execution failed");
+         const double final=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("StopSat"))->GetEpoch();
+         require(std::abs((final-initial)*86400.-86.4)<.01,"Multiple-stop mission did not stop at first satisfied condition");
       }
       {
          editor->setPlainText("Create Spacecraft ApsisSat;\nApsisSat.DisplayStateType = Keplerian;\n"

@@ -16,6 +16,7 @@
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
 #include "PropagationForm.hpp"
+#include "PropagationStopsDialog.hpp"
 #include "CommandEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "ScriptCompatibility.hpp"
@@ -70,6 +71,11 @@ int main(int argc, char **argv)
    try {
       TestSettings isolatedSettings;
       {
+         const QString stopSource="Propagate 'Keep' BackProp Prop(Sat) {Sat.ElapsedSecs = 60, StopTolerance = 1e-8, OrbitColor = Green}; % comment";
+         PropagationStopsDialog stops(stopSource);
+         stops.findChild<QTableWidget *>("propagationStopsTable")->item(0,1)->setText("120");
+         auto stopExpected=stopSource; stopExpected.replace("= 60,","= 120,");
+         require(stops.statement()==stopExpected,"Stop table changed options, modifier, label or comment");
          QString changed; PropagationForm form({"Prop"},{"Sat"},[&](const QString &value) { changed=value; });
          const QString source="  Propagate 'Keep label' BackProp Prop(Sat) {Sat.A1ModJulian = 20000}; % keep comment\n";
          form.setStatement(source); require(!form.isHidden(),"Labeled custom propagation hidden");
@@ -907,6 +913,25 @@ int main(int argc, char **argv)
       const QString advanced="Propagate QtProp(QtSat) {QtSat.ElapsedSecs = 600, QtSat.Earth.Periapsis};";
       commandText->setPlainText(advanced);
       require(form->isHidden() && commandText->toPlainText()==advanced,"Form simplified an advanced command");
+      auto *editStops=commandPanel->findChild<QPushButton *>("editPropagationStops"); require(editStops && !editStops->isHidden(),"Multiple stopping conditions lack GUI editor");
+      QTimer::singleShot(0,[&] {
+         auto *dialog=commandPanel->findChild<QDialog *>("propagationStopsDialog"); auto *table=dialog->findChild<QTableWidget *>("propagationStopsTable");
+         require(table->rowCount()==2 && table->item(1,1)->text().isEmpty() && !(table->item(1,1)->flags() & Qt::ItemIsEditable),"Apsis row has editable goal");
+         table->item(0,1)->setText("120"); dialog->reject();
+      }); editStops->click(); require(commandText->toPlainText()==advanced,"Stopping conditions Cancel changed command");
+      QTimer::singleShot(0,[&] {
+         auto *dialog=commandPanel->findChild<QDialog *>("propagationStopsDialog"); auto *table=dialog->findChild<QTableWidget *>("propagationStopsTable");
+         require(table->horizontalHeader()->sectionResizeMode(0)==QHeaderView::Interactive,"Stop columns are locked");
+         dialog->findChild<QPushButton *>("propagationStopAdd")->click();
+         require(!dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->isEnabled(),"Blank stop row accepted");
+         table->item(2,0)->setText("QtSat.ElapsedDays"); table->item(2,1)->setText("0.001");
+         dialog->findChild<QPushButton *>("propagationStopUp")->click();
+         require(table->item(1,0)->text()=="QtSat.ElapsedDays" && table->item(1,1)->text()=="0.001","Stop reorder detached goal");
+         table->selectRow(2); dialog->findChild<QPushButton *>("propagationStopRemove")->click();
+         dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+      }); editStops->click();
+      require(commandText->toPlainText().contains("QtSat.ElapsedSecs = 600, QtSat.ElapsedDays = 0.001"),"Multiple stop GUI source update failed");
+      commandText->undo(); require(commandText->toPlainText()==advanced,"Stopping conditions edit was not one undo step");
       commandText->setPlainText(originalCommand);
       auto *duration=commandPanel->findChild<QLineEdit *>("propagationDuration");
       auto *units=commandPanel->findChild<QComboBox *>("propagationUnits");

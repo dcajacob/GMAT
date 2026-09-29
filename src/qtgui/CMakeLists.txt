@@ -14,6 +14,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
    ReportViewer.cpp ReportViewer.hpp
+   PropagationStopsDialog.cpp PropagationStopsDialog.hpp
    OrbitRenderer.cpp OrbitRenderer.hpp
    OrbitCamera.hpp
    StarCatalog.cpp StarCatalog.hpp
