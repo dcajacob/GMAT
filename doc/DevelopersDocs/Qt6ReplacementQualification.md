@@ -102,7 +102,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
-| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Full-file search remains pending. |
+| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
 | `src/gui/output/CompareReportPanel.hpp` | Pending audit |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
@@ -1142,7 +1142,26 @@ characters and a CRLF at boundaries, exercises backward/jump navigation, retains
 content after a missing-file error, reaches a marker beyond 17 MiB, then reloads
 a shorter replacement. Existing Compatibility/Plot report checks retain exact
 small-report text, path-in-title, read-only/no-wrap, selection and close behavior.
-Full-file search and wx report-comparison workflows remain pending.
+Case-sensitive full-file search follows below; wx report-comparison workflows remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 31.05 seconds. Evidence:
 `Qt6ParityValidation/check-report-paging.txt`.
+
+## Complete report search
+
+ReportViewer now supports a separate case-sensitive literal search across the
+complete file, next non-overlapping match and cancellation. A zero-interval Qt
+timer scans one MiB per callback with bounded overlap for cross-chunk matches;
+closing the viewer destroys the timer/file objects. Navigation/reload cancels an
+active scan. Results navigate to the matching page, highlight its visible portion
+and explicitly identify a result continuing onto the next page. Search file
+restarts from the beginning; exhaustion does not wrap silently.
+
+FileTests covers a match spanning a page boundary, a Unicode character deferred
+to the next page, advancing matches, cancellation, no-match feedback and finding
+a marker beyond 17 MiB. Page-local Find retains its existing richer options.
+Case-insensitive/whole-word full-file modes and report comparison are not claimed
+by this milestone.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 33.34 seconds. Evidence:
+`Qt6ParityValidation/check-report-search.txt`.

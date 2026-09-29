@@ -953,3 +953,10 @@ and Windows line endings remain intact. **Find…** searches the displayed page.
 **Reload** reads the current file again, including replacements or appended data;
 if the file shrank, the page is adjusted automatically. Read failures retain the
 previous display and show an error. Viewing a report does not modify its file.
+
+Report windows also provide **Search file**, which starts at the beginning and
+searches the complete file for the entered text, matching case exactly. **Next
+match** continues after the current result; **Stop** cancels a scan. Searches run
+in bounded chunks, navigate to the matching page, and highlight the visible part
+of the result. A message identifies matches continuing on the next page. The
+existing **Find…** control remains available for richer searches within one page.

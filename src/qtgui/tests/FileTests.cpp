@@ -3,6 +3,8 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include <QLabel>
+#include <QLineEdit>
+#include <QElapsedTimer>
 #include "TestSettings.hpp"
 #include "QtMessageReceiver.hpp"
 #include "StartupCompatibility.hpp"
@@ -75,11 +77,26 @@ int main(int argc,char **argv)
          require(viewer.findChild<QSpinBox *>("reportPage")->value()==3,"Previous page failed");
          viewer.findChild<QSpinBox *>("reportPage")->setValue(1);
          require(text->toPlainText().startsWith("row 123"),"Jump to report page failed");
+         auto *query=viewer.findChild<QLineEdit *>("reportFileSearchText");
+         auto *search=viewer.findChild<QPushButton *>("reportSearchFile"),*stop=viewer.findChild<QPushButton *>("reportStopSearch");
+         auto complete=[&] { QElapsedTimer timer; timer.start(); while (stop->isEnabled() && timer.elapsed()<10000) app.processEvents(QEventLoop::AllEvents,10); require(!stop->isEnabled(),"File search did not finish"); };
+         query->setText(QString::fromUtf8("123€next")); search->click(); complete();
+         require(viewer.findChild<QLabel *>("reportPageStatus")->text().contains("continues on the next page") && text->textCursor().selectedText()=="123", "Cross-page file match was missed or highlighted incorrectly");
+         query->setText(QString::fromUtf8("€")); search->click(); complete();
+         require(text->textCursor().selectedText()==QString::fromUtf8("€"),"UTF-8 boundary match did not navigate/highlight");
+         query->setText("next row"); search->click(); complete(); const auto matchPosition=text->textCursor().selectionStart();
+         viewer.findChild<QPushButton *>("reportNextMatch")->click(); complete();
+         require(text->textCursor().selectionStart()>matchPosition,"Next file match did not advance");
+         query->setText("absent phrase"); search->click(); require(stop->isEnabled(),"Search cannot be canceled"); stop->click();
+         require(viewer.findChild<QLabel *>("reportPageStatus")->text().contains("stopped"),"Canceled search lacked feedback");
+         search->click(); complete(); require(viewer.findChild<QLabel *>("reportPageStatus")->text().contains("No further matches"),"Missing search text not diagnosed");
          const auto retained=text->toPlainText(); require(QFile::rename(report,report+".old"),"Report rename failed");
          viewer.findChild<QPushButton *>("reportReload")->click();
          require(text->toPlainText()==retained && viewer.findChild<QLabel *>("reportPageStatus")->text().contains("unavailable"),"Missing report discarded displayed content or hid error");
          QFile large(report); require(large.open(QIODevice::WriteOnly) && large.resize(17*chunk) && large.seek(17*chunk),"Large report fixture failed");
          large.write("beyond original preview limit\n"); large.close();
+         query->setText("beyond original"); search->click(); complete();
+         require(text->textCursor().selectedText()=="beyond original","Complete-file search did not reach beyond preview limit");
          viewer.findChild<QPushButton *>("reportLast")->click();
          require(text->toPlainText()=="beyond original preview limit\n","Cannot inspect report beyond 16 MiB");
          write(report,"short replacement\n"); viewer.findChild<QPushButton *>("reportReload")->click();
