@@ -9,6 +9,7 @@ class QTreeWidget;
 class QCloseEvent;
 class QtMessageReceiver;
 class QtInterpreter;
+class QtPlotReceiver;
 class QAction;
 class MainWindow : public QMainWindow
 {
@@ -24,12 +25,14 @@ public:
    void resumeMission();
    void stopMission();
    bool isRunning() const { return running; }
+   QtPlotReceiver *plotReceiver() const { return plots.get(); }
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
 private:
    void refreshTrees();
+   void refreshOutput();
    void newMission();
    bool saveScript(bool saveAs = false);
    bool confirmDiscard();
@@ -43,12 +46,14 @@ private:
    QTreeWidget *output;
    std::unique_ptr<QtMessageReceiver> receiver;
    std::unique_ptr<QtInterpreter> interpreter;
+   std::unique_ptr<QtPlotReceiver> plots;
    QList<QAction *> editingActions;
    QAction *runAction = nullptr;
    QAction *pauseAction = nullptr;
    QAction *stopAction = nullptr;
    QString scriptPath;
    QString builtScript;
+   QMap<QString, QString> reportFiles;
    bool modelValid = false;
    bool ready = false;
    bool running = false;

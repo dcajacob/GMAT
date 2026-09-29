@@ -1,7 +1,8 @@
 find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets)
 add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
-   ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp)
+   ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
+   PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets GmatBase GmatUtil)
 target_include_directories(GmatQtFrontend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 add_executable(GmatQt main.cpp)
@@ -20,4 +21,6 @@ option(GMAT_QT_BUILD_TESTS "Build Qt frontend integration tests" OFF)
 if(GMAT_QT_BUILD_TESTS)
    add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
    target_link_libraries(GmatQtWorkflowTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtPlotTests tests/PlotTests.cpp)
+   target_link_libraries(GmatQtPlotTests PRIVATE GmatQtFrontend)
 endif()

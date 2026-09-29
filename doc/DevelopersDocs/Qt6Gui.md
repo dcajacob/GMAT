@@ -84,7 +84,55 @@ plotting, platform parity, or all property types. The separate wx/console
 exit regression checks shared-engine behavior.
 
 This remains an implementation checkpoint, not a completed replacement.
-Still required: actual orbit/ground-track/XY plots, specialized resource
-forms and compound properties, mission command editing, output navigation,
-plugin compatibility handling, wider functional coverage, and platform
-build/package validation. Only Linux has been built and exercised so far.
+Still required: specialized resource forms and compound properties, mission
+command editing, plugin compatibility handling, advanced graphics and plot
+style parity, wider functional coverage, and platform build/package validation.
+Only Linux has been built and exercised so far.
+
+## Plotting and output
+
+The Qt receiver now records and renders native OrbitView, GroundTrack,
+GroundTrackPlot, XYPlot and DynamicDataDisplay publications. Plot windows use
+the central MDI workspace and can be reopened from Output without losing
+their recorded samples. The receiver retains numeric data independently of
+window lifetime; a rebuild starts a fresh recording. Body and coordinate
+system pointers are used only while receiving engine publications, never
+during drawing or replay.
+
+OrbitView is currently an orthographic trajectory view with body disks,
+rotation, pan, reversible wheel zoom, Fit, image export, and replay. It uses
+the view-coordinate positions already converted by OrbitPlot; non-spacecraft
+bodies are converted from the internal frame separately. This is not yet the
+full wx 3D renderer: body textures, spacecraft models, star fields, reference
+planes, and scripted camera tracking remain outstanding. Unsupported camera
+and drawing options are reported in Message Window. Advanced XY marker/style
+and solver-iteration behavior also needs parity work.
+
+GroundTrack uses the engine's geodetic longitude/latitude, resolved body map,
+collection/update frequencies, configured point limit and line width. Missing
+satellites preserve their curve slots and break the line. Dateline crossings
+split at the map boundary. GroundTrackPlot's older Cartesian callback path
+is implemented but still needs its own full engine regression. Ground station
+markers reject objects that are not body-fixed points. Replay does not mutate
+the retained histories. QPainter handles physical display scaling.
+
+Dynamic tables preserve displayed values and cell colors when closed and
+reopened. Output also lists report files and opens a read-only preview of up
+to 16 MiB; larger files retain their complete contents on disk.
+
+Build `GmatQtPlotTests` with `GMAT_QT_BUILD_TESTS=ON`, then run:
+
+```
+QT_QPA_PLATFORM=offscreen build/linux-gui/src/qtgui/GmatQtPlotTests \
+  /absolute/path/to/host-startup.txt src/qtgui/tests/plots.script \
+  /tmp/gmat-qt-plots.png
+```
+
+This real-engine test compares final orbit XYZ, XY samples, and geodetic
+longitude/latitude with a 16-digit GMAT report. It also verifies map loading,
+sampling and retention settings, dateline interpolation, missing samples,
+invalid station handling, close-during-run/reopen/rerun, reversible zoom,
+replay retention, dynamic-table values/colors, and Output report opening.
+The test has passed at display scale 1 and 2. The existing Qt workflow suite
+continues to pass with the plot receiver installed. These checks do not
+establish complete graphics or cross-platform parity.

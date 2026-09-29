@@ -3,6 +3,8 @@
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "QtPlotReceiver.hpp"
+#include "PlotInterface.hpp"
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
 #include "BaseException.hpp"
@@ -36,6 +38,7 @@ MainWindow::MainWindow()
    workspace->setObjectName("workspace");
    workspace->setBackground(palette().mid());
    setCentralWidget(workspace);
+   plots = std::make_unique<QtPlotReceiver>(workspace);
    auto *navigation = new QDockWidget("Mission workspace", this);
    navigation->setObjectName("navigation");
    auto *tabs = new QTabWidget(navigation);
@@ -51,6 +54,29 @@ MainWindow::MainWindow()
    resources = makeTree("Resources");
    mission = makeTree("Mission");
    output = makeTree("Output");
+   plots->changed = [this] { refreshOutput(); };
+   connect(output, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
+      const auto name = item->data(0, Qt::UserRole).toString();
+      if (item->data(0, Qt::UserRole+1).toString()=="report") {
+         if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
+         QFile file(name);
+         if (!file.open(QIODevice::ReadOnly)) { statusBar()->showMessage("Report is not available: " + file.errorString()); return; }
+         constexpr qint64 limit = 16 * 1024 * 1024;
+         const auto bytes = file.read(limit);
+         if (file.error()!=QFileDevice::NoError) { statusBar()->showMessage("Report read failed: " + file.errorString()); return; }
+         auto *viewer = new QPlainTextEdit;
+         viewer->setObjectName("report:" + item->text(0));
+         viewer->setReadOnly(true);
+         viewer->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+         viewer->setLineWrapMode(QPlainTextEdit::NoWrap);
+         viewer->setPlainText(QString::fromUtf8(bytes));
+         if (!file.atEnd()) viewer->appendPlainText("\n[Preview limited to the first 16 MiB. The complete report is saved at " + name + "]");
+         auto *child = workspace->addSubWindow(viewer);
+         child->setAttribute(Qt::WA_DeleteOnClose);
+         child->setWindowTitle(item->text(0) + " — Report");
+         child->resize(750,500); child->show();
+      } else if (!name.isEmpty()) plots->show(name);
+   });
    navigation->setWidget(tabs);
    addDockWidget(Qt::LeftDockWidgetArea, navigation);
    auto *console = new QDockWidget("Message Window", this);
@@ -160,8 +186,10 @@ MainWindow::MainWindow()
 }
 MainWindow::~MainWindow()
 {
+   plots->changed = {};
    Moderator::SetUiInterpreter(nullptr);
    if (ready) Moderator::Instance()->Finalize();
+   PlotInterface::SetPlotReceiver(nullptr);
    MessageInterface::SetMessageReceiver(nullptr);
 }
 bool MainWindow::initialize(const QString &startup)
@@ -171,6 +199,7 @@ bool MainWindow::initialize(const QString &startup)
       messages->moveCursor(QTextCursor::End); messages->insertPlainText(text);
    });
    MessageInterface::SetMessageReceiver(receiver.get());
+   PlotInterface::SetPlotReceiver(plots.get());
    try {
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
       if (ready) {
@@ -185,6 +214,7 @@ bool MainWindow::initialize(const QString &startup)
 void MainWindow::newMission()
 {
    if (!ready || running) return;
+   plots->clear();
    Moderator::Instance()->LoadDefaultMission();
    editor->setPlainText(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)));
    builtScript = editor->toPlainText(); modelValid = true;
@@ -252,6 +282,7 @@ bool MainWindow::buildScript()
       }
    }
    bool success = false;
+   plots->clear();
    try {
       std::istringstream stream(editor->toPlainText().toStdString());
       success = Moderator::Instance()->InterpretScript(&stream, true);
@@ -265,6 +296,7 @@ bool MainWindow::buildScript()
 void MainWindow::refreshTrees()
 {
    resources->clear(); mission->clear(); output->clear();
+   reportFiles.clear();
    auto *root = new QTreeWidgetItem(resources, {"Resources"});
    const std::pair<const char *, UnsignedInt> groups[] = {
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
@@ -276,6 +308,11 @@ void MainWindow::refreshTrees()
    for (const auto &group : groups) {
       auto *category = new QTreeWidgetItem(root, {group.first});
       for (const auto &name : Moderator::Instance()->GetListOfObjects(group.second)) {
+         if (group.second == Gmat::SUBSCRIBER) {
+            auto *object = Moderator::Instance()->GetConfiguredObject(name);
+            if (object && object->IsOfType(Gmat::REPORT_FILE))
+               reportFiles.insert(QString::fromStdString(name), QString::fromStdString(object->GetStringParameter("FullPathFileName")));
+         }
          if (group.second == Gmat::PARAMETER) {
             auto *parameter = dynamic_cast<Parameter *>(Moderator::Instance()->GetConfiguredObject(name));
             if (!parameter || parameter->GetKey() == GmatParam::SYSTEM_PARAM) continue;
@@ -290,7 +327,24 @@ void MainWindow::refreshTrees()
    for (auto *command = Moderator::Instance()->GetFirstCommand(); command && seen.insert(command).second; command = command->GetNext())
       new QTreeWidgetItem(sequence, {QString::fromStdString(command->GetTypeName())});
    sequence->setExpanded(true);
-   new QTreeWidgetItem(output, {"Reports"}); new QTreeWidgetItem(output, {"Plots"});
+   refreshOutput();
+}
+void MainWindow::refreshOutput()
+{
+   output->clear();
+   auto *reports = new QTreeWidgetItem(output, {"Reports"});
+   for (auto it = reportFiles.cbegin(); it != reportFiles.cend(); ++it) {
+      auto *item = new QTreeWidgetItem(reports, {it.key()});
+      item->setData(0, Qt::UserRole, it.value());
+      item->setData(0, Qt::UserRole+1, "report");
+   }
+   reports->setExpanded(true);
+   auto *folder = new QTreeWidgetItem(output, {"Plots"});
+   for (const auto &name : plots->names()) {
+      auto *item = new QTreeWidgetItem(folder, {name});
+      item->setData(0, Qt::UserRole, name);
+   }
+   folder->setExpanded(true);
 }
 void MainWindow::updateTitle()
 {
@@ -409,6 +463,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    QString error;
+   plots->clear();
    try {
       std::istringstream stream(candidate.toStdString());
       if (!moderator->InterpretScript(&stream, true)) error = "The mission rejected these changes. See Message Window.";
