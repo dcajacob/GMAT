@@ -25,12 +25,20 @@ constexpr double degrees = 57.2957795130823208768;
 void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting> &settings)
 {
    auto *moderator=Moderator::Instance();
-   for (auto it=settings.cbegin();it!=settings.cend();++it) for (const auto &view:it->views) {
+   for (auto it=settings.cbegin();it!=settings.cend();++it) {
+      if (it->bodyRelative) {
+         auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+         if (!plot || !plot->IsOfType("OrbitView") || plot->GetStringParameter("ViewPointRefType")=="Vector" ||
+             plot->GetStringParameter("ViewPointVectorType")!="Vector")
+            throw std::runtime_error((it.key()+": body-relative camera requires an object ViewPointReference and a vector ViewPointVector").toStdString());
+      }
+      for (const auto &view:it->views) {
       for (const auto &name:{view.reference,view.target}) {
          if (name.isEmpty() || name=="CoordinateSystem") continue;
          auto *object=moderator->GetConfiguredObject(name.toStdString());
          if (!object) object=moderator->GetSolarSystemInUse()->GetBody(name.toStdString());
          if (!dynamic_cast<SpacePoint *>(object)) throw std::runtime_error((it.key()+" camera "+view.name+": unknown space point "+name).toStdString());
+      }
       }
    }
 }
@@ -269,17 +277,40 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          }
          return std::array<double,3>{state[0],state[1],state[2]};
       };
+      const auto settings=cameraSettings.value(text(name));
+      auto rotate=[&](const std::array<double,3> &vector,SpacePoint *object) {
+         if (!object) throw std::runtime_error("Missing body-relative camera reference");
+         Rmatrix33 viewToBase;
+         if (entry->view) {
+            entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
+            viewToBase=entry->view->GetLastRotationMatrix();
+         }
+         auto bodyToBase=object->GetAttitude(epoch);
+         if (object->IsOfType(Gmat::SPACECRAFT)) bodyToBase=bodyToBase.Transpose();
+         const auto rotated=viewToBase.Transpose()*bodyToBase*Rvector3(vector[0],vector[1],vector[2]);
+         return std::array<double,3>{rotated[0],rotated[1],rotated[2]};
+      };
       try {
          PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
          const auto reference=resolve(entry->referenceIsVector,entry->cameraReference,entry->referenceVector);
-         const auto position=resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector);
+         auto position=resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector);
+         if (settings.bodyRelative) {
+            if (!entry->positionIsVector) throw std::runtime_error("Body-relative camera position must be a vector");
+            position=rotate(position,entry->cameraReference);
+         }
          camera.target=resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
          Rvector3 up(entry->upVector[0],entry->upVector[1],entry->upVector[2]);
-         if (entry->viewUp && entry->view && entry->viewUp!=entry->view) {
+         if (settings.bodyRelative) {
+            const auto bodyUp=rotate(entry->upVector,entry->cameraReference); up=Rvector3(bodyUp[0],bodyUp[1],bodyUp[2]);
+         } else if (entry->viewUp && entry->view && entry->viewUp!=entry->view) {
             entry->viewUp->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
             const auto upToBase=entry->viewUp->GetLastRotationMatrix();
             entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
             up=entry->view->GetLastRotationMatrix().Transpose()*upToBase*up;
+         }
+         if (settings.centerOffset) {
+            const auto offset=settings.bodyRelative ? rotate(*settings.centerOffset,entry->cameraReference) : *settings.centerOffset;
+            for (int i=0;i<3;++i) camera.target[i]+=offset[i];
          }
          for (int i=0;i<3;++i) {
             camera.eye[i]=reference[i]+entry->cameraScale*position[i]; camera.up[i]=up[i];
@@ -292,25 +323,32 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          while (data.cameras.size()>static_cast<size_t>(data.maxPoints)) data.cameras.pop_front();
       } catch (BaseException &) { warn(name,"unresolved scripted camera (using available camera or manual view)"); }
       catch (const std::exception &) { warn(name,"invalid scripted camera (using available camera or manual view)"); }
-      const auto settings=cameraSettings.value(text(name));
       for (int index=0;index<settings.views.size();++index) {
          const auto &view=settings.views[index];
          try {
-            auto position=[&](const QString &objectName) {
-               if (objectName.isEmpty() || objectName=="CoordinateSystem") return std::array<double,3>{};
+            auto findObject=[&](const QString &objectName) -> SpacePoint * {
+               if (objectName.isEmpty() || objectName=="CoordinateSystem") return nullptr;
                SpacePoint *object=nullptr;
                for (auto *point:entry->points) if (point && text(point->GetName())==objectName) { object=point; break; }
                if (!object && entry->solarSystem) object=entry->solarSystem->GetBody(objectName.toStdString());
                if (!object) object=dynamic_cast<SpacePoint *>(Moderator::Instance()->GetInternalObject(objectName.toStdString()));
-               return resolve(false,object,{});
+               return object;
+            };
+            auto position=[&](const QString &objectName) {
+               if (objectName.isEmpty() || objectName=="CoordinateSystem") return std::array<double,3>{};
+               return resolve(false,findObject(objectName),{});
             };
             const auto origin=position(view.reference);
             const auto target=view.target.isEmpty() ? origin : position(view.target);
-            PlotCamera camera; camera.frame=data.frame; camera.solver=solving; camera.up=view.up;
+            auto *reference=view.bodyRelative ? findObject(view.reference) : nullptr;
+            const auto eye=view.bodyRelative ? rotate(view.eye,reference) : view.eye;
+            const auto center=view.bodyRelative ? rotate(view.center,reference) : view.center;
+            PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
+            camera.up=view.bodyRelative ? rotate(view.up,reference) : view.up;
             for (int axis=0;axis<3;++axis) {
-               camera.eye[axis]=origin[axis]+view.eye[axis];
-               camera.target[axis]=target[axis]+view.center[axis];
-               if (!std::isfinite(camera.eye[axis]) || !std::isfinite(camera.target[axis])) throw std::runtime_error("Nonfinite camera position");
+               camera.eye[axis]=origin[axis]+eye[axis];
+               camera.target[axis]=target[axis]+center[axis];
+               if (!std::isfinite(camera.eye[axis]) || !std::isfinite(camera.target[axis]) || !std::isfinite(camera.up[axis])) throw std::runtime_error("Nonfinite camera position");
             }
             if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
                throw std::runtime_error("Camera eye and target coincide");

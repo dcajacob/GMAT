@@ -132,23 +132,26 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       QtCameraSetting cameraSetting{true,fov};
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool body=frame!="CoordinateSystem";
+      cameraSetting.bodyRelative=body && values.value("InertialFrame","Off")=="Off" && values.value("ViewTrajectory","Off")=="Off";
       auto set=[&](const QString &key,const QString &value) { cameras.append("GMAT "+plot+"."+key+" = "+value+";"); };
       set("ViewPointReference",body ? frame : "[0 0 0]");
       set("ViewDirection",body ? frame : "[0 0 0]");
       const auto prefix=values.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
       const bool stored=values.value("Set"+prefix+"Location")=="On";
-      std::array<double,3> eye,center,up;
-      if (stored && vectorValue(values.value(prefix+"Eye"),eye)) set("ViewPointVector",formatVector(eye));
+      std::array<double,3> eye{0,-1,0},center{},up{0,0,1};
+      if (stored) for (auto component:{qMakePair(QString("Eye"),&eye),qMakePair(QString("Center"),&center),qMakePair(QString("Up"),&up)}) {
+         if (values.contains(prefix+component.first) && !vectorValue(values.value(prefix+component.first),*component.second)) {
+            result.error=plot+": invalid stored camera "+component.first+" vector."; return result;
+         }
+      }
+      if (stored) set("ViewPointVector",formatVector(eye));
       else result.notes.append(plot+": default camera distance used; review Script view or Fit.");
-      if (stored && vectorValue(values.value(prefix+"Center"),center)) {
+      if (stored) {
          if (!body) set("ViewDirection",formatVector(center));
-         else if (center!=std::array<double,3>{0,0,0}) result.notes.append(plot+": body-relative center offset needs manual adjustment.");
+         else cameraSetting.centerOffset=center;
       }
       if (values.contains("LookAtFrame")) set("ViewDirection",values["LookAtFrame"]);
-      if (stored && values.contains(prefix+"Up") && !vectorValue(values.value(prefix+"Up"),up)) {
-         result.error=plot+": camera up vector must contain three finite numbers."; return result;
-      }
-      if (stored && vectorValue(values.value(prefix+"Up"),up)) {
+      if (stored) {
          int axis=0; for (int i=1;i<3;++i) if (std::abs(up[i])>std::abs(up[axis])) axis=i;
          QString signedAxis=up[axis]<0 ? "-" : ""; signedAxis+="XYZ"[axis]; set("ViewUpAxis",signedAxis);
          if (!std::isfinite(std::hypot(up[0],up[1],up[2])) || std::hypot(up[0],up[1],up[2])<1e-12) {
@@ -168,6 +171,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          const auto extraFrame=extra.value("ViewFrame","CoordinateSystem");
          if (extraFrame!="CoordinateSystem") preset.reference=extraFrame;
          preset.target=extra.value("LookAtFrame");
+         preset.bodyRelative=!preset.reference.isEmpty() && extra.value("InertialFrame","Off")=="Off" && extra.value("ViewTrajectory","Off")=="Off";
          const auto location=extra.value("SetCurrentLocation")=="On" ? QString("Current") : QString("Default");
          if (extra.value("Set"+location+"Location")=="On") {
             // OF defaults for omitted stored components.
@@ -179,7 +183,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             }
          } else result.notes.append(preset.name+": automatic OF distance is replaced by 30000 km; use Fit or zoom to adjust.");
          cameraSetting.views.append(preset);
-         if (!preset.reference.isEmpty()) result.notes.append(preset.name+": tracks the object using plot-frame axes; body-relative rotation is not imported.");
+         if (!preset.reference.isEmpty()) result.notes.append(preset.name+(preset.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
+         if (!preset.target.isEmpty()) result.notes.append(preset.name+": look-at target is tracked directly; OF ShortestAngle/AZEL orientation is not imported.");
          if (extra.value("ViewTrajectory")=="On") result.notes.append(preset.name+": trajectory-relative orientation is not imported.");
       }
       try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
@@ -187,7 +192,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
       result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views; trajectory-relative orientation is not imported.");
-      if (body) result.notes.append(plot+": object tracking uses plot-frame axes; body-relative view rotation is not imported.");
+      if (body) result.notes.append(plot+(cameraSetting.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
+      if (values.contains("LookAtFrame")) result.notes.append(plot+": look-at target is tracked directly; OF ShortestAngle/AZEL orientation is not imported.");
    }
    int insertion=output.size();
    for (int i=0;i<output.size();++i) if (codePart(output[i]).startsWith("BeginMissionSequence")) { insertion=i; break; }
@@ -203,13 +209,15 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
 {
    QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
    if (setting.up) object.insert("up",QJsonArray{(*setting.up)[0],(*setting.up)[1],(*setting.up)[2]});
+   if (setting.bodyRelative) object.insert("bodyRelative",true);
+   if (setting.centerOffset) object.insert("centerOffset",QJsonArray{(*setting.centerOffset)[0],(*setting.centerOffset)[1],(*setting.centerOffset)[2]});
    if (!setting.primaryName.isEmpty()) object.insert("primaryName",setting.primaryName);
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
       for (const auto &view:setting.views) views.append(QJsonObject{{"name",view.name},{"reference",view.reference},{"target",view.target},
          {"eye",vector(view.eye)},{"center",vector(view.center)},{"up",vector(view.up)},
-         {"perspective",view.perspective},{"fieldOfView",view.fieldOfView}});
+         {"perspective",view.perspective},{"fieldOfView",view.fieldOfView},{"bodyRelative",view.bodyRelative}});
       object.insert("views",views);
    }
    return "% GMAT-Qt-Camera "+QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact))+"\n";
@@ -240,6 +248,17 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
             throw std::runtime_error("Invalid GMAT-Qt-Camera up vector: expected three finite numbers and a nonzero length");
          setting.up=up;
       }
+      if (object.contains("bodyRelative") && !object.value("bodyRelative").isBool()) throw std::runtime_error("Camera bodyRelative must be a boolean");
+      setting.bodyRelative=object.value("bodyRelative").toBool();
+      if (object.contains("centerOffset")) {
+         const auto array=object.value("centerOffset").toArray(); std::array<double,3> center{};
+         if (array.size()!=3) throw std::runtime_error("Camera centerOffset must have three numbers");
+         for (int i=0;i<3;++i) {
+            if (!array[i].isDouble() || !std::isfinite(array[i].toDouble())) throw std::runtime_error("Camera centerOffset must have finite numbers");
+            center[i]=array[i].toDouble();
+         }
+         setting.centerOffset=center;
+      }
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
       if (object.contains("primaryName")) {
          setting.primaryName=object.value("primaryName").toString();
@@ -266,6 +285,9 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
                 !value.value("target").isString() || (!view.target.isEmpty() && !identifier.match(view.target).hasMatch()) ||
                 !value.value("perspective").isBool() || !std::isfinite(view.fieldOfView) || view.fieldOfView<1 || view.fieldOfView>150)
                throw std::runtime_error("Invalid or duplicate named camera: check names, reference objects, projection and field of view");
+            if (value.contains("bodyRelative") && !value.value("bodyRelative").isBool()) throw std::runtime_error("Named camera bodyRelative must be a boolean");
+            view.bodyRelative=value.value("bodyRelative").toBool();
+            if (view.bodyRelative && (view.reference.isEmpty() || view.reference=="CoordinateSystem")) throw std::runtime_error("Body-relative camera needs an object reference");
             view.eye=vector(value.value("eye")); view.center=vector(value.value("center")); view.up=vector(value.value("up"));
             const auto upLength=std::hypot(view.up[0],view.up[1],view.up[2]);
             const auto distance=std::hypot(view.eye[0]-view.center[0],view.eye[1]-view.center[1],view.eye[2]-view.center[2]);

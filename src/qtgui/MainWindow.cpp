@@ -752,10 +752,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (originalMission.hasMatch() && rebuiltMission.hasMatch())
          candidate=candidate.left(rebuiltMission.capturedStart())+expectedScript.mid(originalMission.capturedStart());
       // An explicit axis edit replaces an imported arbitrary roll vector.
-      if (object->IsOfType("OrbitView") && changes.contains("ViewUpAxis")) {
+      if (object->IsOfType("OrbitView") && (changes.contains("ViewUpAxis") || changes.contains("ViewDirection"))) {
          const auto settings=qtCameraSettings(expectedScript);
          if (settings.contains(name)) {
-            auto setting=settings.value(name); setting.up.reset();
+            auto setting=settings.value(name);
+            if (changes.contains("ViewUpAxis")) setting.up.reset();
+            if (changes.contains("ViewDirection")) setting.centerOffset.reset();
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }

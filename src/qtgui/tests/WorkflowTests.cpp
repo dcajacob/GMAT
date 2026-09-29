@@ -1,6 +1,8 @@
 #include "MainWindow.hpp"
 #include "QtPlotReceiver.hpp"
 #include "OrbitCamera.hpp"
+#include "CoordinateConverter.hpp"
+#include "CoordinateSystem.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
@@ -93,6 +95,9 @@ int main(int argc, char **argv)
             require(invalid,"Invalid up vector accepted");
          }
          require(!convertOpenFramesViews(QString(input).replace("[1 0 1]","[0 0 0]")).error.isEmpty(),"Zero OF up vector accepted");
+         const auto absolute=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame = CoordinateSystem","Camera.InertialFrame = On;\nCamera.ViewFrame = Earth"));
+         require(absolute.error.isEmpty() && !qtCameraSettings(absolute.script).value("Display").bodyRelative,"InertialFrame On incorrectly follows body rotation");
+         require(!convertOpenFramesViews(QString(input).replace("[100 200 300]","[invalid]")).error.isEmpty(),"Invalid primary eye silently replaced");
          const auto custom=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 37.5;\nCamera.ViewFrame"));
          require(custom.error.isEmpty() && qtCameraSettings(custom.script)["Display"].fieldOfView==37.5,"Conversion rounded the OF field of view");
          require(!convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 180;\nCamera.ViewFrame")).error.isEmpty(),
@@ -685,8 +690,14 @@ int main(int argc, char **argv)
                   for (const auto &sample:curve.points) if (sample.frame==camera->frame) point=&sample;
                require(point,"Named camera reference frame is absent");
                require(std::abs(camera->target[0]-point->x)<1e-8 && std::abs(camera->target[1]-point->y)<1e-8 &&
-                  std::abs(camera->target[2]-point->z)<1e-8 && std::abs(camera->eye[1]-point->y+30000)<1e-8,
+                  std::abs(camera->target[2]-point->z)<1e-8,
                   "Additional camera failed to track its reference object");
+               const double origin[]={point->x,point->y,point->z};
+               for (int axis=0;axis<3;++axis) {
+                  require(std::abs(camera->eye[axis]-origin[axis]+30000*point->bodyToView[axis*3+1])<1e-8,
+                     "Body-relative eye does not follow object orientation");
+                  require(std::abs(camera->up[axis]-point->bodyToView[axis*3+2])<1e-10,"Body-relative up does not follow object orientation");
+               }
             }
          }
       };
@@ -783,6 +794,53 @@ int main(int argc, char **argv)
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");
+      {
+         auto bodyScript=originalSample;
+         bodyScript.replace(QRegularExpression("TheView\\.ViewFrame\\s*=\\s*CoordinateSystem"),"TheView.ViewFrame = Earth");
+         bodyScript.replace(QRegularExpression("TheView\\.DefaultCenter\\s*=\\s*\\[[^\\]]*\\]"),"TheView.DefaultCenter = [100 200 300]");
+         bodyScript.replace("BeginMissionSequence;","DefaultSC.Attitude = Spinner;\nDefaultSC.SpinRate = 0.2;\nBeginMissionSequence;");
+         const auto converted=convertOpenFramesViews(bodyScript);
+         require(converted.error.isEmpty(),"Body-relative fixture conversion failed");
+         const auto setting=qtCameraSettings(converted.script).value("OFI_EarthView");
+         require(setting.bodyRelative && setting.centerOffset==std::optional<std::array<double,3>>({100,200,300}) && setting.views[1].bodyRelative,
+            "Conversion lost relative-camera mode or center offset");
+         editor->setPlainText(converted.script);
+         require(window.runMission()==MainWindow::RunResult::Completed,"Body-relative camera mission failed");
+         auto checkBodyCamera=[&] {
+            const auto model=window.plotReceiver()->model("OFI_EarthView");
+            auto *fixed=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("EarthFixed"));
+            auto *plotFrame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject(model->coordinates.toStdString()));
+            require(fixed && plotFrame && !model->cameras.empty(),"Independent camera coordinate frames missing");
+            CoordinateConverter converter;
+            for (const auto *camera:{&model->cameras.front(),&model->cameras.back()}) {
+               double epoch=0;
+               for (const auto &curve:model->curves) if (curve.name=="Earth")
+                  for (const auto &point:curve.points) if (point.frame==camera->frame) epoch=point.epoch;
+               require(epoch!=0,"Body camera sample epoch missing");
+               Rvector6 eye,center,up;
+               converter.Convert(epoch,Rvector6(150000,0,0,0,0,0),fixed,eye,plotFrame);
+               converter.Convert(epoch,Rvector6(100,200,300,0,0,0),fixed,center,plotFrame);
+               converter.Convert(epoch,Rvector6(1,0,1,0,0,0),fixed,up,plotFrame);
+               for (int axis=0;axis<3;++axis) require(std::abs(camera->eye[axis]-eye[axis])<1e-7 &&
+                  std::abs(camera->target[axis]-center[axis])<1e-8 && std::abs(camera->up[axis]-up[axis])<1e-10,
+                  "Body camera differs from independent EarthFixed coordinate conversion");
+            }
+            if (model->coordinates!="EarthFixed")
+               require(std::abs(model->cameras.front().eye[0]-model->cameras.back().eye[0])>100,"Body camera did not rotate with Earth");
+         };
+         checkBodyCamera(); checkViewHistories();
+         require(window.applyResourceChanges("OFI_EarthView",{{"CoordinateSystem","EarthFixed"}},editor->toPlainText()).isEmpty() &&
+            window.runMission()==MainWindow::RunResult::Completed,"Body camera in rotating plot frame failed");
+         checkBodyCamera(); checkViewHistories();
+         require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
+            "Body-relative camera save/reopen failed");
+         checkBodyCamera(); checkViewHistories();
+         const auto good=editor->toPlainText();
+         require(!window.applyResourceChanges("OFI_EarthView",{{"ViewPointReference","[0 0 0]"}},good).isEmpty(),
+            "Body-relative mode accepted a reference with no attitude");
+         require(editor->toPlainText()==good && window.runMission()==MainWindow::RunResult::Completed,"Invalid body-camera edit lost the mission");
+         checkBodyCamera();
+      }
       editor->setPlainText("Create OpenFramesVector Vec;\nBeginMissionSequence;\n");
       bool manualExplanation=false;
       QTimer::singleShot(0,&window,[&] {

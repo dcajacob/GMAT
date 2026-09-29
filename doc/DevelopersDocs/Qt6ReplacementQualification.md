@@ -378,3 +378,29 @@ the first camera; additional definitions are Qt comments.
 
 The user executable was rebuilt; all 11 Qt tests passed in 22.99 seconds.
 Evidence: `Qt6ParityValidation/check-multiple-cameras.txt`.
+
+
+## Body-relative camera checkpoint
+
+Primary and additional OF views now retain the InertialFrame mode. With that
+setting Off and ViewTrajectory Off, their eye offsets, center offsets and up
+vectors rotate with the reference object's attitude into the plot coordinate
+system. Celestial and spacecraft attitude conventions are handled separately.
+InertialFrame On retains position tracking with plot-frame axes. Primary center
+offsets are retained, and an explicit ViewDirection edit clears that override.
+Validation rejects incompatible primary reference/eye types before execution.
+
+WorkflowTests checks the primary Earth camera against independent EarthFixed
+coordinate conversions, including nonzero center and non-axis up vectors at the
+first and last samples, both in inertial and rotating plot frames. Additional
+Earth and spinning-spacecraft views match the recorded body orientation and
+position histories. Save/reopen retains the poses; incompatible reference edits
+are rejected and the previous mission reruns unchanged. Conversion also verifies
+InertialFrame On and rejects malformed primary stored vectors.
+
+Trajectory/segment views, two-frame look-at ShortestAngle/AZEL orientation and
+original automatic framing remain pending. These cases retain explicit conversion
+notes and are not counted as completed parity.
+
+The user executable was rebuilt; all 11 Qt tests passed in 24.63 seconds.
+Evidence: `Qt6ParityValidation/check-body-cameras.txt`.

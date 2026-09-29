@@ -486,8 +486,8 @@ Conversion is explicit, validated, undoable and unsaved. Calculations remain
 unchanged; viewer differences are documented in comments and the message
 window. It imports common plot flags and named camera views into Qt OrbitView,
 including perspective projection and vertical FOV. A camera selector switches
-views during playback. Trajectory-relative orientation and body-relative camera
-rotation are not yet imported. Unsupported
+views during playback. Body-relative cameras follow object orientation;
+trajectory-relative and two-frame look-at orientation remain pending. Unsupported
 OpenFrames object kinds or dynamic viewer assignments require manual editing.
 Keep the original file if it will also be used with the OFI application.
 
@@ -627,7 +627,7 @@ a nearest-axis fallback for the base viewer. Keep projection retains this vector
 An explicit ViewUpAxis edit in the resource panel removes the override, and Undo
 restores it. When editing raw script, remove the `up` member to use ViewUpAxis.
 Zero, malformed or nonfinite imported vectors are rejected with an explanation.
-Body-/trajectory-relative orientation remains open.
+Trajectory-relative and two-frame look-at orientation remain open.
 
 
 ### Named camera views
@@ -641,9 +641,22 @@ mission run starts with the first view. Keep projection updates only the selecte
 camera, and normal Save preserves all named definitions.
 
 Additional views preserve stored Current/Default eye, center and up vectors.
-Object references track positions in plot-frame axes, including center offsets.
-Body-relative rotation, trajectory/segment views and OF's automatic framing are
-still pending. Views without a stored location currently use a 30000 km offset;
+Object references track positions, including center offsets. With InertialFrame
+Off, body-relative views also follow object orientation; InertialFrame On retains
+plot-frame axes. Trajectory/segment views, two-frame look-at orientation and OF's
+automatic framing are still pending. Views without a stored location currently use a 30000 km offset;
 conversion reports this explicitly. Duplicate/unknown view names, invalid poses
 and missing reference objects are rejected before execution. The base viewer
 uses the first camera and ignores the additional Qt metadata.
+
+
+Body-relative camera settings are retained in Qt metadata for the primary and
+additional views. Eye, center offset and up rotate from body axes into the plot
+coordinate system at each recorded sample. This applies to both celestial bodies
+and spacecraft, with their different attitude-matrix conventions. Playback uses
+these recorded poses without consulting live mission objects. Stored Current
+location takes precedence over Default location; omitted stored components use
+OF defaults, and malformed vectors are rejected. An explicit ViewDirection edit
+clears an imported primary center offset. A body-relative primary view requires
+an object reference and a vector eye offset; incompatible edits are rejected and
+the previous mission is restored.
