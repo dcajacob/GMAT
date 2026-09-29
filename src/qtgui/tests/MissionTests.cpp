@@ -218,7 +218,25 @@ int main(int argc,char **argv)
          form.setStatement("Achieve DC(FirstSat.X = 1);"); pick(form,"Solver","DC","Opt");
          form.setStatement("Minimize Opt(FirstSat.X);"); pick(form,"Solver","Opt","DC");
          form.setStatement("NonlinearConstraint Opt(FirstSat.X >= 1);"); pick(form,"Solver","Opt","DC");
-         form.setStatement("Vary DC(FirstSat.X = 1);"); pick(form,"Solver","Opt",{}); pick(form,"Solver","DC",{});
+         form.setStatement("Vary 'Keep options' DC(FirstSat.X = 1, {Lower = -20, Upper = 25}); % preserved");
+         form.findChild<QPushButton *>("commandAddOptions")->click();
+         auto *lower=form.findChild<QLineEdit *>("commandField_Lower");
+         auto *upper=form.findChild<QLineEdit *>("commandField_Upper");
+         require(lower->isEnabled() && upper->isEnabled(),"DifferentialCorrector bounds are disabled");
+         lower->setText("-30"); const auto dcSource=replacement;
+         pick(form,"Solver","Opt",{});
+         require(!lower->isEnabled() && !upper->isEnabled() && lower->text()=="-30" && upper->text()=="25" && !lower->toolTip().isEmpty(),
+            "Yukon bounds were editable or their pending values were lost");
+         for (const auto &key:{"Perturbation","MaxStep","AdditiveScaleFactor","MultiplicativeScaleFactor"})
+            require(form.findChild<QLineEdit *>(QString("commandField_")+key)->isEnabled(),"Yukon supported setting disabled");
+         pick(form,"Solver","DC",{});
+         require(lower->isEnabled() && upper->isEnabled() && replacement==dcSource,"Switching solvers lost pending settings or source");
+         form.findChild<QLineEdit *>("commandField_Solver")->setText("MissingSolver");
+         require(!lower->isEnabled(),"Unknown solver exposes capability-specific controls");
+         form.findChild<QLineEdit *>("commandField_Solver")->setText("DC");
+         require(lower->isEnabled() && replacement==dcSource,"Invalid solver recovery lost settings");
+         pick(form,"Solver","Opt",{},false);
+         require(lower->isEnabled() && replacement==dcSource,"Cancelled solver selection changed controls");
          form.setStatement("FindEvents Eclipse;"); pick(form,"Locator","Eclipse","DC");
          editor->setPlainText(original); require(window.buildScript(),"Picker fixture restoration failed");
       }

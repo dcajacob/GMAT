@@ -49,7 +49,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options in tests; full optimizer mode combinations pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
-| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver-dependent control enabling and plugin-specific variable cases pending. |
+| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered; covariance controls and broader formation/mode combinations pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
@@ -1576,3 +1576,24 @@ not yet qualify solver-dependent enable/disable behavior or every plugin option.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 63.63 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-solver-option-controls.txt`.
+
+## Solver-dependent Vary controls
+
+Audited wx VaryPanel::SetControlEnabling against the engine capability flags.
+Qt now enables perturbation, bounds, maximum step and scale-factor fields only
+when the selected configured solver supports them. Unsupported fields retain
+their values and explain why they are disabled. An unknown solver disables these
+fields until a valid solver is selected; source validation remains with Apply.
+
+MissionTests switches from DifferentialCorrector to Yukon and back, verifies
+Yukon's disabled bounds and enabled supported settings, and checks that pending
+values, labels and comments survive. Unknown-solver recovery and Cancel are
+covered. The existing targeting test still verifies Apply, save/reopen and solve.
+The scale/step/perturbation-disabled combinations of other plugins remain outside
+this runtime qualification; MATLAB remains deferred.
+
+The form also handles construction before engine initialization by leaving
+capability-dependent fields disabled without querying the configuration manager.
+The initial run exposed this case; after guarding the lookup, all 11 Qt tests
+passed in 70.23 seconds and the user's GmatQt was rebuilt. Native viewer checks
+used isolated Xvfb. Evidence: `Qt6ParityValidation/check-solver-capabilities.txt`.

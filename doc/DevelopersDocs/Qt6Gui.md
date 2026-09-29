@@ -1084,3 +1084,7 @@ omitted from the script. Vary adds missing perturbation, bounds, maximum step an
 scale-factor fields; Achieve adds tolerance. Values come from GMAT's command
 defaults. Existing options, pending edits, labels and comments are retained.
 Edit the added fields, then Apply to validate and update the mission.
+
+Vary option fields follow the selected solver's capabilities. Unsupported
+settings are disabled with an explanation, and their values are retained when
+switching solvers. Select a configured solver to enable supported settings.

@@ -289,6 +289,28 @@ void CommandForm::setStatement(const QString &statement)
             });
          }
       }
+      if (spec.type=="Vary") {
+         auto *solverField=findChild<QLineEdit *>("commandField_Solver");
+         auto refreshCapabilities=[this,solverField] {
+            auto *moderator=Moderator::Instance();
+            auto *solver=moderator->IsInitialized() ? moderator->GetConfiguredObject(solverField->text().trimmed().toStdString()) : nullptr;
+            if (solver && !solver->IsOfType("Solver")) solver=nullptr;
+            const QList<QPair<QString,QString>> settings={
+               {"Perturbation","AllowVariablePertSetting"},{"Lower","AllowRangeSettings"},
+               {"Upper","AllowRangeSettings"},{"MaxStep","AllowStepsizeSetting"},
+               {"AdditiveScaleFactor","AllowScaleSetting"},{"MultiplicativeScaleFactor","AllowScaleSetting"}};
+            for (const auto &setting:settings) {
+               auto *field=findChild<QLineEdit *>("commandField_"+setting.first); if (!field) continue;
+               const bool enabled=solver && solver->GetBooleanParameter(setting.second.toStdString());
+               field->setEnabled(enabled);
+               field->setToolTip(enabled ? QString() : solver ? "The selected solver does not use this setting. Its value is retained." :
+                  "Select a configured solver to edit this setting. Its value is retained.");
+               if (auto *label=layout->labelForField(field)) label->setEnabled(enabled);
+            }
+         };
+         connect(solverField,&QLineEdit::textChanged,this,[refreshCapabilities] { refreshCapabilities(); });
+         refreshCapabilities();
+      }
       show(); return;
    }
    hide();
