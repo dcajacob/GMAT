@@ -388,9 +388,9 @@ signed up axes in the configured view-up coordinate system. Camera states are
 captured numerically with the mission frames; replay and reopened plots need no
 live engine pointers. Drag/pan/zoom remain offsets from the tracked camera.
 **Fit** frames the mission; **Script view** restores the scripted framing.
-Native and fallback rendering share the camera basis. The projection remains
-orthographic, using camera distance to set scale, rather than adopting the
-OpenFrames perspective/navigation interface. Degenerate eye/target settings
+Native and fallback rendering share the camera basis. Orthographic is the
+default, with perspective and vertical field of view available through the
+Qt camera controls and imported OpenFrames camera settings. Degenerate eye/target settings
 are reported; a parallel up vector gets a stable fallback roll.
 
 Native rendering also honors constellation outlines from `CONSTELLATION_FILE`,
@@ -484,7 +484,8 @@ approve conversion at launch with:
 Conversion is explicit, validated, undoable and unsaved. Calculations remain
 unchanged; viewer differences are documented in comments and the message
 window. It imports common plot flags and the first supported camera view into
-Qt OrbitView. It does not import OFI perspective/FOV, multiple views,
+Qt OrbitView, including its perspective projection and vertical FOV. It does
+not yet import multiple views,
 trajectory-relative orientation or body-relative camera rotation. Unsupported
 OpenFrames object kinds or dynamic viewer assignments require manual editing.
 Keep the original file if it will also be used with the OFI application.
@@ -580,6 +581,8 @@ Orbit plots now offer **Orthographic / Perspective** and a vertical field-of-vie
 control (1–150 degrees, before wheel zoom). Orthographic remains the default.
 Perspective uses depth-dependent sizing and clips objects behind the camera;
 native stars retain translation invariance and follow perspective zoom. These
-controls currently affect the displayed plot only. They are not yet imported
-from OpenFrames definitions or saved into scripts. That conversion/persistence
-work remains on the replacement qualification checklist.
+interactive controls currently affect the displayed plot only. Conversion imports
+the selected OpenFrames view’s perspective/FOV into a `% GMAT-Qt-Camera` JSON
+comment. Qt validates and restores it when running a saved script; the base
+engine treats it as a comment. Resource/mission edits retain these settings.
+Saving interactive camera adjustments remains on the qualification checklist.

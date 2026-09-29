@@ -385,6 +385,7 @@ bool MainWindow::initialize(const QString &startup)
 void MainWindow::newMission()
 {
    if (!ready || running) return;
+   plots->cameraSettings.clear();
    plots->clear();
    Moderator::Instance()->LoadDefaultMission();
    editor->setPlainText(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)));
@@ -522,8 +523,10 @@ bool MainWindow::buildScript()
    bool success = false;
    plots->clear();
    try {
+      const auto cameras=qtCameraSettings(editor->toPlainText());
       std::istringstream stream(editor->toPlainText().toStdString());
       success = Moderator::Instance()->InterpretScript(&stream, true);
+      if (success) plots->cameraSettings=cameras;
    } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
    catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
    catch (...) { messages->appendPlainText("Unexpected error while building the script."); }
@@ -832,8 +835,14 @@ bool MainWindow::restoreBuiltModel()
    refreshTrees(); return modelValid;
 }
 
-QString MainWindow::applyModelScript(const QString &candidate)
+QString MainWindow::applyModelScript(const QString &requested)
 {
+   QString candidate;
+   QMap<QString,QtCameraSetting> cameras;
+   try {
+      candidate=retainQtCameraSettings(editor->toPlainText(),requested);
+      cameras=qtCameraSettings(candidate);
+   } catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    auto *moderator = Moderator::Instance();
    QString error;
    plots->clear();
@@ -855,6 +864,7 @@ QString MainWindow::applyModelScript(const QString &candidate)
    cursor.insertText(candidate);
    cursor.endEditBlock();
    builtScript = candidate;
+   plots->cameraSettings=cameras;
    modelValid = true;
    refreshTrees();
    statusBar()->showMessage("Mission updated — save the script to keep changes");

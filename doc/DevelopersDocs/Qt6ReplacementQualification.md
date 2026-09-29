@@ -250,3 +250,22 @@ projection alone does not satisfy those conversion requirements.
 
 All 11 tests passed in 20.90 seconds; GmatQt was rebuilt. Evidence:
 `Qt6ParityValidation/check-perspective.txt`.
+
+## OpenFrames projection import checkpoint
+
+The converter now imports the first selected OF view's perspective projection
+and FOVy (default 45 degrees), preserving fractional angles. Settings are stored
+in a `% GMAT-Qt-Camera` JSON comment, so the base engine can still interpret the
+converted calculations. Qt validates plot names, booleans, finite FOV from 1 to
+150 degrees and duplicate directives before using them. Invalid or unsupported
+FOV is rejected rather than clamped during conversion.
+
+Receiver-created orbit models get these settings before their widgets are
+created. GUI reconstruction retains directives when engine serialization omits
+them. Tests cover defaults, fractional FOV, invalid values, duplicate directives,
+the real Hohmann renderer model, resource edit/Undo, and save/reopen/run. This
+closes basic OF perspective/FOV import, but not multiple-view selection, relative
+orientation, or saving camera changes made with the interactive controls.
+
+Rebuilt GmatQt and passed all 11 tests in 20.59 seconds; evidence:
+`Qt6ParityValidation/check-fov-import.txt`.

@@ -81,6 +81,10 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
 {
    remove(name);
    auto &entry=entries[text(name)]; entry.data=std::make_shared<PlotModel>(kind); entry.data->title=text(name);
+   if (kind==PlotModel::Kind::Orbit && cameraSettings.contains(text(name))) {
+      const auto setting=cameraSettings.value(text(name));
+      entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
+   }
    show(text(name));
    const auto bounds=workspace->viewport()->rect();
    const int width=std::clamp(static_cast<int>((w>0 && w<=1 ? w : .6)*bounds.width()),200,std::max(200,bounds.width()));

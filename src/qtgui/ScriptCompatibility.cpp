@@ -4,6 +4,9 @@
 #include <QRegularExpression>
 #include <array>
 #include <cmath>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <stdexcept>
 
 namespace {
 QString codePart(const QString &line)
@@ -111,6 +114,12 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.notes.append(plot+": no supported view selection; review the default OrbitView camera."); continue;
       }
       const auto view=match.captured(1); const auto values=properties.value(view);
+      bool validFov=false;
+      const double fov=values.value("FOVy","45").toDouble(&validFov);
+      if (!validFov || !std::isfinite(fov) || fov<1 || fov>150) {
+         result.error=plot+": field of view must be a finite number from 1 to 150 degrees for Qt conversion."; return result;
+      }
+      cameras.append(qtCameraDirective(plot,{true,fov}).trimmed());
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool body=frame!="CoordinateSystem";
       auto set=[&](const QString &key,const QString &value) { cameras.append("GMAT "+plot+"."+key+" = "+value+";"); };
@@ -133,7 +142,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          if (nonzero!=1) result.notes.append(plot+": non-axis up vector approximated by "+signedAxis+"; review camera roll.");
       }
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
-      result.notes.append(plot+": uses first view "+view+" with Qt orthographic controls; OFI view switching, FOV and trajectory-relative orientation are not imported.");
+      result.notes.append(plot+": uses first view "+view+" with perspective and its vertical field of view; OFI view switching and trajectory-relative orientation are not imported.");
       if (body) result.notes.append(plot+": object tracking uses plot-frame axes; body-relative view rotation is not imported.");
    }
    int insertion=output.size();
@@ -143,5 +152,37 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
    QStringList preamble={"% OpenFrames viewer conversion for Qt. Review these visual differences before saving:"};
    for (const auto &note:result.notes) preamble.append("% "+note);
    result.script=(preamble+output).join('\n');
+   return result;
+}
+
+QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
+{
+   const QJsonObject object{{"plot",plot},{"perspective",setting.perspective},{"fieldOfView",setting.fieldOfView}};
+   return "% GMAT-Qt-Camera "+QString::fromUtf8(QJsonDocument(object).toJson(QJsonDocument::Compact))+"\n";
+}
+QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
+{
+   QMap<QString,QtCameraSetting> result;
+   for (const auto &line:source.split('\n')) {
+      const auto text=line.trimmed(); const QString prefix="% GMAT-Qt-Camera ";
+      if (!text.startsWith(prefix)) continue;
+      QJsonParseError error;
+      const auto document=QJsonDocument::fromJson(text.mid(prefix.size()).toUtf8(),&error);
+      const auto object=document.object(); const auto name=object.value("plot").toString();
+      const auto fov=object.value("fieldOfView").toDouble(-1);
+      if (error.error!=QJsonParseError::NoError || !document.isObject() ||
+          !QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch() ||
+          !object.value("perspective").isBool() || !std::isfinite(fov) || fov<1 || fov>150 || result.contains(name))
+         throw std::runtime_error("Invalid or duplicate GMAT-Qt-Camera comment: expected a plot name, perspective boolean and fieldOfView from 1 to 150 degrees");
+      result.insert(name,{object.value("perspective").toBool(),fov});
+   }
+   return result;
+}
+QString retainQtCameraSettings(const QString &original,const QString &candidate)
+{
+   const auto before=qtCameraSettings(original),after=qtCameraSettings(candidate);
+   QString result=candidate;
+   for (auto it=before.cbegin();it!=before.cend();++it)
+      if (!after.contains(it.key())) result.prepend(qtCameraDirective(it.key(),it.value()));
    return result;
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "PlotReceiver.hpp"
 #include "PlotModel.hpp"
+#include "ScriptCompatibility.hpp"
 #include <QMap>
 #include <QPointer>
 #include <QStringList>
@@ -21,6 +22,7 @@ public:
    bool show(const QString &name);
    std::shared_ptr<const PlotModel> model(const QString &name) const;
    std::function<void()> changed;
+   QMap<QString,QtCameraSetting> cameraSettings;
 virtual bool CreateGlPlotWindow(const std::string &plotName,
                         const std::string &oldName,
                         Real positionX, Real positionY,

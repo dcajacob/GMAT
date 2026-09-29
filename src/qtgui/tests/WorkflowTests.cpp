@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "QtPlotReceiver.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
@@ -66,6 +67,17 @@ int main(int argc, char **argv)
          require(converted.script.contains("Create OrbitView Display;") && converted.script.contains("Display.ViewPointVector = [100 200 300]") &&
             converted.script.contains("retained as a comment") && converted.script.contains("non-axis up vector"),"View conversion lost settings or omitted limitations");
          require(convertOpenFramesViews(dynamics).script==dynamics,"Converter changed a script without OFI");
+         const auto cameras=qtCameraSettings(converted.script);
+         require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
+            "Conversion lost default OF perspective/FOV");
+         const auto custom=convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 37.5;\nCamera.ViewFrame"));
+         require(custom.error.isEmpty() && qtCameraSettings(custom.script)["Display"].fieldOfView==37.5,"Conversion rounded the OF field of view");
+         require(!convertOpenFramesViews(QString(input).replace("Camera.ViewFrame", "Camera.FOVy = 180;\nCamera.ViewFrame")).error.isEmpty(),
+            "Out-of-range OF FOV was silently changed");
+         bool rejected=false;
+         try { qtCameraSettings(qtCameraDirective("Display",{true,45})+qtCameraDirective("Display",{true,60})); }
+         catch (const std::exception &) { rejected=true; }
+         require(rejected,"Conflicting camera directives were accepted");
          require(!convertOpenFramesViews(input+"GMAT total = Camera.FOVy;\n").error.isEmpty(),"Converter removed a view used by calculations");
          require(!convertOpenFramesViews("Create OpenFramesVector Vec;\n").error.isEmpty(),"Unsupported OFI declaration was silently removed");
          require(!convertOpenFramesViews(input+"Display.Axes = Off;\n").error.isEmpty(),"Dynamic viewer setting was silently rewritten");
@@ -553,10 +565,25 @@ int main(int argc, char **argv)
       require(window.buildScript() && conversionPrompts==2,"Accepted automatic OFI conversion failed");
       require(editor->toPlainText().endsWith(dynamics) && editor->document()->isModified(),"Conversion changed mission or failed to mark unsaved changes");
       require(window.runMission()==MainWindow::RunResult::Completed,"Converted Hohmann mission did not run");
+      auto convertedView=window.plotReceiver()->model("OFI_EarthView");
+      require(convertedView && convertedView->perspective && convertedView->fieldOfView==45,
+         "Converted OF camera settings did not reach the renderer model");
       editor->undo(); require(editor->toPlainText()==originalSample,"Conversion was not one undoable edit");
       answerConversion(QMessageBox::Yes);
       require(window.runMission()==MainWindow::RunResult::Completed && conversionPrompts==3,
          "Run did not offer conversion after undo");
+      const auto convertedSource=editor->toPlainText();
+      require(window.applyResourceChanges("OFI_EarthView",{{"StarCount","321"}},convertedSource).isEmpty(),
+         "Converted plot resource edit failed");
+      require(qtCameraSettings(editor->toPlainText())["OFI_EarthView"].fieldOfView==45,
+         "Resource editing lost the Qt camera directive");
+      editor->undo(); require(editor->toPlainText()==convertedSource && window.buildScript(),"Camera-preserving resource edit lost Undo");
+      QTemporaryDir cameraFiles;
+      const auto savedCamera=cameraFiles.filePath("converted.script");
+      require(window.saveScriptTo(savedCamera) && window.loadScript(savedCamera) && window.runMission()==MainWindow::RunResult::Completed,
+         "Converted camera save/reopen failed");
+      convertedView=window.plotReceiver()->model("OFI_EarthView");
+      require(convertedView && convertedView->perspective && convertedView->fieldOfView==45,"Save/reopen changed imported camera projection");
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");
