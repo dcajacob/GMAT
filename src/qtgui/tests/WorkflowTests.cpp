@@ -77,6 +77,14 @@ int main(int argc, char **argv)
          auto expected=source; expected.replace("20000","20001"); require(changed==expected,"Propagation edit lost label, BackProp or comment");
          form.findChild<QLineEdit *>("propagationStopParameter")->setText("Sat.ElapsedSecs");
          expected.replace("Sat.A1ModJulian","Sat.ElapsedSecs"); require(changed==expected,"Stop parameter edit changed unrelated spans");
+         form.findChild<QCheckBox *>("propagationBackwards")->setChecked(false); expected.replace("BackProp ","");
+         require(changed==expected,"Backward toggle lost source formatting");
+         auto *tolerance=form.findChild<QLineEdit *>("propagationTolerance"); tolerance->setText("1e-9");
+         require(changed.contains("Sat.ElapsedSecs = 20001, StopTolerance = 1e-9") && changed.endsWith("% keep comment\n"),"Tolerance insertion lost stop or comment");
+         tolerance->clear(); require(changed==expected,"Clearing tolerance did not restore omitted default");
+         form.setStatement("Propagate Prop(Sat) {Sat.ElapsedSecs = 60,StopTolerance = 1e-5}; % keep");
+         tolerance->setText("2e-6");
+         require(changed=="Propagate Prop(Sat) {Sat.ElapsedSecs = 60,StopTolerance = 2e-6}; % keep","Existing tolerance formatting changed");
          form.setStatement("Propagate Prop(Sat) {Sat.Earth.Periapsis};"); require(!form.isHidden() && !form.findChild<QLineEdit *>("propagationDuration")->isEnabled(),"Apsis propagation lacks event controls");
          form.findChild<QLineEdit *>("propagationStopParameter")->setText("Sat.Earth.Apoapsis");
          require(changed=="Propagate Prop(Sat) {Sat.Earth.Apoapsis};","Apsis stop acquired a spurious goal");

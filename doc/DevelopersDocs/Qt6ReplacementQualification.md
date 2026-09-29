@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Remaining options and plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; multi-propagator/multi-stop and tolerance controls pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance controls covered; multi-propagator/multi-stop pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector added alongside existing input/output controls. Selector-specific and broader function workflow qualification pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -1204,3 +1204,22 @@ stops, synchronized propagators and StopTolerance controls remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 32.56 seconds. Evidence:
 `Qt6ParityValidation/check-apsis-controls.txt`.
+
+## Propagate direction and tolerance
+
+Added a backward-propagation checkbox and optional StopTolerance field to the
+single-stop form. The placeholder reads the default from a fresh engine Propagate
+command. Empty input preserves omission or removes an explicit option; existing
+tolerance values are replaced by span so formatting is retained. BackProp edits
+also preserve labels/comments and existing spacing when unchanged.
+
+WorkflowTests covers inserting/removing tolerance, preserving existing compact
+option formatting and toggling an existing BackProp modifier. CompatibilityTests
+extends the selected apsis workflow: zero tolerance must fail without changing
+source, a positive tolerance must apply, and saved/reopened periapsis propagation
+must move backward in epoch while apoapsis moves forward. Both retain the expected
+orbital radius checks. These changes do not implement multiple stopping conditions,
+synchronized propagators or other advanced Propagate options.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 34.38 seconds. Evidence:
+`Qt6ParityValidation/check-propagation-options.txt`.

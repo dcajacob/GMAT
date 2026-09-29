@@ -1,6 +1,8 @@
 #include "PropagationForm.hpp"
 #include "ReportParameterDialog.hpp"
 #include <QComboBox>
+#include <QCheckBox>
+#include "Propagate.hpp"
 #include <QFormLayout>
 #include <QHBoxLayout>
 #include <QPushButton>
@@ -9,12 +11,19 @@
 #include <QSignalBlocker>
 
 namespace {
+QPair<int,int> backwardSpan(const QString &statement)
+{
+   const auto prefix=QRegularExpression("^\\s*Propagate\\s+(?:'[^'\\n]*'\\s+)?").match(statement);
+   const int start=prefix.capturedEnd();
+   const auto keyword=QRegularExpression("^BackProp\\s+").match(statement.mid(start));
+   return {start,keyword.hasMatch() ? keyword.capturedLength() : 0};
+}
 bool eventStop(const QString &parameter) { return parameter.endsWith(".Periapsis") || parameter.endsWith(".Apoapsis"); }
 const QRegularExpression &propagationPattern()
 {
    static const QRegularExpression pattern(
       "^\\s*Propagate\\s+(?:'[^'\\n]*'\\s+)?(?:BackProp\\s+)?([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*([A-Za-z][A-Za-z0-9_]*)\\s*\\)"
-      "\\s*\\{\\s*([A-Za-z][A-Za-z0-9_.]*)(?:\\s*=\\s*([^{};,%]+?))?\\s*\\}\\s*;[ \\t]*(?:%[^\\n]*)?\\s*$");
+      "\\s*\\{\\s*([A-Za-z][A-Za-z0-9_.]*)(?:\\s*=\\s*([^{};,%]+?))?(\\s*,\\s*StopTolerance\\s*=\\s*([^{};,%]+?))?\\s*\\}\\s*;[ \\t]*(?:%[^\\n]*)?\\s*$");
    return pattern;
 }
 }
@@ -39,10 +48,22 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
       });
    };
    picker("Stop parameter",stopParameter,"propagationChooseStop"); picker("Stop value",duration,"propagationChooseGoal");
+   backward=new QCheckBox("Propagate backwards",this); backward->setObjectName("propagationBackwards"); layout->addRow(backward);
+   tolerance=new QLineEdit(this); tolerance->setObjectName("propagationTolerance");
+   Propagate defaults; tolerance->setPlaceholderText("Default: "+QString::number(defaults.GetRealParameter("StopTolerance"),'g',10));
+   tolerance->setToolTip("Positive stop tolerance. Leave blank to use GMAT's default."); layout->addRow("Stop tolerance",tolerance);
    auto update=[this,changed] {
       if (synchronizing) return;
       const auto match=propagationPattern().match(original); if (!match.hasMatch()) return;
       QString result=original;
+      if (match.capturedStart(5)>=0) {
+         if (tolerance->text().trimmed().isEmpty()) result.remove(match.capturedStart(5),match.capturedLength(5));
+         else result.replace(match.capturedStart(6),match.capturedLength(6),tolerance->text().trimmed());
+      } else if (!tolerance->text().trimmed().isEmpty()) {
+         const int end=match.capturedStart(4)<0 ? match.capturedEnd(3) : match.capturedEnd(4);
+         result.insert(end,", StopTolerance = "+tolerance->text().trimmed());
+      }
+
       const bool event=eventStop(stopParameter->text());
       duration->setEnabled(!event); findChild<QPushButton *>("propagationChooseGoal")->setEnabled(!event);
       if (event || match.capturedStart(4)<0) {
@@ -54,6 +75,8 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
       }
       result.replace(match.capturedStart(2),match.capturedLength(2),spacecraft->currentText());
       result.replace(match.capturedStart(1),match.capturedLength(1),propagator->currentText());
+      const auto span=backwardSpan(original);
+      result.replace(span.first,span.second,backward->isChecked() ? (span.second ? original.mid(span.first,span.second) : QString("BackProp ")) : QString());
       synchronizing=true; changed(result); synchronizing=false;
    };
    connect(propagator,&QComboBox::currentTextChanged,this,update);
@@ -73,6 +96,8 @@ PropagationForm::PropagationForm(const QStringList &propagators,const QStringLis
       units->setCurrentIndex(suffix=="ElapsedSecs" ? 0 : suffix=="ElapsedDays" ? 1 : 2); update();
    });
    connect(duration,&QLineEdit::textChanged,this,update);
+   connect(tolerance,&QLineEdit::textChanged,this,update);
+   connect(backward,&QCheckBox::toggled,this,update);
 }
 void PropagationForm::setStatement(const QString &statement)
 {
@@ -82,6 +107,7 @@ void PropagationForm::setStatement(const QString &statement)
    const auto match=propagationPattern().match(statement);
    if (!match.hasMatch() || (match.capturedStart(4)<0 && !eventStop(match.captured(3))) || propagator->findText(match.captured(1))<0 || spacecraft->findText(match.captured(2))<0) { hide(); return; }
    synchronizing=true; original=statement;
+   backward->setChecked(backwardSpan(statement).second>0); tolerance->setText(match.captured(6).trimmed());
    propagator->setCurrentText(match.captured(1)); spacecraft->setCurrentText(match.captured(2));
    stopParameter->setText(match.captured(3));
    const auto suffix=match.captured(3).section('.',-1);

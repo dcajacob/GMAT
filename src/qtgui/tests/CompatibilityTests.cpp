@@ -436,11 +436,19 @@ int main(int argc,char **argv)
                dialog->findChild<QPushButton *>("reportUseReference")->click();
                dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
             }); form.findChild<QPushButton *>("propagationChooseStop")->click();
-            require(replacement.contains("ApsisSat.Earth."+event+"}") && replacement.contains("'Selected event'") && replacement.contains("% keep event comment") &&
+            require(QRegularExpression("ApsisSat\\.Earth\\."+event+"\\s*(?:,|})").match(replacement).hasMatch() && replacement.contains("'Selected event'") && replacement.contains("% keep event comment") &&
                !form.findChild<QLineEdit *>("propagationDuration")->isEnabled(),"Apsis GUI kept a goal or lost source");
+            form.findChild<QCheckBox *>("propagationBackwards")->setChecked(event=="Periapsis");
+            auto *tolerance=form.findChild<QLineEdit *>("propagationTolerance"); tolerance->setText("0");
+            const auto beforeInvalid=editor->toPlainText();
+            require(!window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty() && editor->toPlainText()==beforeInvalid,"Invalid stop tolerance changed mission");
+            tolerance->setText("1e-8");
             require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,replacement).isEmpty(),"Selected apsis stop rejected");
             roundTrip("selected-"+event); require(window.runMission()==MainWindow::RunResult::Completed,"Selected apsis mission failed");
             auto *sat=Moderator::Instance()->GetInternalObject("ApsisSat");
+            const auto startEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("ApsisSat"))->GetEpoch();
+            const auto endEpoch=dynamic_cast<Spacecraft *>(sat)->GetEpoch();
+            require(event=="Periapsis" ? endEpoch<startEpoch : endEpoch>startEpoch,"GUI propagation direction was not applied");
             const double radius=std::hypot(sat->GetRealParameter("X"),sat->GetRealParameter("Y"),sat->GetRealParameter("Z"));
             require(std::abs(radius-(event=="Periapsis" ? 9000. : 11000.))<0.01,"Selected apsis stopped at incorrect orbital radius");
          }

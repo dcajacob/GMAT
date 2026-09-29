@@ -3,6 +3,7 @@
 #include <QStringList>
 #include <functional>
 class QComboBox;
+class QCheckBox;
 class QLineEdit;
 class PropagationForm final : public QGroupBox
 {
@@ -12,7 +13,8 @@ public:
    void setStatement(const QString &statement);
 private:
    QComboBox *propagator, *spacecraft, *units;
-   QLineEdit *duration,*stopParameter;
+   QLineEdit *duration,*stopParameter,*tolerance;
+   QCheckBox *backward;
    QString original;
    bool synchronizing=false;
 };

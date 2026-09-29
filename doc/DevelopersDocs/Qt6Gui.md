@@ -973,3 +973,8 @@ The stop-parameter picker includes **Periapsis** and **Apoapsis**, with a centra
 body selector. Choosing either disables the stop-value field and removes the
 numeric goal from the command. Existing labels and comments remain intact. Choose
 a scalar stop parameter again to return to a parameter/value condition.
+
+Propagation controls also include **Propagate backwards** and **Stop tolerance**.
+The tolerance field shows GMAT's current default as its placeholder; leaving it
+blank omits the option. Enter a positive tolerance to override it. Existing option
+formatting, labels and comments are preserved when editing represented commands.
