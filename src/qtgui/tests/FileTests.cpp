@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "TestSettings.hpp"
 #include "QtMessageReceiver.hpp"
 #include <QApplication>
 #include <QFile>
@@ -21,6 +22,7 @@ int main(int argc,char **argv)
    QApplication app(argc,argv);
    QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("QtFiles");
    try {
+      TestSettings isolatedSettings;
       QTemporaryDir temporary; require(temporary.isValid(),"Temporary directory unavailable");
       const auto path=temporary.path()+QString::fromUtf8("/mission Δ.script");
       const auto original=QString::fromUtf8("% UTF-8: café Δ\nBeginMissionSequence;\n");

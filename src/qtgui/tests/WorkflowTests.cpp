@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
@@ -43,6 +44,7 @@ int main(int argc, char **argv)
    const auto screenshot = argc == 4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
+      TestSettings isolatedSettings;
       MainWindow window;
       window.show();
       require(window.initialize(startup), "Runtime initialization failed");

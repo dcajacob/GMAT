@@ -17,7 +17,7 @@ def main():
                            XDG_CONFIG_HOME=str(root / "settings"))
 
         def run(arguments, expected):
-            result = subprocess.run([str(executable), *map(str, arguments)],
+            result = subprocess.run([str(executable), "--settings-dir", str(root / "settings"), *map(str, arguments)],
                                     cwd=root, env=environment, capture_output=True,
                                     text=True, timeout=30)
             if result.returncode != expected:

@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "TestSettings.hpp"
 #include "CommandEditor.hpp"
 #include "Moderator.hpp"
 #include <QApplication>
@@ -41,6 +42,7 @@ int main(int argc,char **argv)
    const auto screenshot=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
+      TestSettings isolatedSettings;
       MainWindow window; window.show(); require(window.initialize(startup),"Runtime failed");
       require(window.loadScript(script) && window.buildScript(),"Mission failed to build");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");

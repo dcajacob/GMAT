@@ -6,6 +6,7 @@
 #include <QFile>
 #include <cstdio>
 #include <QTimer>
+#include <QSettings>
 int main(int argc, char **argv)
 {
    QApplication app(argc, argv);
@@ -17,8 +18,16 @@ int main(int argc, char **argv)
    parser.addOption({"startup", "GMAT startup file", "file"});
    parser.addOption({"screenshot", "Save a startup screenshot and exit", "file"});
    parser.addOption({"run", "Run the loaded mission after opening the window"});
+   parser.addOption({"settings-dir", "Use an isolated INI settings directory", "directory"});
    parser.addPositionalArgument("script", "Optional GMAT script to open");
    parser.process(app);
+   if (parser.isSet("settings-dir")) {
+      const auto directory=QFileInfo(parser.value("settings-dir")).absoluteFilePath();
+      if (!QDir().mkpath(directory)) { std::fprintf(stderr,"Cannot create settings directory.\n"); return 2; }
+      QSettings::setDefaultFormat(QSettings::IniFormat);
+      QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,directory);
+      QSettings::setPath(QSettings::IniFormat,QSettings::SystemScope,directory+"/system");
+   }
    QString defaultStartup=QCoreApplication::applicationDirPath()+"/gmat_startup_qt.txt";
 #ifdef Q_OS_MACOS
    if (!QFileInfo::exists(defaultStartup))

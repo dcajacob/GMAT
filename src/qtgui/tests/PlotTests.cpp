@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "TestSettings.hpp"
 #include "QtPlotReceiver.hpp"
 #include "PlotWidget.hpp"
 #include "FileManager.hpp"
@@ -38,6 +39,7 @@ int main(int argc,char **argv)
    const auto image=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
+      TestSettings isolatedSettings;
       PlotModel sample(PlotModel::Kind::GroundTrack);
       sample.maxPoints=3; sample.append(0,170,2); sample.append(0,175,4);
       sample.append(0,std::numeric_limits<double>::quiet_NaN(),8); sample.append(0,-175,8);

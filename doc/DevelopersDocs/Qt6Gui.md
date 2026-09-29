@@ -118,6 +118,25 @@ Unrelated panels retain their existing stale-snapshot protection after a change.
 
 ## Functional validation
 
+The complete Qt suite is registered with CTest when `GMAT_QT_BUILD_TESTS=ON`.
+From an already configured GMAT build, run:
+
+```
+cmake -S . -B build/linux-gui -DGMAT_INCLUDE_QT_GUI=ON -DGMAT_QT_BUILD_TESTS=ON
+cmake --build build/linux-gui --target check-qt --config Release --parallel 6
+```
+
+`check-qt` builds the frontend, enabled native plugins and test executables, then
+runs six checks: files, workflow, mission editing, plots, high-DPI plots and the
+launcher. To rerun without rebuilding, use
+`ctest --test-dir build/linux-gui -C Release -L qt-gui --output-on-failure`.
+CTest locks serialize access to shared engine outputs even under parallel CTest.
+Each GUI test uses temporary INI settings rather than normal platform settings;
+the launcher uses the new `--settings-dir` option for the same isolation.
+A small Python launcher supplies runtime DLL search directories on Windows.
+The six-test suite passes on Linux; this registration does not establish a
+Windows or macOS pass until it is built and run on those platforms.
+
 Enable and run the real-engine workflow executable with a host startup file:
 
 ```

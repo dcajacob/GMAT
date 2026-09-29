@@ -19,7 +19,6 @@ else()
    install(TARGETS GmatQt DESTINATION bin)
 endif()
 
-option(GMAT_QT_BUILD_TESTS "Build Qt frontend integration tests" OFF)
 if(GMAT_QT_BUILD_TESTS)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
    target_link_libraries(GmatQtFileTests PRIVATE GmatQtFrontend)
@@ -29,4 +28,30 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtPlotTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtMissionTests tests/MissionTests.cpp)
    target_link_libraries(GmatQtMissionTests PRIVATE GmatQtFrontend)
+   find_package(Python3 REQUIRED COMPONENTS Interpreter)
+   set(qt_test_runner "${CMAKE_CURRENT_SOURCE_DIR}/tests/RunTest.py")
+   function(add_qt_test name target)
+      add_test(NAME ${name} COMMAND "${Python3_EXECUTABLE}" "${qt_test_runner}"
+         "$<TARGET_FILE_DIR:GmatQt>" "$<TARGET_FILE_DIR:Qt6::Core>"
+         $<TARGET_FILE:${target}> ${ARGN})
+      set_tests_properties(${name} PROPERTIES LABELS qt-gui TIMEOUT 60
+         RESOURCE_LOCK gmat_qt_engine WORKING_DIRECTORY "$<TARGET_FILE_DIR:GmatQt>")
+   endfunction()
+   set(qt_test_startup "$<TARGET_FILE_DIR:GmatQt>/gmat_startup_qt.txt")
+   add_qt_test(QtGui.Files GmatQtFileTests)
+   add_qt_test(QtGui.Workflow GmatQtWorkflowTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/propagate.script")
+   add_qt_test(QtGui.Mission GmatQtMissionTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/mission.script")
+   add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
+   add_qt_test(QtGui.PlotsHiDPI GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
+   set_tests_properties(QtGui.PlotsHiDPI PROPERTIES ENVIRONMENT "QT_SCALE_FACTOR=2")
+   add_test(NAME QtGui.Launch COMMAND "${Python3_EXECUTABLE}" "${qt_test_runner}"
+      "$<TARGET_FILE_DIR:GmatQt>" "$<TARGET_FILE_DIR:Qt6::Core>"
+      "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/LaunchTests.py"
+      $<TARGET_FILE:GmatQt> "${CMAKE_CURRENT_SOURCE_DIR}/tests/propagate.script")
+   set_tests_properties(QtGui.Launch PROPERTIES LABELS qt-gui TIMEOUT 150 RESOURCE_LOCK gmat_qt_engine)
+   add_custom_target(check-qt
+      COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+      DEPENDS GmatQt GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests
+      USES_TERMINAL VERBATIM)
 endif()
