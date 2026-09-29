@@ -83,6 +83,12 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
    }
    for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesView") {
       const auto values=properties.value(it.key());
+      for (const auto *key:{"ViewFrame","LookAtFrame"}) if (values.value(key).contains('.')) {
+         result.error=it.key()+"."+key+": segment-relative cameras are not yet supported by Qt conversion. The original script is unchanged."; return result;
+      }
+      if (values.value("ViewTrajectory")=="On" && values.value("SetCurrentLocation")!="On" && values.value("SetDefaultLocation")!="On") {
+         result.error=it.key()+": automatic trajectory framing is not yet supported. Set a stored Current or Default camera location before converting this view."; return result;
+      }
       for (const auto *key:{"SetDefaultLocation","SetCurrentLocation","InertialFrame","ViewTrajectory","ShortestAngle"})
          if (values.contains(key) && values.value(key)!="On" && values.value(key)!="Off") {
             result.error=it.key()+"."+key+": expected On or Off."; return result;
@@ -128,6 +134,13 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          if (types.value(viewName)!="OpenFramesView" || seen.contains(viewName)) {
             result.error=plot+": unknown or duplicate camera view "+viewName+"."; return result;
          }
+         const auto viewSettings=properties.value(viewName);
+         if (viewSettings.value("ViewTrajectory")=="On" && viewSettings.value("ViewFrame","CoordinateSystem")!="CoordinateSystem") {
+            auto objects=properties[plot].value("Add"); objects.remove('{'); objects.remove('}');
+            if (!objects.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).contains(viewSettings.value("ViewFrame"))) {
+               result.error=viewName+": trajectory frame must name an object in "+plot+".Add or CoordinateSystem."; return result;
+            }
+         }
          seen.insert(viewName);
       }
       const auto view=viewNames.first(); const auto values=properties.value(view);
@@ -138,7 +151,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       }
       QtCameraSetting cameraSetting{true,fov};
       const auto frame=values.value("ViewFrame","CoordinateSystem");
-      const bool body=frame!="CoordinateSystem";
+      const bool trajectory=values.value("ViewTrajectory")=="On";
+      const bool body=frame!="CoordinateSystem" && !trajectory;
       cameraSetting.bodyRelative=body && values.value("InertialFrame","Off")=="Off" && values.value("ViewTrajectory","Off")=="Off";
       auto set=[&](const QString &key,const QString &value) { cameras.append("GMAT "+plot+"."+key+" = "+value+";"); };
       set("ViewPointReference",body ? frame : "[0 0 0]");
@@ -180,7 +194,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             result.error=preset.name+": field of view must be a finite number from 1 to 150 degrees."; return result;
          }
          const auto extraFrame=extra.value("ViewFrame","CoordinateSystem");
-         if (extraFrame!="CoordinateSystem") preset.reference=extraFrame;
+         const bool trajectory=extra.value("ViewTrajectory")=="On";
+         if (extraFrame!="CoordinateSystem" && !trajectory) preset.reference=extraFrame;
          preset.target=extra.value("LookAtFrame");
          preset.lookAtRotation=!preset.target.isEmpty(); preset.shortestAngle=extra.value("ShortestAngle","Off")=="On";
          preset.bodyRelative=!preset.reference.isEmpty() && extra.value("InertialFrame","Off")=="Off" && extra.value("ViewTrajectory","Off")=="Off";
@@ -197,13 +212,14 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          cameraSetting.views.append(preset);
          if (!preset.reference.isEmpty()) result.notes.append(preset.name+(preset.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
          if (!preset.target.isEmpty()) result.notes.append(preset.name+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
-         if (extra.value("ViewTrajectory")=="On") result.notes.append(preset.name+": trajectory-relative orientation is not imported.");
+         if (trajectory) result.notes.append(preset.name+": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object.");
       }
       try { qtCameraSettings(qtCameraDirective(plot,cameraSetting)); }
       catch (const std::exception &error) { result.error=QString::fromUtf8(error.what()); return result; }
       cameras.append(qtCameraDirective(plot,cameraSetting).trimmed());
       set("ViewUpCoordinateSystem",properties[plot].value("CoordinateSystem","EarthMJ2000Eq"));
-      result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views; trajectory-relative orientation is not imported.");
+      result.notes.append(plot+": camera selector retains "+QString::number(viewNames.size())+" named views.");
+      if (trajectory) result.notes.append(plot+": stored whole-trajectory camera retained in the plot frame; it does not follow the moving object.");
       if (body) result.notes.append(plot+(cameraSetting.bodyRelative ? ": camera follows the object position and orientation." : ": camera follows the object position using plot-frame axes."));
       if (values.contains("LookAtFrame")) result.notes.append(plot+": two-frame look-at orientation is retained, including ShortestAngle/AZEL rotation.");
    }

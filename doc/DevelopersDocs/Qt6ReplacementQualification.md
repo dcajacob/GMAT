@@ -1098,8 +1098,31 @@ Further trajectory audit: OFScene::GetTrajectoryFrameByName returns
 OFSpaceObject::WholeTrajectory (mDrawTraj), while moving-object views use
 FrameOnWholeTrajectory (mViewRefFrame). Thus simply disabling body orientation
 while continuing to track object position is not a full trajectory-view mapping.
-The existing conversion warning remains; trajectory/segment framing is still an
-explicit open requirement.
+Stored whole-trajectory conversion is addressed in the following milestone;
+automatic trajectory and segment framing remain open requirements.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 37.66 seconds. Evidence:
 `Qt6ParityValidation/check-perspective-fit.txt`.
+
+## Stored whole-trajectory conversion
+
+The OFSpaceObject source confirms mDrawTraj is attached directly to the primary
+plot frame, while mViewRefFrame has the position/attitude follower. Conversion now
+maps stored whole-trajectory views to the plot-frame origin rather than tracking
+the named spacecraft. Stored eye, center, up, FOV and existing two-frame look-at
+handling remain in place. Secondary named trajectory presets likewise use an
+empty object reference. Unknown trajectory names are rejected unless represented
+in the plot Add list; CoordinateSystem is accepted directly.
+
+WorkflowTests checks primary/secondary mapping, scientific command preservation,
+unknown-object rejection, automatic-framing and segment-specific diagnostics.
+A converted example is saved/reopened/run; its spacecraft must move more than
+1 km while every camera eye/target sample remains fixed, with the stored eye
+coordinate retained. The earlier generic trajectory warning is replaced by a
+specific preservation note for supported stored views. Unsupported automatic
+trajectory and segment cases now stop conversion with actionable errors rather
+than substituting moving-object tracking. Their implementation remains pending;
+this milestone does not claim complete trajectory camera parity.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 36.87 seconds. Evidence:
+`Qt6ParityValidation/check-trajectory-camera.txt`.

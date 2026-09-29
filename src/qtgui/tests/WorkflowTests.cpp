@@ -91,6 +91,16 @@ int main(int argc, char **argv)
                QString(multiple).replace("Close.CurrentUp = [1 1 0]","Close.CurrentUp = [0 0 0]")})
             require(!convertOpenFramesViews(invalid).error.isEmpty(),"Invalid secondary view silently accepted");
 
+         auto trajectoryInput=input; trajectoryInput.replace("Camera.ViewFrame = CoordinateSystem","Camera.ViewFrame = Sat;\nCamera.ViewTrajectory = On");
+         const auto trajectory=convertOpenFramesViews(trajectoryInput);
+         require(trajectory.error.isEmpty() && trajectory.script.contains("Display.ViewPointReference = [0 0 0]") &&
+            !qtCameraSettings(trajectory.script).value("Display").bodyRelative && trajectory.script.endsWith(dynamics),"Stored trajectory camera still follows object");
+         auto secondary=multiple; secondary.replace("Close.SetCurrentLocation", "Close.ViewFrame = Sat;\nClose.ViewTrajectory = On;\nClose.SetCurrentLocation");
+         const auto secondaryTrajectory=convertOpenFramesViews(secondary);
+         require(secondaryTrajectory.error.isEmpty() && qtCameraSettings(secondaryTrajectory.script).value("Display").views[0].reference.isEmpty(),"Secondary trajectory camera still follows object");
+         require(!convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Missing")).error.isEmpty(),"Unknown trajectory object silently accepted");
+         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off")).error.contains("automatic trajectory framing"),"Automatic trajectory framing silently approximated");
+         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop")).error.contains("segment-relative"),"Segment camera lacks specific diagnostic");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
             "Conversion lost default OF perspective/FOV");
@@ -1106,6 +1116,25 @@ int main(int argc, char **argv)
       QFile unchangedSample(sample);
       require(unchangedSample.open(QIODevice::ReadOnly) && QString::fromUtf8(unchangedSample.readAll())==originalSample,
          "Automatic conversion overwrote the example file");
+      {
+         auto trajectoryScript=originalSample;
+         trajectoryScript.replace(QRegularExpression("TheView\\.ViewFrame\\s*=\\s*CoordinateSystem"),"TheView.ViewFrame = DefaultSC;\nTheView.ViewTrajectory = On");
+         const auto converted=convertOpenFramesViews(trajectoryScript); require(converted.error.isEmpty(),"Trajectory runtime conversion failed");
+         editor->setPlainText(converted.script);
+         QTemporaryDir files; const auto path=files.filePath("trajectory-camera.script");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Trajectory camera save/reopen/run failed");
+         const auto model=window.plotReceiver()->model("OFI_EarthView"); require(model && model->cameras.size()>2,"Trajectory camera history missing");
+         bool moved=false;
+         for (const auto &curve:model->curves) if (curve.name=="DefaultSC" && curve.points.size()>1) {
+            const auto &a=curve.points.front(),&b=curve.points.back(); moved=std::hypot(b.x-a.x,b.y-a.y,b.z-a.z)>1;
+         }
+         require(moved,"Trajectory fixture spacecraft did not move");
+         const auto first=model->cameras.front();
+         for (const auto &camera:model->cameras) for (int axis=0;axis<3;++axis)
+            require(std::abs(camera.eye[axis]-first.eye[axis])<1e-8 && std::abs(camera.target[axis]-first.target[axis])<1e-8,
+               "Stored trajectory camera moves with spacecraft");
+         require(std::abs(first.eye[0]-150000)<1e-8 && std::abs(first.target[0])<1e-8,"Stored trajectory camera pose was not retained");
+      }
       {
          auto bodyScript=originalSample;
          bodyScript.replace(QRegularExpression("TheView\\.ViewFrame\\s*=\\s*CoordinateSystem"),"TheView.ViewFrame = Earth");

@@ -935,3 +935,12 @@ mission. The separate property controls remain available.
 Perspective **Fit** now uses the narrower of the horizontal and vertical viewing
 angles. Tall, narrow tiled windows therefore keep the fitted scene inside both
 edges. Stored camera distances remain unchanged unless Fit is selected.
+
+### Stored OpenFrames trajectory views
+
+Conversion now preserves whole-trajectory views with a stored Current or Default
+camera location in the plot frame. They no longer track the spacecraft position.
+The named trajectory object must be in the plot's Add list (or use
+CoordinateSystem). Primary and additional named cameras are supported.
+Automatic trajectory framing and segment-relative views still require further
+implementation; conversion explains those cases and leaves the script unchanged.
