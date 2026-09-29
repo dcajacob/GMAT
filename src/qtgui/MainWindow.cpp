@@ -19,6 +19,7 @@
 #include "MessageInterface.hpp"
 #include "BaseException.hpp"
 #include <QAction>
+#include <QApplication>
 #include <QCloseEvent>
 #include <QDockWidget>
 #include <QFile>
@@ -35,6 +36,7 @@
 #include <QStatusBar>
 #include <QTabWidget>
 #include <QTextDocument>
+#include <QTextEdit>
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QStyle>
@@ -183,17 +185,27 @@ MainWindow::MainWindow()
    connect(saveAs, &QAction::triggered, this, [this] { saveScript(true); });
    file->addSeparator();
    connect(file->addAction("E&xit"), &QAction::triggered, this, &QWidget::close);
-   auto editAction = [edit, this](const QString &label, const QKeySequence &key, auto slot) {
+   connect(qApp,&QApplication::focusChanged,this,[this](QWidget *,QWidget *focused) {
+      // Menus temporarily take focus; keep the editor they were opened from.
+      if (!focused || qobject_cast<QMenu *>(focused) || focused==menuBar()) return;
+      if (isAncestorOf(focused) && (qobject_cast<QPlainTextEdit *>(focused) ||
+          qobject_cast<QTextEdit *>(focused) || qobject_cast<QLineEdit *>(focused))) textEditTarget=focused;
+      else textEditTarget.clear();
+   });
+   auto editAction = [edit, this](const QString &label, const QKeySequence &key, const char *slot) {
       auto *action = edit->addAction(label); action->setShortcut(key);
-      connect(action, &QAction::triggered, editor, slot);
+      action->setObjectName(QString("edit_")+slot);
+      connect(action, &QAction::triggered, this, [this,slot] {
+         if (textEditTarget && textEditTarget->isEnabled()) QMetaObject::invokeMethod(textEditTarget,slot,Qt::DirectConnection);
+      });
       editingActions.append(action);
    };
-   editAction("&Undo", QKeySequence::Undo, &QPlainTextEdit::undo);
-   editAction("&Redo", QKeySequence::Redo, &QPlainTextEdit::redo);
+   editAction("&Undo", QKeySequence::Undo, "undo");
+   editAction("&Redo", QKeySequence::Redo, "redo");
    edit->addSeparator();
-   editAction("Cu&t", QKeySequence::Cut, &QPlainTextEdit::cut);
-   editAction("&Copy", QKeySequence::Copy, &QPlainTextEdit::copy);
-   editAction("&Paste", QKeySequence::Paste, &QPlainTextEdit::paste);
+   editAction("Cu&t", QKeySequence::Cut, "cut");
+   editAction("&Copy", QKeySequence::Copy, "copy");
+   editAction("&Paste", QKeySequence::Paste, "paste");
    edit->addSeparator();
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);

@@ -123,6 +123,12 @@ The workflow suite also creates a spacecraft through the New resource dialog,
 checks name/type validation and undo, inserts a propagation command using the
 created object, and verifies that it advances by the requested 60 seconds.
 
+The Edit menu routes text actions to the focused editor, including resource
+table cells and command panels. It retains the originating editor while a menu
+is open, and does not fall back to the script when a navigation tree has focus.
+Workflow and Mission tests exercise Paste/Undo/Redo in those panels and verify
+that the mission script stays unchanged until Apply.
+
 This remains an implementation checkpoint, not a completed replacement.
 Still required: specialized resource and command forms, compound properties,
 plugin compatibility handling, advanced graphics and plot

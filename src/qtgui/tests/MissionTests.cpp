@@ -2,6 +2,10 @@
 #include "CommandEditor.hpp"
 #include "Moderator.hpp"
 #include <QApplication>
+#include <QAction>
+#include <QClipboard>
+#include <QMenu>
+#include <QKeyEvent>
 #include <QDialogButtonBox>
 #include <QDir>
 #include <QFileInfo>
@@ -94,7 +98,26 @@ int main(int argc,char **argv)
       CommandEditor *panel=nullptr;
       for (auto *widget:window.findChildren<QWidget *>()) if (auto *candidate=dynamic_cast<CommandEditor *>(widget)) panel=candidate;
       require(panel!=nullptr,"Mission double click did not open editor");
-      panel->findChild<QPlainTextEdit *>("commandSource")->setPlainText("total = total + 4;");
+      auto *commandSource=panel->findChild<QPlainTextEdit *>("commandSource");
+      commandSource->setFocus(); QApplication::processEvents();
+      const auto scriptBeforeTextEdit=editor->toPlainText();
+      const auto commandBeforeTextEdit=commandSource->toPlainText();
+      commandSource->selectAll(); QApplication::clipboard()->setText("total = total + 4;");
+      window.findChild<QAction *>("edit_paste")->trigger();
+      require(commandSource->toPlainText()=="total = total + 4;" && editor->toPlainText()==scriptBeforeTextEdit,"Paste targeted the wrong document");
+      QMenu *editMenu=nullptr;
+      for (auto *menu:window.findChildren<QMenu *>()) if (menu->title()=="&Edit") editMenu=menu;
+      require(editMenu!=nullptr,"Edit menu missing");
+      editMenu->popup(window.mapToGlobal(QPoint(100,30))); QApplication::processEvents();
+      editMenu->setActiveAction(window.findChild<QAction *>("edit_undo"));
+      QKeyEvent activate(QEvent::KeyPress,Qt::Key_Return,Qt::NoModifier);
+      QApplication::sendEvent(editMenu,&activate); QApplication::processEvents();
+      require(commandSource->toPlainText()==commandBeforeTextEdit && editor->toPlainText()==scriptBeforeTextEdit,"Undo targeted the script instead of the command panel");
+      window.findChild<QAction *>("edit_redo")->trigger();
+      require(commandSource->toPlainText()=="total = total + 4;","Redo did not target command editor");
+      tree->setFocus(); QApplication::processEvents();
+      window.findChild<QAction *>("edit_undo")->trigger();
+      require(editor->toPlainText()==scriptBeforeTextEdit && commandSource->toPlainText()=="total = total + 4;","Undo with tree focus changed an editor");
       require(panel->hasChanges() && !window.buildScript(),"Unapplied mission changes did not protect Build");
       if (!screenshot.isEmpty()) { QApplication::processEvents(); require(window.grab().save(screenshot),"Mission screenshot failed"); }
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();

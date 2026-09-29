@@ -17,6 +17,7 @@
 #include <QDialog>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QClipboard>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -116,7 +117,21 @@ int main(int argc, char **argv)
       bool massFound = false;
       for (int row = 0; row < table->rowCount(); ++row) {
          if (table->item(row, 0)->text() == "DryMass") {
-            table->item(row, 1)->setText("888.25"); massFound = true; break;
+            const auto unchangedScript=editor->toPlainText();
+            const auto originalText=table->item(row,1)->text();
+            table->editItem(table->item(row,1)); QApplication::processEvents();
+            auto *field=qobject_cast<QLineEdit *>(QApplication::focusWidget());
+            require(field!=nullptr,"Property cell editor did not receive focus");
+            field->selectAll(); QApplication::clipboard()->setText("888.25");
+            window.findChild<QAction *>("edit_paste")->trigger();
+            require(field->text()=="888.25" && editor->toPlainText()==unchangedScript,"Property Paste modified the script");
+            window.findChild<QAction *>("edit_undo")->trigger();
+            require(field->text()==originalText && editor->toPlainText()==unchangedScript,"Property Undo modified the script");
+            window.findChild<QAction *>("edit_redo")->trigger();
+            panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->setFocus();
+            QApplication::processEvents();
+            require(table->item(row,1)->text()=="888.25","Edited cell did not commit on focus change");
+            massFound = true; break;
          }
       }
       require(massFound && panel->hasChanges(), "Mass is not editable in the panel");

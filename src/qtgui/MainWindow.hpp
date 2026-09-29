@@ -3,6 +3,7 @@
 #include <memory>
 #include <QList>
 #include <QMap>
+#include <QPointer>
 #include "MissionModel.hpp"
 class QMdiArea;
 class QPlainTextEdit;
@@ -49,6 +50,7 @@ private:
    QMdiArea *workspace;
    QPlainTextEdit *editor;
    QPlainTextEdit *messages;
+   QPointer<QWidget> textEditTarget;
    QTreeWidget *resources;
    QTreeWidget *mission;
    QTreeWidget *output;
