@@ -62,7 +62,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverGoalsPanel.hpp` | Pending audit |
-| `src/gui/solver/DCSetupPanel.hpp` | Pending audit |
+| `src/gui/solver/DCSetupPanel.hpp` | Six wx fields audited; algorithm/derivative dropdowns and report output picker corrected. Pending Apply, chooser Cancel, Broyden/CentralDifference save/reopen solve and report writing covered. Other algorithm/derivative combinations remain to qualify. |
 | `src/gui/solver/SolverCreatePanel.hpp` | Pending audit |
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
@@ -1597,3 +1597,22 @@ capability-dependent fields disabled without querying the configuration manager.
 The initial run exposed this case; after guarding the lookup, all 11 Qt tests
 passed in 70.23 seconds and the user's GmatQt was rebuilt. Native viewer checks
 used isolated Xvfb. Evidence: `Qt6ParityValidation/check-solver-capabilities.txt`.
+
+## DifferentialCorrector resource editor
+
+Audited DCSetupPanel's six fields: MaximumIterations, ReportStyle, ReportFile,
+ShowProgress, Algorithm and DerivativeMethod. Qt already exposes the iteration,
+report-style and progress controls in Convergence/Output sections. Algorithm and
+derivative method were free text because the engine marks them as enumerations
+without supplying their choice lists. Qt now supplies the same three choices for
+each as wx and the engine setters. Solver ReportFile now uses an output chooser.
+
+MissionTests configures Broyden, CentralDifference, Verbose report output and an
+iteration limit through ResourceEditor. It checks chooser Cancel and that pending
+settings do not alter the configured engine, applies them, saves/reopens, solves
+the existing target, and verifies a nonempty report at the selected path. This
+qualifies that combination; it does not establish all algorithm/derivative pairs.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 64.67 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-dc-controls.txt`.

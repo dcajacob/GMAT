@@ -92,6 +92,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          if (field.filename) {
             const auto type=object.GetTypeName();
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
+               (object.IsOfType("Solver") && field.name=="ReportFile") ||
                (object.IsOfType("Estimator") && (field.name=="MatlabFile" || field.name=="DataFile"));
             field.fileInput=object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
@@ -120,6 +121,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             }
          }
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowModel") field.choices={"None","DualCone"};
+         // DifferentialCorrector marks these as enums but supplies no choice
+         // metadata. Match its setters and the wx DC setup panel.
+         if (object.IsOfType("DifferentialCorrector") && field.name=="Algorithm")
+            field.choices={"NewtonRaphson","Broyden","ModifiedBroyden"};
+         if (object.IsOfType("DifferentialCorrector") && field.name=="DerivativeMethod")
+            field.choices={"CentralDifference","ForwardDifference","BackwardDifference"};
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies")
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
          if (object.IsOfType("CoordinateSystem") && field.name=="Axes")

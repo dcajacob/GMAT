@@ -1088,3 +1088,10 @@ Edit the added fields, then Apply to validate and update the mission.
 Vary option fields follow the selected solver's capabilities. Unsupported
 settings are disabled with an explanation, and their values are retained when
 switching solvers. Select a configured solver to enable supported settings.
+
+### DifferentialCorrector settings
+
+The solver resource editor offers algorithm and derivative-method dropdowns in
+Convergence. Output contains report style, report destination and progress
+settings. Browse chooses a report output path; Apply stores the settings and
+running the mission writes the report.

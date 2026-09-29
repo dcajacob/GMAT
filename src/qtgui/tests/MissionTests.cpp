@@ -4,6 +4,9 @@
 #include "CommandForm.hpp"
 #include "ConditionDialog.hpp"
 #include "ReportParameterDialog.hpp"
+#include "ResourceEditor.hpp"
+#include <QFileDialog>
+#include <QFile>
 #include <QSpinBox>
 #include <QComboBox>
 #include "Moderator.hpp"
@@ -368,6 +371,31 @@ int main(int argc,char **argv)
          "Vary DC(goalValue = 1, {Perturbation = 0.001, Lower = -20, Upper = 20, MaxStep = 10});\n"
          "Achieve DC(x = 7, {Tolerance = 0.000001});\nEndTarget;\n");
       require(window.buildScript(),"Targeting fixture did not build");
+      QTemporaryDir solverOutput; require(solverOutput.isValid(),"Solver report directory failed");
+      const auto solverReport=solverOutput.filePath("target report.txt");
+      {
+         const auto before=editor->toPlainText(); QString error; QWidget owner;
+         ResourceEditor settings(*Moderator::Instance()->GetConfiguredObject("DC"),[&](const auto &changes) {
+            error=window.applyResourceChanges("DC",changes,before); return error;
+         },&owner);
+         auto *grid=settings.findChild<QTableWidget *>();
+         auto row=[&](const QString &name) { for (int i=0;i<grid->rowCount();++i) if (grid->item(i,0)->text()==name) return i; throw std::runtime_error("Missing DC setting"); };
+         auto combo=[&](const QString &name) { auto *value=qobject_cast<QComboBox *>(grid->cellWidget(row(name),1)); require(value,"DC dropdown missing"); return value; };
+         require(combo("Algorithm")->count()==3 && combo("DerivativeMethod")->count()==3 && combo("ReportStyle")->count()==4,"DC choices do not match wx");
+         combo("Algorithm")->setCurrentText("Broyden"); combo("DerivativeMethod")->setCurrentText("CentralDifference");
+         combo("ReportStyle")->setCurrentText("Verbose"); combo("ShowProgress")->setCurrentText("true");
+         grid->item(row("MaximumIterations"),1)->setText("30");
+         auto *reportItem=grid->item(row("ReportFile"),1); const auto originalReport=reportItem->text();
+         QTimer::singleShot(0,&settings,[&] {
+            auto *dialog=settings.findChild<QFileDialog *>("resourceFileDialog"); require(dialog && dialog->acceptMode()==QFileDialog::AcceptSave,"Solver report chooser is not an output picker");
+            dialog->selectFile(solverReport); dialog->reject();
+         }); settings.findChild<QPushButton *>("chooseProperty_ReportFile")->click();
+         require(reportItem->text()==originalReport,"Cancelled solver report changed path");
+         reportItem->setText(solverReport);
+         require(Moderator::Instance()->GetConfiguredObject("DC")->GetStringParameter("Algorithm")=="NewtonRaphson","Pending solver settings changed engine");
+         settings.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         require(error.isEmpty() && Moderator::Instance()->GetConfiguredObject("DC")->GetStringParameter("Algorithm")=="Broyden","DC GUI settings failed to apply");
+      }
       {
          ReportParameterDialog numeric({"x"},&window,ReportParameterDialog::Mode::WritableReal);
          auto *entry=numeric.findChild<QComboBox *>("reportParameterEntry");
@@ -450,6 +478,8 @@ int main(int argc,char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed,"Targeting did not execute");
       auto solved=[&] { return Moderator::Instance()->GetInternalObject("x")->GetRealParameter("Value"); };
       require(std::abs(solved()-8)<1e-6,"Targeting did not achieve edited goal");
+      QFile solverReportFile(solverReport);
+      require(solverReportFile.open(QIODevice::ReadOnly) && !solverReportFile.readAll().trimmed().isEmpty(),"GUI-configured solver report was not written after reopen");
       require(window.findChildren<QTableWidget *>("solverProgress").size()==1,"Edited solver mode left a stale progress window");
       auto *progress=window.findChild<QTableWidget *>("solverProgress");
       auto *solverStatus=window.findChild<QLabel *>("solverStatus");
