@@ -3,6 +3,8 @@
 #include "Target.hpp"
 #include "Optimize.hpp"
 #include "FindEvents.hpp"
+#include "Vary.hpp"
+#include "Achieve.hpp"
 #include <memory>
 #include <QFormLayout>
 #include <QLineEdit>
@@ -257,13 +259,17 @@ void CommandForm::setStatement(const QString &statement)
             add(setting.captured(1),match.capturedStart(options)+setting.capturedStart(2),setting.capturedLength(2));
          }
       }
-      if (spec.type=="Solver branch" || spec.type=="Event search") {
+      if (spec.type=="Solver branch" || spec.type=="Event search" || spec.type=="Vary" || spec.type=="Achieve") {
          std::unique_ptr<GmatCommand> prototype;
          if (spec.type=="Event search") prototype=std::make_unique<FindEvents>();
+         else if (spec.type=="Vary") prototype=std::make_unique<Vary>();
+         else if (spec.type=="Achieve") prototype=std::make_unique<Achieve>();
          else if (QRegularExpression("^\\s*Optimize\\b").match(statement).hasMatch()) prototype=std::make_unique<Optimize>();
          else prototype=std::make_unique<Target>();
          QStringList missing;
-         const QStringList keys=spec.type=="Event search" ? QStringList{"Append"} : QStringList{"SolveMode","ExitMode","ShowProgressWindow"};
+         const QStringList keys=spec.type=="Event search" ? QStringList{"Append"} :
+            spec.type=="Vary" ? QStringList{"Perturbation","Lower","Upper","MaxStep","AdditiveScaleFactor","MultiplicativeScaleFactor"} :
+            spec.type=="Achieve" ? QStringList{"Tolerance"} : QStringList{"SolveMode","ExitMode","ShowProgressWindow"};
          for (const auto &key:keys) {
             if (findChild<QLineEdit *>("commandField_"+key)) continue;
             const auto value=(key=="ShowProgressWindow" || key=="Append") ? (prototype->GetBooleanParameter(key.toStdString()) ? QString("true") : QString("false")) :
@@ -273,11 +279,12 @@ void CommandForm::setStatement(const QString &statement)
          if (!missing.isEmpty()) {
             auto *defaults=new QPushButton("Add default options",this); defaults->setObjectName("commandAddOptions");
             defaults->setToolTip("Add omitted options using GMAT defaults; existing settings and command contents are preserved"); layout->addRow(defaults);
-            connect(defaults,&QPushButton::clicked,this,[this,pattern=spec.pattern,options,missing] {
+            const bool argumentOptions=spec.type=="Vary" || spec.type=="Achieve";
+            connect(defaults,&QPushButton::clicked,this,[this,pattern=spec.pattern,options,missing,argumentOptions] {
                auto result=currentStatement(); const auto match=QRegularExpression("^\\s*"+pattern).match(result);
                if (!match.hasMatch()) return;
                if (match.capturedStart(options)>=0) result.insert(match.capturedEnd(options),(match.captured(options).trimmed().isEmpty() ? "" : ", ")+missing.join(", "));
-               else result.insert(match.capturedEnd(1)," {"+missing.join(", ")+"}");
+               else result.insert(match.capturedEnd(argumentOptions ? 3 : 1),(argumentOptions ? ", {" : " {")+missing.join(", ")+"}");
                synchronizing=true; changed(result); synchronizing=false; setStatement(result);
             });
          }

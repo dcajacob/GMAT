@@ -1076,3 +1076,11 @@ elements are available alongside the property browser. Output choices filter
 writable parameters. The text fields remain editable, and Apply validates the
 function signature. Quoted commas and array-index commas remain within one
 argument when loading the selector. Cancel leaves the command unchanged.
+
+### Omitted Vary and Achieve options
+
+Use **Add default options** in a Vary or Achieve command form to expose settings
+omitted from the script. Vary adds missing perturbation, bounds, maximum step and
+scale-factor fields; Achieve adds tolerance. Values come from GMAT's command
+defaults. Existing options, pending edits, labels and comments are retained.
+Edit the added fields, then Apply to validate and update the mission.

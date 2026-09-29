@@ -69,6 +69,20 @@ int main(int argc,char **argv)
          require(result==expected,"Vary form changed unrelated source");
          form.findChild<QLineEdit *>("commandField_Initial value")->setText("3.5");
          expected.replace("x = 1","x = 3.5"); require(result==expected,"Multiple field edits lost a value");
+         form.findChild<QPushButton *>("commandAddOptions")->click();
+         require(result.contains("Upper = 25") && result.contains("x = 3.5") && result.contains("% keep this") &&
+            result.count("Perturbation =")==1 && result.contains("MultiplicativeScaleFactor = 1.0"),"Adding Vary defaults lost pending values or duplicated options");
+         require(!form.findChild<QPushButton *>("commandAddOptions"),"Vary defaults can be added twice");
+         for (const auto &command:{QString("Vary"),QString("Achieve")}) {
+            form.setStatement(command+" 'Keep name' DC(x = 2); % keep comment");
+            form.findChild<QLineEdit *>("commandField_Solver")->setText("OtherDC");
+            form.findChild<QPushButton *>("commandAddOptions")->click();
+            require(result.startsWith(command+" 'Keep name' OtherDC(x = 2, {") && result.endsWith("}); % keep comment"),
+               "Omitted solver options inserted outside argument list or lost source");
+            auto *setting=form.findChild<QLineEdit *>(command=="Vary" ? "commandField_MaxStep" : "commandField_Tolerance");
+            require(setting,"Added solver options did not expose editable controls"); setting->setText("0.02");
+            require(result.contains(command=="Vary" ? "MaxStep = 0.02" : "Tolerance = 0.02"),"Added solver option cannot be edited");
+         }
          const QString loop="For 'Keep loop' i = 1:2:7;\n   total = total + i; % body stays exact\nEndFor;";
          form.setStatement(loop);
          auto *step=form.findChild<QLineEdit *>("commandField_Step");
@@ -360,11 +374,22 @@ int main(int argc,char **argv)
          require(selected && window.applyMissionChange(current,find(current,"Vary"),MissionEdit::Replace,varied).isEmpty(),"Selected Vary variable did not apply");
       }
 
+      {
+         const auto current=window.missionSnapshot(); QString changed;
+         CommandForm optionsForm([&](const QString &value) { changed=value; }); optionsForm.setStatement("Vary DC(x = 1);");
+         optionsForm.findChild<QPushButton *>("commandAddOptions")->click();
+         optionsForm.findChild<QLineEdit *>("commandField_Lower")->setText("-20");
+         optionsForm.findChild<QLineEdit *>("commandField_Upper")->setText("20");
+         optionsForm.findChild<QLineEdit *>("commandField_MaxStep")->setText("2");
+         require(window.applyMissionChange(current,find(current,"Vary"),MissionEdit::Replace,changed).isEmpty(),"Added Vary options did not apply");
+      }
       snapshot=window.missionSnapshot();
       const int achieve=find(snapshot,"Achieve");
       QString replacement;
       CommandForm goalForm([&](const QString &text) { replacement=text; });
-      goalForm.setStatement(snapshot.nodes[achieve].statement);
+      goalForm.setStatement("Achieve DC(x = 7);");
+      goalForm.findChild<QPushButton *>("commandAddOptions")->click();
+      goalForm.findChild<QLineEdit *>("commandField_Tolerance")->setText("0.000001");
       auto *goal=goalForm.findChild<QLineEdit *>("commandField_Value");
       require(goal,"Engine-generated Achieve command has no form");
       {
