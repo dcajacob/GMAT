@@ -610,3 +610,11 @@ these initializations later; edit those assignments through the Mission tree.
 This grid does not reinterpret arbitrary existing assignment code as a formula
 block. Resource edits preserve the existing mission section, including comments
 and formula commands, rather than replacing it with engine-formatted output.
+
+
+Propagator resource panels expose writable settings from the selected integrator
+or ephemeris propagator, including InitialStepSize. Apply preserves the separate
+force-model section for numerical propagators. TLE, BulirschStoer and
+PrinceDormand853 configuration, save/reopen, execution and recovery scenarios
+are covered by the compatibility suite; the qualification checklist records
+remaining plugin and specialized-editor gaps.

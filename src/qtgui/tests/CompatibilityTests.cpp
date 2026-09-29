@@ -3,6 +3,11 @@
 #include "CommandForm.hpp"
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
+#include "SolarSystem.hpp"
+#include "CelestialBody.hpp"
+#include "ResourceProperties.hpp"
+#include <QRegularExpression>
+#include <array>
 #include <QApplication>
 #include <QDir>
 #include <QFile>
@@ -119,6 +124,69 @@ int main(int argc,char **argv)
          auto *member=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject(name));
          require(member && std::abs((member->GetEpoch()-epoch)*86400-60)<.01,"Formation did not propagate both members for 60 seconds");
       }
+      auto tle=read(samples.filePath("Ex_TLE_Propagation.script"));
+      const auto tleReport=output.filePath("tle.txt");
+      tle.replace("'Ex_TLE_Propagation.txt'","'"+tleReport+"'");
+      tle.replace("'../samples/SupportFiles/Ex_TLE_Propagation_TLE.txt'","'"+samples.filePath("SupportFiles/Ex_TLE_Propagation_TLE.txt")+"'");
+      tle.replace(QRegularExpression("RF\\.Add\\s*=\\s*\\{[^}]*\\}"),
+         "RF.Add = {ExampleSat.A1ModJulian, ExampleSat.X, ExampleSat.Y, ExampleSat.Z, ExampleSat.VX, ExampleSat.VY, ExampleSat.VZ}");
+      editor->setPlainText(tle); require(window.buildScript(),"TLE example did not build");
+      bool stepEditor=false;
+      for (const auto &field:resourceProperties(*Moderator::Instance()->GetConfiguredObject("TLEProp"))) stepEditor=stepEditor || field.name=="InitialStepSize";
+      require(stepEditor,"TLE step configuration missing from Qt resource editor");
+      roundTrip("tle");
+      auto tleEndpoint=[&] {
+         require(window.runMission()==MainWindow::RunResult::Completed,"TLE propagation failed");
+         const auto report=read(tleReport).trimmed().split('\n');
+         require(report.size()>200,"TLE report is missing propagated samples");
+         const auto first=report[1].trimmed().split(QRegularExpression("\\s+"));
+         const auto last=report.last().trimmed().split(QRegularExpression("\\s+"));
+         require(first.size()==7 && last.size()==7,"Unexpected TLE report columns");
+         std::array<double,7> endpoint;
+         for (int i=0;i<7;++i) { bool valid=false; endpoint[i]=last[i].toDouble(&valid); require(valid && std::isfinite(endpoint[i]),"Nonfinite TLE state"); }
+         require(std::abs(endpoint[0]-first[0].toDouble()-1)<1e-8,"TLE mission did not span one day");
+         const double radius=std::hypot(endpoint[1],endpoint[2],endpoint[3]);
+         require(radius>6800 && radius<7500,"TLE orbit radius inconsistent with the supplied low-Earth orbit");
+         auto *spacecraft=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("ExampleSat"));
+         require(spacecraft && std::abs(spacecraft->GetEpoch()-endpoint[0])<1e-9,"TLE report and propagated epoch disagree");
+         return endpoint;
+      };
+      const auto baseline=tleEndpoint();
+      require(window.applyResourceChanges("TLEProp",{{"InitialStepSize","120"}},editor->toPlainText()).isEmpty(),"TLE step edit failed");
+      roundTrip("tle-step");
+      const auto refined=tleEndpoint();
+      for (int i=1;i<7;++i) require(std::abs(baseline[i]-refined[i])<1e-4,"TLE endpoint changed with output sampling step");
+      const auto validTle=editor->toPlainText();
+      auto missingTle=validTle; missingTle.replace(samples.filePath("SupportFiles/Ex_TLE_Propagation_TLE.txt"),output.filePath("missing-tle.txt"));
+      editor->setPlainText(missingTle);
+      require(window.runMission()==MainWindow::RunResult::Failed,"Missing TLE file was silently accepted");
+      editor->setPlainText(validTle); const auto recovered=tleEndpoint();
+      for (int i=1;i<7;++i) require(std::abs(refined[i]-recovered[i])<1e-8,"TLE failed-file recovery changed the result");
+      const double mu=Moderator::Instance()->GetSolarSystemInUse()->GetBody("Earth")->GetGravitationalConstant();
+      const double radius=7000,speed=std::sqrt(mu/radius),duration=1200,angle=std::sqrt(mu/(radius*radius*radius))*duration;
+      for (const auto *type:{"BulirschStoer","PrinceDormand853"}) {
+         const auto integratorReport=output.filePath(QString(type)+".txt");
+         editor->setPlainText(QString("Create Spacecraft Circle;\nCircle.X = 7000;\nCircle.Y = 0;\nCircle.Z = 0;\n"
+            "Circle.VX = 0;\nCircle.VY = %1;\nCircle.VZ = 0;\n"
+            "Create ForceModel PointMass;\nPointMass.PrimaryBodies = {};\nPointMass.PointMasses = {Earth};\n"
+            "Create Propagator Prop;\nProp.FM = PointMass;\nProp.Type = %2;\nProp.InitialStepSize = 60;\nProp.Accuracy = 1e-12;\n"
+            "Create ReportFile OrbitReport;\nOrbitReport.Filename = '%3';\n"
+            "BeginMissionSequence;\nPropagate Prop(Circle) {Circle.ElapsedSecs = 1200};\n"
+            "Report OrbitReport Circle.X Circle.Y Circle.Z;\n").arg(QString::number(speed,'g',17),type,integratorReport));
+         require(window.buildScript(),"Plugin integrator fixture did not build");
+         const auto settingError=window.applyResourceChanges("Prop",{{"InitialStepSize","30"}},editor->toPlainText());
+         if (!settingError.isEmpty()) std::cerr<<type<<": "<<settingError.toStdString()<<std::endl;
+         require(settingError.isEmpty(),"Owned plugin integrator setting failed");
+         roundTrip(type);
+         require(window.runMission()==MainWindow::RunResult::Completed,"Plugin integrator propagation failed");
+         auto *circle=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("Circle"));
+         require(circle && std::abs(circle->GetRealParameter("X")-radius*std::cos(angle))<1e-4 &&
+            std::abs(circle->GetRealParameter("Y")-radius*std::sin(angle))<1e-4 && std::abs(circle->GetRealParameter("Z"))<1e-4,
+            "Plugin integrator differs from analytic circular-orbit solution");
+         require(!read(integratorReport).trimmed().isEmpty(),"Plugin integrator report missing");
+      }
+      std::cout<<"PASS: BulirschStoer and PrinceDormand853 configuration, round trips and analytic circular-orbit checks\n";
+      std::cout<<"PASS: TLE sample, step configuration, report epoch/state, sampling invariance and missing-file recovery\n";
       std::cout<<"PASS: Python cross product and report, configured formation members and simultaneous propagation\n";
       std::cout<<"PASS: plugin save, Save As, exact source round trip and failed-build recovery before numerical execution\n";
       std::cout<<"PASS: registered native plugins, edited GMAT function arguments and cross product, Yukon analytic optimum, automatic eclipse events and report access\n";

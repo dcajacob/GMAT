@@ -730,8 +730,16 @@ QString MainWindow::applyResourceChanges(const QString &name,
       }
       if (!proposed->Validate()) return "The resource rejected these settings.";
       candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
-      const auto oldBlock = QString::fromStdString(object->GetGeneratingString(Gmat::SCRIPTING));
-      auto newBlock = QString::fromStdString(proposed->GetGeneratingString(Gmat::SCRIPTING));
+      auto serialize=[](GmatBase &resource) {
+         if (!resource.IsOfType(Gmat::PROP_SETUP)) return QString::fromStdString(resource.GetGeneratingString(Gmat::SCRIPTING));
+         // The full script writes force models in their own section. Match that
+         // convention without changing the configured object's output flags.
+         std::unique_ptr<GmatBase> copy(resource.Clone());
+         copy->TakeAction("ExcludeODEModel");
+         return QString::fromStdString(copy->GetGeneratingString(Gmat::SCRIPTING));
+      };
+      const auto oldBlock = serialize(*object);
+      auto newBlock = serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
          if (isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value());
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)

@@ -4,6 +4,8 @@
 #include "Moderator.hpp"
 #include "Rmatrix.hpp"
 #include "Array.hpp"
+#include "PropSetup.hpp"
+#include "Propagator.hpp"
 #include "Rvector.hpp"
 #include <QRegularExpression>
 #include <cmath>
@@ -91,6 +93,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // Some plugin and computed properties have no scalar editor.
       }
    }
+   if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
+      for (const auto &field:resourceProperties(*propagator)) {
+         const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
+         if (!duplicate) fields.append(field);
+      }
+   }
    if (object.IsOfType("Spacecraft")) {
       // Attitude parameters are delegated by name at IDs above the spacecraft
       // parameter table. Enumerate the owned model rather than guessing IDs.
@@ -121,6 +129,10 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
 
 bool isResourceList(GmatBase &object, const QString &name)
 {
+   if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
+      try { if (propagator->GetParameterID(name.toStdString())>=0) return isResourceList(*propagator,name); }
+      catch (BaseException &) {} // Parent-only fields such as FM and Type.
+   }
    // These lists use canonical {...} syntax. Other compound lists can carry
    // additional positional settings and need their own replacement handling.
    QString leaf;
@@ -230,6 +242,11 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
+      int parameter=-1;
+      try { parameter=propagator->GetParameterID(name.toStdString()); } catch (BaseException &) {}
+      if (parameter>=0 && !propagator->IsParameterReadOnly(parameter)) { setResourceProperty(*propagator,name,value); return; }
+   }
    QString leaf;
    if (auto *force=forcePropertyOwner(object,name,leaf)) { setResourceProperty(*force,leaf,value); return; }
    const auto id = object.GetParameterID(name.toStdString());

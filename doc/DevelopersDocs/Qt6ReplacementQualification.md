@@ -94,7 +94,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid; retained/new cells, cancel, ragged/nonfinite rejection, reconstruction and Undo tested. Expression workflow pending. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
-| `src/gui/propagator/PropagationConfigPanel.hpp` | Pending audit |
+| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
 | `src/gui/asset/GroundStationPanel.hpp` | Pending audit |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
@@ -154,19 +154,19 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libGmatEstimation` | Pending qualification |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. Contact and remaining locator workflows pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
-| `../plugins/libExtraPropagators` | Pending qualification |
+| `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
 | `../plugins/libMsise00` | Pending qualification |
 | `../plugins/libNewParameters` | Pending qualification |
 | `../plugins/libPolyhedronGravity` | Pending qualification |
-| `../plugins/libProductionPropagators` | Pending qualification |
+| `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | Pending qualification |
 | `../plugins/libScriptTools` | Pending qualification |
 | `../plugins/libStation` | Pending qualification |
 | `../plugins/libThrustFile` | Pending qualification |
-| `../plugins/thinksys/libTLEPropagator` | Pending qualification |
+| `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
 | `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. Additional settings/error modes pending. |
 
 ## Implementation checkpoint 1
@@ -308,3 +308,25 @@ The remaining specialized-editor, multi-camera and plugin gates stay open.
 
 GmatQt rebuilt; all 11 tests passed in 21.53 seconds. Evidence:
 `Qt6ParityValidation/check-array-expressions.txt`.
+
+
+## Propagator plugin checkpoint
+
+Resource panels now enumerate writable fields of a PropSetup's owned propagator,
+including plugin settings hidden by the parent forwarding table. Edits target the
+owned object. Resource serialization excludes the separately written force model
+when matching propagator blocks; previously numerical-propagator Apply could fail
+with the specialized-editor message despite having a supported property.
+
+CompatibilityTests runs the shipped TLE mission, checks a one-day report span,
+finite low-Earth-orbit state and matching spacecraft epoch, edits sampling from
+300 to 120 seconds, verifies endpoint invariance, and recovers from a missing TLE
+file without changing the result. BulirschStoer and PrinceDormand853 each undergo
+step editing, exact save/Save As/reopen and invalid-build recovery, then propagate
+a circular point-mass Earth orbit against an analytic endpoint within 0.1 metre.
+Both produce reports. These checks qualify these scenarios, not every plugin
+option or propagation regime. Specialized workflows and other inventory gaps
+remain open.
+
+The user's GmatQt executable was rebuilt. All 11 Qt tests passed in 21.91 seconds.
+Evidence: `Qt6ParityValidation/check-plugin-propagators.txt`.
