@@ -69,5 +69,10 @@ endif()
 # Bulk changes to the src targets can be made here, using the
 # SET_TARGET_PROPERTIES(${SrcTargets} ...) function. This is cleaner
 # than applying the target properties at each subdirectory.
+if(GMAT_INCLUDE_QT_GUI)
+   ADD_SUBDIRECTORY(qtgui)
+   LIST(APPEND SrcTargets GmatQt)
+endif()
+
 SET_TARGET_PROPERTIES(${SrcTargets} PROPERTIES VERSION ${GMAT_VERSION})
 SET_TARGET_PROPERTIES(${SrcTargets} PROPERTIES FOLDER "GMAT Core")

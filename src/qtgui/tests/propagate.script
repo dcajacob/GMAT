@@ -1,0 +1,9 @@
+% Core-only mission for Qt script interpretation and execution checks.
+Create Spacecraft QtSat;
+Create ForceModel QtForces;
+QtForces.CentralBody = Earth;
+QtForces.PrimaryBodies = {Earth};
+Create Propagator QtProp;
+QtProp.FM = QtForces;
+BeginMissionSequence;
+Propagate QtProp(QtSat) {QtSat.ElapsedSecs = 600};

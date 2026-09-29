@@ -1,0 +1,13 @@
+find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets)
+add_executable(GmatQt main.cpp MainWindow.cpp MainWindow.hpp
+   QtMessageReceiver.cpp QtMessageReceiver.hpp)
+target_link_libraries(GmatQt PRIVATE Qt6::Widgets GmatBase GmatUtil)
+_SETOUTPUTDIRECTORY(GmatQt bin)
+set_target_properties(GmatQt PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+if(APPLE)
+   set_target_properties(GmatQt PROPERTIES INSTALL_RPATH "@loader_path/../Frameworks")
+   install(TARGETS GmatQt DESTINATION ${GMAT_MAC_APPBUNDLE_PATH}/MacOS)
+else()
+   set_target_properties(GmatQt PROPERTIES INSTALL_RPATH "$ORIGIN")
+   install(TARGETS GmatQt DESTINATION bin)
+endif()

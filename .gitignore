@@ -53,6 +53,7 @@ __pycache__
 *.sublime-workspace
 .vs/
 /build
+/application/bin/GmatQt*
 /depends/cspice65/windows/cspice64
 /depends/cspice66/windows/cspice64
 /src/base/solarsys/CPaJAcXSKaQEfMDHG.svg
