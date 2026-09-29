@@ -78,7 +78,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/ThrusterPanel.hpp` | Pending audit |
-| `src/gui/spacecraft/SpicePanel.hpp` | Pending audit |
+| `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. CK/SCLK/FK runtime use and NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatDialog.hpp` | Pending audit |
@@ -862,3 +862,23 @@ cases remain pending.
 
 GmatQt was rebuilt; all 11 Qt checks passed in 26.98 seconds. Evidence:
 `Qt6ParityValidation/check-writable-parameters.txt`.
+
+## Spacecraft SPICE file-list editor
+
+SpacePoint's four spacecraft kernel arrays were excluded by the generic list
+allowlist. They are now exposed as ordered file lists rather than resource-name
+lists. The dialog supports adding existing files, removing selected entries,
+drag reordering and Cancel. Serialization quotes paths, preserves commas/spaces,
+replaces the entire list and allows clearing. Apostrophes, semicolons and embedded
+line breaks are explicitly rejected in this GUI path; unrestricted filename
+round trips remain an outstanding edge case.
+
+WorkflowTests uses two copies of the bundled GEOSat.bsp, including filenames with
+spaces and a comma. It adds through the real picker, checks duplicate prevention,
+reorders, cancels removal, applies and verifies engine order. It then checks
+Undo/Redo, exact save/reopen, failed-edit rollback for a nonexistent kernel and
+clearing. All four kernel-list controls are present, but this does not qualify
+CK/SCLK/FK loading or SPICE propagation/attitude execution.
+
+GmatQt was rebuilt; all 11 Qt checks passed in 27.83 seconds. Evidence:
+`Qt6ParityValidation/check-kernel-lists.txt`.

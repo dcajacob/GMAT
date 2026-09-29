@@ -581,6 +581,46 @@ int main(int argc, char **argv)
          require(Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringParameter("ModelFile")!=path.toStdString(),
             "Browsing input applied the resource prematurely"); panel.discardChanges();
       }
+      {
+         QTemporaryDir kernels; const auto kernel=QFileInfo(startup).dir().absoluteFilePath("../data/vehicle/ephem/spk/GEOSat.bsp");
+         const auto first=kernels.filePath("first kernel.bsp"),second=kernels.filePath("second,kernel.bsp");
+         require(kernels.isValid() && QFile::copy(kernel,first) && QFile::copy(kernel,second),"Kernel fixtures unavailable");
+         const auto before=editor->toPlainText(); QString error="No Apply";
+         QWidget owner;
+         ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Vehicle"),
+            [&](const QMap<QString,QString> &changes) { error=window.applyResourceChanges("Vehicle",changes,before); return error; },&owner);
+         auto *choose=panel.findChild<QPushButton *>("chooseProperty_OrbitSpiceKernelName");
+         require(choose && panel.findChild<QPushButton *>("chooseProperty_FrameSpiceKernelName") &&
+            panel.findChild<QPushButton *>("chooseProperty_AttitudeSpiceKernelName") && panel.findChild<QPushButton *>("chooseProperty_SCClockSpiceKernelName"),"Kernel list controls missing");
+         bool ordered=false;
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("kernelFileDialog"); if (!dialog) return;
+            auto *list=dialog->findChild<QListWidget *>("kernelFileList");
+            for (const auto &path:{first,second,first}) {
+               QTimer::singleShot(0,dialog,[path] {
+                  auto *picker=qobject_cast<QFileDialog *>(QApplication::activeModalWidget()); if (!picker) return;
+                  picker->selectFile(path); QMetaObject::invokeMethod(picker,"accept",Qt::DirectConnection);
+               }); dialog->findChild<QPushButton *>("kernelFileAdd")->click();
+            }
+            ordered=list->count()==2; if (ordered) list->insertItem(0,list->takeItem(1)); dialog->accept();
+         }); choose->click(); require(ordered && panel.hasChanges(),"Kernel Add did not preserve unique ordered files");
+         QTimer::singleShot(0,&panel,[&] {
+            auto *dialog=panel.findChild<QDialog *>("kernelFileDialog"); if (!dialog) return;
+            auto *list=dialog->findChild<QListWidget *>("kernelFileList"); list->selectAll();
+            dialog->findChild<QPushButton *>("kernelFileRemove")->click(); dialog->reject();
+         }); choose->click();
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         require(error.isEmpty(),qPrintable(error));
+         auto actual=Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringArrayParameter("OrbitSpiceKernelName");
+         require(actual.size()==2 && actual[0]==second.toStdString() && actual[1]==first.toStdString(),"Kernel Apply lost order, comma-containing path or cancelled selection");
+         const auto selected=editor->toPlainText(); editor->undo();
+         require(editor->toPlainText()==before && window.buildScript() && Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringArrayParameter("OrbitSpiceKernelName").empty(),"Kernel Undo failed");
+         editor->redo(); require(window.buildScript(),"Kernel Redo failed");
+         require(window.saveScriptTo(kernels.filePath("selected.script")) && window.loadScript(kernels.filePath("selected.script")) && window.buildScript(),"Kernel save/reopen failed");
+         require(editor->toPlainText()==selected,"Kernel save/reopen changed source");
+         require(!window.applyResourceChanges("Vehicle",{{"OrbitSpiceKernelName",kernels.filePath("missing.bsp")}},selected).isEmpty() && editor->toPlainText()==selected,"Missing kernel did not roll back");
+         require(window.applyResourceChanges("Vehicle",{{"OrbitSpiceKernelName",""}},selected).isEmpty() && Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringArrayParameter("OrbitSpiceKernelName").empty(),"Clearing kernel files failed");
+      }
       const auto hardwareScript=editor->toPlainText();
       require(!window.applyResourceChanges("Vehicle",{{"Tanks","MissingTank"}},hardwareScript).isEmpty(),
          "Missing hardware reference accepted");

@@ -80,11 +80,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          case Gmat::OBJECTARRAY_TYPE:
             if (!isResourceList(object, field.name)) continue;
             for (const auto &entry : object.GetStringArrayParameter(id)) field.choices.append(QString::fromStdString(entry));
-            field.value = field.choices.join(", ");
+            field.fileList=isResourceFileList(object,field.name);
+            field.value = field.choices.join(field.fileList ? "\n" : ", ");
             field.choices.clear(); field.list = true; break;
          default: continue;
          }
-         field.filename=object.GetParameterType(id)==Gmat::FILENAME_TYPE;
+         field.filename=field.fileList || object.GetParameterType(id)==Gmat::FILENAME_TYPE;
          if (field.filename) {
             const auto type=object.GetTypeName();
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
@@ -154,6 +155,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    return fields;
 }
 
+bool isResourceFileList(GmatBase &object,const QString &name)
+{
+   return object.IsOfType("Spacecraft") && (name=="OrbitSpiceKernelName" || name=="AttitudeSpiceKernelName" ||
+      name=="SCClockSpiceKernelName" || name=="FrameSpiceKernelName");
+}
+
 bool isResourceList(GmatBase &object, const QString &name)
 {
    if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
@@ -170,7 +177,7 @@ bool isResourceList(GmatBase &object, const QString &name)
    if (forcePropertyOwner(object,name,leaf)) return false;
    const auto id=object.GetParameterID(name.toStdString());
    const auto type=QString::fromStdString(object.GetTypeName());
-   const bool supported=(name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
+   const bool supported=isResourceFileList(object,name) || (name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       (object.IsOfType("Thruster") && name=="Tank") ||
@@ -200,16 +207,18 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 {
    const auto id=object.GetParameterID(name.toStdString());
    if (!isResourceList(object,name) || object.IsParameterReadOnly(id)) throw std::runtime_error("This list cannot be edited here");
-   // Accept resource/parameter names only. Candidate interpretation resolves
-   // references and verifies subscriber-specific parameter restrictions.
+   // Candidate interpretation resolves resource references and validates kernel
+   // files. File lists use newlines so commas within paths remain intact.
    static const QRegularExpression reference("^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$");
    static const QRegularExpression arrayElement("^[A-Za-z_][A-Za-z0-9_]*\\([1-9][0-9]*,\\s*[1-9][0-9]*\\)$");
    const bool reportParameters=object.GetTypeName()=="ReportFile" && name=="Add";
+   const bool files=isResourceFileList(object,name);
    QStringList entries;
    if (!value.trimmed().isEmpty()) {
-      for (const auto &part : splitResourceReferences(value)) {
+      for (const auto &part : (files ? value.split('\n',Qt::SkipEmptyParts) : splitResourceReferences(value))) {
          const auto entry=part.trimmed();
-         if (!reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         if (files && (entry.contains('\'') || entry.contains('\r') || entry.contains(';'))) throw std::runtime_error("Kernel paths cannot contain quotes, semicolons or line breaks");
+         if (!files && !reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
          if (name=="Add" && object.IsOfType("Formation")) {
             auto *member=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!member || !member->IsOfType(Gmat::SPACECRAFT)) throw std::runtime_error("Formation members must be existing spacecraft");

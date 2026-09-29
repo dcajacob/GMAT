@@ -153,7 +153,10 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          table->setCellWidget(row,1,choices);
       } else if (field.choices.isEmpty()) {
          auto *value=new QTableWidgetItem(field.value);
-         if (field.list) value->setToolTip("Comma-separated resource or parameter names. Apply replaces the complete list.");
+         if (field.fileList) {
+            value->setFlags(value->flags() & ~Qt::ItemIsEditable);
+            value->setToolTip("Ordered kernel file paths. Browse to add, remove or reorder files; Apply replaces the complete list.");
+         } else if (field.list) value->setToolTip("Comma-separated resource or parameter names. Apply replaces the complete list.");
          if (field.rows>0 && field.columns>0) {
             value->setFlags(value->flags() & ~Qt::ItemIsEditable);
             value->setData(Qt::UserRole,field.rows);
@@ -175,6 +178,27 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                if (reportParameters) {
                   ReportParameterDialog dialog(splitResourceReferences(value->text()),this);
                   if (dialog.exec()==QDialog::Accepted) value->setText(dialog.selection().join(", "));
+               } else if (field.fileList) {
+                  QDialog dialog(this); dialog.setObjectName("kernelFileDialog"); dialog.setWindowTitle(field.name); dialog.resize(650,360);
+                  auto *layout=new QVBoxLayout(&dialog);
+                  layout->addWidget(new QLabel("Add kernel files. Drag rows to change their order.",&dialog));
+                  auto *list=new QListWidget(&dialog); list->setObjectName("kernelFileList");
+                  list->addItems(value->text().split('\n',Qt::SkipEmptyParts)); list->setSelectionMode(QAbstractItemView::ExtendedSelection);
+                  list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
+                  auto *actions=new QHBoxLayout; layout->addLayout(actions);
+                  auto *add=new QPushButton("Add files…",&dialog); add->setObjectName("kernelFileAdd"); actions->addWidget(add);
+                  auto *remove=new QPushButton("Remove selected",&dialog); remove->setObjectName("kernelFileRemove"); actions->addWidget(remove); actions->addStretch();
+                  connect(add,&QPushButton::clicked,&dialog,[&] {
+                     QFileDialog picker(&dialog,"Select kernel files"); picker.setObjectName("kernelFilePicker"); picker.setFileMode(QFileDialog::ExistingFiles);
+                     if (picker.exec()!=QDialog::Accepted) return;
+                     for (const auto &path:picker.selectedFiles()) if (list->findItems(path,Qt::MatchExactly).isEmpty()) list->addItem(path);
+                  });
+                  connect(remove,&QPushButton::clicked,&dialog,[list] { qDeleteAll(list->selectedItems()); });
+                  auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+                  connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+                  if (dialog.exec()==QDialog::Accepted) {
+                     QStringList paths; for (int i=0;i<list->count();++i) paths.append(list->item(i)->text()); value->setText(paths.join('\n'));
+                  }
                } else if (field.filename) {
                   QFileDialog dialog(this,"Choose "+field.name,value->text());
                   dialog.setObjectName("resourceFileDialog");

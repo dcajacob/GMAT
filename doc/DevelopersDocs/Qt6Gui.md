@@ -858,3 +858,13 @@ not mark them as settable. Known read-only properties are omitted from property
 browsing and cannot be accepted by typing them into these writable pickers.
 Literal numbers cannot be selected as writable destinations. The original command
 text fields still support direct editing and engine validation on Apply.
+
+### Spacecraft SPICE kernel lists
+
+The spacecraft SPICE section now includes orbit, attitude, spacecraft-clock and
+frame kernel lists. Browse opens an ordered list: Add files accepts existing files,
+Remove selected deletes entries, and dragging changes order. Duplicate paths are
+not added twice. Cancel discards dialog edits; OK leaves them pending in the
+resource editor until Apply. Applying replaces the complete list, so removal and
+clearing work as expected. Paths with spaces or commas are retained; paths with
+apostrophes, semicolons or embedded line breaks are not accepted by this editor.

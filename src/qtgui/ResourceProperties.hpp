@@ -11,6 +11,7 @@ struct ResourceProperty
    QStringList choices;
    QStringList references;
    bool filename = false;
+   bool fileList = false;
    bool fileInput = false;
    bool fileOutput = false;
    bool list = false;
@@ -20,5 +21,6 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object);
 void validateResourceProperties(GmatBase &object);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
 QStringList splitResourceReferences(const QString &value);
+bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value);
