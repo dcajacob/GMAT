@@ -196,6 +196,13 @@ int main(int argc, char **argv)
             auto *format=panel.findChild<QComboBox *>("spacecraftEpochFormat"); auto *grid=panel.findChild<QTableWidget *>(); QTableWidgetItem *date=nullptr;
             for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()=="Epoch") date=grid->item(row,1);
             require(format && date,"Spacecraft epoch conversion controls absent");
+            for (const auto &name:{"DateFormat","DisplayStateType","AnomalyType"})
+               require(!panel.findChild<QPushButton *>(QString("chooseProperty_")+name),"Enumeration incorrectly offers a color picker");
+            require(panel.findChild<QPushButton *>("chooseProperty_OrbitColor") && panel.findChild<QPushButton *>("chooseProperty_TargetColor"),
+               "Actual spacecraft colors lost their pickers");
+            for (const auto &field:resourceProperties(*Moderator::Instance()->GetConfiguredObject("QtSat"))) {
+               if (field.name=="DateFormat" || field.name=="DisplayStateType" || field.name=="AnomalyType") require(!field.color,"Enumeration metadata still identifies a color");
+            }
             format->setCurrentText("UTCGregorian"); const auto converted=date->text();
             date->setText("bad date"); format->setCurrentText("TAIModJulian");
             require(format->currentText()=="UTCGregorian" && date->text()=="bad date","Invalid spacecraft date changed format");

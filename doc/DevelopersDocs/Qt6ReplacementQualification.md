@@ -1450,3 +1450,20 @@ representation. Both fixes are exercised by the pending-state conversion test.
 Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 50.20 seconds.
 Native viewer checks used isolated Xvfb. Evidence:
 `Qt6ParityValidation/check-state-representation.txt`.
+
+## Enumeration versus color controls
+
+The shared resource-property reader incorrectly fell through from ENUMERATION_TYPE
+into COLOR_TYPE, marking enumerations as colors. Fields whose engine enum list
+was empty could consequently receive a color button, including spacecraft
+AnomalyType and extra controls beside date/state settings. Enumeration handling
+now reads its string value and finishes without setting the color flag.
+
+WorkflowTests verifies that DateFormat, DisplayStateType and AnomalyType do not
+offer color buttons or color metadata, while OrbitColor and TargetColor retain
+their pickers. Existing PlotTests still exercise actual color selection, Cancel,
+Apply, rollback and rendered trajectory color.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt tests passed in 35.00 seconds.
+Native viewer checks used isolated Xvfb. Evidence:
+`Qt6ParityValidation/check-enum-controls.txt`.

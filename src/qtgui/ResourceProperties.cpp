@@ -74,7 +74,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.choices = {"On", "Off"}; field.value = QString::fromStdString(object.GetOnOffParameter(id)); break;
          case Gmat::ENUMERATION_TYPE:
             for (const auto &choice : object.GetPropertyEnumStrings(id)) field.choices.append(QString::fromStdString(choice));
-            [[fallthrough]];
+            field.value=QString::fromStdString(object.GetStringParameter(id)); break;
          case Gmat::COLOR_TYPE: field.color=true; [[fallthrough]];
          case Gmat::STRING_TYPE:
          case Gmat::FILENAME_TYPE:
