@@ -3,6 +3,12 @@
 #include <QLineEdit>
 #include <QRegularExpression>
 #include <algorithm>
+#include "ReportParameterDialog.hpp"
+#include "Moderator.hpp"
+#include "GmatBase.hpp"
+#include <QPushButton>
+#include <QHBoxLayout>
+#include <QInputDialog>
 
 CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *parent)
    : QGroupBox("Command settings",parent),layout(new QFormLayout(this)),changed(std::move(callback))
@@ -57,7 +63,28 @@ void CommandForm::setStatement(const QString &statement)
       if (start<0) return;
       auto *input=new QLineEdit(statement.mid(start,length),this);
       input->setObjectName("commandField_"+name);
-      layout->addRow(name,input); fields.append({input,start,length});
+      if (title()=="Report" && (name=="Report file" || name=="Parameters")) {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0);
+         row->addWidget(input); auto *choose=new QPushButton("Select…",container);
+         choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
+         connect(choose,&QPushButton::clicked,this,[this,input,name] {
+            if (name=="Report file") {
+               QStringList reports;
+               for (const auto &value:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) {
+                  auto *object=Moderator::Instance()->GetConfiguredObject(value);
+                  if (object && object->GetTypeName()=="ReportFile") reports.append(QString::fromStdString(value));
+               }
+               reports.sort(); bool accepted=false;
+               const auto chosen=QInputDialog::getItem(this,"Select report file","Report file",reports,
+                  std::max(0,static_cast<int>(reports.indexOf(input->text()))),false,&accepted);
+               if (accepted && !chosen.isEmpty()) input->setText(chosen);
+            } else {
+               ReportParameterDialog dialog(input->text().split(QRegularExpression("\\s+(?![^()]*\\))"),Qt::SkipEmptyParts),this);
+               if (dialog.exec()==QDialog::Accepted) input->setText(dialog.selection().join(" "));
+            }
+         });
+      } else layout->addRow(name,input);
+      fields.append({input,start,length});
       connect(input,&QLineEdit::textChanged,this,[this] { updateSource(); });
    };
    for (const auto &spec:specs) {

@@ -737,3 +737,15 @@ each run adds its output (including headers when enabled) to the existing file;
 with it false, a run replaces the file. Output report windows show their full
 file path in the title and display read-only, unwrapped text. Reports larger than
 16 MiB still use the existing bounded preview, with the complete file left on disk.
+
+
+### Choosing report parameters
+
+Report command settings include **Select…** beside Report file and Parameters.
+ReportFile's Add property uses the same parameter selector. Choose an existing
+reportable parameter or enter a reference, then add it to the ordered list. For
+arrays, choose a row and column and use **Add element**, or use **Add parameter**
+for the whole array. Remove, Up/Down and dragging control the selected order.
+Cancel preserves the previous selection; applying the command or resource validates
+references. Object/property/coordinate-system browsing is not yet implemented;
+new property references can be entered directly.

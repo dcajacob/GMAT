@@ -56,7 +56,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/CallFunctionPanel.hpp` | Pending audit |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Pending audit |
 | `src/gui/command/MinimizePanel.hpp` | Pending audit |
-| `src/gui/command/ReportPanel.hpp` | Pending audit |
+| `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property/dependency browsing pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/function/FunctionSetupPanel.hpp` | Pending audit |
 | `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
@@ -135,7 +135,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Full parameter chooser and solver-iteration combinations pending. |
+| `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; object/property/dependency browsing and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
@@ -547,3 +547,27 @@ is not qualified as wx-equivalent. Clipboard contents are not changed by tests.
 
 GmatQt was rebuilt; all 11 Qt tests passed in 28.06 seconds. Evidence:
 `Qt6ParityValidation/check-report-lifecycle.txt`.
+
+
+### Shared report parameter selector
+
+The Report command now offers a configured ReportFile picker and an ordered
+parameter dialog. ReportFile Add uses the same dialog. It lists configured
+reportable parameters, accepts typed references, adds whole arrays or individual
+cells with bounds taken from the array, and supports removal, Up/Down and drag
+reordering. The dialog edits a local selection; Cancel leaves its caller unchanged.
+Command Apply continues to validate references through the engine.
+
+CompatibilityTests exercises the actual command picker and dialog, array bounds,
+remove/add/reorder, Cancel, exact label/comment preservation, application to the
+mission and numerical results after save/reopen. It also verifies the resource
+panel opens the shared dialog without splitting indexed parameters and receives
+the reordered list. Property references not already configured can be entered,
+but wx's object/property/dependency browser is still pending and this does not
+qualify the full ParameterSelectDialog workflow. Drag ordering uses Qt's standard
+InternalMove implementation; the executable test uses explicit Up/Down controls.
+
+All 11 Qt checks passed in 27.49 seconds. After wrapping the selector's help text
+for a reasonable dialog width, GmatQt was rebuilt and Compatibility passed again
+in 2.39 seconds. Evidence: `Qt6ParityValidation/check-report-picker.txt` and
+`Qt6ParityValidation/report-picker-final.txt`.

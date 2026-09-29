@@ -12,6 +12,11 @@
 #include <QPushButton>
 #include <QMdiSubWindow>
 #include <QStatusBar>
+#include "ReportParameterDialog.hpp"
+#include <QListWidget>
+#include <QSpinBox>
+#include <QTimer>
+#include <QInputDialog>
 #include "FileManager.hpp"
 #include <QRegularExpression>
 #include <array>
@@ -61,6 +66,48 @@ int main(int argc,char **argv)
          require(window.applyResourceChanges("ConfiguredReport",{{"Add","Values(1,2), Number"},
             {"FixedWidth","false"},{"WriteHeaders","false"},{"Precision","6"},{"Delimiter",","}},editor->toPlainText()).isEmpty(),
             "Report configuration or array-element list rejected");
+         {
+            QString replacement;
+            CommandForm form([&](const QString &value) { replacement=value; });
+            form.setStatement("Report 'Saved label' ConfiguredReport Number Values(1,2); % keep comment");
+            bool choseReport=false;
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QInputDialog *>();
+               require(dialog && dialog->comboBoxItems().contains("ConfiguredReport"),"Report file picker missing configured report");
+               dialog->setTextValue("ConfiguredReport"); choseReport=true; dialog->accept();
+            });
+            form.findChild<QPushButton *>("commandChoose_Report file")->click();
+            require(choseReport,"Report picker was not used");
+            bool selected=false;
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QDialog *>("reportParameterDialog");
+               require(dialog,"Report parameter selector did not open");
+               auto *entry=dialog->findChild<QComboBox *>("reportParameterEntry");
+               entry->setCurrentText("Values");
+               auto *row=dialog->findChild<QSpinBox *>("reportArrayRow");
+               auto *column=dialog->findChild<QSpinBox *>("reportArrayColumn");
+               require(row->isEnabled() && row->maximum()==2 && column->maximum()==2,"Array bounds absent from picker");
+               row->setValue(1); column->setValue(2);
+               auto *list=dialog->findChild<QListWidget *>("reportSelectedParameters");
+               list->setCurrentRow(1); dialog->findChild<QPushButton *>("reportParameterRemove")->click();
+               dialog->findChild<QPushButton *>("reportAddElement")->click();
+               dialog->findChild<QPushButton *>("reportParameterUp")->click();
+               selected=true; dialog->accept();
+            });
+            form.findChild<QPushButton *>("commandChoose_Parameters")->click();
+            require(selected && replacement=="Report 'Saved label' ConfiguredReport Values(1,2) Number; % keep comment",
+               "Parameter selection lost order, label or comment");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=form.findChild<QDialog *>("reportParameterDialog");
+               dialog->findChild<QListWidget *>("reportSelectedParameters")->clear(); dialog->reject();
+            });
+            form.findChild<QPushButton *>("commandChoose_Parameters")->click();
+            require(replacement.contains("Values(1,2) Number"),"Cancelling selection changed command");
+            const auto snapshot=window.missionSnapshot(); int reportIndex=-1;
+            for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.startsWith("Report ")) reportIndex=i;
+            require(reportIndex>=0 && window.applyMissionChange(snapshot,reportIndex,MissionEdit::Replace,replacement).isEmpty(),
+               "Selected report parameters did not apply to mission");
+         }
          const auto valid=editor->toPlainText();
          for (const auto &changes:QVector<QMap<QString,QString>>{
             {{"Delimiter","::"}},{{"Precision","0"}},{{"ColumnWidth","0"}},{{"Add","Values(1,2); Stop"}}})
@@ -81,20 +128,31 @@ int main(int argc,char **argv)
             panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
             require(changes.value("Delimiter")==":" && delimiter->insertPolicy()==QComboBox::NoInsert,
                "Custom delimiter was lost or can be inserted without its value");
+            bool reordered=false;
+            QTimer::singleShot(0,[&] {
+               auto *dialog=panel.findChild<QDialog *>("reportParameterDialog");
+               auto *list=dialog->findChild<QListWidget *>("reportSelectedParameters");
+               require(list->count()==2 && list->item(0)->text()=="Values(1,2)","Resource picker split an array element");
+               list->setCurrentRow(0); dialog->findChild<QPushButton *>("reportParameterDown")->click();
+               reordered=true; dialog->accept();
+            });
+            panel.findChild<QPushButton *>("chooseProperty_Add")->click();
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+            require(reordered && changes.value("Add")=="Number, Values(1,2)","Resource report picker lost reordered parameters");
          }
          require(splitResourceReferences("Values(1,2), Number")==QStringList({"Values(1,2)","Number"}),
             "Report picker split an indexed parameter");
          roundTrip("report-settings");
          require(window.runMission()==MainWindow::RunResult::Completed,"Configured report run failed");
-         require(read(reportPath).trimmed()=="12.3457,-7.25","Report precision, delimiter or header settings not reflected in output");
+         require(read(reportPath).trimmed()=="-7.25,12.3457","Report precision, delimiter or header settings not reflected in output");
          require(window.applyResourceChanges("ConfiguredReport",{{"Delimiter","\t"}},editor->toPlainText()).isEmpty(),"Tab delimiter edit failed");
          roundTrip("tab-report");
-         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath).trimmed()=="12.3457\t-7.25",
+         require(window.runMission()==MainWindow::RunResult::Completed && read(reportPath).trimmed()=="-7.25\t12.3457",
             "Tab report save/reopen or output failed");
          auto automatic=editor->toPlainText();
          automatic.replace("BeginMissionSequence;","Create Spacecraft ReportSat;\nCreate ForceModel ReportForces;\n"
             "Create Propagator ReportProp;\nReportProp.FM = ReportForces;\nBeginMissionSequence;");
-         automatic.replace("Report ConfiguredReport Number Values(1,2);","Propagate ReportProp(ReportSat) {ReportSat.ElapsedSecs = 1};");
+         automatic.replace("Report 'Saved label' ConfiguredReport Values(1,2) Number; % keep comment","Propagate ReportProp(ReportSat) {ReportSat.ElapsedSecs = 1};");
          editor->setPlainText(automatic); require(window.buildScript(),"Automatic report fixture failed");
          roundTrip("automatic-report");
          require(window.runMission()==MainWindow::RunResult::Completed,"Automatic report execution failed");

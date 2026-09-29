@@ -4,6 +4,7 @@
 #include "BaseException.hpp"
 #include <memory>
 #include "ResourceProperties.hpp"
+#include "ReportParameterDialog.hpp"
 #include "ScriptCompatibility.hpp"
 #include <QJsonDocument>
 #include <QJsonArray>
@@ -165,12 +166,16 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             connect(edit,&QPushButton::clicked,this,[this,value] { table->itemDoubleClicked(value); });
          }
          table->setItem(row, 1, value);
-         if (field.filename || !field.references.isEmpty()) {
+         const bool reportParameters=object.GetTypeName()=="ReportFile" && field.name=="Add";
+         if (field.filename || !field.references.isEmpty() || reportParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
             choose->setObjectName("chooseProperty_"+field.name);
             table->setCellWidget(row,3,choose);
-            connect(choose,&QPushButton::clicked,this,[this,value,field] {
-               if (field.filename) {
+            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters] {
+               if (reportParameters) {
+                  ReportParameterDialog dialog(splitResourceReferences(value->text()),this);
+                  if (dialog.exec()==QDialog::Accepted) value->setText(dialog.selection().join(", "));
+               } else if (field.filename) {
                   QFileDialog dialog(this,"Choose "+field.name,value->text());
                   // Output files need not exist yet; validation belongs to Apply.
                   dialog.setFileMode(QFileDialog::AnyFile);
