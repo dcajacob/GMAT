@@ -1,0 +1,3 @@
+PASS: exit: console mission
+PASS: exit: GUI mission and identical console state report
+PASS: exit: invalid script returns status 1

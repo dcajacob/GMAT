@@ -213,10 +213,12 @@ They also check repeated resource opening and refreshing stale clean panels.
 The plotting suite checks Window-menu activation, minimized-window restoration,
 closed-window removal, and safe handling of an entry whose window was closed.
 
-This remains an implementation checkpoint, not a completed replacement.
-Still required: specialized resource and command forms, compound properties,
-plugin compatibility handling, advanced graphics and plot
-style parity, wider functional coverage, and platform build/package validation.
+The requested initial Linux Qt desktop is implemented and verified; see the
+[acceptance audit](Qt6LinuxValidation/README.md). It is not a complete wx feature
+replacement. Replacing wx entirely would additionally require specialized
+resource and command forms, compound-property controls, broader plugin
+compatibility, advanced graphics/plot style parity, wider functional coverage,
+and platform packaging. Those limitations remain described below.
 Linux and Windows have been built and exercised. Windows also passed a native
 desktop launch with the deployed Qt runtime and no Qt directory on PATH.
 macOS and a standalone Windows installer remain unverified.
