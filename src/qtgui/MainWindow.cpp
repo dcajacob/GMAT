@@ -37,6 +37,7 @@
 #include <QFontDatabase>
 #include <QMdiArea>
 #include <QMdiSubWindow>
+#include <QOpenGLWidget>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPlainTextEdit>
@@ -68,6 +69,16 @@ QStringList creatableResourceTypes()
 
 MainWindow::MainWindow()
 {
+   // Establish OpenGL composition before the top-level window is first shown.
+   // Otherwise Qt replaces the native surface when the first OrbitView is
+   // added during Run, which can disrupt Wayland input/focus on the old surface.
+   // Keep this hidden child alive even when all plot windows have been closed.
+   if (QGuiApplication::platformName()!="offscreen" && QGuiApplication::platformName()!="minimal") {
+      auto *compositionAnchor=new QOpenGLWidget(this);
+      compositionAnchor->setObjectName("compositionAnchor");
+      compositionAnchor->resize(1,1);
+      compositionAnchor->hide();
+   }
    resize(1280, 850);
    workspace = new QMdiArea(this);
    workspace->setObjectName("workspace");

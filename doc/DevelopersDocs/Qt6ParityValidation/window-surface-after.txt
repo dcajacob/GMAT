@@ -1,0 +1,9 @@
+24 ms: run default mission
+338 ms: mission completed
+863 ms: minimize ground
+863 ms: minimize click sent
+1387 ms: open orbit from Output
+1388 ms: open returned
+1913 ms: restore ground
+2438 ms: minimize ground again
+2944 ms: PASS: desktop event loop remains responsive

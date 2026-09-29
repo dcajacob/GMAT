@@ -2,6 +2,8 @@
 #include "TestSettings.hpp"
 #include "FileManager.hpp"
 #include <QApplication>
+#include <QWindow>
+#include <QPlatformSurfaceEvent>
 #include <QDir>
 #include <QElapsedTimer>
 #include <QFileInfo>
@@ -16,6 +18,17 @@
 #include <iostream>
 #include <memory>
 
+class SurfaceObserver final : public QObject
+{
+public:
+   int destroyed=0;
+   bool eventFilter(QObject *,QEvent *event) override {
+      if (event->type()==QEvent::PlatformSurface &&
+          static_cast<QPlatformSurfaceEvent *>(event)->surfaceEventType()==QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed) ++destroyed;
+      return false;
+   }
+};
+
 int main(int argc,char **argv)
 {
    QApplication app(argc,argv);
@@ -25,6 +38,7 @@ int main(int argc,char **argv)
    if (argc<3 || QString(argv[2])!="--desktop-settings") settings=std::make_unique<TestSettings>();
    const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
    MainWindow window; window.show();
+   SurfaceObserver surface; window.windowHandle()->installEventFilter(&surface);
    if (!window.initialize(startup)) return 1;
    QTemporaryDir output;
    FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",(output.path()+"/").toStdString());
@@ -72,6 +86,7 @@ int main(int argc,char **argv)
          log("restore ground"); ground->showNormal(); area->setActiveSubWindow(ground); ground->raise(); break;
       case 3: log("minimize ground again"); clickMinimize(ground); break;
       case 4:
+         if (surface.destroyed) { log("FAIL: plot interaction replaced the native window"); app.exit(1); return; }
          if (!ground->isMinimized()) { log("FAIL: repeated minimize did not minimize"); app.exit(1); return; }
          log("PASS: desktop event loop remains responsive"); app.exit(0); break;
       }
@@ -79,7 +94,9 @@ int main(int argc,char **argv)
    QTimer::singleShot(0,&window,[&] {
       log("run default mission");
       if (window.runMission()!=MainWindow::RunResult::Completed) { app.exit(1); return; }
-      log("mission completed"); actions.start();
+      log("mission completed");
+      if (surface.destroyed) { log("FAIL: first OrbitView destroyed the live native window"); app.exit(1); return; }
+      actions.start();
    });
    return app.exec();
 }

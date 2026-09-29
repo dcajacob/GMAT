@@ -1,0 +1,3 @@
+26 ms: run default mission
+459 ms: mission completed
+459 ms: FAIL: first OrbitView destroyed the live native window

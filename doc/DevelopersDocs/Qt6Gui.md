@@ -492,3 +492,27 @@ editor button columns are hidden. All visible columns remain manually
 resizable: drag a header border, or double-click it to fit the contents. Solver
 and dynamic-data updates preserve adjusted widths for the open table. Widths
 are not persisted after closing the table or restarting the application.
+
+
+### Native window lifetime and desktop input
+
+A hidden OpenGL composition anchor is created before showing the main window
+on native platforms. Without it, opening the first OrbitView during Run made
+Qt destroy and recreate the already-visible native surface. This is documented
+[Qt behavior when adding the first QOpenGLWidget dynamically](https://doc.qt.io/qt-6/qopenglwidget.html).
+Avoiding that replacement protects native input/focus continuity, especially
+when Run was triggered by an input event on Wayland. The anchor lives until
+the main window is destroyed; offscreen/minimal platforms retain the CPU path.
+
+`GmatQtWindowTests` checks native-surface stability and exercises title-bar
+minimize, Output activation, restore and repeat minimize in the real Qt event
+loop. `QtGui.NativeWindows` runs it under Xvfb. To check the actual desktop
+graphics path and saved settings without platform/rendering overrides:
+
+```sh
+build/linux-gui/src/qtgui/GmatQtWindowTests application/bin/gmat_startup_qt.txt --desktop-settings
+```
+
+The test reads saved layout settings but does not save changes. A sleeping
+main thread in `QCoreApplication::exec()` alone does not establish a deadlock;
+inspect input delivery/native window lifetime as well as rendering.
