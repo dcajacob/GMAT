@@ -1,0 +1,11 @@
+26 ms: run default mission
+346 ms: mission completed
+821 ms: minimize ground
+821 ms: minimize click sent
+1295 ms: open orbit from Output
+1296 ms: open returned
+DefaultSC: points=123 radius=0 visible=1
+Earth: points=123 radius=6378.14 visible=1
+Sun: points=123 radius=695990 visible=0
+Rendered ocean=0 trajectory=0
+8559 ms: FAIL: default OrbitView lacks textured Earth or trajectory

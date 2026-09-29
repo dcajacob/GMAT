@@ -378,7 +378,9 @@ struct OrbitRenderer::Scene
 
 OrbitRenderer::OrbitRenderer(std::shared_ptr<PlotModel> data,QWidget *parent) : QOpenGLWidget(parent),scene(new Scene(std::move(data)))
 {
-   QSurfaceFormat format; format.setVersion(2,1); format.setDepthBufferSize(24); format.setSamples(4); setFormat(format);
+   // Multisampled widget framebuffers trigger Intel Iris Xe GPU resets when
+   // OSG and Qt share this context. Keep hardware rendering without MSAA.
+   QSurfaceFormat format; format.setVersion(2,1); format.setDepthBufferSize(24); format.setSamples(0); setFormat(format);
    setAttribute(Qt::WA_TransparentForMouseEvents);
    setObjectName("orbitRenderer");
 }

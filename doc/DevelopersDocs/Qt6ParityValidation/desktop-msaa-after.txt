@@ -1,0 +1,42 @@
+Intel Iris Xe (ADL GT2), GNOME Wayland, saved desktop settings.
+No platform or software-rendering overrides.
+Started: 2026-09-29T11:29:03-06:00
+
+Run 1
+25 ms: run default mission
+327 ms: mission completed
+853 ms: minimize ground
+853 ms: minimize click sent
+1378 ms: open orbit from Output
+1378 ms: open returned
+Rendered ocean=48613 trajectory=1267
+1997 ms: restore ground
+2405 ms: minimize ground again
+2905 ms: PASS: desktop event loop remains responsive
+
+Run 2
+26 ms: run default mission
+282 ms: mission completed
+758 ms: minimize ground
+758 ms: minimize click sent
+1232 ms: open orbit from Output
+1233 ms: open returned
+Rendered ocean=48613 trajectory=1267
+1817 ms: restore ground
+2222 ms: minimize ground again
+2721 ms: PASS: desktop event loop remains responsive
+
+Run 3
+27 ms: run default mission
+292 ms: mission completed
+767 ms: minimize ground
+767 ms: minimize click sent
+1242 ms: open orbit from Output
+1243 ms: open returned
+Rendered ocean=48613 trajectory=1267
+1808 ms: restore ground
+2201 ms: minimize ground again
+2702 ms: PASS: desktop event loop remains responsive
+
+Kernel log during these runs:
+-- No entries --

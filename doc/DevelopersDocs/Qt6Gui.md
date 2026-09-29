@@ -516,3 +516,25 @@ build/linux-gui/src/qtgui/GmatQtWindowTests application/bin/gmat_startup_qt.txt 
 The test reads saved layout settings but does not save changes. A sleeping
 main thread in `QCoreApplication::exec()` alone does not establish a deadlock;
 inspect input delivery/native window lifetime as well as rendering.
+
+
+### Intel graphics stalls and missing OrbitView content
+
+OrbitView uses a single-sample framebuffer. The previous four-sample MSAA
+request reproduced Intel Iris Xe (ADL GT2) GPU hangs and context resets on the
+GNOME Wayland desktop. The mission had 123 trajectory samples, but the captured
+view was black and opening it stalled for several seconds. Disabling MSAA
+rendered the textured Earth and orbit on the same hardware without a reset;
+hardware acceleration remains enabled. Edges may be less smooth without MSAA.
+
+The native window test now checks Earth-texture and orbit pixels after opening
+OrbitView, in addition to window activation and minimize/restore behavior.
+An optional fourth argument saves that captured image:
+
+```sh
+build/linux-gui/src/qtgui/GmatQtWindowTests application/bin/gmat_startup_qt.txt --desktop-settings /tmp/orbit.png
+```
+
+See [desktop GPU validation](Qt6ParityValidation/README.md#desktop-gpu-regression)
+for the reproduction and validation evidence. Software-rendered Xvfb tests
+alone did not expose this hardware failure.

@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "PlotWidget.hpp"
 #include "TestSettings.hpp"
 #include "FileManager.hpp"
 #include <QApplication>
@@ -81,9 +82,24 @@ int main(int argc,char **argv)
          if (items.size()!=1) { app.exit(1); return; }
          tree->itemDoubleClicked(items.first(),0); log("open returned"); break;
       }
-      case 2:
+      case 2: {
          if (area->activeSubWindow()!=orbit || orbit->isMinimized()) { log("FAIL: orbit not active"); app.exit(1); return; }
+         auto *view=dynamic_cast<PlotWidget *>(orbit->widget());
+         if (!view) { log("FAIL: OrbitView widget missing"); app.exit(1); return; }
+         // A visible window alone can pass after a GPU reset while its scene is
+         // blank. Require both the blue Earth texture and the red orbit.
+         const auto pixels=view->canvas()->captureImage();
+         if (argc>3) pixels.save(argv[3]);
+         int ocean=0,trajectory=0;
+         for (int y=0;y<pixels.height();++y) for (int x=0;x<pixels.width();++x) {
+            const auto color=pixels.pixelColor(x,y);
+            if (color.blue()>color.red()*2 && color.blue()>50 && color.green()>25) ++ocean;
+            if (color.red()>150 && color.green()<100 && color.blue()<100) ++trajectory;
+         }
+         std::cerr<<"Rendered ocean="<<ocean<<" trajectory="<<trajectory<<std::endl;
+         if (ocean<1000 || trajectory<100) { log("FAIL: default OrbitView lacks textured Earth or trajectory"); app.exit(1); return; }
          log("restore ground"); ground->showNormal(); area->setActiveSubWindow(ground); ground->raise(); break;
+      }
       case 3: log("minimize ground again"); clickMinimize(ground); break;
       case 4:
          if (surface.destroyed) { log("FAIL: plot interaction replaced the native window"); app.exit(1); return; }

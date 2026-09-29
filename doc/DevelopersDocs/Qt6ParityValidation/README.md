@@ -132,3 +132,21 @@ names/borders, and diffuse lighting without eclipse shadows. Advanced plugin
 fields without a Qt control remain accessible in the script editor. Optional
 plugins outside the exercised function/optimizer/event paths require their
 own scientific acceptance tests before claiming numerical parity.
+
+
+## Desktop GPU regression
+
+On 2026-09-29, the default mission reproduced Intel Iris Xe (ADL GT2) GPU
+hangs/context resets on GNOME Wayland with four-sample widget MSAA. The mission
+contained 123 samples, but capture contained no Earth or trajectory pixels and
+the test stalled before failing: [before log](desktop-msaa-before.txt).
+
+Using a single-sample framebuffer with hardware acceleration retained, three
+consecutive desktop runs passed in 2.7–2.9 seconds, including title-bar minimize,
+Output activation, Earth/orbit pixel checks, restore and repeat minimize.
+There were no kernel log entries during those runs: [after log](desktop-msaa-after.txt).
+The [captured OrbitView](desktop-orbit.png) shows the texture, trajectory,
+spacecraft and stars. The rebuilt application and tests use the same renderer;
+[all 11 regression tests passed](check-msaa.txt). This covers the observed Intel
+configuration, not every hardware/driver combination. The pixel check is now
+part of `QtGui.NativeWindows` so a visible but empty view cannot pass it.
