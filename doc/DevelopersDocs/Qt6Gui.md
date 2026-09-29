@@ -231,8 +231,12 @@ and solver-iteration behavior also needs parity work.
 GroundTrack uses the engine's geodetic longitude/latitude, resolved body map,
 collection/update frequencies, configured point limit and line width. Missing
 satellites preserve their curve slots and break the line. Dateline crossings
-split at the map boundary. GroundTrackPlot's older Cartesian callback path
-is implemented but still needs its own full engine regression. Ground station
+split at the map boundary. The engine's SubscriberFactory maps the script type
+`GroundTrackPlot` to the newer `GroundTrack`; the real-engine plot fixture now
+verifies that alias against geodetic report coordinates, map loading, and its
+retention limit. The older Cartesian callback is checked separately with a
+known spherical projection; the current script factory cannot exercise it.
+Ground station
 markers reject objects that are not body-fixed points. Replay does not mutate
 the retained histories. QPainter handles physical display scaling.
 

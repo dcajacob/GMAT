@@ -74,6 +74,14 @@ int main(int argc,char **argv)
       require(std::abs(lastxy.x-secs)<1e-5 && std::abs(lastxy.y-x)<1e-7,"XY samples differ from engine report");
       const auto &lastg=g.points.back();
       require(std::abs(std::remainder(lastg.x-lon,360.0))<1e-6 && std::abs(lastg.y-lat)<1e-5,"Ground track differs from geodetic engine report");
+      const auto legacy=receiver->model("QtLegacyGround");
+      require(legacy && legacy->kind==PlotModel::Kind::GroundTrack && !legacy->map.isNull(),"Legacy ground track type or map incorrect");
+      require(Moderator::Instance()->GetConfiguredObject("QtLegacyGround")->IsOfType("GroundTrack"),"GroundTrackPlot script alias no longer maps to GroundTrack");
+      const auto &legacyCurve=curve(*legacy,"QtSat");
+      require(legacyCurve.points.size()==80,"Legacy ground track retention not honored");
+      const auto &legacyLast=legacyCurve.points.back();
+      require(std::abs(std::remainder(legacyLast.x-lon,360.0))<1e-6 && std::abs(legacyLast.y-lat)<1e-5,
+         "GroundTrackPlot script alias differs from geodetic engine report");
       const auto count=o.points.size();
       auto *area=window.findChild<QMdiArea *>("workspace"); require(area!=nullptr,"Workspace missing");
       require(receiver->show("QtData"),"Dynamic display could not open");
@@ -120,8 +128,22 @@ int main(int argc,char **argv)
       require(sparse->curves[0].points.size()==3 && sparse->curves[1].points.size()==2 && !sparse->curves[1].points.back().connect,"Absent satellite corrupted track slots");
       require(!receiver->TakeGroundTrackAction("Sparse","AddStation=QtSat"),"Non-station object accepted as station");
       receiver->DeleteGlPlot("Sparse");
+      // Direct callback compatibility: the public script factory routes
+      // GroundTrackPlot to GroundTrack, so it cannot exercise this older path.
+      const auto previousView=receiver->GetViewType();
+      receiver->SetViewType(GmatPlot::GROUND_TRACK_PLOT);
+      require(receiver->CreateGlPlotWindow("CartesianTrack","",0,0,.5,.5,false,0),"Cartesian track callback failed to create");
+      receiver->SetGlObject("CartesianTrack",{"SyntheticSat"},{});
+      require(receiver->UpdateGlPlot("CartesianTrack","",{"SyntheticSat"},1,
+         {1000},{1000},{1000},{0},{0},{0},{},{},false,0,true,true,false),"Cartesian track callback failed");
+      const auto &cartesian=curve(*receiver->model("CartesianTrack"),"SyntheticSat").points.back();
+      require(std::abs(cartesian.x-45)<1e-10 && std::abs(cartesian.y-35.264389682754654)<1e-10,
+         "Cartesian compatibility callback has incorrect spherical projection");
+      receiver->DeleteGlPlot("CartesianTrack");
+      receiver->SetViewType(previousView);
       receiver->DeleteDynamicData("QtData","");
       receiver->DeleteGlPlot("QtSampledGround");
+      receiver->DeleteGlPlot("QtLegacyGround");
       for (const auto &name:receiver->names()) receiver->show(name);
       auto *windowMenu=window.findChild<QMenu *>("windowMenu");
       require(windowMenu!=nullptr,"Window menu missing");
