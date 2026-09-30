@@ -3,6 +3,7 @@
 #include "ResourceEditor.hpp"
 #include "CelestialBodyPanel.hpp"
 #include "SolarSystemPanel.hpp"
+#include "CommandEditor.hpp"
 #include "TestSettings.hpp"
 #include "FileManager.hpp"
 #include "GmatGlobal.hpp"
@@ -27,7 +28,10 @@
 #include <QTabBar>
 #include <QTabWidget>
 #include <QMessageBox>
+#include <QMenu>
+#include <QTreeWidgetItemIterator>
 #include <QTimer>
+#include <QRegularExpression>
 #include <iostream>
 #include <stdexcept>
 #include <functional>
@@ -115,8 +119,69 @@ int main(int argc,char **argv)
       require(result.open(QIODevice::ReadOnly) && result.readAll()==expectedReport,"Apply save/reopen changed calculations"); result.close();
       auto reference=prefix; reference.replace("V = 1;","V = 9;"); editor->setPlainText(reference+mission);
       require(window.runMission()==MainWindow::RunResult::Completed && result.open(QIODevice::ReadOnly) && result.readAll()==expectedReport,"Apply report differs from independent script"); result.close();
+      const QString commandMission="BeginMissionSequence;\nV = V + 1; % retain command comment\nW = W + 1;\nReport Values V W Sat.EarthMJ2000Eq.X;\n";
+      editor->setPlainText(reference+commandMission); require(window.buildScript(),"Command Apply fixture failed");
+      auto *tree=window.findChild<QTreeWidget *>("Mission");
+      auto item=[&](int index) {
+         for (QTreeWidgetItemIterator it(tree);*it;++it) if ((*it)->data(0,Qt::UserRole).isValid() && (*it)->data(0,Qt::UserRole).toInt()==index) return *it;
+         throw std::runtime_error("Command Apply mission item missing");
+      };
+      auto find=[&](const QString &text) {
+         const auto snapshot=window.missionSnapshot();
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.contains(text)) return i;
+         throw std::runtime_error("Command Apply mission node missing");
+      };
+      auto commandWindow=[&]() {
+         for (auto *child:workspace->subWindowList(QMdiArea::StackingOrder)) if (child->isVisible() && dynamic_cast<CommandEditor *>(child->widget())) {
+            if (child==workspace->currentSubWindow()) return child;
+         }
+         throw std::runtime_error("Command Apply editor missing");
+      };
+      tree->itemDoubleClicked(item(find("V = V + 1")),0); auto *command=commandWindow();
+      const auto originalCommandScript=editor->toPlainText(); QString firstCommandScript;
+      for (const auto &step:QStringList{"2","3"}) {
+         auto *old=command->widget(); auto *text=old->findChild<QPlainTextEdit *>("commandSource");
+         auto statement=text->toPlainText(); statement.replace(QRegularExpression("V \\+ [123]"),"V + "+step); text->setPlainText(statement); text->setFocus(); apply(command);
+         require(command->isVisible() && command->widget()!=old && !dynamic_cast<CommandEditor *>(command->widget())->hasChanges() &&
+            command->widget()->findChild<QPlainTextEdit *>("commandSource")->toPlainText().contains("V + "+step),"Command Apply did not keep and refresh its editor");
+         require(editor->toPlainText().contains("% retain command comment"),"Command Apply lost its comment");
+         if (step=="2") firstCommandScript=editor->toPlainText();
+      }
+      const auto acceptedCommandScript=editor->toPlainText();
+      auto *bad=command->widget()->findChild<QPlainTextEdit *>("commandSource"); bad->setPlainText("V = MissingName;"); apply(command);
+      require(editor->toPlainText()==acceptedCommandScript && dynamic_cast<CommandEditor *>(command->widget())->hasChanges() && bad->toPlainText()=="V = MissingName;","Failed command Apply lost accepted source or pending text");
+      dynamic_cast<EditablePanel *>(command->widget())->discardChanges(); command->close();
+      require(window.runMission()==MainWindow::RunResult::Completed && result.open(QIODevice::ReadOnly),"Repeated command Apply report missing"); const auto commandReport=result.readAll(); result.close();
+      editor->undo(); require(editor->toPlainText()==firstCommandScript,"Command Apply Undo did not restore first Apply"); editor->undo(); require(editor->toPlainText()==originalCommandScript,"Command Apply Undo did not restore exact original");
+      editor->redo(); editor->redo(); require(editor->toPlainText()==acceptedCommandScript,"Command Apply Redo not exact");
+      require(window.saveScriptTo(files.filePath("command Apply ü.script")) && window.loadScript(files.filePath("command Apply ü.script")) && window.runMission()==MainWindow::RunResult::Completed && result.open(QIODevice::ReadOnly) && result.readAll()==commandReport,"Command Apply save/reopen changed calculations"); result.close();
+      auto independent=reference+commandMission; independent.replace("V = V + 1;","V = V + 3;"); editor->setPlainText(independent);
+      require(window.runMission()==MainWindow::RunResult::Completed && result.open(QIODevice::ReadOnly) && result.readAll()==commandReport,"Command Apply differs from independent source calculations"); result.close();
+      // Exercise the actual context-menu insertion routes, including after a
+      // branch: a refreshed editor must refer to the insertion, not its anchor.
+      for (const auto &operation:QStringList{"Insert before…","Insert after…","Append command…"}) {
+         editor->setPlainText(reference+"BeginMissionSequence;\nIf V > 0;\n   W = W + 1;\nEndIf;\nReport Values V W;\n"); require(window.buildScript(),"Insertion Apply fixture failed");
+         int anchor=-1; const auto snapshot=window.missionSnapshot();
+         for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="If") anchor=i;
+         require(anchor>=0,"Insertion branch anchor missing"); tree->expandAll(); auto *selected=item(anchor); tree->scrollToItem(selected); QApplication::processEvents();
+         std::exception_ptr menuFailure;
+         QTimer::singleShot(0,&window,[&] {
+            try {
+               auto *menu=qobject_cast<QMenu *>(QApplication::activePopupWidget()); require(menu,"Insertion menu did not open"); QAction *choice=nullptr;
+               for (auto *action:menu->actions()) if (action->text()==operation) choice=action;
+               require(choice && choice->isEnabled(),"Insertion action unavailable"); menu->setActiveAction(choice); QKeyEvent enter(QEvent::KeyPress,Qt::Key_Return,Qt::NoModifier); QApplication::sendEvent(menu,&enter);
+            } catch (...) { menuFailure=std::current_exception(); if (auto *popup=QApplication::activePopupWidget()) popup->close(); }
+         });
+         tree->customContextMenuRequested(tree->visualItemRect(selected).center()); if (menuFailure) std::rethrow_exception(menuFailure);
+         auto *insert=commandWindow(); insert->widget()->findChild<QPlainTextEdit *>("commandSource")->setPlainText("V = V + 5;"); apply(insert);
+         require(insert->isVisible() && !dynamic_cast<CommandEditor *>(insert->widget())->hasChanges() && insert->widget()->findChild<QPlainTextEdit *>("commandSource")->toPlainText().contains("V + 5"),"Accepted insertion did not become an edit panel");
+         auto replacement=insert->widget()->findChild<QPlainTextEdit *>("commandSource")->toPlainText(); replacement.replace("V + 5","V + 6"); insert->widget()->findChild<QPlainTextEdit *>("commandSource")->setPlainText(replacement); apply(insert);
+         require(editor->toPlainText().count("V + 6")==1 && !editor->toPlainText().contains("V + 5") && editor->toPlainText().contains("If V > 0") && editor->toPlainText().contains("W = W + 1"),"Second insertion Apply duplicated the command or edited its anchor");
+         insert->close();
+      }
       std::cout<<"PASS: About menu engine/build/runtime details, credits, exact offline license, read-only/search/Close/Escape, compact layout, missing/malformed license correction and pending mission/Undo preservation\n";
       std::cout<<"PASS: repeated workspace Apply keeps resource windows open, refreshes clean snapshots/page/filter/columns, preserves other pending edits, rejects stale Apply, exact Undo/Redo, Unicode save/reopen and independent numeric reports\n";
+      std::cout<<"PASS: repeated command Apply stays open and refreshes accepted controls, rejects invalid changes without losing pending text, exact Undo/Redo, Unicode save/reopen and independent reports; before/after-branch/append insertion becomes editing without duplication\n";
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
 }

@@ -4,6 +4,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
    UserParameter.cpp UserParameter.hpp
    AboutDialog.cpp AboutDialog.hpp
+   HelpDialog.cpp HelpDialog.hpp
    SolarSystemPanel.cpp SolarSystemPanel.hpp
    CelestialBodyPanel.cpp CelestialBodyPanel.hpp
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
@@ -56,6 +57,14 @@ if(WIN32)
    target_compile_definitions(GmatQtFrontend PUBLIC NOMINMAX)
 endif()
 add_executable(GmatQt main.cpp)
+find_package(Python3 QUIET COMPONENTS Interpreter)
+if(Python3_Interpreter_FOUND)
+   # Explicit, like runtime deployment: compiling the GUI does not require Java.
+   # The documentation Makefile uses the repository's bundled DocBook tools.
+   add_custom_target(build-qt-help
+      COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/BuildHelp.py
+      COMMENT "Building and installing the offline GMAT user guide" USES_TERMINAL VERBATIM)
+endif()
 target_link_libraries(GmatQt PRIVATE GmatQtFrontend)
 _SETOUTPUTDIRECTORY(GmatQt bin)
 set_target_properties(GmatQt PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
@@ -105,6 +114,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtSolverPlotTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtDesktopTests tests/DesktopTests.cpp)
    target_link_libraries(GmatQtDesktopTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtHelpTests tests/HelpTests.cpp)
+   target_link_libraries(GmatQtHelpTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
    target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
@@ -223,6 +234,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.OrbitSetup GmatQtOrbitSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.SolverPlots GmatQtSolverPlotTests "${qt_test_startup}")
    add_qt_test(QtGui.Desktop GmatQtDesktopTests "${qt_test_startup}")
+   add_qt_test(QtGui.Help GmatQtHelpTests "${qt_test_startup}")
    add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -242,5 +254,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtResourceRoundTripTests)
    add_dependencies(check-qt GmatQtSolverPlotTests)
    add_dependencies(check-qt GmatQtDesktopTests)
+   add_dependencies(check-qt GmatQtHelpTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

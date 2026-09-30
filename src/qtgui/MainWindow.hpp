@@ -16,6 +16,8 @@ class QtInterpreter;
 class QtPlotReceiver;
 class QtSolverListenerManager;
 class EditablePanel;
+class HelpController;
+class CommandEditor;
 class QMdiSubWindow;
 class GmatBase;
 class QAction;
@@ -56,6 +58,7 @@ private:
    EditablePanel *makeResourcePanel(GmatBase &object,const QString &snapshot);
    void refreshAppliedResourcePanels();
    void openCommandEditor(int index, MissionEdit operation);
+   CommandEditor *makeCommandPanel(int index,MissionEdit operation);
    void showCreateResource();
    void showPathSettings();
    void showFileComparison(const QString &baseline={});
@@ -72,6 +75,7 @@ private:
    QPlainTextEdit *editor;
    QPlainTextEdit *messages;
    QPointer<QWidget> textEditTarget;
+   HelpController *contextHelp;
    QTreeWidget *resources;
    QTreeWidget *mission;
    QTreeWidget *output;

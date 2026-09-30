@@ -54,6 +54,7 @@ __pycache__
 .vs/
 /build
 /application/bin/GmatQt*
+/application/docs/help/
 /depends/cspice65/windows/cspice64
 /depends/cspice66/windows/cspice64
 /src/base/solarsys/CPaJAcXSKaQEfMDHG.svg

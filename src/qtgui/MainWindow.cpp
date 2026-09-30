@@ -3,6 +3,7 @@
 #include "MainWindow.hpp"
 #include "InspectionDialog.hpp"
 #include "AboutDialog.hpp"
+#include "HelpDialog.hpp"
 #include "UserParameter.hpp"
 #include "SolarSystemPanel.hpp"
 #include "SolarSystem.hpp"
@@ -320,6 +321,14 @@ MainWindow::MainWindow()
    auto *run = menuBar()->addMenu("&Mission");
    auto *windows = menuBar()->addMenu("&Window");
    auto *help = menuBar()->addMenu("&Help");
+   contextHelp=new HelpController(this);
+   auto *contents=help->addAction("GMAT &Help"); contents->setObjectName("helpContentsAction");
+   connect(contents,&QAction::triggered,this,[this] { contextHelp->show("index"); });
+   auto *usingGmat=help->addAction("Using GMAT"); usingGmat->setObjectName("helpUsingGmat");
+   connect(usingGmat,&QAction::triggered,this,[this] { contextHelp->show("UsingGmat"); });
+   auto *tutorials=help->addAction("Tutorials"); tutorials->setObjectName("helpTutorials");
+   connect(tutorials,&QAction::triggered,this,[this] { contextHelp->show("Tutorials"); });
+   help->addSeparator();
    auto *toolbar = addToolBar("Standard");
    toolbar->setObjectName("standardToolbar");
    auto add = [this, toolbar](QMenu *menu, const QString &label, QStyle::StandardPixmap icon, const QKeySequence &key, auto callback) {
@@ -533,6 +542,7 @@ EditablePanel *MainWindow::makeResourcePanel(GmatBase &object,const QString &sna
       if (auto *button=buttons->button(QDialogButtonBox::Close)) button->setObjectName("closePanel");
    }
    panel->onApplied=[this] { refreshAppliedResourcePanels(); };
+   contextHelp->attach(panel,object.IsOfType("CelestialBody") ? "CelestialBody" : QString::fromStdString(object.GetTypeName()));
    return panel;
 }
 
@@ -1413,6 +1423,18 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    }
    if (operation!=MissionEdit::Append && (index<0 || index>=missionState.nodes.size())) return;
    if (operation==MissionEdit::Replace && !missionState.nodes[index].editable) return;
+   auto *panel=makeCommandPanel(index,operation);
+   auto *child=new EditorSubWindow;
+   child->setWidget(panel); workspace->addSubWindow(child);
+   child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
+   child->setProperty("commandIndex",index);
+   child->setProperty("sourceScript",missionState.sourceScript);
+   child->setWindowTitle(operation==MissionEdit::Replace ? missionState.nodes[index].label : "Insert mission command");
+   child->resize(700,500); child->show();
+   workspace->setActiveSubWindow(child);
+}
+CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)
+{
    const auto snapshot=missionState;
    QString statement=operation==MissionEdit::Replace ? snapshot.nodes[index].statement : QString();
    const auto spacecraft=Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT);
@@ -1470,12 +1492,36 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
          if (generation!=modelGeneration) { statusBar()->showMessage("The mission changed. Reopen this command panel to inspect its summary."); return; }
          showSummary(index);
       }) : std::function<void()>());
-   auto *child=new EditorSubWindow;
-   child->setWidget(panel); workspace->addSubWindow(child);
-   child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
-   child->setWindowTitle(operation==MissionEdit::Replace ? snapshot.nodes[index].label : "Insert mission command");
-   child->resize(700,500); child->show();
-   workspace->setActiveSubWindow(child);
+   contextHelp->attach(panel,panel->property("helpTopic").toString());
+   panel->onApplied=[this,panel,snapshot,index,operation] {
+      auto *child=qobject_cast<QMdiSubWindow *>(panel->parentWidget());
+      if (!child) return;
+      // Insertion becomes an editor for its first accepted command. Following
+      // Apply updates that command instead of repeating the insertion.
+      int accepted=index;
+      if (operation==MissionEdit::Append) accepted=snapshot.nodes.size();
+      else if (operation==MissionEdit::InsertAfter) {
+         accepted=index+1;
+         for (;accepted<snapshot.nodes.size();++accepted) {
+            int parent=snapshot.nodes[accepted].parent;
+            while (parent>=0 && parent!=index) parent=snapshot.nodes[parent].parent;
+            if (parent!=index) break;
+         }
+      }
+      if (accepted<0 || accepted>=missionState.nodes.size() || !missionState.nodes[accepted].editable) {
+         statusBar()->showMessage("Command applied; reopen its mission entry to continue editing"); return;
+      }
+      CommandEditor *replacement;
+      try { replacement=makeCommandPanel(accepted,MissionEdit::Replace); }
+      catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); return; }
+      catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); return; }
+      const auto *focus=QApplication::focusWidget(); const auto name=focus && panel->isAncestorOf(focus) ? focus->objectName() : QString();
+      child->setWidget(replacement); child->setProperty("commandIndex",accepted); child->setProperty("sourceScript",missionState.sourceScript);
+      child->setWindowTitle(missionState.nodes[accepted].label); panel->hide(); panel->deleteLater(); replacement->show();
+      if (auto *target=replacement->findChild<QWidget *>(name);!name.isEmpty() && target) target->setFocus();
+      refreshAppliedResourcePanels();
+   };
+   return panel;
 }
 QString MainWindow::applyMissionChange(const MissionSnapshot &snapshot,int index,MissionEdit operation,
                                      const QString &replacement)

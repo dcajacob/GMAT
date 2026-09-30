@@ -13,6 +13,9 @@
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QRegularExpression>
+#include "Moderator.hpp"
+#include "GmatBase.hpp"
 CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QString,QString> &templates,
                              Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations,std::function<void()> summary)
    : EditablePanel(parent),original(statement),inserting(adding)
@@ -23,6 +26,17 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    choices->addItem("Choose a command template…"); choices->addItems(templates.keys());
    if (adding) layout->addWidget(choices); else choices->hide();
    source=new QPlainTextEdit(statement,this); source->setObjectName("commandSource");
+   auto helpTopic=[this] {
+      auto text=source->toPlainText();
+      text.remove(QRegularExpression("(?m)^\\s*%[^\\n]*\\n?"));
+      const auto match=QRegularExpression("^\\s*([A-Za-z][A-Za-z0-9_]*)").match(text);
+      auto type=match.hasMatch() ? match.captured(1) : QString("CallGmatFunction");
+      if (type=="GMAT" || type=="Equation" || QRegularExpression("^\\s*[A-Za-z][A-Za-z0-9_.]*(?:\\([^)]*\\))?\\s*=").match(text).hasMatch()) type="Assignment";
+      else if (auto *object=Moderator::Instance()->GetConfiguredObject(type.toStdString());object && object->IsOfType("Function")) type="CallGmatFunction";
+      if (text.trimmed().isEmpty()) type="index";
+      setProperty("helpTopic",type);
+   };
+   connect(source,&QPlainTextEdit::textChanged,this,helpTopic); helpTopic();
    auto *event=new QPushButton("Script event…",this); event->setObjectName("editScriptEvent"); layout->addWidget(event);
    auto showEvent=[this,event] { event->setVisible(ScriptEventDialog::supports(source->toPlainText())); };
    connect(source,&QPlainTextEdit::textChanged,this,showEvent); showEvent();
@@ -88,7 +102,7 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    }
    connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status] {
       const auto error=apply(source->toPlainText());
-      if (error.isEmpty()) { applied=true; parentWidget()->close(); }
+      if (error.isEmpty()) { applied=true; appliedSuccessfully(); }
       else status->setText(error);
    });
    connect(buttons,&QDialogButtonBox::rejected,this,[this] { parentWidget()->close(); });
