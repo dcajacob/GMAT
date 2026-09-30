@@ -104,14 +104,14 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
 | `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
 | `src/gui/output/EventFilePanel.hpp` | Pending audit |
-| `src/gui/output/CompareReportPanel.hpp` | Pending audit |
+| `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Broader search/menu and very large directory cases remain under their separate audits. |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
 | `src/gui/mission/TreeViewOptionDialog.hpp` | Pending audit |
 | `src/gui/view/ViewTextDialog.hpp` | Pending audit |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
 | `src/gui/view/EditorPanel.hpp` | Pending audit |
-| `src/gui/app/CompareFilesDialog.hpp` | Pending audit |
+| `src/gui/app/CompareFilesDialog.hpp` | Active wx modes, absolute tolerance, skip blanks, baseline/candidate prefixes, up to three directories, file limit and result export audited. Qt File > Compare files workspace and report Compare action provide these controls plus two-file comparison. ComparisonTests covers UTF-8/BOM/CRLF, tolerance boundaries, UTC columns, maxima, trailing rows, invalid input, three-directory matching/.truth fallback/exact limits, editable widths, picker Cancel/row removal, full export/input protection, Stop/close and real-engine report/save/reopen invariance. Native Wayland inspected. Non-UTF-8 files, arbitrary initial header/data ambiguity, mid-read replacement and extreme directory/record regimes remain unqualified. |
 | `src/gui/app/ScriptPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | Pending audit |
 | `src/gui/solarsys/UniversePanel.hpp` | Pending audit |
@@ -123,7 +123,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Pending audit |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
-| `src/gui/app/CompareTextDialog.hpp` | Pending audit |
+| `src/gui/app/CompareTextDialog.hpp` | Source audited: this compiled legacy class has no caller in the current wx GUI. GmatMainFrame::CompareFiles uses CompareFilesDialog for text/numeric comparison, mapped to the qualified Qt comparison workspace above. No separate exposed workflow was found. |
 | `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
@@ -3021,3 +3021,57 @@ The ScriptEventPanel row now has executable audit evidence; 46 of 108 wx entries
 remain marked Pending audit. Common editor/menu workflows remain under their
 separate audits, and broader viewer, plugin and file gates stay open. Full
 replacement acceptance is not established by this checkpoint.
+
+## File/report comparison workflow
+
+Audited wx CompareFilesDialog and GmatMainFrame::CompareFiles: three comparison
+modes, absolute tolerance, text blank-line selection, baseline/candidate prefixes,
+up to three directories, file count and result export. CompareReportPanel is
+read-only, unwrapped output with Close; the active default wx comparison path
+instead opens ViewTextDialog. CompareTextDialog remains compiled but has no
+caller in the current wx sources. Qt now provides File > Compare files and a
+Compare action in report viewers, with two-file or directory comparison,
+adjustable directory columns, scrollable setup and a resizable result area.
+
+The Qt worker streams UTF-8 input and complete difference output to temporary
+storage. Text handles BOM/CRLF and optional blank-line skipping. Numeric-line
+comparison reuses GmatFileUtil::CompareLines; numeric columns reuse
+GetRealColumns for the existing numeric/UTC representations and report maximum
+absolute differences. Engine simulation, estimation and numerical algorithms
+are unchanged. Unlike the wx file loop, Qt counts trailing rows, diagnoses
+malformed data after the first record and differing column counts, and does not
+hang on lines beyond the wx fixed buffer. Lines larger than 16 MiB, non-finite
+numbers and non-UTF-8/binary text receive explicit errors. Initial column headers
+are skipped; arbitrary initial header/data ambiguity remains unqualified.
+
+ComparisonTests independently specifies text differences, blank-line behavior,
+numeric tolerance boundaries, Gregorian/ISO UTC equivalence, column maxima,
+extra rows, unequal columns, malformed/non-finite data and missing files.
+Three-directory GUI execution checks prefix matching, .truth fallback, backup/log
+exclusion, an exact one-file limit, error counts, manually adjusted widths and
+picker row identity after removal. Real picker Cancel and Save controls are
+exercised using Qt dialogs; native desktop-portal chooser integration remains
+unqualified. Invalid settings and Stop retain previous completed results.
+Closing an active comparison cancels its worker without accessing deleted UI.
+
+A result larger than 16 MiB remains inspectable through ReportViewer paging;
+event processing continues during comparison, and export matches the entire
+stored result. Unicode export, explicit replacement, missing-directory failure
+and protection of inputs including a symbolic-link alias are covered. A real
+engine report produces literal values 2 and 5; opening its Compare action
+prefills the baseline and compares equal to the reference. Mission source and
+dirty state stay unchanged, and Unicode save/reopen/run reproduces the report.
+
+The actual application/bin/GmatQt executable was rebuilt. All 25 Qt suites
+passed in 103.93 seconds; evidence: Qt6ParityValidation/check-comparison.txt.
+Native Wayland execution passed and the inspected capture shows readable table
+columns, mode/tolerance controls, scrollable setup, paged output and accessible
+Compare/Stop/Save/Close controls. Evidence: Qt6ParityValidation/comparison-wayland.txt
+and Qt6ParityValidation/comparison-wayland.png. The log includes Qt Wayland
+text-input focus warnings during picker handling; this run passed.
+
+Mid-read file replacement, non-UTF-8 formats, broader numeric/header/record
+regimes, extreme directory counts and common editor/menu behavior remain
+unqualified. The wx inventory has 43 of 108 entries still marked Pending audit.
+The selected plugin evidence remains 5 without qualification and 15 partial.
+Full replacement acceptance remains open.

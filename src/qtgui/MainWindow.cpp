@@ -1,4 +1,5 @@
 #include "ReportViewer.hpp"
+#include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
 #include "TrackingConfigDialog.hpp"
 #include "EpochIntervalDialog.hpp"
@@ -184,7 +185,7 @@ MainWindow::MainWindow()
          if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
          QFile file(name);
          if (!file.open(QIODevice::ReadOnly)) { statusBar()->showMessage("Report is not available: " + file.errorString()); return; }
-         auto *viewer = new ReportViewer(name,item->text(0));
+         auto *viewer = new ReportViewer(name,item->text(0),nullptr,[this,name] { showFileComparison(name); });
          auto *child = workspace->addSubWindow(viewer);
          child->setAttribute(Qt::WA_DeleteOnClose);
          child->setWindowTitle(item->text(0) + " — " + name);
@@ -240,6 +241,10 @@ MainWindow::MainWindow()
    saveAs->setShortcut(QKeySequence::SaveAs);
    editingActions.append(saveAs);
    connect(saveAs, &QAction::triggered, this, [this] { saveScript(true); });
+   file->addSeparator();
+   auto *compareFiles=file->addAction("Compare files…"); compareFiles->setObjectName("compareFiles");
+   editingActions.append(compareFiles);
+   connect(compareFiles,&QAction::triggered,this,[this] { showFileComparison(); });
    file->addSeparator();
    connect(file->addAction("E&xit"), &QAction::triggered, this, &QWidget::close);
    connect(qApp,&QApplication::focusChanged,this,[this](QWidget *,QWidget *focused) {
@@ -392,6 +397,15 @@ MainWindow::MainWindow()
    restoreGeometry(settings.value("geometry").toByteArray());
    restoreState(settings.value("windowState").toByteArray());
    updateTitle();
+}
+
+void MainWindow::showFileComparison(const QString &baseline)
+{
+   if (running) { statusBar()->showMessage("Wait until the mission stops before comparing its output files"); return; }
+   auto *panel=new ComparisonPanel(baseline);
+   auto *child=workspace->addSubWindow(panel); child->setAttribute(Qt::WA_DeleteOnClose);
+   child->setWindowTitle("Compare files");
+   child->resize(qBound(600,workspace->width(),980),qBound(480,workspace->height(),780)); child->show();
 }
 MainWindow::~MainWindow()
 {

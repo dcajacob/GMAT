@@ -47,6 +47,7 @@ private:
    void refreshOutput();
    void openCommandEditor(int index, MissionEdit operation);
    void showCreateResource();
+   void showFileComparison(const QString &baseline={});
    QString applyModelScript(const QString &candidate);
    bool restoreBuiltModel();
    void newMission();

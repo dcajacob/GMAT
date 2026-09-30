@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <limits>
 
-ReportViewer::ReportViewer(const QString &path,const QString &name,QWidget *parent)
+ReportViewer::ReportViewer(const QString &path,const QString &name,QWidget *parent,const std::function<void()> &compare)
    : QWidget(parent),path(path)
 {
    auto *layout=new QVBoxLayout(this); layout->setContentsMargins(4,4,4,4);
@@ -26,6 +26,7 @@ ReportViewer::ReportViewer(const QString &path,const QString &name,QWidget *pare
    pageNumber=new QSpinBox(this); pageNumber->setObjectName("reportPage"); pageNumber->setPrefix("Page "); pageNumber->setKeyboardTracking(false); pageNumber->setRange(1,1); controls->addWidget(pageNumber);
    next=button("Next","reportNext"); last=button("Last","reportLast");
    auto *reload=button("Reload","reportReload"),*find=button("Find…","reportFind"); controls->addStretch();
+   if (compare) connect(button("Compare…","reportCompare"),&QPushButton::clicked,this,compare);
    auto *fileSearch=new QHBoxLayout; layout->addLayout(fileSearch);
    searchText=new QLineEdit(this); searchText->setObjectName("reportFileSearchText"); searchText->setMaxLength(32768);
    searchText->setPlaceholderText("Find in complete file (case-sensitive)…"); fileSearch->addWidget(searchText,1);

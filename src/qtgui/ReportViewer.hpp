@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QString>
 #include <QByteArray>
+#include <functional>
 class QPlainTextEdit;
 class QLineEdit;
 class QFile;
@@ -12,7 +13,8 @@ class QPushButton;
 class ReportViewer final : public QWidget
 {
 public:
-   ReportViewer(const QString &path,const QString &name,QWidget *parent=nullptr);
+   ReportViewer(const QString &path,const QString &name,QWidget *parent=nullptr,
+                const std::function<void()> &compare={});
 private:
    bool loadPage(qint64 page);
    void searchFile(qint64 start);

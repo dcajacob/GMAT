@@ -1364,3 +1364,29 @@ the complete mission, and an invalid command leaves the earlier mission intact
 so the text can be corrected. The command source remains available for editing
 complete blocks directly. Pending edits support Undo/Redo, and saved/reopened
 events retain their commands, labels and comments.
+
+### Comparing output files
+
+Use **File > Compare files…**, or **Compare…** in an Output report viewer to
+prefill that report as the baseline. Compare two files or a baseline directory
+against up to three candidate directories. Directory matching removes the
+baseline prefix and prepends each candidate prefix; missing matches also try
+the same name with `.truth`. Supported directory extensions are `.txt`,
+`.report`, `.data`, `.script`, `.eph`, `.oem`, `.e` and `.truth`; logs and backup
+files are excluded. **Files: All** compares every match, or enter a positive
+limit. The directory table columns can be resized manually.
+
+Text comparison includes blank lines unless **Skip blank lines** is selected.
+Numeric lines use the engine's token comparison, ignore strings/comments and
+skip blank lines. Numeric columns skip initial headers, accept engine-supported
+numeric/UTC fields and report each column's maximum absolute difference.
+Numeric tolerance must be finite and nonnegative. Trailing rows and unequal
+column counts are differences; malformed rows after data starts and non-finite
+numbers are errors. Text files must use UTF-8; BOM and CRLF are accepted.
+Individual lines larger than 16 MiB are diagnosed explicitly.
+
+**Compare** runs without blocking the interface. **Stop** retains the previous
+complete result; **Close** cancels active work. Results are read-only, paged and
+searchable through the complete file. **Save results…** exports the complete
+comparison, including differences and errors, and prevents overwriting its input
+files. Comparing reports does not edit the mission or change its calculations.
