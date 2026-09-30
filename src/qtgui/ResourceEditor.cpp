@@ -489,12 +489,13 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          const bool reportParameters=object.GetTypeName()=="ReportFile" && field.name=="Add";
          const bool plotParameters=object.GetTypeName()=="XYPlot" && (field.name=="XVariable" || field.name=="YVariables");
          const bool filterFiles=object.IsOfType(Gmat::DATA_FILTER) && field.name=="FileNames",acceptFilter=object.IsOfType("AcceptFilter");
+         const bool forceBodies=object.IsOfType("ODEModel") && (field.name=="PrimaryBodies" || field.name=="PointMasses");
          if (field.filename || !field.references.isEmpty() || reportParameters || plotParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
             choose->setObjectName("chooseProperty_"+field.name);
             if (!field.help.isEmpty()) choose->setToolTip(field.help);
             table->setCellWidget(row,3,choose);
-            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters,filterFiles,acceptFilter] {
+            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters,filterFiles,acceptFilter,forceBodies] {
                if (reportParameters || plotParameters) {
                   const auto mode=plotParameters ? (field.name=="XVariable" ? ReportParameterDialog::Mode::PlottableSingle : ReportParameterDialog::Mode::PlottableMultiple) : ReportParameterDialog::Mode::Multiple;
                   ReportParameterDialog dialog(splitResourceReferences(value->text()),this,mode);
@@ -554,6 +555,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   for (auto &name:selected) name=name.trimmed();
                   auto names=selected;
                   for (const auto &name:field.references) if (!names.contains(name)) names.append(name);
+                  auto hidden=field.hiddenReferences;
+                  // Match wx's primary/point-mass exclusion using the pending
+                  // table values, rather than the model at panel creation.
+                  if (forceBodies) {
+                     const auto other=field.name=="PointMasses" ? "PrimaryBodies" : "PointMasses";
+                     for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()==other)
+                        hidden+=splitResourceReferences(table->item(row,1)->text());
+                  }
+                  for (const auto &name:hidden) names.removeAll(name);
                   for (const auto &name:names) {
                      auto *item=new QListWidgetItem(name,list);
                      item->setFlags(item->flags()|Qt::ItemIsUserCheckable);

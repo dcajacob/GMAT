@@ -1,0 +1,95 @@
+Obj unable to find material ''
+Obj unable to find material ''
+Obj unable to find material ''
+Error reading file /tmp/QtBodies-iqdxzu/bad image.txt: file not handled
+Qt orbit: could not load model /tmp/QtBodies-iqdxzu/bad image.txt ; using the default body or marker.
+Obj unable to find material ''
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+ SPICE(FILEOPENFAILED)
+
+ WRLINE: An error occurred while attempting to open /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.txt.  The value of IOSTAT returned was: 128.
+Qt bodies: four wx pages, built-in protection, pending/Cancel/correction/rollback, physical reports, texture/model/pose/color rendering, comment-preserving repeated digit-prefixed properties, exact Undo/Redo, Unicode save/reopen, New Asteroid, SPICE orbit and custom-pole frame reports, PCK/FK selection/replacement/removal/order, startup kernel replacement/clear, independent scripts, invalid-ID/missing-SPK recovery and Run/Stop guards passed
+Qt body selection: solar-shadow and primary/point-mass callers, user-body choices, hidden Sun/overlapping gravity bodies, Select all/Clear/Cancel/pending/Apply, typed rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact raw-script power/propagation reports passed

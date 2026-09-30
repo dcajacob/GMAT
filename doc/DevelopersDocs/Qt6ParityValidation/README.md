@@ -315,3 +315,33 @@ portal choosers, shared Help and top-level Wayland main-window minimize/restore
 remain unqualified. The wx inventory has 21 of 108 Pending audit entries;
 audited partial rows and plugin/file gates remain open, and the overall
 replacement objective is unfinished.
+
+## Shared body selection and preserved implicit defaults
+
+The additional `CelestialBodyTests` cases drive both wx body-selector callers:
+solar-power shadows and force-model primary/point masses. Configured Ceres is
+included; Sun is excluded from shadows, and gravity lists exclude the opposite
+pending selection. Select all/Clear/Cancel/pending/Apply, typed invalid/overlap
+rejection, exact Undo/Redo and Unicode save/reopen are covered. Exact power and
+propagation reports agree with separately written scripts. Empty shadow lists
+clear prior explicit membership and suppress the default Earth through
+save/reopen/run; empty point-mass selection also executes.
+
+`body-selection-wayland.{shadow-selection,point-selection}.png` were visually
+inspected after the native run; output is `body-selection-wayland.txt`.
+Body-list-only edits now preserve surrounding source and implicit defaults.
+The test found that whole-mission serialization can make a power system's
+implicit epoch explicit and slightly change its decay result. Broader combined
+scalar/list/default/epoch cases still require qualification. The interpreter's
+empty solar-shadow list now invokes the existing clear action/no-bodies flag;
+no numerical algorithm was changed.
+
+The full regression log is `check-body-selection.txt`. The existing SPICE error-
+file diagnostic warnings remain in negative execution tests. Optional calculated-
+point mode, broader gravity/owned-component transitions, multiple pending
+panels, portal/keyboard/focus, shared Help and top-level Wayland minimize/restore
+remain unqualified. The wx inventory now has 20 of 108 Pending audit rows and
+audited partial rows and plugin/file gates remain open.
+
+The final rebuilt GmatQt passed all 35 Qt suites in 146.68 seconds; the separate
+Wayland body/selection workflow passed as well.

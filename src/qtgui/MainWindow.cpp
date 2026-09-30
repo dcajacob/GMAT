@@ -921,6 +921,38 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   const bool shadows=object->IsOfType("SolarPowerSystem") && changes.size()==1 && changes.contains("ShadowBodies");
+   const bool forceBodyLists=object->IsOfType("ODEModel") && std::all_of(changes.keyBegin(),changes.keyEnd(),[](const QString &field) { return field=="PrimaryBodies" || field=="PointMasses"; });
+   if (shadows || forceBodyLists) {
+      try {
+         // Keep implicit defaults and unrelated configuration unchanged.
+         // Whole-mission serialization can apply a previously implicit power
+         // epoch and change its decay calculation during a body-list edit.
+         QMap<QString,QStringList> expected;
+         for (auto it=changes.cbegin();it!=changes.cend();++it) expected[it.key()]=splitResourceReferences(it.value());
+         if (forceBodyLists) {
+            const auto effective=[&](const QString &field) { if (expected.contains(field)) return expected.value(field); QStringList names; for (const auto &body:object->GetStringArrayParameter(field.toStdString())) names.append(QString::fromStdString(body)); return names; };
+            const auto primary=effective("PrimaryBodies"),points=effective("PointMasses");
+            for (const auto &body:primary) if (points.contains(body)) return "A body cannot be both primary gravity and point mass. Adjust both lists before Apply.";
+         }
+         QString block;
+         const QStringList fields=forceBodyLists ? QStringList{"PrimaryBodies","PointMasses"} : QStringList{"ShadowBodies"};
+         for (const auto &field:fields) {
+            if (!changes.contains(field)) continue;
+            if (forceBodyLists) for (const auto &body:expected.value(field)) { auto *selected=moderator->GetConfiguredObject(body.toStdString()); if (!selected || !selected->IsOfType("CelestialBody")) return "Select existing celestial bodies for gravity."; }
+            block+=replaceResourceList(*object,"GMAT "+name+"."+field+" = {};\n",field,changes.value(field));
+         }
+         QString firstCommand;
+         for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+         return applyModelScript(setConfigurationBlock(expectedScript,name,changes.keys(),block,firstCommand),[name,expected] {
+            auto *updated=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+            if (!updated) return QString("The resource was not retained.");
+            for (auto it=expected.cbegin();it!=expected.cend();++it) { QStringList actual; for (const auto &body:updated->GetStringArrayParameter(it.key().toStdString())) actual.append(QString::fromStdString(body)); if (actual!=it.value()) return QString("The selected bodies were not retained. The previous configuration was restored."); }
+            return QString();
+         });
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    if (auto *body=dynamic_cast<CelestialBody *>(object)) {
       try {
          QString firstCommand;
@@ -1002,6 +1034,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
       }
       validateResourceProperties(*proposed);
+      if (proposed->IsOfType("ODEModel") && (changes.contains("PrimaryBodies") || changes.contains("PointMasses"))) {
+         const auto effective=[&](const QString &field) {
+            if (changes.contains(field)) return splitResourceReferences(changes.value(field));
+            QStringList names; for (const auto &name:proposed->GetStringArrayParameter(field.toStdString())) names.append(QString::fromStdString(name)); return names;
+         };
+         const auto primary=effective("PrimaryBodies"),points=effective("PointMasses");
+         for (const auto &body:primary) if (points.contains(body)) return "A body cannot be both primary gravity and point mass. Adjust both lists before Apply.";
+      }
       if (proposed->GetTypeName()=="XYPlot" && proposed->GetBooleanParameter("ShowPlot")) {
          const bool emptyY=changes.contains("YVariables") ? splitResourceReferences(changes.value("YVariables")).isEmpty() : proposed->GetStringArrayParameter("YVariables").empty();
          if (emptyY) return "Select at least one Y parameter, or turn off Show plot.";

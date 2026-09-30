@@ -6581,14 +6581,22 @@ bool Interpreter::SetPropertyStringValue(GmatBase *obj, const Integer id,
             // complete clear. Do not discard it as an empty scalar: doing so
             // retains startup kernels after a GUI removal/save/reopen.
             const std::string property = obj->GetParameterText(id);
+            const bool emptyList = GmatStringUtil::IsEnclosedWithBraces(valueToUse) &&
+               GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}")).empty();
+            if (emptyList && property == "ShadowBodies" && obj->IsOfType("SolarPowerSystem"))
+            {
+               // The indexed setter distinguishes an explicit empty list
+               // from the implicit Earth default installed at Initialize.
+               obj->TakeAction("ClearShadowBodies");
+               return obj->SetStringParameter(id, "", 0);
+            }
             if (obj->IsOfType(Gmat::SPACE_POINT) &&
                 (property == "OrbitSpiceKernelName" ||
                  property == "AttitudeSpiceKernelName" ||
                  property == "PlanetarySpiceKernelName" ||
                  property == "SCClockSpiceKernelName" ||
                  property == "FrameSpiceKernelName") &&
-                GmatStringUtil::IsEnclosedWithBraces(valueToUse) &&
-                GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}")).empty())
+                emptyList)
                return obj->SetStringParameter(id, "{}");
 
             // remove enclosing curly brackets if used

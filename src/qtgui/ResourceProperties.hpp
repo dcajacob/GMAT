@@ -13,6 +13,7 @@ struct ResourceProperty
    QString help;
    QStringList choices;
    QStringList references;
+   QStringList hiddenReferences;
    bool color = false;
    bool filename = false;
    bool fileList = false;

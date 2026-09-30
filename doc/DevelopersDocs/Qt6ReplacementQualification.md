@@ -115,7 +115,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt script editor provides line numbers, syntax coloring and bounded Edit > Go to line with Cancel; Save/build and Save/build/run are qualified by ScriptEditingTests. Single-document workflows are covered; multiple inactive documents, line-navigation edge cases and broader shared SavePanel behavior remain pending. |
 | `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | wx read-only rotation-source/built-in pole rules, Earth nutation interval, custom pole values, frame ID and ordered FK files audited. Ceres pole edits and imported SPICE rotation change body-fixed reports and match separate scripts; FK ordering selects the final frame definition. Startup Luna FK removal survives save/reopen. Wider epochs, bodies, frame/pole conventions and source switching remain unqualified. |
 | `src/gui/solarsys/UniversePanel.hpp` | Source/file/timing controls audited. SolarSystem resource and grouped Qt panel expose runtime sources, paired DE file, SPK/PCK browsing, UseTT and interval. DE405/421/424 and SPICE missions, copied Unicode files, retained SPICE DE fallback, independent script reports and body/frame checks, pending/Discard/Cancel, invalid/truncated-file rollback, correction, exact Undo/Redo, save/reopen, comment/implicit boundary preservation and later resource/mission edits covered. Native Wayland panel workflow passed. Wider epochs, caching regimes, malformed full DE contents, keyboard/portal chooser and shared Help remain unqualified. |
-| `src/gui/solarsys/CelesBodySelectDialog.hpp` | Pending audit |
+| `src/gui/solarsys/CelesBodySelectDialog.hpp` | Both active wx callers audited: solar-shadow lists hide Sun; primary/point-mass selection excludes the opposite pending gravity list. Qt checked lists provide add/remove, Select all/Clear, reorder, Cancel and Apply. Existing and user Asteroid choices, typed invalid/overlap rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact power/propagation agreement with separately written scripts covered. Body-only edits preserve surrounding raw configuration; Wayland dialogs inspected. Optional calculated-point mode, broader pending transitions, keyboard/focus/portal and shared Help remain unqualified. |
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Four wx pages audited and exposed through a dedicated Qt MDI editor. Pending controls, applied-only preview, Close Cancel/Discard, invalid correction/rollback, exact Undo/Redo, Run/Stop guards, body creation and Unicode save/reopen covered. Native Wayland pages inspected. Shared Help, wider keyboard/focus, portal choosers and multi-panel lifecycle cases remain unqualified. |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Texture chooser/preview, supported 3DS/OBJ model chooser, offset/rotation/scale bounds and orbit/target colors audited. Applied assets reach PlotCurve; native Wayland rendered checker texture and posed body model were inspected and exceed pixel-change gates while calculation reports stay identical. Invalid image/model/path rollback, default texture/model clearing and Unicode save/reopen covered. Wider formats, materials and relative paths remain unqualified. |
 | `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
@@ -3740,3 +3740,58 @@ remain open. The overall replacement objective is not complete.
 The rebuilt application/bin/GmatQt passed all 35 Qt suites in 144.97 seconds.
 The separate native Wayland body workflow also passed; it uses Qt widget
 choosers rather than the desktop portal.
+
+## Shared celestial-body selection callers
+
+The active CelesBodySelectDialog callers are solar-power shadow selection and
+propagation point-mass selection. wx hides Sun from shadows and the current
+primary gravity body from point masses; its primary-body choices also reflect
+selected point masses. Qt now supplies celestial-body references for both force
+lists, including user bodies. The shared checked-list dialog filters hidden
+names out of both available and existing selections. Gravity filtering reads
+the opposite pending property row at click time, so it follows unapplied edits.
+Typed shadow-Sun, non-body gravity names and overlapping primary/point-mass
+lists are rejected atomically. The generic mixed-property Apply route also
+checks gravity-list overlap against both pending lists.
+
+An exact-report test exposed a pre-existing serialization drift: the power
+system constructor's implicit numeric epoch differs slightly from conversion of
+its default displayed Gregorian epoch. Rewriting the entire mission during a
+body-list edit made that epoch explicit, changing a tested power output from
+1.235996012692897 to 1.235996012761969. Body-list-only changes now replace only
+those configuration assignments and retain surrounding source/defaults. This
+applies to ShadowBodies and pure PrimaryBodies/PointMasses edits. Combined
+scalar/list edits still use the broader serializer and require further default
+and epoch qualification; no numerical calculation was changed.
+
+Explicit empty solar-shadow lists were also ignored by the interpreter, allowing
+Initialize to restore Earth. A narrow empty-list fix calls the existing solar
+power clear action and indexed setter's no-bodies flag. It clears prior explicit
+membership as well as suppressing defaults. Other empty string-array semantics
+are unchanged except the already-qualified SpacePoint kernel clear.
+
+CelestialBodyTests drives both actual MDI callers and shared dialogs. The Sun,
+spacecraft, non-body hardware and SolarSystemBarycenter are excluded where
+required; configured Asteroid Ceres is offered. Select all, Clear, Cancel,
+pending acceptance, Apply, exact Undo/Redo and Unicode save/reopen are exercised.
+A pending Earth primary selection hides Earth from point masses, and selected
+Sun/Luna/Ceres point masses hide those names from primary choices. The solar
+power and propagation reports match separately written scripts exactly. Clearing
+shadows stays empty after save/reopen/run and matches a raw script that clears a
+previous Earth assignment. Clearing point masses also executes successfully.
+
+Native dialogs are captured in
+[shadow selection](Qt6ParityValidation/body-selection-wayland.shadow-selection.png)
+and [point-mass selection](Qt6ParityValidation/body-selection-wayland.point-selection.png),
+with [native output](Qt6ParityValidation/body-selection-wayland.txt). The prior
+SPICE diagnostic-file warnings remain in negative cases. Optional wx calculated-
+point mode has no active selected caller and remains unqualified, along with
+broader gravity/owned-component transitions, multiple pending panels, combined
+power edits/defaults, keyboard/focus/portal behavior and shared Help.
+
+There are now 20 of 108 Pending audit rows. Audited partial rows and viewer,
+plugin/file and Wayland top-level minimize/restore gates remain open. The
+replacement objective is unfinished.
+
+After rebuilding application/bin/GmatQt, all 35 Qt suites passed in 146.68
+seconds: [regression output](Qt6ParityValidation/check-body-selection.txt).

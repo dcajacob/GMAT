@@ -1539,3 +1539,13 @@ Show script displays applied settings. Successful Apply closes the panel;
 Close offers Discard or Cancel for pending edits. Undo restores the prior
 script exactly. The four pages scroll and long rows wrap to fit desktop
 scaling. These controls configure the existing engine.
+
+
+The body selectors used for solar-power shadows and force-model gravity show
+available celestial bodies, including configured user bodies. Check or uncheck
+bodies, use Select all or Clear selection, and drag rows to reorder. Cancel
+retains the original pending list. The Sun is excluded from shadow bodies.
+Primary and point-mass choices exclude bodies in the other pending gravity list;
+typed overlapping lists are rejected on Apply. Clearing shadows explicitly
+removes the implicit Earth shadow, including after save/reopen and execution.
+Body-list-only edits retain the surrounding script and implicit defaults.

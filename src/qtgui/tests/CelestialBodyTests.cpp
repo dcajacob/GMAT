@@ -1,5 +1,6 @@
 #include "MainWindow.hpp"
 #include "CelestialBodyPanel.hpp"
+#include "ResourceEditor.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "SolarSystem.hpp"
@@ -17,6 +18,8 @@
 #include <QComboBox>
 #include <QListWidget>
 #include <QTabWidget>
+#include <QTabBar>
+#include <QTableWidget>
 #include <QLabel>
 #include <QPushButton>
 #include <QDialogButtonBox>
@@ -54,6 +57,24 @@ static CelestialBodyPanel *open(MainWindow &window,const QString &name)
 }
 static void close(MainWindow &window) { for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget())) { panel->discardChanges(); child->close(); } QApplication::processEvents(); }
 static QLineEdit *edit(CelestialBodyPanel &panel,const QString &field) { auto *value=panel.findChild<QLineEdit *>("body_"+field); require(value,"Body value control missing"); return value; }
+static ResourceEditor *resource(MainWindow &window,const QString &name)
+{
+   auto *tree=window.findChild<QTreeWidget *>("Resources"); const auto items=tree->findItems(name,Qt::MatchExactly|Qt::MatchRecursive); require(items.size()==1,"Resource entry missing"); tree->itemDoubleClicked(items.first(),0); QApplication::processEvents();
+   auto *panel=dynamic_cast<ResourceEditor *>(window.findChild<QMdiArea *>("workspace")->activeSubWindow()->widget()); require(panel,"Resource editor missing"); return panel;
+}
+static QTableWidgetItem *property(ResourceEditor &panel,const QString &name)
+{
+   auto *table=panel.findChild<QTableWidget *>(); require(table,"Resource property table missing"); for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()==name) return table->item(row,1); throw std::runtime_error("Property row missing");
+}
+static void section(ResourceEditor &panel,const QString &name)
+{
+   auto *tabs=panel.findChild<QTabBar *>("propertySections"); require(tabs,"Resource sections missing"); for (int i=0;i<tabs->count();++i) if (tabs->tabText(i)==name) { tabs->setCurrentIndex(i); return; } throw std::runtime_error("Resource section missing");
+}
+static void applyResource(ResourceEditor &panel)
+{
+   panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+   QStringList messages; for (auto *label:panel.findChildren<QLabel *>()) messages.append(label->text()); require(!panel.hasChanges(),qPrintable(messages.join('\n')));
+}
 static void apply(CelestialBodyPanel &panel) { panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(!panel.hasChanges(),qPrintable(panel.findChild<QLabel *>("bodyStatus")->text())); QApplication::processEvents(); }
 static const PlotCurve &curve(MainWindow &window,const QString &name) { const auto model=window.plotReceiver()->model("Orb"); require(model!=nullptr,"Body plot data missing"); for (const auto &entry:model->curves) if (entry.name==name) return entry; throw std::runtime_error("Body plot curve missing"); }
 static QImage render(MainWindow &window,const QString &path)
@@ -128,9 +149,50 @@ int main(int argc,char **argv)
       close(window); editor->setPlainText(original); require(window.buildScript(),"Default body kernel removal fixture failed"); panel=open(window,"Luna"); auto *defaultPcks=panel->findChild<QListWidget *>("body_PlanetarySpiceKernelName"); require(defaultPcks && defaultPcks->count()>0,"Luna default kernel list missing"); defaultPcks->selectAll(); panel->findChild<QPushButton *>("bodyRemove_PlanetarySpiceKernelName")->click(); addFile(*panel,"PlanetarySpiceKernelName",pck2); apply(*panel); require(state("Luna").value("PlanetarySpiceKernelName")==pck2,"Default PCK replacement appended/retained startup membership");
       panel=open(window,"Luna"); defaultPcks=panel->findChild<QListWidget *>("body_PlanetarySpiceKernelName"); defaultPcks->selectAll(); panel->findChild<QPushButton *>("bodyRemove_PlanetarySpiceKernelName")->click(); tabs=panel->findChild<QTabWidget *>("bodyPages"); tabs->setCurrentIndex(2); auto *defaultFrames=panel->findChild<QListWidget *>("body_FrameSpiceKernelName"); require(defaultFrames && defaultFrames->count()>0,"Luna default FK list missing"); defaultFrames->selectAll(); panel->findChild<QPushButton *>("bodyRemove_FrameSpiceKernelName")->click(); apply(*panel); require(state("Luna").value("PlanetarySpiceKernelName").isEmpty() && state("Luna").value("FrameSpiceKernelName").isEmpty(),"Default PCK/FK removal retained startup membership"); require(window.saveScriptTo(saved) && window.loadScript(saved) && state("Luna").value("PlanetarySpiceKernelName").isEmpty() && state("Luna").value("FrameSpiceKernelName").isEmpty(),"Default kernel clear did not survive save/reopen");
       editor->setPlainText("Luna.PlanetarySpiceKernelName = { };\nLuna.FrameSpiceKernelName = {};\n"+original); require(window.buildScript() && state("Luna").value("PlanetarySpiceKernelName").isEmpty() && state("Luna").value("FrameSpiceKernelName").isEmpty(),"Separately written empty kernel lists did not clear startup defaults");
+      // The wx body-selection dialog serves solar shadows and force-model
+      // point masses. Exercise both actual Qt callers and pending exclusions.
+      close(window);
+      const auto userBody="Create Asteroid Ceres;\nCeres.Mu = 63;\nCeres.EquatorialRadius = 470;\nCeres.NAIFId = 2000001;\nCeres.OrbitSpiceKernelName = {'"+ceresKernel+"'};\n";
+      auto selectionSource=userBody+QString("Create SolarPowerSystem SolarPower;\n")+original;
+      selectionSource.insert(selectionSource.indexOf("BeginMissionSequence"),"Sat.PowerSystem = SolarPower;\n");
+      selectionSource.replace("Sat.EarthFixed.Z;","Sat.EarthFixed.Z Sat.SolarPower.TotalPowerAvailable;");
+      editor->setPlainText(selectionSource); require(window.runMission()==MainWindow::RunResult::Completed,"Body selection fixture failed");
+      auto *pickerPanel=resource(window,"SolarPower"); section(*pickerPanel,"Shadow"); const auto initialShadow=property(*pickerPanel,"ShadowBodies")->text();
+      auto selectBodies=[&](ResourceEditor &panel,const QString &field,const QStringList &selected,const QStringList &hidden,bool accept,const QString &capturePath={}) {
+         modal(panel,[&] { panel.findChild<QPushButton *>("chooseProperty_"+field)->click(); },[&](QDialog *dialog) {
+            auto *list=dialog->findChild<QListWidget *>("resourceSelectionList"); require(list,"Body selection list missing"); QStringList choices;
+            for (int i=0;i<list->count();++i) choices.append(list->item(i)->text());
+            require(choices.contains("Luna") && choices.contains("Ceres") && !choices.contains("Sat") && !choices.contains("SolarPower") && !choices.contains("SolarSystemBarycenter"),"Body selection did not filter resource types/include user body");
+            for (const auto &name:hidden) require(!choices.contains(name),"wx hidden body appeared in selection");
+            dialog->findChild<QPushButton *>("resourceSelectAll")->click(); for (int i=0;i<list->count();++i) require(list->item(i)->checkState()==Qt::Checked,"Body Select all failed");
+            dialog->findChild<QPushButton *>("resourceClearSelection")->click(); for (int i=0;i<list->count();++i) { require(list->item(i)->checkState()==Qt::Unchecked,"Body Clear failed"); if (selected.contains(list->item(i)->text())) list->item(i)->setCheckState(Qt::Checked); }
+            for (const auto &name:selected) require(choices.contains(name),"Selectable body missing"); capture(*dialog,capturePath);
+            if (accept) dialog->accept();
+         });
+      };
+      selectBodies(*pickerPanel,"ShadowBodies",{"Luna","Ceres"},{"Sun"},false); require(property(*pickerPanel,"ShadowBodies")->text()==initialShadow && !pickerPanel->hasChanges() && editor->toPlainText()==selectionSource,"Body picker Cancel changed pending/model/source");
+      selectBodies(*pickerPanel,"ShadowBodies",{"Luna","Ceres"},{"Sun"},true,captures.isEmpty() ? QString() : captures+".shadow-selection.png"); require(pickerPanel->hasChanges() && editor->toPlainText()==selectionSource,"Shadow selection applied before Apply"); applyResource(*pickerPanel);
+      require(window.runMission()==MainWindow::RunResult::Completed,"GUI shadow selection mission failed"); const auto shadowReport=bytes(report); const auto selectedShadowSource=editor->toPlainText();
+      require(selectedShadowSource.endsWith(selectionSource.mid(selectionSource.indexOf("BeginMissionSequence"))) && !selectedShadowSource.contains("SolarPower.InitialEpoch"),"Body selection rewrote unrelated defaults/mission"); editor->undo(); require(editor->toPlainText()==selectionSource,"Shadow selection Undo not exact"); editor->redo(); require(editor->toPlainText()==selectedShadowSource,"Shadow selection Redo not exact"); require(window.buildScript(),"Shadow selection Redo rebuild failed");
+      require(!window.applyResourceChanges("SolarPower",{{"ShadowBodies","Sun"}},selectedShadowSource).isEmpty() && editor->toPlainText()==selectedShadowSource,"Typed Sun shadow bypassed wx exclusion");
+      require(window.saveScriptTo(saved) && window.loadScript(saved) && window.runMission()==MainWindow::RunResult::Completed && bytes(report)==shadowReport,"Shadow selection save/reopen changed calculation");
+      auto shadowReference=selectionSource; shadowReference.insert(shadowReference.indexOf("BeginMissionSequence"),"SolarPower.ShadowBodies = {Luna, Ceres};\n"); editor->setPlainText(shadowReference); require(window.runMission()==MainWindow::RunResult::Completed && bytes(report)==shadowReport,"GUI/raw-script shadow calculations differ");
+      pickerPanel=resource(window,"SolarPower"); section(*pickerPanel,"Shadow"); selectBodies(*pickerPanel,"ShadowBodies",{},{"Sun"},true); applyResource(*pickerPanel); require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetConfiguredObject("SolarPower")->GetStringArrayParameter("ShadowBodies").empty(),"Clear shadows restored implicit Earth at execution"); const auto clearShadowReport=bytes(report); require(window.saveScriptTo(saved) && window.loadScript(saved) && window.runMission()==MainWindow::RunResult::Completed && bytes(report)==clearShadowReport && Moderator::Instance()->GetConfiguredObject("SolarPower")->GetStringArrayParameter("ShadowBodies").empty(),"Clear shadow selection did not survive save/reopen/run");
+      auto clearedReference=selectionSource; clearedReference.insert(clearedReference.indexOf("BeginMissionSequence"),"SolarPower.ShadowBodies = {Earth};\nSolarPower.ShadowBodies = {};\n"); editor->setPlainText(clearedReference); require(window.runMission()==MainWindow::RunResult::Completed && bytes(report)==clearShadowReport && Moderator::Instance()->GetConfiguredObject("SolarPower")->GetStringArrayParameter("ShadowBodies").empty(),"Raw empty shadow list did not clear prior/default bodies"); close(window); editor->setPlainText(shadowReference); require(window.runMission()==MainWindow::RunResult::Completed,"Point-mass fixture restore failed");
+      pickerPanel=resource(window,"FM"); section(*pickerPanel,"Bodies"); property(*pickerPanel,"PrimaryBodies")->setText("Earth");
+      selectBodies(*pickerPanel,"PointMasses",{"Sun","Luna","Ceres"},{"Earth"},false); require(property(*pickerPanel,"PointMasses")->text()=="Earth" && editor->toPlainText()==shadowReference,"Point-mass Cancel changed fields/source");
+      selectBodies(*pickerPanel,"PointMasses",{"Sun","Luna","Ceres"},{"Earth"},true,captures.isEmpty() ? QString() : captures+".point-selection.png");
+      const auto beforeForces=editor->toPlainText(); require(!window.applyResourceChanges("FM",{{"PrimaryBodies","Earth"},{"PointMasses","Earth, Luna"}},beforeForces).isEmpty() && editor->toPlainText()==beforeForces,"Typed overlapping gravity lists bypassed wx exclusion");
+      applyResource(*pickerPanel); require(window.runMission()==MainWindow::RunResult::Completed,"GUI point-mass selection mission failed"); const auto forceReport=bytes(report);
+      require(window.saveScriptTo(saved) && window.loadScript(saved) && window.runMission()==MainWindow::RunResult::Completed && bytes(report)==forceReport,"Force-body selection save/reopen changed calculation");
+      auto forceReference=shadowReference; forceReference.replace("FM.PrimaryBodies = {};","FM.PrimaryBodies = {Earth};"); forceReference.replace("FM.PointMasses = {Earth};","FM.PointMasses = {Sun, Luna, Ceres};"); editor->setPlainText(forceReference); require(window.runMission()==MainWindow::RunResult::Completed && bytes(report)==forceReport,"GUI/raw-script point-mass reports differ");
+      require(!window.applyResourceChanges("FM",{{"PointMasses","SolarPower"}},forceReference).isEmpty() && editor->toPlainText()==forceReference,"Non-body point mass accepted or changed source");
+      pickerPanel=resource(window,"FM"); section(*pickerPanel,"Bodies"); modal(*pickerPanel,[&] { pickerPanel->findChild<QPushButton *>("chooseProperty_PrimaryBodies")->click(); },[](QDialog *dialog) { auto *list=dialog->findChild<QListWidget *>("resourceSelectionList"); require(list,"Primary-body selection missing"); bool earth=false; for (int i=0;i<list->count();++i) { const auto name=list->item(i)->text(); require(name!="Sun" && name!="Luna" && name!="Ceres","Primary picker included selected point mass"); earth=earth || name=="Earth"; } require(earth,"Primary-body picker omitted Earth"); });
+      pickerPanel=resource(window,"FM"); section(*pickerPanel,"Bodies"); selectBodies(*pickerPanel,"PointMasses",{},{"Earth"},true); applyResource(*pickerPanel); require(window.runMission()==MainWindow::RunResult::Completed,"Clear point-mass selection failed");
       close(window); editor->setPlainText(original); require(window.buildScript(),"Body Stop fixture restore failed"); panel=open(window,"Earth"); edit(*panel,"Mu")->setText("400000"); modal(*panel,[&] { panel->parentWidget()->close(); },[](QDialog *dialog) { auto *question=qobject_cast<QMessageBox *>(dialog); require(question,"Body close prompt missing"); question->button(QMessageBox::Cancel)->click(); }); require(panel->hasChanges() && editor->toPlainText()==original,"Body Close Cancel lost pending edits"); close(window);
       const QString loop="Create Variable n;\nBeginMissionSequence;\nWhile n < 1e12;\nn = n + 1;\nEndWhile;\n"; editor->setPlainText(loop); require(window.buildScript(),"Body loop fixture failed"); panel=open(window,"Earth"); bool guarded=false; QTimer::singleShot(20,&window,[&] { guarded=!panel->isEnabled() && !window.applyResourceChanges("Earth",{{"Mu","400000"}},loop).isEmpty(); window.stopMission(); }); require(window.runMission()==MainWindow::RunResult::Stopped && guarded && panel->isEnabled(),"Body editing not guarded during Run/Stop"); close(window); editor->setPlainText(original); require(window.runMission()==MainWindow::RunResult::Completed && bytes(report)==baselineReport,"Body mission did not recover after Stop");
       std::cout<<"Qt bodies: four wx pages, built-in protection, pending/Cancel/correction/rollback, physical reports, texture/model/pose/color rendering, comment-preserving repeated digit-prefixed properties, exact Undo/Redo, Unicode save/reopen, New Asteroid, SPICE orbit and custom-pole frame reports, PCK/FK selection/replacement/removal/order, startup kernel replacement/clear, independent scripts, invalid-ID/missing-SPK recovery and Run/Stop guards passed\n";
+      std::cout<<"Qt body selection: solar-shadow and primary/point-mass callers, user-body choices, hidden Sun/overlapping gravity bodies, Select all/Clear/Cancel/pending/Apply, typed rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact raw-script power/propagation reports passed\n";
    } catch (BaseException &error) { std::cerr<<error.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &error) { std::cerr<<error.what()<<'\n'; return 1; }
    return 0;
 }

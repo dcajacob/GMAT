@@ -378,8 +378,15 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.choices={"NewtonRaphson","Broyden","ModifiedBroyden"};
          if (object.IsOfType("DifferentialCorrector") && field.name=="DerivativeMethod")
             field.choices={"CentralDifference","ForwardDifference","BackwardDifference"};
-         if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies")
+         if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowBodies") {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) if (name!="Sun") field.references.append(QString::fromStdString(name));
+            field.hiddenReferences={"Sun"};
+         }
+         if (object.IsOfType("ODEModel") && (field.name=="PrimaryBodies" || field.name=="PointMasses")) {
+            field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
+         }
          if (object.IsOfType("CoordinateSystem") && field.name=="Axes")
             for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM)) field.choices.append(QString::fromStdString(type));
          if (object.GetTypeName()=="ObjectReferenced" && (field.name=="XAxis" || field.name=="YAxis" || field.name=="ZAxis"))
@@ -552,6 +559,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             if (!thruster || !thruster->IsOfType(Gmat::THRUSTER)) throw std::runtime_error("Select an available thruster.");
          }
          if (object.IsOfType("SolarPowerSystem") && name=="ShadowBodies") {
+            if (entry=="Sun") throw std::runtime_error("The Sun cannot shadow itself. Select other celestial bodies.");
             const auto &bodies=Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY);
             if (std::find(bodies.begin(),bodies.end(),entry.toStdString())==bodies.end()) throw std::runtime_error("Select an existing celestial body for solar shadows");
          }
