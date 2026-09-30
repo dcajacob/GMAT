@@ -35,6 +35,7 @@ struct PlotCurve
    QVector<quint64> breaks;
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
+   bool wireframeObject = false;
    double radius = 0;
    QString texturePath;
    QString modelPath;

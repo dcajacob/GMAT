@@ -72,7 +72,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution and broader interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
-| `src/gui/spacecraft/VisualModelPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/VisualModelPanel.hpp` | File, rotation/translation/scale sliders and numeric fields, recenter/autoscale, new-file pose reset, colors and Earth-reference preview audited. Qt visual editor implemented with pending Apply, engine normalization and model-read diagnostics. Cancel, file/color pickers, invalid input recovery, Undo/Redo and save/reopen propagation covered. Textured OBJ preview/rotation/Earth reference tested at normal, 150% and 200% scaling and directly on Wayland. Broader 3DS asset/material cases remain to qualify. |
 | `src/gui/spacecraft/AttitudePanel.hpp` | Pending audit |
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
@@ -1874,3 +1874,62 @@ thruster and power-consuming propulsion combinations remain open qualification.
 Validation: rebuilt the user's GmatQt; all 11 Qt suites passed in 38.79 seconds.
 Native viewer tests used isolated Xvfb/software OpenGL. Evidence:
 `Qt6ParityValidation/check-hardware-attachments.txt`.
+
+
+## Spacecraft visual-model editor and fractional-DPI viewport
+
+Audited wx VisualModelPanel's filename/browse, three rotation and translation
+slider/text pairs, logarithmic scale slider/text, Recenter Model, Autoscale Model,
+new-file pose reset, Show Earth and the shared orbit/target color controls.
+Qt now offers **Visual model…** from the spacecraft properties. Its splitter
+pairs grouped controls with the existing Qt orbit renderer; controls scroll on
+smaller displays. Wheel/drag/Fit retain Qt navigation. Choosing a new model
+resets its offsets/rotations and scale, matching wx; Recenter sets offsets to
+zero and Autoscale restores scale one. Orbit and target colors stay pending.
+
+The dialog normalizes numeric edits through setters on a cloned spacecraft,
+including offsets limited to [-3.5,3.5], wrapped rotations and scale limited to
+[0.001,1000]. Numeric fields show the engine's normalized values on editing
+completion. Nonfinite input and unreadable model geometry leave the last valid
+preview and report the error. Model paths resolve through the engine's model
+path rules and use the same reader as the native orbit viewer. OK updates only
+the pending property rows; Apply remains the mission edit. Offscreen/minimal
+platforms retain controls/validation but have no native mesh preview.
+
+The Earth size reference uses the standard equatorial radius and a per-object
+wireframe flag; this leaves the spacecraft mesh filled/textured. The shared
+painter also respects body wireframe settings. WorkflowTests covers Cancel,
+sliders, recenter/autoscale, new-file reset, numeric normalization, malformed
+model recovery, file/color chooser acceptance and cancellation, pending/model
+separation, Apply, exact-source Undo/Redo and save/reopen. It verifies all orbit
+state elements are unchanged and reopened propagation still lasts 600 seconds.
+Native tests render a textured OBJ in the dialog, change its rotation and verify
+changed pixels, then show the wireframe Earth reference. Broader 3DS assets and
+material combinations remain open qualification cases.
+
+Direct Wayland execution exposed stale OSG viewport dimensions during widget
+resize at fractional display scaling. Initialization now uses physical pixels;
+each paint refreshes OSG's context size and viewport from the current widget
+size/ratio. The native harness also waits for initial window exposure/configure
+before subsequent resize requests, since an outstanding Wayland initial
+configure can overwrite an immediate client resize. Centered Fit assertions and
+framebuffer-size checks remain in place. Added QtGui.NativeOrbitFractionalDPI
+at QT_SCALE_FACTOR=1.5 alongside normal and 2x native checks.
+
+Validation: rebuilt the user's GmatQt; all 12 Qt suites passed in 47.61 seconds.
+Native suite rendering uses Xvfb/software OpenGL. The preview capture mode also
+passed directly on the current Wayland desktop without forced software rendering,
+including the preceding centered-Fit/resize checks, textured preview, rotation,
+Earth reference and cleanup. The 2250x1620 dialog capture was visually inspected.
+Evidence: `Qt6ParityValidation/check-visual-model.txt`,
+`Qt6ParityValidation/visual-model-wayland.txt` and
+`Qt6ParityValidation/visual-model-wayland.png`.
+
+After the viewport correction, GmatQtWindowTests was also rerun directly on
+Wayland with temporary settings. The default mission, ground-view minimize,
+Output OrbitView opening, ground restoration and repeated minimize passed in
+2.891 seconds. Its capture contained 21,679 ocean and 685 trajectory pixels.
+This is evidence for that sequence on the current desktop, not all viewer
+lifecycle or extended-session qualification. Evidence:
+`Qt6ParityValidation/visual-default-wayland.txt` and
+`Qt6ParityValidation/visual-default-wayland.png`.

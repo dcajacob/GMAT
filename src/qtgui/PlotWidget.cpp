@@ -252,7 +252,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             const double radius=curve.radius/(xmax-xmin)*area.width()*perspectiveScale(*object.a);
             QRadialGradient gradient(pixel-QPointF(radius*.3,radius*.3),radius*1.4);
             gradient.setColorAt(0,curve.color.lighter(145)); gradient.setColorAt(1,curve.color.darker(240));
-            painter.setPen(curve.color); painter.setBrush(gradient); painter.drawEllipse(pixel,radius,radius);
+            painter.setPen(curve.color); painter.setBrush(data->wireframe || curve.wireframeObject ? QBrush(Qt::NoBrush) : QBrush(gradient)); painter.drawEllipse(pixel,radius,radius);
          } else { painter.setBrush(object.a->color); painter.drawEllipse(pixel,3.5,3.5); }
       }
       if (data->labels) for (const auto &object:objects) if (!object.b) {

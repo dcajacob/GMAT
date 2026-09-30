@@ -1,6 +1,7 @@
 #include "ResourceEditor.hpp"
 #include "FunctionFileDialog.hpp"
 #include "BallisticsMassDialog.hpp"
+#include "VisualModelDialog.hpp"
 #include "Moderator.hpp"
 #include "AxisSystem.hpp"
 #include "TimeSystemConverter.hpp"
@@ -474,6 +475,34 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       table->setItem(row, 2, unit);
    }
    if (spacecraft) {
+      auto *visual=new QPushButton("Visual model…",this); visual->setObjectName("spacecraftVisualModel"); layout->addWidget(visual);
+      const auto spacecraftName=object.GetName();
+      connect(visual,&QPushButton::clicked,this,[this,spacecraftName] {
+         QMap<QString,QString> values;
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text();
+            if (name=="ModelFile" || name.startsWith("ModelRotation") || name.startsWith("ModelOffset") || name=="ModelScale" || name=="OrbitColor" || name=="TargetColor")
+               values.insert(name,table->item(row,1)->text());
+         }
+         VisualModelDialog dialog(values,[spacecraftName](const QMap<QString,QString> &pending) {
+            auto *configured=Moderator::Instance()->GetConfiguredObject(spacecraftName);
+            if (!configured) throw std::runtime_error("This spacecraft is no longer available.");
+            std::unique_ptr<GmatBase> preview(configured->Clone());
+            if (!preview) throw std::runtime_error("This spacecraft cannot be previewed.");
+            for (auto it=pending.cbegin();it!=pending.cend();++it) setResourceProperty(*preview,it.key(),it.value());
+            QMap<QString,QString> normalized=pending;
+            for (auto it=pending.cbegin();it!=pending.cend();++it)
+               if (it.key().startsWith("ModelRotation") || it.key().startsWith("ModelOffset") || it.key()=="ModelScale")
+                  normalized[it.key()]=QString::number(preview->GetRealParameter(it.key().toStdString()),'g',17);
+            normalized["@ResolvedModelFile"]=pending.value("ModelFile").isEmpty() ? QString() : QString::fromStdString(preview->GetStringParameter("ModelFileFullPath"));
+            return normalized;
+         },this);
+         if (dialog.exec()!=QDialog::Accepted) return;
+         const auto edited=dialog.values();
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text(); if (edited.contains(name)) table->item(row,1)->setText(edited.value(name));
+         }
+      });
       auto *button=new QPushButton("Ballistics and mass…",this); button->setObjectName("spacecraftBallisticsMass");
       layout->addWidget(button);
       connect(button,&QPushButton::clicked,this,[this] {

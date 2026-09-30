@@ -12,6 +12,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptCompatibility.cpp ScriptCompatibility.hpp
    BallisticsMassDialog.cpp BallisticsMassDialog.hpp
+   VisualModelDialog.cpp VisualModelDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
@@ -70,6 +71,10 @@ if(GMAT_QT_BUILD_TESTS)
             ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1 QT_SCALE_FACTOR=2
             $<TARGET_FILE:GmatQtOrbitRendererTests>)
          set_tests_properties(QtGui.NativeOrbitHiDPI PROPERTIES LABELS qt-gui TIMEOUT 60)
+         add_test(NAME QtGui.NativeOrbitFractionalDPI COMMAND ${QT_XVFB_RUN} -a
+            ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1 QT_SCALE_FACTOR=1.5
+            $<TARGET_FILE:GmatQtOrbitRendererTests>)
+         set_tests_properties(QtGui.NativeOrbitFractionalDPI PROPERTIES LABELS qt-gui TIMEOUT 60)
       endif()
    endif()
    add_executable(GmatQtWindowTests tests/WindowTests.cpp)

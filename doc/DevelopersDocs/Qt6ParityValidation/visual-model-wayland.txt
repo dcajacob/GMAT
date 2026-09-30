@@ -1,0 +1,1 @@
+PASS: textured visual model preview, rotation and wireframe Earth reference

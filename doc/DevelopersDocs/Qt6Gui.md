@@ -1145,3 +1145,13 @@ and order. OK keeps those choices pending until Apply. Clearing every attachment
 is supported. The spacecraft **PowerSystem** dropdown offers available nuclear
 and solar systems and **No power system** for detachment. Remove dependent mission
 references before detaching hardware that those commands or reports use.
+
+
+**Visual model…** opens the spacecraft's model preview beside rotation,
+translation, scale and color controls. Browse loads a new model and resets its
+pose; Recenter zeros the offsets and Autoscale restores scale one. Show Earth
+adds a wireframe size reference. Drag/wheel and Fit adjust the preview view.
+Invalid inputs keep the last valid preview while you correct them. Numeric
+values follow GMAT's supported ranges. OK keeps changes pending in the
+spacecraft panel; Apply updates the mission. The splitter and scrolling controls
+keep the editor usable on smaller displays.

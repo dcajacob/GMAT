@@ -1,5 +1,10 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
+#include "VisualModelDialog.hpp"
+#include "PlotWidget.hpp"
+#include <QPushButton>
+#include <QLineEdit>
+#include <QSlider>
 #include <QApplication>
 #include <QTemporaryDir>
 #include <QPainter>
@@ -21,8 +26,11 @@ int main(int argc,char **argv)
          fitModel->curves[0].radius=1; fitModel->curves[0].color=Qt::green; fitModel->append(0,offset,offset,offset);
          fitModel->curves[1].visible=false; fitModel->append(1,-1e9,0,0);
          OrbitRenderer viewer(fitModel); viewer.show(); viewer.setView(1,0,0,{},0);
+         QEventLoop exposed; QTimer::singleShot(150,&exposed,&QEventLoop::quit); exposed.exec();
          for (const auto &size:{QSize(240,600),QSize(600,240),QSize(400,400)}) {
-            viewer.resize(size); app.processEvents(); const auto image=viewer.captureImage();
+            viewer.resize(size); app.processEvents();
+            QEventLoop configured; QTimer::singleShot(50,&configured,&QEventLoop::quit); configured.exec();
+            const auto image=viewer.captureImage();
             int left=image.width(),right=-1,top=image.height(),bottom=-1,count=0;
             for (int y=0;y<image.height();++y) for (int x=0;x<image.width();++x) {
                const auto pixel=image.pixelColor(x,y);
@@ -31,6 +39,9 @@ int main(int argc,char **argv)
                }
             }
             require(count>1000,"Perspective Fit body missing");
+            if (std::abs((left+right)*.5-image.width()*.5)>=5 || std::abs((top+bottom)*.5-image.height()*.5)>=5)
+               std::cerr<<"Fit offset="<<offset<<" perspective="<<perspective<<" requested="<<size.width()<<"x"<<size.height()
+                  <<" framebuffer="<<image.width()<<"x"<<image.height()<<" bounds="<<left<<","<<right<<","<<top<<","<<bottom<<std::endl;
             require(std::abs((left+right)*.5-image.width()*.5)<5 && std::abs((top+bottom)*.5-image.height()*.5)<5,
                "Fit did not center the translated visible body");
             require(left>image.width()*.025 && right<image.width()*.975 && top>image.height()*.025 && bottom<image.height()*.975,
@@ -75,6 +86,7 @@ int main(int argc,char **argv)
          OrbitRenderer viewer(model);
          viewer.resize(640,480); viewer.show(); viewer.setView(1,0,0,{},0);
          app.processEvents();
+         QEventLoop exposed; QTimer::singleShot(150,&exposed,&QEventLoop::quit); exposed.exec();
          require(viewer.isValid(),"OpenGL context unavailable");
          const auto front=viewer.captureImage();
          require(!front.isNull(),"Framebuffer capture failed");
@@ -95,7 +107,10 @@ int main(int argc,char **argv)
          const auto rotated=viewer.captureImage();
          require(rotated!=behind,"Body rotation did not rotate texture");
          viewer.resize(300,500); app.processEvents();
+         QEventLoop resizedWindow; QTimer::singleShot(50,&resizedWindow,&QEventLoop::quit); resizedWindow.exec();
          const auto resized=viewer.captureImage();
+         if (resized.width()!=qRound(300*viewer.devicePixelRatioF()) || resized.height()!=qRound(500*viewer.devicePixelRatioF()))
+            std::cerr<<"Resize widget="<<viewer.width()<<"x"<<viewer.height()<<" ratio="<<viewer.devicePixelRatioF()<<" frame="<<resized.width()<<"x"<<resized.height()<<std::endl;
          require(resized.width()==qRound(300*viewer.devicePixelRatioF()) && resized.height()==qRound(500*viewer.devicePixelRatioF()),"Resized framebuffer dimensions wrong");
          body.texturePath=directory.filePath("missing.png");
          const auto fallback=viewer.captureImage();
@@ -108,6 +123,27 @@ int main(int argc,char **argv)
       mesh.write("mtllib panel.mtl\nv -1 -1 0\nv 1 -1 0\nv 1 1 0\nv -1 1 0\nvt 0 0\nvt 1 0\nvt 1 1\nvt 0 1\nvn 0 0 1\nusemtl panel\nf 1/1/1 2/2/1 3/3/1 4/4/1\n"); mesh.close();
       QFile material(directory.filePath("panel.mtl")); require(material.open(QIODevice::WriteOnly),"Material fixture failed");
       material.write("newmtl panel\nKa 0.2 0.2 0.2\nKd 1 1 1\nmap_Kd texture.png\n"); material.close();
+      {
+         QMap<QString,QString> values={{"ModelFile",mesh.fileName()},{"ModelScale","1"},{"OrbitColor","Red"},{"TargetColor","Yellow"}};
+         for (const auto &axis:QStringList{"X","Y","Z"}) { values["ModelRotation"+axis]="0"; values["ModelOffset"+axis]="0"; }
+         VisualModelDialog preview(values,[](const auto &pending) { auto normalized=pending; normalized["@ResolvedModelFile"]=pending.value("ModelFile"); return normalized; });
+         preview.show(); app.processEvents();
+         QEventLoop exposed; QTimer::singleShot(150,&exposed,&QEventLoop::quit); exposed.exec();
+         auto *canvas=dynamic_cast<PlotCanvas *>(preview.findChild<QWidget *>("visualModelPreview")); require(canvas,"Model preview canvas missing");
+         canvas->setViewAngles(0,3.14159265358979323846/2); const auto initial=canvas->captureImage(); int blue=0;
+         for (int y=0;y<initial.height();++y) for (int x=0;x<initial.width();++x) { const auto c=initial.pixelColor(x,y); if (c.blue()>c.red()*2 && c.blue()>70) ++blue; }
+         require(blue>1000,"Visual model dialog did not render the textured mesh");
+         const bool capturePreview=argc==3 && QString::fromLocal8Bit(argv[1])=="--preview-capture";
+         if (capturePreview) require(preview.grab().save(QString::fromLocal8Bit(argv[2])),"Native visual preview capture failed");
+         preview.findChild<QSlider *>("visualSlider_ModelRotationY")->setValue(90);
+         QEventLoop settle; QTimer::singleShot(200,&settle,&QEventLoop::quit); settle.exec();
+         const auto rotated=canvas->captureImage();
+         require(preview.previewModel()->curves[0].modelRotation[1]==90 && rotated!=initial,"Model rotation preview did not change native pixels");
+         preview.findChild<QPushButton *>("visualShowEarth")->click(); app.processEvents();
+         require(preview.previewModel()->curves[1].visible && canvas->captureImage()!=rotated,"Native Earth size reference missing");
+         preview.close();
+         if (capturePreview) { std::cout<<"PASS: textured visual model preview, rotation and wireframe Earth reference"<<std::endl; return 0; }
+      }
       model->curves.clear(); auto &spacecraft=model->curves[0];
       spacecraft.modelPath=mesh.fileName(); spacecraft.color=Qt::red;
       model->append(0,0,0,0);

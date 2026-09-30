@@ -124,6 +124,8 @@ osg::ref_ptr<osg::Geode> sphere(double radius,const QString &path,const QColor &
 }
 }
 
+bool orbitModelFileReadable(const QString &path) { return !path.isEmpty() && readModel(path,true).valid(); }
+
 struct OrbitRenderer::Scene
 {
    struct Curve {
@@ -356,7 +358,7 @@ struct OrbitRenderer::Scene
          curve.root->setNodeMask(source.visible ? ~0u : 0);
          if (!source.visible) continue;
          curve.body->getOrCreateStateSet()->setAttributeAndModes(
-            new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK,model->wireframe ? osg::PolygonMode::LINE : osg::PolygonMode::FILL),
+            new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK,(model->wireframe || source.wireframeObject) ? osg::PolygonMode::LINE : osg::PolygonMode::FILL),
             osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
          if (curve.modelLoaded) {
             curve.modelPose->getOrCreateStateSet()->setMode(GL_NORMALIZE,osg::StateAttribute::ON);
@@ -411,7 +413,7 @@ void OrbitRenderer::releaseGraphics()
 }
 void OrbitRenderer::initializeGL()
 {
-   scene->context=new osgViewer::GraphicsWindowEmbedded(0,0,width(),height());
+   scene->context=new osgViewer::GraphicsWindowEmbedded(0,0,qRound(width()*devicePixelRatioF()),qRound(height()*devicePixelRatioF()));
    scene->viewer.getCamera()->setGraphicsContext(scene->context);
    scene->viewer.getCamera()->setDrawBuffer(GL_COLOR_ATTACHMENT0);
    scene->viewer.getCamera()->setReadBuffer(GL_COLOR_ATTACHMENT0);
@@ -443,6 +445,14 @@ void OrbitRenderer::paintGL()
    scene->context->getState()->dirtyAllVertexArrays();
    scene->context->getState()->apply();
    scene->context->setDefaultFboId(defaultFramebufferObject());
+   // A Wayland configure or fractional-DPI framebuffer recreation can reach
+   // paint/capture after the widget size changed but before resizeGL updated
+   // OSG. Derive the viewport from this frame's actual widget dimensions.
+   const int framebufferWidth=qRound(width()*devicePixelRatioF()),framebufferHeight=qRound(height()*devicePixelRatioF());
+   const auto *traits=scene->context->getTraits();
+   if (traits->width!=framebufferWidth || traits->height!=framebufferHeight)
+      scene->context->resized(0,0,framebufferWidth,framebufferHeight);
+   scene->viewer.getCamera()->setViewport(0,0,framebufferWidth,framebufferHeight);
    scene->synchronize(width(),height(),devicePixelRatioF()); scene->viewer.frame();
    // OSG and Qt share this context. Restore upload/array state before Qt paints
    // its text and controls, including after textured model material traversal.

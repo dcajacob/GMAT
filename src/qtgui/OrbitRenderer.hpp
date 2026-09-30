@@ -3,6 +3,8 @@
 #include <QOpenGLWidget>
 #include <memory>
 
+bool orbitModelFileReadable(const QString &path);
+
 // A rendering surface only; PlotCanvas continues to own the existing controls.
 class OrbitRenderer final : public QOpenGLWidget
 {

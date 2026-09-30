@@ -15,6 +15,9 @@
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
+#include "VisualModelDialog.hpp"
+#include <QSlider>
+#include <QColorDialog>
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
 #include "PropagationGroupsDialog.hpp"
@@ -349,6 +352,96 @@ int main(int argc, char **argv)
             configured->GetRealParameter("SPADSRPScaleFactor")==1.25 && configured->GetRealParameter("SPADDragScaleFactor")==1.5,
             "Reopened SPAD configuration lost settings");
          editor->setPlainText(before); require(window.buildScript(),"Ballistics fixture restoration failed");
+         sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      }
+      {
+         const auto source=editor->toPlainText(); QTemporaryDir assets;
+         QFile mesh(assets.filePath("preview model.obj")); require(mesh.open(QIODevice::WriteOnly),"Preview mesh fixture failed");
+         mesh.write("v -1 -1 0\nv 1 -1 0\nv 0 1 0\nf 1 2 3\n"); mesh.close();
+         QFile invalidMesh(assets.filePath("broken.obj")); require(invalidMesh.open(QIODevice::WriteOnly),"Bad mesh fixture failed");
+         invalidMesh.write("not a model\n"); invalidMesh.close();
+         auto *configured=Moderator::Instance()->GetConfiguredObject("QtSat");
+         const double initialEpoch=configured->GetRealParameter("A1Epoch");
+         double state[6]; for (int i=0;i<6;++i) state[i]=configured->GetRealParameter("Element"+std::to_string(i+1));
+         QString error="Visual model Apply not called";
+         {
+            QWidget owner; ResourceEditor panel(*configured,[&](const auto &changes) {
+               error=window.applyResourceChanges("QtSat",changes,source); return error;
+            },&owner,source);
+            auto *button=panel.findChild<QPushButton *>("spacecraftVisualModel"); require(button,"Visual model editor absent");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *dialog=panel.findChild<QDialog *>("visualModelDialog");
+               require(dialog,"Visual model dialog missing"); dialog->findChild<QLineEdit *>("visual_ModelOffsetX")->setText("2"); dialog->reject();
+            }); button->click(); require(!panel.hasChanges(),"Visual model Cancel changed pending properties");
+            QTimer::singleShot(0,&panel,[&] {
+               auto *base=panel.findChild<QDialog *>("visualModelDialog"); auto *dialog=dynamic_cast<VisualModelDialog *>(base);
+               auto field=[&](const QString &name) { return dialog->findChild<QLineEdit *>("visual_"+name); };
+               auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+               field("ModelScale")->setText("nan"); ok->click();
+               require(dialog->isVisible() && !dialog->findChild<QLabel *>("visualModelError")->text().isEmpty(),"Nonfinite visual transform accepted");
+               dialog->findChild<QPushButton *>("visualAutoscale")->click(); require(field("ModelScale")->text()=="1","Autoscale did not reset wx scale");
+               field("ModelOffsetX")->setText("1"); field("ModelOffsetY")->setText("2"); field("ModelOffsetZ")->setText("3");
+               dialog->findChild<QPushButton *>("visualRecenter")->click();
+               for (const auto &axis:QStringList{"X","Y","Z"}) require(field("ModelOffset"+axis)->text()=="0","Recenter retained an offset");
+               dialog->findChild<QSlider *>("visualSlider_ModelRotationX")->setValue(90);
+               dialog->findChild<QSlider *>("visualSlider_ModelRotationY")->setValue(-30);
+               dialog->findChild<QSlider *>("visualSlider_ModelRotationZ")->setValue(45);
+               dialog->findChild<QSlider *>("visualSlider_ModelOffsetX")->setValue(125);
+               dialog->findChild<QSlider *>("visualSlider_ModelOffsetY")->setValue(-50);
+               dialog->findChild<QSlider *>("visualSlider_ModelOffsetZ")->setValue(75); field("ModelScale")->setText("2.5");
+               require(field("ModelRotationX")->text()=="90" && field("ModelOffsetX")->text()=="1.25","Transform sliders did not update numeric fields");
+               field("ModelFile")->setText(invalidMesh.fileName()); ok->click();
+               require(dialog->isVisible() && !dialog->findChild<QLabel *>("visualModelError")->text().isEmpty(),"Unreadable model accepted");
+               const auto previous=field("ModelFile")->text();
+               QTimer::singleShot(0,dialog,[&] { dialog->findChild<QFileDialog *>("visualModelFileDialog")->reject(); });
+               dialog->findChild<QPushButton *>("visualBrowseModel")->click(); require(field("ModelFile")->text()==previous,"Cancelled model chooser changed path");
+               QTimer::singleShot(0,dialog,[&] {
+                  auto *picker=dialog->findChild<QFileDialog *>("visualModelFileDialog"); require(picker->fileMode()==QFileDialog::ExistingFile,"Visual model chooser accepted nonexistent files");
+                  picker->selectFile(mesh.fileName()); QMetaObject::invokeMethod(picker,"accept",Qt::DirectConnection);
+               }); dialog->findChild<QPushButton *>("visualBrowseModel")->click();
+               for (const auto &axis:QStringList{"X","Y","Z"})
+                  require(field("ModelRotation"+axis)->text()=="0" && field("ModelOffset"+axis)->text()=="0","New model selection did not reset wx transforms");
+               require(field("ModelScale")->text()=="1","New model selection did not reset wx scale");
+               field("ModelRotationX")->setText("90"); field("ModelRotationY")->setText("-30");
+               field("ModelOffsetY")->setText("-.5"); field("ModelOffsetZ")->setText(".75");
+               field("ModelOffsetX")->setText("7"); field("ModelRotationZ")->setText("225"); field("ModelScale")->setText("2000");
+               QMetaObject::invokeMethod(field("ModelScale"),"editingFinished",Qt::DirectConnection);
+               require(field("ModelOffsetX")->text()=="3.5" && field("ModelRotationZ")->text()=="-135" && field("ModelScale")->text()=="1000",
+                  "Visual editor did not show the engine's normalized bounds");
+               field("ModelOffsetX")->setText("1.25"); field("ModelRotationZ")->setText("45"); field("ModelScale")->setText("2.5");
+               QTimer::singleShot(0,dialog,[&] {
+                  auto *picker=dialog->findChild<QColorDialog *>("visualModelColorDialog"); picker->setCurrentColor(QColor(10,100,220)); picker->accept();
+               }); dialog->findChild<QPushButton *>("visualChoose_OrbitColor")->click();
+               require(field("OrbitColor")->text()=="[10 100 220]","Visual color picker lost selected RGB values");
+               field("TargetColor")->setText("Yellow");
+               QTimer::singleShot(0,dialog,[&] { dialog->findChild<QColorDialog *>("visualModelColorDialog")->reject(); });
+               dialog->findChild<QPushButton *>("visualChoose_TargetColor")->click();
+               require(field("TargetColor")->text()=="Yellow","Cancelled visual color picker changed pending color");
+               dialog->findChild<QPushButton *>("visualShowEarth")->click();
+               require(dialog->previewModel()->curves[1].visible && dialog->previewModel()->curves[1].wireframeObject,"Earth size reference is not a wireframe");
+               dialog->findChild<QPushButton *>("visualShowEarth")->click(); ok->click();
+               const auto &curve=dialog->previewModel()->curves[0];
+               require(curve.modelPath==mesh.fileName() && curve.modelScale==2.5 && curve.modelOffset[0]==1.25 && curve.modelRotation[0]==90,
+                  "Recovered visual preview lost pending transforms or path");
+            }); button->click();
+            require(panel.hasChanges() && editor->toPlainText()==source && configured->GetRealParameter("ModelRotationX")!=90,
+               "Visual model preview altered configured spacecraft before Apply");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error)); const auto changed=editor->toPlainText();
+         require(changed.mid(changed.indexOf("BeginMissionSequence"))==source.mid(source.indexOf("BeginMissionSequence")),"Visual Apply changed mission commands");
+         editor->undo(); require(editor->toPlainText()==source && window.buildScript(),"Visual Apply Undo lost source");
+         editor->redo(); require(editor->toPlainText()==changed && window.buildScript(),"Visual Apply Redo lost transforms");
+         const auto path=assets.filePath("model.script"); require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Visual model save/reopen failed");
+         configured=Moderator::Instance()->GetConfiguredObject("QtSat");
+         require(configured->GetStringParameter("ModelFile")==mesh.fileName().toStdString() && configured->GetRealParameter("ModelScale")==2.5 &&
+            configured->GetRealParameter("ModelOffsetY")==-.5 && configured->GetRealParameter("ModelOffsetZ")==.75 &&
+            configured->GetRealParameter("ModelRotationY")==-30 && configured->GetRealParameter("ModelRotationZ")==45,"Reopened model lost transform settings");
+         for (int i=0;i<6;++i) require(std::abs(configured->GetRealParameter("Element"+std::to_string(i+1))-state[i])<1e-9,"Visual settings changed configured orbit");
+         require(window.runMission()==MainWindow::RunResult::Completed &&
+            std::abs((Moderator::Instance()->GetInternalObject("QtSat")->GetRealParameter("A1Epoch")-initialEpoch)*86400-600)<.01,
+            "Visual model edit changed reopened propagation");
+         editor->setPlainText(source); require(window.buildScript(),"Visual fixture restoration failed");
          sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
       }
       {
