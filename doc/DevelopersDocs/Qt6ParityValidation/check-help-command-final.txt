@@ -1,0 +1,63 @@
+UpdateCTestConfiguration  from :/home/dan/GIT/GMAT/GMAT/build/linux-gui/DartConfiguration.tcl
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 35
+    Start 35: QtGui.Desktop
+
+35: Test command: /usr/bin/python3 "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtDesktopTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt"
+35: Working Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+35: Test timeout computed to be: 60
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support propagateSizeHints()
+35: This plugin does not support raise()
+35: This plugin does not support grabbing the keyboard
+35: This plugin does not support raise()
+35: This plugin does not support grabbing the keyboard
+35: This plugin does not support raise()
+35: This plugin does not support grabbing the keyboard
+35: PASS: About menu engine/build/runtime details, credits, exact offline license, read-only/search/Close/Escape, compact layout, missing/malformed license correction and pending mission/Undo preservation
+35: PASS: repeated workspace Apply keeps resource windows open, refreshes clean snapshots/page/filter/columns, preserves other pending edits, rejects stale Apply, exact Undo/Redo, Unicode save/reopen and independent numeric reports
+35: PASS: repeated command Apply stays open and refreshes accepted controls, rejects invalid changes without losing pending text, exact Undo/Redo, Unicode save/reopen and independent reports; before/after-branch/append insertion becomes editing without duplication
+1/2 Test #35: QtGui.Desktop ....................   Passed    0.76 sec
+test 36
+    Start 36: QtGui.Help
+
+36: Test command: /usr/bin/python3 "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtHelpTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt"
+36: Working Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+36: Test timeout computed to be: 60
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support raise()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support raise()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support raise()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support raise()
+36: This plugin does not support propagateSizeHints()
+36: This plugin does not support raise()
+36: This plugin does not support propagateSizeHints()
+36: PASS: offline Help contents/tutorials/resource topics, command topic refresh, F1 and button/modal routing, search/navigation/Escape, pending resource/source and Undo preservation, missing/malformed file recovery, overrides and engine topic aliases
+2/2 Test #36: QtGui.Help .......................   Passed    0.52 sec
+
+The following tests passed:
+	QtGui.Desktop
+	QtGui.Help
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   1.28 sec*proc (2 tests)
+
+Total Test time (real) =   1.29 sec

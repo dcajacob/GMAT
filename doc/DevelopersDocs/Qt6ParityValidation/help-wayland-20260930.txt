@@ -1,0 +1,3 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5cff403a6130 with focusing surface 0x5cff40deb240
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5cff40deb240 with focusing surface 0x5cff403a6130
+PASS: offline Help contents/tutorials/resource topics, command topic refresh, F1 and button/modal routing, search/navigation/Escape, pending resource/source and Undo preservation, missing/malformed file recovery, overrides and engine topic aliases

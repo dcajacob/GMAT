@@ -115,6 +115,7 @@ int main(int argc,char **argv)
    };
    const auto source=window.findChild<QPlainTextEdit *>("scriptEditor")->toPlainText();
    const bool minimizeMain=!(argc>4 && QString(argv[4])=="--skip-main-minimize");
+   const bool wayland=QGuiApplication::platformName().startsWith("wayland");
    int stage=0,cycle=0;
    QTimer actions;
    actions.setInterval(500);
@@ -169,11 +170,21 @@ int main(int argc,char **argv)
          break;
       case 10:
          if (minimizeMain) {
-            if (!window.isMinimized()) { log("FAIL: main window did not minimize"); app.exit(1); return; }
+            // xdg-shell does not report minimization. Qt 6.10 sends
+            // set_minimized, then clears WindowMinimized itself; asserting the
+            // flag would reject a working compositor request. Keep the native
+            // X11 assertion and check the Wayland event loop/restore instead.
+            if (!wayland && !window.isMinimized()) { log("FAIL: main window did not minimize"); app.exit(1); return; }
+            if (wayland) std::cerr<<"Wayland after minimize request: client state="<<int(window.windowState())
+               <<" exposed="<<window.windowHandle()->isExposed()
+               <<"; compositor minimization is not reported by xdg-shell"<<std::endl;
             log("restore main window"); window.showNormal(); window.raise(); window.activateWindow();
          }
          break;
       case 11:
+         if (minimizeMain && !window.windowHandle()->isExposed()) {
+            log("FAIL: restored main window is not exposed"); app.exit(1); return;
+         }
          if (!openOutput("DefaultOrbitView") || !scene("DefaultOrbitView")) {
             log("FAIL: main-window restore lost orbit"); app.exit(1); return;
          }
@@ -191,7 +202,9 @@ int main(int argc,char **argv)
          }
          if (++cycle<3) { stage=0; log("repeat viewer lifecycle"); }
          else {
-            log(minimizeMain ? "PASS: three viewer lifecycle cycles, textured orbit/map and trajectories, immediate close/reopen, resize/maximize, main minimize/restore and rerun remain responsive" :
+            log(minimizeMain ? (wayland ?
+               "PASS: three viewer lifecycle cycles, textured orbit/map and trajectories, immediate close/reopen, resize/maximize, Wayland main minimize requests and exposed restoration/rerun remain responsive; compositor minimization state is not observable" :
+               "PASS: three viewer lifecycle cycles, textured orbit/map and trajectories, immediate close/reopen, resize/maximize, main minimize/restore and rerun remain responsive") :
                "PASS: three viewer lifecycle cycles, textured orbit/map and trajectories, immediate close/reopen, resize/maximize and rerun remain responsive; top-level minimize/restore remains unqualified");
             app.exit(0);
          }

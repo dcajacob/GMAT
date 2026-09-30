@@ -1,0 +1,9 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5e4a71c2fd20
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5e4a71c2fd20
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5e4a713ba550 with focusing surface 0x5e4a7137d570
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x5e4a74576140, name="QMenuClassWindow") has a transientParent set and that parent window has received input.
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x5e4a7464b2e0, name="QMenuClassWindow") has a transientParent set and that parent window has received input.
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x5e4a7461d640, name="QMenuClassWindow") has a transientParent set and that parent window has received input.
+PASS: About menu engine/build/runtime details, credits, exact offline license, read-only/search/Close/Escape, compact layout, missing/malformed license correction and pending mission/Undo preservation
+PASS: repeated workspace Apply keeps resource windows open, refreshes clean snapshots/page/filter/columns, preserves other pending edits, rejects stale Apply, exact Undo/Redo, Unicode save/reopen and independent numeric reports
+PASS: repeated command Apply stays open and refreshes accepted controls, rejects invalid changes without losing pending text, exact Undo/Redo, Unicode save/reopen and independent reports; before/after-branch/append insertion becomes editing without duplication

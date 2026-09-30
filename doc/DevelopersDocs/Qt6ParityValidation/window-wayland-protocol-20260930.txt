@@ -1,0 +1,209 @@
+Extracted self-process Wayland trace; complete raw run is /tmp/window-wayland-protocol.txt.
+Qt 6.10.2 primary source: https://raw.githubusercontent.com/qt/qtbase/v6.10.2/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp
+Installed xdg-shell source: /usr/share/wayland-protocols/stable/xdg-shell/xdg-shell.xml, set_minimized.
+No compositor access settings were changed. This trace does not assert an unreported minimization state.
+
+
+...
+[ 721520.642] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#64, 0, 0)
+[ 721520.645] {mesa egl surface queue}  -> wl_surface#43.damage_buffer(0, 0, 2147483647, 2147483647)
+[ 721520.647] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 721520.648] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#65)
+[ 721520.682] {Default Queue} xdg_activation_token_v1#53.done("d6278424-1000-4d19-91a6-75438538e136_TIME0")
+[ 721520.689] {Default Queue}  -> xdg_activation_v1#34.activate("d6278424-1000-4d19-91a6-75438538e136_TIME0", wl_surface#43)
+[ 721521.856] {Display Queue} wl_display#1.delete_id(63)
+[ 721521.869] {Display Queue} wl_display#1.delete_id(65)
+[ 721521.914] {mesa egl surface queue} wl_callback#65.done(75545)
+[ 721551.850] {Display Queue} wl_display#1.delete_id(62)
+[ 721551.863] wl_callback#62.done(318312711)
+[ 721553.611]  -> wl_surface#43.frame(new id wl_callback#62)
+[ 721553.638] {mesa egl display queue}  -> zwp_linux_dmabuf_v1#37.create_params(new id zwp_linux_buffer_params_v1#65)
+
+...
+[ 721553.673] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 721553.675] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#66)
+[ 721553.886] {Display Queue} wl_display#1.delete_id(65)
+[ 721553.894] {Display Queue} wl_display#1.delete_id(66)
+[ 721554.125] {Default Queue} xdg_activation_token_v1#57.done("5446c604-97e1-476e-b913-2cf5dbefac62_TIME0")
+[ 721554.134] {Default Queue}  -> xdg_activation_v1#34.activate("5446c604-97e1-476e-b913-2cf5dbefac62_TIME0", wl_surface#43)
+[ 721554.138] {Default Queue} xdg_activation_token_v1#58.done("eef8dbb6-892f-4121-b519-c5d8860ba8af_TIME0")
+[ 721554.141] {Default Queue}  -> xdg_activation_v1#34.activate("eef8dbb6-892f-4121-b519-c5d8860ba8af_TIME0", wl_surface#43)
+[ 721554.143] {Default Queue} xdg_activation_token_v1#59.done("af08f51b-122c-4dc1-a77a-d0d344c5d311_TIME0")
+[ 721554.145] {Default Queue}  -> xdg_activation_v1#34.activate("af08f51b-122c-4dc1-a77a-d0d344c5d311_TIME0", wl_surface#43)
+[ 721554.147] {Default Queue} xdg_toplevel#51.configure_bounds(1469, 928)
+[ 721554.150] {Default Queue} xdg_toplevel#51.configure(1469, 928, array[20])
+[ 721554.153] {Default Queue} xdg_surface#41.configure(21828)
+[ 721554.156] {Default Queue} wl_keyboard#27.enter(75547, wl_surface#43, array[0])
+[ 721554.162] {Default Queue}  -> wl_display#1.sync(new id wl_callback#65)
+[ 721554.164] {Default Queue} wl_keyboard#27.modifiers(75547, 0, 0, 0, 0)
+[ 721554.168] {Default Queue} wl_data_device#19.data_offer(new id wl_data_offer#4278190080)
+
+...
+[ 721554.211] {Default Queue} xdg_toplevel#51.configure_bounds(1469, 928)
+[ 721554.213] {Default Queue} xdg_toplevel#51.configure(1469, 928, array[24])
+[ 721554.215] {Default Queue} xdg_surface#41.configure(21830)
+[ 721554.217] {Default Queue} wl_surface#43.enter(wl_output#6)
+501 ms: mission completed
+501 ms: default OrbitView and GroundTrack are both exposed in the workspace
+[ 721558.186] {Display Queue} wl_display#1.delete_id(65)
+[ 721558.443] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 721559.168] {Default Queue}  -> zwp_text_input_v3#23.commit()
+[ 721559.313] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+503 ms: explicit and manually adjusted viewer positions retained
+[ 721559.459] {Default Queue} wl_callback#65.done(75547)
+[ 721568.660] {Display Queue} wl_display#1.delete_id(62)
+
+...
+[ 721702.557] {Default Queue}  -> zwp_text_input_v3#23.commit()
+[ 721702.675] {Default Queue}  -> zwp_text_input_v3#23.set_cursor_rectangle(284, 128, 1, 18)
+[ 721702.680] {Default Queue}  -> zwp_text_input_v3#23.set_surrounding_text("%General Mission Analysis Tool(GMAT) Script", 0, 0)
+[ 721702.683] {Default Queue}  -> zwp_text_input_v3#23.set_content_type(519, 0)
+[ 721702.685] {Default Queue}  -> zwp_text_input_v3#23.commit()
+Window state=2
+[ 721703.152] {Default Queue} zwp_text_input_v3#23.done(3)
+[ 721718.865] {Display Queue} wl_display#1.delete_id(67)
+[ 721718.893] wl_callback#67.done(318312885)
+[ 721719.375] {mesa egl surface queue} wl_callback#63.done(75549)
+[ 721719.389] {mesa egl surface queue} wl_buffer#66.release()
+[ 721723.137]  -> wl_surface#43.frame(new id wl_callback#63)
+[ 721723.156] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#66, 0, 0)
+
+...
+[ 723986.062] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#67, 0, 0)
+[ 723986.064] {mesa egl surface queue}  -> wl_surface#43.damage_buffer(0, 0, 2147483647, 2147483647)
+[ 723986.066] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 723986.068] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#61)
+[ 723986.101] {Default Queue} xdg_activation_token_v1#53.done("1fb92c3d-50b9-4dde-b3d0-a9dafb88ae7f_TIME0")
+[ 723986.108] {Default Queue}  -> xdg_activation_v1#34.activate("1fb92c3d-50b9-4dde-b3d0-a9dafb88ae7f_TIME0", wl_surface#43)
+[ 723986.111] {Default Queue} wl_pointer#28.leave(75550, wl_surface#43)
+[ 723986.117] {Default Queue} wl_pointer#28.frame()
+[ 723986.191] {Default Queue}  -> xdg_activation_token_v1#53.destroy()
+[ 723986.249] {Display Queue} wl_display#1.delete_id(65)
+[ 723986.251] {Display Queue} wl_display#1.delete_id(58)
+[ 723986.252] {Display Queue} wl_display#1.delete_id(61)
+[ 723988.127] {mesa egl surface queue} wl_callback#61.done(75551)
+
+...
+[ 725222.249] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 725222.339] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultOrbitView]")
+[ 725222.342] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultOrbitView]")
+[ 725223.192] {Default Queue}  -> wp_cursor_shape_device_v1#29.set_shape(75553, 1)
+[ 725223.271] {Default Queue} xdg_activation_token_v1#53.done("1b98fa91-e320-4421-b2bf-e766d2e857e2_TIME0")
+[ 725223.277] {Default Queue}  -> xdg_activation_v1#34.activate("1b98fa91-e320-4421-b2bf-e766d2e857e2_TIME0", wl_surface#43)
+[ 725223.280] {Default Queue} xdg_activation_token_v1#60.done("d51c6516-35a4-4776-961b-530ad44dbbf9_TIME0")
+[ 725223.282] {Default Queue}  -> xdg_activation_v1#34.activate("d51c6516-35a4-4776-961b-530ad44dbbf9_TIME0", wl_surface#43)
+[ 725223.283] {Default Queue} xdg_activation_token_v1#66.done("4e77cb2e-6d41-4f59-97d5-62fe83abaade_TIME0")
+[ 725223.285] {Default Queue}  -> xdg_activation_v1#34.activate("4e77cb2e-6d41-4f59-97d5-62fe83abaade_TIME0", wl_surface#43)
+[ 725223.328] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 725223.333] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultOrbitView]")
+[ 725223.336] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultOrbitView]")
+[ 725223.341] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 725223.343] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultOrbitView]")
+[ 725224.747] {mesa egl surface queue}  -> zwp_linux_dmabuf_feedback_v1#55.destroy()
+[ 725224.781] {Default Queue}  -> wl_surface#52.destroy()
+
+...
+[ 725617.875] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#66, 0, 0)
+[ 725617.879] {mesa egl surface queue}  -> wl_surface#43.damage_buffer(0, 0, 2147483647, 2147483647)
+[ 725617.881] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 725617.883] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#60)
+[ 725617.917] {Default Queue} xdg_activation_token_v1#72.done("599f01b1-b733-4f73-82a6-ad91bea1648d_TIME0")
+[ 725617.925] {Default Queue}  -> xdg_activation_v1#34.activate("599f01b1-b733-4f73-82a6-ad91bea1648d_TIME0", wl_surface#43)
+[ 725617.929] {Default Queue} xdg_activation_token_v1#53.done("178d3ba4-0958-4674-b1b7-fa1a44f590be_TIME0")
+[ 725617.931] {Default Queue}  -> xdg_activation_v1#34.activate("178d3ba4-0958-4674-b1b7-fa1a44f590be_TIME0", wl_surface#43)
+[ 725617.988] {Default Queue}  -> xdg_activation_token_v1#72.destroy()
+[ 725617.991] {Default Queue}  -> xdg_activation_token_v1#53.destroy()
+[ 725626.327] {Display Queue} wl_display#1.delete_id(60)
+[ 725626.345] {Display Queue} wl_display#1.delete_id(72)
+[ 725626.349] {Display Queue} wl_display#1.delete_id(53)
+[ 725634.613] {Display Queue} wl_display#1.delete_id(71)
+[ 725634.625] wl_callback#71.done(318316800)
+
+...
+[ 725651.653] {Display Queue} wl_display#1.delete_id(71)
+[ 725651.670] wl_callback#71.done(318316818)
+DefaultGroundTrackPlot ocean=1284427 trajectory=18021
+4861 ms: ground scene retained; settling focus before main minimize
+5278 ms: minimize main window
+[ 726334.558] {Default Queue}  -> xdg_toplevel#51.set_minimized()
+Window state=1
+[ 726334.714] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 726334.722] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726334.725] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726334.746] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 726334.748] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726334.752] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726334.874] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+
+...
+[ 726345.262]  -> wl_surface#43.frame(new id wl_callback#60)
+[ 726345.276] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#66, 0, 0)
+[ 726345.279] {mesa egl surface queue}  -> wl_surface#43.damage_buffer(0, 0, 2147483647, 2147483647)
+[ 726345.281] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 726345.283] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#71)
+Window state=0
+[ 726345.659] {Display Queue} wl_display#1.delete_id(71)
+[ 726356.102] {mesa egl surface queue} wl_callback#71.done(75553)
+[ 726356.114] {mesa egl surface queue} wl_buffer#57.release()
+[ 726356.669] {Display Queue} wl_display#1.delete_id(60)
+[ 726356.677] wl_callback#60.done(318317522)
+[ 726356.735]  -> wl_surface#43.frame(new id wl_callback#60)
+[ 726356.757] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#57, 0, 0)
+
+...
+[ 726442.440] {mesa egl surface queue}  -> zwp_linux_buffer_params_v1#71.destroy()
+[ 726442.442] {mesa egl surface queue}  -> wl_surface#43.attach(wl_buffer#60, 0, 0)
+[ 726442.445] {mesa egl surface queue}  -> wl_surface#43.damage_buffer(0, 0, 2147483647, 2147483647)
+[ 726442.446] {mesa egl surface queue}  -> wl_surface#43.commit()
+[ 726442.448] {mesa egl surface queue}  -> wl_display#1.sync(new id wl_callback#66)
+Window state=2
+[ 726442.512] {Default Queue} wl_callback#53.done(75555)
+[ 726442.517] {Default Queue}  -> wl_data_offer#4278190080.destroy()
+[ 726442.521] {Default Queue}  -> zwp_primary_selection_offer_v1#4278190081.destroy()
+[ 726442.524] {Default Queue} wl_pointer#28.leave(75556, wl_surface#43)
+[ 726442.529] {Default Queue} wl_pointer#28.frame()
+[ 726442.861] {Display Queue} wl_display#1.delete_id(57)
+[ 726442.871] {Display Queue} wl_display#1.delete_id(71)
+
+...
+[ 726572.709] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726572.711] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [DefaultGroundTrackPlot]")
+[ 726572.719] {Display Queue} wl_display#1.delete_id(57)
+[ 726572.863] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 726572.868] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+Wayland after minimize request: client state=2 exposed=0; compositor minimization is not reported by xdg-shell
+5778 ms: restore main window
+[ 726834.568] {Default Queue}  -> xdg_toplevel#51.unset_maximized()
+Window state=0
+[ 726834.708] {Default Queue}  -> xdg_activation_v1#34.get_activation_token(new id xdg_activation_token_v1#66)
+[ 726834.710] {Default Queue}  -> xdg_activation_token_v1#66.set_surface(wl_surface#43)
+[ 726834.713] {Default Queue}  -> xdg_activation_token_v1#66.set_app_id("GmatQtWindowTests")
+[ 726834.716] {Default Queue}  -> xdg_activation_token_v1#66.set_serial(75556, wl_seat#18)
+[ 726834.718] {Default Queue}  -> xdg_activation_token_v1#66.commit()
+[ 726852.518] {Default Queue} xdg_toplevel#51.configure_bounds(1469, 928)
+[ 726852.535] {Default Queue} xdg_toplevel#51.configure(1313, 911, array[0])
+[ 726852.540] {Default Queue} xdg_surface#41.configure(21862)
+[ 726852.547] {Default Queue} xdg_activation_token_v1#66.done("8aee2768-f786-430a-9051-2d53a58ed110_TIME0")
+[ 726852.554] {Default Queue}  -> xdg_activation_v1#34.activate("8aee2768-f786-430a-9051-2d53a58ed110_TIME0", wl_surface#43)
+[ 726852.576] {Default Queue}  -> xdg_surface#41.ack_configure(21862)
+[ 726852.587] {Default Queue}  -> wp_viewport#45.set_destination(1333, 931)
+[ 726852.589] {Default Queue}  -> xdg_surface#41.set_window_geometry(10, 10, 1313, 911)
+[ 726852.594] {Default Queue}  -> wl_compositor#4.create_region(new id wl_region#53)
+[ 726852.596] {Default Queue}  -> wl_region#53.add(11, 49, 1311, 871)
+[ 726852.598] {Default Queue}  -> wl_surface#43.set_opaque_region(wl_region#53)
+[ 726852.600] {Default Queue}  -> wl_region#53.destroy()
+
+...
+[ 727004.820] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 727004.835] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 727007.481] {Display Queue} wl_display#1.delete_id(60)
+[ 727007.512] {Display Queue} wl_display#1.delete_id(55)
+[ 727007.515] {Display Queue} wl_display#1.delete_id(71)
+6277 ms: FAIL: restored main window is not exposed
+[ 727354.116] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 727354.350] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[ 727355.572] {mesa egl surface queue}  -> zwp_linux_dmabuf_feedback_v1#68.destroy()
+[ 727355.589] {Default Queue}  -> wl_surface#70.destroy()
+[ 727355.593] {Default Queue}  -> wp_viewport#59.destroy()
+[ 727355.595] {Default Queue}  -> wp_fractional_scale_v1#67.destroy()
+[ 727355.902] {Default Queue}  -> xdg_toplevel#51.destroy()

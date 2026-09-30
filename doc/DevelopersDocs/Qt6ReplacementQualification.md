@@ -4030,3 +4030,64 @@ The user's executable was rebuilt with all final source changes. Commits
 19be5d1 (SPICE), 5c01a5e (solver display) and 423ebea (desktop/viewer behavior)
 keep the changes reviewable on codex/qt6-gui. No acceptance gate is silently
 closed by this checkpoint.
+
+
+## 2026-09-30 context Help, command Apply and Wayland protocol evidence
+
+The earlier strict Wayland failure at `isMinimized()` was a harness assertion
+that this platform cannot support. The installed xdg-shell protocol explicitly
+does not report minimized state. The exact [Qt 6.10.2 platform implementation](https://raw.githubusercontent.com/qt/qtbase/v6.10.2/src/plugins/platforms/wayland/plugins/shellintegration/xdg-shell/qwaylandxdgshell.cpp)
+sends `set_minimized()` and immediately removes WindowMinimized from its client
+state (requestWindowStates). WindowTests now retains the X11 assertion and checks
+exposure after restoration on Wayland instead of asserting an unavailable flag.
+This corrects the test; it does not force application window state.
+
+`window-wayland-protocol-20260930.txt` records the minimize request, continued
+event-loop progress and the surface becoming unexposed. Programmatic showNormal/
+raise/activate did not re-expose it without a desktop input gesture, so the
+updated check fails **restoration exposure**, not the unsupported minimized flag.
+The trace alone is not independent evidence of the compositor's unreported
+minimized state. Actual desktop input restoration remains unqualified. The
+compositor's read-only GetWindows API denied introspection; no desktop security
+or access setting was changed. The raw historical assertion failures are retained.
+
+Offline context Help is now delivered through the Help menu, resource and command
+Help buttons and F1, including ownership across modal-window boundaries. Engine
+type aliases resolve to the existing documentation topics. Pending command text
+updates its Help topic; modal ballistics/attitude/visual-model editors receive
+specific spacecraft topics. The built-in read-only viewer provides page search,
+Back/Forward, Topic, Contents, Retry and Close/Escape, plus explicit Open in browser.
+Local missing/read/malformed UTF-8 errors remain visible and corrected files can
+be retried. QSettings Help/type overrides are supported. Standard file/color/font
+choosers retain their own button arrangements.
+
+The source R2026a DocBook build succeeded using the repository's existing Makefile
+and bundled Java tools. New explicit `build-qt-help` copies the generated user
+guide to the selected runtime's default HELP_PATH; normal GUI compilation does
+not acquire a Java requirement. Existing package install rules include those
+files. HelpTests requires this prerequisite, checks the actual generated pages,
+button/F1/modal routing, search/navigation/Escape, missing/malformed/corrected
+files, overrides, aliases and exact preservation of pending resource values,
+mission text and Undo. `help-wayland-20260930.txt` and its `.spacecraft.png` and
+`.ballistics.png` captures passed on native Wayland and were visually inspected.
+External browser/web invocation is implemented but not executed by this test.
+
+Command Apply now reconstructs the accepted command controls in the same MDI
+window with a current snapshot. Before/after/append insertion switches to editing
+the first accepted command, so another Apply cannot repeat the insertion. After
+a branch, the accepted index skips the anchor's descendants. Failure retains
+pending text and accepted source. DesktopTests exercises actual tree/context-menu
+routes, repeated Apply, failure recovery, before/after-branch/append insertion,
+exact Undo/Redo, Unicode save/reopen and byte-equal numerical reports against an
+independent script. `desktop-command-apply-wayland.txt` passed natively. Clean
+resource companions refresh as before; wider command companion/body/SolarSystem
+refresh and shared keyboard/portal/document cases remain open.
+
+All 41 suites passed in 178.71 seconds (`check-help-command-apply.txt`). The
+application was rebuilt after the small final Help history-status and standard
+chooser exclusions, and focused Desktop/Help tests passed
+(`check-help-command-final.txt`). That full suite predates only those small Help
+changes; no claim of a later full rerun is made. Windows/macOS and MATLAB remain
+deferred. The full replacement goal remains active: folder-run, debugger, mission
+filters/undocking, welcome/navigation, bulk parameter operations and the remaining
+viewer/plugin/file/shared-desktop acceptance evidence still require completion.

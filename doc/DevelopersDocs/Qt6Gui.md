@@ -1584,8 +1584,10 @@ read-only/searchable. File errors stay visible and retry rereads the file.
 Resource Apply keeps its MDI window open and refreshes accepted controls from
 the rebuilt model. Clean resource companions refresh their page/filter/columns;
 unapplied companion edits are preserved and stale Apply remains protected.
-Commands/insertion panels still close after successful Apply. Shared Help and
-broader keyboard/portal/refresh combinations remain under qualification.
+Command Apply also refreshes its accepted controls in the same window. An accepted
+insertion becomes an editor for the first inserted command, so the next Apply
+changes that command rather than inserting a duplicate. Failed Apply retains the
+pending text. Broader companion refresh/keyboard/portal cases remain under qualification.
 
 SPICE diagnostic initialization retains previous GMATSpiceKernelError.txt files
 and selects unused numbered siblings for new raw output. An unavailable output
@@ -1595,3 +1597,30 @@ repeated, fresh, read-only and long-path cases plus corrected kernel load/unload
 are covered by SpiceDiagnosticTests. Wider storage/race cases remain open.
 
 See Qt6ReplacementQualification.md for current evidence and incomplete gates.
+
+
+### Offline context Help
+
+Help / GMAT Help, Using GMAT and Tutorials open the local user guide. Resource
+and command editors have Help buttons and F1; subordinate modal editors inherit
+the resource topic, with ballistics, attitude and visual-model topics selected
+explicitly. Command topics follow the current pending command text. Help is
+read-only, with Find, Back/Forward, Topic, Contents and Close/Escape. Open in
+browser uses the desktop application for a requested page.
+
+The default location is the startup HELP_PATH/html directory. QSettings entries
+Help/<engine type> can override individual local or web topics. Missing or
+malformed UTF-8 pages report the exact path; restore the file and select Retry.
+Help does not apply pending configuration or edit the mission.
+
+Build the offline R2026a documentation from this repository with:
+
+```bash
+cmake --build build/linux-gui --target build-qt-help
+```
+
+This explicit target needs Python, make and Java, and uses the bundled DocBook
+tools already used by doc/help/Makefile. It copies help.html, html and files into
+application/docs/help, which the existing install rules include. The generated
+files are ignored by Git. GUI compilation itself does not require the help build;
+QtGui.Help requires the offline pages to be built before qualification.
