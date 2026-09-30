@@ -73,7 +73,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | File, rotation/translation/scale sliders and numeric fields, recenter/autoscale, new-file pose reset, colors and Earth-reference preview audited. Qt visual editor implemented with pending Apply, engine normalization and model-read diagnostics. Cancel, file/color pickers, invalid input recovery, Undo/Redo and save/reopen propagation covered. Textured OBJ preview/rotation/Earth reference tested at normal, 150% and 200% scaling and directly on Wayland. Broader 3DS asset/material cases remain to qualify. |
-| `src/gui/spacecraft/AttitudePanel.hpp` | Pending audit |
+| `src/gui/spacecraft/AttitudePanel.hpp` | Model-dependent controls, frame restrictions, Euler/quaternion/MRP/DCM orientation and Euler-rate/angular-velocity selection audited. Focused Qt dialog with pending conversion, per-model edit retention, typed frame/body selectors and AEM input chooser implemented. Cancel, invalid state recovery, exact paired Apply/Undo/Redo, save/reopen and zero-rate Spinner report execution covered. Nonzero-rate propagation, specialized-model execution, other Euler sequences, frame dependencies and AEM/SPICE file cases remain to qualify. |
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
@@ -1933,3 +1933,56 @@ This is evidence for that sequence on the current desktop, not all viewer
 lifecycle or extended-session qualification. Evidence:
 `Qt6ParityValidation/visual-default-wayland.txt` and
 `Qt6ParityValidation/visual-default-wayland.png`.
+
+
+## Focused attitude model, orientation and rate editing
+
+Audited wx AttitudePanel's model-dependent field display, coordinate-system
+restrictions, orientation and rate representation choices, Euler sequences,
+precessing-spinner and nadir-pointing settings, and AEM file chooser. Qt now has
+an **Attitude…** dialog with grouped controls, explicit angle/rate units, typed
+coordinate/body choices and an existing-file AEM chooser. Initial-state controls
+are hidden when the model does not allow them; locked reference frames are not
+editable. SPICE models direct users to the spacecraft kernel controls.
+
+The dialog uses spacecraft clones, retaining each model's pending settings while
+switching models within the dialog. Representation changes first validate and
+submit current pending values, then display engine-converted values. Rejected
+numbers, zero quaternions, invalid cosine matrices and failed frame changes leave
+inputs available for correction and restore the previous selector. Required
+orientation/rate fields must be readable before committing a conversion; a
+failed getter cannot silently leave an empty state editor.
+
+Attitude state/rate components are submitted together through GMAT's existing
+vector/matrix setters. This also corrects ordinary resource Apply: initialized
+attitude clones reject scalar quaternion setters, and ordering must establish
+model/representation/sequence before dependent values. No engine mathematics
+were changed. OK retains the selected model's complete settings until spacecraft
+Apply, including other pending spacecraft changes. The generic table displays
+available accepted values and marks original-model fields that are no longer
+used; subsequent attitude edits go through the dialog.
+
+WorkflowTests covers dialog Cancel, Euler/quaternion/MRP/DCM round trips, both
+rate representations, invalid values and recovery, model-specific controls and
+pending-data retention, locked and invalid frames, AEM chooser Cancel, reopening
+pending settings, paired DryMass/attitude Apply, exact-source Undo/Redo and
+save/reopen. A zero-rate Spinner mission propagates for 600 seconds and reports
+quaternion samples that match the reference computed directly from the input
+Euler angles through GMAT's conversion utility.
+The mission-command tail remains unchanged.
+
+Rebuilt the actual `application/bin/GmatQt` executable; all 12 suites passed in
+60.54 seconds. Native suite checks used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-attitude.txt`. A separate Wayland process with temporary
+settings and report files passed the attitude workflow and captured the final
+dialog, including unit labels; the capture was inspected for control/button fit.
+Evidence: `Qt6ParityValidation/attitude-wayland.txt` and `attitude-wayland.png`.
+The direct Wayland command used WorkflowTests' `--attitude-capture` mode, which
+runs through this attitude workflow and exits before later workflow scenarios.
+This is not a full desktop or long-session qualification claim.
+
+Nonzero-rate dynamics, other Euler sequences/singularities, specialized
+PrecessingSpinner/NadirPointing/CCSDS-AEM execution, changing reference-frame
+dependencies and broader attitude file/error cases remain qualification work.
+The existing SPICE execution coverage does not qualify every operation in this
+new dialog. The larger workflow, plugin and viewer acceptance gates remain open.

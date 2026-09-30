@@ -2,6 +2,7 @@
 #include "EditablePanel.hpp"
 #include <QMap>
 #include <QString>
+#include <QSet>
 #include <functional>
 #include <QMdiSubWindow>
 class GmatBase;
@@ -18,6 +19,8 @@ private:
    QTableWidget *table;
    QLabel *status;
    QMap<QString, QString> original;
+   QMap<QString, QString> attitudeEdits;
+   QSet<QString> attitudeNames;
    QString originalExpressions="[]",expressions="[]";
    bool applied = false;
    bool pairedTankEdits = false;

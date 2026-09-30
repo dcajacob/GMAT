@@ -1,0 +1,12 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x589c559dc3b0 with focusing surface 0x589c56148370
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x589c56148370 with focusing surface 0x589c559dc3b0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x589c56148370 with focusing surface 0x589c559dc3b0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x589c56148370
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x589c56148370
+Qt orbit: could not load model /tmp/QtWorkflow-iwOjCO/broken.obj ; using the default body or marker.
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x589c559dc3b0 with focusing surface 0x589c570a7e50
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x589c570a7e50 with focusing surface 0x589c559dc3b0
+Obj unable to find material ''
+Obj unable to find material ''
+*** line not handled *** :not a model
+PASS: attitude dialog conversions, model switching, deferred Apply, save/reopen and report execution

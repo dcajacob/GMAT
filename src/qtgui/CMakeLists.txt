@@ -13,6 +13,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    ScriptCompatibility.cpp ScriptCompatibility.hpp
    BallisticsMassDialog.cpp BallisticsMassDialog.hpp
    VisualModelDialog.cpp VisualModelDialog.hpp
+   AttitudeDialog.cpp AttitudeDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp

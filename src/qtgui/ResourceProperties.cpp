@@ -12,6 +12,7 @@
 #include <memory>
 #include <array>
 #include "Rvector.hpp"
+#include "Attitude.hpp"
 #include <QRegularExpression>
 #include <QSet>
 #include <cmath>
@@ -377,6 +378,62 @@ void validateResourceProperties(GmatBase &object)
    }
    if (count!=2 || directions.size()!=2)
       throw std::runtime_error("Select exactly two different R, V or N directions; leave the third axis blank");
+}
+
+QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QString> &values)
+{
+   QSet<QString> consumed;
+   if (!spacecraft.IsOfType("Spacecraft")) return consumed;
+   if (values.contains("Attitude")) {
+      setResourceProperty(spacecraft,"Attitude",values.value("Attitude")); consumed.insert("Attitude");
+   }
+   auto *attitude=dynamic_cast<Attitude *>(spacecraft.GetOwnedObject(0));
+   if (!attitude) return consumed;
+   QSet<QString> names;
+   for (int id=0;id<attitude->GetParameterCount();++id) {
+      const auto name=QString::fromStdString(attitude->GetParameterText(id));
+      if (name!="Epoch") names.insert(name);
+   }
+   // Selectors must precede dependent data. Submit state/rate as complete
+   // vectors or matrices: scalar quaternion setters reject initialized clones.
+   for (const auto &name:QStringList{"AttitudeDisplayStateType","AttitudeRateDisplayStateType","AttitudeCoordinateSystem","EulerAngleSequence"})
+      if (values.contains(name)) { setResourceProperty(*attitude,name,values.value(name)); consumed.insert(name); }
+   if (values.contains("AttitudeCoordinateSystem")) {
+      const auto frameName=values.value("AttitudeCoordinateSystem").toStdString();
+      auto *frame=Moderator::Instance()->GetConfiguredObject(frameName);
+      if (!frame || !frame->IsOfType("CoordinateSystem")) throw std::runtime_error("Select an available attitude coordinate system.");
+      attitude->SetRefObject(frame,Gmat::COORDINATE_SYSTEM,frameName);
+   }
+   auto number=[&](const QString &name) {
+      if (!values.contains(name)) return attitude->GetRealParameter(name.toStdString());
+      if (attitude->IsParameterReadOnly(name.toStdString())) throw std::runtime_error((name+" is unavailable for this attitude model or representation.").toStdString());
+      bool ok=false; const double value=values.value(name).toDouble(&ok);
+      if (!ok || !std::isfinite(value)) throw std::runtime_error((name+" must be a finite number.").toStdString());
+      consumed.insert(name); return value;
+   };
+   auto vector=[&](const QString &property,const QStringList &components) {
+      bool changed=false; for (const auto &name:components) changed=changed || values.contains(name);
+      if (!changed) return;
+      Rvector vector(components.size());
+      for (int i=0;i<components.size();++i) vector[i]=number(components[i]);
+      attitude->SetRvectorParameter(property.toStdString(),vector);
+   };
+   vector("Quaternion",{"Q1","Q2","Q3","Q4"});
+   vector("EulerAngles",{"EulerAngle1","EulerAngle2","EulerAngle3"});
+   vector("MRPs",{"MRP1","MRP2","MRP3"});
+   QStringList matrixNames; for (int r=1;r<=3;++r) for (int c=1;c<=3;++c) matrixNames.append(QString("DCM%1%2").arg(r).arg(c));
+   bool matrixChanged=false; for (const auto &name:matrixNames) matrixChanged=matrixChanged || values.contains(name);
+   if (matrixChanged) {
+      Rmatrix matrix(3,3); for (int i=0;i<9;++i) matrix(i/3,i%3)=number(matrixNames[i]);
+      attitude->SetRmatrixParameter("DirectionCosineMatrix",matrix);
+   }
+   vector("AngularVelocity",{"AngularVelocityX","AngularVelocityY","AngularVelocityZ"});
+   vector("EulerAngleRates",{"EulerAngleRate1","EulerAngleRate2","EulerAngleRate3"});
+   for (auto it=values.cbegin();it!=values.cend();++it) if (names.contains(it.key()) && !consumed.contains(it.key())) {
+      setResourceProperty(*attitude,it.key(),it.value()); consumed.insert(it.key());
+   }
+   if (!consumed.isEmpty() && !attitude->Validate()) throw std::runtime_error("The attitude rejected these settings.");
+   return consumed;
 }
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)

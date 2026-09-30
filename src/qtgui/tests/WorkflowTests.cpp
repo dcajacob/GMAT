@@ -16,6 +16,9 @@
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
 #include "VisualModelDialog.hpp"
+#include "AttitudeDialog.hpp"
+#include "AttitudeConversionUtility.hpp"
+#include "GmatConstants.hpp"
 #include <QSlider>
 #include <QColorDialog>
 #include "PropagationForm.hpp"
@@ -53,13 +56,14 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QEventLoop>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
 
 static void require(bool condition, const char *message)
 {
-   if (!condition) throw std::runtime_error(message);
+   if (!condition) { std::cerr<<"CHECK FAILED: "<<message<<'\n'; throw std::runtime_error(message); }
 }
 
 int main(int argc, char **argv)
@@ -68,10 +72,11 @@ int main(int argc, char **argv)
    app.setAttribute(Qt::AA_DontUseNativeDialogs);
    QApplication::setOrganizationName("GMATTests");
    QApplication::setApplicationName("QtWorkflow");
-   if (argc < 3 || argc > 4) return 2;
+   if (argc < 3 || argc > 5 || (argc==5 && QString(argv[3])!="--attitude-capture")) return 2;
    const auto startup = QFileInfo(argv[1]).absoluteFilePath();
    const auto script = QFileInfo(argv[2]).absoluteFilePath();
    const auto screenshot = argc == 4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
+   const auto attitudeCapture = argc == 5 ? QFileInfo(argv[4]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
@@ -680,6 +685,110 @@ int main(int argc, char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed,"Edited attitude failed propagation");
       editor->undo(); require(editor->toPlainText()==attitudeScript && window.buildScript(),"Attitude edit was not undoable");
       editor->undo(); require(editor->toPlainText()==forceScript && window.buildScript(),"Attitude representation was not undoable");
+      {
+         const auto originalMission=editor->toPlainText();
+         QTemporaryDir files; const auto report=files.filePath("attitude.txt");
+         auto fixture=originalMission;
+         fixture.replace("BeginMissionSequence;","Create ReportFile AttitudeReport;\nAttitudeReport.Filename = '"+report+"';\nAttitudeReport.WriteHeaders = false;\n"
+            "AttitudeReport.Add = {QtSat.Q1, QtSat.Q2, QtSat.Q3, QtSat.Q4};\nBeginMissionSequence;");
+         editor->setPlainText(fixture); if (!window.buildScript()) { app.processEvents(); for (auto *text:window.findChildren<QPlainTextEdit *>()) if (text!=editor) std::cerr<<text->toPlainText().right(5000).toStdString(); throw std::runtime_error("Attitude dialog fixture failed"); }
+         const auto before=editor->toPlainText(); QString applied="Apply not invoked";
+         const auto expected=AttitudeConversionUtility::ToQuaternion(AttitudeConversionUtility::ToCosineMatrix(
+            Rvector3(15*GmatMathConstants::RAD_PER_DEG,25*GmatMathConstants::RAD_PER_DEG,35*GmatMathConstants::RAD_PER_DEG),3,2,1));
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const QMap<QString,QString> &values) {
+               applied=window.applyResourceChanges("QtSat",values,before); return applied;
+            },&owner,before);
+            auto *open=panel.findChild<QPushButton *>("spacecraftAttitude"); require(open,"Focused attitude editor absent");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=dynamic_cast<AttitudeDialog *>(QApplication::activeModalWidget()); require(dialog,"Attitude dialog not open");
+               dialog->findChild<QComboBox *>("attitudeModel")->setCurrentText("Spinner");
+               dialog->findChild<QLineEdit *>("attitude_Q1")->setText("0.3"); dialog->reject();
+            }); open->click();
+            require(!panel.hasChanges() && editor->toPlainText()==before,"Attitude Cancel changed spacecraft");
+            QTimer::singleShot(0,[&] {
+               auto *dialog=dynamic_cast<AttitudeDialog *>(QApplication::activeModalWidget()); require(dialog,"Attitude dialog not open");
+               auto combo=[&](const QString &name) { auto *widget=dialog->findChild<QComboBox *>("attitude_"+name); require(widget,qPrintable("Attitude selector missing: "+name)); return widget; };
+               auto field=[&](const QString &name) { auto *widget=dialog->findChild<QLineEdit *>("attitude_"+name); require(widget,qPrintable("Attitude numeric field missing: "+name)); return widget; };
+               auto *model=dialog->findChild<QComboBox *>("attitudeModel"); model->setCurrentText("Spinner");
+               combo("AttitudeDisplayStateType")->setCurrentText("EulerAngles");
+               combo("EulerAngleSequence")->setCurrentText("321");
+               for (int i=1;i<=3;++i) field(QString("EulerAngle%1").arg(i))->setText(QString::number(i*10+5));
+               combo("AttitudeRateDisplayStateType")->setCurrentText("EulerAngleRates");
+               for (int i=1;i<=3;++i) field(QString("EulerAngleRate%1").arg(i))->setText(QString::number(i*.1));
+               field("EulerAngle2")->setText("nan"); combo("AttitudeDisplayStateType")->setCurrentText("Quaternion");
+               require(combo("AttitudeDisplayStateType")->currentText()=="EulerAngles" && field("EulerAngle2")->text()=="nan" &&
+                  !dialog->findChild<QLabel *>("attitudeError")->text().isEmpty(),"Invalid attitude conversion did not retain inputs");
+               field("EulerAngle2")->setText("25"); combo("AttitudeDisplayStateType")->setCurrentText("Quaternion");
+               require(!dialog->findChild<QLineEdit *>("attitude_EulerAngle1") && field("Q4"),"Quaternion fields did not replace Euler fields");
+               for (int i=1;i<=4;++i) require(std::abs(field(QString("Q%1").arg(i))->text().toDouble()-expected[i-1])<1e-12,"Pending Euler to quaternion conversion changed orientation");
+               // A zero quaternion must fail as a group, preserving correction inputs.
+               for (int i=1;i<=4;++i) field(QString("Q%1").arg(i))->setText("0");
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+               require(dialog->isVisible() && !dialog->findChild<QLabel *>("attitudeError")->text().isEmpty(),"Zero quaternion accepted");
+               for (int i=1;i<=4;++i) field(QString("Q%1").arg(i))->setText(QString::number(expected[i-1],'g',17));
+               combo("AttitudeDisplayStateType")->setCurrentText("MRPs"); require(field("MRP1") && !dialog->findChild<QLineEdit *>("attitude_Q1"),"MRP fields not refreshed");
+               combo("AttitudeDisplayStateType")->setCurrentText("DirectionCosineMatrix");
+               require(field("DCM33") && !dialog->findChild<QLineEdit *>("attitude_MRP1"),"DCM fields not refreshed");
+               const auto diagonal=field("DCM11")->text(); field("DCM11")->setText("2");
+               combo("AttitudeDisplayStateType")->setCurrentText("EulerAngles");
+               require(combo("AttitudeDisplayStateType")->currentText()=="DirectionCosineMatrix","Invalid DCM conversion accepted");
+               field("DCM11")->setText(diagonal); combo("AttitudeDisplayStateType")->setCurrentText("EulerAngles");
+               for (int i=1;i<=3;++i) require(std::abs(field(QString("EulerAngle%1").arg(i))->text().toDouble()-(i*10+5))<1e-10,"Orientation representation round trip changed angles");
+               combo("AttitudeRateDisplayStateType")->setCurrentText("AngularVelocity");
+               require(field("AngularVelocityZ") && !dialog->findChild<QLineEdit *>("attitude_EulerAngleRate1"),"Rate fields not refreshed");
+               require(dialog->findChild<QLabel *>("attitudeUnit_AngularVelocityZ")->text()=="deg/s","Attitude rate units missing");
+               combo("AttitudeRateDisplayStateType")->setCurrentText("EulerAngleRates");
+               for (int i=1;i<=3;++i) require(std::abs(field(QString("EulerAngleRate%1").arg(i))->text().toDouble()-i*.1)<1e-10,"Rate conversion round trip changed values");
+               combo("AttitudeRateDisplayStateType")->setCurrentText("AngularVelocity");
+               for (const auto &axis:QStringList{"X","Y","Z"}) field("AngularVelocity"+axis)->setText("0");
+               require(!dialog->findChild<QComboBox *>("attitude_AttitudeCoordinateSystem"),"Locked spinner frame is editable");
+               model->setCurrentText("CoordinateSystemFixed");
+               auto *frame=combo("AttitudeCoordinateSystem"); const auto originalFrame=frame->currentText(); frame->addItem("MissingFrame"); frame->setCurrentText("MissingFrame");
+               require(combo("AttitudeCoordinateSystem")->currentText()==originalFrame,"Missing attitude frame accepted");
+               model->setCurrentText("PrecessingSpinner");
+               require(field("SpinRate") && !dialog->findChild<QLineEdit *>("attitude_Q1") && !dialog->findChild<QLineEdit *>("attitude_EulerAngle1"),"Precessing model fields not refreshed");
+               field("SpinRate")->setText("0.75"); model->setCurrentText("NadirPointing");
+               require(field("BodyAlignmentVectorX") && combo("AttitudeReferenceBody") && combo("AttitudeConstraintType"),"Nadir controls absent");
+               require(!dialog->findChild<QComboBox *>("attitude_AttitudeCoordinateSystem"),"Locked nadir reference frame remains editable");
+               model->setCurrentText("CCSDS-AEM"); require(field("AttitudeFileName") && dialog->findChild<QPushButton *>("attitudeBrowse_AttitudeFileName"),"Attitude ephemeris chooser absent");
+               QTimer::singleShot(0,[&] { auto *chooser=qobject_cast<QFileDialog *>(QApplication::activeModalWidget()); require(chooser && chooser->fileMode()==QFileDialog::ExistingFile,"AEM chooser permits new input files"); chooser->reject(); });
+               dialog->findChild<QPushButton *>("attitudeBrowse_AttitudeFileName")->click();
+               model->setCurrentText("PrecessingSpinner"); require(std::abs(field("SpinRate")->text().toDouble()-.75)<1e-12,qPrintable("Switching models lost pending spinner data: "+field("SpinRate")->text()));
+               model->setCurrentText("Spinner");
+               for (int i=1;i<=3;++i) require(std::abs(field(QString("EulerAngle%1").arg(i))->text().toDouble()-(i*10+5))<1e-10,"Switching models lost pending orientation");
+               combo("AttitudeDisplayStateType")->setCurrentText("Quaternion");
+               if (!attitudeCapture.isEmpty()) {
+                  QEventLoop exposed; QTimer::singleShot(200,&exposed,&QEventLoop::quit); exposed.exec();
+                  require(dialog->grab().save(attitudeCapture),"Attitude dialog capture failed");
+               }
+               dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+            }); open->click();
+            require(panel.hasChanges() && editor->toPlainText()==before,"Attitude OK skipped deferred Apply");
+            require(Moderator::Instance()->GetConfiguredObject("QtSat")->GetStringParameter("Attitude")!="Spinner","Dialog mutated configured attitude");
+            auto *grid=panel.findChild<QTableWidget *>();
+            for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()=="DryMass") grid->item(row,1)->setText("850");
+            QTimer::singleShot(0,[&] { auto *dialog=dynamic_cast<AttitudeDialog *>(QApplication::activeModalWidget()); require(dialog && dialog->findChild<QLineEdit *>("attitude_Q4"),"Reopened pending attitude model absent"); dialog->reject(); }); open->click();
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(applied.isEmpty(),qPrintable(applied)); const auto after=editor->toPlainText();
+         require(after.mid(after.indexOf("BeginMissionSequence;"))==before.mid(before.indexOf("BeginMissionSequence;")),"Attitude Apply rewrote mission commands");
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Attitude paired Apply not one exact Undo");
+         editor->redo(); require(editor->toPlainText()==after && window.buildScript(),"Attitude paired Apply not one exact Redo");
+         const auto path=files.filePath("attitude.script"); require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Attitude save/reopen failed");
+         auto *edited=Moderator::Instance()->GetConfiguredObject("QtSat");
+         require(edited->GetStringParameter("Attitude")=="Spinner" && edited->GetStringParameter("AttitudeDisplayStateType")=="Quaternion" && edited->GetRealParameter("DryMass")==850,"Attitude Apply lost paired spacecraft edits");
+         for (int i=1;i<=4;++i) require(std::abs(edited->GetRealParameter("Q"+std::to_string(i))-expected[i-1])<1e-12,"Attitude quaternion changed after reopen");
+         require(window.runMission()==MainWindow::RunResult::Completed,"GUI-configured attitude mission failed");
+         QFile output(report); require(output.open(QIODevice::ReadOnly),"Attitude execution report missing");
+         const auto lines=QString::fromUtf8(output.readAll()).trimmed().split('\n'); require(lines.size()>1,"Attitude report samples missing");
+         for (const auto &line:{lines.front(),lines.back()}) {
+            const auto values=line.trimmed().split(QRegularExpression("\\s+"),Qt::SkipEmptyParts); require(values.size()==4,"Attitude report columns changed");
+            for (int i=0;i<4;++i) require(std::abs(values[i].toDouble()-expected[i])<1e-12,"GUI attitude report changed orientation during propagation");
+         }
+         editor->setPlainText(originalMission); require(window.buildScript(),"Attitude fixture restoration failed");
+         if (!attitudeCapture.isEmpty()) { std::cout<<"PASS: attitude dialog conversions, model switching, deferred Apply, save/reopen and report execution\n"; return 0; }
+      }
       editor->setPlainText("Create Array QtMatrix[2,3];\nGMAT QtMatrix(1,1) = 4;\nGMAT QtMatrix(2,3) = 9;\nBeginMissionSequence;\n");
       require(window.buildScript(), "Array fixture did not build");
       const auto arrayScript=editor->toPlainText();

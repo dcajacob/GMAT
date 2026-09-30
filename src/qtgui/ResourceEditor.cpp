@@ -2,6 +2,7 @@
 #include "FunctionFileDialog.hpp"
 #include "BallisticsMassDialog.hpp"
 #include "VisualModelDialog.hpp"
+#include "AttitudeDialog.hpp"
 #include "Moderator.hpp"
 #include "AxisSystem.hpp"
 #include "TimeSystemConverter.hpp"
@@ -475,6 +476,47 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       table->setItem(row, 2, unit);
    }
    if (spacecraft) {
+      attitudeNames.insert("Attitude");
+      if (auto *attitude=object.GetOwnedObject(0)) for (int id=0;id<attitude->GetParameterCount();++id) {
+         const auto name=QString::fromStdString(attitude->GetParameterText(id));
+         if (name!="Epoch") attitudeNames.insert(name);
+      }
+      auto *attitudeButton=new QPushButton("Attitude…",this); attitudeButton->setObjectName("spacecraftAttitude"); layout->addWidget(attitudeButton);
+      const auto attitudeSpacecraftName=object.GetName();
+      connect(attitudeButton,&QPushButton::clicked,this,[this,attitudeSpacecraftName,attitudeButton] {
+         try {
+            auto *configured=Moderator::Instance()->GetConfiguredObject(attitudeSpacecraftName);
+            if (!configured) throw std::runtime_error("This spacecraft is no longer available.");
+            auto pending=attitudeEdits;
+            if (pending.isEmpty()) for (int row=0;row<table->rowCount();++row) {
+               const auto name=table->item(row,0)->text();
+               if (!attitudeNames.contains(name)) continue;
+               const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+               const auto value=combo ? comboValue(combo) : table->item(row,1)->text();
+               if (value!=original.value(name)) pending.insert(name,value);
+            }
+            AttitudeDialog dialog(*configured,pending,this);
+            if (dialog.exec()!=QDialog::Accepted) return;
+            attitudeEdits=dialog.values();
+            // The generic table is a snapshot of the original model. Keep it
+            // visible for context, but use the dialog for subsequent edits.
+            for (int row=0;row<table->rowCount();++row) if (attitudeNames.contains(table->item(row,0)->text())) {
+               const auto name=table->item(row,0)->text();
+               const auto value=attitudeEdits.contains(name) ? attitudeEdits.value(name) : "Not used by "+attitudeEdits.value("Attitude");
+               if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) {
+                  if (combo->findText(value)<0) combo->addItem(value);
+                  combo->setCurrentText(value);
+               } else if (auto *item=table->item(row,1)) item->setText(value);
+               for (int column=1;column<table->columnCount();++column) {
+                  if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(false);
+                  if (auto *item=table->item(row,column)) item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+               }
+            }
+            attitudeButton->setText("Attitude… (pending)");
+            status->setText("Attitude settings are pending. Use Attitude… to review them, then Apply the spacecraft.");
+         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+      });
       auto *visual=new QPushButton("Visual model…",this); visual->setObjectName("spacecraftVisualModel"); layout->addWidget(visual);
       const auto spacecraftName=object.GetName();
       connect(visual,&QPushButton::clicked,this,[this,spacecraftName] {
@@ -734,10 +776,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
-      QMap<QString, QString> changes;
+      QMap<QString, QString> changes=attitudeEdits;
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
+         if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
          const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
@@ -763,6 +806,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
+   if (!attitudeEdits.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));

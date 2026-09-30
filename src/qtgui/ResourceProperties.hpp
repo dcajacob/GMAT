@@ -2,6 +2,8 @@
 #include <QString>
 #include <QStringList>
 #include <QVector>
+#include <QMap>
+#include <QSet>
 class GmatBase;
 struct ResourceProperty
 {
@@ -21,6 +23,7 @@ struct ResourceProperty
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
 void validateResourceProperties(GmatBase &object);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
+QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);

@@ -734,8 +734,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString mixture=changes.value("MixRatio");
       const bool stateRepresentation=proposed->IsOfType("Spacecraft") && changes.contains("DisplayStateType");
       if (stateRepresentation) setResourceProperty(*proposed,"DisplayStateType",changes.value("DisplayStateType"));
+      const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio") || (stateRepresentation && it.key()=="DisplayStateType")) continue;
+         if (attitudeChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio") || (stateRepresentation && it.key()=="DisplayStateType")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }

@@ -1155,3 +1155,11 @@ Invalid inputs keep the last valid preview while you correct them. Numeric
 values follow GMAT's supported ranges. OK keeps changes pending in the
 spacecraft panel; Apply updates the mission. The splitter and scrolling controls
 keep the editor usable on smaller displays.
+
+**Attitude…** opens a focused spacecraft attitude editor. Model selection updates
+the available fields and retains each model's pending settings during the dialog.
+Orientation and rate selectors convert pending values before displaying the new
+representation. Invalid values remain available for correction. Reference frame
+controls respect the model's restrictions; reference bodies and AEM input files
+have dedicated selectors. OK keeps the selected model's settings pending until
+spacecraft Apply, together with other spacecraft changes.
