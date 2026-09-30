@@ -16,6 +16,7 @@
 #include "EventLocatorDialog.hpp"
 #include "XYPlotDialog.hpp"
 #include "GroundTrackDialog.hpp"
+#include "OrbitViewDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -317,18 +318,20 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       });
    }
    layout->addWidget(search);
-   if (object.GetTypeName()=="XYPlot" || object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") {
-      const bool ground=object.GetTypeName()!="XYPlot";
+   if (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="XYPlot" || object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") {
+      const bool orbit=object.GetTypeName()=="OrbitView";
+      const bool ground=!orbit && object.GetTypeName()!="XYPlot";
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
-      auto *button=new QPushButton(ground ? "Ground-track setup…" : "XY plot setup…",this); button->setObjectName(ground ? "editGroundTrack" : "editXYPlot"); layout->addWidget(button);
-      connect(button,&QPushButton::clicked,this,[this,initial,ground] {
+      auto *button=new QPushButton(orbit ? "Orbit-view setup…" : ground ? "Ground-track setup…" : "XY plot setup…",this); button->setObjectName(orbit ? "editOrbitView" : ground ? "editGroundTrack" : "editXYPlot"); layout->addWidget(button);
+      connect(button,&QPushButton::clicked,this,[this,initial,ground,orbit] {
          QMap<QString,QString> pending;
          for (int row=0;row<table->rowCount();++row) {
             const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
             pending.insert(table->item(row,0)->text(),combo ? comboValue(combo) : table->item(row,1)->text());
          }
          QMap<QString,QString> values;
-         if (ground) { GroundTrackDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         if (orbit) { OrbitViewDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         else if (ground) { GroundTrackDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
          else { XYPlotDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
          for (int row=0;row<table->rowCount();++row) {
             const auto name=table->item(row,0)->text(); if (!values.contains(name)) continue;

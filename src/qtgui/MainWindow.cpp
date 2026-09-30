@@ -7,6 +7,7 @@
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
 #include "GroundStationDialog.hpp"
+#include "OrbitViewDialog.hpp"
 #include "EventLocatorDialog.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
@@ -399,7 +400,7 @@ void MainWindow::newMission()
 {
    if (!ready || running) return;
    plots->cameraSettings.clear();
-   plots->clear();
+   plots->clear(true);
    Moderator::Instance()->LoadDefaultMission();
    editor->setPlainText(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)));
    builtScript = editor->toPlainText(); modelValid = true;
@@ -422,6 +423,7 @@ bool MainWindow::loadScript(const QString &path)
       QMessageBox::warning(this,"Open failed","This script is not valid UTF-8. Convert its encoding before opening it.");
       return false;
    }
+   plots->clear(true);
    editor->setPlainText(text);
    scriptPath = path; editor->document()->setModified(false); updateTitle(); return true;
 }
@@ -741,8 +743,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto atmosphereChanges=applyAtmosphereProperties(*proposed,changes);
       const auto stationChanges=applyGroundStationLocation(*proposed,changes);
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
+      const auto viewChanges=applyOrbitViewProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -768,9 +771,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
          return QString::fromStdString(copy->GetGeneratingString(Gmat::SCRIPTING));
       };
       const auto oldBlock = serialize(*object);
-      auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : serialize(*proposed);
+      auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : proposed->IsOfType("OrbitView") ? orbitViewScript(*proposed) : serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);

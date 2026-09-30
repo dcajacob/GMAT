@@ -1231,6 +1231,7 @@ bool OrbitView::SetStringParameter(const Integer id, const std::string &value)
          PutRvector3Value(mViewPointRefVector, id, value);
          mViewPointRefType = "Vector";
       }
+      return true;
    case VIEWPOINT_REF_TYPE:
       mViewPointRefType = value;
       return true;

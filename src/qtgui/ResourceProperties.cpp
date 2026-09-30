@@ -1,6 +1,8 @@
 #include "ResourceProperties.hpp"
 #include "ReportParameterDialog.hpp"
 #include "GroundTrackDialog.hpp"
+#include "OrbitViewDialog.hpp"
+#include "OrbitPlot.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
@@ -94,6 +96,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          }
          case Gmat::INTEGER_TYPE: field.value = QString::number(object.GetIntegerParameter(id)); break;
          case Gmat::UNSIGNED_INT_TYPE: field.value = QString::number(object.GetUnsignedIntParameter(id)); break;
+         case Gmat::BOOLEANARRAY_TYPE: {
+            if (!object.IsOfType("OrbitView") || field.name!="DrawObject") continue;
+            QStringList values;
+            for (const auto &name:object.GetStringArrayParameter("Add")) values.append(static_cast<OrbitPlot &>(object).GetShowObject(name) ? "true" : "false");
+            field.value=values.join(" "); break;
+         }
          case Gmat::BOOLEAN_TYPE:
             field.choices = {"true", "false"}; field.value = object.GetBooleanParameter(id) ? "true" : "false"; break;
          case Gmat::ON_OFF_TYPE:
@@ -136,6 +144,15 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                   field.references.append(QString::fromStdString(name));
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
+         }
+         if (object.IsOfType("OrbitView")) {
+            const bool camera=QStringList{"ViewPointReference","ViewPointVector","ViewDirection"}.contains(field.name);
+            const bool frame=field.name=="CoordinateSystem" || field.name=="ViewUpCoordinateSystem";
+            if (camera || frame) {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(camera ? Gmat::SPACE_POINT : Gmat::COORDINATE_SYSTEM)) field.references.append(QString::fromStdString(name));
+            }
+            if (field.name=="ViewUpAxis" && field.choices.isEmpty()) field.choices={"X","Y","Z","-X","-Y","-Z"};
          }
          if (object.IsOfType("Spacecraft") && field.name=="DisplayStateType") {
             auto *frame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject(object.GetStringParameter("CoordinateSystem")));
@@ -410,6 +427,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void validateResourceProperties(GmatBase &object)
 {
+   validateOrbitViewProperties(object);
    if (object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") { validateGroundTrackTexture(object); return; }
    if (object.GetTypeName()=="XYPlot") {
       const auto x=QString::fromStdString(object.GetStringParameter("XVariable"));

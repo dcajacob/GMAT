@@ -55,6 +55,15 @@ int main(int argc,char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      for (bool perspective:{false,true}) {
+         auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
+         model->perspective=perspective; model->fitCamera=true; model->labels=false; model->legend=false; model->axes=false; model->grid=false;
+         model->curves[0].radius=1; model->curves[0].color=Qt::green; model->append(0,0,0,0);
+         PlotCanvas canvas(model); canvas.resize(600,400); canvas.show(); canvas.setViewAngles(0,0); app.processEvents();
+         const auto visible=canvas.captureImage();
+         model->curves[1].lines=false; model->curves[1].showObject=false; model->append(1,1e9,0,0);
+         canvas.refresh(); app.processEvents(); require(canvas.captureImage()==visible,"Undrawn camera/Sun object changed Fit bounds");
+      }
       for (const auto kind:{PlotModel::Kind::Orbit,PlotModel::Kind::GroundTrack}) {
          auto model=std::make_shared<PlotModel>(kind); model->axes=false; model->grid=false; model->labels=false; model->legend=false;
          model->redrawPoints=1; model->curves[0].name="Track"; model->curves[0].color=Qt::red;

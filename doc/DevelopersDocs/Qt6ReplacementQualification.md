@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
 | `src/gui/app/TextEphemFileDialog.hpp` | Pending audit |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Drawing options audited; live Qt display controls covered, camera controls partly covered. Full resource workflow and remaining view modes pending. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
@@ -2396,3 +2396,78 @@ captures were visually inspected. Evidence: `Qt6ParityValidation/check-ground-se
 Broader solver-loop display modes, body/station combinations, runtime asset loss
 and remaining orbit camera/option workflows stay open; this does not close the
 full viewer or replacement qualification gate.
+
+
+## Grouped OrbitView setup and camera lifecycle
+
+Audited active wx OrbitViewPanel controls and the native initialization path.
+Qt now provides **Orbit-view setup…** with ordered space-point Add/Remove/Clear,
+Up/Down and drag movement, per-object Draw flags, three object-or-vector camera
+selectors with retained numeric fields while switching modes, view/up coordinate
+systems, six up axes, positive view scale, drawing/star controls, solver iteration
+choices and collection/update/retention/redraw counts. Content scrolls while
+OK/Cancel remain outside the scroll area. Perspective and FOV behind the disabled
+`__ENABLE_GL_PERSPECTIVE__`/FOV macros are not active wx resource requirements;
+Qt's existing live Camera dialog and saved projection comments continue serving
+those options. Overlap and subscriber color overrides are likewise inactive in
+this base build.
+
+OK validates a clone and returns pending resource values. Apply reconstructs Add
+and DrawObject together, preserving flags by name when only Add changes. Visibility
+metadata uses the engine's named show-object map rather than including implicit
+camera/Sun entries from its runtime boolean array. Empty lists on a disabled plot
+are omitted from serialization; explicit empty object/boolean assignments fail
+the base interpreter. Shown empty plots, duplicate/wrong-type references, invalid
+vector syntax/nonfinite values, wrong frames and nonpositive scales are rejected
+without changing the mission. A zero vector ViewDirection is a valid target at the
+coordinate-system origin, and remains supported.
+
+The audit found a missing return in OrbitView's full-string ViewPointReference
+setter. It fell through into ViewPointRefType, replacing the intended Vector/Object
+classification with the supplied string. The return is corrected; indexed vector
+interpretation and propagation equations are unchanged. The new workflow checks
+complete-vector Apply, its serialized type, and resulting camera history.
+
+Qt previously ignored the UseInitialView callback and reset each new canvas.
+It now captures session camera state in the plot model, retaining it after viewer
+closure, and restores it on rebuild/rerun when UseInitialView is Off. The retained
+state includes zoom, rotation, pan, Fit, projection/FOV and selected camera name;
+On restores the scripted camera. New/Open clears this session state. The model
+still obtains new tracking history from the engine, and replay begins at Latest
+for a new run. Unchanged vector formatting in the grouped editor does not count
+as an explicit camera edit, so drawing-only changes preserve imported primary
+camera metadata.
+
+The show-object callback now controls body/model visibility independently of
+trajectory lines, matching wx Draw Object behavior. Fully undrawn implicit objects
+are excluded from Fit bounds and legends; otherwise the implicit Sun could expand
+Fit to astronomical distances. A hidden body radius no longer enlarges its
+trajectory bounds. Native and fallback captures exercise this distinction.
+
+`OrbitSetupTests` covers object add/remove/duplicate prevention/reorder/clear,
+paired visibility, object/vector mode switching, all three camera roles, typed
+frames, scale and up axis, drawing/stars/sampling callbacks, compact scrolling,
+Cancel/pending reopen, corrective validation, exact source Undo/Redo and Unicode
+save/reopen. Reports of spacecraft Earth-fixed XYZ are identical before and after
+the GUI configuration. Constant vectors yield the expected eye/target/up history;
+object targets and positions track published spacecraft/Luna points. Multiple
+reruns and viewer close/reopen retain the adjusted zoom, rotation, pan, Fit and
+projection with UseInitialView Off, and On resets them. A drawing-only grouped
+edit preserves an imported body/LookAt camera and executes it successfully.
+
+Additional solver-loop modes, named-camera retention during camera-list changes,
+more view/up-frame combinations, geometric degeneracies, scene/asset loss and
+broader OF conversion qualification remain open. This checkpoint does not close
+the full replacement, viewer or plugin gates.
+
+
+Rebuilt the actual `application/bin/GmatQt` launcher target. All 17 Qt suites
+passed in 60.73 seconds, including OrbitSetup, native/fallback plots, native window
+lifecycle, conversion workflows and normal/fractional/200% renderer checks. A
+separate isolated-settings process passed the entire new workflow on the current
+Wayland desktop. Dialog and rendered-orbit captures were visually inspected: the
+object/camera controls and action buttons are readable, lower drawing/data options
+are accessible by scrolling, and the orbit capture shows the textured Earth,
+trajectory, wireframe and configured guides/star field. Evidence:
+`Qt6ParityValidation/check-orbit-setup.txt`, `orbit-setup-wayland.txt`,
+`orbit-setup-wayland.png` and `orbit-view-wayland.png`.

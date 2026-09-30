@@ -1,0 +1,1 @@
+PASS: grouped OrbitView objects/draw flags, typed object/vector/frame cameras, styles/stars/sampling, pending/Cancel/validation/rollback, exact Undo/Redo/Unicode save/reopen, numerical report invariance, UseInitialView Off camera/pan/fit/projection retention across reruns/close/reopen and On reset, object tracking and compact layout

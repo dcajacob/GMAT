@@ -17,7 +17,7 @@ class QtPlotReceiver final : public PlotReceiver
 public:
    explicit QtPlotReceiver(QMdiArea *workspace);
    ~QtPlotReceiver() override;
-   void clear();
+   void clear(bool resetViews=false);
    static void validateCameraReferences(const QMap<QString,QtCameraSetting> &settings);
    QStringList names() const;
    bool show(const QString &name);
@@ -192,6 +192,7 @@ private:
       SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
+      bool useInitialView = true;
       QString provider;
    };
    Entry *find(const std::string &name);
@@ -206,4 +207,5 @@ private:
    QMdiArea *workspace;
    QMap<QString, Entry> entries;
    QSet<QString> warnings;
+   QMap<QString,PlotViewState> savedViews;
 };

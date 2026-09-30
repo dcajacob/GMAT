@@ -82,14 +82,17 @@ PlotCanvas::PlotCanvas(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    setToolTip("Wheel: zoom · Drag: rotate orbit or pan chart · Shift-drag: pan orbit · Double-click: fit");
    if (data->kind==PlotModel::Kind::Orbit && QGuiApplication::platformName()!="offscreen" && QGuiApplication::platformName()!="minimal")
       renderer=new OrbitRenderer(data,this);
-   if (data->scriptedCamera) scriptView();
+   if (data->userView) restoreView(*data->userView);
+   else if (data->scriptedCamera) scriptView();
 }
 void PlotCanvas::refresh()
 {
+   if (data->kind==PlotModel::Kind::Orbit) data->userView=PlotViewState{zoom,yaw,pitch,pan,data->fitCamera,data->perspective,data->fieldOfView,
+      data->cameraViews.isEmpty() ? QString() : data->cameraViews[data->selectedCamera].name};
    QStringList details{data->title};
    if (!data->xLabel.isEmpty()) details << "X: "+data->xLabel;
    if (!data->yLabel.isEmpty()) details << "Y: "+data->yLabel;
-   if (data->legend) for (const auto &curve:data->curves) if (curve.visible) details << curve.name;
+   if (data->legend) for (const auto &curve:data->curves) if (curve.visible && (data->kind!=PlotModel::Kind::Orbit || curve.drawsContent())) details << curve.name;
    details << "Wheel: zoom · Drag: rotate orbit or pan chart · Shift-drag: pan orbit · Double-click: fit";
    setToolTip(details.join('\n').toHtmlEscaped().replace("\n","<br>"));
    if (renderer) renderer->setView(zoom,yaw,pitch,pan,visibleFrame); else update();
@@ -100,6 +103,16 @@ void PlotCanvas::fit() { zoom = 1; pan = {}; data->fitCamera=true; refresh(); }
 void PlotCanvas::scriptView() {
    if (!data->scriptedCamera) return;
    zoom=1; pan={}; yaw=0; pitch=0; data->fitCamera=false; refresh();
+}
+void PlotCanvas::restoreView(const PlotViewState &state)
+{
+   // Copy because refresh replaces data->userView, which can own the argument.
+   const auto saved=state;
+   zoom=saved.zoom; yaw=saved.yaw; pitch=saved.pitch; pan=saved.pan; data->fitCamera=saved.fit;
+   for (int i=0;i<data->cameraViews.size();++i) if (data->cameraViews[i].name==saved.camera) { data->selectedCamera=i; break; }
+   data->perspective=saved.perspective; data->fieldOfView=saved.fieldOfView;
+   if (!data->cameraViews.isEmpty()) { data->cameraViews[data->selectedCamera].perspective=saved.perspective; data->cameraViews[data->selectedCamera].fieldOfView=saved.fieldOfView; }
+   refresh();
 }
 void PlotCanvas::setFrame(quint64 value) { visibleFrame = value; refresh(); }
 void PlotCanvas::zoomBy(double steps) { zoom = std::clamp(zoom * std::pow(1.15, steps), 0.02, 200.0); refresh(); }
@@ -134,7 +147,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    // the plot itself; the tooltip retains full labels when space is exhausted.
    QList<const PlotCurve *> legendCurves;
    int preferredWidth=1;
-   if (data->legend) for (const auto &curve:data->curves) if (curve.visible) {
+   if (data->legend) for (const auto &curve:data->curves) if (curve.visible && (!orbit || curve.drawsContent())) {
       legendCurves << &curve;
       preferredWidth=std::max(preferredWidth,metrics.horizontalAdvance(curve.name)+34);
    }
@@ -153,9 +166,9 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    double ymax = ground ? 90 : -std::numeric_limits<double>::infinity();
    double extent = 1;
    OrbitSceneBounds bounds;
-   for (const auto &curve:data->curves) if (curve.visible)
+   for (const auto &curve:data->curves) if (curve.drawsContent())
       for (const auto &point:curve.points) {
-         extent=std::max(extent,std::hypot(point.x,point.y,point.z)+curve.radius);
+         extent=std::max(extent,std::hypot(point.x,point.y,point.z)+(curve.showObject ? curve.radius : 0));
          bounds.include(point.x,point.y,point.z,curve.showObject ? curve.radius : 0);
       }
    const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent,area.width()/area.height(),&bounds);
@@ -493,6 +506,14 @@ void PlotWidget::updateReplayFrame()
    if (replayPosition) replayPosition->setText(value==1000 ? "Latest" : QString::number(value/10.)+"%");
    drawing->setFrame(value==1000 ? std::numeric_limits<quint64>::max() : first+static_cast<quint64>((data->frame-first)*(value/1000.0)));
 }
+void PlotWidget::restoreView(const PlotViewState &state)
+{
+   drawing->restoreView(state);
+   if (auto *views=findChild<QComboBox *>("orbitCameraView")) { const QSignalBlocker block(views); views->setCurrentIndex(data->selectedCamera); }
+   if (auto *projection=findChild<QComboBox *>("orbitProjection")) { const QSignalBlocker block(projection); projection->setCurrentIndex(data->perspective ? 1 : 0); }
+   if (auto *fov=findChild<QDoubleSpinBox *>("orbitFieldOfView")) { const QSignalBlocker block(fov); fov->setValue(data->fieldOfView); fov->setEnabled(data->perspective); }
+}
+
 void PlotWidget::refresh()
 {
    if (historyGeneration!=data->historyGeneration) {

@@ -207,12 +207,12 @@ struct OrbitRenderer::Scene
             const auto sphere=prepared.modelPose->getBound();
             objects.insert(source.name,{sphere.center(),sphere.radius()>0 ? sphere.radius() : 1});
          } else objects.insert(source.name,{{},source.radius>0 ? source.radius : 1});
-         if (!source.visible) continue;
+         if (!source.drawsContent()) continue;
          const double scale=std::abs(source.modelScale)*(source.radius==0 ? 1000 : 1);
          const double offset=std::hypot(source.modelOffset[0],source.modelOffset[1],source.modelOffset[2]);
          const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
          for (const auto &p:source.points) {
-            extent=std::max(extent,std::hypot(p.x,p.y,p.z)+radius);
+            extent=std::max(extent,std::hypot(p.x,p.y,p.z)+(source.showObject ? radius : 0));
             bounds.include(p.x,p.y,p.z,source.showObject ? radius : 0);
          }
       }
@@ -501,7 +501,7 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
    if (scene->model->legend) {
       int x=12;
       for (const auto &curve:scene->model->curves) {
-         if (!curve.visible) continue;
+         if (!curve.drawsContent()) continue;
          painter.setPen(QPen(curve.color,2)); painter.drawLine(x,20,x+15,20);
          painter.setPen(QColor(220,225,235)); painter.drawText(x+20,25,curve.name);
          x+=34+painter.fontMetrics().horizontalAdvance(curve.name);

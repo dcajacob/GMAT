@@ -8,8 +8,17 @@
 #include <deque>
 #include <limits>
 #include <array>
+#include <optional>
 #include "StarCatalog.hpp"
 
+struct PlotViewState
+{
+   double zoom=1,yaw=0,pitch=0;
+   QPointF pan;
+   bool fit=false,perspective=false;
+   double fieldOfView=50;
+   QString camera;
+};
 struct PlotPoint
 {
    double x = 0, y = 0, z = 0, epoch = 0;
@@ -35,6 +44,7 @@ struct PlotCurve
    QVector<quint64> breaks;
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
+   bool drawsContent() const { return visible && (lines || markers || showObject); }
    bool wireframeObject = false;
    double radius = 0;
    QString texturePath;
@@ -88,6 +98,7 @@ struct PlotModel
    bool constellationsEnabled=false,constellationCatalogLoaded=false;
    ConstellationCatalog constellationCatalog;
    bool scriptedCamera=false, fitCamera=false;
+   std::optional<PlotViewState> userView;
    bool perspective=false;
    double fieldOfView=50;
    std::deque<PlotCamera> cameras;

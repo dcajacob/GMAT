@@ -1186,3 +1186,21 @@ Recent-segment redraw affects running plots and replay while retaining their
 history. Zero draws all retained points; completing a run restores the full
 retained trajectory. Maximum retained points can be one. These behaviors apply
 to both orbit and ground-track rendering.
+
+
+OrbitView resources provide **Orbit-view setup…** with ordered space-point
+selection and per-object Draw flags, three object-or-vector camera selectors,
+view/up coordinate systems, up axis and scale, drawing and star options, solver
+iteration mode and collection/update/retention/redraw settings. The groups scroll
+in smaller windows while OK/Cancel remain visible. OK keeps edits pending until
+resource Apply. Draw flags hide the body/model while retaining its trajectory,
+matching wx; removing an object removes both.
+
+**Reset to script camera on each run** controls `UseInitialView`. When unchecked,
+Qt retains zoom, rotation, pan, Fit, projection/FOV and the selected named camera
+within this mission across rebuilds/reruns and viewer close/reopen. When checked,
+a rerun restores the scripted camera. New/Open starts a fresh camera session.
+Drawing-only edits through the grouped dialog preserve imported OF camera
+metadata. Projection/FOV remain available through the live viewer Camera dialog
+and Keep projection action; obsolete readonly wx FOV fields are not exposed as
+resource settings.

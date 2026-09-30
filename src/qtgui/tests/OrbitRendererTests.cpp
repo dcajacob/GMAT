@@ -25,6 +25,7 @@ int main(int argc,char **argv)
          fitModel->labels=false; fitModel->legend=false; fitModel->axes=false; fitModel->grid=false;
          fitModel->curves[0].radius=1; fitModel->curves[0].color=Qt::green; fitModel->append(0,offset,offset,offset);
          fitModel->curves[1].visible=false; fitModel->append(1,-1e9,0,0);
+         fitModel->curves[2].lines=false; fitModel->curves[2].showObject=false; fitModel->append(2,1e9,0,0);
          OrbitRenderer viewer(fitModel); viewer.show(); viewer.setView(1,0,0,{},0);
          QEventLoop exposed; QTimer::singleShot(150,&exposed,&QEventLoop::quit); exposed.exec();
          for (const auto &size:{QSize(240,600),QSize(600,240),QSize(400,400)}) {

@@ -68,8 +68,11 @@ QtPlotReceiver::Entry *QtPlotReceiver::find(const std::string &name)
 {
    auto it=entries.find(text(name)); return it==entries.end() ? nullptr : &it.value();
 }
-void QtPlotReceiver::clear()
+void QtPlotReceiver::clear(bool resetViews)
 {
+   for (auto it=entries.cbegin();it!=entries.cend();++it)
+      if (it->data->kind==PlotModel::Kind::Orbit && it->data->userView) savedViews.insert(it.key(),*it->data->userView);
+   if (resetViews) savedViews.clear();
    for (auto &entry : entries) if (entry.window) delete entry.window.data();
    entries.clear(); warnings.clear(); if (changed) changed();
 }
@@ -163,6 +166,7 @@ void QtPlotReceiver::refresh(Entry &entry, bool force)
 bool QtPlotReceiver::remove(const std::string &name)
 {
    auto it=entries.find(text(name)); if (it==entries.end()) return false;
+   if (it->data->kind==PlotModel::Kind::Orbit && it->data->userView) savedViews.insert(it.key(),*it->data->userView);
    if (it->window) delete it->window.data(); entries.erase(it); if (changed) changed(); return true;
 }
 void QtPlotReceiver::warn(const std::string &name, const std::string &option)
@@ -225,10 +229,11 @@ void QtPlotReceiver::SetGl2dDrawingOption(const std::string &name,const std::str
    SetGroundTrackOption(name,"TextureMap",map);
    if (auto *entry=find(name)) entry->data->footprints=footprint!=0;
 }
-void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bool ec,bool xy,bool wire,bool axes,bool grid,bool sun,bool,bool,bool stars,bool constellations,Integer count)
+void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bool ec,bool xy,bool wire,bool axes,bool grid,bool sun,bool,bool useInitial,bool stars,bool constellations,Integer count)
 {
    if (auto *entry=find(name)) {
       auto &data=*entry->data;
+      entry->useInitialView=useInitial;
       data.labels=labels; data.axes=axes; data.grid=grid;
       data.xyPlane=xy; data.eclipticPlane=ec; data.wireframe=wire; data.sunLine=sun;
       data.constellationsEnabled=constellations;
@@ -267,7 +272,10 @@ void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *refer
       if (const auto setting=cameraSettings.value(text(name));setting.up) entry->upVector=*setting.up;
       for (int i=0;i<3;++i) { entry->referenceVector[i]=referenceVector[i]; entry->positionVector[i]=positionVector[i]; entry->directionVector[i]=directionVector[i]; }
       entry->data->scriptedCamera=true;
-      if (entry->widget) entry->widget->canvas()->scriptView();
+      if (entry->widget) {
+         if (!entry->useInitialView && savedViews.contains(text(name))) entry->widget->restoreView(savedViews.value(text(name)));
+         else entry->widget->canvas()->scriptView();
+      }
    }
 }
 void QtPlotReceiver::SetGlDrawOrbitFlag(const std::string &name,const std::vector<bool> &flags)
@@ -276,7 +284,7 @@ void QtPlotReceiver::SetGlDrawOrbitFlag(const std::string &name,const std::vecto
 }
 void QtPlotReceiver::SetGlShowObjectFlag(const std::string &name,const std::vector<bool> &flags)
 {
-   if (auto *entry=find(name)) for (size_t i=0;i<flags.size();++i) entry->data->curves[static_cast<int>(i)].visible=flags[i];
+   if (auto *entry=find(name)) for (size_t i=0;i<flags.size();++i) entry->data->curves[static_cast<int>(i)].showObject=flags[i];
 }
 void QtPlotReceiver::SetGlUpdateFrequency(const std::string &name,Integer frequency) { if (auto *entry=find(name)) entry->data->updateFrequency=std::max(1,static_cast<int>(frequency)); }
 bool QtPlotReceiver::IsThere(const std::string &name) { auto *entry=find(name); return entry && entry->window && entry->window->isVisible(); }

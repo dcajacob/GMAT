@@ -14,6 +14,7 @@ public:
    explicit PlotCanvas(std::shared_ptr<PlotModel> data, QWidget *parent = nullptr);
    void fit();
    void scriptView();
+   void restoreView(const PlotViewState &state);
    void setFrame(quint64 value);
    double zoomFactor() const { return zoom; }
    void zoomBy(double wheelSteps);
@@ -39,6 +40,7 @@ class PlotWidget final : public QWidget
 public:
    explicit PlotWidget(std::shared_ptr<PlotModel> data, QWidget *parent = nullptr);
    void refresh();
+   void restoreView(const PlotViewState &state);
    void setProjectionSaver(std::function<QString(bool,double)> callback);
    PlotCanvas *canvas() const { return drawing; }
 private:
