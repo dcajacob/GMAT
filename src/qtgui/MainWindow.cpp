@@ -3,6 +3,8 @@
 #include "MainWindow.hpp"
 #include "InspectionDialog.hpp"
 #include "UserParameter.hpp"
+#include "SolarSystemPanel.hpp"
+#include "SolarSystem.hpp"
 #include "PathSettingsDialog.hpp"
 #include "GmatCommand.hpp"
 #include "CommandUtil.hpp"
@@ -150,6 +152,20 @@ QStringList creatableResourceTypes()
          result.append(QString::fromStdString(type));
    result.append({"Variable","String","Array"});
    result.removeDuplicates(); result.sort(); return result;
+}
+QString qtConfiguredScript()
+{
+   auto *moderator=Moderator::Instance();
+   auto script=QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+   auto *system=moderator->GetSolarSystemInUse();
+   if (system && system->GetStringParameter("EphemerisSource")=="SPICE") {
+      // Engine parameter order writes SPICE before a modified DEFilename.
+      // That filename setter needs a selected DE source. Recreate the ordered
+      // fallback pair so subsequent resource/mission edits can rebuild it.
+      const auto settings=solarSystemSettings(*system);
+      script=solarSystemScript(script,settings,settings.values,{});
+   }
+   return script;
 }
 }
 
@@ -447,7 +463,7 @@ MainWindow::MainWindow()
       const QString snapshot = builtScript;
       for (auto *child:workspace->subWindowList()) {
          if (child->property("resourceName").toString()!=name) continue;
-         auto *panel=dynamic_cast<ResourceEditor *>(child->widget());
+         auto *panel=dynamic_cast<EditablePanel *>(child->widget());
          if (!panel) continue;
          if (child->property("sourceScript").toString()==snapshot || panel->hasChanges()) {
             if (child->isMinimized()) child->showNormal();
@@ -458,9 +474,12 @@ MainWindow::MainWindow()
          }
          child->close();
       }
-      auto *panel = new ResourceEditor(*object, [this, name, snapshot](const QMap<QString, QString> &changes) {
+      const auto apply=[this, name, snapshot](const QMap<QString, QString> &changes) {
          return applyResourceChanges(name, changes, snapshot);
-      },nullptr,snapshot);
+      };
+      EditablePanel *panel=nullptr;
+      if (auto *system=dynamic_cast<SolarSystem *>(object)) panel=new SolarSystemPanel(*system,apply);
+      else panel=new ResourceEditor(*object,apply,nullptr,snapshot);
       auto *child = new EditorSubWindow;
       child->setWidget(panel);
       workspace->addSubWindow(child);
@@ -539,7 +558,7 @@ void MainWindow::newMission()
    plots->cameraSettings.clear();
    plots->clear(true);
    Moderator::Instance()->LoadDefaultMission();
-   editor->setPlainText(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)));
+   editor->setPlainText(qtConfiguredScript());
    builtScript = editor->toPlainText(); modelValid = true;
    scriptPath.clear(); editor->document()->setModified(false); refreshTrees(); updateTitle();
 }
@@ -705,6 +724,9 @@ void MainWindow::refreshTrees()
    reportFiles.clear();
    ephemerisFiles.clear();
    auto *root = new QTreeWidgetItem(resources, {"Resources"});
+   auto *solarSystem=new QTreeWidgetItem(root,{"SolarSystem"});
+   solarSystem->setData(0,Qt::UserRole,"SolarSystem");
+   solarSystem->setToolTip(0,"Planetary ephemeris source, files and update settings");
    std::vector<std::pair<const char *, UnsignedInt>> groups = {
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
       {"Formations", Gmat::FORMATION}, {"Ground Stations", Gmat::GROUND_STATION},
@@ -757,7 +779,7 @@ void MainWindow::refreshTrees()
    if (modelValid) {
       try {
          missionState = snapshotMission(Moderator::Instance()->GetFirstCommand(),
-            omitUnsetHardwareFovs(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING))), builtScript);
+            omitUnsetHardwareFovs(qtConfiguredScript()), builtScript);
          std::function<void(int,QTreeWidgetItem *)> addNode = [&](int index, QTreeWidgetItem *parent) {
             const auto &node = missionState.nodes[index];
             auto *item = new QTreeWidgetItem(parent, {node.label});
@@ -896,6 +918,26 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   if (auto *system=dynamic_cast<SolarSystem *>(object)) {
+      try {
+         QString firstCommand;
+         for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+         const auto values=solarSystemSettings(*system);
+         auto pending=values.values;
+         for (auto it=changes.cbegin();it!=changes.cend();++it) {
+            if (!pending.contains(it.key())) return "This solar-system setting is not editable here.";
+            pending[it.key()]=it.value();
+         }
+         const auto selected=pending.value("EphemerisSource");
+         if (changes.contains("EphemerisSource") && !changes.contains("DEFilename") && values.deFiles.contains(selected)) {
+            pending["DEFilename"]=values.deFiles.value(selected); pending["@DEFileSource"]=selected;
+         }
+         return applyModelScript(solarSystemScript(expectedScript,values,pending,firstCommand),[pending] {
+            return solarSystemSettingsError(*Moderator::Instance()->GetSolarSystemInUse(),pending);
+         });
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    if (object->GetTypeName()=="Variable" || object->GetTypeName()=="String") {
       if (changes.size()!=1 || !changes.contains("Value")) return "Edit the parameter's initial value.";
       try {
@@ -955,7 +997,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (empty) return "Select an object, or turn off Show plot.";
       }
       if (!proposed->Validate()) return "The resource rejected these settings.";
-      candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      candidate = qtConfiguredScript();
       if (builtInPoint) {
          // Default built-in points are cloaked and have no block to replace.
          // Write only their supported appearance settings; never create or
@@ -1148,14 +1190,14 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
    if (!object) return "This resource no longer exists.";
    QString candidate;
    try {
-      const auto canonical=QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      const auto canonical=qtConfiguredScript();
       const QRegularExpression declaration("^[ \\t]*Create[ \\t]+[A-Za-z0-9_]+[ \\t]+[^;\\n]*\\b"+
          QRegularExpression::escape(name)+"\\b[^;\\n]*;",QRegularExpression::MultilineOption);
       if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch() || !declaration.match(canonical).hasMatch())
          return "Built-in resources and generated parameters cannot be deleted here.";
       if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
          return "This resource is used by another resource or mission command. See Message Window for details.";
-      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING))));
+      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(qtConfiguredScript()));
    } catch (BaseException &error) {
       const auto detail=QString::fromStdString(error.GetFullMessage());
       return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";

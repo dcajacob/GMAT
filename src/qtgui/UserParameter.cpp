@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 namespace {
-struct Statement { QString code; QVector<qsizetype> positions; };
+struct Statement { QString code; QVector<qsizetype> positions,continuations; };
 QVector<Statement> statements(const QString &source)
 {
    QVector<Statement> result; Statement current;
@@ -36,7 +36,7 @@ QVector<Statement> statements(const QString &source)
          else if (c=='\n' && depth==0 && !current.code.trimmed().isEmpty()) {
             const auto trimmed=current.code.trimmed();
             if (trimmed.endsWith("...")) {
-               const auto dots=current.code.lastIndexOf("..."); current.code.remove(dots,3); current.positions.remove(dots,3);
+               const auto dots=current.code.lastIndexOf("..."); current.continuations+=current.positions.mid(dots,3); current.code.remove(dots,3); current.positions.remove(dots,3);
             } else if (!trimmed.endsWith('=') && !QRegularExpression("^Create\\s+[A-Za-z][A-Za-z0-9_]*$").match(trimmed).hasMatch()) {
                result.append(current); current={};
             }
@@ -113,5 +113,60 @@ QString setUserParameterValue(const QString &source,const QString &name,const QS
       if (after<source.size() && source[after]=='%') { const auto end=source.indexOf('\n',after); createEnd=end<0 ? source.size() : end+1; }
       candidate.insert(createEnd,"\nGMAT "+name+" = "+literal+";\n");
    }
+   return candidate;
+}
+
+QString setConfigurationBlock(const QString &source,const QString &name,const QStringList &properties,const QString &block,const QString &firstMissionStatement)
+{
+   auto normalize=[](QString code) {
+      code=code.trimmed(); if (code.endsWith(';')) code.chop(1);
+      code.remove(QRegularExpression("^GMAT\\s+"));
+      QString result; bool quoted=false;
+      for (auto ch:code) { if (ch=='\'') quoted=!quoted; if (quoted || !ch.isSpace()) result+=ch; }
+      return result;
+   };
+   QString firstCommand;
+   if (!firstMissionStatement.isEmpty()) {
+      const auto commands=statements(firstMissionStatement);
+      if (!commands.isEmpty()) firstCommand=normalize(commands.first().code);
+   }
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z][A-Za-z0-9_]*)\\s*=");
+   const QRegularExpression begin("^\\s*BeginMissionSequence\\b");
+   QVector<qsizetype> remove;
+   auto boundary=source.size(); bool located=firstCommand.isEmpty();
+   for (const auto &statement:statements(source)) {
+      if (begin.match(statement.code).hasMatch() || (!firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) {
+         auto first=0; while (first<statement.code.size() && statement.code[first].isSpace()) ++first;
+         boundary=source.lastIndexOf('\n',statement.positions[first]-1)+1;
+         // A command may share a line with a configuration assignment.
+         if (!source.mid(boundary,statement.positions[first]-boundary).trimmed().isEmpty()) boundary=statement.positions[first];
+         located=true; break;
+      }
+      const auto match=assignment.match(statement.code);
+      if (!match.hasMatch() || !properties.contains(match.captured(1))) continue;
+      qsizetype first=0,last=statement.code.size()-1;
+      while (first<=last && statement.code[first].isSpace()) ++first;
+      while (last>=first && statement.code[last].isSpace()) --last;
+      const auto start=statement.positions[first],end=statement.positions[last];
+      const auto lineStart=source.lastIndexOf('\n',start-1)+1;
+      auto lineEnd=source.indexOf('\n',end); if (lineEnd<0) lineEnd=source.size();
+      bool commentsInside=false;
+      for (auto i=first+1;i<=last;++i) if (statement.positions[i]!=statement.positions[i-1]+1) { commentsInside=true; break; }
+      if (!commentsInside && source.mid(lineStart,start-lineStart).trimmed().isEmpty() && source.mid(end+1,lineEnd-end-1).trimmed().isEmpty()) {
+         // Plain assignment lines can be removed entirely. Repeated Apply
+         // must not accumulate empty rows or whitespace from old filenames.
+         for (auto i=lineStart;i<lineEnd+(lineEnd<source.size() ? 1 : 0);++i) remove.append(i);
+      } else {
+         // Mapped code positions exclude comments. Keep them verbatim when a
+         // statement crosses lines or has a trailing comment.
+         for (auto i=first;i<=last;++i) remove.append(statement.positions[i]);
+         remove+=statement.continuations;
+      }
+   }
+   if (!located) throw std::runtime_error("Cannot locate the mission boundary safely. Add BeginMissionSequence before editing this resource.");
+   QString candidate=source;
+   candidate.insert(boundary,(boundary>0 && source[boundary-1]!='\n' ? "\n" : "")+block+(block.endsWith('\n') ? "" : "\n"));
+   std::sort(remove.begin(),remove.end());
+   for (auto i=remove.crbegin();i!=remove.crend();++i) candidate.remove(*i,1);
    return candidate;
 }

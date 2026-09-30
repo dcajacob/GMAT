@@ -267,3 +267,24 @@ plugin/data hot replacement remain unqualified. The wx inventory now has 27 of
 
 [All 33 Qt suites passed](check-paths.txt) in 135.35 seconds, with native
 viewer/launch checks and the user’s application/bin/GmatQt rebuilt.
+
+## Solar-system source and file workflow
+
+SolarSystemTests configures DE405, DE421, DE424 and SPICE through the actual
+resource panel, including paired Unicode file selections, UseTT and update
+interval. Its reports match separately scripted configurations through the
+same engine; frame-origin offsets also match body ephemeris values. Pending
+changes, source-dependent controls, picker/close Cancel/Discard, invalid file
+and interval rollback/correction, stale panels, exact Undo/Redo and Unicode
+save/reopen are exercised. A retained custom DE fallback survives subsequent
+spacecraft, create/delete and mission edits under SPICE. Running/Stop guards
+and recovery are covered.
+
+[Native Wayland passed](solar-wayland.txt), with inspected
+[DE controls](solar-wayland.de.png) and [SPICE controls](solar-wayland.spice.png).
+Qt file dialogs were used; native portal selection, broader epoch/cache regimes
+and malformed complete DE content remain unqualified. The inventory now has
+26 of 108 Pending audit entries; the broader replacement goal remains active.
+
+[All 34 Qt suites passed](check-solar.txt) in 143.78 seconds, including
+native viewer and launch checks, with application/bin/GmatQt rebuilt.

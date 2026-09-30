@@ -3,6 +3,7 @@ find_package(OpenSceneGraph 3.6 REQUIRED COMPONENTS osg osgDB osgViewer osgGA os
 add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
    UserParameter.cpp UserParameter.hpp
+   SolarSystemPanel.cpp SolarSystemPanel.hpp
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
    ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
@@ -134,6 +135,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtEstimationTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtParameterTests tests/ParameterTests.cpp)
    add_executable(GmatQtPathTests tests/PathTests.cpp)
+   add_executable(GmatQtSolarSystemTests tests/SolarSystemTests.cpp)
+   target_link_libraries(GmatQtSolarSystemTests PRIVATE GmatQtFrontend)
    target_link_libraries(GmatQtPathTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtPathTests GmatQt)
    target_link_libraries(GmatQtParameterTests PRIVATE GmatQtFrontend)
@@ -191,6 +194,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.Estimation GmatQtEstimationTests "${qt_test_startup}")
    add_qt_test(QtGui.Parameters GmatQtParameterTests "${qt_test_startup}")
    add_qt_test(QtGui.Paths GmatQtPathTests "${qt_test_startup}")
+   add_qt_test(QtGui.SolarSystem GmatQtSolarSystemTests "${qt_test_startup}")
    add_qt_test(QtGui.Inspection GmatQtInspectionTests "${qt_test_startup}")
    add_qt_test(QtGui.KalmanFilter GmatQtKalmanTests "${qt_test_startup}")
    add_qt_test(QtGui.Comparison GmatQtComparisonTests "${qt_test_startup}")
@@ -213,5 +217,5 @@ if(GMAT_QT_BUILD_TESTS)
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests GmatQtCalculatedPointTests GmatQtDataInterfaceTests GmatQtEstimationTests GmatQtComparisonTests GmatQtThrustFileTests GmatQtScriptEditingTests GmatQtExternalForceTests GmatQtPolyhedronTests
       USES_TERMINAL VERBATIM)
-   add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests)
+   add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests GmatQtSolarSystemTests)
 endif()

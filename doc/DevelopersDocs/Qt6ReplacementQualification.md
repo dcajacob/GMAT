@@ -114,7 +114,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/CompareFilesDialog.hpp` | Active wx modes, absolute tolerance, skip blanks, baseline/candidate prefixes, up to three directories, file limit and result export audited. Qt File > Compare files workspace and report Compare action provide these controls plus two-file comparison. ComparisonTests covers UTF-8/BOM/CRLF, tolerance boundaries, UTC columns, maxima, trailing rows, invalid input, three-directory matching/.truth fallback/exact limits, editable widths, picker Cancel/row removal, full export/input protection, Stop/close and real-engine report/save/reopen invariance. Native Wayland inspected. Non-UTF-8 files, arbitrary initial header/data ambiguity, mid-read replacement and extreme directory/record regimes remain unqualified. |
 | `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt script editor provides line numbers, syntax coloring and bounded Edit > Go to line with Cancel; Save/build and Save/build/run are qualified by ScriptEditingTests. Single-document workflows are covered; multiple inactive documents, line-navigation edge cases and broader shared SavePanel behavior remain pending. |
 | `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | Pending audit |
-| `src/gui/solarsys/UniversePanel.hpp` | Pending audit |
+| `src/gui/solarsys/UniversePanel.hpp` | Source/file/timing controls audited. SolarSystem resource and grouped Qt panel expose runtime sources, paired DE file, SPK/PCK browsing, UseTT and interval. DE405/421/424 and SPICE missions, copied Unicode files, retained SPICE DE fallback, independent script reports and body/frame checks, pending/Discard/Cancel, invalid/truncated-file rollback, correction, exact Undo/Redo, save/reopen, comment/implicit boundary preservation and later resource/mission edits covered. Native Wayland panel workflow passed. Wider epochs, caching regimes, malformed full DE contents, keyboard/portal chooser and shared Help remain unqualified. |
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Pending audit |
@@ -3620,3 +3620,47 @@ coverage or disk-failure cases remain unqualified. Shared Help and top-level
 Wayland minimize/restore remain open. The wx inventory now has 27 of 108 Pending
 audit entries; audited workflows and all 20 selected plugins retain unfinished
 qualification cases, so the broader replacement goal remains active.
+
+## Solar-system source, files and timing
+
+The wx UniversePanel field and enabling rules were compared with SolarSystem's
+actual runtime metadata and setters. Qt now exposes this intrinsic resource in
+the tree, with a dedicated panel and no live object mutation before Apply.
+Engine reconstruction plus field/file postconditions commits the complete
+configuration or restores the previous model while retaining pending controls.
+A binary-file preflight rejects incomplete DE records before the engine's
+unchecked short header reads; numerical algorithms are unchanged.
+
+The script updater removes only the controlled solar-system configuration
+assignments, preserves their comments and untouched configuration, inserts an
+ordered replacement before the explicit or identified implicit mission boundary,
+and retains the complete command suffix. A SPICE configuration first selects
+its DE fallback and filename, then SPICE and its kernels. The Qt canonical
+serialization route preserves this pairing for subsequent resource edits,
+resource deletion and mission edits; the engine's normal parameter order can
+otherwise attempt a DEFilename assignment while SPICE is selected.
+
+SolarSystemTests drives the actual MDI controls, all three installed DE sources
+and SPICE, copied Unicode ephemeris/kernel paths, source switching and dependent
+controls, Browse accept/Cancel, pending-close Discard/Cancel, correction, stale
+panel guards, exact Undo/Redo and Unicode save/reopen. GUI reports match
+independently written scripts through the same engine. Earth/Sun and Earth/Luna
+frame offsets match the selected body's ephemeris at the reported mission epoch.
+Source changes produce distinct DE outputs. Unrelated no-drag spacecraft
+changes, create/delete and mission round trips preserve the SPICE reports.
+Missing DE/SPK files, truncated DE headers, wrong SPK/PCK types and invalid
+interval/source values leave the previous model and source unchanged. The panel
+is disabled while running and re-enabled after Stop; the next mission recovers.
+
+[Native Wayland evidence](Qt6ParityValidation/solar-wayland.txt) and inspected
+[DE controls](Qt6ParityValidation/solar-wayland.de.png) and
+[SPICE controls](Qt6ParityValidation/solar-wayland.spice.png) accompany the
+[full regression log](Qt6ParityValidation/check-solar.txt). The tests use Qt
+choosers; desktop portal choosers, wider epochs/cache timings, malformed complete
+DE content and shared Help remain unqualified. These cases establish GUI
+calculation preservation, not independent ephemeris/science certification.
+
+All 34 Qt suites passed in 143.78 seconds after rebuilding the user's
+application/bin/GmatQt. The wx inventory now has 26 of 108 Pending audit entries. Audited rows still
+contain remaining acceptance cases; celestial-body pages and other workflow,
+viewer and plugin/file gates remain open. The overall goal remains active.

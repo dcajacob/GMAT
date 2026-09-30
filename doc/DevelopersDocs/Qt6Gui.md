@@ -1488,3 +1488,24 @@ depend on spacecraft are excluded. **Save as…** exports UTF-8 text and protect
 the mission script from being overwritten. Rebuilding/loading invalidates old
 summaries; editing the script requires a new run before inspecting results.
 Failed/stopped runs show partial results and identify commands without data.
+
+### Solar-system ephemeris settings
+
+Double-click **SolarSystem** in Resources to select a planetary ephemeris source,
+its DE file, planetary SPK/PCK files, update interval in seconds, and whether to
+use TT for ephemeris. The source choices come from this runtime. Zero requests
+an update every time. Browse selects an existing file; typed filenames remain
+pending until Apply. Invalid settings retain the pending edits for correction.
+
+DE selection updates its filename and retains pending filenames when switching
+sources within the panel. With SPICE selected, the DE field shows its fallback
+and is disabled. Apply saves that fallback before selecting SPICE, so the saved
+script and subsequent resource/mission edits can rebuild it. Close offers
+Discard or Cancel if changes are pending; successful Apply closes the panel.
+Undo restores the exact previous script.
+
+The selected DE file must contain complete binary records; the engine validates
+the ephemeris version and SPICE kernel types. Filename apostrophes, percent
+signs and control characters are rejected to prevent script-parser ambiguity.
+The leap-second kernel remains a startup setting. These controls configure the
+existing engine calculations.

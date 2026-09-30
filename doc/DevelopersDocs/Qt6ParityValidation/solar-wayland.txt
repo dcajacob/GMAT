@@ -1,0 +1,2 @@
+Runtime sources: DE405, DE421, DE424, SPICE
+Qt solar system: DE405/421/424 and SPICE, paired Unicode files, source-dependent/pending controls, picker Cancel/accept, close Discard/Cancel, Apply/correction/rollback, exact Undo/Redo, save/reopen, independent reports/body-frame checks and comment/implicit mission preservation passed
