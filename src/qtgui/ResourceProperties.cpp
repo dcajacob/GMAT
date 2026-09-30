@@ -909,8 +909,8 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
       if (arrayValues) {
          rows=inputRows.size();
          columns=inputRows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
-         if (rows<1 || columns<1 || rows>1000 || columns>1000 || rows*columns>100000)
-            throw std::runtime_error("Array dimensions must be positive and contain at most 100000 cells");
+         if (rows<1 || columns<1 || rows>1000 || columns>1000 || rows*columns>1000000)
+            throw std::runtime_error("Array dimensions must be positive and contain at most 1000000 cells");
       }
       if (inputRows.size()!=rows) throw std::runtime_error("Keep the existing number of rows; separate rows with semicolons");
       Rmatrix matrix(rows,columns);

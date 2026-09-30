@@ -2,6 +2,7 @@
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
 #include "InspectionDialog.hpp"
+#include "UserParameter.hpp"
 #include "GmatCommand.hpp"
 #include "CommandUtil.hpp"
 #include "CoordinateSystem.hpp"
@@ -116,6 +117,14 @@ private:
       }
    }
 };
+QString userParameterValueError(const QString &name,const QString &type,const QString &value)
+{
+   auto *parameter=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+   if (!parameter || parameter->GetTypeName()!=type.toStdString()) return "The parameter was not created with the requested type.";
+   const bool matches=type=="Variable" ? parameter->GetRealParameter("Value")==userParameterLiteral(type,value).toDouble() :
+      parameter->GetStringParameter("Expression")==value.toStdString() && parameter->GetStringParameter("Value")==value.toStdString();
+   return matches ? QString() : "GMAT could not preserve this initializer exactly. Edit its script settings or choose a representable value.";
+}
 QString omitUnsetHardwareFovs(QString script,GmatBase *replacement=nullptr)
 {
    // Imager's empty optional FOV is serialized as a diagnostic placeholder.
@@ -456,7 +465,7 @@ MainWindow::MainWindow()
       child->setProperty("configurationPanel", true);
       child->setProperty("resourceName",name);
       child->setProperty("sourceScript",snapshot);
-      child->setWindowTitle(name); child->resize(680, 540); child->show();
+      child->setWindowTitle(name); child->resize(680,(object->GetTypeName()=="Variable" || object->GetTypeName()=="String") ? 240 : 540); child->show();
    });
    QSettings settings;
    restoreGeometry(settings.value("geometry").toByteArray());
@@ -877,6 +886,15 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   if (object->GetTypeName()=="Variable" || object->GetTypeName()=="String") {
+      if (changes.size()!=1 || !changes.contains("Value")) return "Edit the parameter's initial value.";
+      try {
+         QString firstCommand;
+         for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+         return applyModelScript(setUserParameterValue(expectedScript,name,QString::fromStdString(object->GetTypeName()),changes.value("Value"),firstCommand),[name,type=QString::fromStdString(object->GetTypeName()),value=changes.value("Value")] { return userParameterValueError(name,type,value); });
+      }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    auto *calculatedPoint=dynamic_cast<CalculatedPoint *>(object);
    const bool builtInPoint=calculatedPoint && calculatedPoint->IsBuiltIn();
    if (builtInPoint) for (auto it=changes.cbegin();it!=changes.cend();++it)
@@ -1013,7 +1031,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    return applyModelScript(candidate);
 }
 
-QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns)
+QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue)
 {
    if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
       return "Build the current script before creating a resource.";
@@ -1024,10 +1042,17 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
    if (!identifier.match(name).hasMatch()) return "Use a name starting with a letter, followed by letters, digits or underscores.";
    if (!creatableResourceTypes().contains(type)) return "Select an available resource type.";
    if (Moderator::Instance()->GetConfiguredObject(name.toStdString())) return "That resource name is already in use.";
-   if (type=="Array" && (rows<1 || columns<1 || rows>100 || columns>100))
-      return "Choose array dimensions from 1 to 100. Larger arrays can be created in the script editor.";
+   const auto commands=Moderator::Instance()->GetListOfFactoryItems(Gmat::COMMAND);
+   if (std::find(commands.begin(),commands.end(),name.toStdString())!=commands.end() || name=="GMAT") return "Choose a name that is not a mission command or reserved keyword.";
+   if (type=="Array" && (rows<1 || columns<1 || rows>1000 || columns>1000))
+      return "Choose array dimensions from 1 to 1000.";
    const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
-   return applyModelScript("Create "+type+" "+name+dimensions+";\n"+builtScript);
+   QString initializer;
+   if (initialValue) {
+      try { initializer="GMAT "+name+" = "+userParameterLiteral(type,*initialValue)+";\n"; }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
+   return applyModelScript("Create "+type+" "+name+dimensions+";\n"+initializer+builtScript,initialValue ? std::function<QString()>([name,type,value=*initialValue] { return userParameterValueError(name,type,value); }) : std::function<QString()>());
 }
 
 void MainWindow::showCreateResource()
@@ -1043,12 +1068,21 @@ void MainWindow::showCreateResource()
    auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
    auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setWordWrap(true);
    layout->addRow("Type",type); layout->addRow("Name",name);
-   auto *rows=new QSpinBox(&dialog); rows->setObjectName("arrayRows"); rows->setRange(1,100);
-   auto *columns=new QSpinBox(&dialog); columns->setObjectName("arrayColumns"); columns->setRange(1,100);
+   auto *rows=new QSpinBox(&dialog); rows->setObjectName("arrayRows"); rows->setRange(1,1000);
+   auto *columns=new QSpinBox(&dialog); columns->setObjectName("arrayColumns"); columns->setRange(1,1000);
    layout->addRow("Rows",rows); layout->addRow("Columns",columns);
+   auto *value=new QLineEdit(&dialog); value->setObjectName("parameterInitialValue"); layout->addRow("Initial value",value);
+   auto initialValues=std::make_shared<QMap<QString,QString>>(QMap<QString,QString>{{"Variable","0"},{"String",""}});
+   auto previousType=std::make_shared<QString>(type->currentText());
    const auto dimensions=[=] {
+      if (initialValues->contains(*previousType)) (*initialValues)[*previousType]=value->text();
+      *previousType=type->currentText();
       const bool array=type->currentText()=="Array";
       layout->setRowVisible(rows,array); layout->setRowVisible(columns,array);
+      const bool scalar=type->currentText()=="Variable" || type->currentText()=="String";
+      layout->setRowVisible(value,scalar);
+      value->setText(initialValues->value(type->currentText()));
+      value->setPlaceholderText(type->currentText()=="Variable" ? "Finite number" : "Literal text (no enclosing quotes)");
    };
    connect(type,&QComboBox::currentTextChanged,&dialog,dimensions); dimensions();
    layout->addRow(status);
@@ -1056,7 +1090,7 @@ void MainWindow::showCreateResource()
    buttons->button(QDialogButtonBox::Ok)->setText("Create"); layout->addRow(buttons);
    connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
-      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value());
+      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value(),(type->currentText()=="Variable" || type->currentText()=="String") ? std::optional<QString>(value->text()) : std::nullopt);
       if (error.isEmpty()) dialog.accept(); else status->setText(error);
    });
    dialog.resize(460,180); name->setFocus();
@@ -1127,7 +1161,7 @@ bool MainWindow::restoreBuiltModel()
    refreshTrees(); return modelValid;
 }
 
-QString MainWindow::applyModelScript(const QString &requested)
+QString MainWindow::applyModelScript(const QString &requested,const std::function<QString()> &validate)
 {
    QString candidate;
    QMap<QString,QtCameraSetting> cameras;
@@ -1143,7 +1177,7 @@ QString MainWindow::applyModelScript(const QString &requested)
       setScriptDirectory();
       std::istringstream stream(candidate.toStdString());
       if (!moderator->InterpretScript(&stream, true)) error = "The mission rejected these changes. See Message Window.";
-      else QtPlotReceiver::validateCameraReferences(cameras);
+      else { QtPlotReceiver::validateCameraReferences(cameras); if (validate) error=validate(); }
    } catch (BaseException &exception) { error = QString::fromStdString(exception.GetFullMessage()); }
    catch (const std::exception &exception) { error = QString::fromUtf8(exception.what()); }
    if (!error.isEmpty()) {

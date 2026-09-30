@@ -174,7 +174,10 @@ keeps changes local until Apply. Cancel leaves the property unchanged. Array
 values serialize as indexed initial assignments and participate in the same
 validation, rollback and undo flow as scalar properties. Array grids offer row and column controls, preserve retained cells and fill
 new cells with zero. Apply validates the resized mission; Undo restores the
-prior dimensions and values. Use **Expressions…** for formulas evaluated at mission start; see the expression
+prior dimensions and values. Arrays support 1–1000 rows and columns. The
+Row/Column selectors jump directly to a cell; enter a finite number and click
+**Set cell** (or press Enter). This edits the pending grid, then **OK** returns
+it to the resource panel for **Apply**. Use **Expressions…** for formulas evaluated at mission start; see the expression
 workflow below.
 
 Spacecraft panels open on Orbit and group the existing editable fields under
@@ -187,11 +190,21 @@ Thrusters, tanks, solvers and force models also group their available fields
 into sections (for example Fuel, Direction, Convergence and Bodies).
 These are grouped property controls, not yet the full specialized wx forms.
 
+Variable and String panels provide a focused **Initial value** field. Use a
+finite number for a Variable and literal text without enclosing quotes for a
+String. Apply updates its configuration initializer while preserving later
+mission assignments and comments. The change is undoable and checked against
+the interpreted value before it is committed. Strings must fit on one line;
+GMAT cannot represent every combination of apostrophes and percent signs.
+An unsupported value leaves the prior source and model intact. **Show script…**
+displays the applied configuration, excluding pending edits.
+
 Use **Edit > New resource** or the Resources context menu to add a resource.
 The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
 force-model, coordinate-system, solver and subscriber types, plus Variable and
-String and Array. Arrays have row/column controls (1–100 each in this dialog;
-larger declarations remain available through the script). Creation validates a complete candidate mission and is one undoable
+String and Array. Variable and String creation includes an initial-value field;
+values remain pending when switching between these types. Arrays have row/column
+controls (1–1000 each). Creation validates a complete candidate mission and is one undoable
 script edit. Duplicate names, invalid identifiers, stale script snapshots and
 pending panel changes are rejected. The resource appears in the tree and its
 property panel opens after successful creation. Some resource types require

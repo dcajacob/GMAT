@@ -208,3 +208,32 @@ passed with display access in 37.75 seconds. Portal choosers,
 Wayland top-level minimize/restore, font zoom and broader summary/solver-loop
 semantics remain unqualified. The source audit is now 32 of 108 Pending audit;
 this checkpoint does not complete the broader replacement goal.
+
+## Variable/String values and direct Array cells
+
+Parameters tests qualify focused scalar Initial value panels and typed initial
+values in New resource. Actual MDI/dialog paths cover pending previews,
+Cancel, invalid correction, interpreted-value rollback, exact source Undo/Redo,
+Unicode save/reopen and independently scripted numeric/text report agreement.
+Grouped/default initializers, optional semicolons and implicit mission boundaries
+retain subsequent executable assignments. The existing engine parser's String
+truncation cases are rejected; supported apostrophes, percent, spaces and
+statement-looking literal data retain their exact values.
+
+Actual New resource creates a 1000×1000 Array. Row/Column selectors navigate to
+its final cell, invalid Set is rejected, Cancel leaves the engine unchanged,
+and pending grid acceptance/Apply/save/reopen retains its value. Column widths
+remain adjustable. Added resources can be deleted without changing the original
+report outputs.
+
+[Native Wayland passed](parameters-wayland.txt); inspected captures show
+[Variable values](parameters-wayland.variable.png),
+[String values](parameters-wayland.string.png),
+[maximum Array creation](parameters-wayland.create.png) and
+[direct last-cell editing](parameters-wayland.array.png).
+Desktop portal choosers, broader keyboard/focus and shared Help remain
+unqualified. The source inventory now has 30 of 108 Pending audit entries;
+audited rows and selected plugins still have incomplete acceptance cases.
+
+[All 32 Qt suites passed](check-parameters.txt) in 172.91 seconds, including
+native viewer and launch checks, with the user’s application/bin/GmatQt rebuilt.

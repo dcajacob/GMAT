@@ -77,6 +77,27 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 {
    auto *layout = new QVBoxLayout(this);
    layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
+   if (object.GetTypeName()=="Variable" || object.GetTypeName()=="String") {
+      const bool numeric=object.GetTypeName()=="Variable";
+      originalScalarValue=numeric ? QString::number(object.GetRealParameter("Value"),'g',17) : QString::fromStdString(object.GetStringParameter("Expression"));
+      auto *form=new QFormLayout; auto *value=new QLineEdit(originalScalarValue,this); value->setObjectName("parameterValue");
+      value->setPlaceholderText(numeric ? "Finite number" : "Literal text (no enclosing quotes)");
+      form->addRow("Initial value",value); layout->addLayout(form);
+      scalarValue=[value] { return value->text(); };
+      status=new QLabel(numeric ? "Mission assignments can change this value during execution. Edit expressions in the mission sequence." : "Enter literal text without enclosing quotes. Mission assignments stay unchanged.",this);
+      status->setWordWrap(true); layout->addWidget(status); layout->addStretch();
+      auto *buttons=new QDialogButtonBox(QDialogButtonBox::Apply|QDialogButtonBox::Close,this); layout->addWidget(buttons);
+      const auto scriptPreview=QString::fromStdString(object.GetGeneratingString(Gmat::SHOW_SCRIPT));
+      auto *preview=new QPushButton("Show script…",this); preview->setObjectName("showScript"); buttons->addButton(preview,QDialogButtonBox::ActionRole);
+      connect(preview,&QPushButton::clicked,this,[this,scriptPreview] { InspectionDialog dialog("Parameter script",scriptPreview,"Applied initializer. Pending edits are not included.",this); dialog.exec(); });
+      connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply] {
+         if (!hasChanges()) { status->setText("No changes to apply."); return; }
+         const auto error=apply({{"Value",scalarValue()}});
+         if (error.isEmpty()) { applied=true; parentWidget()->close(); } else status->setText(error);
+      });
+      connect(buttons,&QDialogButtonBox::rejected,this,[this] { parentWidget()->close(); });
+      return;
+   }
    if (object.IsOfType("CoordinateSystem") && object.GetOwnedObject(0)) {
       // Retain a snapshot: applying any resource reconstructs the engine model.
       auto initial=std::shared_ptr<GmatBase>(object.GetOwnedObject(0)->Clone());
@@ -931,8 +952,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          auto *dimensions=new QFormLayout;
          auto *rowCount=new QSpinBox(&dialog),*columnCount=new QSpinBox(&dialog);
          rowCount->setObjectName("arrayRows"); columnCount->setObjectName("arrayColumns");
-         rowCount->setRange(1,100); columnCount->setRange(1,100);
-         rowCount->setMaximum(std::max(100,rows)); columnCount->setMaximum(std::max(100,columns));
+         rowCount->setRange(1,1000); columnCount->setRange(1,1000);
+         rowCount->setMaximum(std::max(1000,rows)); columnCount->setMaximum(std::max(1000,columns));
          rowCount->setValue(rows); columnCount->setValue(columns);
          if (vector) { rowCount->setRange(1,1); rowCount->hide(); }
          else dimensions->addRow("Rows",rowCount);
@@ -951,6 +972,47 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       fitTableColumns(grid);
       layout->addWidget(grid);
       auto *error=new QLabel(&dialog); error->setWordWrap(true); layout->addWidget(error);
+      if (item->data(Qt::UserRole+2).toBool()) {
+         auto *cellControls=new QWidget(&dialog); auto *row=new QHBoxLayout(cellControls); row->setContentsMargins(0,0,0,0);
+         auto *cellRow=new QSpinBox(cellControls),*cellColumn=new QSpinBox(cellControls);
+         cellRow->setObjectName("arrayCellRow"); cellColumn->setObjectName("arrayCellColumn");
+         cellRow->setRange(1,grid->rowCount()); cellColumn->setRange(1,grid->columnCount());
+         auto *cellValue=new QLineEdit(cellControls); cellValue->setObjectName("arrayCellValue");
+         auto *set=new QPushButton("Set cell",cellControls); set->setObjectName("arraySetCell");
+         row->addWidget(new QLabel("Row",cellControls)); row->addWidget(cellRow);
+         row->addWidget(new QLabel("Column",cellControls)); row->addWidget(cellColumn);
+         row->addWidget(new QLabel("Value",cellControls)); row->addWidget(cellValue,1); row->addWidget(set);
+         layout->insertWidget(layout->indexOf(grid),cellControls);
+         auto select=[=] {
+            const int r=cellRow->value()-1,c=cellColumn->value()-1;
+            auto *cell=grid->item(r,c); if (!cell) return;
+            grid->setCurrentCell(r,c); grid->scrollToItem(cell); cellValue->setText(cell->text());
+         };
+         connect(cellRow,&QSpinBox::valueChanged,&dialog,select); connect(cellColumn,&QSpinBox::valueChanged,&dialog,select);
+         connect(grid,&QTableWidget::currentCellChanged,&dialog,[=](int r,int c,int,int) {
+            if (r<0 || c<0) return;
+            const QSignalBlocker rowBlock(cellRow),columnBlock(cellColumn);
+            cellRow->setValue(r+1); cellColumn->setValue(c+1);
+            if (auto *cell=grid->item(r,c)) cellValue->setText(cell->text());
+         });
+         connect(grid,&QTableWidget::itemChanged,&dialog,[=](QTableWidgetItem *cell) {
+            if (cell->row()==cellRow->value()-1 && cell->column()==cellColumn->value()-1) cellValue->setText(cell->text());
+         });
+         const auto dimensionsChanged=[=] {
+            cellRow->setMaximum(std::max(1,grid->rowCount())); cellColumn->setMaximum(std::max(1,grid->columnCount()));
+         };
+         connect(grid->model(),&QAbstractItemModel::rowsInserted,&dialog,dimensionsChanged);
+         connect(grid->model(),&QAbstractItemModel::rowsRemoved,&dialog,dimensionsChanged);
+         connect(grid->model(),&QAbstractItemModel::columnsInserted,&dialog,dimensionsChanged);
+         connect(grid->model(),&QAbstractItemModel::columnsRemoved,&dialog,dimensionsChanged);
+         connect(set,&QPushButton::clicked,&dialog,[=] {
+            bool valid=false; const double number=cellValue->text().toDouble(&valid);
+            if (!valid || !std::isfinite(number)) { error->setText("Enter a finite numeric cell value."); return; }
+            auto *cell=grid->item(cellRow->value()-1,cellColumn->value()-1); if (!cell) return;
+            cell->setText(QString::number(number,'g',17)); error->clear();
+         });
+         connect(cellValue,&QLineEdit::returnPressed,set,&QPushButton::click); select();
+      }
       auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
       layout->addWidget(buttons);
       connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
@@ -1195,6 +1257,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
+   if (scalarValue) return scalarValue()!=originalScalarValue;
    if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {

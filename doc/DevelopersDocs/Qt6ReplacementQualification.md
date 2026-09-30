@@ -82,17 +82,17 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Generic writable/visible field generation, cloned validation and INI-based layout/units/help audited. Qt ResourceEditor supplies engine-typed controls, owned properties and atomic script rebuild/rollback; object-specific execution evidence is recorded in individual rows. INI metadata parity, omitted plugin types and all dynamic refresh cases remain pending. |
 | `src/gui/foundation/GmatDialog.hpp` | Shared OK/Cancel/reset, validation-before-close and Help contract audited. Qt focused dialogs keep pending values until acceptance; field/dialog Cancel and invalid-input recovery are covered by the corresponding suites. Close/Escape/focus behavior across all dialogs and context Help remain pending. |
-| `src/gui/foundation/ParameterCreateDialog.hpp` | Pending audit |
+| `src/gui/foundation/ParameterCreateDialog.hpp` | Active wx numeric Variable, literal String, Array creation (dimensions 1–1000), name validation and existing-user-parameter operations audited. Qt New resource supplies typed initial values, retains values on type changes, rejects duplicate/reserved names and invalid dimensions, and opens the created resource in the tree. Parameters tests cover actual dialog Cancel, correction, creation Undo/Redo, Unicode String and maximum Array creation, then deletion without changing original report results. Existing parameters open from Resources; wx list/Clear layout and shared Help remain unqualified. |
 | `src/gui/foundation/ParameterSelectDialog.hpp` | Pending audit |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Context Help and staying open after Apply remain pending. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
-| `src/gui/foundation/ArraySetupDialog.hpp` | Shared numeric grid; see ArraySetupPanel. Full wx dialog audit pending. |
+| `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
 | `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. FileTests, WorkflowTests and ScriptEditingTests cover the single Qt mission document, failure/cancel identity protection, encoding, save-before-run and pending/close protection. Multiple inactive documents, panel-specific reload/status and remaining shared editor cases remain pending. |
-| `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
+| `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Shared Help and staying open after Apply remain pending. |
+| `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
@@ -3449,3 +3449,78 @@ needs its own wx audit; the generic property table hides their engine-read-only
 expression metadata. Context Help and keeping applied panels open also remain
 unfinished. The wx inventory now has 32 of 108 Pending audit; audited rows can
 still be partial, and the broad replacement goal remains active.
+
+
+## Variable/String initialization and direct Array cell controls
+
+Audited the active wx ParameterSetupPanel, ParameterCreateDialog,
+ArraySetupPanel and ArraySetupDialog and their GmatMainFrame routing. The active
+Variable/String editor shows a disabled name and edits numeric Value or String
+Expression. Production creation uses numeric literals and literal strings;
+conditional experimental expression/object-selection paths are not enabled.
+Arrays accept 1–1000 rows and columns and have a direct row/column Value/Update
+workflow as well as the numeric grid.
+
+Qt Variable and String resources now open focused Initial value panels with
+applied-script previews. The generic table previously hid the read-only numeric
+metadata; setting String Value changed the runtime string without updating its
+serialized initializer. The focused Apply path updates the effective source
+initializer, interprets the candidate, and checks the numeric value or both
+String Expression and Value before committing the source. It preserves grouped
+Create declarations, earlier initializers, inline comments and subsequent
+mission assignments. Omitted initializers are inserted after the declaration;
+optional semicolons and implicit mission boundaries are supported. If the
+engine's first mission statement cannot be located safely, Apply reports an
+error instead of rewriting executable assignments. No numerical algorithms or
+shared engine parser code changed.
+
+GMAT preserves inner apostrophes literally and does not decode doubled quotes.
+Its existing percent/comment parser cannot represent every combination of quotes
+and percent signs; some inputs build but truncate. Interpreted-value checks
+reject those candidates and restore the prior model/source. When a representable
+new literal contains percent and the initializer has a trailing comment, the
+comment is preserved on its own preceding line to avoid it becoming string
+data. Control characters and multiline literals are rejected. This is an
+explicit engine-format limitation, not general string-format qualification.
+
+New resource includes typed initial values for Variable/String, preserves each
+pending value when changing type, validates duplicate/reserved names and opens
+the created resource. Array creation and resizing now match the wx 1–1000 range
+on both axes. Numeric grids add synchronized Row/Column selectors, scrolling to
+the selected cell, a Value field and Set cell/Enter action. Values remain local
+until grid OK and panel Apply; finite-value errors do not change the cell.
+Column widths remain adjustable.
+
+Parameters tests exercise actual MDI panels and New resource dialogs, numeric
+and Unicode String Apply, pending previews, invalid correction, source/model
+rollback, exact Undo/Redo, grouped and omitted initializers, scientific notation,
+optional semicolons and implicit mission sequences. GUI-configured and separately
+scripted missions produce identical numeric/text reports (including later
+mission assignments), and Unicode mission save/reopen preserves both. This
+compares configuration routes through the same engine, not independent numerical
+implementations. Empty strings, spaces, apostrophes, doubled apostrophes,
+semicolons, percent, quotes/backslashes and statement-looking literal data are
+covered, together with rejection of known truncating combinations.
+
+Creation Cancel, invalid-value correction without closing, retained values across
+type changes, atomic creation Undo/Redo, Unicode String creation and reserved or
+duplicate names are covered. Actual New resource creates a 1000×1000 Array; its
+last cell is navigated directly, invalid Set is rejected, grid Cancel leaves the
+model intact, and accepted pending data applies and survives save/reopen.
+Deleting the added resources reproduces the original reports. Settings and
+reports are isolated in temporary directories.
+
+All 32 registered Qt suites passed in 172.91 seconds with display access,
+including native X11 normal/HiDPI/fractional rendering, viewer lifecycles and
+launch. The user executable application/bin/GmatQt was rebuilt. Combined log:
+Qt6ParityValidation/check-parameters.txt.
+
+Native Wayland passed and the Variable, String, creation and last-cell layouts
+were visually inspected: Qt6ParityValidation/parameters-wayland.txt and
+parameters-wayland.{variable,string,create,array}.png. The maximum-grid evidence
+covers this host; it is not a scalability guarantee for every system. Desktop
+portal chooser behavior, shared Help, keeping panels open after Apply, broader
+keyboard/focus operations, and all imported source/parser combinations remain
+unqualified. The wx inventory now has 30 of 108 entries Pending audit; audited
+rows and all 20 selected plugins still contain unfinished qualifications. The
+broader replacement goal remains active.

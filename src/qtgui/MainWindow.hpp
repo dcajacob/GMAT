@@ -1,6 +1,8 @@
 #pragma once
 #include <QMainWindow>
 #include <memory>
+#include <optional>
+#include <functional>
 #include <QList>
 #include <QMap>
 #include <QPointer>
@@ -40,7 +42,7 @@ public:
                               MissionEdit operation, const QString &replacement);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
-   QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1);
+   QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1, const std::optional<QString> &initialValue=std::nullopt);
    QString deleteResource(const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
@@ -51,7 +53,7 @@ private:
    void openCommandEditor(int index, MissionEdit operation);
    void showCreateResource();
    void showFileComparison(const QString &baseline={});
-   QString applyModelScript(const QString &candidate);
+   QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={});
    bool restoreBuiltModel();
    void setScriptDirectory();
    void newMission();

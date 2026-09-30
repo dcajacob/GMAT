@@ -16,6 +16,8 @@ public:
    bool hasChanges() const override;
    void discardChanges() override { applied = true; }
 private:
+   std::function<QString()> scalarValue;
+   QString originalScalarValue;
    QTableWidget *table;
    QLabel *status;
    QMap<QString, QString> original;

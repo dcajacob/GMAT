@@ -1,0 +1,5 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5e5b541d2540
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5e5b541d2540
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5e5b55796f80
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5e5b55796f80
+Qt parameters: numeric/string initial values, pending/Cancel/rollback, exact Undo, Unicode save/reopen, independent reports, implicit/no-semicolon source, quote fidelity, typed creation, reserved names and 1000x1000 array cell navigation/Apply passed
