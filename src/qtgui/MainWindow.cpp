@@ -8,6 +8,7 @@
 #include "AtmosphereDialog.hpp"
 #include "GroundStationDialog.hpp"
 #include "OrbitViewDialog.hpp"
+#include "ThrusterDialog.hpp"
 #include "EventLocatorDialog.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
@@ -744,8 +745,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto stationChanges=applyGroundStationLocation(*proposed,changes);
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
       const auto viewChanges=applyOrbitViewProperties(*proposed,changes);
+      const auto thrusterChanges=applyThrusterFrame(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || thrusterChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }

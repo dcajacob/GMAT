@@ -33,11 +33,11 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 
 | wx source | Qt mapping / missing operations / evidence |
 | --- | --- |
-| `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; finite-burn execution and electric configuration round trips covered; broader electric operating modes pending |
-| `src/gui/hardware/BurnThrusterPanel.hpp` | Pending audit |
-| `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
+| `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; chemical and electric polynomial finite-burn execution, analytic fuel consumption and configuration round trips covered; broader coefficient regimes pending |
+| `src/gui/hardware/BurnThrusterPanel.hpp` | Thruster branch audited: dependent Local frame/axes/origin, direction, scale, duty cycle and gravitational acceleration; ordered typed tanks/mixtures, mass-decrement off, clear/restore and failed-burn recovery covered. Impulsive-burn branch and broader frames/operating combinations pending. |
+| `src/gui/hardware/ThrusterConfigPanel.hpp` | Active chemical/electric controls audited. Grouped direction/performance setup, electric model dependencies, all three electric models, minimum-power cutoff, maximum clipping, GUI-attached nuclear power, chemical/electric mixtures, finite burn/coast, numerical report equivalence and round trips covered. Shared power, solar/eclipses, broader polynomial/frame regimes pending. |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
-| `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
+| `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
@@ -68,7 +68,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities and specialized frames remain to qualify. Orbit Designer/Summary are legacy hidden workflows; see the source audit below. |
-| `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consuming GUI-attached power remains to qualify. |
+| `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consumes GUI-attached nuclear power in all three thrust models; missing-power failure and attachment recovery covered. Solar/shared-power propulsion cases pending. |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution with Bilinear/Bicubic interpolation, scale 1.5 and missing-file recovery covered. Broader assets and interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Source audited: launcher explicitly hidden by OrbitPanel (GMT-3383). Retained legacy design tools are not exposed workflows in the base wx GUI; see the audit below. |
@@ -77,7 +77,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Source audited: read-only output of the hidden Orbit Designer, rather than a standalone spacecraft summary action; see the audit below. |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
-| `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric thruster attachment/execution combinations remain to qualify. |
+| `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric execution with script-attached thrusters and GUI-attached power covered, electric GUI attachment combinations remain to qualify. |
 | `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
@@ -2471,3 +2471,53 @@ are accessible by scrolling, and the orbit capture shows the textured Earth,
 trajectory, wireframe and configured guides/star field. Evidence:
 `Qt6ParityValidation/check-orbit-setup.txt`, `orbit-setup-wayland.txt`,
 `orbit-setup-wayland.png` and `orbit-view-wayland.png`.
+
+
+## Thruster direction, electric models and tank recovery
+
+Audited the active wx ThrusterConfigPanel controls and the thruster branch of
+BurnThrusterPanel. Qt now offers a grouped Thruster setup dialog with Local or
+configured coordinate systems, dependent axes/origin, direction components,
+duty cycle, scale and gravitational acceleration. Electric controls include all
+three thrust models, minimum/maximum usable power, efficiency, Isp and constant
+thrust. Model changes retain inactive values and enable applicable controls;
+electric polynomial coefficients remain in the existing coefficient dialog.
+The compact dialog scrolls while its action buttons remain accessible.
+
+Conditionally readonly Origin/Axes are available when switching a foreign frame
+to Local; Apply sets the coordinate system before dependent fields. The original
+generic application order incorrectly attempted readonly Axes first. Coupled
+power limits and zero direction receive corrective feedback before Apply.
+Conditionally readonly MixRatio is exposed for first-tank selection, with paired
+Tank/MixRatio serialization. Tank pickers and Apply enforce ChemicalTank versus
+ElectricTank. Clear-all omits the default empty Tank/MixRatio assignments because
+the interpreter cannot read an explicit empty ratio vector. An active burn still
+requires a tank; the GUI can retain a tankless hardware configuration and recover
+after restoring its tanks. These are GUI configuration/serialization changes;
+propulsion mathematics is unchanged.
+
+ThrusterTests configures a chemical thruster and all three electric models through
+Qt, plus a below-minimum-power case. The cases exercise direction/model dependency
+controls, Cancel, pending reopen, first-tank addition, paired reordered mixture
+ratios, coefficient editing, compact layout, Apply, exact Undo/Redo and Unicode
+save/reopen. Electric cases deliberately fail without a power system, then attach
+a nuclear system through the spacecraft GUI and execute successfully. Ten-second
+burn reports match an independently script-configured mission within 1e-8 in
+fuel, inertial position, thrust, Isp and mass flow. With power clipped from 10 kW
+to 4 kW, analytic fuel losses are 0.0025 kg chemical, 0.0001 kg constant-thrust,
+0.0000256 kg fixed-efficiency, 0.00003 kg polynomial and zero below minimum power.
+The 3:1 ordered mixture consumes 75% from FuelB and 25% from FuelA. Fuel remains
+unchanged during coast and with DecrementMass off. Clearing all tanks survives
+save/reopen/build, fails an active burn, and restoring tanks recovers the original
+report results. Invalid frame/body/direction/duty/scale/gravity/tank/power edits
+leave source unchanged and permit another successful run.
+
+Rebuilt application/bin/GmatQt. All 18 Qt suites passed in 64.27 seconds. The full
+new workflow also passed in an isolated-settings process on native Wayland;
+its captured dialog was visually inspected for labels, model dependencies and
+accessible action buttons. Evidence: Qt6ParityValidation/check-thrusters.txt,
+thruster-wayland.txt and thruster-wayland.png.
+
+The impulsive-burn branch, other local/reference frames, shared electric power,
+solar/eclipsed propulsion and broader polynomial/tank operating cases remain
+open, along with the larger workflow, viewer and plugin qualification gates.

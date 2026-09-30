@@ -17,6 +17,7 @@
 #include "XYPlotDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
+#include "ThrusterDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -116,6 +117,22 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       sections->setObjectName("propertySections");
       sections->setExpanding(false);
       layout->addWidget(sections);
+   }
+   if (thruster) {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto *setup=new QPushButton("Thruster setup…",this); setup->setObjectName("editThruster"); layout->addWidget(setup);
+      connect(setup,&QPushButton::clicked,this,[this,initial] {
+         QMap<QString,QString> pending;
+         for (int row=0;row<table->rowCount();++row) {
+            const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+            pending.insert(table->item(row,0)->text(),combo ? comboValue(combo) : table->item(row,1)->text());
+         }
+         ThrusterDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; const auto values=dialog.settings();
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text(); if (!values.contains(name)) continue;
+            if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values.value(name)); else table->item(row,1)->setText(values.value(name));
+         }
+      });
    }
    if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
       const bool electric=object.IsOfType("ElectricThruster");
@@ -946,6 +963,32 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                                  "General","Bus coefficients","Solar coefficients","Shadow","Bodies","Gravity field","Atmosphere","Radiation pressure","Perturbations","Direction","Fuel","Performance","Convergence","Output"})
          if (present.contains(section)) sections->addTab(section);
       sections->addTab("All Properties");
+   }
+   if (thruster) {
+      int frameRow=-1,axesRow=-1,originRow=-1;
+      for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (name=="CoordinateSystem") frameRow=row; if (name=="Axes") axesRow=row; if (name=="Origin") originRow=row; }
+      if (frameRow>=0 && axesRow>=0 && originRow>=0) {
+         auto *axes=qobject_cast<QComboBox *>(table->cellWidget(axesRow,1));
+         auto update=[this,frameRow,originRow,axes] {
+            if (!axes) return;
+            const QSignalBlocker block(table);
+            const bool local=table->item(frameRow,1)->text()=="Local"; axes->setEnabled(local);
+            const bool origin=local && axes->currentText()!="MJ2000Eq" && axes->currentText()!="SpacecraftBody";
+            if (auto *item=table->item(originRow,1)) item->setFlags(origin ? item->flags()|Qt::ItemIsEditable : item->flags() & ~Qt::ItemIsEditable);
+            if (auto *picker=table->cellWidget(originRow,3)) picker->setEnabled(origin);
+         };
+         connect(table,&QTableWidget::itemChanged,this,[update](QTableWidgetItem *) { update(); });
+         if (axes) connect(axes,&QComboBox::currentTextChanged,this,update); update();
+      }
+   }
+   if (object.IsOfType("ElectricThruster")) {
+      auto *coefficients=findChild<QPushButton *>("thrusterCoefficients");
+      for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ThrustModel") {
+         if (auto *model=qobject_cast<QComboBox *>(table->cellWidget(row,1))) {
+            auto update=[model,coefficients] { coefficients->setEnabled(model->currentText()=="ThrustMassPolynomial"); };
+            connect(model,&QComboBox::currentTextChanged,this,update); update();
+         }
+      }
    }
    layout->addWidget(table, 1);
    status = new QLabel("Apply validates changes and updates the mission script.", this);

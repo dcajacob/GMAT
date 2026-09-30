@@ -2,6 +2,7 @@
 #include "ReportParameterDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
+#include "ThrusterDialog.hpp"
 #include "OrbitPlot.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
@@ -54,9 +55,10 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // GroundTrack hides a default texture from serialization; wx still
          // permits replacing it through its dedicated texture-map control.
          const bool groundTexture=object.GetTypeName()=="GroundTrack" && object.GetParameterText(id)=="TextureMap";
+         const bool thrusterSetting=object.IsOfType("Thruster") && QStringList{"Origin","Axes","MixRatio"}.contains(QString::fromStdString(object.GetParameterText(id)));
          bool orbitElementId=false;
          if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
-         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture) continue;
+         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
@@ -144,6 +146,19 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                   field.references.append(QString::fromStdString(name));
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
+         }
+         if (object.IsOfType("Thruster")) {
+            if (field.name=="CoordinateSystem") {
+               field.references.clear(); field.references.append("Local");
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) field.references.append(QString::fromStdString(name));
+            }
+            if (field.name=="Tank") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::FUEL_TANK)) {
+                  auto *tank=Moderator::Instance()->GetConfiguredObject(name);
+                  if (tank && tank->IsOfType(object.IsOfType("ElectricThruster") ? "ElectricTank" : "ChemicalTank")) field.references.append(QString::fromStdString(name));
+               }
+            }
          }
          if (object.IsOfType("OrbitView")) {
             const bool camera=QStringList{"ViewPointReference","ViewPointVector","ViewDirection"}.contains(field.name);
@@ -336,6 +351,10 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             if (target->GetName()!=entry.toStdString())
                throw std::runtime_error("Use the resource name "+target->GetName()+" instead of "+entry.toStdString());
          }
+         if (object.IsOfType("Thruster") && name=="Tank") {
+            auto *tank=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
+            if (!tank || !tank->IsOfType(object.IsOfType("ElectricThruster") ? "ElectricTank" : "ChemicalTank")) throw std::runtime_error("Select a tank matching the thruster type.");
+         }
          if (object.IsOfType("SolarPowerSystem") && name=="ShadowBodies") {
             const auto &bodies=Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY);
             if (std::find(bodies.begin(),bodies.end(),entry.toStdString())==bodies.end()) throw std::runtime_error("Select an existing celestial body for solar shadows");
@@ -349,6 +368,17 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    const QString key=QString::fromStdString(object.GetName())+"."+name;
    const QRegularExpression assignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+
       "[ \\t]*=[ \\t]*\\{[^;]*?\\}[ \\t]*;",QRegularExpression::MultilineOption);
+   if (name=="Tank" && object.IsOfType("Thruster") && entries.isEmpty()) {
+      if (mixture && !mixture->trimmed().isEmpty()) throw std::runtime_error("Enter one mixture ratio for each selected tank");
+      // ClearTanks leaves both arrays empty. The interpreter cannot read an
+      // explicit empty MixRatio vector, so serialize their default by omission.
+      QString result=block;
+      result.remove(assignment);
+      const QString ratioKey=QString::fromStdString(object.GetName())+".MixRatio";
+      result.remove(QRegularExpression("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(ratioKey)+
+         "[ \\t]*=[ \\t]*\\[[^;]*?\\][ \\t]*;",QRegularExpression::MultilineOption));
+      return result;
+   }
    auto matches=assignment.globalMatch(block);
    QStringList serialized=entries;
    if (object.GetParameterType(id)==Gmat::STRINGARRAY_TYPE)
@@ -428,6 +458,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 void validateResourceProperties(GmatBase &object)
 {
    validateOrbitViewProperties(object);
+   validateThrusterProperties(object);
    if (object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") { validateGroundTrackTexture(object); return; }
    if (object.GetTypeName()=="XYPlot") {
       const auto x=QString::fromStdString(object.GetStringParameter("XVariable"));

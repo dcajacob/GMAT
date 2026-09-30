@@ -1204,3 +1204,17 @@ Drawing-only edits through the grouped dialog preserve imported OF camera
 metadata. Projection/FOV remain available through the live viewer Camera dialog
 and Keep projection action; obsolete readonly wx FOV fields are not exposed as
 resource settings.
+
+Chemical and electric thrusters provide **Thruster setup…** with direction and
+performance groups. Local axes/origin controls follow the coordinate-system
+selection; origin is inactive for MJ2000Eq and SpacecraftBody axes. Electric
+model selection enables its applicable efficiency, Isp and constant-thrust
+fields while retaining other pending values. Power limits are checked together.
+The controls scroll on smaller displays; OK keeps changes pending until Apply.
+
+**Tanks and mixtures…** selects tanks matching the thruster type, with ordered
+positive mixture ratios. Removing all tanks clears both lists and survives
+save/reopen; an active burn still requires a tank. **Coefficients…** edits chemical
+coefficients or electric polynomial coefficients, and is enabled for electric
+thrusters when ThrustMassPolynomial is selected. Spacecraft **PowerSystem**
+selection attaches the power source required by electric propulsion.
