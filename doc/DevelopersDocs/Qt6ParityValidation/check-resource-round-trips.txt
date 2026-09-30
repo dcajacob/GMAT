@@ -1,0 +1,166 @@
+[1/30] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/30] Linking CXX executable src/qtgui/GmatQtMissionTests
+[3/30] Linking CXX executable src/qtgui/GmatQtPlotTests
+[4/30] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[5/30] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[6/30] Linking CXX executable src/qtgui/GmatQtFileTests
+[7/30] Linking CXX executable src/qtgui/GmatQtWindowTests
+[8/30] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[9/30] Linking CXX executable src/qtgui/GmatQtStationTests
+[10/30] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[11/30] Linking CXX executable src/qtgui/GmatQtPlotSetupTests
+[12/30] Linking CXX executable src/qtgui/GmatQtThrusterTests
+[13/30] Linking CXX executable src/qtgui/GmatQtEventLocatorTests
+[14/30] Linking CXX executable src/qtgui/GmatQtEphemerisTests
+[15/30] Linking CXX executable src/qtgui/GmatQtBurnTests
+[16/30] Linking CXX executable src/qtgui/GmatQtDynamicDataTests
+[17/30] Linking CXX executable src/qtgui/GmatQtDataInterfaceTests
+[18/30] Linking CXX executable src/qtgui/GmatQtCalculatedPointTests
+[19/30] Linking CXX executable src/qtgui/GmatQtPathTests
+[20/30] Linking CXX executable src/qtgui/GmatQtInspectionTests
+[21/30] Linking CXX executable src/qtgui/GmatQtCelestialBodyTests
+[22/30] Linking CXX executable src/qtgui/GmatQtKalmanTests
+[23/30] Linking CXX executable src/qtgui/GmatQtComparisonTests
+[24/30] Linking CXX executable src/qtgui/GmatQtThrustFileTests
+[25/30] Linking CXX executable src/qtgui/GmatQtScriptEditingTests
+[26/30] Building CXX object src/qtgui/CMakeFiles/GmatQtParameterTests.dir/tests/ParameterTests.cpp.o
+[27/30] Building CXX object src/qtgui/CMakeFiles/GmatQtSolarSystemTests.dir/tests/SolarSystemTests.cpp.o
+[28/30] Linking CXX executable src/qtgui/GmatQtParameterTests
+[29/30] Linking CXX executable src/qtgui/GmatQtSolarSystemTests
+[29/30] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/36 Test  #1: QtGui.NativeOrbit ................***Failed    0.27 sec
+qt.qpa.xcb: could not connect to display :142
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: linuxfb, minimal, eglfs, xcb, wayland-brcm, wayland-egl, wayland, vkkhrdisplay, minimalegl, offscreen, vnc.
+
+Subprocess aborted
+
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/36 Test  #2: QtGui.NativeOrbitHiDPI ...........***Failed    0.24 sec
+qt.qpa.xcb: could not connect to display :142
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: linuxfb, minimal, eglfs, xcb, wayland-brcm, wayland-egl, wayland, vkkhrdisplay, minimalegl, offscreen, vnc.
+
+Subprocess aborted
+
+      Start  3: QtGui.NativeOrbitFractionalDPI
+ 3/36 Test  #3: QtGui.NativeOrbitFractionalDPI ...***Failed    0.23 sec
+qt.qpa.xcb: could not connect to display :142
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: linuxfb, minimal, eglfs, xcb, wayland-brcm, wayland-egl, wayland, vkkhrdisplay, minimalegl, offscreen, vnc.
+
+Subprocess aborted
+
+      Start  4: QtGui.NativeWindows
+ 4/36 Test  #4: QtGui.NativeWindows ..............***Failed    0.40 sec
+qt.qpa.xcb: could not connect to display :142
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: linuxfb, minimal, eglfs, xcb, wayland-brcm, wayland-egl, wayland, vkkhrdisplay, minimalegl, offscreen, vnc.
+
+Subprocess aborted
+
+      Start  5: QtGui.NativePlots
+ 5/36 Test  #5: QtGui.NativePlots ................***Failed    0.39 sec
+qt.qpa.xcb: could not connect to display :142
+qt.qpa.plugin: From 6.5.0, xcb-cursor0 or libxcb-cursor0 is needed to load the Qt xcb platform plugin.
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: linuxfb, minimal, eglfs, xcb, wayland-brcm, wayland-egl, wayland, vkkhrdisplay, minimalegl, offscreen, vnc.
+
+Subprocess aborted
+
+      Start  6: QtGui.Files
+ 6/36 Test  #6: QtGui.Files ......................   Passed    2.37 sec
+      Start  7: QtGui.Workflow
+ 7/36 Test  #7: QtGui.Workflow ...................   Passed   10.86 sec
+      Start  8: QtGui.Mission
+ 8/36 Test  #8: QtGui.Mission ....................   Passed    1.69 sec
+      Start  9: QtGui.Compatibility
+ 9/36 Test  #9: QtGui.Compatibility ..............   Passed    4.51 sec
+      Start 10: QtGui.Atmosphere
+10/36 Test #10: QtGui.Atmosphere .................   Passed    3.13 sec
+      Start 11: QtGui.Stations
+11/36 Test #11: QtGui.Stations ...................   Passed    1.98 sec
+      Start 12: QtGui.EventLocators
+12/36 Test #12: QtGui.EventLocators ..............   Passed    3.47 sec
+      Start 13: QtGui.Thrusters
+13/36 Test #13: QtGui.Thrusters ..................   Passed    3.16 sec
+      Start 14: QtGui.Burns
+14/36 Test #14: QtGui.Burns ......................   Passed    3.26 sec
+      Start 15: QtGui.Ephemeris
+15/36 Test #15: QtGui.Ephemeris ..................   Passed    3.35 sec
+      Start 16: QtGui.DynamicData
+16/36 Test #16: QtGui.DynamicData ................   Passed    0.74 sec
+      Start 17: QtGui.CalculatedPoints
+17/36 Test #17: QtGui.CalculatedPoints ...........   Passed    0.98 sec
+      Start 18: QtGui.DataInterface
+18/36 Test #18: QtGui.DataInterface ..............   Passed    2.19 sec
+      Start 19: QtGui.Estimation
+19/36 Test #19: QtGui.Estimation .................   Passed    5.58 sec
+      Start 20: QtGui.Parameters
+20/36 Test #20: QtGui.Parameters .................   Passed    8.32 sec
+      Start 21: QtGui.Paths
+21/36 Test #21: QtGui.Paths ......................   Passed    1.08 sec
+      Start 22: QtGui.SolarSystem
+22/36 Test #22: QtGui.SolarSystem ................   Passed    1.38 sec
+      Start 23: QtGui.CelestialBodies
+23/36 Test #23: QtGui.CelestialBodies ............   Passed    3.52 sec
+      Start 24: QtGui.ResourceRoundTrips
+24/36 Test #24: QtGui.ResourceRoundTrips .........   Passed    0.80 sec
+      Start 25: QtGui.Inspection
+25/36 Test #25: QtGui.Inspection .................   Passed    0.71 sec
+      Start 26: QtGui.KalmanFilter
+26/36 Test #26: QtGui.KalmanFilter ...............   Passed    6.92 sec
+      Start 27: QtGui.Comparison
+27/36 Test #27: QtGui.Comparison .................   Passed    1.17 sec
+      Start 28: QtGui.ThrustFiles
+28/36 Test #28: QtGui.ThrustFiles ................   Passed    4.26 sec
+      Start 29: QtGui.ScriptEditing
+29/36 Test #29: QtGui.ScriptEditing ..............   Passed    1.12 sec
+      Start 30: QtGui.ExternalForces
+30/36 Test #30: QtGui.ExternalForces .............   Passed    1.30 sec
+      Start 31: QtGui.Polyhedron
+31/36 Test #31: QtGui.Polyhedron .................   Passed    3.41 sec
+      Start 32: QtGui.OrbitSetup
+32/36 Test #32: QtGui.OrbitSetup .................   Passed    1.86 sec
+      Start 33: QtGui.PlotSetup
+33/36 Test #33: QtGui.PlotSetup ..................   Passed    2.41 sec
+      Start 34: QtGui.Plots
+34/36 Test #34: QtGui.Plots ......................   Passed    4.10 sec
+      Start 35: QtGui.PlotsHiDPI
+35/36 Test #35: QtGui.PlotsHiDPI .................   Passed    3.82 sec
+      Start 36: QtGui.Launch
+36/36 Test #36: QtGui.Launch .....................   Passed    1.49 sec
+
+86% tests passed, 5 tests failed out of 36
+
+Label Time Summary:
+qt-gui    =  96.47 sec*proc (36 tests)
+
+Total Test time (real) =  96.48 sec
+
+The following tests FAILED:
+	  1 - QtGui.NativeOrbit (Failed)                        qt-gui
+	  2 - QtGui.NativeOrbitHiDPI (Failed)                   qt-gui
+	  3 - QtGui.NativeOrbitFractionalDPI (Failed)           qt-gui
+	  4 - QtGui.NativeWindows (Failed)                      qt-gui
+	  5 - QtGui.NativePlots (Failed)                        qt-gui
+Errors while running CTest
+FAILED: [code=8] src/qtgui/CMakeFiles/check-qt /home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/CMakeFiles/check-qt
+cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+ninja: build stopped: subcommand failed.

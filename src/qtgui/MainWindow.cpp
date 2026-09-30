@@ -1051,19 +1051,19 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (empty) return "Select an object, or turn off Show plot.";
       }
       if (!proposed->Validate()) return "The resource rejected these settings.";
-      candidate = qtConfiguredScript();
+      candidate = expectedScript;
       if (builtInPoint) {
          // Default built-in points are cloaked and have no block to replace.
          // Write only their supported appearance settings; never create or
          // change their fixed body definition.
+         QString block,firstCommand;
+         for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
          for (auto it=changes.cbegin();it!=changes.cend();++it) {
             const QString key=name+"."+it.key();
             const QString assignment="GMAT "+key+" = "+QString::fromStdString(proposed->GetStringParameter(it.key().toStdString()))+";";
-            const QRegularExpression existing("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+"[ \\t]*=[^;\\n]*;",QRegularExpression::MultilineOption);
-            if (existing.match(candidate).hasMatch()) candidate.replace(existing,assignment);
-            else candidate.prepend(assignment+"\n");
+            block+=assignment+'\n';
          }
-         return applyModelScript(candidate);
+         return applyModelScript(setConfigurationBlock(expectedScript,name,changes.keys(),block,firstCommand));
       }
       auto serialize=[](GmatBase &resource) {
          if (!resource.IsOfType(Gmat::PROP_SETUP)) return QString::fromStdString(resource.GetGeneratingString(Gmat::SCRIPTING));
@@ -1073,8 +1073,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
          copy->TakeAction("ExcludeODEModel");
          return QString::fromStdString(copy->GetGeneratingString(Gmat::SCRIPTING));
       };
-      const auto oldBlock = serialize(*object);
-      auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : proposed->IsOfType("OrbitView") ? orbitViewScript(*proposed) : (proposed->IsOfType("ImpulsiveBurn") || proposed->IsOfType("FiniteBurn")) ? burnResourceScript(*proposed) : serialize(*proposed);
+      const auto snapshot=[&](GmatBase &resource) { return resource.IsOfType("Spacecraft") ? spacecraftOrbitScript(resource) : resource.IsOfType("OrbitView") ? orbitViewScript(resource) : (resource.IsOfType("ImpulsiveBurn") || resource.IsOfType("FiniteBurn")) ? burnResourceScript(resource) : serialize(resource); };
+      const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
+      auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
          if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
@@ -1100,18 +1101,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (!newBlock.endsWith('\n')) newBlock+='\n';
          newBlock+=originalMappings;
       }
-      if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
-         return "This resource requires a specialized editor. Use its script settings for now.";
-      candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
-      // Unrelated resource edits also reconstruct the mission. Avoid repeated
-      // representation drift or omitted anomaly elements in other spacecraft.
-      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(candidate,proposed.get()),object);
-      // Resource edits must not normalize/rewrite the existing mission commands,
-      // including cell formulas, labels and user comments.
-      const QRegularExpression missionStart("^[ \t]*BeginMissionSequence\\b",QRegularExpression::MultilineOption);
-      const auto originalMission=missionStart.match(expectedScript),rebuiltMission=missionStart.match(candidate);
-      if (originalMission.hasMatch() && rebuiltMission.hasMatch())
-         candidate=candidate.left(rebuiltMission.capturedStart())+expectedScript.mid(originalMission.capturedStart());
+      QString firstCommand;
+      for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+      candidate=patchResourceConfiguration(expectedScript,name,oldBlock,omitUnsetHardwareFovs(newBlock,proposed.get()),firstCommand,object->IsOfType("ODEModel"));
       if (object->IsOfType("Array") && (changes.contains("@ArrayExpressions") || changes.contains("RmatValue")))
          candidate=setArrayExpressions(candidate,name,changes.value("@ArrayExpressions",arrayExpressions(expectedScript,name)),
             proposed->GetIntegerParameter("NumRows"),proposed->GetIntegerParameter("NumCols"));

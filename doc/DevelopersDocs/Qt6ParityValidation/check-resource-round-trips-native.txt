@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 1: QtGui.NativeOrbit
+1/5 Test #1: QtGui.NativeOrbit ................   Passed    3.71 sec
+    Start 2: QtGui.NativeOrbitHiDPI
+2/5 Test #2: QtGui.NativeOrbitHiDPI ...........   Passed    4.58 sec
+    Start 3: QtGui.NativeOrbitFractionalDPI
+3/5 Test #3: QtGui.NativeOrbitFractionalDPI ...   Passed    3.99 sec
+    Start 4: QtGui.NativeWindows
+4/5 Test #4: QtGui.NativeWindows ..............   Passed   20.34 sec
+    Start 5: QtGui.NativePlots
+5/5 Test #5: QtGui.NativePlots ................   Passed    4.22 sec
+
+100% tests passed, 0 tests failed out of 5
+
+Label Time Summary:
+qt-gui    =  36.84 sec*proc (5 tests)
+
+Total Test time (real) =  36.84 sec

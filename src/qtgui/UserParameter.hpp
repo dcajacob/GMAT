@@ -6,3 +6,10 @@ QString setUserParameterValue(const QString &source,const QString &name,const QS
 // Replace only named configuration assignments, retaining comments and the
 // entire mission suffix. Values in the ordered block are already serialized.
 QString setConfigurationBlock(const QString &source,const QString &name,const QStringList &properties,const QString &block,const QString &firstMissionStatement={});
+// Apply the changed assignments in two engine-generated resource snapshots to
+// the original source. Unchanged properties and other resources stay implicit
+// or retain their original syntax. Array declarations may change dimensions.
+// Owned force models require their creation selectors and dependent fields in
+// serializer order. In that case replace the edited resource's configuration,
+// including legacy unqualified force aliases; other source remains untouched.
+QString patchResourceConfiguration(const QString &source,const QString &name,const QString &before,const QString &after,const QString &firstMissionStatement={},bool replaceOwnedConfiguration=false);

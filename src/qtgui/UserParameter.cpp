@@ -1,6 +1,7 @@
 #include "UserParameter.hpp"
 #include <QRegularExpression>
 #include <QVector>
+#include <QMap>
 #include <cmath>
 #include <algorithm>
 #include <stdexcept>
@@ -130,7 +131,7 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
       const auto commands=statements(firstMissionStatement);
       if (!commands.isEmpty()) firstCommand=normalize(commands.first().code);
    }
-   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z0-9_]+)\\s*=");
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"(?:\\.([A-Za-z0-9_.]+(?:\\([^;=]*\\))?)|(\\([^;=]*\\)))\\s*=");
    const QRegularExpression begin("^\\s*BeginMissionSequence\\b");
    QVector<qsizetype> remove;
    auto boundary=source.size(); bool located=firstCommand.isEmpty();
@@ -143,7 +144,8 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
          located=true; break;
       }
       const auto match=assignment.match(statement.code);
-      if (!match.hasMatch() || !properties.contains(match.captured(1))) continue;
+      const auto property=(match.captured(1).isEmpty() ? match.captured(2) : match.captured(1)).remove(QRegularExpression("\\s+"));
+      if (!match.hasMatch() || !properties.contains(property)) continue;
       qsizetype first=0,last=statement.code.size()-1;
       while (first<=last && statement.code[first].isSpace()) ++first;
       while (last>=first && statement.code[last].isSpace()) --last;
@@ -168,5 +170,71 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
    candidate.insert(boundary,(boundary>0 && source[boundary-1]!='\n' ? "\n" : "")+block+(block.endsWith('\n') ? "" : "\n"));
    std::sort(remove.begin(),remove.end());
    for (auto i=remove.crbegin();i!=remove.crend();++i) candidate.remove(*i,1);
+   return candidate;
+}
+
+QString patchResourceConfiguration(const QString &source,const QString &name,const QString &before,const QString &after,const QString &firstMissionStatement,bool replaceOwnedConfiguration)
+{
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"(?:\\.([A-Za-z0-9_.]+(?:\\([^;=]*\\))?)|(\\([^;=]*\\)))\\s*=");
+   const QRegularExpression declaration("^\\s*Create\\s+([A-Za-z][A-Za-z0-9_]*)\\s+([^;]+?);?\\s*$",QRegularExpression::DotMatchesEverythingOption);
+   const QRegularExpression definition("\\b"+QRegularExpression::escape(name)+"(?:\\s*\\[\\s*[1-9][0-9]*\\s*,\\s*[1-9][0-9]*\\s*\\])?(?![A-Za-z0-9_])");
+   auto normalize=[](QString code) { code=code.trimmed(); code.remove(QRegularExpression("^GMAT\\s+")); if (!code.endsWith(';')) code+=';'; return code; };
+   struct Snapshot { QMap<QString,QStringList> values; QString type,definition; QVector<QPair<QString,QString>> ordered; };
+   const auto snapshot=[&](const QString &text) {
+      Snapshot result;
+      for (const auto &statement:statements(text)) {
+         const auto create=declaration.match(statement.code);
+         if (create.hasMatch()) {
+            const auto match=definition.match(create.captured(2));
+            if (match.hasMatch()) { if (!result.definition.isEmpty()) throw std::runtime_error("Multiple declarations for the edited resource."); result.type=create.captured(1); result.definition=match.captured().remove(QRegularExpression("\\s+")); }
+            continue;
+         }
+         const auto match=assignment.match(statement.code);
+         if (!match.hasMatch()) throw std::runtime_error("Cannot safely patch a generated resource statement.");
+         const auto key=(match.captured(1).isEmpty() ? match.captured(2) : match.captured(1)).remove(QRegularExpression("\\s+"));
+         const auto code=normalize(statement.code); result.values[key].append(code); result.ordered.append({key,code});
+      }
+      return result;
+   };
+   const auto old=snapshot(before),pending=snapshot(after);
+   if (old.type!=pending.type || old.definition.isEmpty() || pending.definition.isEmpty()) throw std::runtime_error("Cannot safely locate the resource declaration.");
+   QStringList changed;
+   for (auto it=old.values.cbegin();it!=old.values.cend();++it) if (it.value()!=pending.values.value(it.key())) changed.append(it.key());
+   for (auto it=pending.values.cbegin();it!=pending.values.cend();++it) if (!old.values.contains(it.key())) changed.append(it.key());
+   if (replaceOwnedConfiguration && !changed.isEmpty()) {
+      // A root selector creates its owned force. Moving just that selector
+      // behind unchanged subfields makes valid source fail interpretation.
+      // Legacy scripts may also use unqualified aliases absent from the
+      // canonical snapshot. Remove those before inserting the complete
+      // ordered force configuration, preserving comments and mission code.
+      changed=old.values.keys();
+      for (const auto &key:pending.values.keys()) if (!changed.contains(key)) changed.append(key);
+      for (const auto &statement:statements(source)) {
+         const auto match=assignment.match(statement.code);
+         if (match.hasMatch()) {
+            const auto key=(match.captured(1).isEmpty() ? match.captured(2) : match.captured(1)).remove(QRegularExpression("\\s+"));
+            if (!changed.contains(key)) changed.append(key);
+         }
+      }
+   }
+   QString block; for (const auto &entry:pending.ordered) if (changed.contains(entry.first)) block+=entry.second+'\n';
+   QString candidate=changed.isEmpty() ? source : setConfigurationBlock(source,name,changed,block,firstMissionStatement);
+   if (old.definition!=pending.definition) {
+      if (old.type!="Array") throw std::runtime_error("Changing this resource declaration needs its script settings.");
+      QVector<qsizetype> positions;
+      for (const auto &statement:statements(candidate)) {
+         if (QRegularExpression("^\\s*BeginMissionSequence\\b").match(statement.code).hasMatch()) break;
+         const auto create=declaration.match(statement.code); if (!create.hasMatch() || create.captured(1)!="Array") continue;
+         const auto match=definition.match(create.captured(2)); if (!match.hasMatch()) continue;
+         if (!positions.isEmpty()) throw std::runtime_error("Multiple declarations for the edited array.");
+         const auto start=create.capturedStart(2)+match.capturedStart(),end=start+match.capturedLength();
+         // Remove only mapped declaration characters; retain any comments
+         // between dimensions and all the other arrays in a grouped Create.
+         positions=statement.positions.mid(start,end-start);
+      }
+      if (positions.isEmpty()) throw std::runtime_error("Cannot safely locate the array declaration.");
+      for (auto i=positions.crbegin();i!=positions.crend();++i) candidate.remove(*i,1);
+      candidate.insert(positions.first(),pending.definition);
+   }
    return candidate;
 }

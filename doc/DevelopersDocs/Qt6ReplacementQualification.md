@@ -3795,3 +3795,47 @@ replacement objective is unfinished.
 
 After rebuilding application/bin/GmatQt, all 35 Qt suites passed in 146.68
 seconds: [regression output](Qt6ParityValidation/check-body-selection.txt).
+
+## Source-preserving resource edits and mixed implicit defaults
+
+`ResourceRoundTripTests` exercises actual MDI resource panels rather than only
+calling serializers. A spacecraft Cd edit preserves Keplerian input values,
+comments, a power system's implicit initial epoch and an unused Asteroid's
+implicit physical defaults. Its complete numerical report stays exactly equal
+to the original run. Mixed solar-power scalar/shadow-list edits, explicit empty
+shadows after prior membership, invalid-edit correction and save/reopen agree
+exactly with independently written scripts. The same mixed edit preserves an
+implicit mission boundary and its original command suffix.
+
+The new patcher compares matching old/new resource snapshots and rewrites only
+changed configuration assignments. It handles dotted owned settings, repeated
+left-hand sides, continuations, grouped Array declarations and indexed numeric
+cells. Resizing one of two Arrays preserves the other declaration, values and
+comments, with reports equal to a separately resized script. Exact Undo/Redo
+and Unicode save/reopen are covered. Removed owned coordinate-axis settings
+are checked separately, and resource type replacement is rejected.
+
+Force-model selectors create their dependent forces. Patching just a selector
+can leave an unchanged subfield before its creator; legacy unqualified aliases
+can also survive under the wrong body/model. Owned force edits therefore replace
+that edited model's configuration as an ordered unit, including raw aliases,
+while retaining other resources and the complete mission source. Atmosphere,
+external-force and polyhedron suites cover model/body changes and numerical
+report agreement. Optional FOV placeholders are omitted from both snapshots,
+so selecting a real FOV named `UndefinedFieldOfView` is retained correctly;
+the estimation suite covers selection, replacement and clearing.
+
+The native Wayland resource workflow passed; its power panel was visually
+inspected in `round-trip-wayland.power.png`, with raw output in
+`round-trip-wayland.txt`. This extends mixed scalar/list/default qualification;
+wider alias/dependency combinations, resource deletion, filesystem/portal
+failures and remaining inventory gates still require qualification. No numerical
+algorithm was changed.
+
+The rebuilt GmatQt passed all 36 suites across the full 31-suite non-native run
+and the five native suites rerun with desktop access. The initial sandbox run
+could not reach its temporary X display; that failure and the successful native
+rerun are preserved in `check-resource-round-trips.txt` and
+`check-resource-round-trips-native.txt`. The separate Wayland workflow also
+passed. The source inventory remains 20 of 108 Pending audit entries; this
+checkpoint does not close the broader replacement goal.

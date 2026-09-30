@@ -153,8 +153,12 @@ This is current-value feedback, not yet iteration-history plotting.
 
 Double-clicking a resource opens an editable property panel. Scalar numbers,
 booleans, strings, enumerations and references are supported. Applying edits
-changes a clone, validates it, serializes it into the complete mission, and
-interprets that candidate. A rejected candidate restores the previous model
+changes a clone, validates it, compares its serialized settings with the original
+resource, and patches changed configuration assignments into the current script
+before interpreting the candidate. Unchanged settings retain their original
+syntax and implicit defaults, including power-system epochs. Owned force models
+are written together in engine order because their selectors create dependent
+forces. Other resources, comments and mission commands retain their source. A rejected candidate restores the previous model
 without changing editor contents. Successful changes update the script as
 one undoable edit. Stale panels reject changes, and unapplied panel edits
 prevent Build/Run from silently using older values. Plot object lists (`Add`),
