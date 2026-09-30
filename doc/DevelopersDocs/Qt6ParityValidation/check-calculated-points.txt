@@ -1,0 +1,72 @@
+[1/20] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/20] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[3/20] Linking CXX executable src/qtgui/GmatQtWindowTests
+[4/20] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[5/20] Linking CXX executable src/qtgui/GmatQtFileTests
+[6/20] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[7/20] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[8/20] Linking CXX executable src/qtgui/GmatQtPlotTests
+[9/20] Linking CXX executable src/qtgui/GmatQtStationTests
+[10/20] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[11/20] Linking CXX executable src/qtgui/GmatQtMissionTests
+[12/20] Linking CXX executable src/qtgui/GmatQtAtmosphereTests
+[13/20] Linking CXX executable src/qtgui/GmatQtEventLocatorTests
+[14/20] Linking CXX executable src/qtgui/GmatQtPlotSetupTests
+[15/20] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[16/20] Linking CXX executable src/qtgui/GmatQtThrusterTests
+[17/20] Linking CXX executable src/qtgui/GmatQtDynamicDataTests
+[18/20] Linking CXX executable src/qtgui/GmatQtEphemerisTests
+[19/20] Linking CXX executable src/qtgui/GmatQtBurnTests
+[19/20] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/22 Test  #1: QtGui.NativeOrbit ................   Passed    3.73 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/22 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    4.62 sec
+      Start  3: QtGui.NativeOrbitFractionalDPI
+ 3/22 Test  #3: QtGui.NativeOrbitFractionalDPI ...   Passed    4.24 sec
+      Start  4: QtGui.NativeWindows
+ 4/22 Test  #4: QtGui.NativeWindows ..............   Passed    3.29 sec
+      Start  5: QtGui.NativePlots
+ 5/22 Test  #5: QtGui.NativePlots ................   Passed    4.67 sec
+      Start  6: QtGui.Files
+ 6/22 Test  #6: QtGui.Files ......................   Passed    2.65 sec
+      Start  7: QtGui.Workflow
+ 7/22 Test  #7: QtGui.Workflow ...................   Passed   11.59 sec
+      Start  8: QtGui.Mission
+ 8/22 Test  #8: QtGui.Mission ....................   Passed    1.49 sec
+      Start  9: QtGui.Compatibility
+ 9/22 Test  #9: QtGui.Compatibility ..............   Passed    5.33 sec
+      Start 10: QtGui.Atmosphere
+10/22 Test #10: QtGui.Atmosphere .................   Passed    3.71 sec
+      Start 11: QtGui.Stations
+11/22 Test #11: QtGui.Stations ...................   Passed    2.47 sec
+      Start 12: QtGui.EventLocators
+12/22 Test #12: QtGui.EventLocators ..............   Passed    3.63 sec
+      Start 13: QtGui.Thrusters
+13/22 Test #13: QtGui.Thrusters ..................   Passed    3.68 sec
+      Start 14: QtGui.Burns
+14/22 Test #14: QtGui.Burns ......................   Passed    3.76 sec
+      Start 15: QtGui.Ephemeris
+15/22 Test #15: QtGui.Ephemeris ..................   Passed    3.76 sec
+      Start 16: QtGui.DynamicData
+16/22 Test #16: QtGui.DynamicData ................   Passed    0.96 sec
+      Start 17: QtGui.CalculatedPoints
+17/22 Test #17: QtGui.CalculatedPoints ...........   Passed    1.26 sec
+      Start 18: QtGui.OrbitSetup
+18/22 Test #18: QtGui.OrbitSetup .................   Passed    1.51 sec
+      Start 19: QtGui.PlotSetup
+19/22 Test #19: QtGui.PlotSetup ..................   Passed    3.83 sec
+      Start 20: QtGui.Plots
+20/22 Test #20: QtGui.Plots ......................   Passed    6.22 sec
+      Start 21: QtGui.PlotsHiDPI
+21/22 Test #21: QtGui.PlotsHiDPI .................   Passed    6.09 sec
+      Start 22: QtGui.Launch
+22/22 Test #22: QtGui.Launch .....................   Passed    1.62 sec
+
+100% tests passed, 0 tests failed out of 22
+
+Label Time Summary:
+qt-gui    =  84.12 sec*proc (22 tests)
+
+Total Test time (real) =  84.12 sec

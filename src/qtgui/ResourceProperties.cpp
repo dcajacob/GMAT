@@ -14,6 +14,7 @@
 #include "Propagator.hpp"
 #include "AxisSystem.hpp"
 #include "CoordinateSystem.hpp"
+#include "CalculatedPoint.hpp"
 #include "StateConversionUtil.hpp"
 #include "TimeSystemConverter.hpp"
 #include <memory>
@@ -57,6 +58,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // permits replacing it through its dedicated texture-map control.
          const bool groundTexture=object.GetTypeName()=="GroundTrack" && object.GetParameterText(id)=="TextureMap";
          const auto fieldName=QString::fromStdString(object.GetParameterText(id));
+         if (auto *point=dynamic_cast<CalculatedPoint *>(&object); point && point->IsBuiltIn() && fieldName!="OrbitColor" && fieldName!="TargetColor") continue;
          const bool thrusterSetting=(object.IsOfType("Thruster") && QStringList{"Origin","Axes","MixRatio"}.contains(fieldName)) ||
             (object.IsOfType("ImpulsiveBurn") && QStringList{"Origin","Axes"}.contains(fieldName));
          const bool ephemerisSetting=object.IsOfType("EphemerisFile") && QStringList{"DistanceUnit","IncludeEventBoundaries"}.contains(fieldName);
@@ -187,6 +189,22 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             }
          }
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowModel") field.choices={"None","DualCone"};
+         if (object.IsOfType("LibrationPoint")) {
+            if (field.name=="Point") field.choices={"L1","L2","L3","L4","L5"};
+            if (field.name=="Primary" || field.name=="Secondary") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACE_POINT)) {
+                  auto *point=Moderator::Instance()->GetConfiguredObject(name);
+                  if (point && (point->IsOfType("CelestialBody") || point->IsOfType("Barycenter")) && name!="SolarSystemBarycenter") field.references.append(QString::fromStdString(name));
+               }
+               field.references.removeDuplicates(); field.references.sort();
+            }
+         }
+         if (object.IsOfType("Barycenter") && field.name=="BodyNames") {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
+            field.references.sort();
+         }
          if (object.IsOfType("DragForce")) {
             if (field.name=="HistoricWeatherSource") field.choices={"ConstantFluxAndGeoMag","CSSISpaceWeatherFile"};
             if (field.name=="PredictedWeatherSource") field.choices={"ConstantFluxAndGeoMag","CSSISpaceWeatherFile","SchattenFile"};
@@ -302,7 +320,9 @@ bool isResourceList(GmatBase &object, const QString &name)
    if (forcePropertyOwner(object,name,leaf)) return false;
    const auto id=object.GetParameterID(name.toStdString());
    const auto type=QString::fromStdString(object.GetTypeName());
+   if (auto *point=dynamic_cast<CalculatedPoint *>(&object)) if (name=="BodyNames" && point->IsBuiltIn()) return false;
    const bool supported=isResourceFileList(object,name) || (name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
+      (type=="Barycenter" && name=="BodyNames") ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       ((object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) && name=="Tank") ||
@@ -370,12 +390,17 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             const auto &bodies=Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY);
             if (std::find(bodies.begin(),bodies.end(),entry.toStdString())==bodies.end()) throw std::runtime_error("Select an existing celestial body for solar shadows");
          }
+         if (object.IsOfType("Barycenter") && name=="BodyNames") {
+            auto *body=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
+            if (!body || !body->IsOfType("CelestialBody") || body->GetName()!=entry.toStdString()) throw std::runtime_error("Select existing celestial bodies for the barycenter.");
+         }
          if (entries.contains(entry)) throw std::runtime_error("Each list entry must be unique");
          entries.append(entry);
       }
    }
    if (object.GetTypeName()=="XYPlot" && name=="YVariables" && entries.isEmpty() && object.GetBooleanParameter("ShowPlot"))
       throw std::runtime_error("Select at least one Y parameter, or turn off Show plot.");
+   if (object.IsOfType("Barycenter") && name=="BodyNames" && entries.isEmpty()) throw std::runtime_error("Select at least one celestial body for the barycenter.");
    const QString key=QString::fromStdString(object.GetName())+"."+name;
    const QRegularExpression assignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+
       "[ \\t]*=[ \\t]*\\{[^;]*?\\}[ \\t]*;",QRegularExpression::MultilineOption);
@@ -471,6 +496,16 @@ void validateResourceProperties(GmatBase &object)
    validateBurnProperties(object);
    validateOrbitViewProperties(object);
    validateThrusterProperties(object);
+   if (object.IsOfType("LibrationPoint")) {
+      const auto primary=object.GetStringParameter("Primary"),secondary=object.GetStringParameter("Secondary");
+      if (primary==secondary) throw std::runtime_error("Primary and secondary bodies must be different.");
+      for (const auto &name:{primary,secondary}) {
+         auto *point=Moderator::Instance()->GetConfiguredObject(name);
+         if (!point || (!point->IsOfType("CelestialBody") && !point->IsOfType("Barycenter")) || name=="SolarSystemBarycenter" || point->GetName()!=name)
+            throw std::runtime_error("Select celestial bodies or barycenters other than SolarSystemBarycenter for the libration point.");
+      }
+      return;
+   }
    if (object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") { validateGroundTrackTexture(object); return; }
    if (object.GetTypeName()=="XYPlot") {
       const auto x=QString::fromStdString(object.GetStringParameter("XVariable"));

@@ -12,6 +12,7 @@
 #include "BurnDialog.hpp"
 #include "EphemerisDialog.hpp"
 #include "DynamicDataDialog.hpp"
+#include "CalculatedPoint.hpp"
 #include "EphemerisFile.hpp"
 #include "EventLocatorDialog.hpp"
 #include "CommandEditor.hpp"
@@ -755,6 +756,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   auto *calculatedPoint=dynamic_cast<CalculatedPoint *>(object);
+   const bool builtInPoint=calculatedPoint && calculatedPoint->IsBuiltIn();
+   if (builtInPoint) for (auto it=changes.cbegin();it!=changes.cend();++it)
+      if (it.key()!="OrbitColor" && it.key()!="TargetColor") return "Only orbit and target colors can be changed on this built-in calculated point.";
    if (changes.contains("@DynamicData") && !object->IsOfType("DynamicDataDisplay")) return "Grid settings require a dynamic data display.";
    if (changes.contains("@ArrayExpressions") && !object->IsOfType("Array")) return "Cell expressions require an Array.";
    if (changes.contains("@ArrayExpressions") && changes.size()==1) {
@@ -796,6 +801,19 @@ QString MainWindow::applyResourceChanges(const QString &name,
       }
       if (!proposed->Validate()) return "The resource rejected these settings.";
       candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      if (builtInPoint) {
+         // Default built-in points are cloaked and have no block to replace.
+         // Write only their supported appearance settings; never create or
+         // change their fixed body definition.
+         for (auto it=changes.cbegin();it!=changes.cend();++it) {
+            const QString key=name+"."+it.key();
+            const QString assignment="GMAT "+key+" = "+QString::fromStdString(proposed->GetStringParameter(it.key().toStdString()))+";";
+            const QRegularExpression existing("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+"[ \\t]*=[^;\\n]*;",QRegularExpression::MultilineOption);
+            if (existing.match(candidate).hasMatch()) candidate.replace(existing,assignment);
+            else candidate.prepend(assignment+"\n");
+         }
+         return applyModelScript(candidate);
+      }
       auto serialize=[](GmatBase &resource) {
          if (!resource.IsOfType(Gmat::PROP_SETUP)) return QString::fromStdString(resource.GetGeneratingString(Gmat::SCRIPTING));
          // The full script writes force models in their own section. Match that

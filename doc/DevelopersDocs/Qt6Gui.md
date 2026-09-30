@@ -1265,3 +1265,19 @@ parameters; leaving its checklist empty updates every cell. Unselected cells kee
 their preceding published values, matching the base engine. Closed displays retain
 published data for reopening, including immediate reopen before Qt finishes
 deleting the old MDI child.
+
+
+### Barycenters and libration points
+
+A Barycenter resource exposes **BodyNames**. Use its Select button to add or remove
+celestial bodies, clear the selection or drag them into a different order. Apply
+replaces the complete list; at least one distinct celestial body is required.
+A LibrationPoint resource offers primary/secondary selectors for celestial bodies
+and custom barycenters, plus an L1–L5 dropdown. The two bodies must differ;
+SolarSystemBarycenter, spacecraft and other libration points cannot be selected.
+
+Both resources offer orbit and target color pickers. Built-in barycenters explain
+that membership is fixed and permit only their colors to be changed. All edits
+remain pending until Apply, validate the complete mission, support Undo/Redo and
+persist through script save/reopen. Configured calculated points can be used as
+coordinate-system origins and OrbitView objects through the existing selectors.

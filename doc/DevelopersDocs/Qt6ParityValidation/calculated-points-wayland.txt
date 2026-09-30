@@ -1,0 +1,1 @@
+PASS: typed barycenter/libration selections and five point choices, body add/remove/clear/reorder, pending/Cancel/validation/rollback, colors, exact Undo/Redo/Unicode save/reopen, coordinate-report invariance, mass-weighted and libration geometry, built-in protection, orbit publications and recovery

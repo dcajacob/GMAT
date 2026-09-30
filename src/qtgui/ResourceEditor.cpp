@@ -23,6 +23,7 @@
 #include "DynamicDataDialog.hpp"
 #include "EphemerisFile.hpp"
 #include "Spacecraft.hpp"
+#include "CalculatedPoint.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
 #include <QColorDialog>
@@ -144,6 +145,10 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          }
          table->setProperty("ephemerisGroupedUpdate",false);
       });
+   }
+   if (auto *point=dynamic_cast<CalculatedPoint *>(&object); point && point->IsBuiltIn()) {
+      auto *note=new QLabel("This is a built-in calculated point. Its body membership is fixed; its orbit and target colors can be changed.",this);
+      note->setObjectName("builtInPointInfo"); note->setWordWrap(true); layout->addWidget(note);
    }
    if (object.IsOfType("DynamicDataDisplay")) {
       auto initial=std::shared_ptr<GmatBase>(object.Clone()); auto *setup=new QPushButton("Dynamic data setup…",this); setup->setObjectName("editDynamicData"); layout->addWidget(setup);

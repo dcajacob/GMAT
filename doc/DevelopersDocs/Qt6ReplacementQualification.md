@@ -109,7 +109,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/mission/TreeViewOptionDialog.hpp` | Pending audit |
 | `src/gui/view/ViewTextDialog.hpp` | Pending audit |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
-| `src/gui/solarsys/LibrationPointPanel.hpp` | Pending audit |
+| `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
 | `src/gui/view/EditorPanel.hpp` | Pending audit |
 | `src/gui/app/CompareFilesDialog.hpp` | Pending audit |
 | `src/gui/app/ScriptPanel.hpp` | Pending audit |
@@ -121,7 +121,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
 | `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. Full solver-iteration modes and broader burn/hardware parameter execution remain to qualify. |
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Pending audit |
-| `src/gui/solarsys/BarycenterPanel.hpp` | Pending audit |
+| `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
 | `src/gui/app/CompareTextDialog.hpp` | Pending audit |
 | `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
@@ -2716,3 +2716,62 @@ in 102.19 seconds, including native orbit/window checks, plotting/HiDPI, mission
 and plugin/file regressions and the new DynamicData suite. Evidence:
 Qt6ParityValidation/check-dynamic-data.txt. Full replacement acceptance remains
 open.
+
+
+## Calculated-point resource controls and viewer execution
+
+Audited active wx BarycenterPanel and LibrationPointPanel controls, including
+GmatColorPanel as instantiated by these panels (its segment override checkbox is
+hidden here). Barycenter membership was absent from Qt's supported list fields.
+It is now editable through the existing ordered membership checklist, with typed
+celestial-body choices. Add/remove/clear, drag ordering, pending changes and
+Cancel use the shared resource editor. Apply replaces the complete BodyNames
+list and rejects empty, duplicate, missing and non-body entries. Although the
+engine's diagnostic text mentions barycenter members, its actual Barycenter
+SetRefObject rejects non-celestial bodies; Qt follows that executable behavior.
+
+Libration points now offer all five L1–L5 choices and primary/secondary selectors
+containing celestial bodies and custom barycenters. Spacecraft, other libration
+points and SolarSystemBarycenter are excluded, matching the engine's supported
+references. Apply validates the final pair so swapping bodies can be atomic,
+while identical bodies are rejected. Both resources retain orbit/target color
+entry and color pickers, with edits pending until Apply.
+
+Testing exposed a built-in appearance serialization gap: a default built-in
+barycenter has no generated script block to replace. Applying a color therefore
+returned the specialized-editor error. Qt now writes/replaces only the validated
+appearance assignments and reinterprets the whole candidate. It never emits a
+Create or changes membership. Built-in editors explain their fixed definition
+and expose only orbit/target colors. First color changes, updates to existing
+appearance, preserving the other color, exact Undo/Redo, save/reopen and numerical
+report invariance are tested.
+
+CalculatedPointTests configures Earth/Luna membership and a Sun/custom-barycenter
+libration point through actual GUI controls, then saves/reopens a Unicode script
+and runs its dependent coordinate systems and OrbitView. Nine coordinate report
+components match an independently script-configured mission exactly as written.
+Mass-weighted body positions agree with published barycenter positions within
+1e-7 km. GUI-applied Earth/Luna L1–L5 selections are individually saved/reopened
+and executed; collinear position/order and equilibrium residuals and triangular
+geometry provide independent checks on the selected definition reaching the
+viewer. Two-body reorder and single-body membership, empty GUI selection recovery,
+wrong references/types, duplicate membership and built-in protection are covered.
+No propagation or calculated-point algorithms changed.
+
+The native Wayland workflow passed with isolated preferences. The inspected
+resource-editor capture shows readable properties, selection/color buttons,
+L1–L5 dropdown and Apply/Close actions. The orbit capture and pixel check confirm
+the configured L4 marker appears in its chosen color; nearby Earth/Sat/Center
+labels can overlap at this scene scale, so this is not a label-placement parity
+claim. Evidence: Qt6ParityValidation/calculated-points-wayland.txt,
+calculated-points-wayland.setup.png and calculated-points-wayland.view.png.
+
+Broader bodies, epochs, mass ratios and ephemeris-error boundaries remain
+qualification cases. There are now 47 wx inventory entries marked Pending audit.
+The full workflow, viewer/OF and plugin acceptance gates remain open.
+
+Rebuilt the actual application/bin/GmatQt target. All 22 Qt suites passed in
+84.12 seconds with the final implementation, including native orbit/window
+checks, mission/plugin/file regressions, plotting/HiDPI and CalculatedPoints.
+Evidence: Qt6ParityValidation/check-calculated-points.txt. Full replacement
+acceptance remains open.
