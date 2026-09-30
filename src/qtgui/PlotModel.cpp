@@ -33,7 +33,7 @@ void PlotModel::append(int index, double x, double y, double z, double epoch,
 void PlotModel::clear()
 {
    for (auto &curve : curves) { curve.points.clear(); curve.breaks.clear(); curve.breakNext = true; }
-   frame = 0; pendingUpdates = 0; ++historyGeneration;
+   frame = 0; pendingUpdates = 0; endOfRun=false; ++historyGeneration;
    cameras.clear();
    for (auto &view:cameraViews) view.cameras.clear();
 }
@@ -43,13 +43,27 @@ void PlotModel::breakLines()
 }
 void PlotModel::trim()
 {
-   maxPoints = std::max(2, maxPoints);
+   maxPoints = std::max(1, maxPoints);
    while (cameras.size()>static_cast<size_t>(maxPoints)) cameras.pop_front();
    for (auto &view:cameraViews) while (view.cameras.size()>static_cast<size_t>(maxPoints)) view.cameras.pop_front();
    for (auto &curve : curves) {
       while (curve.points.size() > static_cast<size_t>(maxPoints)) curve.points.pop_front();
       if (!curve.points.empty()) curve.points.front().connect = false;
    }
+}
+quint64 PlotModel::firstVisibleFrame(const PlotCurve &curve,quint64 through) const
+{
+   if (kind==Kind::XY || redrawPoints<=0 || (endOfRun && through>=frame)) return 0;
+   // wx uses endIndex - NumPointsToRedraw: retain the preceding endpoint
+   // so the requested number of recent segments can still be connected.
+   int count=0;
+   quint64 first=std::numeric_limits<quint64>::max();
+   for (auto point=curve.points.rbegin();point!=curve.points.rend();++point) {
+      if (point->frame>through) continue;
+      first=point->frame;
+      if (count++==redrawPoints) break;
+   }
+   return first;
 }
 QVector<QPair<QPointF, QPointF>> PlotModel::groundSegments(const QPointF &a, const QPointF &b)
 {

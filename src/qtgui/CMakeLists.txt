@@ -19,6 +19,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    GroundStationDialog.cpp GroundStationDialog.hpp
    EventLocatorDialog.cpp EventLocatorDialog.hpp
    XYPlotDialog.cpp XYPlotDialog.hpp
+   GroundTrackDialog.cpp GroundTrackDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp

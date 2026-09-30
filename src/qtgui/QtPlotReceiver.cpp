@@ -170,10 +170,11 @@ void QtPlotReceiver::warn(const std::string &name, const std::string &option)
    const QString key=text(name+":"+option); if (warnings.contains(key)) return;
    warnings.insert(key); MessageInterface::ShowMessage("Qt plot '%s': %s is not yet supported.\n",name.c_str(),option.c_str());
 }
-bool QtPlotReceiver::CreateGlPlotWindow(const std::string &name,const std::string &oldName,Real x,Real y,Real w,Real h,bool maximized,Integer)
+bool QtPlotReceiver::CreateGlPlotWindow(const std::string &name,const std::string &oldName,Real x,Real y,Real w,Real h,bool maximized,Integer redrawPoints)
 {
    if (oldName!=name && !oldName.empty()) remove(oldName);
    auto &entry=create(name,currentView==GmatPlot::GROUND_TRACK_PLOT ? PlotModel::Kind::GroundTrack : PlotModel::Kind::Orbit,x,y,w,h,maximized);
+   entry.data->redrawPoints=std::max(0,static_cast<int>(redrawPoints));
    if (entry.data->kind==PlotModel::Kind::GroundTrack) { entry.data->xLabel="Longitude (deg)"; entry.data->yLabel="Latitude (deg)"; }
    return true;
 }
@@ -282,8 +283,8 @@ bool QtPlotReceiver::IsThere(const std::string &name) { auto *entry=find(name); 
 bool QtPlotReceiver::InitializeGlPlot(const std::string &name) { return find(name)!=nullptr; }
 bool QtPlotReceiver::RefreshGlPlot(const std::string &name) { if (auto *entry=find(name)) { refresh(*entry,true); return true; } return false; }
 bool QtPlotReceiver::DeleteGlPlot(const std::string &name) { return remove(name); }
-bool QtPlotReceiver::SetGlEndOfRun(const std::string &name) { return RefreshGlPlot(name); }
-void QtPlotReceiver::SetMaxGlDataPoints(const std::string &name,Integer count) { if (auto *entry=find(name)) { entry->data->maxPoints=static_cast<int>(std::clamp<Integer>(count,2,std::numeric_limits<int>::max())); entry->data->trim(); } }
+bool QtPlotReceiver::SetGlEndOfRun(const std::string &name) { if (auto *entry=find(name)) { entry->data->endOfRun=true; refresh(*entry,true); return true; } return false; }
+void QtPlotReceiver::SetMaxGlDataPoints(const std::string &name,Integer count) { if (auto *entry=find(name)) { entry->data->maxPoints=static_cast<int>(std::clamp<Integer>(count,1,std::numeric_limits<int>::max())); entry->data->trim(); } }
 bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,const StringArray &names,const Real &epoch,
       const RealArray &x,const RealArray &y,const RealArray &z,const RealArray &,const RealArray &,const RealArray &,
       const ColorMap &colors,const ColorMap &targetColors,bool solving,Integer,bool update,bool drawing,bool)
@@ -605,6 +606,7 @@ bool QtPlotReceiver::CreateGroundTrackWindow(const std::string &name,const std::
    if (auto *configured=Moderator::Instance()->GetConfiguredObject(name)) {
       if (configured->IsOfType("GroundTrack")) {
          SetMaxGlDataPoints(name,configured->GetIntegerParameter("MaxPlotPoints"));
+         entry.data->redrawPoints=std::max(0,static_cast<int>(configured->GetIntegerParameter("NumPointsToRedraw")));
          entry.data->defaultLineWidth=std::clamp(static_cast<int>(configured->GetIntegerParameter("LineWidth")),1,20);
          entry.data->footprints=configured->GetStringParameter("ShowFootPrints")=="All";
       }
@@ -615,7 +617,14 @@ void QtPlotReceiver::SetGroundTrackOption(const std::string &name,const std::str
 {
    if (auto *entry=find(name)) {
       if (option=="TextureMap") {
-         entry->data->map=QImage(text(value));
+         QString path=text(value);
+         if (auto *configured=Moderator::Instance()->GetConfiguredObject(name)) {
+            if (configured->IsOfType("GroundTrack") || configured->IsOfType("GroundTrackPlot")) {
+               std::string file,resolved;
+               if (FileManager::Instance()->GetTextureMapFile(value,configured->GetStringParameter("CentralBody"),name,file,resolved,false)) path=text(resolved);
+            }
+         }
+         entry->data->map=QImage(path);
          if (!value.empty() && entry->data->map.isNull()) MessageInterface::ShowMessage("Qt GroundTrack '%s': could not load map '%s'; using coordinate grid.\n",name.c_str(),value.c_str());
       } else warn(name,option);
    }
@@ -656,7 +665,10 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
    } else if (command=="Reinitialize" || command=="ClearData" || command=="Reset") {
       entry->data->clear(); entry->data->stations.clear();
       if (command=="Reinitialize") entry->data->curves.clear();
-   } else if (command=="Refresh" || command=="RunComplete") refresh(*entry,true);
+   } else if (command=="Refresh" || command=="RunComplete") {
+      if (command=="RunComplete") entry->data->endOfRun=true;
+      refresh(*entry,true);
+   }
    else return TakeGlAction(name,action);
    return true;
 }

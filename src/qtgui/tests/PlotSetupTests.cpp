@@ -2,7 +2,12 @@
 #include "ResourceEditor.hpp"
 #include "ReportParameterDialog.hpp"
 #include "XYPlotDialog.hpp"
+#include "GroundTrackDialog.hpp"
+#include "BodyFixedStateConverter.hpp"
+#include "SolarSystem.hpp"
+#include "CelestialBody.hpp"
 #include "QtPlotReceiver.hpp"
+#include "PlotWidget.hpp"
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
@@ -14,6 +19,9 @@
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFileDialog>
+#include <QImage>
+#include <QImageReader>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
@@ -21,9 +29,13 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QSpinBox>
+#include <QScrollArea>
+#include <QScrollBar>
+#include <QMdiSubWindow>
 #include <QTableWidget>
 #include <QTemporaryDir>
 #include <QTimer>
+#include <QEventLoop>
 #include <cmath>
 #include <functional>
 #include <iostream>
@@ -41,6 +53,93 @@ static QTableWidgetItem *field(ResourceEditor &panel,const QString &name)
    auto *table=panel.findChild<QTableWidget *>();
    for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()==name) return table->item(row,1);
    throw std::runtime_error("Plot field missing");
+}
+static const PlotCurve &namedCurve(const PlotModel &model,const QString &name)
+{
+   for (const auto &curve:model.curves) if (curve.name==name) return curve;
+   throw std::runtime_error("Expected configured curve missing");
+}
+static void groundTrackWorkflow(MainWindow &window,const QString &capture,QTemporaryDir &files)
+{
+   auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor"); const auto texture=files.filePath("custom map.png"),bad=files.filePath("broken map.png"),report=files.filePath("ground.txt"),saved=files.filePath("ground ü.script");
+   QImage custom(32,16,QImage::Format_RGB32); custom.fill(QColor(80,120,170)); require(custom.save(texture),"Custom texture fixture unavailable");
+   QFile valid(texture); require(valid.open(QIODevice::ReadOnly),"Custom texture fixture cannot be read");
+   QFile invalid(bad); require(invalid.open(QIODevice::WriteOnly),"Corrupt texture fixture unavailable"); invalid.write(valid.read(33)); invalid.close();
+   require(QImageReader(bad).canRead(),"Corrupt fixture lacks a recognizable PNG header");
+   const QString mission="BeginMissionSequence;\nPropagate Prop(Sat) {Sat.ElapsedSecs = 600}; % preserve ground mission\nReport Values Sat.EarthFixed.X Sat.EarthFixed.Y Sat.EarthFixed.Z Sat.MarsFixed.X Sat.MarsFixed.Y Sat.MarsFixed.Z;\n";
+   const QString base="Create Spacecraft Sat;\nCreate GroundStation Site;\nSite.HorizonReference = Sphere;\nSite.StateType = Spherical;\nSite.Location1 = 20;\nSite.Location2 = 30;\nSite.Location3 = 0;\n"
+      "Create CoordinateSystem MarsFixed;\nMarsFixed.Origin = Mars;\nMarsFixed.Axes = BodyFixed;\n"
+      "Create ForceModel FM;\nCreate Propagator Prop;\nProp.FM = FM;\nProp.InitialStepSize = 60;\nProp.MinStep = 60;\nProp.MaxStep = 60;\n"
+      "Create GroundTrackPlot Map;\nMap.Add = {Sat, Site};\nMap.DataCollectFrequency = 1;\nMap.MaxPlotPoints = 100;\n"
+      "Create OrbitView Orb;\nOrb.Add = {Sat, Earth};\nOrb.NumPointsToRedraw = 1;\nOrb.MaxPlotPoints = 3;\n"
+      "Create ReportFile Values;\nValues.Filename = '"+report+"';\nValues.Precision = 16;\n"+mission;
+   editor->setPlainText(base); require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Ground-track baseline failed");
+   auto baseline=window.plotReceiver()->model("Map"); require(baseline && !baseline->map.isNull() && baseline->curves[0].points.size()>5,"Ground baseline missing texture/samples");
+   const auto count=baseline->curves[0].points.size();
+   const auto orbit=window.plotReceiver()->model("Orb"); require(orbit && orbit->redrawPoints==1 && orbit->endOfRun && namedCurve(*orbit,"Sat").points.size()==3,"Orbit redraw/retention settings not passed by GL callback");
+   require(baseline->stations.size()==1 && baseline->stations[0].name=="Site","Station marker missing");
+   require(std::abs(baseline->stations[0].longitude-30)<1e-9 && std::abs(baseline->stations[0].latitude-20)<1e-9,"Station ground coordinates wrong");
+   QFile data(report); require(data.open(QIODevice::ReadOnly),"Ground reference report missing"); const auto expected=QString::fromUtf8(data.readAll()).trimmed().split('\n').last().simplified().split(' '); require(expected.size()==6,"Ground reference frame report incomplete");
+   require(window.buildScript(),"Ground-track reset failed"); const auto source=editor->toPlainText(); QString applyError="Not applied"; std::exception_ptr failure;
+   {
+      QWidget owner; auto *plot=Moderator::Instance()->GetConfiguredObject("Map");
+      ResourceEditor panel(*plot,[&](const auto &changes) { applyError=window.applyResourceChanges("Map",changes,source); return applyError; },&owner,source);
+      auto *button=panel.findChild<QPushButton *>("editGroundTrack"); require(button,"Ground-track setup missing");
+      later(&panel,failure,[&] { auto *dialog=panel.findChild<QDialog *>("groundTrackDialog"); dialog->findChild<QComboBox *>("groundCentralBody")->setCurrentText("Mars"); close(dialog,false); }); button->click(); if (failure) std::rethrow_exception(failure);
+      require(!panel.hasChanges() && editor->toPlainText()==source,"Ground Cancel leaked edits");
+      later(&panel,failure,[&] {
+         auto *dialog=panel.findChild<QDialog *>("groundTrackDialog"); auto *body=dialog->findChild<QComboBox *>("groundCentralBody"); auto *map=dialog->findChild<QLineEdit *>("groundTextureMap");
+         require(body->findText("Mars")>=0 && dialog->findChild<QSpinBox *>("ground_MaxPlotPoints")->minimum()==1 && dialog->findChild<QSpinBox *>("ground_NumPointsToRedraw")->minimum()==0,"Ground typed data selectors incorrect");
+         auto *objects=dialog->findChild<QListWidget *>("groundObjects"); require(objects->findItems("Site",Qt::MatchExactly).size()==1 && objects->findItems("Earth",Qt::MatchExactly).isEmpty(),"Ground object picker does not match wx types");
+         dialog->findChild<QPushButton *>("groundClearSelection")->click(); close(dialog); require(dialog->isVisible(),"Shown ground plot accepted no objects"); dialog->findChild<QPushButton *>("groundSelectAll")->click();
+         require(dialog->findChild<QLabel *>("groundTrackError")->text().isEmpty(),"Corrected object selection retained stale error");
+         map->setText(bad); close(dialog); require(dialog->isVisible() && !dialog->findChild<QLabel *>("groundTrackError")->text().isEmpty(),"Unreadable ground texture accepted");
+         map->setText(texture);
+         later(dialog,failure,[&] { dialog->findChild<QFileDialog *>("groundTextureDialog")->reject(); }); dialog->findChild<QPushButton *>("groundBrowseTexture")->click(); if (failure) std::rethrow_exception(failure); require(map->text()==texture,"Texture picker Cancel changed map");
+         body->setCurrentText("Mars"); const auto marsDefault=map->text(); require(marsDefault!=texture && !marsDefault.isEmpty(),"Central-body change did not choose its default map"); body->setCurrentText("Earth"); require(map->text()==texture,"Custom Earth map lost while changing bodies"); body->setCurrentText("Mars"); require(map->text()==marsDefault,"Body map round trip lost default");
+         later(dialog,failure,[&] { auto *picker=dialog->findChild<QFileDialog *>("groundTextureDialog"); picker->selectFile(texture); require(QMetaObject::invokeMethod(picker,"accept",Qt::DirectConnection),"Texture picker did not accept selection"); }); dialog->findChild<QPushButton *>("groundBrowseTexture")->click(); if (failure) std::rethrow_exception(failure); require(map->text()==texture,"Texture picker did not apply file");
+         for (int i=0;i<objects->count();++i) objects->item(i)->setCheckState(objects->item(i)->text()=="Sat" ? Qt::Checked : Qt::Unchecked);
+         dialog->findChild<QSpinBox *>("ground_DataCollectFrequency")->setValue(2); dialog->findChild<QSpinBox *>("ground_UpdatePlotFrequency")->setValue(4); dialog->findChild<QSpinBox *>("ground_MaxPlotPoints")->setValue(3); dialog->findChild<QSpinBox *>("ground_NumPointsToRedraw")->setValue(1);
+         dialog->findChild<QComboBox *>("groundSolverIterations")->setCurrentText("None");
+         const auto normal=dialog->size(); dialog->resize(620,440); QEventLoop settle; QTimer::singleShot(80,&settle,&QEventLoop::quit); settle.exec();
+         auto *scroll=dialog->findChild<QScrollArea *>("groundTrackScroll"); require(scroll->verticalScrollBar()->maximum()>0,"Compact ground dialog cannot scroll");
+         auto *ok=dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok); require(dialog->rect().contains(QRect(ok->mapTo(dialog,QPoint()),ok->size())),"Ground OK outside compact dialog");
+         dialog->resize(normal); QTimer::singleShot(80,&settle,&QEventLoop::quit); settle.exec();
+         if (!capture.isEmpty()) { scroll->verticalScrollBar()->setValue(0); require(dialog->grab().save(capture+".ground.png"),"Ground dialog capture failed"); }
+         close(dialog);
+      }); button->click(); if (failure) std::rethrow_exception(failure);
+      require(panel.hasChanges() && plot->GetStringParameter("CentralBody")=="Earth" && plot->GetIntegerParameter("MaxPlotPoints")==100,"Ground setup modified configured values before Apply");
+      later(&panel,failure,[&] { auto *dialog=panel.findChild<QDialog *>("groundTrackDialog"); require(dialog->findChild<QComboBox *>("groundCentralBody")->currentText()=="Mars" && dialog->findChild<QLineEdit *>("groundTextureMap")->text()==texture,"Pending ground setup not retained"); close(dialog,false); }); button->click(); if (failure) std::rethrow_exception(failure);
+      panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(applyError.isEmpty(),qPrintable(applyError));
+   }
+   const auto changed=editor->toPlainText(); require(changed.endsWith(mission),"Ground edit changed mission source"); editor->undo(); require(editor->toPlainText()==source,"Ground Undo failed"); editor->redo(); require(editor->toPlainText()==changed,"Ground Redo failed");
+   require(window.saveScriptTo(saved) && window.loadScript(saved) && editor->toPlainText()==changed && window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Ground save/reopen/execution failed");
+   auto model=window.plotReceiver()->model("Map"); require(model && model->maxPoints==3 && model->redrawPoints==1 && model->updateFrequency==4 && model->endOfRun && namedCurve(*model,"Sat").points.size()==3,"Ground settings not applied to viewer");
+   for (const auto &curve:model->curves) require(curve.name!="Site","Deselected ground station retained in viewer");
+   require(model->stations.isEmpty(),"Deselected station marker retained");
+   require(model->map.size()==custom.size() && model->map.pixelColor(0,0)==custom.pixelColor(0,0),"Custom texture not rendered in ground model");
+   require(window.plotReceiver()->show("Map"),"Configured ground viewer unavailable"); QApplication::processEvents();
+   PlotWidget *viewer=nullptr; for (auto *child:window.findChildren<QMdiSubWindow *>()) if (child->property("plotName").toString()=="Map") viewer=dynamic_cast<PlotWidget *>(child->widget());
+   require(viewer,"Configured ground viewer widget missing"); const auto image=viewer->canvas()->captureImage(); int mapPixels=0;
+   for (int row=0;row<image.height();++row) for (int col=0;col<image.width();++col) if (image.pixelColor(col,row)==custom.pixelColor(0,0)) ++mapPixels;
+   require(mapPixels>1000,"Configured map image not drawn in ground viewer");
+   if (!capture.isEmpty()) require(image.save(capture+".ground-view.png"),"Configured ground viewer capture failed");
+   const auto &point=model->curves.constFind(0).value().points.back(); const double radians=180/std::acos(-1.0),x=expected[3].toDouble(),y=expected[4].toDouble(),z=expected[5].toDouble();
+   auto *mars=Moderator::Instance()->GetSolarSystemInUse()->GetBody("Mars");
+   const auto defaultName=QString::fromStdString(mars->GetStringParameter(mars->GetParameterID("TextureMapFileName")));
+   const auto spherical=BodyFixedStateConverterUtil::Convert(Rvector3(x,y,z),"Cartesian","Sphere","Spherical","Ellipsoid",mars->GetFlattening(),mars->GetEquatorialRadius());
+   require(std::abs(point.x-std::atan2(y,x)*radians)<1e-9 && std::abs(point.y-spherical[0]*radians)<1e-5,"Selected Mars ground coordinates disagree with independent report/converter");
+   const auto current=editor->toPlainText(); require(!window.applyResourceChanges("Map",{{"TextureMap",bad}},current).isEmpty() && editor->toPlainText()==current,"Invalid generic texture edit did not roll back");
+   require(!window.applyResourceChanges("Map",{{"DataCollectFrequency","0"}},current).isEmpty() && editor->toPlainText()==current,"Invalid collect frequency accepted");
+   require(window.applyResourceChanges("Map",{{"MaxPlotPoints","100"}},current).isEmpty() && window.runMission()==MainWindow::RunResult::Completed,"Ground collect-frequency check failed");
+   require(window.plotReceiver()->model("Map")->curves[0].points.size()<count,"Ground data collection frequency ignored");
+   require(window.applyResourceChanges("Map",{{"MaxPlotPoints","1"}},editor->toPlainText()).isEmpty() && window.runMission()==MainWindow::RunResult::Completed && window.plotReceiver()->model("Map")->curves[0].points.size()==1,"One-point ground retention ignored");
+   require(window.applyResourceChanges("Map",{{"TextureMap",defaultName}},editor->toPlainText()).isEmpty() && window.runMission()==MainWindow::RunResult::Completed && !window.plotReceiver()->model("Map")->map.isNull() && window.plotReceiver()->model("Map")->map.size()!=custom.size(),"Body texture filename not resolved through texture path");
+   require(window.applyResourceChanges("Map",{{"TextureMap",""}},editor->toPlainText()).isEmpty() && window.runMission()==MainWindow::RunResult::Completed && !window.plotReceiver()->model("Map")->map.isNull() && window.plotReceiver()->model("Map")->map.size()!=custom.size(),"Default body texture did not recover");
+   require(window.applyResourceChanges("Map",{{"CentralBody","Earth"},{"Add","Site"},{"TextureMap",""}},editor->toPlainText()).isEmpty() && window.runMission()==MainWindow::RunResult::Completed,"Station-only ground plot failed");
+   const auto stationOnly=window.plotReceiver()->model("Map"); require(stationOnly && stationOnly->curves.isEmpty() && stationOnly->stations.size()==1 && stationOnly->stations[0].name=="Site","Station-only plot retained an old spacecraft curve or lost its station");
+   require(window.applyResourceChanges("Map",{{"ShowPlot","false"}},editor->toPlainText()).isEmpty() && window.runMission()==MainWindow::RunResult::Completed && !window.plotReceiver()->model("Map"),"Ground plot disable ignored");
+   std::cout<<"PASS: ground-track typed objects/body maps, texture picker/validation/recovery, data settings, pending Apply/Cancel/Undo/Redo/save/reopen, Mars frame/report agreement and one-point retention\n";
 }
 int main(int argc,char **argv)
 {
@@ -130,6 +229,7 @@ int main(int argc,char **argv)
       require(window.saveScriptTo(saved) && window.loadScript(saved) && window.buildScript() && window.runMission()==MainWindow::RunResult::Completed && !window.plotReceiver()->model("Graph"),"Disabled XY plot still opens after save/reopen");
       const auto disabled=editor->toPlainText(); require(!window.applyResourceChanges("Graph",{{"ShowPlot","true"}},disabled).isEmpty() && editor->toPlainText()==disabled,"Empty XY plot enabled without Y parameters");
       std::cout<<"PASS: XY grouped controls, plottable parameter/array browser, Cancel/pending Apply, validation/recovery, exact Undo/Redo/save/reopen, grid/visibility and numerical curve/report agreement\n";
+      groundTrackWorkflow(window,capture,files);
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; }
    catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;

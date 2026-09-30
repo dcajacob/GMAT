@@ -367,8 +367,9 @@ struct OrbitRenderer::Scene
          auto positions=new osg::Vec3Array; auto colors=new osg::Vec4Array;
          const PlotPoint *last=nullptr;
          unsigned start=0;
+         const auto first=model->firstVisibleFrame(source,frame);
          for (const auto &p:source.points) {
-            if (p.frame>frame) continue;
+            if (p.frame>frame || p.frame<first) continue;
             if (!p.connect && positions->size()>start) {
                if (source.lines) geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP,start,positions->size()-start));
                start=positions->size();

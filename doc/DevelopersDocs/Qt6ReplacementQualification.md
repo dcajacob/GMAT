@@ -118,7 +118,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Pending audit |
-| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Pending audit |
+| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
 | `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. Full solver-iteration modes and broader burn/hardware parameter execution remain to qualify. |
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Pending audit |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Pending audit |
@@ -2331,3 +2331,68 @@ on Wayland, with the dialog capture visually inspected. Evidence:
 `Qt6ParityValidation/check-xy-setup.txt`, `xy-setup-wayland.txt` and
 `xy-setup-wayland.png`. Ground-track setup, remaining orbit redraw/camera modes,
 full solver-iteration combinations and broader parameter contexts remain open.
+
+
+## Ground-track setup, texture defaults and redraw limits
+
+Audited wx `GroundTrackPlotPanel.cpp`, its active main-frame route, and the actual
+subscriber factory. In this branch the `GroundTrackPlot` script alias creates
+`GroundTrack`, whose native callbacks publish planetodetic spacecraft coordinates
+and separate fixed station markers. The legacy concrete `GroundTrackPlot` remains
+in the source. Qt's new **Ground-track setup…** serves both types, with Drawing,
+Data and Other options groups: typed bodies, spacecraft/station checklists,
+bulk selection/clear, collection/update frequencies, retention/redraw counts,
+Show plot, solver iteration modes and a texture picker/Default action.
+The color controls behind `__USE_COLOR_FROM_SUBSCRIBER__` are not enabled by the
+current wx source/build; object colors remain editable through their resources.
+
+Changing the body chooses its default map and retains custom choices per body
+when returning. GroundTrack marks an empty/default TextureMap readonly to omit
+it from serialization; this is not a restriction on the active wx texture
+control. Qt now exposes and permits that field while retaining the engine's
+serialization behavior. Map validation resolves the engine's texture path and
+actually decodes the image, rejecting missing or truncated images before Apply.
+The receiver also resolves bare texture filenames through the engine's texture
+path, so a body-default filename selected by the GUI renders successfully.
+
+Object-list reconstruction now avoids legacy `DrawObject` assignments for
+current GroundTrack, where that property does not exist, and for the legacy
+concrete subscriber, where it is readonly. Station selection and deletion reach
+the current runtime's separate marker list without leaving stale spacecraft
+curves or station markers. Show plot with no selected objects is rejected with
+corrective feedback; station-only plots remain supported.
+
+Qt previously discarded the GL `NumPointsToRedraw` argument and ignored the
+current GroundTrack field. It now honors the requested recent segments during
+runs and replay, including the preceding endpoint needed to connect each segment.
+This follows legacy wx `ViewCanvas::ComputeActualIndex` semantics. Current
+GroundTrack stores the same setting but its wx native window does not consume
+it; Qt gives that existing GUI setting an effect. Retained history and stable
+camera bounds are unchanged. `SetGlEndOfRun` and GroundTrack's `RunComplete`
+restore the full retained trajectory, and clearing for a rerun resets that state.
+`MaxPlotPoints = 1` is now respected by the receiver and model, matching the
+engine's positive-integer range.
+
+`PlotSetupTests` qualifies typed selection and map defaults, file-picker
+accept/Cancel, a PNG with a recognizable header but no image data, pending
+Apply/reopen, compact scrolling/action buttons, exact Undo/Redo and Unicode-path
+save/reopen. A GUI-configured Mars plot renders the selected custom image,
+verified from actual canvas pixels. Its longitude agrees with an independently
+configured body-fixed report within 1e-9 degrees; planetodetic latitude agrees
+with the engine's separate state converter within 1e-5 degrees, allowing the
+existing ground-track iteration tolerance. The tests verify collection frequency,
+retained sample count, one-point retention, update/redraw settings, a real
+OrbitView GL redraw callback, default-map recovery, deselected station removal,
+station-only execution and disabled-view suppression.
+
+`PlotTests` captures both native OpenGL and fallback orbit drawing, plus 2D
+ground tracks. It verifies recent-segment images differ from complete retained
+tracks, completion/zero redraw restore full tracks, replay honors the limit,
+history remains intact and clearing resets completion state. All 16 Qt suites
+pass and the actual `application/bin/GmatQt` is rebuilt. The final setup and
+execution workflow also passes directly on Wayland. Compact scrolling and buttons were tested, and dialog/map
+captures were visually inspected. Evidence: `Qt6ParityValidation/check-ground-setup.txt`,
+`ground-setup-wayland.txt`, `ground-setup-wayland.png` and `ground-view-wayland.png`.
+Broader solver-loop display modes, body/station combinations, runtime asset loss
+and remaining orbit camera/option workflows stay open; this does not close the
+full viewer or replacement qualification gate.

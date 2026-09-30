@@ -1172,3 +1172,17 @@ array elements. Remove, Up/Down and drag reordering edit the Y list. Strings and
 bare arrays are excluded; turn off Show plot to keep a plot with no Y selections.
 OK retains edits in the resource panel, and Apply validates and saves them to
 the mission. Cancel leaves the pending resource values unchanged.
+
+
+Ground-track resources provide **Ground-track setup…** with central-body and
+spacecraft/station selection, sampling/update frequencies, maximum retained
+points, recent-segment redraw, visibility, solver settings and texture browsing.
+Body changes choose the corresponding default texture and retain custom choices
+when switching back. Default restores the body's map. Missing or undecodable
+images produce corrective feedback. The controls scroll in smaller windows,
+keeping OK/Cancel accessible, and changes remain pending until resource Apply.
+
+Recent-segment redraw affects running plots and replay while retaining their
+history. Zero draws all retained points; completing a run restores the full
+retained trajectory. Maximum retained points can be one. These behaviors apply
+to both orbit and ground-track rendering.

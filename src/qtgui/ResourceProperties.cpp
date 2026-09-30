@@ -1,5 +1,6 @@
 #include "ResourceProperties.hpp"
 #include "ReportParameterDialog.hpp"
+#include "GroundTrackDialog.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
@@ -48,9 +49,12 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // Array values are marked read-only for ordinary property syntax;
          // their specialized editor writes the array's indexed initial values.
          const bool arrayValues=object.GetTypeName()=="Array" && object.GetParameterText(id)=="RmatValue";
+         // GroundTrack hides a default texture from serialization; wx still
+         // permits replacing it through its dedicated texture-map control.
+         const bool groundTexture=object.GetTypeName()=="GroundTrack" && object.GetParameterText(id)=="TextureMap";
          bool orbitElementId=false;
          if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
-         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId) continue;
+         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
@@ -382,7 +386,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       if (ratio.hasMatch()) result.replace(ratio.capturedStart(),ratio.capturedLength(),ratioValue);
       else if (!entries.isEmpty()) result+=(result.endsWith('\n') ? "" : "\n")+ratioValue+"\n";
    }
-   if (name=="Add" && (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="GroundTrack" || object.GetTypeName()=="GroundTrackPlot")) {
+   if (name=="Add" && (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="GroundTrackPlot") && !object.IsParameterReadOnly(object.GetParameterID("DrawObject"))) {
       // DrawObject is positional in scripts. Preserve visibility by name when
       // entries move or disappear, and show newly added objects.
       const auto oldNames=object.GetStringArrayParameter(id);
@@ -406,6 +410,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void validateResourceProperties(GmatBase &object)
 {
+   if (object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") { validateGroundTrackTexture(object); return; }
    if (object.GetTypeName()=="XYPlot") {
       const auto x=QString::fromStdString(object.GetStringParameter("XVariable"));
       if ((object.GetBooleanParameter("ShowPlot") && x.isEmpty()) || (!x.isEmpty() && !ReportParameterDialog::isPlottableReference(x)))
@@ -540,7 +545,8 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
       if (QString::fromStdString(object.GetParameterText(elementId))==name) { id=elementId; break; }
    }
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
-   if (object.IsParameterReadOnly(id) && !arrayValues) throw std::runtime_error("Property is read-only");
+   const bool groundTexture=object.GetTypeName()=="GroundTrack" && name=="TextureMap";
+   if (object.IsParameterReadOnly(id) && !arrayValues && !groundTexture) throw std::runtime_error("Property is read-only");
    bool valid = false;
    switch (object.GetParameterType(id)) {
    case Gmat::RVECTOR_TYPE:

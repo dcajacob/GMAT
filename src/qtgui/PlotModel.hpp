@@ -97,6 +97,8 @@ struct PlotModel
    double automaticRadius=0;
    QString automaticBody;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
+   int redrawPoints = 0;
+   bool endOfRun = false;
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;
    quint64 frame = 0, historyGeneration = 0;
@@ -106,6 +108,7 @@ struct PlotModel
    void clear();
    void breakLines();
    void trim();
+   quint64 firstVisibleFrame(const PlotCurve &curve,quint64 through) const;
    static QVector<QPair<QPointF, QPointF>> groundSegments(const QPointF &a, const QPointF &b);
    static QVector<QPointF> groundFootprint(QPointF center,double radiusDegrees=5);
 };

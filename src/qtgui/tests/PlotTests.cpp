@@ -55,6 +55,21 @@ int main(int argc,char **argv)
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
+      for (const auto kind:{PlotModel::Kind::Orbit,PlotModel::Kind::GroundTrack}) {
+         auto model=std::make_shared<PlotModel>(kind); model->axes=false; model->grid=false; model->labels=false; model->legend=false;
+         model->redrawPoints=1; model->curves[0].name="Track"; model->curves[0].color=Qt::red;
+         for (const auto &point:QVector<QPointF>{{-100,-50},{100,-50},{100,50},{-100,50},{-100,0}}) { ++model->frame; model->append(0,point.x(),point.y()); }
+         PlotCanvas canvas(model); canvas.resize(600,400); canvas.show(); app.processEvents();
+         const auto recent=canvas.captureImage(); require(!recent.isNull(),"Recent trajectory capture failed");
+         model->endOfRun=true; canvas.refresh(); app.processEvents(); const auto complete=canvas.captureImage();
+         require(recent!=complete,"Run completion did not restore complete retained trajectory");
+         model->endOfRun=false; model->redrawPoints=0; canvas.refresh(); app.processEvents();
+         require(canvas.captureImage()==complete,"Redraw zero did not show all retained trajectory points");
+         model->endOfRun=true; model->redrawPoints=1; canvas.setFrame(3); app.processEvents(); const auto replay=canvas.captureImage();
+         model->redrawPoints=0; canvas.refresh(); app.processEvents(); require(canvas.captureImage()!=replay,"Replay ignored recent trajectory setting");
+         require(model->curves[0].points.size()==5,"Redraw setting discarded retained history");
+         model->redrawPoints=1; model->clear(); require(!model->endOfRun,"Rerun retained completion state");
+      }
       {
          auto model=std::make_shared<PlotModel>(PlotModel::Kind::Orbit);
          model->scriptedCamera=true; model->axes=false; model->grid=false; model->labels=false; model->legend=false;

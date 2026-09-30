@@ -234,8 +234,9 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       for (const auto &curve:data->curves) {
          if (!curve.visible) continue;
          const PlotPoint *previous=nullptr,*last=nullptr;
+         const auto first=data->firstVisibleFrame(curve,visibleFrame);
          for (const auto &point:curve.points) {
-            if (point.frame>visibleFrame) continue;
+            if (point.frame>visibleFrame || point.frame<first) continue;
             if (perspectiveScale(point)==0) { previous=nullptr; last=nullptr; continue; }
             if (curve.lines && previous && point.connect) objects.append({(depth(*previous)+depth(point))/2,&curve,previous,&point});
             previous=&point; last=&point;
@@ -262,8 +263,9 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    if (!orbit) for (const auto &curve : data->curves) {
       if (!curve.visible) continue;
       const PlotPoint *previous=nullptr, *last=nullptr;
+      const auto first=data->firstVisibleFrame(curve,visibleFrame);
       for (const auto &point : curve.points) {
-         if (point.frame > visibleFrame) continue;
+         if (point.frame > visibleFrame || point.frame<first) continue;
          const QPointF position=project(point), pixel=screen(position);
          painter.setPen(curvePen(curve,point.color));
          if (ground && data->footprints) {

@@ -1,0 +1,9 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5ee8eb20fbf0 with focusing surface 0x5ee8eb90f800
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5ee8eb90f800 with focusing surface 0x5ee8eb20fbf0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5ee8eb90f800
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5ee8eb90f800
+libpng error: Read Error
+libpng error: Read Error
+REFERENCE: 59.99999988125637         3                         7                         7086.464536250405
+PASS: XY grouped controls, plottable parameter/array browser, Cancel/pending Apply, validation/recovery, exact Undo/Redo/save/reopen, grid/visibility and numerical curve/report agreement
+PASS: ground-track typed objects/body maps, texture picker/validation/recovery, data settings, pending Apply/Cancel/Undo/Redo/save/reopen, Mars frame/report agreement and one-point retention
