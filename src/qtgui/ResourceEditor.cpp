@@ -1,5 +1,6 @@
 #include "ResourceEditor.hpp"
 #include "TrackingConfigDialog.hpp"
+#include "EpochIntervalDialog.hpp"
 #include "FunctionFileDialog.hpp"
 #include "BallisticsMassDialog.hpp"
 #include "VisualModelDialog.hpp"
@@ -463,11 +464,12 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          }
          const bool reportParameters=object.GetTypeName()=="ReportFile" && field.name=="Add";
          const bool plotParameters=object.GetTypeName()=="XYPlot" && (field.name=="XVariable" || field.name=="YVariables");
+         const bool filterFiles=object.IsOfType(Gmat::DATA_FILTER) && field.name=="FileNames",acceptFilter=object.IsOfType("AcceptFilter");
          if (field.filename || !field.references.isEmpty() || reportParameters || plotParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
             choose->setObjectName("chooseProperty_"+field.name);
             table->setCellWidget(row,3,choose);
-            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters] {
+            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters,filterFiles,acceptFilter] {
                if (reportParameters || plotParameters) {
                   const auto mode=plotParameters ? (field.name=="XVariable" ? ReportParameterDialog::Mode::PlottableSingle : ReportParameterDialog::Mode::PlottableMultiple) : ReportParameterDialog::Mode::Multiple;
                   ReportParameterDialog dialog(splitResourceReferences(value->text()),this,mode);
@@ -489,6 +491,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                      for (const auto &path:picker.selectedFiles()) if (list->findItems(path,Qt::MatchExactly).isEmpty()) list->addItem(path);
                   });
                   connect(remove,&QPushButton::clicked,&dialog,[list] { qDeleteAll(list->selectedItems()); });
+                  if (filterFiles) {
+                     auto sentinel=[&](const QString &label,const QString &name,const QString &value) { auto *button=new QPushButton(label,&dialog); button->setObjectName(name); actions->addWidget(button); connect(button,&QPushButton::clicked,&dialog,[list,value] { list->clear(); list->addItem(value); }); };
+                     sentinel("All files","filterAllFiles","All");
+                     if (acceptFilter) sentinel("From tracking","filterTrackingFiles","From_AddTrackingConfig");
+                  }
                   auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
                   connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
                   if (dialog.exec()==QDialog::Accepted) {
@@ -1069,6 +1076,24 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    }
    layout->addWidget(table, 1);
    status = new QLabel("Apply validates changes and updates the mission script.", this);
+   if (hasEpochInterval(object)) {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone()); QMap<QString,int> rows;
+      for (int row=0;row<table->rowCount();++row) if (QStringList{"EpochFormat","InitialEpoch","FinalEpoch"}.contains(table->item(row,0)->text())) rows.insert(table->item(row,0)->text(),row);
+      auto *format=qobject_cast<QComboBox *>(table->cellWidget(rows.value("EpochFormat"),1));
+      if (format && rows.size()==3) {
+         format->setToolTip("Changing format converts both endpoints. Gregorian dates use milliseconds; numeric formats retain full precision.");
+         auto read=[this,rows,format] { return QMap<QString,QString>{{"EpochFormat",format->currentText()},{"InitialEpoch",table->item(rows.value("InitialEpoch"),1)->text()},{"FinalEpoch",table->item(rows.value("FinalEpoch"),1)->text()}}; };
+         auto write=[this,rows,format](const QMap<QString,QString> &values) { const QSignalBlocker block(format); format->setCurrentText(values.value("EpochFormat")); format->setProperty("previousEpochFormat",values.value("EpochFormat")); for (const auto &name:QStringList{"InitialEpoch","FinalEpoch"}) table->item(rows.value(name),1)->setText(values.value(name)); };
+         format->setProperty("previousEpochFormat",format->currentText());
+         connect(format,&QComboBox::currentTextChanged,this,[this,format,read,write](const QString &next) {
+            try { auto values=read(); values["EpochFormat"]=format->property("previousEpochFormat").toString(); write(convertEpochInterval(values,next)); status->clear(); }
+            catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromStdString(failure.GetFullMessage())); }
+            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromUtf8(failure.what())); }
+         });
+         auto *button=new QPushButton("Time interval…",this); button->setObjectName("editEpochInterval"); layout->addWidget(button);
+         connect(button,&QPushButton::clicked,this,[this,initial,read,write] { EpochIntervalDialog dialog(*initial,read(),this); if (dialog.exec()==QDialog::Accepted) write(dialog.settings()); });
+      }
+   }
    status->setWordWrap(true); layout->addWidget(status);
    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close, this);
    layout->addWidget(buttons);

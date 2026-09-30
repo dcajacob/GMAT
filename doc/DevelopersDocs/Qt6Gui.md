@@ -1333,5 +1333,20 @@ and supports Undo/Redo and save/reopen. An unset optional antenna field of view
 stays unset during script reconstruction; explicitly configured references are
 retained. Antenna FOV pickers support selecting, replacing and clearing an
 optional reference. A bounded, noise-free range-skin simulation/batch workflow
-is covered; broader measurement types, filters, multiple propagator mappings
-and paired simulator epoch conversion remain on the replacement checklist.
+is covered; broader measurement types, filter regimes and multiple propagator
+mappings remain on the replacement checklist.
+
+For simulators and data filters, **Time interval…** edits the epoch format and
+both endpoints together. Changing format in the dialog or the property table
+converts both dates. Failed conversion preserves the earlier format and values;
+Cancel preserves pending properties. Apply rejects an interval whose initial
+epoch follows its final epoch. Gregorian dates follow the engine's millisecond
+format; numeric epochs retain its full time precision.
+
+TrackingFileSet and estimator DataFilters use typed filter checklists. AcceptFilter
+and RejectFilter provide observed-object, tracker and measurement-type lists,
+ordered file selection and editable RecordNumbers such as `1, 4-20` or `All`.
+File selection includes **All files** and, for an accept filter, **From tracking**.
+AcceptFilter ThinMode offers Frequency or Time; ThinningFrequency remains
+validated by the engine. The bounded batch-estimation test covers frequency
+thinning and record rejection; broader filter modes remain to qualify.

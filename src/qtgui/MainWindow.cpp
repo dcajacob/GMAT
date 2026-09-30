@@ -1,6 +1,7 @@
 #include "ReportViewer.hpp"
 #include "MainWindow.hpp"
 #include "TrackingConfigDialog.hpp"
+#include "EpochIntervalDialog.hpp"
 #include "QtMessageReceiver.hpp"
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
@@ -803,9 +804,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto viewChanges=applyOrbitViewProperties(*proposed,changes);
       const auto burnChanges=applyBurnProperties(*proposed,changes);
       const auto ephemerisChanges=applyEphemerisProperties(*proposed,changes);
+      const auto intervalChanges=applyEpochIntervalProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
          if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || (pairedMixture && it.key()=="MixRatio")) continue;
-         if (isResourceList(*proposed,it.key())) continue;
+         if (intervalChanges.contains(it.key()) || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }

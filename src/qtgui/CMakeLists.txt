@@ -26,6 +26,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    EphemerisDialog.cpp EphemerisDialog.hpp
    DynamicDataDialog.cpp DynamicDataDialog.hpp
    TrackingConfigDialog.cpp TrackingConfigDialog.hpp
+   EpochIntervalDialog.cpp EpochIntervalDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp

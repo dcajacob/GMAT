@@ -151,7 +151,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
 | `../plugins/libEKF` | Pending qualification |
-| `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Broader measurements, noisy/real data, filters, epoch conversion, multiple propagator mappings, pass biases and covariance settings remain pending. |
+| `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
@@ -2926,3 +2926,59 @@ Rebuilt the actual application/bin/GmatQt target. All 24 Qt suites passed in
 plotting/HiDPI, mission/plugin/file regressions and launcher validation. Evidence:
 Qt6ParityValidation/check-estimation.txt. This checkpoint leaves the broader
 replacement acceptance gates open.
+
+## Paired simulation/filter epochs and batch data editing
+
+Simulator and data-filter EpochFormat/InitialEpoch/FinalEpoch now have a shared
+Time interval dialog. Format changes convert both endpoints atomically, in the
+dialog and the property table. Cancel retains the earlier pending properties;
+failed conversion retains the earlier format and both edited date strings.
+Apply uses a clone, sets the format before either endpoint and rejects invalid
+or reversed intervals. A format-only resource transaction converts both existing
+endpoints automatically, instead of interpreting old text in the new format.
+
+Numeric conversion initially used the converter's Real-based display string.
+That rounding moved an endpoint beyond the simulator's nanosecond comparison
+tolerance and changed its final sample by 60 seconds. Qt now serializes numeric
+epochs using GmatTime::ToString. The bounded fixture's numeric interval survives
+Unicode save/reopen and produces exactly the original observations and the same
+fourteen state/epoch report values within 1e-8. Conversion back to UTCGregorian
+also reproduces those outputs. All engine-advertised representations are cycled
+through the dialog. GregorianDate's existing parser accepts milliseconds; the
+UI retains that supported representation and explains its precision. This does
+not qualify arbitrary fractional-calendar, UT1 or leap-second boundary cases.
+The time conversion and simulation algorithms remain unchanged.
+
+Estimator and TrackingFileSet DataFilters now provide typed checklists.
+AcceptFilter/RejectFilter expose observed-object, tracker and measurement-type
+lists, ordered input files, record numbers/ranges and available thinning modes.
+File selection can restore All or an accept filter's From_AddTrackingConfig.
+Positive records and ascending ranges are validated before candidate script
+interpretation; wrong filter/reference/types, unknown measurements, zero
+thinning frequency and invalid/reversed ranges roll back without source changes.
+
+EstimationTests extends the bounded noise-free range-skin fixture with an
+independently script-configured accept filter for the observation file,
+EstSat and Range_Skin, every-second-record frequency thinning, and a reject
+filter for records 1-3. GUI configuration changes the lists, frequency and
+record range, converts filter epochs through the property table and selects
+both estimator filters. Exact Undo/Redo and Unicode save/reopen retain the
+settings. The resulting state/epoch values and measurement residual rows,
+including USER edit flags, match the independent reference. Run metadata is
+excluded from residual comparison. Clearing the estimator filter list restores
+the original unfiltered state/epoch report; the simulator observations remain
+unchanged throughout. File sentinel controls and Cancel are exercised as well.
+
+Native Wayland execution passed with isolated settings; the inspected interval
+capture shows readable complete numeric epochs and accessible Cancel/OK.
+Evidence: Qt6ParityValidation/estimation-intervals-wayland.txt and
+Qt6ParityValidation/estimation-intervals-wayland.interval.png. The actual
+application/bin/GmatQt was rebuilt and all 24 Qt suites passed in 106.79 seconds.
+Evidence: Qt6ParityValidation/check-estimation-intervals.txt.
+
+Level-one filtering execution, time-based thinning, filtered tracker/hardware
+and GPS identities, overlapping/multiple filters and interval boundaries remain
+to qualify, along with estimator epoch conversion and the earlier broader
+estimation cases. This expands partial evidence for GmatEstimation; 47 of 108 wx
+inventory entries still await audit, and 5 of 20 runtime plugins still have no
+qualification evidence. Full replacement acceptance remains open.

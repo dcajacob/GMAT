@@ -2,6 +2,8 @@
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "TrackingConfigDialog.hpp"
+#include "EpochIntervalDialog.hpp"
+#include "TimeSystemConverter.hpp"
 #include "CommandForm.hpp"
 #include "Moderator.hpp"
 #include "BaseException.hpp"
@@ -43,7 +45,7 @@ static QString read(const QString &path) { QFile file(path); require(file.open(Q
 static QString diagnostics(MainWindow &window) { QApplication::processEvents(); return window.findChild<QDockWidget *>("messages")->findChild<QPlainTextEdit *>()->toPlainText().right(6000); }
 static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) throw std::runtime_error(diagnostics(window).toStdString()); }
 static QVector<double> values(const QString &path) { QVector<double> result; for (const auto &entry:read(path).simplified().split(' ')) { bool ok; const auto value=entry.toDouble(&ok); require(ok && std::isfinite(value),"State report contains invalid values"); result.append(value); } return result; }
-static void same(const QVector<double> &a,const QVector<double> &b) { require(a.size()==b.size(),"State report dimensions changed"); for (int i=0;i<a.size();++i) require(std::abs(a[i]-b[i])<1e-8,"GUI configuration changed simulation/estimation calculation"); }
+static void same(const QVector<double> &a,const QVector<double> &b,const char *stage="GUI configuration") { require(a.size()==b.size(),"State report dimensions changed"); for (int i=0;i<a.size();++i) if (std::abs(a[i]-b[i])>=1e-8) throw std::runtime_error((QString(stage)+" changed state column "+QString::number(i)+" by "+QString::number(a[i]-b[i],'g',16)).toStdString()); }
 static void later(QWidget *owner,std::exception_ptr &failure,std::function<void()> action) { QTimer::singleShot(0,owner,[owner,&failure,action] { try { action(); } catch (...) { failure=std::current_exception(); for (auto *dialog:owner->findChildren<QDialog *>()) dialog->reject(); } }); }
 static void close(QDialog *dialog,bool accept=true) { dialog->findChild<QDialogButtonBox *>()->button(accept ? QDialogButtonBox::Ok : QDialogButtonBox::Cancel)->click(); }
 static int row(ResourceEditor &panel,const QString &name) { auto *table=panel.findChild<QTableWidget *>(); for (int r=0;r<table->rowCount();++r) if (table->item(r,0)->text()==name) return r; throw std::runtime_error(("Missing estimation property: "+name).toStdString()); }
@@ -165,6 +167,46 @@ int main(int argc,char **argv)
       // after it is restored; the simulator must not silently recreate it.
       auto estimationOnly=source; estimationOnly.remove(QRegularExpression("^RunSimulator[^\\n]*\\n",QRegularExpression::MultilineOption)); editor->setPlainText(estimationOnly); require(window.buildScript(),"Estimation-only fixture failed build"); require(QFile::rename(measurements,measurements+".held"),"Observation-file failure fixture unavailable"); require(window.runMission()==MainWindow::RunResult::Failed && diagnostics(window).contains(QFileInfo(measurements).fileName()),"Missing observation file did not fail clearly"); require(QFile::rename(measurements+".held",measurements),"Observation restore failed"); run(window); same(values(states).mid(7),expected.mid(7));
       require(window.loadScript(saved),"Final estimation restore failed"); run(window); same(values(states),expected);
-      std::cout<<"PASS: Qt tracking paths/types, pending/Cancel/columns, simulator/estimator/solve-for/station lists, typed run commands, noise-free six-state fit and independent reports/observations, exact Undo/Redo/Unicode save/reopen, invalid edit rollback and missing observation recovery\n";
+      applyPanel("sim",[&](ResourceEditor &panel) {
+         auto *button=panel.findChild<QPushButton *>("editEpochInterval"); require(button,"Simulator interval editor missing");
+         later(&panel,failure,[&] { auto *dialog=panel.findChild<QDialog *>("epochIntervalDialog"); dialog->findChild<QComboBox *>("intervalEpochFormat")->setCurrentText("TAIModJulian"); close(dialog,false); }); button->click(); if (failure) std::rethrow_exception(failure); require(!panel.hasChanges(),"Interval Cancel changed resource");
+         later(&panel,failure,[&] {
+            auto *dialog=panel.findChild<QDialog *>("epochIntervalDialog"); auto *format=dialog->findChild<QComboBox *>("intervalEpochFormat"); auto *start=dialog->findChild<QLineEdit *>("intervalInitialEpoch"),*end=dialog->findChild<QLineEdit *>("intervalFinalEpoch");
+            const auto originalStart=start->text(),originalEnd=end->text();
+            for (const auto &name:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) { format->setCurrentText(QString::fromStdString(name)); const auto error=dialog->findChild<QLabel *>("epochIntervalError")->text(); if (!error.isEmpty()) throw std::runtime_error((QString::fromStdString(name)+": "+error+"; dates="+start->text()+", "+end->text()).toStdString()); }
+            format->setCurrentText("UTCGregorian"); require(start->text()==originalStart && end->text()==originalEnd,"Epoch format cycle changed physical interval");
+            end->setText("bad epoch"); format->setCurrentText("TAIModJulian"); require(format->currentText()=="UTCGregorian" && start->text()==originalStart && end->text()=="bad epoch" && !dialog->findChild<QLabel *>("epochIntervalError")->text().isEmpty(),"Failed conversion partially changed the interval");
+            end->setText(originalEnd); format->setCurrentText("TAIModJulian");
+            if (!capture.isEmpty()) { require(waitUntil([&] { return dialog->windowHandle() && dialog->windowHandle()->isExposed(); }),"Interval dialog did not expose"); require(dialog->grab().save(capture+".interval.png"),"Interval capture failed"); }
+            close(dialog);
+         }); button->click(); if (failure) std::rethrow_exception(failure);
+      });
+      const auto intervalSave=files.filePath("numeric interval ü.script"); require(window.saveScriptTo(intervalSave) && window.loadScript(intervalSave),"Numeric interval save/reopen failed"); run(window); same(values(states),expected,"Numeric interval"); require(read(measurements)==data,"Epoch conversion changed generated observations");
+      auto numeric=editor->toPlainText(); require(window.applyResourceChanges("sim",{{"EpochFormat","UTCGregorian"}},numeric).isEmpty(),"Format-only edit failed to convert both dates"); run(window); same(values(states),expected,"Format-only interval"); require(read(measurements)==data,"Format-only edit changed observations");
+      for (const auto &bad:QList<QMap<QString,QString>>{{{"FinalEpoch","09 Jun 2012 00:00:00.000"}},{{"EpochFormat","Invalid"}},{{"InitialEpoch","not a date"}}}) { const auto source=editor->toPlainText(); require(!window.applyResourceChanges("sim",bad,source).isEmpty() && editor->toPlainText()==source,"Invalid interval edit changed source"); }
+      // Compare GUI filters with independently configured filter assignments
+      // on the same bounded fixture; the unfiltered observations remain intact.
+      auto filterReference=editor->toPlainText(); filterReference.replace("BeginMissionSequence","Create AcceptFilter KeepRange;\nKeepRange.Trackers = {'All'};\nKeepRange.ObservedObjects = {'EstSat'};\nKeepRange.DataTypes = {'Range_Skin'};\nKeepRange.RecordNumbers = {'All'};\nKeepRange.ThinMode = 'Frequency';\nKeepRange.ThinningFrequency = 2;\nCreate RejectFilter DropRecords;\nDropRecords.RecordNumbers = {'1-3'};\nbat.DataFilters = {KeepRange, DropRecords};\nBeginMissionSequence");
+      filterReference.replace("KeepRange.Trackers", "KeepRange.FileNames = {'"+measurements+"'};\nKeepRange.EpochFormat = 'UTCGregorian';\nKeepRange.InitialEpoch = '09 Jun 2012 00:00:00.000';\nKeepRange.FinalEpoch = '11 Jun 2012 00:00:00.000';\nKeepRange.Trackers");
+      editor->setPlainText(filterReference); run(window); const auto filteredExpected=values(states); const auto filteredReport=read(report); require(read(measurements)==data,"Estimator filters changed simulation output");
+      auto filterBase=filterReference; filterBase.replace("bat.DataFilters = {KeepRange, DropRecords};","bat.DataFilters = {};"); filterBase.replace("KeepRange.ThinningFrequency = 2;","KeepRange.ThinningFrequency = 1;"); filterBase.replace("DropRecords.RecordNumbers = {'1-3'};","DropRecords.RecordNumbers = {'All'};"); filterBase.replace("KeepRange.DataTypes = {'Range_Skin'};","KeepRange.DataTypes = {'All'};"); filterBase.replace("KeepRange.ObservedObjects = {'EstSat'};","KeepRange.ObservedObjects = {'All'};"); editor->setPlainText(filterBase); require(window.buildScript(),"Editable filter fixture rejected");
+      applyPanel("KeepRange",[&](ResourceEditor &panel) {
+         auto *table=panel.findChild<QTableWidget *>(); auto *format=qobject_cast<QComboBox *>(table->cellWidget(row(panel,"EpochFormat"),1)); require(format && panel.findChild<QPushButton *>("editEpochInterval"),"Filter paired epoch controls missing"); format->setCurrentText("TAIModJulian"); bool numeric=false; table->item(row(panel,"FinalEpoch"),1)->text().toDouble(&numeric); require(numeric,"Main filter format selector did not convert both dates");
+         later(&panel,failure,[&] { auto *dialog=panel.findChild<QDialog *>("kernelFileDialog"); auto *list=dialog->findChild<QListWidget *>("kernelFileList"); dialog->findChild<QPushButton *>("filterTrackingFiles")->click(); require(list->count()==1 && list->item(0)->text()=="From_AddTrackingConfig","Tracking-config file sentinel missing"); dialog->findChild<QPushButton *>("filterAllFiles")->click(); require(list->count()==1 && list->item(0)->text()=="All","All-files sentinel did not replace the list"); close(dialog,false); });
+         panel.findChild<QPushButton *>("chooseProperty_FileNames")->click(); if (failure) std::rethrow_exception(failure);
+         selectList(panel,"DataTypes",{"Range_Skin"}); selectList(panel,"ObservedObjects",{"EstSat"}); selectList(panel,"Trackers",{"All"});
+         table->item(row(panel,"ThinningFrequency"),1)->setText("2"); auto *mode=qobject_cast<QComboBox *>(table->cellWidget(row(panel,"ThinMode"),1)); require(mode && mode->findText("Time")>=0,"Filter thinning mode choices missing");
+      });
+      applyPanel("DropRecords",[&](ResourceEditor &panel) { panel.findChild<QTableWidget *>()->item(row(panel,"RecordNumbers"),1)->setText("1-3"); });
+      applyPanel("bat",[&](ResourceEditor &panel) { selectList(panel,"DataFilters",{"KeepRange","DropRecords"}); });
+      const auto filtersSaved=files.filePath("filtered estimation ü.script"); require(window.saveScriptTo(filtersSaved) && window.loadScript(filtersSaved),"Filtered estimation save/reopen failed"); run(window); same(values(states),filteredExpected,"GUI filters"); require(read(measurements)==data,"GUI filters changed simulated observations");
+      const QRegularExpression observationRow("^[ \\t]*(?:[0-9]+[ \\t]+)?[0-9]+[ \\t]+[0-9]{2}[ \\t]+[A-Za-z]{3}[ \\t]+[0-9]{4}[^\\n]*$",QRegularExpression::MultilineOption);
+      auto observationRows=[&](const QString &text) { QStringList rows; auto matches=observationRow.globalMatch(text); while (matches.hasNext()) rows.append(matches.next().captured()); return rows; };
+      const auto referenceRows=observationRows(filteredReport),guiRows=observationRows(read(report));
+      require(!referenceRows.isEmpty() && guiRows==referenceRows,"GUI filter selection changed observation flags/residual report");
+      require(!referenceRows.filter(QRegularExpression("\\bUSER\\b")).isEmpty(),"Accept/reject filters did not mark any observations as edited");
+      for (const auto &bad:QList<QPair<QString,QMap<QString,QString>>>{{"bat",{{"DataFilters","RangeModel"}}},{"KeepRange",{{"Trackers","Earth"}}},{"KeepRange",{{"DataTypes","Unknown"}}},{"KeepRange",{{"ThinningFrequency","0"}}},{"DropRecords",{{"RecordNumbers","3-1"}}},{"DropRecords",{{"RecordNumbers","-2"}}}}) { const auto source=editor->toPlainText(); require(!window.applyResourceChanges(bad.first,bad.second,source).isEmpty() && editor->toPlainText()==source,"Invalid filter edit changed source"); }
+      applyPanel("bat",[&](ResourceEditor &panel) { selectList(panel,"DataFilters",{}); }); run(window); same(values(states),expected);
+      std::cout<<"PASS: Qt tracking paths/types, pending/Cancel/columns, simulator/estimator/solve-for/station lists, typed run commands, paired epoch conversion and exact numeric observation boundaries, accept/reject filter lists/ranges/thinning and residual edit-flag equivalence, noise-free six-state fit and independent reports/observations, exact Undo/Redo/Unicode save/reopen, invalid edit rollback and missing observation recovery\n";
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; } return 0;
 }

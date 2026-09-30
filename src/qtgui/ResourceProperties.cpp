@@ -1,5 +1,6 @@
 #include "ResourceProperties.hpp"
 #include "TrackingConfigDialog.hpp"
+#include "EpochIntervalDialog.hpp"
 #include "ReportParameterDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
@@ -221,6 +222,23 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             if (field.name=="Type") field.choices=trackingMeasurementTypes();
             if (field.name=="SolveFors") field.references={"Bias","PassBiases"};
          }
+         if (hasEpochInterval(object) && field.name=="EpochFormat") {
+            field.choices.clear(); for (const auto &format:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) field.choices.append(QString::fromStdString(format));
+         }
+         if ((object.IsOfType("TrackingFileSet") || object.IsOfType("Estimator")) && field.name=="DataFilters") {
+            field.references.clear(); for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::DATA_FILTER)) field.references.append(QString::fromStdString(name));
+         }
+         if (object.IsOfType(Gmat::DATA_FILTER)) {
+            if (field.name=="ThinMode") field.choices={"Frequency","Time"};
+            if (field.name=="DataTypes") { field.references=trackingMeasurementTypes(); field.references.prepend("All"); }
+            if (field.name=="ObservedObjects" || field.name=="Trackers") {
+               field.references={"All"};
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACE_POINT)) {
+                  auto *participant=Moderator::Instance()->GetConfiguredObject(name);
+                  if (participant && (participant->IsOfType("Spacecraft") || (field.name=="Trackers" && participant->IsOfType("GroundStation")))) field.references.append(QString::fromStdString(name));
+               }
+            }
+         }
          if (object.IsOfType("Imager") && field.name=="FieldOfView") {
             field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::FIELD_OF_VIEW)) field.references.append(QString::fromStdString(name));
@@ -334,7 +352,8 @@ bool isResourceFileList(GmatBase &object,const QString &name)
 {
    return (object.IsOfType("Spacecraft") && (name=="OrbitSpiceKernelName" || name=="AttitudeSpiceKernelName" ||
       name=="SCClockSpiceKernelName" || name=="FrameSpiceKernelName")) ||
-      (object.IsOfType("TrackingFileSet") && (name=="FileName" || name=="RampTable"));
+      (object.IsOfType("TrackingFileSet") && (name=="FileName" || name=="RampTable")) ||
+      (object.IsOfType(Gmat::DATA_FILTER) && name=="FileNames");
 }
 
 bool isResourceList(GmatBase &object, const QString &name)
@@ -360,6 +379,8 @@ bool isResourceList(GmatBase &object, const QString &name)
       ((object.IsOfType("Spacecraft") || object.IsOfType("ErrorModel")) && name=="SolveFors") ||
       (object.IsOfType("Simulator") && name=="AddData") ||
       (object.IsOfType("Estimator") && name=="Measurements") ||
+      ((object.IsOfType("TrackingFileSet") || object.IsOfType("Estimator")) && name=="DataFilters") ||
+      (object.IsOfType(Gmat::DATA_FILTER) && QStringList{"FileNames","ObservedObjects","Trackers","DataTypes","RecordNumbers"}.contains(name)) ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       ((object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) && name=="Tank") ||
@@ -401,7 +422,16 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       for (const auto &part : (files ? value.split('\n',Qt::SkipEmptyParts) : splitResourceReferences(value))) {
          const auto entry=part.trimmed();
          if (files && (entry.contains('\'') || entry.contains('\r') || entry.contains(';'))) throw std::runtime_error("File paths cannot contain quotes, semicolons or line breaks");
-         if (!files && !reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         const bool record=object.IsOfType(Gmat::DATA_FILTER) && name=="RecordNumbers";
+         if (record) {
+            if (!QRegularExpression("^(?:All|[1-9][0-9]*(?:-[1-9][0-9]*)?)$").match(entry).hasMatch()) throw std::runtime_error("Enter All, positive record numbers or ascending ranges such as 1-20.");
+            if (entry.contains('-') && entry.section('-',0,0).toLongLong()>entry.section('-',1,1).toLongLong()) throw std::runtime_error("Record ranges must be ascending.");
+         }
+         if (!files && !record && !reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         if (object.IsOfType(Gmat::DATA_FILTER) && (name=="DataTypes" || name=="ObservedObjects" || name=="Trackers")) {
+            const auto fields=resourceProperties(object); const auto field=std::find_if(fields.cbegin(),fields.cend(),[&](const auto &field) { return field.name==name; });
+            if (field==fields.cend() || (!field->references.contains(entry) && !(name=="ObservedObjects" && entry.contains('.')))) throw std::runtime_error(("Select an available "+name+" entry.").toStdString());
+         }
          if (object.GetTypeName()=="XYPlot" && name=="YVariables" && !ReportParameterDialog::isPlottableReference(entry))
             throw std::runtime_error(("Select a numeric plot parameter or a valid array element: "+entry).toStdString());
          if (name=="Add" && object.IsOfType("Formation")) {
@@ -433,7 +463,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
          }
          const QString expectedType=(object.IsOfType("GroundStation") && name=="ErrorModels") ? "ErrorModel" :
             (object.IsOfType("GroundStation") && name=="AddHardware") ? "Hardware" :
-            ((object.IsOfType("Simulator") && name=="AddData") || (object.IsOfType("Estimator") && name=="Measurements")) ? "TrackingFileSet" : QString();
+            ((object.IsOfType("Simulator") && name=="AddData") || (object.IsOfType("Estimator") && name=="Measurements")) ? "TrackingFileSet" :
+            ((object.IsOfType("TrackingFileSet") || object.IsOfType("Estimator")) && name=="DataFilters") ? "DataFilter" : QString();
          if (!expectedType.isEmpty()) {
             auto *referenceObject=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!referenceObject || !referenceObject->IsOfType(expectedType.toStdString())) throw std::runtime_error(("Select existing "+expectedType+" resources for "+name+".").toStdString());
