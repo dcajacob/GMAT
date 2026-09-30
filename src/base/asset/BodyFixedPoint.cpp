@@ -86,7 +86,7 @@ BodyFixedPoint::PARAMETER_TEXT[BodyFixedPointParamCount - SpacePointParamCount] 
          "Location3",         // Z or Altitude value
          "LOCATION_LABEL_1",  // "X" or "Latitude"
          "LOCATION_LABEL_2",  // "Y" or "Longitude"
-         "LOCATION_LABEL_3"   // "Z" or "Altitude"
+         "LOCATION_LABEL_3",  // "Z" or "Altitude"
          "LOCATION_UNITS_1",  // "km" or "deg"
          "LOCATION_UNITS_2",  // "km" or "deg"
          "LOCATION_UNITS_3"   // "km" or "km"

@@ -115,7 +115,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
                (object.IsOfType("Solver") && field.name=="ReportFile") ||
                (object.IsOfType("Estimator") && (field.name=="MatlabFile" || field.name=="DataFile"));
-            field.fileInput=atmosphereFile || object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
+            field.fileInput=atmosphereFile || object.IsOfType("GroundStation") || object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
                type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
          }

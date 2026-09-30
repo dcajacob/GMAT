@@ -21,6 +21,7 @@ private:
    QMap<QString, QString> original;
    QMap<QString, QString> attitudeEdits;
    QMap<QString, QString> atmosphereEdits;
+   QMap<QString, QString> stationEdits;
    QSet<QString> attitudeNames;
    std::function<QMap<QString,QString>()> pendingOrbit;
    QString originalExpressions="[]",expressions="[]";

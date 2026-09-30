@@ -1,0 +1,33 @@
+REFERENCE CONTACT REPORT
+Target: Sat
+
+Observer: Site
+Start Time (UTC)            Stop Time (UTC)               Duration (s)         
+01 Jan 2015 20:14:00.539    01 Jan 2015 20:26:04.994      724.45447426    
+01 Jan 2015 22:01:12.414    01 Jan 2015 22:10:16.647      544.23290069    
+02 Jan 2015 03:26:08.556    02 Jan 2015 03:35:45.523      576.96703024    
+02 Jan 2015 05:09:54.867    02 Jan 2015 05:24:23.018      868.15101901    
+02 Jan 2015 06:56:39.806    02 Jan 2015 07:07:04.800      624.99423592    
+
+
+Number of events : 5
+
+
+
+GUI CONTACT REPORT
+Target: Sat
+
+Observer: Site
+Start Time (UTC)            Stop Time (UTC)               Duration (s)         
+01 Jan 2015 20:14:00.539    01 Jan 2015 20:26:04.994      724.45447426    
+01 Jan 2015 22:01:12.414    01 Jan 2015 22:10:16.647      544.23290069    
+02 Jan 2015 03:26:08.556    02 Jan 2015 03:35:45.523      576.96703024    
+02 Jan 2015 05:09:54.867    02 Jan 2015 05:24:23.018      868.15101807    
+02 Jan 2015 06:56:39.806    02 Jan 2015 07:07:04.800      624.99423592    
+
+
+Number of events : 5
+
+
+
+PASS: ground-station selectors/labels, physical-state conversions, validation/Cancel, colors/mask pickers, grouped Apply/Undo/Redo, save/reopen and contact execution

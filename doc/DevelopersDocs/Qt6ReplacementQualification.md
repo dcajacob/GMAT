@@ -67,15 +67,15 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
-| `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities, specialized frames and Orbit Designer/Summary workflows remain to qualify. |
+| `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities and specialized frames remain to qualify. Orbit Designer/Summary are legacy hidden workflows; see the source audit below. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consuming GUI-attached power remains to qualify. |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution with Bilinear/Bicubic interpolation, scale 1.5 and missing-file recovery covered. Broader assets and interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
-| `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
+| `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Source audited: launcher explicitly hidden by OrbitPanel (GMT-3383). Retained legacy design tools are not exposed workflows in the base wx GUI; see the audit below. |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | File, rotation/translation/scale sliders and numeric fields, recenter/autoscale, new-file pose reset, colors and Earth-reference preview audited. Qt visual editor implemented with pending Apply, engine normalization and model-read diagnostics. Cancel, file/color pickers, invalid input recovery, Undo/Redo and save/reopen propagation covered. Textured OBJ preview/rotation/Earth reference tested at normal, 150% and 200% scaling and directly on Wayland. Broader 3DS asset/material cases remain to qualify. |
 | `src/gui/spacecraft/AttitudePanel.hpp` | Model-dependent controls, frame restrictions, Euler/quaternion/MRP/DCM orientation and Euler-rate/angular-velocity selection audited. Focused Qt dialog with pending conversion, per-model edit retention, typed frame/body selectors and AEM input chooser implemented. Cancel, invalid state recovery, exact paired Apply/Undo/Redo, save/reopen and zero-rate Spinner report execution covered. Nonzero-rate propagation, specialized-model execution, other Euler sequences, frame dependencies and AEM/SPICE file cases remain to qualify. |
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
-| `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
+| `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Source audited: read-only output of the hidden Orbit Designer, rather than a standalone spacecraft summary action; see the audit below. |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric thruster attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
@@ -96,7 +96,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
-| `src/gui/asset/GroundStationPanel.hpp` | Pending audit |
+| `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
@@ -152,7 +152,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. Other ephemeris formats and coverage-boundary cases pending. |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
-| `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. Contact and remaining locator workflows pending. |
+| `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. Locator configuration, hardware/FOV, light-time and remaining workflows pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
@@ -164,7 +164,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
 | `../plugins/libScriptTools` | Pending qualification |
-| `../plugins/libStation` | Pending qualification |
+| `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
 | `../plugins/libThrustFile` | Pending qualification |
 | `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
 | `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. Additional settings/error modes pending. |
@@ -2144,3 +2144,73 @@ compact-window scrolling is checked in the test. Evidence:
 `Qt6ParityValidation/atmosphere-wayland.txt` and
 `Qt6ParityValidation/atmosphere-wayland.png`. The broader workflow, viewer and
 plugin qualification gates remain open.
+
+
+## Legacy Orbit Designer and Summary source audit
+
+The retained Orbit Designer source offers SunSync, RepeatSunSync,
+RepeatGroundTrack, Geostationary, Molniya and Frozen design tools. However,
+`src/gui/spacecraft/OrbitPanel.cpp` explicitly hides its launcher with
+`orbitDesignerButton->Show(false)` and the comment “Remove At-risk Orbit
+Designer feature, GMT-3383.” `OrbitSummaryDialog` is read-only text created
+by `OrbitDesignerDialog::OnSummary`; it is not a separate action displaying
+an existing spacecraft state. These files therefore do not establish a
+missing exposed workflow in the current base wx GUI. No Qt design prototype
+or new orbital mathematics was added. Active orbit editing and its remaining
+representation/frame qualification cases retain their existing scope.
+
+## Ground-station location, appearance and contact qualification
+
+Audited the active wx GroundStationPanel ID, minimum elevation, central body,
+state type, horizon reference, three dependent location fields/units and
+orbit/target colors. Its station hardware controls are commented out. The Qt
+resource editor now has a **Ground station…** action grouping these controls
+and an optional horizon-mask input picker with Clear. Coordinate selectors
+convert the pending numeric location through the engine, with the selected
+body's radius and flattening. Changing the body retains the current numeric
+location, matching wx. Cartesian coordinates disable the horizon selector;
+spherical fields show latitude/longitude in degrees and altitude in km.
+Rejected conversions restore selectors and retain the invalid inputs.
+Content scrolls in compact windows while OK/Cancel stay available.
+
+Dialog OK retains pending edits in ResourceEditor; only parent Apply updates
+the configured resource and mission script. Apply sets body and representation
+before location components. Previously Qt's generic alphabetical property
+order could interpret edited location components in the old representation.
+Engine latitude/elevation bounds, finite inputs, colors and mask existence are
+validated together on a clone. Named colors initialize the picker correctly.
+The engine's BodyFixedPoint parameter-label array was missing a comma between
+LOCATION_LABEL_3 and LOCATION_UNITS_1, shifting subsequent label lookups; this
+metadata defect is corrected. GroundStation's mask setter now accepts an
+empty filename so an existing mask can be removed.
+
+StationTests exercises picker acceptance/Cancel, grouped validation, pending
+reopening, exact-source Undo/Redo, preserved mission comments, save/reopen,
+Earth Cartesian/spherical and Sphere/Ellipsoid conversions, and Mars preview
+geometry using its own radius/flattening. Coordinate round trips retain the
+physical Earth position within 1e-8 km. A one-day spacecraft/contact scenario
+compares GUI-configured station results with independently script-configured
+references: default elevation (five events), elevation 25 degrees, and the
+bundled Ex_Contact_Location_Station_Mask.txt. Contact endpoints match the
+report's millisecond precision; durations allow 1e-5 seconds because coordinate
+roundoff can alter the event root's last microsecond. Elevated and masked
+cases must differ from baseline. A missing mask fails execution; restoring
+it and reopening the saved script recovers matching contacts. GUI Clear
+removes the configured mask and restores baseline contacts after save/reopen.
+These comparisons qualify calculation-preserving UI behavior, not independent
+validation of the contact algorithms.
+
+Station hardware, antenna/custom FOV, media corrections, error models,
+non-Earth contact execution, light-time/aberration modes and full EventLocator
+configuration remain unqualified. This checkpoint does not close the broader
+workflow, viewer or plugin gates.
+
+Rebuilt the actual `application/bin/GmatQt` launcher target and Station plugin.
+All 14 Qt suites passed in 53.17 seconds, including the new Stations suite and
+native viewer/window/plot checks. A separate isolated-settings process also
+passed the entire station workflow on the current Wayland desktop. The final
+dialog capture was visually inspected for field readability, grouping, units,
+file/color controls and visible action buttons. Evidence:
+`Qt6ParityValidation/check-stations.txt`,
+`Qt6ParityValidation/stations-wayland.txt` and
+`Qt6ParityValidation/stations-wayland.png`.

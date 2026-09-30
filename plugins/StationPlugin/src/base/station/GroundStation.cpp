@@ -530,6 +530,7 @@ bool GroundStation::SetStringParameter(const Integer id,
 
    if (id == MASK_FILENAME)
    {
+      if (value.empty()) { maskFileName.clear(); return true; }
       std::string theFile = GmatFileUtil::FindFile(value);
       if (theFile == "" )
          throw AssetException("Error: '" + value + "' set to " + GetName() +

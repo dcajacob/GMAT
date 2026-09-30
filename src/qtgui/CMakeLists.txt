@@ -16,6 +16,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    AttitudeDialog.cpp AttitudeDialog.hpp
    SpacecraftOrbit.cpp SpacecraftOrbit.hpp
    AtmosphereDialog.cpp AtmosphereDialog.hpp
+   GroundStationDialog.cpp GroundStationDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
@@ -94,6 +95,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtCompatibilityTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtAtmosphereTests tests/AtmosphereTests.cpp)
    target_link_libraries(GmatQtAtmosphereTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtStationTests tests/StationTests.cpp)
+   target_link_libraries(GmatQtStationTests PRIVATE GmatQtFrontend)
    find_package(Python3 REQUIRED COMPONENTS Interpreter)
    set(qt_test_runner "${CMAKE_CURRENT_SOURCE_DIR}/tests/RunTest.py")
    function(add_qt_test name target)
@@ -119,6 +122,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.Mission GmatQtMissionTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/mission.script")
    add_qt_test(QtGui.Compatibility GmatQtCompatibilityTests "${qt_test_startup}" "${PROJECT_SOURCE_DIR}/application/samples")
    add_qt_test(QtGui.Atmosphere GmatQtAtmosphereTests "${qt_test_startup}")
+   add_qt_test(QtGui.Stations GmatQtStationTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
    add_qt_test(QtGui.PlotsHiDPI GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
    set_tests_properties(QtGui.PlotsHiDPI PROPERTIES ENVIRONMENT "QT_SCALE_FACTOR=2")
@@ -130,6 +134,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_custom_target(check-qt
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests
+      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests
       USES_TERMINAL VERBATIM)
 endif()
