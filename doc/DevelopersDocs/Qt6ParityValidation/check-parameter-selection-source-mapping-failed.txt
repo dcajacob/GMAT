@@ -1,0 +1,357 @@
+[1/40] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/40] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[3/40] Linking CXX executable src/qtgui/GmatQtMissionNavigationTests
+[4/40] Linking CXX executable src/qtgui/GmatQtSolverPlotTests
+[5/40] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[6/40] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[7/40] Linking CXX executable src/qtgui/GmatQtHelpTests
+[8/40] Linking CXX executable src/qtgui/GmatQtFolderRunTests
+[9/40] Linking CXX executable src/qtgui/GmatQtSpiceDiagnosticTests
+[10/40] Linking CXX executable src/qtgui/GmatQtDesktopTests
+[11/40] Linking CXX executable src/qtgui/GmatQtWindowTests
+[12/40] Linking CXX executable src/qtgui/GmatQtWelcomeTests
+[13/40] Linking CXX executable src/qtgui/GmatQtFileTests
+[14/40] Linking CXX executable src/qtgui/GmatQtPlotTests
+[15/40] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[16/40] Linking CXX executable src/qtgui/GmatQtMissionTests
+[17/40] Linking CXX executable src/qtgui/GmatQtEventLocatorTests
+[18/40] Linking CXX executable src/qtgui/GmatQtAtmosphereTests
+[19/40] Linking CXX executable src/qtgui/GmatQtStationTests
+[20/40] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[21/40] Linking CXX executable src/qtgui/GmatQtPlotSetupTests
+[22/40] Linking CXX executable src/qtgui/GmatQtThrusterTests
+[23/40] Linking CXX executable src/qtgui/GmatQtEphemerisTests
+[24/40] Linking CXX executable src/qtgui/GmatQtBurnTests
+[25/40] Linking CXX executable src/qtgui/GmatQtDynamicDataTests
+[26/40] Linking CXX executable src/qtgui/GmatQtParameterTests
+[27/40] Linking CXX executable src/qtgui/GmatQtEstimationTests
+[28/40] Linking CXX executable src/qtgui/GmatQtPathTests
+[29/40] Linking CXX executable src/qtgui/GmatQtCalculatedPointTests
+[30/40] Linking CXX executable src/qtgui/GmatQtDataInterfaceTests
+[31/40] Linking CXX executable src/qtgui/GmatQtCelestialBodyTests
+[32/40] Linking CXX executable src/qtgui/GmatQtSolarSystemTests
+[33/40] Linking CXX executable src/qtgui/GmatQtInspectionTests
+[34/40] Linking CXX executable src/qtgui/GmatQtKalmanTests
+[35/40] Linking CXX executable src/qtgui/GmatQtPolyhedronTests
+[36/40] Linking CXX executable src/qtgui/GmatQtScriptEditingTests
+[37/40] Linking CXX executable src/qtgui/GmatQtExternalForceTests
+[38/40] Linking CXX executable src/qtgui/GmatQtThrustFileTests
+[39/40] Linking CXX executable src/qtgui/GmatQtComparisonTests
+[39/40] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/46 Test  #1: QtGui.NativeOrbit ................   Passed    3.97 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/46 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    4.99 sec
+      Start  3: QtGui.NativeOrbitFractionalDPI
+ 3/46 Test  #3: QtGui.NativeOrbitFractionalDPI ...   Passed    4.58 sec
+      Start  4: QtGui.NativeWindows
+ 4/46 Test  #4: QtGui.NativeWindows ..............   Passed   20.86 sec
+      Start  5: QtGui.NativeSolverPlots
+ 5/46 Test  #5: QtGui.NativeSolverPlots ..........   Passed    3.36 sec
+      Start  6: QtGui.NativeFolderRun
+ 6/46 Test  #6: QtGui.NativeFolderRun ............   Passed    4.34 sec
+      Start  7: QtGui.NativePlots
+ 7/46 Test  #7: QtGui.NativePlots ................   Passed    5.97 sec
+      Start  8: QtGui.Files
+ 8/46 Test  #8: QtGui.Files ......................   Passed    4.04 sec
+      Start  9: QtGui.Workflow
+ 9/46 Test  #9: QtGui.Workflow ...................   Passed   37.26 sec
+      Start 10: QtGui.Mission
+10/46 Test #10: QtGui.Mission ....................   Passed    5.34 sec
+      Start 11: QtGui.Compatibility
+11/46 Test #11: QtGui.Compatibility ..............   Passed    6.54 sec
+      Start 12: QtGui.Atmosphere
+12/46 Test #12: QtGui.Atmosphere .................   Passed    3.68 sec
+      Start 13: QtGui.Stations
+13/46 Test #13: QtGui.Stations ...................   Passed    2.16 sec
+      Start 14: QtGui.EventLocators
+14/46 Test #14: QtGui.EventLocators ..............   Passed    4.60 sec
+      Start 15: QtGui.Thrusters
+15/46 Test #15: QtGui.Thrusters ..................   Passed    4.01 sec
+      Start 16: QtGui.Burns
+16/46 Test #16: QtGui.Burns ......................   Passed    3.83 sec
+      Start 17: QtGui.Ephemeris
+17/46 Test #17: QtGui.Ephemeris ..................   Passed    3.92 sec
+      Start 18: QtGui.DynamicData
+18/46 Test #18: QtGui.DynamicData ................   Passed    1.06 sec
+      Start 19: QtGui.CalculatedPoints
+19/46 Test #19: QtGui.CalculatedPoints ...........   Passed    1.34 sec
+      Start 20: QtGui.DataInterface
+20/46 Test #20: QtGui.DataInterface ..............   Passed    2.65 sec
+      Start 21: QtGui.Estimation
+21/46 Test #21: QtGui.Estimation .................   Passed    6.57 sec
+      Start 22: QtGui.Parameters
+22/46 Test #22: QtGui.Parameters .................   Passed   10.26 sec
+      Start 23: QtGui.Paths
+23/46 Test #23: QtGui.Paths ......................   Passed    1.62 sec
+      Start 24: QtGui.SolarSystem
+24/46 Test #24: QtGui.SolarSystem ................   Passed    1.76 sec
+      Start 25: QtGui.CelestialBodies
+25/46 Test #25: QtGui.CelestialBodies ............   Passed    4.09 sec
+      Start 26: QtGui.ResourceRoundTrips
+26/46 Test #26: QtGui.ResourceRoundTrips .........   Passed    2.31 sec
+      Start 27: QtGui.Inspection
+27/46 Test #27: QtGui.Inspection .................   Passed    1.25 sec
+      Start 28: QtGui.KalmanFilter
+28/46 Test #28: QtGui.KalmanFilter ...............***Failed    2.22 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+RunEstimator: This command cannot be located safely; use the script editor
+orming Estimation (using "FPS")
+*** 
+********************************************************
+
+a priori state:
+   Estimation Epoch:
+   25357.5420605831215277777778 A.1 modified Julian
+   25357.5420601851851851851856 TAI modified Julian
+   10 Jun 2010 01:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 579.611695915
+   EstSat.EarthMJ2000Eq.Y = 2018.43658446
+   EstSat.EarthMJ2000Eq.Z = 6754.3020067
+   EstSat.EarthMJ2000Eq.VX = 1.77051383423
+   EstSat.EarthMJ2000Eq.VY = -7.02918642835
+   EstSat.EarthMJ2000Eq.VZ = 1.94478002492
+   EstSat.Cd = 2.1942879347
+
+Warning: The orbit state transition matrix does not currently contain SRP contributions from shadow partial derivatives when using Spherical SRP.
+Variable Step Integration Statistics (FPS):
+    60 steps taken
+    Min step taken  : 60.000000 sec
+    Max step taken  : 60.000000 sec
+    Sum of steps    : 3600.000000 sec
+    Average step    : 60.000000 sec
+    Stddev of steps : 0.000000 sec
+    Histogram:
+           0.0 -    6.0 sec :      0
+           6.0 -   12.0 sec :      0
+          12.0 -   18.0 sec :      0
+          18.0 -   24.0 sec :      0
+          24.0 -   30.0 sec :      0
+          30.0 -   36.0 sec :      0
+          36.0 -   42.0 sec :      0
+          42.0 -   48.0 sec :      0
+          48.0 -   54.0 sec :      0
+          54.0 -   60.0 sec :     60
+Variable Step Integration Statistics (FPS):
+    0 steps taken
+
+********************************************************
+*** Estimation Completed
+********************************************************
+
+Final Estimated State:
+
+   Estimation Epoch:
+   25357.5420605831215277777778 A.1 modified Julian
+   25357.5420601851851851851856 TAI modified Julian
+   10 Jun 2010 01:00:00.000 UTCG
+   EstSat.EarthMJ2000Eq.X = 579.611695915
+   EstSat.EarthMJ2000Eq.Y = 2018.43658446
+   EstSat.EarthMJ2000Eq.Z = 6754.3020067
+   EstSat.EarthMJ2000Eq.VX = 1.77051383423
+   EstSat.EarthMJ2000Eq.VY = -7.02918642835
+   EstSat.EarthMJ2000Eq.VZ = 1.94478002492
+   EstSat.Cd = 2.1942879347
+
+Final Covariance Matrix:
+
+         2.558107588807e-05        -6.550433085065e-06        -2.769654283679e-06         4.062891364370e-09        -3.905777354454e-09        -9.585478355597e-09        -4.143916020188e-07
+        -6.550433085065e-06         6.676140345779e-05         1.570512335971e-05         3.502489772646e-10         4.488102066181e-08         5.956182160876e-08        -1.026725332696e-07
+        -2.769654283679e-06         1.570512335971e-05         2.821673157197e-05        -3.536190776581e-09         3.080518797353e-08         2.462393669572e-08        -2.268232950365e-06
+         4.062891364370e-09         3.502489772646e-10        -3.536190776581e-09         3.814907540916e-11         5.168700650224e-12        -6.173768826914e-12        -4.650987969696e-10
+        -3.905777354454e-09         4.488102066181e-08         3.080518797353e-08         5.168700650224e-12         4.889109073192e-11         4.733456218109e-11        -7.447126983098e-10
+        -9.585478355597e-09         5.956182160876e-08         2.462393669572e-08        -6.173768826914e-12         4.733456218109e-11         6.591938921805e-11        -3.711759125553e-09
+        -4.143916020188e-07        -1.026725332696e-07        -2.268232950365e-06        -4.650987969696e-10        -7.447126983098e-10        -3.711759125553e-09         3.999586437959e-02
+
+Final Correlation Matrix:
+
+             1.000000000000            -0.158506794245            -0.103089113777             0.130057019972            -0.110441734055            -0.233425232730            -0.000409679279
+            -0.158506794245             1.000000000000             0.361847244470             0.006940202438             0.785570439436             0.897839390836            -0.000062832452
+            -0.103089113777             0.361847244470             1.000000000000            -0.107780532595             0.829383988136             0.570949300578            -0.002135141974
+             0.130057019972             0.006940202438            -0.107780532595             1.000000000000             0.119680806977            -0.123112391532            -0.000376526601
+            -0.110441734055             0.785570439436             0.829383988136             0.119680806977             1.000000000000             0.833790445162            -0.000532557313
+            -0.233425232730             0.897839390836             0.570949300578            -0.123112391532             0.833790445162             1.000000000000            -0.002285944353
+            -0.000409679279            -0.000062832452            -0.002135141974            -0.000376526601            -0.000532557313            -0.002285944353             1.000000000000
+
+********************************************************
+
+
+
+EstSat.DateFormat = 'UTCGregorian';
+EstSat.Epoch = '10 Jun 2010 01:00:00.000';
+EstSat.CoordinateSystem = 'EarthMJ2000Eq';
+EstSat.DisplayStateType = 'Cartesian';
+EstSat.X = 579.6116959150526;
+EstSat.Y = 2018.436584456823;
+EstSat.Z = 6754.30200669736;
+EstSat.VX = 1.770513834229206;
+EstSat.VY = -7.029186428354885;
+EstSat.VZ = 1.944780024922395;
+EstSat.DryMass = 50;
+EstSat.Cd = 2.194287934700708;
+EstSat.Cr = 1.8;
+EstSat.DragArea = 10;
+EstSat.SRPArea = 10;
+EstSat.SPADDragScaleFactor = 1;
+EstSat.SPADSRPScaleFactor = 1;
+EstSat.AtmosDensityScaleFactor = 1;
+EstSat.ExtendedMassPropertiesModel = 'None';
+EstSat.PowerSystem = '';
+EstSat.NAIFId = -10014001;
+EstSat.NAIFIdReferenceFrame = -9014001;
+EstSat.SpiceFrameId = '';
+EstSat.OrbitColor = 'Green';
+EstSat.TargetColor = 'LightGray';
+EstSat.OrbitErrorCovariance = [ 2.558107588806709e-05 -6.550433085064632e-06 -2.769654283679238e-06 4.06289136436997e-09 -3.905777354454435e-09 -9.585478355597224e-09 ; -6.550433085064632e-06 6.676140345778569e-05 1.570512335971246e-05 3.502489772646164e-10 4.488102066180921e-08 5.956182160876174e-08 ; -2.769654283679238e-06 1.570512335971246e-05 2.821673157197075e-05 -3.536190776581452e-09 3.080518797352802e-08 2.462393669571732e-08 ; 4.06289136436997e-09 3.502489772646164e-10 -3.536190776581452e-09 3.814907540916283e-11 5.168700650224191e-12 -6.173768826913923e-12 ; -3.905777354454435e-09 4.488102066180921e-08 3.080518797352802e-08 5.168700650224191e-12 4.889109073191767e-11 4.733456218108999e-11 ; -9.585478355597224e-09 5.956182160876174e-08 2.462393669571732e-08 -6.173768826913923e-12 4.733456218108999e-11 6.591938921804942e-11 ];
+EstSat.ProcessNoiseModel = 'SNC';
+EstSat.CdSigma = 0.1999896606817321;
+EstSat.CrSigma = 1e+70;
+EstSat.Id = 'LEOSat';
+EstSat.Attitude = 'CoordinateSystemFixed';
+EstSat.SPADSRPFile = '';
+EstSat.SPADSRPInterpolationMethod = 'Bilinear';
+EstSat.SPADSRPScaleFactorSigma = 1e+70;
+EstSat.SPADDragFile = '';
+EstSat.SPADDragInterpolationMethod = 'Bilinear';
+EstSat.SPADDragScaleFactorSigma = 1e+70;
+EstSat.AtmosDensityScaleFactorSigma = 1e+70;
+EstSat.AddHardware = {'GpsReceiver', 'GpsAntenna'};
+EstSat.SolveFors = {'CartesianState', 'FogmCd'};
+EstSat.ModelFile = 'aura.3ds';
+EstSat.ModelOffsetX = 0;
+EstSat.ModelOffsetY = 0;
+EstSat.ModelOffsetZ = 0;
+EstSat.ModelRotationX = 0;
+EstSat.ModelRotationY = 0;
+EstSat.ModelRotationZ = 0;
+EstSat.ModelScale = 1;
+EstSat.AttitudeDisplayStateType = 'Quaternion';
+EstSat.AttitudeRateDisplayStateType = 'AngularVelocity';
+EstSat.AttitudeCoordinateSystem = EarthMJ2000Eq;
+EstSat.EulerAngleSequence = '321';
+
+
+EstSat.DateFormat = 'UTCGregorian';
+EstSat.Epoch = '10 Jun 2010 01:00:00.000';
+EstSat.CoordinateSystem = 'EarthMJ2000Eq';
+EstSat.DisplayStateType = 'Cartesian';
+EstSat.X = 579.6116959150526;
+EstSat.Y = 2018.436584456823;
+EstSat.Z = 6754.30200669736;
+EstSat.VX = 1.770513834229206;
+EstSat.VY = -7.029186428354885;
+EstSat.VZ = 1.944780024922395;
+EstSat.DryMass = 50;
+EstSat.Cd = 2.194287934700708;
+EstSat.Cr = 1.8;
+EstSat.DragArea = 10;
+EstSat.SRPArea = 10;
+EstSat.SPADDragScaleFactor = 1;
+EstSat.SPADSRPScaleFactor = 1;
+EstSat.AtmosDensityScaleFactor = 1;
+EstSat.ExtendedMassPropertiesModel = 'None';
+EstSat.PowerSystem = '';
+EstSat.NAIFId = -10014001;
+EstSat.NAIFIdReferenceFrame = -9014001;
+EstSat.SpiceFrameId = '';
+EstSat.OrbitColor = 'Green';
+EstSat.TargetColor = 'LightGray';
+EstSat.OrbitErrorCovariance = [ 2.558107588806709e-05 -6.550433085064632e-06 -2.769654283679238e-06 4.06289136436997e-09 -3.905777354454435e-09 -9.585478355597224e-09 ; -6.550433085064632e-06 6.676140345778569e-05 1.570512335971246e-05 3.502489772646164e-10 4.488102066180921e-08 5.956182160876174e-08 ; -2.769654283679238e-06 1.570512335971246e-05 2.821673157197075e-05 -3.536190776581452e-09 3.080518797352802e-08 2.462393669571732e-08 ; 4.06289136436997e-09 3.502489772646164e-10 -3.536190776581452e-09 3.814907540916283e-11 5.168700650224191e-12 -6.173768826913923e-12 ; -3.905777354454435e-09 4.488102066180921e-08 3.080518797352802e-08 5.168700650224191e-12 4.889109073191767e-11 4.733456218108999e-11 ; -9.585478355597224e-09 5.956182160876174e-08 2.462393669571732e-08 -6.173768826913923e-12 4.733456218108999e-11 6.591938921804942e-11 ];
+EstSat.ProcessNoiseModel = 'SNC';
+EstSat.CdSigma = 0.1999896606817321;
+EstSat.CrSigma = 1e+70;
+EstSat.Id = 'LEOSat';
+EstSat.Attitude = 'CoordinateSystemFixed';
+EstSat.SPADSRPFile = '';
+EstSat.SPADSRPInterpolationMethod = 'Bilinear';
+EstSat.SPADSRPScaleFactorSigma = 1e+70;
+EstSat.SPADDragFile = '';
+EstSat.SPADDragInterpolationMethod = 'Bilinear';
+EstSat.SPADDragScaleFactorSigma = 1e+70;
+EstSat.AtmosDensityScaleFactorSigma = 1e+70;
+EstSat.AddHardware = {'GpsReceiver', 'GpsAntenna'};
+EstSat.SolveFors = {'CartesianState', 'FogmCd'};
+EstSat.ModelFile = 'aura.3ds';
+EstSat.ModelOffsetX = 0;
+EstSat.ModelOffsetY = 0;
+EstSat.ModelOffsetZ = 0;
+EstSat.ModelRotationX = 0;
+EstSat.ModelRotationY = 0;
+EstSat.ModelRotationZ = 0;
+EstSat.ModelScale = 1;
+EstSat.AttitudeDisplayStateType = 'Quaternion';
+EstSat.AttitudeRateDisplayStateType = 'AngularVelocity';
+EstSat.AttitudeCoordinateSystem = EarthMJ2000Eq;
+EstSat.EulerAngleSequence = '321';
+
+
+Mission run completed.
+===> Total Run Time: 0.651 seconds
+
+========================================
+
+
+      Start 29: QtGui.Comparison
+29/46 Test #29: QtGui.Comparison .................   Passed    2.53 sec
+      Start 30: QtGui.ThrustFiles
+30/46 Test #30: QtGui.ThrustFiles ................   Passed    7.15 sec
+      Start 31: QtGui.ScriptEditing
+31/46 Test #31: QtGui.ScriptEditing ..............   Passed    2.38 sec
+      Start 32: QtGui.ExternalForces
+32/46 Test #32: QtGui.ExternalForces .............   Passed    2.70 sec
+      Start 33: QtGui.Polyhedron
+33/46 Test #33: QtGui.Polyhedron .................   Passed    6.46 sec
+      Start 34: QtGui.OrbitSetup
+34/46 Test #34: QtGui.OrbitSetup .................   Passed    3.31 sec
+      Start 35: QtGui.SolverPlots
+35/46 Test #35: QtGui.SolverPlots ................   Passed    3.37 sec
+      Start 36: QtGui.Desktop
+36/46 Test #36: QtGui.Desktop ....................   Passed    2.00 sec
+      Start 37: QtGui.Help
+37/46 Test #37: QtGui.Help .......................   Passed    1.33 sec
+      Start 38: QtGui.FolderRun
+38/46 Test #38: QtGui.FolderRun ..................   Passed    5.22 sec
+      Start 39: QtGui.MissionNavigation
+39/46 Test #39: QtGui.MissionNavigation ..........   Passed    0.61 sec
+      Start 40: QtGui.Welcome
+40/46 Test #40: QtGui.Welcome ....................   Passed    0.75 sec
+      Start 41: QtGui.ParameterSelection
+41/46 Test #41: QtGui.ParameterSelection .........   Passed    2.10 sec
+      Start 42: QtGui.SpiceDiagnostics
+42/46 Test #42: QtGui.SpiceDiagnostics ...........   Passed    0.21 sec
+      Start 43: QtGui.PlotSetup
+43/46 Test #43: QtGui.PlotSetup ..................   Passed    2.12 sec
+      Start 44: QtGui.Plots
+44/46 Test #44: QtGui.Plots ......................   Passed    3.13 sec
+      Start 45: QtGui.PlotsHiDPI
+45/46 Test #45: QtGui.PlotsHiDPI .................   Passed    3.02 sec
+      Start 46: QtGui.Launch
+46/46 Test #46: QtGui.Launch .....................   Passed    1.22 sec
+
+98% tests passed, 1 tests failed out of 46
+
+Label Time Summary:
+qt-gui    = 208.20 sec*proc (46 tests)
+
+Total Test time (real) = 208.23 sec
+
+The following tests FAILED:
+	 28 - QtGui.KalmanFilter (Failed)                       qt-gui
+Errors while running CTest
+FAILED: [code=8] src/qtgui/CMakeFiles/check-qt /home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/CMakeFiles/check-qt 
+cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+ninja: build stopped: subcommand failed.

@@ -1,0 +1,7 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5e59a13c76e0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5e59a13c76e0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5e59a139b220 with focusing surface 0x5e59a305ab20
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5e59a305ab20 with focusing surface 0x5e59a139b220
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5e59a139b220
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5e59a139b220
+PASS: real Report command bulk owners/properties and typed frames; Cancel, order, repeated bulk deduplication, pending Apply, source/labels/comments, exact Undo/Redo/Unicode save/reopen and independent numeric report; Add all/Remove all and caller restrictions; positional function duplicates; adjustable columns, Check/Uncheck all, empty selection, attached hardware conflict/recovery and body-fixed frames

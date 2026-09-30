@@ -83,9 +83,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Generic writable/visible field generation, cloned validation and INI-based layout/units/help audited. Qt ResourceEditor supplies engine-typed controls, owned properties and atomic script rebuild/rollback; object-specific execution evidence is recorded in individual rows. INI metadata parity, omitted plugin types and all dynamic refresh cases remain pending. |
 | `src/gui/foundation/GmatDialog.hpp` | Shared OK/Cancel/reset, validation-before-close and Help contract audited. Qt focused dialogs keep pending values until acceptance; field/dialog Cancel and invalid-input recovery are covered by the corresponding suites. Close/Escape/focus behavior across all dialogs and context Help remain pending. |
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Active wx numeric Variable, literal String, Array creation (dimensions 1–1000), name validation and existing-user-parameter operations audited. Qt New resource supplies typed initial values, retains values on type changes, rejects duplicate/reserved names and invalid dimensions, and opens the created resource in the tree. Parameters tests cover actual dialog Cancel, correction, creation Undo/Redo, Unicode String and maximum Array creation, then deletion without changing original report results. Existing parameters open from Resources; wx list/Clear layout and shared Help remain unqualified. |
-| `src/gui/foundation/ParameterSelectDialog.hpp` | Active report/XY/dynamic-data, Vary/Achieve/Minimize/constraints, loop/condition, propagation-stop, burn/group and function callers audited. wx supports single/multiple object/property selection, attached hardware, coordinate/body/ODE dependencies, writable/plottable/whole-object restrictions, array indices, Add/Remove/All/reorder and Cancel. Qt ReportParameterDialog and typed resource/group controls cover ordered scalar/array, dependency, hardware and caller-specific selection with existing execution/round-trip tests. Bulk multi-object/property selection, Add All/Remove All and remaining dependency/caller combinations remain delivery/qualification gaps; the audit does not qualify them. |
+| `src/gui/foundation/ParameterSelectDialog.hpp` | Active report/XY/dynamic-data, Vary/Achieve/Minimize/constraints, loop/condition, propagation-stop, burn/group and function callers audited. wx supports single/multiple object/property selection, attached hardware, coordinate/body/ODE dependencies, writable/plottable/whole-object restrictions, array indices, Add/Remove/All/reorder and Cancel. Qt ReportParameterDialog and typed resource/group controls cover ordered scalar/array, dependency, hardware and caller-specific selection with existing execution/round-trip tests. Bulk multi-object/property selection and Add All/Remove All are now implemented. ParameterSelectionTests covers typed shared frames, caller filtering, conflict/recovery for different attached tanks, ordered Report Apply with independent numeric output, source/Undo/Redo/save/reopen, bulk deduplication and positional function duplicates; native Wayland controls were captured and inspected. Broader caller/dependency combinations and desktop input remain under qualification. |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
-| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Resource windows now stay open and refresh accepted/clean model snapshots after Apply (DesktopTests); commands still close successful snapshots. Context Help and broader Apply/focus cases remain pending. |
+| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, retain and refresh accepted panels after Apply, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are covered by InspectionTests. Desktop/Mission tests cover retained resource and command panels, clean companion refresh and protected pending companions. Offline context Help and inherited modal Help are implemented and exercised; broader mixed Apply/focus/desktop cases remain under qualification. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
@@ -4260,3 +4260,84 @@ check-welcome.txt records all 45 Qt suites passing in 162.67 seconds after the
 final Welcome/recent/document changes. application/bin/GmatQt was rebuilt; the
 separate final Wayland Welcome test/capture and actual launcher preference checks
 also passed. These results retain the outstanding native desktop/portal limits.
+
+
+## Original command source and bulk parameter qualification
+
+ParameterSelectionTests exposed an unrelated source-retention defect: command
+Apply previously edited the engine-generated complete script, rewriting resource
+definitions and making implicit defaults explicit. MissionModel now maps the
+accepted command graph back to original source spans and edits that source. It
+shares the existing quoted-literal/comment/continuation statement scanner used by
+resource patches. Sequential alignment plus branch ranges retains duplicate-command
+identity. Numeric formatting, optional engine-filled dictionaries (including
+Write), and For's generated implicit unit step are recognized for alignment.
+The editor retains original options, labels, comments, semicolon-free syntax and
+implicit configuration rather than writing the generated equivalents.
+
+CommandForm now accepts leading comments and omitted terminators in simple
+commands and For/solver headers, while changing only recognized header fields.
+Nested bodies remain in the original statement. A source sequence that cannot
+be aligned safely, including a mission-expanded include without a local span,
+remains a text edit; no canonical whole-script fallback is used. Such cross-file
+command editing is still unqualified. Configuration includes before the mission
+are outside command alignment and retain their original text.
+
+ResourceRoundTripTests verifies command label editing preserves the exact original
+configuration, implicit SolarPowerSystem epoch and unused body defaults, with
+byte-exact propagation/power/array reports, exact Undo/Redo and Unicode save/reopen.
+It also verifies command editing without an explicit BeginMissionSequence leaves
+that boundary implicit and calculations unchanged. MissionTests covers a labeled
+start:end For loop without semicolons, its implicit unit step, leading/inline/body
+comments, exact header edit/Undo/Redo/save/reopen and the independent sums 3 and 6.
+Existing nested branch, duplicate identity, insertion/deletion, script-event,
+solver and invalid-edit tests remain applicable.
+
+The compatibility Save repeat fixture now sets its spacecraft NAIF identifiers
+explicitly. Auto-assigned identifiers change on fresh builds; the old whole-script
+regeneration had accidentally made them explicit. The fixture retains byte-exact
+repeat and failure-recovery assertions with stable intended identifiers. This
+changes the test fixture only, retaining engine ID allocation and preserving
+implicit defaults in actual missions.
+
+ReportParameterDialog now supplies Add all configured and Remove all for ordered
+multiple selections. Bulk additions deduplicate configured names and compatible
+references; manual positional function arguments may repeat a reference. Single
+selectors hide bulk operations. The new multi-object property table shows common
+caller-filtered properties and shares dependency rules with the single browser:
+coordinate/body restrictions, ODE models and directly attached hardware. Reference
+choices are intersected across selected owners. Check all skips unavailable shared
+references; manually selecting a conflicting property blocks OK with a recoverable
+explanation. Selecting fewer owners recovers without altering the engine.
+
+ParameterSelectionTests uses the real Report command editor and nested selector
+widgets. It covers Cancel, two spacecraft/two properties, stable output ordering,
+repeated bulk deduplication, pending Apply, original resource/mission source, labels
+and comments, exact Undo/Redo/Unicode save/reopen and a byte-exact independently
+configured report. It covers configured Add all/Remove all, writable/reportable/
+plottable and single-value constraints, positional function duplicates, adjustable
+columns, Check/Uncheck all, empty owner/property sets, separate attached tanks and
+body-fixed restrictions. Broader caller/dependency combinations remain part of
+shared qualification; this does not requalify every parameter's numerical regime.
+
+parameter-selection-wayland-20260930.txt records a passing native Wayland run and
+its exposed bulk-property PNG was inspected. The capture shows both owners, checked
+properties, shared frame controls and usable acceptance/cancel controls. Qt Wayland
+text-input surface warnings during synthetic focus changes are retained. This is
+widget/native rendering evidence; fresh desktop input, portal choosers and GNOME
+top-level minimize/restore remain outstanding.
+
+check-parameter-selection-source-mapping-failed.txt retains the first complete
+regression: 45 of 46 passed, with KalmanFilter blocked by Write's generated default
+dictionary. Recognizing that dictionary fixed the source alignment; focused
+KalmanFilter/ParameterSelection passed. check-parameter-selection-before-implicit-step.txt
+records all 46 passing in 211.49 seconds before the final implicit-step/header
+addition; the focused Mission suite passed that addition in 4.31 seconds.
+
+Final regression: check-parameter-selection.txt records all 46 Qt suites passing
+in 210.49 seconds after the final original-source, implicit-step and bulk-selection
+changes. The build rebuilt the actual application/bin/GmatQt launcher target.
+The separate final native Wayland parameter-selection run/capture also passed.
+The acceptance checklist remains in progress: debugger stepping/live inspection,
+remaining document/plugin/viewer operations, portal input and top-level GNOME
+minimize/restore still need their required affirmative evidence.

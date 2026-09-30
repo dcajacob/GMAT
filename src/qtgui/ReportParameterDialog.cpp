@@ -1,4 +1,6 @@
 #include "ReportParameterDialog.hpp"
+#include "ParameterReferences.hpp"
+#include "BulkPropertyDialog.hpp"
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
 #include "Parameter.hpp"
@@ -71,51 +73,13 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       for (const auto &name:moderator->GetListOfObjects(ownerType)) properties[QString::fromStdString(name)].append(QString::fromStdString(type));
    }
    owner->addItems(properties.keys());
-   auto updateDependency=[property,dependency,dependencyLabel,use,owner,info,moderator] {
-      dependency->clear();
-      const auto type=property->currentText().toStdString();
-      const auto dep=info->GetDepObjectType(type);
-      UnsignedInt objectType=Gmat::UNKNOWN_OBJECT;
-      if (dep==GmatParam::COORD_SYS) { objectType=Gmat::COORDINATE_SYSTEM; dependencyLabel->setText("Coordinate system"); }
-      else if (dep==GmatParam::ORIGIN) { objectType=Gmat::CELESTIAL_BODY; dependencyLabel->setText("Central body"); }
-      else if (dep==GmatParam::ODE_MODEL) { objectType=Gmat::ODE_MODEL; dependencyLabel->setText("Force model"); }
-      const bool attached=dep==GmatParam::ATTACHED_OBJ;
-      QStringList attachedNames;
-      if (attached) {
-         objectType=info->GetOwnedObjectType(type); dependencyLabel->setText("Attached hardware");
-         if (auto *object=moderator->GetConfiguredObject(owner->currentText().toStdString())) {
-            // Use direct resource references; a thruster's tank reference must
-            // not make that tank appear attached to an unrelated spacecraft.
-            for (int id=0;id<object->GetParameterCount();++id) {
-               try {
-                  const auto kind=object->GetParameterType(id);
-                  if (kind==Gmat::OBJECT_TYPE) attachedNames.append(QString::fromStdString(object->GetStringParameter(id)));
-                  else if (kind==Gmat::OBJECTARRAY_TYPE)
-                     for (const auto &name:object->GetStringArrayParameter(id)) attachedNames.append(QString::fromStdString(name));
-               } catch (BaseException &) {} // Plugin properties may lack a string getter.
-            }
-         }
-      }
-      const bool needed=attached || objectType!=Gmat::UNKNOWN_OBJECT;
-      dependency->setVisible(needed); dependencyLabel->setVisible(needed);
-      if (needed && objectType!=Gmat::UNKNOWN_OBJECT) for (const auto &name:moderator->GetListOfObjects(objectType)) {
-         auto *object=moderator->GetConfiguredObject(name);
-         if (!object) continue;
-         if (attached && !attachedNames.contains(QString::fromStdString(name))) continue;
-         if (dep==GmatParam::COORD_SYS) {
-            try {
-               if (info->RequiresBodyFixedCS(type) && object->GetStringParameter("Axes")!="BodyFixed") continue;
-               if (info->RequiresCelestialBodyCSOrigin(type)) {
-                  auto *origin=moderator->GetConfiguredObject(object->GetStringParameter("Origin"));
-                  if (!origin || !origin->IsOfType(Gmat::CELESTIAL_BODY)) continue;
-               }
-            } catch (BaseException &) { continue; }
-         }
-         dependency->addItem(QString::fromStdString(name));
-      }
-      const auto preferred=dep==GmatParam::COORD_SYS ? "EarthMJ2000Eq" : "Earth";
-      if (dependency->findText(preferred)>=0) dependency->setCurrentText(preferred);
-      use->setEnabled(!owner->currentText().isEmpty() && !property->currentText().isEmpty() && (!needed || dependency->count()>0));
+   auto updateDependency=[property,dependency,dependencyLabel,use,owner] {
+      const auto dep=parameterDependency(owner->currentText(),property->currentText());
+      dependency->clear(); dependency->addItems(dep.choices);
+      dependencyLabel->setText(dep.label);
+      dependency->setVisible(dep.needed); dependencyLabel->setVisible(dep.needed);
+      if (dependency->findText(dep.preferred)>=0) dependency->setCurrentText(dep.preferred);
+      use->setEnabled(!owner->currentText().isEmpty() && !property->currentText().isEmpty() && (!dep.needed || dependency->count()>0));
    };
    auto updateProperties=[owner,property,properties,updateDependency] {
       property->clear(); auto choices=properties.value(owner->currentText()); choices.removeDuplicates(); choices.sort();
@@ -139,10 +103,11 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    layout->addLayout(indices);
    list=new QListWidget(this); list->setObjectName("reportSelectedParameters"); list->addItems(selected);
    list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
-   auto addName=[this,plottable](const QString &name) {
+   auto addName=[this,plottable,arguments](const QString &name) {
       if (name.isEmpty()) return;
       if (singleEntry) { singleEntry->setEditText(name); return; }
-      if (plottable && (!isPlottableReference(name) || !list->findItems(name,Qt::MatchExactly).isEmpty())) return;
+      if (plottable && !isPlottableReference(name)) return;
+      if (!arguments && !list->findItems(name,Qt::MatchExactly).isEmpty()) return;
       list->addItem(name); list->setCurrentRow(list->count()-1);
    };
    connect(add,&QPushButton::clicked,this,[entry,addName] { addName(entry->currentText().trimmed()); });
@@ -170,6 +135,19 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
          auto *item=list->takeItem(index); list->insertItem(destination,item); list->setCurrentRow(destination);
       });
    }
+   auto *removeAll=new QPushButton("Remove all",this); removeAll->setObjectName("reportParameterRemoveAll"); actions->addWidget(removeAll);
+   connect(removeAll,&QPushButton::clicked,list,&QListWidget::clear);
+   auto *addAll=new QPushButton("Add all configured",this); addAll->setObjectName("reportParameterAddAll"); actions->addWidget(addAll);
+   connect(addAll,&QPushButton::clicked,this,[this,names,addName] {
+      for (const auto &name:names) if (list->findItems(name,Qt::MatchExactly).isEmpty()) addName(name);
+   });
+   auto *bulk=new QPushButton("Select multiple object properties…",browser); bulk->setObjectName("reportBulkProperties"); form->addRow(bulk);
+   bulk->setVisible(!single); bulk->setEnabled(!properties.isEmpty());
+   connect(bulk,&QPushButton::clicked,this,[this,properties,owner,property,addName] {
+      BulkPropertyDialog dialog(properties,owner->currentText(),property->currentText(),this);
+      if (dialog.exec()!=QDialog::Accepted) return;
+      for (const auto &name:dialog.selection()) if (list->findItems(name,Qt::MatchExactly).isEmpty()) addName(name);
+   });
    layout->addLayout(actions);
    if (single) {
       list->hide(); add->hide(); element->setText("Use element");

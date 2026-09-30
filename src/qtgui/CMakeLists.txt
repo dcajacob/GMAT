@@ -2,7 +2,7 @@ find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets OpenGLWidgets)
 find_package(OpenSceneGraph 3.6 REQUIRED COMPONENTS osg osgDB osgViewer osgGA osgUtil osgText)
 add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
-   UserParameter.cpp UserParameter.hpp
+   UserParameter.cpp UserParameter.hpp ScriptStatements.hpp
    AboutDialog.cpp AboutDialog.hpp
    HelpDialog.cpp HelpDialog.hpp
    FolderRun.cpp FolderRun.hpp FolderRunDialog.cpp FolderRunDialog.hpp
@@ -17,6 +17,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    CommandForm.cpp CommandForm.hpp
    ConditionDialog.cpp ConditionDialog.hpp
    ReportParameterDialog.cpp ReportParameterDialog.hpp
+   ParameterReferences.cpp ParameterReferences.hpp BulkPropertyDialog.cpp BulkPropertyDialog.hpp
    QtSolverListener.cpp QtSolverListener.hpp
    StartupCompatibility.cpp StartupCompatibility.hpp
    ScriptCompatibility.cpp ScriptCompatibility.hpp
@@ -125,6 +126,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtMissionNavigationTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtWelcomeTests tests/WelcomeTests.cpp)
    target_link_libraries(GmatQtWelcomeTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtParameterSelectionTests tests/ParameterSelectionTests.cpp)
+   target_link_libraries(GmatQtParameterSelectionTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
    target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
@@ -251,6 +254,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.FolderRun GmatQtFolderRunTests "${qt_test_startup}")
    add_qt_test(QtGui.MissionNavigation GmatQtMissionNavigationTests "${qt_test_startup}")
    add_qt_test(QtGui.Welcome GmatQtWelcomeTests "${qt_test_startup}")
+   add_qt_test(QtGui.ParameterSelection GmatQtParameterSelectionTests "${qt_test_startup}")
    add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -274,5 +278,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtFolderRunTests)
    add_dependencies(check-qt GmatQtMissionNavigationTests)
    add_dependencies(check-qt GmatQtWelcomeTests)
+   add_dependencies(check-qt GmatQtParameterSelectionTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

@@ -354,7 +354,12 @@ Stopping conditions; propagator assignments use Propagators and spacecraft. Peri
 
 Changes use an immutable snapshot of the complete mission with source ranges
 matched within each branch. This distinguishes identical statements in different
-branches. Applying validates the complete candidate before updating the script
+branches. Edits patch the original script, preserving unrelated resource source
+and implicit defaults. Engine formatting differences and generated optional
+command dictionaries are matched without writing them into the source. Leading
+comments, simple commands and For/solver headers without semicolons remain available in the controls. An omitted For step remains implicit.
+A command that cannot be aligned safely remains a text edit; unrelated resource
+definitions are never regenerated as a fallback. Applying validates the complete candidate before updating the script
 as one undoable edit. Invalid candidates restore the previous engine model;
 stale panels and unapplied changes receive the same protection as resource panels.
 
@@ -1679,3 +1684,22 @@ files. Recent/sample/New actions honor the current pending-panel and unsaved-scr
 Save/Discard/Cancel flow. Missing files report their full path, and canceled
 operations retain the current source and identity. Main Welcome content scrolls
 in compact windows while Close and the startup preference remain visible.
+
+
+### Bulk parameter selection
+
+The ordered report, XY Y-parameter and function-argument selectors provide
+Add all configured and Remove all. Add all adds each compatible configured name
+once; manual function input/output arguments may repeat a reference in different
+positions. Report and plot additions avoid duplicates. Single-value selectors
+retain their caller restrictions and hide these bulk actions.
+
+Select multiple object properties opens a multi-selection object list and an
+adjustable property/reference table. It shows the properties common to the
+selected objects, with coordinate-system, central-body, force-model or directly
+attached hardware references shared by those objects. Check all selects available
+references; Uncheck all clears them. A manually checked property without a common
+reference explains the conflict and keeps OK disabled. Select fewer objects to
+add different attached hardware separately. Accepted additions use object/property
+order; Cancel leaves the parent selection unchanged. The parent command/resource
+still requires Apply before changing the mission.
