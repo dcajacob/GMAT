@@ -43,6 +43,7 @@ public:
    PolyhedronGravityModel& operator= (const PolyhedronGravityModel& polgm);
 
    virtual bool Initialize();
+   virtual bool Validate();
 
    // inherited from GmatBase
    virtual GmatBase*    Clone() const;

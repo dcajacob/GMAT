@@ -26,6 +26,10 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cmath>
+#include <map>
+#include <algorithm>
+#include "FileUtil.hpp"
 #include "UtilityException.hpp"
 #include "StringUtil.hpp"
 #include "Rvector3.hpp"
@@ -148,162 +152,93 @@ bool PolyhedronBody::LoadBodyShape()
             "data from %s\n", bodyShapeFilename.c_str());
    #endif
 
-   // 1. Open data file:
-   std::ifstream bsFile(bodyShapeFilename.c_str());
-   if (!bsFile)
-      throw UtilityException("Error opening body shape file: \'" + 
-                             bodyShapeFilename + "\'");
-   bsFile.setf(std::ios::skipws);
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("Starting\n");
-   #endif
-
-   std::string  line, subline;
-   // 2. Read all vertices and store them to pointsList:
-   Integer numvertices;
-   Integer index;
-   Real x, y, z;
-   Rvector3 vertex;
-
-   // 2.1. Read number of vertices:
-   getline(bsFile,line);
-   GmatStringUtil::ToInteger(line,&numvertices);
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("   %d vertices\n", numvertices);
-   #endif
-
-   // 2.2. Read all vertices:
-   Integer first, last;
-   for(Integer i=0; (i < numvertices)&&(!bsFile.eof()); ++i)
+   // Parse into temporary storage. A failed read must not leave a partial
+   // mesh that a later retry can append to or index during gravity evaluation.
+   const std::string resolved = GmatFileUtil::FindFile(bodyShapeFilename);
+   std::ifstream input(resolved.empty() ? bodyShapeFilename : resolved);
+   if (!input)
+      throw UtilityException("Error opening body shape file: '" + bodyShapeFilename + "'");
+   Integer lineNumber = 0;
+   const auto fail = [&](const std::string &reason)
    {
-	  // get a line from data file:
-      getline(bsFile,line);
-
-      // get record's index:
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToInteger(subline, &index);
-      line = line.substr(first, line.size()-first);
-
-      // get vertex's x-coordinate:
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToReal(subline, &x);
-      line = line.substr(first, line.size()-first);
-
-      // get vertex's y-coordinate:
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToReal(subline, &y);
-      line = line.substr(first, line.size()-first);
-
-      // get vertex's z-coordinate:
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToReal(subline, &z);
-
-      // push the vertex to verticesList:
-      vertex.Set(x, y,z);				             // unit: km
-	   verticesList.push_back(vertex);
-   }
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("   %d loaded\n", verticesList.size());
-   #endif
-
-   if (bsFile.eof())
-      throw UtilityException("Error: missing data in file: " +
-                             bodyShapeFilename);
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("number of vertices = %d\n", verticesList.size());
-      for (UnsignedInt i = 0; i < verticesList.size(); ++i)
-         MessageInterface::ShowMessage("%.15lf   %.15lf   %.15lf\n", verticesList[i].Get(0), verticesList[i].Get(1), verticesList[i].Get(2) );
-      MessageInterface::ShowMessage("\n");
-   #endif
-
-   // 3. Read all faces and store them to facesList:
-   Integer numfaces;
-   Integer ix, iy, iz;
-   PolygonFace triangularface;
-
-   // 3.1. Read number of faces:
-   getline(bsFile,line);
-   GmatStringUtil::ToInteger(line,&numfaces);
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("   %d faces\n", numfaces);
-   #endif
-
-   // 3.2. Read all faces:
-   for(Integer i=0; (i < numfaces)&&(!bsFile.eof()); ++i)
+      throw UtilityException("Invalid body shape file '" + bodyShapeFilename +
+         "' at line " + std::to_string(lineNumber) + ": " + reason);
+   };
+   const auto row = [&]()
    {
-	  // get a line from data file:
-      getline(bsFile,line);
-
-      // get record's index:
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToInteger(subline, &index);
-      line = line.substr(first, line.size()-first);
-
-      // get the index of the first vertex of triangle :
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToInteger(subline, &ix);
-      line = line.substr(first, line.size()-first);
-
-      // get the index of the second vertex of triangle :
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToInteger(subline, &iy);
-      line = line.substr(first, line.size()-first);
-
-      // get the index of the third vertex of triangle :
-      line = GmatStringUtil::Trim(line, LEADING);
-      GmatStringUtil::FindFirstAndLast(line,' ',first,last);
-      subline = line.substr(0,first);
-      GmatStringUtil::ToInteger(subline, &iz);
-
-	  // define a triangular face:
-	  triangularface.push_back(ix-1);			// GMAT index starts from 0; MatLab index starts from 1
-	  triangularface.push_back(iy-1);			// GMAT index starts from 0; MatLab index starts from 1
-	  triangularface.push_back(iz-1);			// GMAT index starts from 0; MatLab index starts from 1
-
-	  // add the triangular face into facesList:
-	  facesList.push_back(triangularface);
-     triangularface.clear();
+      std::string line;
+      ++lineNumber;
+      if (!std::getline(input, line)) fail("missing mesh data");
+      return std::istringstream(line);
+   };
+   const auto complete = [&](std::istringstream &record)
+   {
+      record >> std::ws;
+      if (!record.eof()) fail("unexpected data after record");
+   };
+   const auto count = [&]()
+   {
+      auto record = row();
+      Integer value = 0;
+      if (!(record >> value) || value < 4) fail("expected a count of at least four");
+      complete(record);
+      return value;
+   };
+   PointsList points;
+   FacesList faces;
+   const Integer vertexCount = count();
+   for (Integer i = 0; i < vertexCount; ++i)
+   {
+      auto record = row();
+      Integer index = 0;
+      Real x = 0.0, y = 0.0, z = 0.0;
+      if (!(record >> index >> x >> y >> z) ||
+          !std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z))
+         fail("expected a vertex record index and three finite coordinates in km");
+      complete(record);
+      points.push_back(Rvector3(x, y, z));
    }
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("   %d loaded\n", facesList.size());
-   #endif
-
-   if (bsFile.eof())
-      throw UtilityException("Error: missing data in file: " +
-                             bodyShapeFilename);
-
-   // 4. Close data file:
-   if (bsFile.is_open())  bsFile.close();
-
+   // Every edge needs two oppositely directed incident faces for the existing
+   // face-normal and edge-attachment gravity calculations to be well defined.
+   std::map<std::pair<Integer, Integer>, std::pair<Integer, Integer>> edges;
+   const Integer faceCount = count();
+   Real signedVolume = 0.0;
+   for (Integer i = 0; i < faceCount; ++i)
+   {
+      auto record = row();
+      Integer index = 0, a = 0, b = 0, c = 0;
+      if (!(record >> index >> a >> b >> c) ||
+          a < 1 || b < 1 || c < 1 || a > vertexCount || b > vertexCount ||
+          c > vertexCount || a == b || b == c || a == c)
+         fail("expected a face record index and three distinct valid vertex indices");
+      complete(record);
+      --a; --b; --c;
+      const Rvector3 u = points[b] - points[a], v = points[c] - points[a];
+      const Rvector3 normal(u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2],
+         u[0]*v[1] - u[1]*v[0]);
+      const Real area = normal * normal;
+      if (!std::isfinite(area) || area <= 0.0) fail("degenerate triangular face");
+      signedVolume += points[a] * normal / 6.0;
+      const Integer indices[] = {a, b, c, a};
+      for (Integer j = 0; j < 3; ++j)
+      {
+         const Integer from = indices[j], to = indices[j + 1];
+         auto &edge = edges[std::make_pair(std::min(from, to), std::max(from, to))];
+         ++edge.first;
+         edge.second += from < to ? 1 : -1;
+      }
+      faces.push_back(PolygonFace{a, b, c});
+   }
+   for (const auto &edge : edges)
+      if (edge.second.first != 2 || edge.second.second != 0)
+         fail("mesh must be closed with consistently oriented triangular faces");
+   if (!std::isfinite(signedVolume) || signedVolume <= 0.0)
+      fail("mesh must enclose positive volume with outward face winding");
+   input >> std::ws;
+   if (!input.eof()) fail("unexpected data after mesh");
+   verticesList.swap(points);
+   facesList.swap(faces);
    isLoad = true;
-
-   #ifdef DEBUG_READ_DATAFILE
-      MessageInterface::ShowMessage("number of faces = %d\n", facesList.size());
-      for (UnsignedInt i = 0; i < facesList.size(); ++i)
-         MessageInterface::ShowMessage("%d:  %d   %d   %d\n", i,
-               facesList[i].at(0), facesList[i].at(1), facesList[i].at(2));
-      MessageInterface::ShowMessage("\n");
-   #endif
 
    return true;
 }

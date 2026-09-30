@@ -1404,3 +1404,13 @@ complete result; **Close** cancels active work. Results are read-only, paged and
 searchable through the complete file. **Save results…** exports the complete
 comparison, including differences and errors, and prevents overwriting its input
 files. Comparing reports does not edit the mission or change its calculations.
+
+For an existing polyhedron gravity contributor, its force-model properties offer
+a celestial-body selector, shape-file Browse control and density in kg/m^3.
+Apply checks a finite positive density and a closed triangle mesh with outward
+face winding. Shape coordinates are in kilometres. The file contains a vertex
+count, rows of `label x y z`, a face count, then rows of `label vertex1 vertex2
+vertex3`; connectivity uses one-based vertex-row indices. Record labels are
+decorative integers. Relative paths resolve from the mission's script directory.
+Malformed inputs are reported before gravity evaluation; the calculation for
+valid meshes remains the existing plugin calculation.

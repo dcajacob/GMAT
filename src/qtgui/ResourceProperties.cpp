@@ -50,6 +50,10 @@ GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
       if (!force) continue;
       const auto prefix=QString::fromStdString(object.BuildPropertyName(force))+".";
       if (name.startsWith(prefix)) { leaf=name.mid(prefix.size()); return force; }
+      // CreateForceBody changes the canonical body prefix while other fields
+      // in the same pending transaction still use the original force name.
+      const auto original=QString::fromStdString(force->GetName())+".";
+      if (force->IsOfType("PolyhedronGravityModel") && name.startsWith(original)) { leaf=name.mid(original.size()); return force; }
    }
    return nullptr;
 }
@@ -164,6 +168,15 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
                type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
             if (object.IsOfType("TrackingFileSet") && field.name=="RampTable") field.fileInput=true;
+         }
+         if (object.IsOfType("PolyhedronGravityModel")) {
+            if (field.name=="ShapeFileName") {
+               field.filename=true; field.fileInput=true;
+               field.help="Closed triangle mesh with outward face winding. Vertex coordinates are in kilometres.";
+            }
+            if (field.name=="BodyDensity") field.unit="kg/m^3";
+            if (field.name=="CreateForceBody")
+               for (const auto &body:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(body));
          }
          if (object.IsOfType("ExternalModel") && field.name=="ScriptFileName") {
             // This engine field is typed as a filename but Python imports its
@@ -612,6 +625,15 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void validateResourceProperties(GmatBase &object)
 {
+   if (object.IsOfType("ODEModel")) for (int i=0;i<object.GetOwnedObjectCount();++i) {
+      auto *force=object.GetOwnedObject(i);
+      if (force && force->IsOfType("PolyhedronGravityModel")) {
+         const auto body=force->GetStringParameter("CreateForceBody");
+         auto *selected=Moderator::Instance()->GetConfiguredObject(body);
+         if (!selected || !selected->IsOfType("CelestialBody")) throw std::runtime_error("Select an existing celestial body for polyhedron gravity.");
+         force->Validate();
+      }
+   }
    validateBurnProperties(object);
    validateOrbitViewProperties(object);
    validateThrusterProperties(object);

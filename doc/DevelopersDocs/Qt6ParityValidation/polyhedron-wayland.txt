@@ -1,0 +1,4 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5a9fb5247140 with focusing surface 0x5a9fb6481e10
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5a9fb5247140
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5a9fb5247140
+PASS: typed body/shape selection and Cancel, density units, pending Apply, independent cube far-field check and script state agreement, exact Undo/Redo/Unicode save/reopen, invalid density/body/missing/malformed shape rollback and recovery, whitespace and legacy record labels, SurfaceHeight browser, Output access, relative paths and unrelated resource editing.

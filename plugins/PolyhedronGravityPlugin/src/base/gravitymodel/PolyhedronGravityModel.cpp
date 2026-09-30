@@ -30,6 +30,7 @@
 #include "MessageInterface.hpp"
 
 #include "PolyhedronGravityModel.hpp"
+#include <cmath>
 #include "Rmatrix33.hpp"
 #include "Rmatrix66.hpp"
 
@@ -160,6 +161,17 @@ PolyhedronGravityModel& PolyhedronGravityModel::operator= (const PolyhedronGravi
 }
 
 
+bool PolyhedronGravityModel::Validate()
+{
+   if (!std::isfinite(bodyDensity) || bodyDensity <= 0.0)
+      throw ODEModelException("Polyhedron body density must be finite and positive (kg/m^3).");
+   if (createForceBodyName.empty())
+      throw ODEModelException("Select a body for the polyhedron gravity model.");
+   PolyhedronBody pending(bodyShapeFilename);
+   pending.LoadBodyShape();
+   return GravityBase::Validate();
+}
+
 bool PolyhedronGravityModel::Initialize()
 {
    if (isPHGMInitialized)
@@ -255,7 +267,9 @@ bool PolyhedronGravityModel::HasLocalClones()
 
 bool PolyhedronGravityModel::IsUserForce()
 {
-	return true;
+   // PolyhedralBodies already declares this contributor during serialization.
+   // Listing it again in UserDefined creates a duplicate force on rebuild.
+   return false;
 }
 
 bool PolyhedronGravityModel::RenameRefObject(const UnsignedInt type,

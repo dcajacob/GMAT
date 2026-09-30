@@ -159,7 +159,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
 | `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
-| `../plugins/libPolyhedronGravity` | Pending qualification |
+| `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. New-contributor creation/removal, real asteroid meshes, custom bodies, multiple bodies/spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
@@ -3229,3 +3229,60 @@ resource and command rows retain their own unverified combinations. There are
 now 35 of 108 entries marked Pending audit; audited partial rows still carry
 open requirements. The selected plugin inventory remains two without initial
 qualification and 18 partial.
+
+## Existing polyhedron gravity controls and checked shape inputs
+
+The three plugin fields, owned serialization, body-shape reader and SurfaceHeight
+parameter dependency were audited. Qt now provides a celestial-body selector and
+an existing-file shape picker, shows density in kg/m^3, and explains that mesh
+coordinates use kilometres. Changes remain pending until Apply. Density must be
+finite and positive; body selection must refer to a celestial body. Paired body
+and shape edits retain the original field ownership while the canonical body
+prefix changes.
+
+The plugin reported itself as a user force although PolyhedralBodies already
+declares its contributor. Engine serialization therefore emitted both
+PolyhedralBodies and UserDefined, causing any GUI reconstruction to fail with a
+duplicate-force error. Its classification now emits only the supported
+PolyhedralBodies declaration. All uses of IsUserForce in this engine are
+serialization/list construction; gravity and propagation evaluation are unchanged.
+
+The old file loader ignored numeric-conversion failures and did not validate
+vertex references before indexing them. The loader now parses into temporary
+storage and commits a mesh only after counts, finite coordinates, connectivity,
+nondegenerate triangles, paired/oppositely directed edges and positive enclosed
+volume pass. This rejects open or inconsistently oriented meshes and globally inward
+face winding before gravity evaluation. Relative inputs use the engine's script-directory
+search context. Valid vertex/face ordering and the legacy decorative numeric
+record labels remain intact. Tabs, CRLF and a missing final newline are accepted.
+Self-intersecting surfaces are not detected or qualified.
+
+PolyhedronTests uses a synthetic closed cube centered on Earth with 20-km edges
+and density 2000 kg/m^3. This is a controlled input fixture, not an Earth physical
+model or asteroid qualification. Its 60-second velocity agrees with an
+independent far-field mass approximation within 0.2 percent. GUI selection and
+density Apply match the independently configured script's state and legacy
+SurfaceHeight report. The parameter browser selects Sat.FM.SurfaceHeight with
+the correct force-model dependency; Output opens the generated report. Exact
+Undo/Redo and Unicode save/reopen preserve execution. A Mars body/path change
+and Earth restoration qualify paired configuration, not Mars propagation.
+
+Ten malformed meshes cover invalid counts, truncated data, out-of-range and
+repeated indices, open surfaces, nonfinite/collinear vertices, reversed face
+orientation and trailing data. GUI Apply rejects each without changing source;
+raw-script failure followed by load/build/run of the valid mission recovers the
+reference report. Missing input and invalid density/body recover similarly.
+Relative-path save/reopen and an unrelated report precision edit retain the
+contributor and calculation. Native Wayland execution passed with isolated
+settings; the inspected capture shows readable fields, density units, body
+selection and shape browsing. Evidence: Qt6ParityValidation/polyhedron-wayland.txt/.png.
+After correcting the separately discovered CommandEcho lifecycle failure, the
+rebuilt user executable passed all 29 Qt suites in 126.18 seconds. Combined
+validation log: Qt6ParityValidation/check-polyhedron-echo.txt.
+
+New-contributor creation/removal, real asteroid meshes/custom bodies, multiple
+bodies/spacecraft, variational and precision propagation, disk-access errors,
+geometric self-intersection and broader SurfaceHeight numerical semantics remain
+open. The selected plugin inventory now has one without initial qualification
+(EKF) and 19 partial. The wx source-audit inventory remains 35 of 108 Pending
+audit; this is not full replacement qualification.
