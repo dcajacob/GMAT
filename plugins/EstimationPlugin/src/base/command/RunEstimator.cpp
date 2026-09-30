@@ -348,7 +348,9 @@ const std::string& RunEstimator::GetGeneratingString(Gmat::WriteMode mode,
    {
       solverModeStr = " {SolveMode = " + solveMode + "}";
    }
-   generatingString = prefix + "RunEstimator " + solverName + solverModeStr + ";";
+   // RunSmoother inherits this formatter. Retain the concrete command type so
+   // its keyword and the base formatter's command-label offset agree.
+   generatingString = prefix + typeName + " " + solverName + solverModeStr + ";";
 
    return RunSolver::GetGeneratingString(mode, prefix, useName);
 }

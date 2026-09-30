@@ -43,6 +43,8 @@
 #include "MessageInterface.hpp"
 #include "BaseException.hpp"
 #include "FileManager.hpp"
+#include "GmatType.hpp"
+#include <vector>
 #include <QAction>
 #include <QApplication>
 #include <QClipboard>
@@ -638,7 +640,7 @@ void MainWindow::refreshTrees()
    reportFiles.clear();
    ephemerisFiles.clear();
    auto *root = new QTreeWidgetItem(resources, {"Resources"});
-   const std::pair<const char *, UnsignedInt> groups[] = {
+   std::vector<std::pair<const char *, UnsignedInt>> groups = {
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
       {"Formations", Gmat::FORMATION}, {"Ground Stations", Gmat::GROUND_STATION},
       {"Propagators", Gmat::PROP_SETUP}, {"Burns", Gmat::BURN},
@@ -649,6 +651,10 @@ void MainWindow::refreshTrees()
       {"Calculated Points",Gmat::CALCULATED_POINT}, {"Celestial Bodies",Gmat::CELESTIAL_BODY},
       {"Measurement Models",Gmat::MEASUREMENT_MODEL}, {"Error Models",Gmat::ERROR_MODEL},
       {"Interfaces",Gmat::INTERFACE}, {"Data Filters",Gmat::DATA_FILTER}, {"Fields of View",Gmat::FIELD_OF_VIEW}};
+   for (const auto &entry:{std::pair{"Process Noise Models","ProcessNoiseModel"},std::pair{"Estimated Parameters","EstimatedParameter"}}) {
+      const auto type=GmatType::GetTypeId(entry.second);
+      if (type!=Gmat::UNKNOWN_OBJECT && !Moderator::Instance()->GetListOfFactoryItems(type).empty()) groups.push_back({entry.first,type});
+   }
    for (const auto &group : groups) {
       auto *category = new QTreeWidgetItem(root, {group.first});
       for (const auto &name : Moderator::Instance()->GetListOfObjects(group.second)) {
@@ -854,9 +860,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto burnChanges=applyBurnProperties(*proposed,changes);
       const auto ephemerisChanges=applyEphemerisProperties(*proposed,changes);
       const auto intervalChanges=applyEpochIntervalProperties(*proposed,changes);
+      const auto warmChanges=applyWarmStartProperties(*proposed,changes);
+      const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
+      if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
          if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || (pairedMixture && it.key()=="MixRatio")) continue;
-         if (intervalChanges.contains(it.key()) || isResourceList(*proposed,it.key())) continue;
+         if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
@@ -1125,7 +1134,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    auto firstType=[&](UnsignedInt category,const char *type,const char *fallback) {
       for (const auto &name:Moderator::Instance()->GetListOfObjects(category)) {
          auto *object=Moderator::Instance()->GetConfiguredObject(name);
-         if (object && object->IsOfType(type)) return QString::fromStdString(name);
+         if (object && object->IsOfType(type) && !(QString::fromLatin1(type)=="Estimator" && object->IsOfType("Smoother"))) return QString::fromStdString(name);
       }
       return QString::fromLatin1(fallback);
    };
@@ -1157,6 +1166,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    if (availableEngineTypes().contains("Set")) templates.insert("Set (file import)",QString("Set %1 %2;").arg(sat,firstType(Gmat::INTERFACE,"DataInterface","FileInterfaceName")));
    if (availableEngineTypes().contains("RunSimulator")) templates.insert("RunSimulator",QString("RunSimulator %1;").arg(firstType(Gmat::SOLVER,"Simulator","SimulatorName")));
    if (availableEngineTypes().contains("RunEstimator")) templates.insert("RunEstimator",QString("RunEstimator %1;").arg(firstType(Gmat::SOLVER,"Estimator","EstimatorName")));
+   if (availableEngineTypes().contains("RunSmoother")) templates.insert("RunSmoother",QString("RunSmoother %1;").arg(firstType(Gmat::SOLVER,"Smoother","SmootherName")));
    for (const auto &command:{QString("BeginFileThrust"),QString("EndFileThrust")}) if (availableEngineTypes().contains(command))
       templates.insert(command,QString("%1 %2(%3);").arg(command,firstType(Gmat::INTERFACE,"ThrustHistoryFile","ThrustHistoryName"),sat));
    QStringList propagationChoices,spacecraftChoices,formationChoices;

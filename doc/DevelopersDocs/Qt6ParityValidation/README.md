@@ -161,3 +161,25 @@ again. It also verifies that the source file remains unchanged, unsupported
 OpenFrames declarations receive a manual-conversion explanation, and ordinary
 scripts build normally. [All 11 tests passed](check-ofi-prompt.txt); the Linux
 `application/bin/GmatQt` executable was rebuilt with this behavior.
+
+## GPS filter/smoother and warm starts
+
+KalmanTests qualifies a one-hour noise-free version of the shipped GPS
+filter/smoother example with SNC process noise and Gauss-Markov drag estimation.
+GUI settings match independently scripted state reports and the complete
+warm-start CSV. It exercises typed references/run commands, owned model settings,
+file picker Cancel, paired date conversion, both warm-start continuation
+boundaries, exact Undo/Redo/Unicode mission reopen, report viewers, rejected
+settings and missing/malformed/late-seed recovery. Labeled smoother serialization
+and SNC vector-setter fall-through bugs were fixed; calculation algorithms remain
+unchanged. The earlier command-edit failure is retained in
+[the diagnostic log](kalman-command-before-fix.txt).
+
+[Native Wayland passed](kalman-wayland.txt). Exposed captures show the
+[warm-start controls](kalman-wayland.warm.png),
+[SNC settings](kalman-wayland.snc.png) and
+[Gauss-Markov settings](kalman-wayland.fogm.png).
+[All 30 Qt suites passed](check-kalman.txt) in 153.67 seconds with the user's
+GmatQt executable rebuilt. Full-day/noisy/real observations, additional models,
+creation/removal, covariance/residual graphics/prediction, warm-start smoothing,
+broader malformed/relative files and disk failures remain unqualified.

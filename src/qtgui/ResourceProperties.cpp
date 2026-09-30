@@ -10,6 +10,8 @@
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
+#include "FactoryManager.hpp"
+#include "GmatType.hpp"
 #include "FileUtil.hpp"
 #include "FileManager.hpp"
 #include "Rmatrix.hpp"
@@ -191,6 +193,30 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                }
             }
          }
+         if (object.IsOfType("SeqEstimator")) {
+            if (field.name=="InputWarmStartFile" || field.name=="OutputWarmStartFile") {
+               field.filename=true; field.fileInput=field.name=="InputWarmStartFile"; field.fileOutput=!field.fileInput;
+               field.help=field.fileInput ? "Filter state and covariance CSV. Leave empty for a cold start." : "Filter state and covariance CSV. Leave empty to disable warm-start output.";
+            }
+            if (field.name=="WarmStartEpochFormat") for (const auto &format:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) field.choices.append(QString::fromStdString(format));
+            if (field.name=="WarmStartEpoch") {
+               field.references={"FirstMeasurement","LastWarmStartRecord"};
+               field.help="Enter a date in WarmStartEpochFormat, or select a boundary. FirstMeasurement requires an earlier seed record; LastWarmStartRecord requires later observations. Changing format converts an explicit date.";
+            }
+         }
+         const bool processType=object.IsOfType("ProcessNoiseModel") && field.name=="Type";
+         const bool parameterModel=object.IsOfType("EstimatedParameter") && field.name=="Model";
+         if (processType || parameterModel) {
+            for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(GmatType::GetTypeId(processType ? "ProcessNoise" : "EstimatedParameterModel"))) field.choices.append(QString::fromStdString(type));
+            field.help="Changing model installs its default settings. Apply, then reopen the resource to edit the new model's parameters.";
+         }
+         if (object.IsOfType("Smoother") && field.name=="Filter") {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SOLVER)) {
+               auto *filter=Moderator::Instance()->GetConfiguredObject(name);
+               if (filter && filter->IsOfType("SeqEstimator")) field.references.append(QString::fromStdString(name));
+            }
+         }
          if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
             try {
                auto type=object.IsOfType("Formation") && field.name=="Add" ? Gmat::SPACECRAFT : object.GetPropertyObjectType(id);
@@ -256,6 +282,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             if (field.name=="Type") field.choices=trackingMeasurementTypes();
             if (field.name=="SolveFors") field.references={"Bias","PassBiases"};
          }
+         if (object.IsOfType("FirstOrderGaussMarkov") && field.name=="SolveFor") field.choices={"Cd","AtmosDensityScaleFactor"};
          if (object.IsOfType("ThrustHistoryFile") && field.name=="AddThrustSegment") {
             field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::INTERFACE)) {
@@ -294,7 +321,14 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(field.name=="ErrorModels" ? Gmat::ERROR_MODEL : Gmat::HARDWARE)) field.references.append(QString::fromStdString(name));
          }
-         if (object.IsOfType("Spacecraft") && field.name=="SolveFors") field.references={"CartesianState","KeplerianState","Cd","Cr","SPADDragScaleFactor","SPADSRPScaleFactor","AtmosDensityScaleFactor"};
+         if (object.IsOfType("Spacecraft") && (field.name=="SolveFors" || field.name=="ProcessNoiseModel")) {
+            if (field.name=="SolveFors") field.references={"CartesianState","KeplerianState","Cd","Cr","SPADDragScaleFactor","SPADSRPScaleFactor","AtmosDensityScaleFactor"};
+            else field.references={""};
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::UNKNOWN_OBJECT)) {
+               auto *candidate=Moderator::Instance()->GetConfiguredObject(name);
+               if (candidate && candidate->IsOfType(field.name=="SolveFors" ? "EstimatedParameter" : "ProcessNoiseModel")) field.references.append(QString::fromStdString(name));
+            }
+         }
          if ((object.IsOfType("Simulator") && field.name=="AddData") || (object.IsOfType("Estimator") && field.name=="Measurements")) {
             field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::MEASUREMENT_MODEL)) {
@@ -363,6 +397,17 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    }
    if (object.IsOfType("CoordinateSystem")) if (auto *axes=object.GetOwnedObject(0)) {
       for (const auto &field:resourceProperties(*axes)) {
+         const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
+         if (!duplicate) fields.append(field);
+      }
+   }
+   if (object.IsOfType("ProcessNoiseModel") || object.IsOfType("EstimatedParameter")) if (auto *model=object.GetOwnedObject(0)) {
+      for (auto field:resourceProperties(*model)) {
+         if (field.name=="CoordinateSystem") {
+            field.references.clear(); for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) field.references.append(QString::fromStdString(name));
+         }
+         if (object.IsOfType("ProcessNoiseModel") && field.name=="AccelNoiseSigma") field.unit="km/s^(3/2)";
+         if (object.IsOfType("EstimatedParameter") && field.name=="HalfLife") field.unit="s";
          const bool duplicate=std::any_of(fields.cbegin(),fields.cend(),[&](const ResourceProperty &other) { return other.name==field.name; });
          if (!duplicate) fields.append(field);
       }
@@ -776,6 +821,31 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QS
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   if (object.IsOfType("Smoother") && name=="Filter") {
+      auto *filter=Moderator::Instance()->GetConfiguredObject(value.trimmed().toStdString());
+      if (!filter || !filter->IsOfType("SeqEstimator")) throw std::runtime_error("Select an existing sequential estimator for this smoother.");
+      object.SetStringParameter("Filter",filter->GetName()); return;
+   }
+   const bool processType=object.IsOfType("ProcessNoiseModel") && name=="Type";
+   const bool parameterModel=object.IsOfType("EstimatedParameter") && name=="Model";
+   if (processType || parameterModel) {
+      const auto type=GmatType::GetTypeId(processType ? "ProcessNoise" : "EstimatedParameterModel");
+      const auto &choices=Moderator::Instance()->GetListOfFactoryItems(type);
+      if (std::find(choices.begin(),choices.end(),value.toStdString())==choices.end()) throw std::runtime_error("Select a registered estimation model.");
+      auto *old=object.GetOwnedObject(0);
+      if (old && object.GetStringParameter(name.toStdString())==value.toStdString()) return;
+      // The wrapper clones its model. Factory creation avoids installing a
+      // temporary owned model in the mission's configured-object map.
+      std::unique_ptr<GmatBase> model(FactoryManager::Instance()->CreateObject(type,value.toStdString(),""));
+      if (!model) throw std::runtime_error("Cannot create the selected estimation model.");
+      if (processType && old) model->SetStringParameter("CoordinateSystem",old->GetStringParameter("CoordinateSystem"));
+      if (!object.SetRefObject(model.get(),type,"")) throw std::runtime_error("Cannot replace the estimation model.");
+      return;
+   }
+   if (object.IsOfType("ProcessNoiseModel") || object.IsOfType("EstimatedParameter")) if (auto *model=object.GetOwnedObject(0)) {
+      int id=-1; try { id=model->GetParameterID(name.toStdString()); } catch (BaseException &) {}
+      if (id>=0 && !model->IsParameterReadOnly(id)) { setResourceProperty(*model,name,value); return; }
+   }
    if (object.IsOfType("Imager") && name=="FieldOfView") {
       const auto selected=value.trimmed().toStdString();
       auto *fov=selected.empty() ? nullptr : Moderator::Instance()->GetConfiguredObject(selected);

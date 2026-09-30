@@ -1,0 +1,7 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x633f7a1dc190
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x633f7a1dc190
+Warm reference passed
+Warm GUI passed
+Boundary FirstMeasurement
+Boundary LastWarmStartRecord
+PASS: one-hour GPS filter/smoother GUI with SNC and Gauss-Markov drag, typed references/solve-fors/run commands, file picker Cancel, independent states and exact covariance CSV, report viewers, paired warm-start epoch conversion and both continuation boundaries, exact Undo/Redo and Unicode mission reopen, invalid edit rollback and missing/malformed/late-seed recovery

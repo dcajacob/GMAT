@@ -77,6 +77,7 @@ void CommandForm::setStatement(const QString &statement)
       {"File import","Set\\s+"+label+name+"\\s+"+name+"([ \\t]*(?:\\(\\s*Data\\s*=\\s*\\{[^{}();%\\n]*\\}\\s*\\))?)"+end,{"Target","Data source","Data"}},
       {"Measurement simulation","RunSimulator\\s+"+label+name+end,{"Simulator"}},
       {"Orbit estimation","RunEstimator\\s+"+label+name+end,{"Estimator"}},
+      {"Orbit smoothing","RunSmoother\\s+"+label+name+end,{"Smoother"}},
       {"Event search","FindEvents\\s+"+label+name+"(?:\\s*\\{([^{};]*)\\})?"+end,{"Locator"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
@@ -103,6 +104,7 @@ void CommandForm::setStatement(const QString &statement)
       else if (title()=="File import" && name=="Data source") resourceType="DataInterface";
       else if (name=="Simulator") resourceType="Simulator";
       else if (name=="Estimator") resourceType="Estimator";
+      else if (name=="Smoother") resourceType="Smoother";
       else if (name=="Thrust history") resourceType="ThrustHistoryFile";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
@@ -292,6 +294,7 @@ void CommandForm::setStatement(const QString &statement)
                for (const auto &value:Moderator::Instance()->GetListOfObjects(Gmat::UNKNOWN_OBJECT)) {
                   auto *object=Moderator::Instance()->GetConfiguredObject(value);
                   if (!object || !object->IsOfType(resourceType.toStdString())) continue;
+                  if (resourceType=="Estimator" && object->IsOfType("Smoother")) continue;
                   if (resourceType=="Solver" && !object->IsOfType("BoundaryValueSolver") && !object->IsOfType("Optimizer")) continue;
                   resources.append(QString::fromStdString(value));
                }

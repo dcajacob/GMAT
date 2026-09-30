@@ -1414,3 +1414,28 @@ vertex3`; connectivity uses one-based vertex-row indices. Record labels are
 decorative integers. Relative paths resolve from the mission's script directory.
 Malformed inputs are reported before gravity evaluation; the calculation for
 valid meshes remains the existing plugin calculation.
+
+### Kalman filtering and smoothing
+
+With the EKF plugin enabled, Resources includes **Process Noise Models** and
+**Estimated Parameters**. Process-noise properties expose the coordinate system,
+update interval and acceleration-noise vector; Gauss–Markov properties expose
+the solve-for coefficient, steady-state value/sigma and half-life in seconds.
+Spacecraft SolveFors can select configured estimated parameters, and its
+ProcessNoiseModel selector lists available noise models. Smoother Filter selects
+a sequential estimator. RunEstimator and RunSmoother offer separate typed
+resource selectors in the mission editor. Their reports open from Output.
+
+InputWarmStartFile browses existing state/covariance CSV files; leave it empty
+for a cold start. OutputWarmStartFile selects a future output; leave it empty to
+disable that output. These fields retain the engine's filename restrictions,
+including its rejection of non-ASCII filenames. Unicode mission filenames are
+supported independently of those plugin output restrictions.
+
+WarmStartEpoch accepts an explicit date or the **FirstMeasurement** and
+**LastWarmStartRecord** boundaries. Changing WarmStartEpochFormat converts an
+explicit date and leaves a boundary selection intact. FirstMeasurement requires
+a seed record strictly before the first observation. LastWarmStartRecord needs
+observations after the selected last record; a seed reaching the end of the data
+cannot continue estimation. File selections and dates remain pending until
+Apply. Failed conversions retain the earlier format and entered date.

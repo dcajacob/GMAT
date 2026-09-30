@@ -687,6 +687,7 @@ const Rvector& SNCProcessNoise::SetRvectorParameter(const Integer id, const Rvec
                throw NoiseException("A nonpositive number was set to AccelNoiseSigma. A valid value has to be a positive number.\n");
 
          accelSigmaVec = value.GetRealArray();
+         return accelSigmaVec;
       }
       else
       {

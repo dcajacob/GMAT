@@ -150,8 +150,8 @@ Every row requires real-engine evidence, not just registration.
 | --- | --- |
 | `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
-| `../plugins/libEKF` | Pending qualification |
-| `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
+| `../plugins/libEKF` | KalmanTests: one-hour, noise-free GPS version of the shipped filter/smoother example with SNC process noise and Gauss-Markov drag. Typed run/reference/solve-for controls, owned model settings, warm-start input/output browsing and paired epoch conversion, both continuation boundaries, exact state/covariance CSV equivalence with independent script configuration, report access, pending/Cancel/Undo/Redo/Unicode mission reopen, invalid-edit rollback and missing/malformed/late-seed recovery covered. Native Wayland panels/execution passed. Creation/removal, full-day/noisy or real data, other measurement/model regimes, covariance editing, residual graphics, prediction, warm-start smoothing and broader malformed/disk cases remain pending. |
+| `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. KalmanTests also covers GPS simulation and concrete RunSmoother serialization, including labels/comments and command edits. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
 | `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. New contributor creation/removal, full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
@@ -3319,3 +3319,67 @@ Qt6ParityValidation/check-polyhedron-echo.txt. More extensive completed nested
 branches/loop combinations and malformed argument syntax remain unqualified.
 This closes the observed lifecycle defect without claiming full plugin or
 replacement qualification.
+
+## GPS Kalman filter, smoother and warm-start qualification
+
+KalmanTests runs a one-hour, noise-free version of the shipped
+Ex_FilterSmoother_GpsPosVec.script, retaining its GPS receiver/antenna/error
+model, eighth-order Earth gravity, drag/SRP, SNC process noise and estimated
+Gauss-Markov Cd coefficient. Seven generated observations feed the EKF and
+Fraser-Potter smoother. The test reports the epoch, six Cartesian components and
+Cd after each stage. Independently configured script results agree with the GUI
+configuration within 1e-8 per reported column; observations and the complete
+warm-start state/covariance CSV match exactly. This compares configuration
+routes through the existing engine, not an independent filter implementation.
+
+Resources now exposes Process Noise Models and Estimated Parameters. Their
+owned models provide writable settings, typed coordinate-system and supported
+solve-for controls, acceleration-noise vector cell editing and half-life units.
+Spacecraft solve-for lists include named EstimatedParameter resources and its
+noise-model picker lists configured ProcessNoiseModels. The smoother's Filter
+picker explicitly selects sequential estimators because its dynamic engine
+reference-type metadata does not populate the generic picker. RunSmoother has
+a typed form/template; RunEstimator choices exclude smoothers. Pending edits,
+picker Cancel, exact Undo/Redo, Unicode mission save/reopen and filter/smoother
+Output report viewers are exercised. Production choices exclude the testing-only
+LinearTime process-noise model; that model is not qualified here.
+
+Warm-start input uses an existing-file chooser and output uses a save chooser;
+empty input means cold start and empty output disables CSV writing. The
+format/epoch pair applies in format-first order. Format changes convert explicit
+dates with GmatTime precision, preserve boundary sentinels and retain the old
+format/date after a failed conversion. The suite cycles every supported time
+representation and compares converted, format-only, saved/reopened and
+independently configured warm starts. It also compares FirstMeasurement and
+LastWarmStartRecord continuation results using observations after the selected
+seed. A missing prior seed and a seed already at the end of the data fail with
+the engine's existing diagnostic, then valid input recovers. Missing GPS/warm
+files and a malformed CSV header recover similarly. The simulator is omitted
+from input-failure cases so it cannot silently recreate a missing file.
+
+The work exposed two configuration/serialization defects. SNC's vector setter
+assigned an accepted vector and then fell through to an unsupported base setter;
+it now returns the accepted vector. RunSmoother inherited a formatter hard-coded
+to RunEstimator, corrupting named commands into text such as
+`RunEstimato 'Smooth GPS'r FPS`. The formatter now uses the concrete command
+type. The rejected command-edit evidence is preserved in
+Qt6ParityValidation/kalman-command-before-fix.txt. Neither change alters the
+filter, smoother, process-noise or propagation calculations.
+
+Native Wayland execution passed with isolated settings and temporary reports.
+Exposed-panel captures were inspected for the warm-start, SNC and Gauss-Markov
+controls: Qt6ParityValidation/kalman-wayland.txt and
+kalman-wayland.{ekf,warm,snc,fogm}.png. The rebuilt user executable passed all
+30 Qt suites in 153.67 seconds; combined log:
+Qt6ParityValidation/check-kalman.txt. This does not qualify the desktop portal
+file chooser or Wayland top-level main-window minimize/restore.
+
+All 20 selected plugins now have initial execution evidence, and all remain
+partial qualifications. Creation/removal, full-day/noisy or real observations,
+additional measurements and estimation models, covariance controls, residual
+graphics, prediction, warm-start smoothing, malformed numeric/covariance CSVs,
+relative warm-start files and disk-write failures remain open. Engine solver and
+warm-start filenames still reject non-ASCII characters; this suite rejects an
+unsupported Unicode output edit without changing source while qualifying Unicode
+mission filenames. The wx inventory remains 35 of 108 Pending audit and the
+broader GUI/camera/OF acceptance gates remain unfinished.

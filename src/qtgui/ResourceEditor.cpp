@@ -1082,6 +1082,24 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    }
    layout->addWidget(table, 1);
    status = new QLabel("Apply validates changes and updates the mission script.", this);
+   if (object.IsOfType("SeqEstimator")) {
+      int formatRow=-1,epochRow=-1;
+      for (int row=0;row<table->rowCount();++row) {
+         if (table->item(row,0)->text()=="WarmStartEpochFormat") formatRow=row;
+         if (table->item(row,0)->text()=="WarmStartEpoch") epochRow=row;
+      }
+      auto *format=formatRow>=0 ? qobject_cast<QComboBox *>(table->cellWidget(formatRow,1)) : nullptr;
+      if (format && epochRow>=0) {
+         format->setProperty("previousEpochFormat",format->currentText());
+         connect(format,&QComboBox::currentTextChanged,this,[this,format,epochRow](const QString &next) {
+            try {
+               const auto converted=convertWarmStartEpoch(table->item(epochRow,1)->text(),format->property("previousEpochFormat").toString(),next);
+               table->item(epochRow,1)->setText(converted); format->setProperty("previousEpochFormat",next); status->clear();
+            } catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromStdString(failure.GetFullMessage())); }
+            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromUtf8(failure.what())); }
+         });
+      }
+   }
    if (hasEpochInterval(object)) {
       auto initial=std::shared_ptr<GmatBase>(object.Clone()); QMap<QString,int> rows;
       for (int row=0;row<table->rowCount();++row) if (QStringList{"EpochFormat","InitialEpoch","FinalEpoch"}.contains(table->item(row,0)->text())) rows.insert(table->item(row,0)->text(),row);
