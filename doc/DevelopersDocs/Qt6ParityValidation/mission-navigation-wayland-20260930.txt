@@ -1,0 +1,4 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x635c264ff840 with focusing surface 0x635c264e3810
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x635c264e3810 with focusing surface 0x635c264ff840
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x635c28c67cf0 with focusing surface 0x635c264ff840
+PASS: command include/exclude filters, Equation/ScriptEvent aliases, Check/Uncheck all, unapplied Close, nested branch boundaries, expansion levels/Show all, source/snapshot/Undo/Redo retention; repeated mission-only undock/close/restore with selection and other tabs retained, command editing from the floating tree, Unicode save/reopen and independent reports

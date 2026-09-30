@@ -19,6 +19,7 @@ class QtSolverListenerManager;
 class EditablePanel;
 class HelpController;
 class CommandEditor;
+class MissionNavigation;
 class QMdiSubWindow;
 class GmatBase;
 class QAction;
@@ -82,6 +83,7 @@ private:
    HelpController *contextHelp;
    QTreeWidget *resources;
    QTreeWidget *mission;
+   MissionNavigation *missionNavigation;
    QTreeWidget *output;
    std::unique_ptr<QtMessageReceiver> receiver;
    std::unique_ptr<QtInterpreter> interpreter;

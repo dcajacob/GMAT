@@ -105,8 +105,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
 | `src/gui/output/EventFilePanel.hpp` | Active read-only unwrapped text/Close, output-path resolution, FileWasWritten guard and disabled Help audited. Qt Output uses ReportViewer for generated reports and an explanatory read-only view for unwritten locators. EventLocatorTests covers generated contents, pending source, rebuild, Disabled, WriteReport-off and Manual-without-FindEvents stale-file rejection, Manual FindEvents recovery, close/reopen and unchanged source. Output windows explicitly activate; native Wayland generated/unwritten views inspected. Broader lifecycle/storage/keyboard cases remain pending. |
 | `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Broader search/menu and very large directory cases remain under their separate audits. |
-| `src/gui/mission/UndockedMissionPanel.hpp` | Active MissionTree/GmatNotebook undock/restore caller audited. wx creates a separate mission tree and vertical MissionTreeToolBar, restoring the notebook on destruction. Qt can float the complete navigation dock and retains the Mission tree; a mission-only detachable view and its level/type toolbar operations remain delivery/qualification gaps. |
-| `src/gui/mission/TreeViewOptionDialog.hpp` | Active MissionTreeToolBar caller audited. Sorted command checklist, Check/Uncheck All and Include/Exclude Apply update the visible MissionTree without editing the mission; Equation and ScriptEvent map to GMAT and BeginScript. Qt expand/collapse and editing exist; command-type Include/Exclude filters and equivalent level/type view controls remain missing. |
+| `src/gui/mission/UndockedMissionPanel.hpp` | Active MissionTree/GmatNotebook undock/restore caller audited. wx creates a separate mission tree and vertical MissionTreeToolBar, restoring the notebook on destruction. Qt MissionNavigation now moves the same tree and its toolbar into a mission-only floating dock, retaining Resources/Output tabs, selection and editing callbacks. Dock/Close restores the Mission tab; saved detached placement restores. MissionNavigationTests and native Wayland captures cover repeated lifecycle, filters, real command editing, exact source/Undo and independent reopened reports. Broader compositor minimize/input and mixed desktop layouts remain under shared window qualification. |
+| `src/gui/mission/TreeViewOptionDialog.hpp` | Active MissionTreeToolBar caller audited. Sorted command checklist, Check/Uncheck All and Include/Exclude Apply update the visible MissionTree without editing the mission; Equation and ScriptEvent map to GMAT and BeginScript. Qt MissionNavigation provides sorted engine/current-command checklists, Check/Uncheck All, Include/Exclude Apply, Show all and collapsed/level 1–3/all expansion. Equation/ScriptEvent aliases and branch context/boundaries are retained without editing source. MissionNavigationTests covers actual dialog operations, unapplied Close, nested branches, exact snapshot/source/Undo and native Wayland layout; see the mission-navigation appendix. |
 | `src/gui/view/ViewTextDialog.hpp` | Read-only multiline/Close and optional single-line OK/Cancel modes audited. Active callers are About license text, folder-run diagnostics and comparison results; editable rename caller is commented. Qt comparison/read-only report text is covered by ComparisonTests; About/license and folder-run delivery remain required under their separate unaudited rows. Shared keyboard/font/menu cases remain pending. |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
@@ -4163,3 +4163,46 @@ in 167.72 seconds, including NativeFolderRun and the existing native X11
 viewer/window suites. application/bin/GmatQt was rebuilt with these final changes.
 The separate Wayland folder test/captures passed; this does not close the outstanding
 GNOME top-level minimize/restore acceptance gate.
+
+
+## Mission-tree filters and mission-only window qualification
+
+The Mission tab now has Show all, Filter, expansion-level and Undock controls.
+View also exposes Undock. Include/Exclude Apply filters the existing tree without
+changing engine configuration or source. The sorted checklist uses runtime factory
+commands and current mission types; Equation maps to GMAT and ScriptEvent to
+BeginScript. Check all/Uncheck all change pending check states. Close/Escape before
+Apply retains the existing view; successful Apply remains available for adjustment.
+Ancestors of matching nested commands and branch boundaries stay visible. Script
+Events remain complete source blocks represented by their BeginScript node, as in
+the existing mission editor. An empty Include hides commands; All recovers them.
+
+Collapsed, levels 1–3 and Expand all set expansion. The applied filter and level
+survive normal tree rebuilds in the current session. Undock moves the same tree
+and toolbar into a mission-only floating dock, leaving Resources and Output in
+the original navigation. Selection and all editing/context callbacks stay on that
+same tree. Dock, closing the floating window, or docking it into the main window
+restores the Mission tab. The detached placement preference is persisted, and
+restored after the main window's saved layout, avoiding an empty saved floating
+window. Filter/depth choices are session state.
+
+MissionNavigationTests covers Include/Exclude, Equation/ScriptEvent aliases,
+Check/Uncheck All, closing unapplied changes, nested If/For boundaries, empty
+Include/All recovery, expansion, pending source/snapshot and exact Undo/Redo,
+three undock/close/restore cycles, selection/other tabs, saved placement and docking,
+actual editing from the floating tree, Unicode save/reopen and byte-exact reports
+against independently configured source. The existing Mission suite verifies
+keyboard focus and Edit-menu targeting. A regression caught the reparented tree's
+explicit hidden state; tree visibility is now restored when adding the controls.
+
+mission-navigation-wayland-20260930.txt records a passing native Wayland run with
+exposed filter and floating windows; filter/undocked/docked PNGs were captured and
+inspected for readable controls and the familiar Resources/Mission/Output,
+workspace/messages arrangement. The native Qt Wayland log includes text-input
+surface warnings during synthetic focus changes. These widget routes establish
+covered operations; fresh compositor keyboard/pointer interaction and top-level
+minimize/restore remain under the shared desktop gate.
+
+check-mission-navigation.txt records all 44 Qt suites passing in 155.31 seconds
+after the final mission-tree changes. The user's application/bin/GmatQt was
+rebuilt; the separate native Wayland navigation test/captures also passed.

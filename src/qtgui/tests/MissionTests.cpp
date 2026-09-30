@@ -32,6 +32,7 @@
 #include <QInputDialog>
 #include <QTemporaryDir>
 #include <QCheckBox>
+#include <QDockWidget>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -337,7 +338,7 @@ int main(int argc,char **argv)
       for (QTreeWidgetItemIterator it(tree);*it;++it)
          if ((*it)->data(0,Qt::UserRole).isValid() && (*it)->data(0,Qt::UserRole).toInt()==selected) target=*it;
       require(target && target->parent()->data(0,Qt::UserRole+1).toString()=="For","Tree hierarchy wrong");
-      window.findChild<QTabWidget *>()->setCurrentIndex(1);
+      window.findChild<QDockWidget *>("navigation")->findChild<QTabWidget *>()->setCurrentIndex(1);
       tree->expandAll(); tree->setCurrentItem(target); tree->itemDoubleClicked(target,0);
       CommandEditor *panel=nullptr;
       for (auto *widget:window.findChildren<QWidget *>()) if (auto *candidate=dynamic_cast<CommandEditor *>(widget)) panel=candidate;

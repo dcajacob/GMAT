@@ -1,6 +1,7 @@
 #include "ReportViewer.hpp"
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
+#include "MissionNavigation.hpp"
 #include <QScopedValueRollback>
 #include "InspectionDialog.hpp"
 #include "AboutDialog.hpp"
@@ -214,6 +215,8 @@ MainWindow::MainWindow()
    resources = makeTree("Resources");
    mission = makeTree("Mission");
    output = makeTree("Output");
+   missionNavigation=new MissionNavigation(mission,tabs,this);
+   missionNavigation->commandTypes=[] { QStringList types; for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(Gmat::COMMAND)) types.append(QString::fromStdString(type)); return types; };
    mission->setContextMenuPolicy(Qt::CustomContextMenu);
    connect(mission, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       if (item->data(0,Qt::UserRole).isValid()) openCommandEditor(item->data(0,Qt::UserRole).toInt(),MissionEdit::Replace);
@@ -429,6 +432,7 @@ MainWindow::MainWindow()
    });
    view->addAction(navigation->toggleViewAction());
    view->addAction(console->toggleViewAction());
+   view->addAction(missionNavigation->detachAction());
    toolbar->addSeparator();
    add(run, "&Build script", QStyle::SP_BrowserReload, QKeySequence("F7"), [this] { buildScript(); });
    runAction = add(run, "&Run mission", QStyle::SP_MediaPlay, QKeySequence("F5"), [this] {
@@ -533,6 +537,7 @@ MainWindow::MainWindow()
    QSettings settings;
    restoreGeometry(settings.value("geometry").toByteArray());
    restoreState(settings.value("windowState").toByteArray());
+   missionNavigation->restorePlacement();
    updateTitle();
 }
 
@@ -895,7 +900,7 @@ void MainWindow::refreshTrees()
       } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
       catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
    }
-   mission->expandToDepth(2);
+   missionNavigation->refresh();
    refreshOutput();
 }
 void MainWindow::refreshOutput()

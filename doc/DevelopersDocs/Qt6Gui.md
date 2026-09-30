@@ -1648,3 +1648,18 @@ The open script and Undo/Redo are retained; accepted engine configuration, paths
 log and batch state are restored afterward. Ordinary viewer history is retained.
 The application reports a restoration failure and requires rebuilding the open
 mission if restoration fails.
+
+
+### Mission tree views
+
+The Mission toolbar provides All, command Filter, expansion levels and Undock.
+Filter offers a sorted checklist with Include/Exclude, Check all/Uncheck all and
+Apply. Pending checklist changes can be closed without changing the view.
+Branches containing matches retain context and boundaries. Equation and ScriptEvent
+are the assignment and script-event aliases. Filters affect the view and retain the
+complete mission source and calculations.
+
+Undock opens a mission-only floating window with the same tree, selection and
+editing controls. Resources/Output stay in the main navigation. Dock or Close
+restores the Mission tab. Detached placement is saved; filter and expansion state
+remain for the current session and survive tree rebuilds.
