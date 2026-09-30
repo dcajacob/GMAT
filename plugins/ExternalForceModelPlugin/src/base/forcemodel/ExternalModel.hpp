@@ -54,6 +54,8 @@ public:
 
    // inherited from GmatBase
    virtual GmatBase* Clone() const;
+   virtual const std::string& GetGeneratingString(Gmat::WriteMode mode = Gmat::SCRIPTING,
+      const std::string &prefix = "", const std::string &useName = "");
 
    // Parameter access methods - overridden from GmatBase
    virtual std::string         GetParameterText(const Integer id) const;

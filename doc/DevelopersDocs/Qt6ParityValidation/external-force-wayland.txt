@@ -1,0 +1,1 @@
+PASS: configured Python module selector and Cancel, pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body states, exact Undo/Redo/Unicode save/reopen, missing module/function failure and recovery, and script-reference combined-force execution.

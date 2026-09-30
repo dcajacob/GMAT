@@ -426,6 +426,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          table->setCellWidget(row,1,choices);
       } else if (field.choices.isEmpty()) {
          auto *value=new QTableWidgetItem(field.value);
+         if (!field.help.isEmpty()) value->setToolTip(field.help);
          if (field.fileList) {
             value->setFlags(value->flags() & ~Qt::ItemIsEditable);
             value->setToolTip("Ordered file paths. Browse to add, remove or reorder files; Apply replaces the complete list.");
@@ -469,6 +470,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (field.filename || !field.references.isEmpty() || reportParameters || plotParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
             choose->setObjectName("chooseProperty_"+field.name);
+            if (!field.help.isEmpty()) choose->setToolTip(field.help);
             table->setCellWidget(row,3,choose);
             connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters,filterFiles,acceptFilter] {
                if (reportParameters || plotParameters) {

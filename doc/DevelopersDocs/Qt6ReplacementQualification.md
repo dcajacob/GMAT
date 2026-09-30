@@ -80,17 +80,17 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric execution with script-attached thrusters and GUI-attached power covered, electric GUI attachment combinations remain to qualify. |
 | `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
-| `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/GmatDialog.hpp` | Pending audit |
+| `src/gui/foundation/GmatBaseSetupPanel.hpp` | Generic writable/visible field generation, cloned validation and INI-based layout/units/help audited. Qt ResourceEditor supplies engine-typed controls, owned properties and atomic script rebuild/rollback; object-specific execution evidence is recorded in individual rows. INI metadata parity, omitted plugin types and all dynamic refresh cases remain pending. |
+| `src/gui/foundation/GmatDialog.hpp` | Shared OK/Cancel/reset, validation-before-close and Help contract audited. Qt focused dialogs keep pending values until acceptance; field/dialog Cancel and invalid-input recovery are covered by the corresponding suites. Close/Escape/focus behavior across all dialogs and context Help remain pending. |
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Pending audit |
 | `src/gui/foundation/ParameterSelectDialog.hpp` | Pending audit |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/GmatPanel.hpp` | Pending audit |
+| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Context Help, object-script preview, command summaries and staying open after Apply remain pending. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | Shared numeric grid; see ArraySetupPanel. Full wx dialog audit pending. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
-| `src/gui/foundation/GmatSavePanel.hpp` | Pending audit |
+| `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. FileTests, WorkflowTests and ScriptEditingTests cover the single Qt mission document, failure/cancel identity protection, encoding, save-before-run and pending/close protection. Multiple inactive documents, panel-specific reload/status and remaining shared editor cases remain pending. |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
@@ -133,7 +133,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
-| `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
+| `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Active grid resize/retained cells, cell editing/clearing and condition colors audited; grouped Qt setup with pending Apply/Cancel, Undo/Redo, Unicode save/reopen, live reports, adjustable widths and immediate close/reopen covered. Extreme dimensions and unnamed-cell styling remain pending. |
 | `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Active parameter selection, text/background colors and warning/critical bounds audited. Real/string/array-element references, duplicate/whole-array/nonnumeric/reversed-bound rejection, Cancel, alarm/custom colors and calculation-preserving round trips covered. Broader parameter contexts and unnamed-cell styling remain pending. |
@@ -153,7 +153,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
-| `../plugins/libExternalForceModel_py314` | Pending qualification |
+| `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. New contributor creation/removal, full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
@@ -3166,3 +3166,66 @@ comes from WindowTests using the same frontend and startup.
 The wx inventory now has 40 of 108 entries marked Pending audit. Selected
 plugin evidence has three without qualification and 17 partial. Full workflow,
 viewer/OF and plugin acceptance remains open.
+
+## Existing external Python force-model editing and serialization
+
+The plugin's three configuration fields, its Python import wrapper, owned-force
+serialization and the wx propagation panel were audited. No dedicated wx
+external-force controls were found. Although ScriptFileName is declared as a
+filename, the runtime imports it as a Python module name. Qt now supplies a
+module selector from configured Python search directories instead of a file
+chooser that would store an unusable absolute filename. Dotted/custom module
+names can still be typed. A tooltip explains the module-name and code-cache
+contract. The function and ExcludeOtherForces setting are editable alongside
+the module on an existing external contributor, with pending Apply and Cancel.
+
+The plugin marked all fields read-only and omitted them during normal owned
+serialization. Reconstructing a mission for any GUI resource edit could
+therefore lose the external force. The owned serializer now writes the module
+declaration before the dependent function and exclusion settings, using the
+interpreter's supported syntax. Qt explicitly exposes only the three supported
+configuration fields; inherited runtime properties remain protected. No force
+evaluation or propagation algorithm was changed.
+
+ExternalForceTests uses the shipped no-API Python model and example, shortened
+to 600 seconds. Its six external state components agree with the independent
+internal two-body propagation within 1e-5 km / 1e-8 km/s. GUI selection, chooser
+Cancel, pending edits and Apply reproduce the independently configured script
+report. Exact Undo/Redo, Unicode save/reopen, missing module/function runtime
+failure and recovery, invalid-setting rollback and both exclusion settings are
+covered. The combined-force result differs from the external-only result and
+matches its separate script reference. An unrelated report precision edit also
+retains that combined-force result and serialized external configuration.
+
+Native Wayland execution passed with isolated settings and temporary reports;
+the inspected capture shows readable module/function fields, selection and
+boolean controls. Evidence: Qt6ParityValidation/external-force-wayland.txt/.png. The rebuilt
+user executable and all 28 Qt suites passed (118.73 seconds); full log:
+Qt6ParityValidation/check-external-force.txt.
+New-contributor creation/removal, full-day/API-dependent examples,
+package/custom-path persistence, modified-module caching, multiple spacecraft,
+variational propagation and malformed callback results remain open. Property-comment
+fidelity is also open: the interpreter can attach dotted external-field comments
+to the resource declaration, overwriting earlier comments. The serializer retains
+attribute comments when present on the owned model, but this does not repair
+that import behavior. This is initial qualification of the existing-contributor workflow, not full plugin
+qualification. The selected plugin inventory now has two without qualification
+and 18 partial; 40 of 108 wx workflows remain Pending audit.
+
+## Shared wx panel and dialog contracts
+
+The five shared GmatBaseSetupPanel, GmatDialog, GmatPanel, GmatSavePanel and
+SubscriberSetupPanel sources were reviewed alongside Qt ResourceEditor,
+CommandEditor and MainWindow. These are shared contracts, not five independent
+mission features. The inventory now records the existing typed controls, pending
+edits, cloned validation, script reconstruction, save-before-build/run and
+rollback evidence together with specific remaining differences. In particular,
+context Help, object-script previews, command summaries, staying open after
+Apply, INI layout metadata, complete dialog navigation and multiple inactive
+script documents are not qualified.
+
+This is a source audit, not additional execution qualification. Individual
+resource and command rows retain their own unverified combinations. There are
+now 35 of 108 entries marked Pending audit; audited partial rows still carry
+open requirements. The selected plugin inventory remains two without initial
+qualification and 18 partial.

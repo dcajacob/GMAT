@@ -10,6 +10,7 @@ struct ResourceProperty
    QString name;
    QString value;
    QString unit;
+   QString help;
    QStringList choices;
    QStringList references;
    bool color = false;

@@ -11,6 +11,7 @@
 #include "BaseException.hpp"
 #include "Moderator.hpp"
 #include "FileUtil.hpp"
+#include "FileManager.hpp"
 #include "Rmatrix.hpp"
 #include "Array.hpp"
 #include "PropSetup.hpp"
@@ -30,12 +31,17 @@
 #include <QRegularExpression>
 #include <QSet>
 #include <QFileInfo>
+#include <QDir>
 #include <cmath>
 #include <algorithm>
 #include <limits>
 #include <stdexcept>
 
 namespace {
+bool externalForceSetting(GmatBase &object,const QString &name)
+{
+   return object.IsOfType("ExternalModel") && QStringList{"ScriptFileName","ExcludeOtherForces","DerivativesFunction"}.contains(name);
+}
 GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
 {
    if (!object.IsOfType("ODEModel")) return nullptr;
@@ -71,7 +77,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          const bool ephemerisInput=object.IsOfType("Spacecraft") && fieldName=="EphemerisName";
          bool orbitElementId=false;
          if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
-         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting && !ephemerisSetting && !ephemerisInput) continue;
+         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting && !ephemerisSetting && !ephemerisInput && !externalForceSetting(object,fieldName)) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
@@ -158,6 +164,19 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
                type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
             if (object.IsOfType("TrackingFileSet") && field.name=="RampTable") field.fileInput=true;
+         }
+         if (object.IsOfType("ExternalModel") && field.name=="ScriptFileName") {
+            // This engine field is typed as a filename but Python imports its
+            // value as a module name. A file chooser would store an invalid
+            // absolute path and lose portability when saving the mission.
+            field.filename=false; field.fileInput=false;
+            field.help="Python module name without .py, found in the configured Python search paths. Imported code is cached; restart GMAT after changing the Python module.";
+            for (const auto &path:FileManager::Instance()->GetAllPythonModulePaths()) {
+               for (const auto &file:QDir(QString::fromStdString(path)).entryInfoList({"*.py"},QDir::Files|QDir::Readable,QDir::Name)) {
+                  const auto module=file.completeBaseName();
+                  if (!module.startsWith('_') && !field.references.contains(module)) field.references.append(module);
+               }
+            }
          }
          if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
             try {
@@ -782,7 +801,7 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
    const bool groundTexture=object.GetTypeName()=="GroundTrack" && name=="TextureMap";
    const bool ephemerisInput=object.IsOfType("Spacecraft") && name=="EphemerisName";
-   if (object.IsParameterReadOnly(id) && !arrayValues && !groundTexture && !ephemerisInput) throw std::runtime_error("Property is read-only");
+   if (object.IsParameterReadOnly(id) && !arrayValues && !groundTexture && !ephemerisInput && !externalForceSetting(object,name)) throw std::runtime_error("Property is read-only");
    bool valid = false;
    switch (object.GetParameterType(id)) {
    case Gmat::RVECTOR_TYPE:

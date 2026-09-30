@@ -171,6 +171,34 @@ GmatBase* ExternalModel::Clone() const
    return (new ExternalModel(*this));
 }
 
+const std::string& ExternalModel::GetGeneratingString(Gmat::WriteMode mode,
+      const std::string &prefix, const std::string &useName)
+{
+   // The owned model marks all fields read-only for ordinary serialization.
+   // Preserve its configuration explicitly, creating the External contributor
+   // before writing its dependent fields when a saved force model is rebuilt.
+   const std::string suffix = "External.";
+   if (mode == Gmat::OWNED_OBJECT && prefix.size() >= suffix.size() &&
+       prefix.compare(prefix.size() - suffix.size(), suffix.size(), suffix) == 0)
+   {
+      const auto assignment = [this](Integer id, const std::string &lhs,
+            const std::string &value)
+      {
+         return GetAttributeCommentLine(id) + lhs + " = " + value + ";" +
+            GetInlineAttributeComment(id) + "\n";
+      };
+      generatingString = assignment(SCRIPT_FILENAME,
+         prefix.substr(0, prefix.size() - suffix.size()) + "External",
+         "'" + scriptFilename + "'");
+      generatingString += assignment(ENTRY_POINT, prefix + "DerivativesFunction",
+         "'" + entryPoint + "'");
+      generatingString += assignment(EXCLUDE_OTHER_FORCES,
+         prefix + "ExcludeOtherForces", excludeForces ? "true" : "false");
+      return generatingString;
+   }
+   return PhysicalModel::GetGeneratingString(mode, prefix, useName);
+}
+
 //------------------------------------------------------------------------------
 // std::string GetParameterText(const Integer id) const
 //------------------------------------------------------------------------------
