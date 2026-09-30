@@ -1,0 +1,18 @@
+PASS: actual application/bin/GmatQt interactive launcher; Welcome/showOnStartup=true; main title requested; Welcome native surface requested.
+[1385758.097] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+[1385838.299] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled * — GMAT Qt 6")
+[1385838.319] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled * — GMAT Qt 6 - [Script]")
+[1385838.613] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[1385838.618] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+[1385839.776] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[1385839.786] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+[1385868.621] {Default Queue}  -> xdg_toplevel#57.set_title("Welcome to GMAT")
+PASS: actual application/bin/GmatQt interactive launcher; Welcome/showOnStartup=false; main title requested; Welcome native surface absent.
+[1389762.759] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+[1389848.082] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled * — GMAT Qt 6")
+[1389848.105] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled * — GMAT Qt 6 - [Script]")
+[1389848.420] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[1389848.429] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+[1389849.651] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6")
+[1389849.663] {Default Queue}  -> xdg_toplevel#51.set_title("Untitled — GMAT Qt 6 - [Script]")
+Evidence: self-launched processes with isolated INI settings and WAYLAND_DEBUG=client; terminated only the two test-owned processes. Native title requests establish launcher/preference routing; WelcomeTests separately checks exposed rendering and delivered operations.

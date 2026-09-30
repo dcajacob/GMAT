@@ -7,6 +7,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    HelpDialog.cpp HelpDialog.hpp
    FolderRun.cpp FolderRun.hpp FolderRunDialog.cpp FolderRunDialog.hpp
    MissionNavigation.cpp MissionNavigation.hpp
+   WelcomeDialog.cpp WelcomeDialog.hpp
    SolarSystemPanel.cpp SolarSystemPanel.hpp
    CelestialBodyPanel.cpp CelestialBodyPanel.hpp
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
@@ -122,6 +123,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtFolderRunTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtMissionNavigationTests tests/MissionNavigationTests.cpp)
    target_link_libraries(GmatQtMissionNavigationTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtWelcomeTests tests/WelcomeTests.cpp)
+   target_link_libraries(GmatQtWelcomeTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
    target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
@@ -247,6 +250,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.Help GmatQtHelpTests "${qt_test_startup}")
    add_qt_test(QtGui.FolderRun GmatQtFolderRunTests "${qt_test_startup}")
    add_qt_test(QtGui.MissionNavigation GmatQtMissionNavigationTests "${qt_test_startup}")
+   add_qt_test(QtGui.Welcome GmatQtWelcomeTests "${qt_test_startup}")
    add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -269,5 +273,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtHelpTests)
    add_dependencies(check-qt GmatQtFolderRunTests)
    add_dependencies(check-qt GmatQtMissionNavigationTests)
+   add_dependencies(check-qt GmatQtWelcomeTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

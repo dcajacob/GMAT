@@ -53,6 +53,7 @@ int main(int argc, char **argv)
       (!parser.isSet("convert-views") || window.convertOpenFramesScript()) && window.buildScript();
    QTimer::singleShot(0, &window, [&] {
       bool succeeded = initialized && loaded;
+      if (succeeded && script.isEmpty() && !parser.isSet("run") && screenshot.isEmpty()) window.showWelcome(true);
       if (parser.isSet("run") && succeeded)
          succeeded = window.runMission() == MainWindow::RunResult::Completed;
       if (!screenshot.isEmpty())

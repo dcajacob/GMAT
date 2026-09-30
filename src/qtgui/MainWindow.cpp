@@ -2,6 +2,7 @@
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
 #include "MissionNavigation.hpp"
+#include "WelcomeDialog.hpp"
 #include <QScopedValueRollback>
 #include "InspectionDialog.hpp"
 #include "AboutDialog.hpp"
@@ -348,8 +349,9 @@ MainWindow::MainWindow()
    add(file, "&New mission", QStyle::SP_FileIcon, QKeySequence::New, [this] { if (confirmDiscard()) newMission(); });
    add(file, "&Open script…", QStyle::SP_DialogOpenButton, QKeySequence::Open, [this] {
       const auto path = QFileDialog::getOpenFileName(this, "Open GMAT script", scriptPath, "GMAT scripts (*.script);;All files (*)");
-      if (!path.isEmpty() && confirmDiscard() && loadScript(path)) buildScript();
+      if (!path.isEmpty()) openMissionFile(path);
    });
+   recentMenu=file->addMenu("Recent missions"); recentMenu->setObjectName("recentMissionsMenu"); connect(recentMenu,&QMenu::aboutToShow,this,&MainWindow::refreshRecentMenu); refreshRecentMenu();
    add(file, "&Save", QStyle::SP_DialogSaveButton, QKeySequence::Save, [this] { saveScript(); });
    auto *saveAs = file->addAction("Save &As…");
    saveAs->setShortcut(QKeySequence::SaveAs);
@@ -485,6 +487,7 @@ MainWindow::MainWindow()
          });
       }
    });
+   auto *welcomeAction=help->addAction("Welcome…"); welcomeAction->setObjectName("showWelcome"); editingActions.append(welcomeAction); connect(welcomeAction,&QAction::triggered,this,[this] { showWelcome(); });
    auto *about=help->addAction("&About GMAT"); about->setObjectName("aboutGMAT");
    connect(about, &QAction::triggered, this, [this] {
       AboutDialog dialog(QString::fromStdString(FileManager::Instance()->GetRootPath()),this); dialog.exec();
@@ -690,7 +693,7 @@ bool MainWindow::loadScript(const QString &path)
    ++modelGeneration; summaryAvailable=false;
    plots->clear(true);
    editor->setPlainText(text);
-   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); return true;
+   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); rememberMissionFile(scriptPath); refreshRecentMenu(); return true;
 }
 bool MainWindow::saveScript(bool saveAs)
 {
@@ -718,7 +721,7 @@ bool MainWindow::saveScriptTo(const QString &path)
    if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
       QMessageBox::warning(this, "Save failed", file.errorString()); return false;
    }
-   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); return true;
+   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); rememberMissionFile(scriptPath); refreshRecentMenu(); return true;
 }
 bool MainWindow::confirmDiscard()
 {
@@ -743,6 +746,33 @@ bool MainWindow::confirmDiscard()
       }
    }
    return true;
+}
+void MainWindow::refreshRecentMenu()
+{
+   recentMenu->clear();
+   for (const auto &path:recentMissionFiles()) {
+      auto *action=recentMenu->addAction(QFileInfo(path).fileName().replace("&","&&")); action->setToolTip(path); action->setData(path); action->setObjectName("recentMission");
+      connect(action,&QAction::triggered,this,[this,path] { openMissionFile(path); });
+   }
+   if (recentMenu->actions().isEmpty()) { auto *empty=recentMenu->addAction("No recent missions"); empty->setEnabled(false); }
+   else { recentMenu->addSeparator(); connect(recentMenu->addAction("Clear recent list"),&QAction::triggered,this,[this] { QSettings().remove("RecentFiles"); refreshRecentMenu(); }); }
+   if (welcome) welcome->refreshRecent();
+}
+bool MainWindow::openMissionFile(const QString &path)
+{
+   if (!ready || running || !confirmDiscard()) return false;
+   const bool opened=loadScript(path) && buildScript();
+   if (opened && welcome) welcome->close();
+   return opened;
+}
+void MainWindow::showWelcome(bool startup)
+{
+   if (!ready || running || (startup && !QSettings().value("Welcome/showOnStartup",true).toBool())) return;
+   if (!welcome) welcome=new WelcomeDialog(QString::fromStdString(FileManager::Instance()->GetRootPath()),
+      [this](const QString &path) { return openMissionFile(path); },
+      [this] { if (!ready || running || !confirmDiscard()) return false; newMission(); return true; },
+      [this](const QString &topic) { contextHelp->show(topic); },this);
+   welcome->refreshRecent(); welcome->show(); welcome->raise(); welcome->activateWindow();
 }
 QStringList MainWindow::availableEngineTypes() const
 {
@@ -945,6 +975,8 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::setRunning(bool value)
 {
    running = value;
+   if (welcome) welcome->setEnabled(!value);
+   recentMenu->setEnabled(!value);
    for (auto *action : editingActions) action->setEnabled(!value);
    editor->setReadOnly(value);
    for (auto *child : workspace->subWindowList())

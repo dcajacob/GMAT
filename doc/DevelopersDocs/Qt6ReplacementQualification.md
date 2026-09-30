@@ -137,7 +137,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Active grid resize/retained cells, cell editing/clearing and condition colors audited; grouped Qt setup with pending Apply/Cancel, Undo/Redo, Unicode save/reopen, live reports, adjustable widths and immediate close/reopen covered. Extreme dimensions and unnamed-cell styling remain pending. |
 | `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Active parameter selection, text/background colors and warning/critical bounds audited. Real/string/array-element references, duplicate/whole-array/nonnumeric/reversed-bound rejection, Cancel, alarm/custom colors and calculation-preserving round trips covered. Broader parameter contexts and unnamed-cell styling remain pending. |
-| `src/gui/app/WelcomePanel.hpp` | Active GmatMainFrame startup/menu caller audited. Recent scripts, sample navigation, local help/tutorial links and persisted ShowWelcomeOnStart preference exist in wx. Qt File Open and the default mission exist; recent-script history, sample/welcome navigation, help links and the welcome preference remain delivery/qualification gaps. |
+| `src/gui/app/WelcomePanel.hpp` | Active GmatMainFrame startup/menu caller audited. Recent scripts, sample navigation, local help/tutorial links and persisted ShowWelcomeOnStart preference exist in wx. Qt Welcome and Recent missions now provide history, sample Browse, in-app local guides/tutorials, configured project/video links, New mission and persisted startup preference. WelcomeTests covers dirty Cancel/Discard, missing recent files, chooser acceptance/Cancel, exact identity/source/Undo, Save As history and independent reports; native Wayland UI and actual launcher preference routing passed. Widget choosers were used; portal and external-browser interaction remain under shared desktop qualification. |
 | `src/gui/app/AboutDialog.hpp` | Active Help/About caller audited. Qt AboutDialog delivers actual engine version/bitness/build details, Qt/OSG versions, credits/contact/project links and the exact offline License.txt through read-only InspectionDialog. DesktopTests covers menu opening, Close/Escape, compact layout, pending source/Undo retention and missing/malformed license correction; native Wayland captures inspected. External website/mail launch has not been exercised. |
 | `src/gui/app/InteractiveMatlabDialog.hpp` | Uninstantiated legacy interactive dialog audited: sends selected inputs/outputs to CallMatlabFunction, displays results and clears/closes. No current GUI caller creates it. MATLAB is outside the selected Linux runtime; no Qt MATLAB workflow or execution qualification is claimed. |
 | `src/gui/app/SetPathDialog.hpp` | wx startup read/write, ordered GMAT/MATLAB function paths, output/log Apply and directory errors audited. Qt Set paths validates full startup imports as pending state, provides full read-only startup preview and atomic export, and uses exact file-manager/global/log rollback. PathTests covers malformed/invalid-root/wx-only imports, custom alias and Python-list retention, mode/log/source protection, Unicode save/read/Apply, a fresh GmatQt process, independently scripted reports, and run/Stop/pending-panel guards. Optional MATLAB editing, plugin/cached-data hot replacement, portal choosers and broader startup/storage formats remain unqualified. |
@@ -4206,3 +4206,57 @@ minimize/restore remain under the shared desktop gate.
 check-mission-navigation.txt records all 44 Qt suites passing in 155.31 seconds
 after the final mission-tree changes. The user's application/bin/GmatQt was
 rebuilt; the separate native Wayland navigation test/captures also passed.
+
+
+## Welcome, recent missions and sample browsing
+
+Help / Welcome opens one reusable nonmodal Welcome window. Normal interactive
+startup without a requested script, run or screenshot shows it according to the
+saved Welcome/showOnStartup preference, initially enabled. Suppressing automated
+run/screenshot modes keeps those requested outputs unobstructed. The manual menu
+remains available when startup Welcome is disabled.
+
+Welcome provides New mission, recent missions with full-path tooltips, Open
+selected/double-click, Clear recent list, configured sample folders/Browse and
+in-app Using GMAT, Reference guide and Tutorials. Project/support/video links
+come from the runtime bin/GMAT.ini Welcome/Links and GettingStarted/Tutorials
+entries. Additional local HTML links validate the file before asking the desktop
+to open it. Sample folders come from Welcome/Samples, falling back to the runtime
+samples directory. The scrolling content preserves visible Close and the startup
+preference in compact windows.
+
+File / Recent missions shares the same history and active-document protection.
+Successful UTF-8 opens and Save/Save As move their absolute path to the front of
+at most ten entries; equivalent absolute/canonical paths are deduplicated. A
+script opened successfully remains recent even if its subsequent build fails,
+matching file history rather than a list of successful missions. Clearing history
+removes settings only, retaining every source file. Unavailable recent files stay
+visible with their path and a recoverable error. Pending panel/script protection
+uses the same confirmed Discard/Save/Cancel flow as File Open and New. Welcome
+closes after a successful open/build; failed/canceled operations retain it.
+
+WelcomeTests exercises the menu/single-window behavior, enabled/disabled startup
+preference, load/Save As/equivalent-path ordering and path identity, recent menu,
+all three offline topics, pending source/identity/Undo retention, dirty Cancel and
+Discard, unavailable-file handling, sample widget Browse Cancel/accept, New mission
+Cancel/accept, compact footer and Clear recent list retaining files. Selected
+numeric reports match independent script-configured values. Native Wayland
+welcome-wayland-20260930.txt and its exposed-window PNG passed and were inspected.
+The test explicitly uses widget file choosers; portal interaction is unqualified.
+
+welcome-launch-wayland-20260930.txt records separate self-launched instances of
+actual application/bin/GmatQt with isolated INI settings and no mission argument.
+The enabled preference requests a native Welcome to GMAT surface; the disabled
+preference requests only the main application window. Raw Wayland traces are in
+/tmp/welcome-launch-true.txt and /tmp/welcome-launch-false.txt; the retained evidence
+contains title requests and provenance. Only those two test-owned processes were
+terminated. WelcomeTests separately establishes exposed rendering and operations;
+protocol title requests alone do not prove physical compositor focus. External
+browser/project/video links are implemented and source-audited but were not opened
+by these tests. Full replacement still requires the outstanding shared desktop,
+parameter-selection/debugger/document and remaining viewer/plugin/file gates.
+
+check-welcome.txt records all 45 Qt suites passing in 162.67 seconds after the
+final Welcome/recent/document changes. application/bin/GmatQt was rebuilt; the
+separate final Wayland Welcome test/capture and actual launcher preference checks
+also passed. These results retain the outstanding native desktop/portal limits.

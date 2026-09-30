@@ -1,0 +1,7 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x6143fcaa9150 with focusing surface 0x6143fd2cdcb0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x6143fd2cdcb0 with focusing surface 0x6143fcaa9150
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x6143fd31b1a0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x6143fd31b1a0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x6143fd29f000
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x6143fd29f000
+PASS: Welcome/menu/single window, startup preference persistence, recent load/Save As/equivalent-path ordering, full-path tooltips, offline guides, pending source/identity/Undo retention, dirty Cancel/Discard, missing-file recovery, sample widget Browse Cancel/accept, New mission Cancel/accept, clear history preserving files and independent numeric reports

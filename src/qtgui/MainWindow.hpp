@@ -20,6 +20,8 @@ class EditablePanel;
 class HelpController;
 class CommandEditor;
 class MissionNavigation;
+class WelcomeDialog;
+class QMenu;
 class QMdiSubWindow;
 class GmatBase;
 class QAction;
@@ -30,6 +32,7 @@ public:
    ~MainWindow() override;
    bool initialize(const QString &startup);
    bool loadScript(const QString &path);
+   void showWelcome(bool startup=false);
    bool saveScriptTo(const QString &path);
    bool buildScript();
    bool convertOpenFramesScript();
@@ -70,6 +73,8 @@ private:
    bool restoreBuiltModel();
    void setScriptDirectory();
    void newMission();
+   void refreshRecentMenu();
+   bool openMissionFile(const QString &path);
    bool saveScript(bool saveAs = false);
    void saveAndBuildScript(bool run);
    bool confirmDiscard();
@@ -84,6 +89,8 @@ private:
    QTreeWidget *resources;
    QTreeWidget *mission;
    MissionNavigation *missionNavigation;
+   QPointer<WelcomeDialog> welcome;
+   QMenu *recentMenu;
    QTreeWidget *output;
    std::unique_ptr<QtMessageReceiver> receiver;
    std::unique_ptr<QtInterpreter> interpreter;

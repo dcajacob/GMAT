@@ -1663,3 +1663,19 @@ Undock opens a mission-only floating window with the same tree, selection and
 editing controls. Resources/Output stay in the main navigation. Dock or Close
 restores the Mission tab. Detached placement is saved; filter and expansion state
 remain for the current session and survive tree rebuilds.
+
+
+### Welcome and recent missions
+
+Help / Welcome provides New mission, recent missions, sample Browse and offline
+Using GMAT, Reference guide and Tutorials. Project, issue, wiki and video links
+use the configured runtime GMAT.ini entries. Normal interactive startup opens
+Welcome unless Show Welcome on startup is cleared; the manual menu remains
+available. Requested script/run/screenshot modes open directly to their work.
+
+File / Recent missions shares the ten-entry history updated by successful opens
+and Save/Save As. Equivalent paths are deduplicated; Clear recent list preserves
+files. Recent/sample/New actions honor the current pending-panel and unsaved-script
+Save/Discard/Cancel flow. Missing files report their full path, and canceled
+operations retain the current source and identity. Main Welcome content scrolls
+in compact windows while Close and the startup preference remain visible.
