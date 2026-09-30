@@ -3,6 +3,7 @@
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
 #include "ThrusterDialog.hpp"
+#include "BurnDialog.hpp"
 #include "OrbitPlot.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
@@ -55,7 +56,9 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          // GroundTrack hides a default texture from serialization; wx still
          // permits replacing it through its dedicated texture-map control.
          const bool groundTexture=object.GetTypeName()=="GroundTrack" && object.GetParameterText(id)=="TextureMap";
-         const bool thrusterSetting=object.IsOfType("Thruster") && QStringList{"Origin","Axes","MixRatio"}.contains(QString::fromStdString(object.GetParameterText(id)));
+         const auto fieldName=QString::fromStdString(object.GetParameterText(id));
+         const bool thrusterSetting=(object.IsOfType("Thruster") && QStringList{"Origin","Axes","MixRatio"}.contains(fieldName)) ||
+            (object.IsOfType("ImpulsiveBurn") && QStringList{"Origin","Axes"}.contains(fieldName));
          bool orbitElementId=false;
          if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
          if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting) continue;
@@ -147,7 +150,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
          }
-         if (object.IsOfType("Thruster")) {
+         if (object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) {
             if (field.name=="CoordinateSystem") {
                field.references.clear(); field.references.append("Local");
                for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) field.references.append(QString::fromStdString(name));
@@ -156,7 +159,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                field.references.clear();
                for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::FUEL_TANK)) {
                   auto *tank=Moderator::Instance()->GetConfiguredObject(name);
-                  if (tank && tank->IsOfType(object.IsOfType("ElectricThruster") ? "ElectricTank" : "ChemicalTank")) field.references.append(QString::fromStdString(name));
+                  if (tank && (object.IsOfType("ImpulsiveBurn") || tank->IsOfType(object.IsOfType("ElectricThruster") ? "ElectricTank" : "ChemicalTank"))) field.references.append(QString::fromStdString(name));
                }
             }
          }
@@ -298,7 +301,7 @@ bool isResourceList(GmatBase &object, const QString &name)
    const bool supported=isResourceFileList(object,name) || (name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
-      (object.IsOfType("Thruster") && name=="Tank") ||
+      ((object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) && name=="Tank") ||
       (type=="FiniteBurn" && name=="Thrusters") ||
       (type=="SolarPowerSystem" && name=="ShadowBodies") ||
       ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses")) ||
@@ -355,6 +358,10 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             auto *tank=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!tank || !tank->IsOfType(object.IsOfType("ElectricThruster") ? "ElectricTank" : "ChemicalTank")) throw std::runtime_error("Select a tank matching the thruster type.");
          }
+         if (object.IsOfType("FiniteBurn") && name=="Thrusters") {
+            auto *thruster=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
+            if (!thruster || !thruster->IsOfType(Gmat::THRUSTER)) throw std::runtime_error("Select an available thruster.");
+         }
          if (object.IsOfType("SolarPowerSystem") && name=="ShadowBodies") {
             const auto &bodies=Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY);
             if (std::find(bodies.begin(),bodies.end(),entry.toStdString())==bodies.end()) throw std::runtime_error("Select an existing celestial body for solar shadows");
@@ -387,7 +394,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    QString result=block;
    // Empty spacecraft hardware lists are defaults, omitted by the engine's
    // serializer. Explicit {} is interpreted as a hardware name in these fields.
-   const bool omitEmpty=object.GetTypeName()=="ReportFile" || object.GetTypeName()=="XYPlot" || (object.IsOfType("Spacecraft") &&
+   const bool omitEmpty=object.GetTypeName()=="ReportFile" || object.GetTypeName()=="XYPlot" || (object.IsOfType("FiniteBurn") && name=="Thrusters") || (object.IsOfType("Spacecraft") &&
       QSet<QString>{"Tanks","Thrusters","AddHardware","AddPlates"}.contains(name));
    if (!matches.hasNext()) {
       if (entries.isEmpty() && omitEmpty) return result;
@@ -457,6 +464,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void validateResourceProperties(GmatBase &object)
 {
+   validateBurnProperties(object);
    validateOrbitViewProperties(object);
    validateThrusterProperties(object);
    if (object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") { validateGroundTrackTexture(object); return; }

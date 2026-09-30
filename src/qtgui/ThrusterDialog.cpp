@@ -1,4 +1,5 @@
 #include "ThrusterDialog.hpp"
+#include "BurnDialog.hpp"
 #include "ResourceProperties.hpp"
 #include "GmatBase.hpp"
 #include "Moderator.hpp"
@@ -17,31 +18,10 @@
 #include <memory>
 #include <stdexcept>
 
-QSet<QString> applyThrusterFrame(GmatBase &thruster,const QMap<QString,QString> &values)
-{
-   QSet<QString> applied;
-   if (!thruster.IsOfType("Thruster")) return applied;
-   if (values.contains("CoordinateSystem")) {
-      setResourceProperty(thruster,"CoordinateSystem",values.value("CoordinateSystem")); applied.insert("CoordinateSystem");
-   }
-   for (const auto &name:QStringList{"Origin","Axes"}) if (values.contains(name)) {
-      if (thruster.GetStringParameter("CoordinateSystem")=="Local") setResourceProperty(thruster,name,values.value(name));
-      else if (!values.contains("CoordinateSystem")) throw std::runtime_error("Local origin and axes require CoordinateSystem = Local.");
-      applied.insert(name);
-   }
-   return applied;
-}
 void validateThrusterProperties(GmatBase &thruster)
 {
    if (!thruster.IsOfType("Thruster")) return;
-   const auto frame=thruster.GetStringParameter("CoordinateSystem");
-   if (frame=="Local") {
-      auto *body=Moderator::Instance()->GetConfiguredObject(thruster.GetStringParameter("Origin"));
-      if (!body || !body->IsOfType(Gmat::CELESTIAL_BODY)) throw std::runtime_error("Select an available local origin body.");
-   } else {
-      auto *object=Moderator::Instance()->GetConfiguredObject(frame);
-      if (!object || !object->IsOfType(Gmat::COORDINATE_SYSTEM)) throw std::runtime_error("Select Local or an available coordinate system.");
-   }
+   validateBurnProperties(thruster);
    if (std::hypot(thruster.GetRealParameter("ThrustDirection1"),thruster.GetRealParameter("ThrustDirection2"),thruster.GetRealParameter("ThrustDirection3"))==0)
       throw std::runtime_error("Thrust direction must have a nonzero component.");
    if (thruster.IsOfType("ElectricThruster")) {
@@ -93,7 +73,7 @@ ThrusterDialog::ThrusterDialog(GmatBase &thruster,const QMap<QString,QString> &p
    for (auto *combo:choices) connect(combo,&QComboBox::currentTextChanged,error,&QLabel::clear);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,this); layout->addWidget(buttons); connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,this,[this,snapshot] {
-      try { const auto values=settings(); std::unique_ptr<GmatBase> candidate(snapshot->Clone()); const auto applied=applyThrusterFrame(*candidate,values); for (auto it=values.cbegin();it!=values.cend();++it) if (!applied.contains(it.key())) setResourceProperty(*candidate,it.key(),it.value()); validateThrusterProperties(*candidate); accept(); }
+      try { const auto values=settings(); std::unique_ptr<GmatBase> candidate(snapshot->Clone()); const auto applied=applyBurnProperties(*candidate,values); for (auto it=values.cbegin();it!=values.cend();++it) if (!applied.contains(it.key())) setResourceProperty(*candidate,it.key(),it.value()); validateThrusterProperties(*candidate); accept(); }
       catch (BaseException &exception) { error->setText(QString::fromStdString(exception.GetFullMessage())); }
       catch (const std::exception &exception) { error->setText(QString::fromUtf8(exception.what())); }
    });

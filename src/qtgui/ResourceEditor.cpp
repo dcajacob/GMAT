@@ -18,6 +18,7 @@
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
 #include "ThrusterDialog.hpp"
+#include "BurnDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -108,6 +109,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    QTabBar *sections=nullptr;
    const bool spacecraft=object.IsOfType("Spacecraft");
    const bool thruster=object.IsOfType("Thruster");
+   const bool impulsive=object.IsOfType("ImpulsiveBurn");
    const bool tank=object.IsOfType("FuelTank");
    const bool solver=object.IsOfType("Solver");
    const bool forces=object.IsOfType("ODEModel");
@@ -118,16 +120,18 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       sections->setExpanding(false);
       layout->addWidget(sections);
    }
-   if (thruster) {
+   if (thruster || impulsive) {
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
-      auto *setup=new QPushButton("Thruster setup…",this); setup->setObjectName("editThruster"); layout->addWidget(setup);
-      connect(setup,&QPushButton::clicked,this,[this,initial] {
+      auto *setup=new QPushButton(impulsive ? "Impulsive burn setup…" : "Thruster setup…",this); setup->setObjectName(impulsive ? "editBurn" : "editThruster"); layout->addWidget(setup);
+      connect(setup,&QPushButton::clicked,this,[this,initial,impulsive] {
          QMap<QString,QString> pending;
          for (int row=0;row<table->rowCount();++row) {
             const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
             pending.insert(table->item(row,0)->text(),combo ? comboValue(combo) : table->item(row,1)->text());
          }
-         ThrusterDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; const auto values=dialog.settings();
+         QMap<QString,QString> values;
+         if (impulsive) { BurnDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         else { ThrusterDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
          for (int row=0;row<table->rowCount();++row) {
             const auto name=table->item(row,0)->text(); if (!values.contains(name)) continue;
             if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values.value(name)); else table->item(row,1)->setText(values.value(name));
@@ -964,7 +968,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (present.contains(section)) sections->addTab(section);
       sections->addTab("All Properties");
    }
-   if (thruster) {
+   if (thruster || impulsive) {
       int frameRow=-1,axesRow=-1,originRow=-1;
       for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (name=="CoordinateSystem") frameRow=row; if (name=="Axes") axesRow=row; if (name=="Origin") originRow=row; }
       if (frameRow>=0 && axesRow>=0 && originRow>=0) {

@@ -1218,3 +1218,15 @@ save/reopen; an active burn still requires a tank. **Coefficients…** edits che
 coefficients or electric polynomial coefficients, and is enabled for electric
 thrusters when ThrustMassPolynomial is selected. Spacecraft **PowerSystem**
 selection attaches the power source required by electric propulsion.
+
+Impulsive burns provide **Impulsive burn setup…** with the delta-V elements in
+km/s, Local or named coordinate systems, dependent Local axes/origin, and optional
+fuel depletion. The fuel group selects one tank and enables Isp/gravity when
+Decrement mass is checked, retaining pending values when it is toggled. Zero
+delta-V is valid. The single fuel tank must be attached to the maneuvering
+spacecraft for mass depletion. OK keeps edits pending until resource Apply.
+
+Finite burns use the **Thrusters** selection checklist with individual checks,
+Select all, Clear selection and drag reordering. Clearing all selections is
+saved as an empty configuration. The base engine rejects executing an active
+finite burn without thrusters; select an attached thruster and Apply to recover.

@@ -34,14 +34,14 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | wx source | Qt mapping / missing operations / evidence |
 | --- | --- |
 | `src/gui/hardware/ThrusterCoefficientDialog.hpp` | Grouped chemical/electric coefficient controls implemented; chemical and electric polynomial finite-burn execution, analytic fuel consumption and configuration round trips covered; broader coefficient regimes pending |
-| `src/gui/hardware/BurnThrusterPanel.hpp` | Thruster branch audited: dependent Local frame/axes/origin, direction, scale, duty cycle and gravitational acceleration; ordered typed tanks/mixtures, mass-decrement off, clear/restore and failed-burn recovery covered. Impulsive-burn branch and broader frames/operating combinations pending. |
+| `src/gui/hardware/BurnThrusterPanel.hpp` | Active thruster and impulsive-burn controls audited. Dependent Local frame/axes/origin, direction, scale, duty cycle and gravitational acceleration; ordered typed thruster tanks/mixtures and single impulsive tank; mass-decrement off, clear/restore and failed-burn recovery covered. Impulsive MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed execution, analytic fuel/frame checks and backward restoration covered. Broader frame/operating combinations pending. |
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Active chemical/electric controls audited. Grouped direction/performance setup, electric model dependencies, all three electric models, minimum-power cutoff, maximum clipping, GUI-attached nuclear power, chemical/electric mixtures, finite burn/coast, numerical report equivalence and round trips covered. Shared power, solar/eclipses, broader polynomial/frame regimes pending. |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
-| `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested; other frames and mass-decrement cases pending. |
+| `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector and single-parameter left/right operand browser provided. Solver selector tested; constraint operand execution combinations pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
@@ -125,8 +125,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
 | `src/gui/app/CompareTextDialog.hpp` | Pending audit |
 | `src/gui/subscriber/EphemerisFilePanel.hpp` | Pending audit |
-| `src/gui/burn/FiniteBurnSetupPanel.hpp` | Pending audit |
-| `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Pending audit |
+| `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
+| `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
 | `src/gui/app/TextEphemFileDialog.hpp` | Pending audit |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
@@ -2521,3 +2521,68 @@ thruster-wayland.txt and thruster-wayland.png.
 The impulsive-burn branch, other local/reference frames, shared electric power,
 solar/eclipsed propulsion and broader polynomial/tank operating cases remain
 open, along with the larger workflow, viewer and plugin qualification gates.
+
+
+## Impulsive and finite burn resource workflows
+
+Audited the active wx ImpulsiveBurnSetupPanel, its BurnThrusterPanel branch, and
+FiniteBurnSetupPanel. Qt lacked the impulsive Tank field entirely because it
+was excluded from supported object-array metadata. Foreign-frame Origin/Axes
+were also hidden rather than made available when selecting Local. The new grouped
+Impulsive burn setup dialog exposes delta-V elements in km/s, Local/named frames,
+dependent axes/origin, optional mass depletion, one fuel tank, Isp and gravity.
+Mass toggling retains values and disables inactive Isp/gravity. Zero delta-V is
+valid. The dialog scrolls in smaller windows with fixed action buttons and keeps
+changes pending until resource Apply.
+
+Burn and thruster frame application now share the ordering rule: CoordinateSystem
+before Local Origin/Axes. Impulsive tank replacement clears and rebuilds the
+cloned list before mass-depletion validation, allowing the first tank and
+DecrementMass to be applied together. Empty impulsive tank lists serialize by
+omitting the default assignment. Multiple tanks with mass depletion receive the
+engine's supported single-tank restriction as corrective GUI feedback. Existing
+multi-tank input can remain represented while mass depletion is off. No burn or
+propagation mathematics was changed.
+
+FiniteBurnSetupPanel's individual and bulk selection operations are served by the
+existing typed Qt checklist, including drag ordering. Apply now rejects wrong-type
+or missing thruster names directly; empty lists serialize by omission. Clearing a
+finite burn is a valid configuration operation and survives save/reopen/build.
+Executing it produces the base engine's explicit diagnosis that the FiniteBurn
+identifies no Thrusters. BurnTests confirms the same failure from an independently
+script-configured empty burn and successful GUI reselection/recovery; the GUI does
+not substitute a silent coast for the engine's rejected active burn.
+
+BurnTests covers seven impulsive cases: inertial, Local MJ2000Eq/VNB/LVLH/
+SpacecraftBody, named EarthFixed and zero delta-V. It exercises frame/depletion
+control dependencies, Cancel, pending reopen, first-tank paired Apply, compact
+scrolling, Isp/no-tank validation, exact source Undo/Redo, Unicode save/reopen and
+label/comment preservation. Nine reported state/fuel fields match independent
+script-configured missions within 1e-8. Fuel depletion matches the rocket equation
+within 1e-9 for a 1200 kg initial spacecraft, Isp 400 s, g0 10 m/s² and the chosen
+delta-V magnitude. Inertial components and VNB/LVLH basis transforms receive
+independent numerical checks. BackProp restores state and fuel within 1e-9.
+Invalid values/references roll back; a selected tank absent from the spacecraft
+fails execution, and reselection restores the original report. Turning mass
+depletion off and clearing the tank survives round trips and burns without fuel
+loss. An imported two-tank mass-off configuration also retains its ordered tank
+list through a grouped vector edit, Apply, Unicode save/reopen and execution.
+
+The finite-burn workflow exercises typed individual/bulk selection, clear-all,
+ordering, Cancel/pending Apply, exact Undo/Redo and labeled mission preservation.
+A reordered pair of GUI-selected chemical engines produces the same position/fuel
+reports as the script reference. The ten-second constant-rate burn consumes
+0.002 kg from FuelA and 0.003 kg from FuelB, and coast fuel remains unchanged.
+Wrong/missing/duplicate selection rolls back; unattached-thruster and empty-burn
+failures recover through corrected selection and save/reopen.
+
+Rebuilt the actual application/bin/GmatQt target. All 19 Qt suites passed in
+70.19 seconds, including the new Burns suite and existing Thrusters/mission/viewer
+regressions. The entire new workflow also passed on native Wayland in an
+isolated-settings process. Its dialog capture was visually inspected for readable
+labels, selectors, units, group layout and action buttons. Evidence:
+Qt6ParityValidation/check-burns.txt, burn-wayland.txt and burn-wayland.png.
+
+Broader burn bodies/attitudes/epochs, fuel limits and finite shared electric-power
+combinations remain unqualified. The larger workflow, viewer and plugin gates
+remain open; 52 wx workflow inventory entries are still marked Pending audit.

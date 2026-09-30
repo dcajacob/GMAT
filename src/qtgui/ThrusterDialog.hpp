@@ -7,7 +7,6 @@ class GmatBase;
 class QComboBox;
 class QLineEdit;
 class QLabel;
-QSet<QString> applyThrusterFrame(GmatBase &thruster,const QMap<QString,QString> &values);
 void validateThrusterProperties(GmatBase &thruster);
 class ThrusterDialog final : public QDialog
 {
