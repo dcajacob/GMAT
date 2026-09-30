@@ -150,7 +150,7 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
       while (first<=last && statement.code[first].isSpace()) ++first;
       while (last>=first && statement.code[last].isSpace()) --last;
       const auto start=statement.positions[first],end=statement.positions[last];
-      const auto lineStart=source.lastIndexOf('\n',start-1)+1;
+      const auto lineStart=start ? source.lastIndexOf('\n',start-1)+1 : 0;
       auto lineEnd=source.indexOf('\n',end); if (lineEnd<0) lineEnd=source.size();
       bool commentsInside=false;
       for (auto i=first+1;i<=last;++i) if (statement.positions[i]!=statement.positions[i-1]+1) { commentsInside=true; break; }
@@ -236,5 +236,60 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       for (auto i=positions.crbegin();i!=positions.crend();++i) candidate.remove(*i,1);
       candidate.insert(positions.first(),pending.definition);
    }
+   return candidate;
+}
+
+QString removeResourceConfiguration(const QString &source,const QString &name,const QString &firstMissionStatement)
+{
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"(?:\\.[A-Za-z0-9_.]+(?:\\([^;=]*\\))?|\\([^;=]*\\))?\\s*=");
+   const QRegularExpression declaration("^\\s*Create\\s+([A-Za-z][A-Za-z0-9_]*)\\s+([^;]+?);?\\s*$",QRegularExpression::DotMatchesEverythingOption);
+   const QRegularExpression definition("\\b"+QRegularExpression::escape(name)+"(?:\\s*\\[\\s*[1-9][0-9]*\\s*,\\s*[1-9][0-9]*\\s*\\])?(?![A-Za-z0-9_])");
+   const auto normalize=[](QString code) {
+      code=code.trimmed(); if (code.endsWith(';')) code.chop(1); code.remove(QRegularExpression("^GMAT\\s+"));
+      QString result; bool quoted=false; for (auto ch:code) { if (ch=='\'') quoted=!quoted; if (quoted || !ch.isSpace()) result+=ch; } return result;
+   };
+   QString firstCommand;
+   if (!firstMissionStatement.isEmpty()) { const auto commands=statements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
+   QVector<qsizetype> remove; bool declared=false,located=firstCommand.isEmpty();
+   const auto eraseStatement=[&](const Statement &statement) {
+      qsizetype first=0,last=statement.code.size()-1;
+      while (first<=last && statement.code[first].isSpace()) ++first;
+      while (last>=first && statement.code[last].isSpace()) --last;
+      const auto start=statement.positions[first],end=statement.positions[last];
+      const auto lineStart=start ? source.lastIndexOf('\n',start-1)+1 : 0;
+      auto lineEnd=source.indexOf('\n',end); if (lineEnd<0) lineEnd=source.size();
+      bool commentsInside=false;
+      for (auto i=first+1;i<=last;++i) if (statement.positions[i]!=statement.positions[i-1]+1) { commentsInside=true; break; }
+      if (!commentsInside && source.mid(lineStart,start-lineStart).trimmed().isEmpty() && source.mid(end+1,lineEnd-end-1).trimmed().isEmpty()) {
+         for (auto i=lineStart;i<lineEnd+(lineEnd<source.size() ? 1 : 0);++i) remove.append(i);
+      } else {
+         remove+=statement.positions.mid(first,last-first+1); remove+=statement.continuations;
+      }
+   };
+   for (const auto &statement:statements(source)) {
+      if (QRegularExpression("^\\s*BeginMissionSequence\\b").match(statement.code).hasMatch() || (!firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) { located=true; break; }
+      const auto create=declaration.match(statement.code);
+      if (create.hasMatch()) {
+         const auto match=definition.match(create.captured(2)); if (!match.hasMatch()) continue;
+         if (declared) throw std::runtime_error("Multiple declarations for the resource to delete.");
+         declared=true;
+         auto other=create.captured(2); other.remove(match.capturedStart(),match.capturedLength());
+         if (other.remove(QRegularExpression("[\\s,]+")).isEmpty()) eraseStatement(statement);
+         else {
+            auto start=create.capturedStart(2)+match.capturedStart(),end=start+match.capturedLength();
+            // Keep the rest of a grouped declaration, including comments
+            // embedded in it. Whitespace-only separators may stay as spacing.
+            while (end<statement.code.size() && statement.code[end].isSpace()) ++end;
+            if (end<statement.code.size() && statement.code[end]==',') ++end;
+            else { auto comma=start-1; while (comma>=create.capturedStart(2) && statement.code[comma].isSpace()) --comma; if (comma>=create.capturedStart(2) && statement.code[comma]==',') start=comma; }
+            remove+=statement.positions.mid(start,end-start);
+         }
+      } else if (assignment.match(statement.code).hasMatch()) eraseStatement(statement);
+   }
+   if (!declared) throw std::runtime_error("Cannot locate this resource's declaration safely. Edit the file that defines it.");
+   if (!located) throw std::runtime_error("Cannot locate the mission boundary safely. Add BeginMissionSequence before deleting this resource.");
+   QString candidate=source;
+   std::sort(remove.begin(),remove.end()); remove.erase(std::unique(remove.begin(),remove.end()),remove.end());
+   for (auto i=remove.crbegin();i!=remove.crend();++i) candidate.remove(*i,1);
    return candidate;
 }

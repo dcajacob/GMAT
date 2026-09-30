@@ -13,3 +13,6 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
 // serializer order. In that case replace the edited resource's configuration,
 // including legacy unqualified force aliases; other source remains untouched.
 QString patchResourceConfiguration(const QString &source,const QString &name,const QString &before,const QString &after,const QString &firstMissionStatement={},bool replaceOwnedConfiguration=false);
+// Delete only this resource's declaration and configuration assignments. A
+// grouped Create keeps its other resources; comments and mission source remain.
+QString removeResourceConfiguration(const QString &source,const QString &name,const QString &firstMissionStatement={});

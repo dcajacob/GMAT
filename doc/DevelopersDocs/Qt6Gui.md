@@ -160,7 +160,9 @@ syntax and implicit defaults, including power-system epochs. Owned force models
 are written together in engine order because their selectors create dependent
 forces. Other resources, comments and mission commands retain their source. A rejected candidate restores the previous model
 without changing editor contents. Successful changes update the script as
-one undoable edit. Stale panels reject changes, and unapplied panel edits
+one undoable edit. Deletion also preserves surrounding source and grouped
+declarations, and protects referenced resources, built-ins and celestial bodies.
+Stale panels reject changes, and unapplied panel edits
 prevent Build/Run from silently using older values. Plot object lists (`Add`),
 XY Y-parameter lists (`YVariables`), and report parameter lists (`Add`) accept
 comma-separated resource/parameter names. Apply replaces the complete list;

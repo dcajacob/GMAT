@@ -3839,3 +3839,38 @@ rerun are preserved in `check-resource-round-trips.txt` and
 `check-resource-round-trips-native.txt`. The separate Wayland workflow also
 passed. The source inventory remains 20 of 108 Pending audit entries; this
 checkpoint does not close the broader replacement goal.
+
+## Source-preserving resource deletion
+
+Resource deletion now removes only the selected declaration and configuration
+assignments from the original source. Grouped Create declarations retain their
+other Variables/Arrays, and inline/continued comments remain in place. The
+mission suffix and implicit power epoch remain unchanged. A missing source
+declaration is rejected with an instruction to edit its defining file; the
+engine still rejects resources referenced by other objects or mission commands.
+
+`ResourceRoundTripTests` covers exact create/delete/Undo/Redo of a numeric
+Variable, creation/deletion of DifferentialCorrector and Yukon resources,
+grouped Variable/Array deletion with retained other initializers/comments,
+Unicode save/reopen and unchanged independent power/state/array reports.
+WorkflowTests continues to exercise pending-panel/stale/reference guards and
+the actual confirmation/context-menu deletion path; estimation and parameter
+suites cover plugin resources and initialized numbers/strings.
+
+The source audit of wx ResourceTree confirms that bodies/SolarSystem have Open
+and Close without a Delete action. They are SolarSystem-owned and cannot be
+removed through ConfigManager's generic deletion API. Qt disables that action
+and returns an accurate explanation for direct calls, including a configured
+user Asteroid; source/model/report retention is tested. Script deletion of a
+user-defined body remains a separate text workflow. The first-character
+resource declaration case exposed Qt's negative-index lastIndexOf behavior;
+configuration removal now uses an explicit beginning-of-file boundary.
+
+The dedicated Wayland create/delete/round-trip run passed; raw output is
+`round-trip-deletion-wayland.txt`. Wider include-file, alias and storage-failure
+cases, shared Help/keyboard/portal interactions and the remaining qualification
+gates remain open. No numerical algorithm was changed.
+
+The rebuilt user's GmatQt passed all 36 suites in 152.07 seconds in one run;
+full output is `check-source-deletion.txt`. The separate native Wayland workflow
+also passed. This checkpoint preserves the larger goal and its open gates.

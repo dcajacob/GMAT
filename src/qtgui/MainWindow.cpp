@@ -382,7 +382,8 @@ MainWindow::MainWindow()
       const QString snapshot=builtScript;
       QMenu menu(this); menu.addAction(create);
       auto *remove=menu.addAction("Delete resource…");
-      remove->setEnabled(ready && !running && modelValid && !name.isEmpty());
+      auto *selected=name.isEmpty() ? nullptr : Moderator::Instance()->GetConfiguredObject(name.toStdString());
+      remove->setEnabled(ready && !running && modelValid && selected && !selected->IsOfType("CelestialBody") && !selected->IsOfType("SolarSystem"));
       if (menu.exec(resources->viewport()->mapToGlobal(position))==remove &&
           QMessageBox::question(this,"Delete resource","Delete "+name+" from this mission?",
              QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
@@ -1234,6 +1235,10 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
    auto *moderator=Moderator::Instance();
    auto *object=moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists.";
+   // SolarSystem owns celestial bodies rather than ConfigManager. Match wx's
+   // protected body workflow instead of reporting a false 'resource is used'.
+   if (object->IsOfType("CelestialBody") || object->IsOfType("SolarSystem"))
+      return "Celestial bodies and the SolarSystem cannot be deleted from this panel. Edit a user-defined body's script declaration instead.";
    QString candidate;
    try {
       const auto canonical=qtConfiguredScript();
@@ -1241,9 +1246,11 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
          QRegularExpression::escape(name)+"\\b[^;\\n]*;",QRegularExpression::MultilineOption);
       if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch() || !declaration.match(canonical).hasMatch())
          return "Built-in resources and generated parameters cannot be deleted here.";
+      QString firstCommand;
+      for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+      candidate=removeResourceConfiguration(expectedScript,name,firstCommand);
       if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
          return "This resource is used by another resource or mission command. See Message Window for details.";
-      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(qtConfiguredScript()));
    } catch (BaseException &error) {
       const auto detail=QString::fromStdString(error.GetFullMessage());
       return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
