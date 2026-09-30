@@ -6577,6 +6577,20 @@ bool Interpreter::SetPropertyStringValue(GmatBase *obj, const Integer id,
       {         
          try
          {
+            // SpacePoint kernel setters support an empty braced list as a
+            // complete clear. Do not discard it as an empty scalar: doing so
+            // retains startup kernels after a GUI removal/save/reopen.
+            const std::string property = obj->GetParameterText(id);
+            if (obj->IsOfType(Gmat::SPACE_POINT) &&
+                (property == "OrbitSpiceKernelName" ||
+                 property == "AttitudeSpiceKernelName" ||
+                 property == "PlanetarySpiceKernelName" ||
+                 property == "SCClockSpiceKernelName" ||
+                 property == "FrameSpiceKernelName") &&
+                GmatStringUtil::IsEnclosedWithBraces(valueToUse) &&
+                GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}")).empty())
+               return obj->SetStringParameter(id, "{}");
+
             // remove enclosing curly brackets if used
             valueToUse = GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}"));
             if (valueToUse == "")

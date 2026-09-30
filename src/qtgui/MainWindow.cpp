@@ -5,6 +5,8 @@
 #include "UserParameter.hpp"
 #include "SolarSystemPanel.hpp"
 #include "SolarSystem.hpp"
+#include "CelestialBodyPanel.hpp"
+#include "CelestialBody.hpp"
 #include "PathSettingsDialog.hpp"
 #include "GmatCommand.hpp"
 #include "CommandUtil.hpp"
@@ -147,7 +149,7 @@ QStringList creatableResourceTypes()
    QStringList result;
    for (const auto category : {Gmat::SPACECRAFT,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
          Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER,Gmat::FUNCTION,Gmat::EVENT_LOCATOR,
-         Gmat::CALCULATED_POINT,Gmat::MEASUREMENT_MODEL,Gmat::ERROR_MODEL,Gmat::INTERFACE,Gmat::DATA_FILTER,Gmat::FIELD_OF_VIEW})
+         Gmat::CALCULATED_POINT,Gmat::CELESTIAL_BODY,Gmat::MEASUREMENT_MODEL,Gmat::ERROR_MODEL,Gmat::INTERFACE,Gmat::DATA_FILTER,Gmat::FIELD_OF_VIEW})
       for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
          result.append(QString::fromStdString(type));
    result.append({"Variable","String","Array"});
@@ -479,6 +481,7 @@ MainWindow::MainWindow()
       };
       EditablePanel *panel=nullptr;
       if (auto *system=dynamic_cast<SolarSystem *>(object)) panel=new SolarSystemPanel(*system,apply);
+      else if (auto *body=dynamic_cast<CelestialBody *>(object)) panel=new CelestialBodyPanel(*body,apply);
       else panel=new ResourceEditor(*object,apply,nullptr,snapshot);
       auto *child = new EditorSubWindow;
       child->setWidget(panel);
@@ -918,6 +921,17 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   if (auto *body=dynamic_cast<CelestialBody *>(object)) {
+      try {
+         QString firstCommand;
+         for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+         return applyModelScript(celestialBodyScript(*body,expectedScript,changes,firstCommand),[name,changes] {
+            auto *updated=dynamic_cast<CelestialBody *>(Moderator::Instance()->GetConfiguredObject(name.toStdString()));
+            return updated ? celestialBodySettingsError(*updated,changes) : QString("This body was not retained. The previous configuration was restored.");
+         });
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    if (auto *system=dynamic_cast<SolarSystem *>(object)) {
       try {
          QString firstCommand;

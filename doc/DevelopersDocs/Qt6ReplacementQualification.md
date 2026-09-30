@@ -113,16 +113,16 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/view/EditorPanel.hpp` | Active save/sync/run, empty-input protection and shared SavePanel actions audited. Qt Mission menu adds Save/build and Save/build/run; ScriptEditingTests covers chooser Cancel, successful save before Build/Run, Unicode paths, independently checked outputs, failed-save/source/identity protection, invalid-script recovery and empty-script protection. Existing FileTests/WorkflowTests cover encoding, Undo/Redo, syntax, Find/Replace, running/close and pending-panel protection. Multiple inactive documents and broader shared editor/menu behavior remain pending. |
 | `src/gui/app/CompareFilesDialog.hpp` | Active wx modes, absolute tolerance, skip blanks, baseline/candidate prefixes, up to three directories, file limit and result export audited. Qt File > Compare files workspace and report Compare action provide these controls plus two-file comparison. ComparisonTests covers UTF-8/BOM/CRLF, tolerance boundaries, UTC columns, maxima, trailing rows, invalid input, three-directory matching/.truth fallback/exact limits, editable widths, picker Cancel/row removal, full export/input protection, Stop/close and real-engine report/save/reopen invariance. Native Wayland inspected. Non-UTF-8 files, arbitrary initial header/data ambiguity, mid-read replacement and extreme directory/record regimes remain unqualified. |
 | `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt script editor provides line numbers, syntax coloring and bounded Edit > Go to line with Cancel; Save/build and Save/build/run are qualified by ScriptEditingTests. Single-document workflows are covered; multiple inactive documents, line-navigation edge cases and broader shared SavePanel behavior remain pending. |
-| `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | Pending audit |
+| `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | wx read-only rotation-source/built-in pole rules, Earth nutation interval, custom pole values, frame ID and ordered FK files audited. Ceres pole edits and imported SPICE rotation change body-fixed reports and match separate scripts; FK ordering selects the final frame definition. Startup Luna FK removal survives save/reopen. Wider epochs, bodies, frame/pole conventions and source switching remain unqualified. |
 | `src/gui/solarsys/UniversePanel.hpp` | Source/file/timing controls audited. SolarSystem resource and grouped Qt panel expose runtime sources, paired DE file, SPK/PCK browsing, UseTT and interval. DE405/421/424 and SPICE missions, copied Unicode files, retained SPICE DE fallback, independent script reports and body/frame checks, pending/Discard/Cancel, invalid/truncated-file rollback, correction, exact Undo/Redo, save/reopen, comment/implicit boundary preservation and later resource/mission edits covered. Native Wayland panel workflow passed. Wider epochs, caching regimes, malformed full DE contents, keyboard/portal chooser and shared Help remain unqualified. |
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Pending audit |
-| `src/gui/solarsys/CelestialBodyPanel.hpp` | Pending audit |
-| `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Pending audit |
+| `src/gui/solarsys/CelestialBodyPanel.hpp` | Four wx pages audited and exposed through a dedicated Qt MDI editor. Pending controls, applied-only preview, Close Cancel/Discard, invalid correction/rollback, exact Undo/Redo, Run/Stop guards, body creation and Unicode save/reopen covered. Native Wayland pages inspected. Shared Help, wider keyboard/focus, portal choosers and multi-panel lifecycle cases remain unqualified. |
+| `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Texture chooser/preview, supported 3DS/OBJ model chooser, offset/rotation/scale bounds and orbit/target colors audited. Applied assets reach PlotCurve; native Wayland rendered checker texture and posed body model were inspected and exceed pixel-change gates while calculation reports stay identical. Invalid image/model/path rollback, default texture/model clearing and Unicode save/reopen covered. Wider formats, materials and relative paths remain unqualified. |
 | `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
 | `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. Full solver-iteration modes and broader burn/hardware parameter execution remain to qualify. |
-| `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Pending audit |
+| `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Mu/radius/flattening validation and ordered PCK lists audited. Earth physical edits and Ceres configuration match separate raw-script reports. PCK Add/Replace/Remove/reorder/Cancel and wrong-type rollback covered; Luna startup PCK replacement/removal survives save/reopen with explicit kernel-list clear. Wider bodies/epochs/physical extremes and SPICE error-file diagnostics remain unqualified. |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
-| `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
+| `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Runtime source choices, protected built-in source/file/central-body fields, NAIF ID and SPK lists audited. New Asteroid Ceres from the resource dialog, copied Unicode SPK, ephemeris-relative reports and separate scripts agree; unknown-ID and missing-SPK execution failures recover after correction. Dormant wx TwoBody/source-file controls are not enabled. Wider bodies, coverage and relative kernel paths remain unqualified. |
 | `src/gui/app/CompareTextDialog.hpp` | Source audited: this compiled legacy class has no caller in the current wx GUI. GmatMainFrame::CompareFiles uses CompareFilesDialog for text/numeric comparison, mapped to the qualified Qt comparison workspace above. No separate exposed workflow was found. |
 | `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
@@ -3664,3 +3664,79 @@ All 34 Qt suites passed in 143.78 seconds after rebuilding the user's
 application/bin/GmatQt. The wx inventory now has 26 of 108 Pending audit entries. Audited rows still
 contain remaining acceptance cases; celestial-body pages and other workflow,
 viewer and plugin/file gates remain open. The overall goal remains active.
+
+## Celestial-body pages, kernels and appearance
+
+The wx body container and its Properties, Orbit, Orientation and Visualization
+pages were compared with runtime metadata and setters. Qt now opens a dedicated
+four-page MDI editor, with the built-in source, central-body and pole protections
+used by wx. User bodies expose their available ephemeris choices and pole values;
+Earth has its nutation interval. The New resource dialog includes the engine's
+celestial-body types. Dormant wx TwoBody and SourceFilename controls are not
+activated; central body and rotation source remain read-only. Imported SPICE
+rotation is displayed and can use edited frame ID and kernels.
+
+The editor snapshots values without cloning a CelestialBody, whose destructor
+can unload kernels used by other live engine objects. Apply reconstructs the
+model from a narrowly replaced configuration block and checks the selected
+values/files afterward. Errors restore the previous model and retain pending
+controls. Comments, untouched configuration and the mission suffix are retained;
+digit-prefixed 3DModel properties are recognized by the configuration updater.
+Repeated identical updates do not duplicate assignments or grow the source.
+
+Kernel lists support browsing, replacement, removal and ordered Up/Down moves.
+Since script kernel setters append entries, complete membership uses an explicit
+empty clear before nonempty lists. The interpreter previously discarded an
+empty string array. A narrow serialization fix now forwards an empty braced
+SpacePoint kernel list to its existing setter; other string arrays and nonempty
+append behavior are unchanged. This lets Luna's startup PCK/FK defaults actually
+be replaced or removed through Apply and save/reopen. No numerical algorithm
+was changed.
+
+CelestialBodyTests drives the actual controls and file/color dialogs. Earth
+physical-property changes affect propagation/altitude/frame reports and the
+plotted radius; these outputs match separately written scripts. New Asteroid
+Ceres uses a copied Unicode SPK and explicit NAIF ID. Its ephemeris-relative and
+body-fixed reports match independent raw configuration scripts. Pole changes
+alter body-fixed reports; imported SPICE rotation plus edited frame ID/FK files
+changes those reports, and reordering two definitions selects the final loaded
+frame. PCK/FK Add/Replace/Remove/order/Cancel, startup replacement/clear and
+separate raw empty-list assignments are covered. Unknown-ID and missing-SPK
+execution failures recover after GUI correction with the prior reports restored.
+
+Texture selection has a pending preview beside its field. Applied texture,
+model pose/scale and color reach the orbit scene while reports remain identical.
+Native rendered captures change by more than 2,000 pixels between the original
+body, checker texture and posed OBJ body. Invalid real values, read-only edits,
+pose bounds, missing/wrong kernel types, duplicate kernels and invalid textures
+or models retain the previous source and body settings. Exact Undo/Redo,
+Unicode save/reopen, default texture/model clearing, Close Cancel and Run/Stop
+editing guards are exercised.
+
+[Wayland run](Qt6ParityValidation/bodies-wayland.txt), inspected
+[Properties](Qt6ParityValidation/bodies-wayland.properties.png),
+[Orbit](Qt6ParityValidation/bodies-wayland.orbit.png),
+[Orientation](Qt6ParityValidation/bodies-wayland.orientation.png),
+[Visualization](Qt6ParityValidation/bodies-wayland.visualization.png),
+[texture rendering](Qt6ParityValidation/bodies-wayland.texture.png) and
+[body-model rendering](Qt6ParityValidation/bodies-wayland.model.png) are saved.
+Long form rows wrap at the desktop scaling used for these captures. The
+[regression log](Qt6ParityValidation/check-bodies.txt) covers all Qt suites.
+
+The negative SPICE execution cases also emit FILEOPENFAILED/IOSTAT 128 while
+writing the existing GMATSpiceKernelError.txt. Correction and rerun succeed,
+but error-file diagnostics remain unqualified; the raw evidence retains these
+messages. Other open cases include broader bodies/epochs/coverage and pole/frame
+conventions, relative kernel paths, texture/model formats/materials, multiple
+pending panels, portal choosers, keyboard/focus and shared Help. These checks
+prove selected GUI/script calculation preservation through the existing engine,
+not independent scientific qualification.
+
+The inventory now has 21 of 108 Pending audit entries; the body-selection dialog
+remains pending and audited rows still carry incomplete cases. Viewer lifecycle,
+plugin/file acceptance and top-level Wayland main-window minimize/restore gates
+remain open. The overall replacement objective is not complete.
+
+The rebuilt application/bin/GmatQt passed all 35 Qt suites in 144.97 seconds.
+The separate native Wayland body workflow also passed; it uses Qt widget
+choosers rather than the desktop portal.

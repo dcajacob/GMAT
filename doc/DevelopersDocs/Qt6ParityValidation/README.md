@@ -288,3 +288,30 @@ and malformed complete DE content remain unqualified. The inventory now has
 
 [All 34 Qt suites passed](check-solar.txt) in 143.78 seconds, including
 native viewer and launch checks, with application/bin/GmatQt rebuilt.
+
+## Celestial-body editor and rendered appearance
+
+`CelestialBodyTests` qualifies the dedicated four-page MDI editor against wx
+field/enabling rules and runtime setters. Earth physical settings and user
+Asteroid Ceres ephemeris/pole/SPICE-frame reports match separately configured
+scripts. PCK/FK/SPK controls cover chooser Cancel/accept, replacement, removal,
+order, invalid-type rollback, startup default clearing and Unicode save/reopen.
+Unknown NAIF ID and missing SPK recover after correction. Pending edits,
+Close Cancel, exact Undo/Redo, repeated comment-preserving 3DModel settings,
+model/texture clearing, invalid appearance and Run/Stop guards are covered.
+
+Native Wayland captures were inspected:
+`bodies-wayland.{properties,orbit,orientation,visualization}.png` and
+`bodies-wayland.{texture,model}.png`. A checker texture and posed OBJ alter more
+than 2,000 rendered pixels while mission reports remain identical. Long rows
+wrap to fit desktop scaling. The raw native log `bodies-wayland.txt` includes
+SPICE FILEOPENFAILED/IOSTAT 128 diagnostic-file warnings from negative execution
+cases; recovery passes, but error-file diagnostics remain unqualified.
+
+All 35 Qt suites passed in 144.97 seconds after rebuilding the user's GmatQt;
+combined evidence is `check-bodies.txt`. Broader bodies/epochs/frames/coverage,
+relative kernel paths, formats/materials, multi-panel/keyboard/focus behavior,
+portal choosers, shared Help and top-level Wayland main-window minimize/restore
+remain unqualified. The wx inventory has 21 of 108 Pending audit entries;
+audited partial rows and plugin/file gates remain open, and the overall
+replacement objective is unfinished.

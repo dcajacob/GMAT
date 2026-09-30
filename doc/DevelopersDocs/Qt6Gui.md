@@ -1509,3 +1509,33 @@ the ephemeris version and SPICE kernel types. Filename apostrophes, percent
 signs and control characters are rejected to prevent script-parser ambiguity.
 The leap-second kernel remains a startup setting. These controls configure the
 existing engine calculations.
+
+
+### Celestial-body settings
+
+Double-click a body in Resources to open **Properties**, **Orbit**,
+**Orientation** and **Visualization**, following the wx layout. Properties
+include gravitational parameter, equatorial radius, flattening and planetary
+PCK files. Orbit exposes the runtime ephemeris choices, NAIF ID and orbit SPK
+files. Built-in ephemerides use SolarSystem; central body and rotation source
+are read-only, matching wx. User-defined bodies expose their pole and rotation
+constants; Earth exposes the nutation update interval. Orientation also has
+the SPICE frame ID and FK files.
+
+Kernel lists offer Add, Replace, Remove and Up/Down. Apply writes the complete
+selected membership and order, including removal of startup defaults. Kernel
+types are validated by the engine. A body whose ID or SPK does not supply its
+requested ephemeris can fail at execution; correct those fields and run again.
+New resource includes the available celestial-body types, including Asteroid.
+
+Visualization offers texture browsing with a pending preview, model browsing,
+model offset/rotation/scale, and orbit/target colors. Clear the model filename
+to restore the spherical body; clear the texture filename to use the engine's
+default texture. Textures must decode, and models must be readable by the
+viewer. Appearance changes leave propagation calculations unchanged.
+
+Values remain pending until Apply; invalid edits retain them for correction.
+Show script displays applied settings. Successful Apply closes the panel;
+Close offers Discard or Cancel for pending edits. Undo restores the prior
+script exactly. The four pages scroll and long rows wrap to fit desktop
+scaling. These controls configure the existing engine.

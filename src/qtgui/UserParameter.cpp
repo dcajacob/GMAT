@@ -130,7 +130,7 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
       const auto commands=statements(firstMissionStatement);
       if (!commands.isEmpty()) firstCommand=normalize(commands.first().code);
    }
-   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z][A-Za-z0-9_]*)\\s*=");
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z0-9_]+)\\s*=");
    const QRegularExpression begin("^\\s*BeginMissionSequence\\b");
    QVector<qsizetype> remove;
    auto boundary=source.size(); bool located=firstCommand.isEmpty();
