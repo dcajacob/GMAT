@@ -1,0 +1,1 @@
+PASS: Save/build and Save/build/run with Cancel, Unicode paths, independent 2/5 outputs and failure recovery; bounded Go to line and Cancel; typed CommandEcho On/Off, pending Apply, labels/comments, exact Undo/Redo/save/reopen, trace boundaries, invalid-edit rollback and RunComplete state restoration.

@@ -266,7 +266,7 @@ const std::string &prefix,
 const std::string &useName)
 {
    generatingString = prefix + "CommandEcho ";
-   generatingString += echoSetting;
+   generatingString += echoSetting + ";";
 
    return GmatCommand::GetGeneratingString(mode, prefix, useName);
 }

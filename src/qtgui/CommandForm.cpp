@@ -67,6 +67,7 @@ void CommandForm::setStatement(const QString &statement)
    const QVector<Spec> specs={
       {"Maneuver","Maneuver\\s+"+label+"(?:BackProp\\s+)?"+name+"\\s*\\(\\s*"+name+"\\s*\\)"+end,{"Burn","Spacecraft"}},
       {"Finite burn","(?:BeginFiniteBurn|EndFiniteBurn)\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Burn","Spacecraft"}},
+      {"File thrust","(?:BeginFileThrust|EndFileThrust)\\s+"+label+name+"\\s*\\(\\s*([^;()\\n]+?)\\s*\\)"+end,{"Thrust history","Spacecraft"}},
       {"Vary","Vary\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Variable","Initial value"}},
       {"Achieve","Achieve\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Goal","Value"}},
       {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Solver","Objective"}},
@@ -80,6 +81,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
       {"Toggle","Toggle\\s+"+label+"([A-Za-z][A-Za-z0-9_]*(?:\\s+[A-Za-z][A-Za-z0-9_]*)*)\\s+(On|Off)"+end,{"Subscribers","State"}},
+      {"Command echo","CommandEcho\\s+"+label+"(On|Off)"+end,{"State"}},
       {"Objects","(?:Global|Clear|Save)\\s+"+label+"([^;%\\n]+?)"+end,{"Objects"}},
       {"Assignment","(?:GMAT\\s+)?"+label+"([A-Za-z][A-Za-z0-9_.]*(?:\\([^;\\n]*?\\))?)\\s*=\\s*([^;\\n]+?)"+end,{"Destination","Expression"}},
       // Branch forms replace only header spans, never their nested commands.
@@ -101,6 +103,7 @@ void CommandForm::setStatement(const QString &statement)
       else if (title()=="File import" && name=="Data source") resourceType="DataInterface";
       else if (name=="Simulator") resourceType="Simulator";
       else if (name=="Estimator") resourceType="Estimator";
+      else if (name=="Thrust history") resourceType="ThrustHistoryFile";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
@@ -110,7 +113,22 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="File import" && name=="Data") {
+      if (title()=="File thrust" && name=="Spacecraft") {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
+         auto *choose=new QPushButton("Select spacecraft…",container); choose->setObjectName("commandChoose_Spacecraft"); row->addWidget(choose); layout->addRow(name,container);
+         connect(choose,&QPushButton::clicked,this,[this,input] {
+            QDialog dialog(this); dialog.setObjectName("fileThrustSpacecraftDialog"); dialog.setWindowTitle("File thrust spacecraft"); auto *layout=new QVBoxLayout(&dialog);
+            auto *list=new QListWidget(&dialog); list->setObjectName("fileThrustSpacecraftList"); list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
+            const auto selected=input->text().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); QStringList names=selected;
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT)) if (!names.contains(QString::fromStdString(name))) names.append(QString::fromStdString(name));
+            for (const auto &name:names) { auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked); }
+            auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+            auto validate=[list,buttons] { bool any=false; for (int i=0;i<list->count();++i) any=any || list->item(i)->checkState()==Qt::Checked; buttons->button(QDialogButtonBox::Ok)->setEnabled(any); };
+            connect(list,&QListWidget::itemChanged,&dialog,[validate] { validate(); }); validate();
+            connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject); dialog.resize(450,350);
+            if (dialog.exec()==QDialog::Accepted) { QStringList values; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) values.append(list->item(i)->text()); input->setText(values.join(", ")); }
+         });
+      } else if (title()=="File import" && name=="Data") {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          input->setToolTip("Leave empty to import all fields, or select fields from the data interface.");
          auto *choose=new QPushButton("Select fields…",container); choose->setObjectName("commandChoose_Data"); row->addWidget(choose); layout->addRow("Data fields (empty imports all)",container);
@@ -200,8 +218,8 @@ void CommandForm::setStatement(const QString &statement)
             ConditionDialog dialog(input->text(),this);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.condition());
          });
-      } else if (title()=="Toggle" && name=="State") {
-         auto *state=new QComboBox(this); state->setObjectName("commandToggleState"); state->addItems({"On","Off"});
+      } else if ((title()=="Toggle" || title()=="Command echo") && name=="State") {
+         auto *state=new QComboBox(this); state->setObjectName(title()=="Toggle" ? "commandToggleState" : "commandEchoState"); state->addItems({"On","Off"});
          state->setCurrentText(input->text()); input->setParent(state); input->hide(); layout->addRow(name,state);
          connect(state,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
          connect(input,&QLineEdit::textChanged,state,&QComboBox::setCurrentText);

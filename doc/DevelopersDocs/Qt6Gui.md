@@ -105,6 +105,14 @@ an unrelated directory, and failure exit codes for missing or invalid inputs.
 
 ## Current evidence and remaining work
 
+The Mission menu includes **Save and build script** (`Ctrl+Shift+F7`) and
+**Save, build and run mission** (`Ctrl+Shift+F5`). Saving must succeed before
+either action builds or runs. Edit > **Go to line** (`Ctrl+L`) navigates without
+changing the script. Relative input/include lookup follows the open script's
+folder; startup assets continue to use the startup directory. When using Save
+As in another folder, relative asset references retain their script spelling
+and may need to be selected again for the new location.
+
 The initial shell compiles with Qt 6.10.2 on Linux, initializes the engine,
 loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only

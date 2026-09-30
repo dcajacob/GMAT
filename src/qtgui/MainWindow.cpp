@@ -59,6 +59,7 @@
 #include <QOpenGLWidget>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QInputDialog>
 #include <QPlainTextEdit>
 #include <QSaveFile>
 #include <QStringDecoder>
@@ -66,12 +67,14 @@
 #include <QStatusBar>
 #include <QTabWidget>
 #include <QTextDocument>
+#include <QTextBlock>
 #include <QTextEdit>
 #include <QToolBar>
 #include <QTreeWidget>
 #include <QStyle>
 #include <sstream>
 #include <set>
+#include <stdexcept>
 
 namespace {
 QString omitUnsetHardwareFovs(QString script,GmatBase *replacement=nullptr)
@@ -200,6 +203,7 @@ MainWindow::MainWindow()
    messages = new QPlainTextEdit(console);
    messages->setReadOnly(true);
    messages->setMaximumBlockCount(10000);
+   messages->setObjectName("messageWindow");
    messages->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
    console->setWidget(messages);
    addDockWidget(Qt::BottomDockWidgetArea, console);
@@ -281,6 +285,15 @@ MainWindow::MainWindow()
    searchAction("&Replace…","scriptReplace",QKeySequence::Replace,[searchDialog] { searchDialog->openSearch(); });
    searchAction("Find next","scriptFindNext",QKeySequence::FindNext,[searchDialog] { searchDialog->findNext(); });
    searchAction("Find previous","scriptFindPrevious",QKeySequence::FindPrevious,[searchDialog] { searchDialog->findNext(true); });
+   searchAction("Go to line…","scriptGoToLine",QKeySequence("Ctrl+L"),[this] {
+      bool accepted=false;
+      const int line=QInputDialog::getInt(this,"Go to line","Line number",editor->textCursor().blockNumber()+1,
+         1,editor->document()->blockCount(),1,&accepted);
+      if (accepted) {
+         editor->setTextCursor(QTextCursor(editor->document()->findBlockByNumber(line-1)));
+         editor->centerCursor(); editor->setFocus();
+      }
+   });
 
    edit->addSeparator();
    auto *create=edit->addAction("New &resource…");
@@ -319,6 +332,13 @@ MainWindow::MainWindow()
    stopAction = add(run, "&Stop", QStyle::SP_MediaStop, QKeySequence("Shift+F5"), [this] { stopMission(); });
    stopAction->setObjectName("stopMission");
    editingActions.removeOne(stopAction);
+   run->addSeparator();
+   auto *saveBuild=run->addAction("Save and build script"); saveBuild->setObjectName("saveBuildScript");
+   saveBuild->setShortcut(QKeySequence("Ctrl+Shift+F7")); editingActions.append(saveBuild);
+   connect(saveBuild,&QAction::triggered,this,[this] { saveAndBuildScript(false); });
+   auto *saveRun=run->addAction("Save, build and run mission"); saveRun->setObjectName("saveRunMission");
+   saveRun->setShortcut(QKeySequence("Ctrl+Shift+F5")); editingActions.append(saveRun);
+   connect(saveRun,&QAction::triggered,this,[this] { saveAndBuildScript(true); });
    setRunning(false);
    windows->setObjectName("windowMenu");
    connect(windows,&QMenu::aboutToShow,this,[this,windows] {
@@ -432,6 +452,7 @@ bool MainWindow::initialize(const QString &startup)
    PlotInterface::SetPlotReceiver(plots.get());
    ListenerManagerInterface::SetListenerManager(solverListeners.get());
    try {
+      startupDirectory = QFileInfo(startup).absolutePath();
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
       if (ready) {
          QStringList keywords;
@@ -448,6 +469,8 @@ bool MainWindow::initialize(const QString &startup)
 void MainWindow::newMission()
 {
    if (!ready || running) return;
+   scriptPath.clear();
+   setScriptDirectory();
    plots->cameraSettings.clear();
    plots->clear(true);
    Moderator::Instance()->LoadDefaultMission();
@@ -474,7 +497,7 @@ bool MainWindow::loadScript(const QString &path)
    }
    plots->clear(true);
    editor->setPlainText(text);
-   scriptPath = path; editor->document()->setModified(false); updateTitle(); return true;
+   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); return true;
 }
 bool MainWindow::saveScript(bool saveAs)
 {
@@ -482,6 +505,16 @@ bool MainWindow::saveScript(bool saveAs)
    QString path = scriptPath;
    if (saveAs || path.isEmpty()) path = QFileDialog::getSaveFileName(this, "Save GMAT script", path, "GMAT scripts (*.script)");
    return saveScriptTo(path);
+}
+void MainWindow::saveAndBuildScript(bool run)
+{
+   if (!ready || running) return;
+   if (editor->toPlainText().trimmed().isEmpty()) {
+      statusBar()->showMessage("Enter a mission script before saving and building");
+      return;
+   }
+   if (!saveScript()) return;
+   if (run) runMission(); else buildScript();
 }
 bool MainWindow::saveScriptTo(const QString &path)
 {
@@ -492,7 +525,7 @@ bool MainWindow::saveScriptTo(const QString &path)
    if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
       QMessageBox::warning(this, "Save failed", file.errorString()); return false;
    }
-   scriptPath = path; editor->document()->setModified(false); updateTitle(); return true;
+   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); return true;
 }
 bool MainWindow::confirmDiscard()
 {
@@ -587,6 +620,7 @@ bool MainWindow::buildScript()
    bool success = false;
    plots->clear();
    try {
+      setScriptDirectory();
       const auto cameras=qtCameraSettings(editor->toPlainText());
       std::istringstream stream(editor->toPlainText().toStdString());
       success = Moderator::Instance()->InterpretScript(&stream, true);
@@ -805,6 +839,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    }
    QString candidate;
    try {
+      setScriptDirectory();
       std::unique_ptr<GmatBase> proposed(object->Clone());
       if (!proposed) return "This resource cannot be edited.";
       if (changes.contains("@DynamicData")) applyDynamicDataSettings(*proposed,changes.value("@DynamicData"));
@@ -1014,10 +1049,21 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
    return error;
 }
 
+void MainWindow::setScriptDirectory()
+{
+   // Stream interpretation does not set the script folder as the engine's
+   // filename overload does. Keep input/include lookup tied to this document
+   // without changing the process directory used for startup data assets.
+   const auto directory = scriptPath.isEmpty() ? startupDirectory : QFileInfo(scriptPath).absolutePath();
+   if (!FileManager::Instance()->SetGmatWorkingDirectory(directory.toStdString()))
+      throw std::runtime_error("The script directory is unavailable: " + directory.toStdString());
+}
+
 bool MainWindow::restoreBuiltModel()
 {
    plots->clear(); modelValid=false;
    try {
+      setScriptDirectory();
       std::istringstream previous(builtScript.toStdString());
       modelValid=Moderator::Instance()->InterpretScript(&previous,true);
    } catch (...) { }
@@ -1036,6 +1082,7 @@ QString MainWindow::applyModelScript(const QString &requested)
    QString error;
    plots->clear();
    try {
+      setScriptDirectory();
       std::istringstream stream(candidate.toStdString());
       if (!moderator->InterpretScript(&stream, true)) error = "The mission rejected these changes. See Message Window.";
       else QtPlotReceiver::validateCameraReferences(cameras);
@@ -1106,9 +1153,12 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"Call function",QString("[OutputVariable] = %1(InputVariable);").arg(firstType(Gmat::FUNCTION,"GmatFunction","FunctionName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
+   if (availableEngineTypes().contains("CommandEcho")) templates.insert("CommandEcho","CommandEcho On;");
    if (availableEngineTypes().contains("Set")) templates.insert("Set (file import)",QString("Set %1 %2;").arg(sat,firstType(Gmat::INTERFACE,"DataInterface","FileInterfaceName")));
    if (availableEngineTypes().contains("RunSimulator")) templates.insert("RunSimulator",QString("RunSimulator %1;").arg(firstType(Gmat::SOLVER,"Simulator","SimulatorName")));
    if (availableEngineTypes().contains("RunEstimator")) templates.insert("RunEstimator",QString("RunEstimator %1;").arg(firstType(Gmat::SOLVER,"Estimator","EstimatorName")));
+   for (const auto &command:{QString("BeginFileThrust"),QString("EndFileThrust")}) if (availableEngineTypes().contains(command))
+      templates.insert(command,QString("%1 %2(%3);").arg(command,firstType(Gmat::INTERFACE,"ThrustHistoryFile","ThrustHistoryName"),sat));
    QStringList propagationChoices,spacecraftChoices,formationChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));
    for (const auto &value:spacecraft) spacecraftChoices.append(QString::fromStdString(value));

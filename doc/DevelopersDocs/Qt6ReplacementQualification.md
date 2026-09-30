@@ -76,7 +76,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/spacecraft/AttitudePanel.hpp` | Model-dependent controls, frame restrictions, Euler/quaternion/MRP/DCM orientation and Euler-rate/angular-velocity selection audited. Focused Qt dialog with pending conversion, per-model edit retention, typed frame/body selectors and AEM input chooser implemented. Cancel, invalid state recovery, exact paired Apply/Undo/Redo, save/reopen and zero-rate Spinner report execution covered. Nonzero-rate propagation, specialized-model execution, other Euler sequences, frame dependencies and AEM/SPICE file cases remain to qualify. |
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Source audited: read-only output of the hidden Orbit Designer, rather than a standalone spacecraft summary action; see the audit below. |
-| `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/SpacecraftPanel.hpp` | Wrapper Create/LoadData/SaveData/page-change behavior audited: eight active orbit, attitude, ballistics/mass, tank, power, SPICE, thruster and visual pages share a pending spacecraft clone; disabled sensor page excluded. Qt ResourceEditor and focused dialogs share pending values and one Apply/rebuild with rollback. Individual page evidence is recorded above/below. Broad mixed-page transactions and focus/navigation behavior remain to qualify. |
 | `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric execution with script-attached thrusters and GUI-attached power covered, electric GUI attachment combinations remain to qualify. |
 | `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
@@ -110,9 +110,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/view/ViewTextDialog.hpp` | Pending audit |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
-| `src/gui/view/EditorPanel.hpp` | Pending audit |
+| `src/gui/view/EditorPanel.hpp` | Active save/sync/run, empty-input protection and shared SavePanel actions audited. Qt Mission menu adds Save/build and Save/build/run; ScriptEditingTests covers chooser Cancel, successful save before Build/Run, Unicode paths, independently checked outputs, failed-save/source/identity protection, invalid-script recovery and empty-script protection. Existing FileTests/WorkflowTests cover encoding, Undo/Redo, syntax, Find/Replace, running/close and pending-panel protection. Multiple inactive documents and broader shared editor/menu behavior remain pending. |
 | `src/gui/app/CompareFilesDialog.hpp` | Active wx modes, absolute tolerance, skip blanks, baseline/candidate prefixes, up to three directories, file limit and result export audited. Qt File > Compare files workspace and report Compare action provide these controls plus two-file comparison. ComparisonTests covers UTF-8/BOM/CRLF, tolerance boundaries, UTC columns, maxima, trailing rows, invalid input, three-directory matching/.truth fallback/exact limits, editable widths, picker Cancel/row removal, full export/input protection, Stop/close and real-engine report/save/reopen invariance. Native Wayland inspected. Non-UTF-8 files, arbitrary initial header/data ambiguity, mid-read replacement and extreme directory/record regimes remain unqualified. |
-| `src/gui/app/ScriptPanel.hpp` | Pending audit |
+| `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt script editor provides line numbers, syntax coloring and bounded Edit > Go to line with Cancel; Save/build and Save/build/run are qualified by ScriptEditingTests. Single-document workflows are covered; multiple inactive documents, line-navigation edge cases and broader shared SavePanel behavior remain pending. |
 | `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | Pending audit |
 | `src/gui/solarsys/UniversePanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Pending audit |
@@ -163,9 +163,9 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
-| `../plugins/libScriptTools` | Pending qualification |
+| `../plugins/libScriptTools` | ScriptEditingTests: the sole registered CommandEcho command has typed On/Off editing, pending Apply, label/comment preservation, exact Undo/Redo/Unicode save/reopen, bounded execution tracing, independently checked 2/5 reports, invalid-edit rollback and initially disabled/enabled RunComplete state restoration. Its generator now retains the terminating semicolon so the GUI can locate/edit it. Nested branches and stopped/failed execution remain pending. |
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
-| `../plugins/libThrustFile` | Pending qualification |
+| `../plugins/libThrustFile` | ThrustFileTests: history creation and input selection, typed segment/tank/solve-for lists and clear/restore, pending/Cancel angle and sigma vector resizing, Begin/EndFileThrust selectors, independent state reports, analytic scaled fuel depletion and post-End coast, exact Undo/Redo/Unicode Save/Save As/reopen, wrong-reference rollback, missing/malformed-file recovery and Output access covered. All four data formats with None/Linear interpolation, relative-file Build/Apply/reopen and the full-day bundled example covered. Multiple spacecraft/segments, cubic interpolation, time-varying angles, estimator solve-fors and file-boundary regimes remain pending. |
 | `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
 | `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. Additional settings/error modes pending. |
 
@@ -3075,3 +3075,94 @@ regimes, extreme directory counts and common editor/menu behavior remain
 unqualified. The wx inventory has 43 of 108 entries still marked Pending audit.
 The selected plugin evidence remains 5 without qualification and 15 partial.
 Full replacement acceptance remains open.
+
+## Thrust-file inputs, script actions and repeated viewer lifecycle
+
+ThrustFilePlugin's history and segment fields and Begin/EndFileThrust commands
+were audited against their engine implementations and the wx generic resource
+editor. Qt now provides history creation, an existing-file chooser, typed
+segment/tank/solve-for lists, clear/restore operations and resizable angle/sigma
+coefficient grids. Coefficient dimensions remain pending until Apply; Cancel
+keeps the prior values. File-thrust command controls select the history and an
+ordered spacecraft list while retaining labels and comments.
+
+ThrustFileTests compares GUI-configured missions with independently configured
+scripts and verifies a five-kg baseline burn, a 1.875-kg scaled burn and constant
+fuel after EndFileThrust. It covers all four acceleration/thrust data formats
+with None/Linear interpolation, list clearing, exact Undo/Redo, Unicode
+Save/Save As/reopen, input-picker Cancel, invalid-edit rollback, missing and
+malformed input recovery and generated report access. The full-day bundled
+example depletes 180 kg to a final total mass of 1170 kg and reproduces its
+report after save/reopen. Multiple spacecraft/segments, cubic interpolation,
+time-varying angles, estimator solve-fors and coverage boundaries remain open.
+
+This execution exposed a GUI file-context bug: stream interpretation did not
+set the engine's script directory. Build, Apply and restoration now set it to
+the current document's folder; an untitled/default mission uses the startup
+folder. Thrust-file Apply uses the engine's matching resolver. Process CWD is
+unchanged, preserving startup asset lookup. Relative inputs beside their
+script survive Build/Apply/save/reopen. Moving a document with raw Save As does
+not rebase its relative asset references; the bundled test explicitly selects
+an absolute input before moving the script. General asset rebasing and broader
+relative-path consumers remain open.
+
+The wx EditorPanel/ScriptPanel and spacecraft wrapper source were audited.
+Qt adds Mission > Save and build script (Ctrl+Shift+F7), Save, build and run
+mission (Ctrl+Shift+F5), and Edit > Go to line (Ctrl+L). Saving must succeed
+before either combined action builds or runs; empty scripts are rejected.
+ScriptEditingTests covers Cancel, exact saved content, Unicode paths, bounded
+line navigation without modification, literal 2/5 execution outputs,
+save-failure source/identity protection, invalid-script and empty-input recovery.
+Multiple inactive documents and broader shared editor/menu operations remain
+pending. The spacecraft wrapper maps to the existing focused Qt dialogs and
+shared pending resource editor; broad mixed-page transactions remain pending.
+
+ScriptToolsPlugin registers only CommandEcho. Qt adds its On/Off control and
+creation template. Its generated script now includes the missing terminating
+semicolon, allowing GUI mission lookup/editing without changing execution.
+Tests verify pending Apply, retained names/comments, exact Undo/Redo and
+save/reopen, trace boundaries, calculation-preserving output, invalid-edit
+rollback and restoration of initially disabled/enabled echo settings.
+Nested branches and stopped/failed execution remain pending.
+
+WindowTests now repeats the default mission viewer lifecycle three times:
+title-bar ground minimize/restore, Output double-click opening, small and large
+resize, orbit maximize, immediate close/reopen of both views, and rerun with
+ground minimized and orbit closed. Every checkpoint requires retained spacecraft
+samples plus rendered blue texture/map and red trajectory pixels; the native
+top-level surface and mission source must remain unchanged. X11's default test
+also requires top-level main-window minimize/restore.
+
+Native Wayland passed all three viewer cycles in 19.88 seconds with no forced
+software-OpenGL setting. The inspected capture shows textured Earth and the
+trajectory. Top-level minimize/restore is explicitly unqualified on this
+desktop: both a plain Qt window and an isolated Qt MDI/OpenGL-anchor window
+report WindowMinimized immediately and WindowNoState one second later.
+The strict Wayland test fails that assertion; subsequent programmatic
+restoration also fails synthetic Output activation. The successful viewer run
+uses the explicit --skip-main-minimize flag and logs that limitation on every
+cycle. This is not evidence for main-window compositor minimize/restore.
+Evidence: Qt6ParityValidation/viewer-lifecycle-wayland.txt/.png,
+qt-minimize-probe.cpp/.txt and qt-minimize-mdi-probe.txt. The probe source can be
+compiled with pkg-config's Qt6Widgets/Qt6OpenGLWidgets flags; run without
+arguments for a plain window, or with `mdi anchor` for the MDI case.
+
+Native Wayland ThrustFileTests and ScriptEditingTests passed with isolated
+preferences and temporary input/output files. Inspected captures show readable
+thrust fields, coefficient buttons and script/navigation layout. Evidence:
+Qt6ParityValidation/thrust-wayland.txt/.png and script-editing-wayland.txt/.png.
+Native script-dialog focus handling emitted Qt Wayland text-input warnings.
+
+The actual application/bin/GmatQt executable was rebuilt; all 27 Qt suites
+passed in 122.38 seconds, including strict X11 main-window minimize/restore.
+Evidence: Qt6ParityValidation/check-thrust-script-lifecycle.txt. The exact user
+launcher was also run from /tmp with its default startup and default mission,
+isolated settings, native Wayland and --run/--screenshot. It exited successfully;
+the inspected capture shows the textured ground map and propagated track.
+Evidence: Qt6ParityValidation/checkpoint-launch-wayland.txt/.png. This CLI
+capture proves launch/default execution; native interactive lifecycle evidence
+comes from WindowTests using the same frontend and startup.
+
+The wx inventory now has 40 of 108 entries marked Pending audit. Selected
+plugin evidence has three without qualification and 17 partial. Full workflow,
+viewer/OF and plugin acceptance remains open.

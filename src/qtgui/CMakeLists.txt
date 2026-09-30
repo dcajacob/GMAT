@@ -131,6 +131,10 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtEstimationTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtComparisonTests tests/ComparisonTests.cpp)
    target_link_libraries(GmatQtComparisonTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtThrustFileTests tests/ThrustFileTests.cpp)
+   target_link_libraries(GmatQtThrustFileTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtScriptEditingTests tests/ScriptEditingTests.cpp)
+   target_link_libraries(GmatQtScriptEditingTests PRIVATE GmatQtFrontend)
    find_package(Python3 REQUIRED COMPONENTS Interpreter)
    set(qt_test_runner "${CMAKE_CURRENT_SOURCE_DIR}/tests/RunTest.py")
    function(add_qt_test name target)
@@ -166,6 +170,8 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.DataInterface GmatQtDataInterfaceTests "${qt_test_startup}")
    add_qt_test(QtGui.Estimation GmatQtEstimationTests "${qt_test_startup}")
    add_qt_test(QtGui.Comparison GmatQtComparisonTests "${qt_test_startup}")
+   add_qt_test(QtGui.ThrustFiles GmatQtThrustFileTests "${qt_test_startup}")
+   add_qt_test(QtGui.ScriptEditing GmatQtScriptEditingTests "${qt_test_startup}")
    add_qt_test(QtGui.OrbitSetup GmatQtOrbitSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -179,6 +185,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_custom_target(check-qt
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests GmatQtCalculatedPointTests GmatQtDataInterfaceTests GmatQtEstimationTests GmatQtComparisonTests
+      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests GmatQtCalculatedPointTests GmatQtDataInterfaceTests GmatQtEstimationTests GmatQtComparisonTests GmatQtThrustFileTests GmatQtScriptEditingTests
       USES_TERMINAL VERBATIM)
 endif()

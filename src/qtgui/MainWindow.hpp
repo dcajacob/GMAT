@@ -50,8 +50,10 @@ private:
    void showFileComparison(const QString &baseline={});
    QString applyModelScript(const QString &candidate);
    bool restoreBuiltModel();
+   void setScriptDirectory();
    void newMission();
    bool saveScript(bool saveAs = false);
+   void saveAndBuildScript(bool run);
    bool confirmDiscard();
    void updateTitle();
    void setRunning(bool value);
@@ -71,6 +73,7 @@ private:
    QAction *pauseAction = nullptr;
    QAction *stopAction = nullptr;
    QString scriptPath;
+   QString startupDirectory;
    QString builtScript;
    QMap<QString, QString> reportFiles;
    QMap<QString,QPair<QString,QString>> ephemerisFiles;

@@ -18,6 +18,7 @@ struct ResourceProperty
    bool fileInput = false;
    bool fileOutput = false;
    bool list = false;
+   bool resizableVector = false;
    int rows = 0, columns = 0;
 };
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
@@ -28,4 +29,5 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,Q
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);
+bool isResizableResourceVector(GmatBase &object,const QString &name);
 QString replaceResourceList(GmatBase &object, const QString &block, const QString &name, const QString &value, const QString *mixture = nullptr);

@@ -435,6 +435,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             value->setData(Qt::UserRole,field.rows);
             value->setData(Qt::UserRole+1,field.columns);
             value->setData(Qt::UserRole+2,object.IsOfType("Array") && field.name=="RmatValue");
+            value->setData(Qt::UserRole+3,field.resizableVector);
             value->setToolTip("Double-click to edit the numeric cells.");
             auto *edit=new QPushButton("Edit cells…",table);
             edit->setObjectName("editCells_"+field.name);
@@ -922,14 +923,17 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          const auto cells=values.value(r).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
          for (int c=0;c<columns;++c) grid->setItem(r,c,new QTableWidgetItem(cells.value(c,"0")));
       }
-      if (item->data(Qt::UserRole+2).toBool()) {
+      const bool vector=item->data(Qt::UserRole+3).toBool();
+      if (item->data(Qt::UserRole+2).toBool() || vector) {
          auto *dimensions=new QFormLayout;
          auto *rowCount=new QSpinBox(&dialog),*columnCount=new QSpinBox(&dialog);
          rowCount->setObjectName("arrayRows"); columnCount->setObjectName("arrayColumns");
          rowCount->setRange(1,100); columnCount->setRange(1,100);
          rowCount->setMaximum(std::max(100,rows)); columnCount->setMaximum(std::max(100,columns));
          rowCount->setValue(rows); columnCount->setValue(columns);
-         dimensions->addRow("Rows",rowCount); dimensions->addRow("Columns",columnCount);
+         if (vector) { rowCount->setRange(1,1); rowCount->hide(); }
+         else dimensions->addRow("Rows",rowCount);
+         dimensions->addRow(vector ? "Coefficients" : "Columns",columnCount);
          layout->addLayout(dimensions);
          layout->addWidget(new QLabel("New cells start at zero. Shrinking removes cells outside the new dimensions.",&dialog));
          auto resize=[=] {

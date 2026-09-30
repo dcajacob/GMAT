@@ -10,6 +10,7 @@
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
+#include "FileUtil.hpp"
 #include "Rmatrix.hpp"
 #include "Array.hpp"
 #include "PropSetup.hpp"
@@ -79,6 +80,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          if (object.IsOfType(Gmat::AXIS_SYSTEM) && field.name=="Epoch") field.unit="A1ModJulian";
          switch (object.GetParameterType(id)) {
          case Gmat::RVECTOR_TYPE: {
+            field.resizableVector=isResizableResourceVector(object,field.name);
             const auto &vector=object.GetRvectorParameter(id);
             field.rows=1; field.columns=vector.GetSize();
             QStringList values;
@@ -222,6 +224,19 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             if (field.name=="Type") field.choices=trackingMeasurementTypes();
             if (field.name=="SolveFors") field.references={"Bias","PassBiases"};
          }
+         if (object.IsOfType("ThrustHistoryFile") && field.name=="AddThrustSegment") {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::INTERFACE)) {
+               auto *segment=Moderator::Instance()->GetConfiguredObject(name);
+               if (segment && segment->IsOfType("ThrustSegment")) field.references.append(QString::fromStdString(name));
+            }
+         }
+         if (object.IsOfType("ThrustSegment")) {
+            if (field.name=="MassSource") {
+               field.references.clear(); for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::FUEL_TANK)) field.references.append(QString::fromStdString(name));
+            }
+            if (field.name=="SolveFors") field.references={"ThrustScaleFactor","ThrustAngle1","ThrustAngle2"};
+         }
          if (hasEpochInterval(object) && field.name=="EpochFormat") {
             field.choices.clear(); for (const auto &format:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) field.choices.append(QString::fromStdString(format));
          }
@@ -348,6 +363,10 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    return fields;
 }
 
+bool isResizableResourceVector(GmatBase &object,const QString &name)
+{
+   return object.IsOfType("ThrustSegment") && QStringList{"ThrustAngle1","ThrustAngle2","ThrustAngle1Sigma","ThrustAngle2Sigma"}.contains(name);
+}
 bool isResourceFileList(GmatBase &object,const QString &name)
 {
    return (object.IsOfType("Spacecraft") && (name=="OrbitSpiceKernelName" || name=="AttitudeSpiceKernelName" ||
@@ -379,6 +398,8 @@ bool isResourceList(GmatBase &object, const QString &name)
       ((object.IsOfType("Spacecraft") || object.IsOfType("ErrorModel")) && name=="SolveFors") ||
       (object.IsOfType("Simulator") && name=="AddData") ||
       (object.IsOfType("Estimator") && name=="Measurements") ||
+      (object.IsOfType("ThrustHistoryFile") && name=="AddThrustSegment") ||
+      (object.IsOfType("ThrustSegment") && (name=="MassSource" || name=="SolveFors")) ||
       ((object.IsOfType("TrackingFileSet") || object.IsOfType("Estimator")) && name=="DataFilters") ||
       (object.IsOfType(Gmat::DATA_FILTER) && QStringList{"FileNames","ObservedObjects","Trackers","DataTypes","RecordNumbers"}.contains(name)) ||
       (name=="YVariables" && type=="XYPlot") ||
@@ -462,6 +483,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             if (!body || !body->IsOfType("CelestialBody") || body->GetName()!=entry.toStdString()) throw std::runtime_error("Select existing celestial bodies for the barycenter.");
          }
          const QString expectedType=(object.IsOfType("GroundStation") && name=="ErrorModels") ? "ErrorModel" :
+            (object.IsOfType("ThrustHistoryFile") && name=="AddThrustSegment") ? "ThrustSegment" :
+            (object.IsOfType("ThrustSegment") && name=="MassSource") ? "FuelTank" :
             (object.IsOfType("GroundStation") && name=="AddHardware") ? "Hardware" :
             ((object.IsOfType("Simulator") && name=="AddData") || (object.IsOfType("Estimator") && name=="Measurements")) ? "TrackingFileSet" :
             ((object.IsOfType("TrackingFileSet") || object.IsOfType("Estimator")) && name=="DataFilters") ? "DataFilter" : QString();
@@ -469,6 +492,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             auto *referenceObject=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!referenceObject || !referenceObject->IsOfType(expectedType.toStdString())) throw std::runtime_error(("Select existing "+expectedType+" resources for "+name+".").toStdString());
          }
+         if (object.IsOfType("ThrustSegment") && name=="SolveFors" && !QStringList{"ThrustScaleFactor","ThrustAngle1","ThrustAngle2"}.contains(entry))
+            throw std::runtime_error("Select a thrust scale factor or thrust angle solve-for.");
          if (entries.contains(entry)) throw std::runtime_error("Each list entry must be unique");
          entries.append(entry);
       }
@@ -571,10 +596,11 @@ void validateResourceProperties(GmatBase &object)
    validateBurnProperties(object);
    validateOrbitViewProperties(object);
    validateThrusterProperties(object);
-   if (object.IsOfType("FileInterface")) {
-      const auto filename=QString::fromStdString(object.GetStringParameter("Filename"));
-      const QFileInfo file(filename);
-      if (filename.isEmpty() || !file.isFile() || !file.isReadable()) throw std::runtime_error("Choose an existing, readable input file for the data interface.");
+   if (object.IsOfType("FileInterface") || object.IsOfType("ThrustHistoryFile")) {
+      const bool history=object.IsOfType("ThrustHistoryFile");
+      const auto filename=object.GetStringParameter(history ? "FileName" : "Filename");
+      const QFileInfo file(QString::fromStdString(history ? GmatFileUtil::FindFile(filename) : filename));
+      if (filename.empty() || !file.isFile() || !file.isReadable()) throw std::runtime_error("Choose an existing, readable input file.");
       return;
    }
    if (object.IsOfType("LibrationPoint")) {
@@ -765,6 +791,10 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
       int rows=vector ? 1 : object.GetRmatrixParameter(id).GetNumRows();
       int columns=vector ? object.GetRvectorParameter(id).GetSize() : object.GetRmatrixParameter(id).GetNumColumns();
       const auto inputRows=value.trimmed().split(';');
+      if (isResizableResourceVector(object,name)) {
+         columns=inputRows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
+         if (columns<1 || columns>100000) throw std::runtime_error("Coefficient vectors need between 1 and 100000 finite values.");
+      }
       if (arrayValues) {
          rows=inputRows.size();
          columns=inputRows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
