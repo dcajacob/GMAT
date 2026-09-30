@@ -1350,3 +1350,17 @@ File selection includes **All files** and, for an accept filter, **From tracking
 AcceptFilter ThinMode offers Frequency or Time; ThinningFrequency remains
 validated by the engine. The bounded batch-estimation test covers frequency
 thinning and record rejection; broader filter modes remain to qualify.
+
+### Script-event editing
+
+Open a BeginScript event in the Mission tree and choose **Script event…**.
+Comments appear above a numbered, highlighted script body, separated by a
+resizable splitter. The outer BeginScript/EndScript labels and inline comments
+stay fixed; nested events and branches are edited in the body. Comment text is
+stored as GMAT comment lines. Clearing the body creates an empty event.
+
+OK updates pending command text; Cancel preserves it. Command Apply validates
+the complete mission, and an invalid command leaves the earlier mission intact
+so the text can be corrected. The command source remains available for editing
+complete blocks directly. Pending edits support Undo/Redo, and saved/reopened
+events retain their commands, labels and comments.

@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "TestSettings.hpp"
 #include "CommandEditor.hpp"
+#include "ScriptEventDialog.hpp"
 #include "CommandForm.hpp"
 #include "ConditionDialog.hpp"
 #include "ReportParameterDialog.hpp"
@@ -365,6 +366,39 @@ int main(int argc,char **argv)
       if (!screenshot.isEmpty()) { QApplication::processEvents(); require(window.grab().save(screenshot),"Mission screenshot failed"); }
       panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
       require(total()==15,"Mission panel Apply did not update the loop");
+      {
+         auto eventScript=original; eventScript.prepend("Create String Note;\n");
+         eventScript.replace("BeginScript;\n   total = total + 1;\nEndScript;", "% original event comment\nBeginScript 'Keep event'; % begin inline\n   Note = 'EndScript; % literal';\n   % BeginScript; inside a comment\n   If total > 0;\n      total = total + 2;\n   Else;\n      total = -99;\n   EndIf;\n   BeginScript 'Nested event';\n      total = total + 3;\n   EndScript; % nested end\nEndScript; % end inline");
+         editor->setPlainText(eventScript); require(window.buildScript() && total()==10,"Nested named script-event fixture rejected");
+         const auto snapshot=window.missionSnapshot(); const int index=find(snapshot,"BeginScript"); const auto statement=snapshot.nodes[index].statement;
+         if (!ScriptEventDialog::supports(statement)) throw std::runtime_error(("Actual named script event not recognized:\n"+statement).toStdString()); ScriptEventDialog unchanged(statement); require(unchanged.statement()==statement,"Opening script-event controls changed exact source");
+         require(!ScriptEventDialog::supports("total = 1;\n") && !ScriptEventDialog::supports("BeginScript;\ntotal = 1;\n"),"Incomplete/non-event source accepted by structured controls");
+         QWidget owner; QString error; CommandEditor event(statement,false,{},[&](const QString &text) { return error=window.applyMissionChange(snapshot,index,MissionEdit::Replace,text); },{},{},&owner);
+         auto *button=event.findChild<QPushButton *>("editScriptEvent"); require(button && !button->isHidden(),"Script-event controls missing from command editor"); auto *source=event.findChild<QPlainTextEdit *>("commandSource");
+         std::exception_ptr failure;
+         auto edit=[&](bool accept,const QString &body,const QString &comments) {
+            QTimer::singleShot(0,&event,[&] { try {
+               auto *dialog=event.findChild<QDialog *>("scriptEventDialog"); require(dialog,"Script-event dialog missing");
+               require(dialog->findChild<QLabel *>("scriptEventBegin")->text().contains("Keep event") && dialog->findChild<QLabel *>("scriptEventEnd")->text().contains("end inline"),"Script-event boundary labels/comments lost");
+               dialog->findChild<QPlainTextEdit *>("scriptEventBody")->setPlainText(body); dialog->findChild<QPlainTextEdit *>("scriptEventComments")->setPlainText(comments);
+               if (!screenshot.isEmpty() && comments.startsWith("updated")) require(dialog->grab().save(screenshot+".script-event.png"),"Script-event capture failed");
+               dialog->findChild<QDialogButtonBox *>()->button(accept ? QDialogButtonBox::Ok : QDialogButtonBox::Cancel)->click();
+            } catch (...) { failure=std::current_exception(); if (auto *dialog=event.findChild<QDialog *>("scriptEventDialog")) dialog->reject(); } }); button->click(); if (failure) std::rethrow_exception(failure);
+         };
+         const auto oldBody=unchanged.findChild<QPlainTextEdit *>("scriptEventBody")->toPlainText();
+         ScriptEventDialog commentsOnly(statement); commentsOnly.findChild<QPlainTextEdit *>("scriptEventComments")->setPlainText("comment-only update"); require(commentsOnly.statement().endsWith(statement.mid(statement.indexOf("BeginScript 'Keep event'"))),"Comment-only edit changed event commands or boundary text");
+         edit(false,"total = -99;","cancelled"); require(source->toPlainText()==statement && !event.hasChanges(),"Script-event Cancel changed pending source");
+         edit(true,"Propagate Missing(Spacecraft);","invalid command"); const auto before=editor->toPlainText(); event.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(!error.isEmpty() && editor->toPlainText()==before && total()==10 && event.hasChanges(),"Invalid event edit failed to preserve source/execution");
+         edit(true,QString(oldBody).replace("total + 2","total + 4"),"updated event comment\nsecond comment");
+         const auto pending=source->toPlainText(); require(pending.contains("% updated event comment\n% second comment") && pending.contains("% begin inline") && pending.contains("% nested end") && pending.contains("% end inline") && pending.contains("EndScript; % literal") && total()==10,"Pending event edit lost boundaries/comments or changed mission");
+         source->undo(); require(source->toPlainText().contains("Propagate Missing"),"Structured event changes are not one undo step"); source->redo(); require(source->toPlainText()==pending,"Event redo changed pending source");
+         event.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(error.isEmpty() && total()==12,"Corrected script event did not execute through GUI Apply"); const auto applied=editor->toPlainText();
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript() && total()==10,"Script-event Undo did not restore exact source/results"); editor->redo(); require(editor->toPlainText()==applied && window.buildScript() && total()==12,"Script-event Redo changed source/results");
+         QTemporaryDir events; require(events.isValid(),"Event round-trip directory failed"); const auto path=events.filePath("script event ü.script"); require(window.saveScriptTo(path) && window.loadScript(path) && total()==12,"Script-event Unicode save/reopen changed execution");
+         const auto emptySnapshot=window.missionSnapshot(); const int emptyIndex=find(emptySnapshot,"BeginScript"); ScriptEventDialog empty(emptySnapshot.nodes[emptyIndex].statement); empty.findChild<QPlainTextEdit *>("scriptEventBody")->clear();
+         require(window.applyMissionChange(emptySnapshot,emptyIndex,MissionEdit::Replace,empty.statement()).isEmpty() && total()==5,"Empty script-event body failed or retained old commands");
+         require(window.loadScript(script) && window.buildScript(),"Script-event test restoration failed");
+      }
       editor->setPlainText("Create DifferentialCorrector DC;\nGMAT DC.MaximumIterations = 20;\n"
          "Create Variable x goalValue;\nCreate String Note;\nCreate Spacecraft FilterSat;\nCreate Array Choice[2,3];\nGMAT x = 1;\nGMAT goalValue = 8;\nBeginMissionSequence;\n"
          "Target DC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};\n"
@@ -500,7 +534,7 @@ int main(int argc,char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed && std::abs(solved()-8)<1e-6,
          "Closing solver progress broke repeated execution");
       require(window.findChild<QTableWidget *>("solverProgress"),"Rerun did not recreate closed solver progress");
-      std::cout<<"PASS: nested branches, duplicate-command identity, replace/insert/delete/append, invalid-edit rollback, stale panel, undo, Mission tree and Apply\n";
+      std::cout<<"PASS: nested branches, duplicate-command identity, replace/insert/delete/append, script-event comments/body/nested labels and quoted literals, pending/Cancel/empty body/Unicode round trips, invalid-edit rollback, stale panel, undo, Mission tree and Apply\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
 }

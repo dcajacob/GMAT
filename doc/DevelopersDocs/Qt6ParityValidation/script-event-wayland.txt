@@ -1,0 +1,2 @@
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x646624593900, name="QMenuClassWindow") has a transientParent set and that parent window has received input.
+PASS: nested branches, duplicate-command identity, replace/insert/delete/append, script-event comments/body/nested labels and quoted literals, pending/Cancel/empty body/Unicode round trips, invalid-edit rollback, stale panel, undo, Mission tree and Apply

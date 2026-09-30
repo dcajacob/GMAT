@@ -3,6 +3,7 @@
 #include "PropagationStopsDialog.hpp"
 #include "PropagationGroupsDialog.hpp"
 #include "CommandForm.hpp"
+#include "ScriptEventDialog.hpp"
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QFontDatabase>
@@ -21,6 +22,13 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    choices->addItem("Choose a command template…"); choices->addItems(templates.keys());
    if (adding) layout->addWidget(choices); else choices->hide();
    source=new QPlainTextEdit(statement,this); source->setObjectName("commandSource");
+   auto *event=new QPushButton("Script event…",this); event->setObjectName("editScriptEvent"); layout->addWidget(event);
+   auto showEvent=[this,event] { event->setVisible(ScriptEventDialog::supports(source->toPlainText())); };
+   connect(source,&QPlainTextEdit::textChanged,this,showEvent); showEvent();
+   connect(event,&QPushButton::clicked,this,[this] {
+      ScriptEventDialog dialog(source->toPlainText(),this); if (dialog.exec()!=QDialog::Accepted) return;
+      auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document); cursor.insertText(dialog.statement()); cursor.endEditBlock();
+   });
    auto *propagation=new PropagationForm(propagators,spacecraft,[this](const QString &text) {
       auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
       cursor.insertText(text); cursor.endEditBlock();

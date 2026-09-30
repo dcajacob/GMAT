@@ -42,7 +42,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
-| `src/gui/command/ScriptEventPanel.hpp` | Pending audit |
+| `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector and single-parameter left/right operand browser provided. Solver selector tested; constraint operand execution combinations pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
@@ -2982,3 +2982,42 @@ to qualify, along with estimator epoch conversion and the earlier broader
 estimation cases. This expands partial evidence for GmatEstimation; 47 of 108 wx
 inventory entries still await audit, and 5 of 20 runtime plugins still have no
 qualification evidence. Full replacement acceptance remains open.
+
+## Script-event comment/body workflow
+
+Audited wx ScriptEventPanel's separate comments/body controls, fixed outer
+BeginScript/EndScript labels, resizable sash layout and pending Save/validation.
+Qt CommandEditor now offers Script event controls for complete event blocks.
+The dialog separates plain comments from a numbered, highlighted script body
+with a vertical splitter. Outer labels and inline comments remain fixed;
+nested script events, branches and quoted marker text stay in the body. Both
+the engine's semicolon-free canonical BeginScript and script-file wrappers are
+recognized. Incomplete/non-event text retains the ordinary command source editor.
+
+Opening without changes preserves the exact command string. Comment-only
+updates retain the entire body and boundary text. OK updates only pending
+command text in one Undo step; Cancel preserves it. Apply uses the existing
+whole-mission transaction, so invalid commands restore the earlier model/source
+and can be corrected without reopening the panel. Empty bodies are supported.
+No mission execution or numerical algorithm was changed.
+
+MissionTests executes a named outer event containing an If/Else branch, a named
+nested event, a string containing EndScript/% and a comment containing BeginScript.
+Its literal reference result is 10. An invalid Propagate edit fails without
+changing that result or source. A corrected GUI body edit and two comment lines
+retain both event names and all inline/nested comments and produce 12. Exact
+mission Undo restores 10; Redo and Unicode save/reopen restore 12. Clearing the
+body removes its commands and produces the expected pre-event result 5.
+
+Native Wayland mission execution and dialog capture passed with isolated settings.
+The inspected image shows readable comments, numbered/highlighted nested script,
+fixed labelled boundaries, a splitter and accessible Cancel/OK. Evidence:
+Qt6ParityValidation/script-event-wayland.txt and
+Qt6ParityValidation/script-event-wayland.png. Rebuilt the actual
+application/bin/GmatQt target; all 24 Qt suites passed in 106.34 seconds.
+Evidence: Qt6ParityValidation/check-script-event.txt.
+
+The ScriptEventPanel row now has executable audit evidence; 46 of 108 wx entries
+remain marked Pending audit. Common editor/menu workflows remain under their
+separate audits, and broader viewer, plugin and file gates stay open. Full
+replacement acceptance is not established by this checkpoint.
