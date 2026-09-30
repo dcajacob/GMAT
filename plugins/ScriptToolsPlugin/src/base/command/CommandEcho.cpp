@@ -46,6 +46,8 @@ GmatCommand("CommandEcho")
 {
    echoSetting = "Off";
    echoStatus = false;
+   initval = false;
+   echoChanged = false;
 }
 
 
@@ -60,7 +62,10 @@ GmatCommand("CommandEcho")
 //------------------------------------------------------------------------------
 CommandEcho::CommandEcho(const CommandEcho& commandEcho) :
 GmatCommand(commandEcho),
-echoStatus(commandEcho.echoStatus)
+echoStatus(commandEcho.echoStatus),
+echoSetting(commandEcho.echoSetting),
+initval(false),
+echoChanged(false)
 {}
 
 
@@ -77,11 +82,15 @@ echoStatus(commandEcho.echoStatus)
 //------------------------------------------------------------------------------
 CommandEcho& CommandEcho::operator=(const CommandEcho& commandEcho)
 {
-   if (this == &commandEcho)
-	{
+   if (this != &commandEcho)
+   {
+      GmatCommand::operator=(commandEcho);
       echoStatus = commandEcho.echoStatus;
-	}
-      return *this;
+      echoSetting = commandEcho.echoSetting;
+      initval = false;
+      echoChanged = false;
+   }
+   return *this;
 }
 
 //------------------------------------------------------------------------------
@@ -95,7 +104,7 @@ CommandEcho& CommandEcho::operator=(const CommandEcho& commandEcho)
 //------------------------------------------------------------------------------
 GmatBase*   CommandEcho::Clone() const
 {
-   return new CommandEcho();
+   return new CommandEcho(*this);
 }
 
 
@@ -172,6 +181,7 @@ bool         CommandEcho::RenameRefObject(const UnsignedInt type,
 
 bool CommandEcho::Execute()
 {
+   echoChanged = true;
    GmatGlobal::Instance()->SetCommandEchoMode(echoStatus);
    return true;
 }
@@ -220,6 +230,7 @@ bool CommandEcho::InterpretAction()
 bool CommandEcho::Initialize()
 {
    initval = GmatGlobal::Instance()->EchoCommands();
+   echoChanged = false;
 
    return true;
 }
@@ -235,7 +246,12 @@ bool CommandEcho::Initialize()
 //------------------------------------------------------------------------------
 void CommandEcho::RunComplete()
 {
-   GmatGlobal::Instance()->SetCommandEchoMode(initval);
+   if (echoChanged)
+   {
+      GmatGlobal::Instance()->SetCommandEchoMode(initval);
+      echoChanged = false;
+   }
+   GmatCommand::RunComplete();
 }
 
 

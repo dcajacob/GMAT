@@ -81,6 +81,8 @@ protected:
    /// Parameter to save initial setting on echo command before CommandEcho
    /// is used
    bool initval;
+   /// Restore only a setting changed by this execution, once per run.
+   bool echoChanged;
 };
 
 #endif // CommandEcho_hpp

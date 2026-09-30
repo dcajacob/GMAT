@@ -163,7 +163,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
-| `../plugins/libScriptTools` | ScriptEditingTests: the sole registered CommandEcho command has typed On/Off editing, pending Apply, label/comment preservation, exact Undo/Redo/Unicode save/reopen, bounded execution tracing, independently checked 2/5 reports, invalid-edit rollback and initially disabled/enabled RunComplete state restoration. Its generator now retains the terminating semicolon so the GUI can locate/edit it. Nested branches and stopped/failed execution remain pending. |
+| `../plugins/libScriptTools` | ScriptEditingTests: the sole registered CommandEcho command has typed On/Off editing, pending Apply, label/comment preservation, exact Undo/Redo/Unicode save/reopen, bounded execution tracing, independently checked 2/5 reports, invalid-edit rollback and initially disabled/enabled RunComplete state restoration. Its generator now retains the terminating semicolon so the GUI can locate/edit it. One stopped While/If case, post-echo file-write failure, initially on/off settings, unexecuted/repeated cleanup and configuration-preserving clones are covered; cleanup/copy defects corrected. Broader completed nested/loop and argument-validation cases remain pending. |
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
 | `../plugins/libThrustFile` | ThrustFileTests: history creation and input selection, typed segment/tank/solve-for lists and clear/restore, pending/Cancel angle and sigma vector resizing, Begin/EndFileThrust selectors, independent state reports, analytic scaled fuel depletion and post-End coast, exact Undo/Redo/Unicode Save/Save As/reopen, wrong-reference rollback, missing/malformed-file recovery and Output access covered. All four data formats with None/Linear interpolation, relative-file Build/Apply/reopen and the full-day bundled example covered. Multiple spacecraft/segments, cubic interpolation, time-varying angles, estimator solve-fors and file-boundary regimes remain pending. |
 | `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
@@ -3286,3 +3286,36 @@ geometric self-intersection and broader SurfaceHeight numerical semantics remain
 open. The selected plugin inventory now has one without initial qualification
 (EKF) and 19 partial. The wx source-audit inventory remains 35 of 108 Pending
 audit; this is not full replacement qualification.
+
+## CommandEcho restoration across rebuild, failure and stop
+
+The first 29-suite polyhedron checkpoint exposed a repeatable ScriptEditing
+failure when echo was enabled before a subsequent Run. Run reconstructs the
+mission, and cleanup of the previous configured commands unconditionally restored
+a stale captured setting; newly constructed commands also had an uninitialized
+capture field. This could overwrite the current user setting before the next
+mission began. The failure is preserved in
+Qt6ParityValidation/check-echo-before-fix.txt.
+
+CommandEcho now initializes its runtime state and restores only a setting that
+it changed during execution, once per run. Cleanup of an unexecuted command and
+repeated cleanup do not overwrite later user settings. Base command cleanup is
+retained. Clones and assignment preserve command configuration/name and start
+with no pending runtime restoration; the previous Clone returned a default Off
+command and the assignment operator's self-assignment condition was inverted.
+
+ScriptEditingTests covers the originally failing repeated Run with echo initially
+on, unchanged 2/5 report values, clone script/name fidelity, cleanup before
+execution and double cleanup after a later setting change. A Save command's
+missing-output-directory error occurs after CommandEcho executes; the run fails
+and preserves the initial setting. A stopped While/If mission with a nested Off
+command restores the initial setting. Both cases run with echo initially off and
+on, then the saved valid script reopens/builds/runs successfully.
+
+Native Wayland execution passed with isolated settings and temporary output:
+Qt6ParityValidation/echo-lifecycle-wayland.txt/.png. All 29 Qt suites passed in
+126.18 seconds after rebuilding the user's GmatQt executable; combined log:
+Qt6ParityValidation/check-polyhedron-echo.txt. More extensive completed nested
+branches/loop combinations and malformed argument syntax remain unqualified.
+This closes the observed lifecycle defect without claiming full plugin or
+replacement qualification.

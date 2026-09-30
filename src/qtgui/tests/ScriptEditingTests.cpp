@@ -3,6 +3,9 @@
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
 #include "GmatGlobal.hpp"
+#include "GmatCommand.hpp"
+#include "FileManager.hpp"
+#include <memory>
 #include "BaseException.hpp"
 #include <QApplication>
 #include <QAction>
@@ -85,6 +88,23 @@ int main(int argc,char **argv)
       for (int i=0;i<invalidSnapshot.nodes.size();++i) if (invalidSnapshot.nodes[i].type=="CommandEcho") { index=i; break; }
       require(!window.applyMissionChange(invalidSnapshot,index,MissionEdit::Replace,"CommandEcho Invalid;").isEmpty() && editor->toPlainText()==valid,"Invalid echo edit did not roll back");
       require(window.runMission()==MainWindow::RunResult::Completed && !GmatGlobal::Instance()->EchoCommands(),"Echo failure recovery failed");
+      {
+         auto *command=Moderator::Instance()->GetFirstCommand(); while (command && command->GetTypeName()!="CommandEcho") command=command->GetNext(); require(command,"Echo command missing for clone check");
+         const auto statement=command->GetGeneratingString(Gmat::NO_COMMENTS); std::unique_ptr<GmatCommand> copy(dynamic_cast<GmatCommand *>(command->Clone())); require(copy && copy->GetGeneratingString(Gmat::NO_COMMENTS)==statement,"Echo clone lost configuration/name");
+         GmatGlobal::Instance()->SetCommandEchoMode(true); copy->RunComplete(); require(GmatGlobal::Instance()->EchoCommands(),"Unexecuted echo cleanup changed current setting");
+         require(copy->Initialize() && copy->Execute(),"Cloned echo failed to initialize/execute"); copy->RunComplete(); require(GmatGlobal::Instance()->EchoCommands(),"Cloned echo did not restore initial setting");
+         GmatGlobal::Instance()->SetCommandEchoMode(false); copy->RunComplete(); require(!GmatGlobal::Instance()->EchoCommands(),"Repeated echo cleanup overwrote a later user setting");
+      }
+      for (bool initial : {false,true}) {
+         GmatGlobal::Instance()->SetCommandEchoMode(initial);
+         editor->setPlainText("Create Variable x;\nBeginMissionSequence;\nCommandEcho On;\nx = 2;\nSave x;\n");
+         const auto outputPath=FileManager::Instance()->GetAbsPathname("OUTPUT_PATH"); FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",files.filePath("missing/nested").toStdString());
+         const auto failed=window.runMission(); FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",outputPath); if (failed!=MainWindow::RunResult::Failed || GmatGlobal::Instance()->EchoCommands()!=initial) { app.processEvents(); throw std::runtime_error("Failed execution lifecycle result="+std::to_string(static_cast<int>(failed))+" initial="+std::to_string(initial)+" actual="+std::to_string(GmatGlobal::Instance()->EchoCommands())+"\n"+messages->toPlainText().right(4000).toStdString()); }
+         editor->setPlainText("Create Variable count;\nBeginMissionSequence;\nCommandEcho On;\nWhile count < 1e12;\nIf count == 0;\nCommandEcho Off;\nEndIf;\ncount = count + 1;\nEndWhile;\n"); QTimer::singleShot(80,&window,[&] { window.stopMission(); });
+         require(window.runMission()==MainWindow::RunResult::Stopped && GmatGlobal::Instance()->EchoCommands()==initial,"Stopped nested execution leaked echo setting");
+      }
+      GmatGlobal::Instance()->SetCommandEchoMode(false); require(window.loadScript(saved) && window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Stopped/failed echo reopen recovery failed");
+
       // A failed save must prevent both interpretation and execution.
       require(QDir().rename(directory,directory+" backup"),"Save failure setup failed");
       editor->appendPlainText("% retained pending edit"); const auto pending=editor->toPlainText(),title=window.windowTitle(),previousReport=read(report);
@@ -104,7 +124,7 @@ int main(int argc,char **argv)
       require(read(saved)==good && editor->document()->isModified() && window.statusBar()->currentMessage().contains("Enter a mission"),"Empty script overwrote the saved mission");
       editor->setPlainText(restored); editor->document()->setModified(false);
       if (argc>2) window.grab().save(QString::fromLocal8Bit(argv[2]));
-      std::cout<<"PASS: Save/build and Save/build/run with Cancel, Unicode paths, independent 2/5 outputs and failure recovery; bounded Go to line and Cancel; typed CommandEcho On/Off, pending Apply, labels/comments, exact Undo/Redo/save/reopen, trace boundaries, invalid-edit rollback and RunComplete state restoration.\n";
+      std::cout<<"PASS: Save/build and Save/build/run with Cancel, Unicode paths, independent 2/5 outputs and failure recovery; bounded Go to line and Cancel; typed CommandEcho On/Off, pending Apply, labels/comments, exact Undo/Redo/save/reopen, trace boundaries, invalid-edit rollback, clone configuration and one-time cleanup, completed/failed/stopped nested RunComplete state restoration.\n";
       return 0;
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; }
      catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
