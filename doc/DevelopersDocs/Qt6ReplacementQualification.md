@@ -57,14 +57,14 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
-| `src/gui/function/MatlabFunctionSetupPanel.hpp` | Pending audit |
+| `src/gui/function/MatlabFunctionSetupPanel.hpp` | FunctionPath load/save and browse controls audited. It requires MATLAB function execution outside the selected startup/runtime (PLUGIN_MATLABINTERFACE=OFF); no MATLAB execution qualification is claimed. Supported GMAT function path/editing/creation workflows remain under FunctionSetupPanel. |
 | `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Save As, pending path Apply and execution from the copy covered. New template-based file creation, Cancel, path Apply and reopened execution covered; broader multi-output/function-signature cases remain pending. |
-| `src/gui/solver/SolverVariablesPanel.hpp` | Pending audit |
-| `src/gui/solver/SolverSetupPanel.hpp` | Pending audit |
-| `src/gui/solver/SolverGoalsPanel.hpp` | Pending audit |
+| `src/gui/solver/SolverVariablesPanel.hpp` | Inactive legacy panel audited: no creation call in the wx GUI, fixed 20-row prototype, SaveData only disables Apply. Active variable edits are VaryPanel; Qt solver/variable selectors, capability-dependent bounds and pending values are covered by WorkflowTests and CompatibilityTests. No separate inactive grid is required; broader active Vary cases remain under that row. |
+| `src/gui/solver/SolverSetupPanel.hpp` | Legacy reflection-based settings audited: bool, real, integer and string load/save for writable fields, with no creation call in current GmatMainFrame. Active generic solvers/optimizers use GmatBaseSetupPanel. Qt ResourceEditor provides typed fields, units/options, report paths, clone validation and transactional Apply; selected DC/Yukon workflows are covered by WorkflowTests/CompatibilityTests. Broader selected plugin settings remain under the runtime inventory. |
+| `src/gui/solver/SolverGoalsPanel.hpp` | Inactive legacy panel audited: no creation call, SaveData returns without writing and its grid update is commented after a known crash. Active goals/objectives/constraints are Achieve/Minimize/NonlinearConstraint commands; Qt mappings and remaining execution cases are recorded on those rows. No separate inactive goal grid is required. |
 | `src/gui/solver/DCSetupPanel.hpp` | Six wx fields audited; algorithm/derivative dropdowns and report output picker corrected. Pending Apply, chooser Cancel, Broyden/CentralDifference save/reopen solve and report writing covered. Other algorithm/derivative combinations remain to qualify. |
-| `src/gui/solver/SolverCreatePanel.hpp` | Pending audit |
-| `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
+| `src/gui/solver/SolverCreatePanel.hpp` | Unused skeleton audited: Setup and button logic are commented, Initialize/GetData/SetData are empty, and no GUI caller instantiates it. Active wx solver creation uses ResourceTree factories; Qt New resource uses runtime factories. ResourceRoundTripTests creates/deletes DifferentialCorrector and Yukon with original source and calculation reports unchanged. |
+| `src/gui/solver/SQPSetupPanel.hpp` | Legacy MATLAB fmincon controls audited: TolFun/TolCon/TolX, MaxFunEvals, MaximumIterations, finite-difference limits and progress/report settings. The wx creation menu is Windows/MATLAB-gated; the selected Qt startup comments libFminconOptimizer and this build has PLUGIN_MATLABINTERFACE=OFF. Outside the selected Linux runtime; no execution or Qt MATLAB qualification is claimed. |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities and specialized frames remain to qualify. Orbit Designer/Summary are legacy hidden workflows; see the source audit below. |
@@ -95,7 +95,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
-| `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
+| `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
@@ -103,11 +103,11 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
 | `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
-| `src/gui/output/EventFilePanel.hpp` | Pending audit |
+| `src/gui/output/EventFilePanel.hpp` | Active read-only unwrapped text/Close, output-path resolution, FileWasWritten guard and disabled Help audited. Qt Output uses ReportViewer for generated reports and an explanatory read-only view for unwritten locators. EventLocatorTests covers generated contents, pending source, rebuild, Disabled, WriteReport-off and Manual-without-FindEvents stale-file rejection, Manual FindEvents recovery, close/reopen and unchanged source. Output windows explicitly activate; native Wayland generated/unwritten views inspected. Broader lifecycle/storage/keyboard cases remain pending. |
 | `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Broader search/menu and very large directory cases remain under their separate audits. |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
 | `src/gui/mission/TreeViewOptionDialog.hpp` | Pending audit |
-| `src/gui/view/ViewTextDialog.hpp` | Pending audit |
+| `src/gui/view/ViewTextDialog.hpp` | Read-only multiline/Close and optional single-line OK/Cancel modes audited. Active callers are About license text, folder-run diagnostics and comparison results; editable rename caller is commented. Qt comparison/read-only report text is covered by ComparisonTests; About/license and folder-run delivery remain required under their separate unaudited rows. Shared keyboard/font/menu cases remain pending. |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
 | `src/gui/view/EditorPanel.hpp` | Active save/sync/run, empty-input protection and shared SavePanel actions audited. Qt Mission menu adds Save/build and Save/build/run; ScriptEditingTests covers chooser Cancel, successful save before Build/Run, Unicode paths, independently checked outputs, failed-save/source/identity protection, invalid-script recovery and empty-script protection. Existing FileTests/WorkflowTests cover encoding, Undo/Redo, syntax, Find/Replace, running/close and pending-panel protection. Multiple inactive documents and broader shared editor/menu behavior remain pending. |
@@ -139,7 +139,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Active parameter selection, text/background colors and warning/critical bounds audited. Real/string/array-element references, duplicate/whole-array/nonnumeric/reversed-bound rejection, Cancel, alarm/custom colors and calculation-preserving round trips covered. Broader parameter contexts and unnamed-cell styling remain pending. |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
-| `src/gui/app/InteractiveMatlabDialog.hpp` | Pending audit |
+| `src/gui/app/InteractiveMatlabDialog.hpp` | Uninstantiated legacy interactive dialog audited: sends selected inputs/outputs to CallMatlabFunction, displays results and clears/closes. No current GUI caller creates it. MATLAB is outside the selected Linux runtime; no Qt MATLAB workflow or execution qualification is claimed. |
 | `src/gui/app/SetPathDialog.hpp` | wx startup read/write, ordered GMAT/MATLAB function paths, output/log Apply and directory errors audited. Qt Set paths validates full startup imports as pending state, provides full read-only startup preview and atomic export, and uses exact file-manager/global/log rollback. PathTests covers malformed/invalid-root/wx-only imports, custom alias and Python-list retention, mode/log/source protection, Unicode save/read/Apply, a fresh GmatQt process, independently scripted reports, and run/Stop/pending-panel guards. Optional MATLAB editing, plugin/cached-data hot replacement, portal choosers and broader startup/storage formats remain unqualified. |
 
 ## Selected runtime plugin inventory
@@ -3874,3 +3874,49 @@ gates remain open. No numerical algorithm was changed.
 The rebuilt user's GmatQt passed all 36 suites in 152.07 seconds in one run;
 full output is `check-source-deletion.txt`. The separate native Wayland workflow
 also passed. This checkpoint preserves the larger goal and its open gates.
+
+## Event report lifecycle and remaining source audit
+
+The wx EventFilePanel reads an existing file only after the running locator's
+FileWasWritten flag is true. Qt previously opened any existing path, allowing
+an old event report to appear after a rebuild, disabled/manual run, or pending
+source edit. Qt now checks the current model/run and running locator before
+reading. Unwritten output displays a read-only explanation and the Manual
+FindEvents requirement. Generated output retains ReportViewer paging/search/
+comparison. Report and binary-ephemeris windows explicitly activate, matching
+the existing resource editor behavior; reopening event output after several
+build/run/close operations had otherwise left the Script window active.
+
+EventLocatorTests opens the actual Output rows and checks current generated
+contents, read-only/no-wrap behavior, stale file retention without display for
+rebuilt/edited/Disabled/WriteReport-off/Manual cases, Manual FindEvents recovery, close/reopen
+and unchanged source. Existing GUI parameter/epoch/interval/report execution
+and save/reopen comparisons continue to pass. Native Wayland generated and
+unwritten windows were captured for inspection, alongside the grouped event
+configuration: `event-output-wayland.png.generated.png`,
+`event-output-wayland.png.unwritten.png` and `event-output-wayland.png`.
+The raw native run is `event-output-wayland.txt`.
+
+Ten additional source rows were audited. SolverVariables/Goals/Create are
+unused non-writing prototypes; SolverSetup is an uninstantiated reflection
+panel whose active generic caller is GmatBaseSetupPanel. Their active Qt
+Vary/Achieve/solver factory/settings counterparts already have execution and
+round-trip evidence. SQP, MatlabFunction and InteractiveMatlab are outside the
+selected no-MATLAB runtime (the interactive dialog also has no current caller).
+The active PropagatorSelectDialog maps to the tested configured-propagator
+controls. ViewText's comparison/read-only behavior maps to Qt; its About/license
+and folder-run callers remain explicit delivery gaps on their own rows. This
+separates source audit from implementation and qualification: no missing active
+operation is counted as completed merely because its helper was read.
+
+The inventory now has 10 of 108 Pending audit entries. Audited partial workflows,
+selected plugin/file limits, shared Help/portal/keyboard behavior and top-level
+Wayland minimize/restore remain open. No numerical algorithm was changed; the
+broader replacement objective remains unfinished.
+
+The rebuilt GmatQt passed all 36 suites in 155.72 seconds after the report guard
+and activation changes (`check-event-output.txt`). The final WriteReport-off
+execution case and more accurate explanatory text were then verified by the
+focused event suite in 3.84 seconds (`check-event-output-report-disabled.txt`)
+and the updated native Wayland run/captures. The actual application was rebuilt
+again with that final explanation. The replacement goal remains unfinished.

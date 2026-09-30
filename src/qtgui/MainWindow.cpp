@@ -29,6 +29,7 @@
 #include "CalculatedPoint.hpp"
 #include "EphemerisFile.hpp"
 #include "EventLocatorDialog.hpp"
+#include "EventLocator.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "StartupCompatibility.hpp"
@@ -254,9 +255,28 @@ MainWindow::MainWindow()
          auto *details=new QLabel(QString("Binary ephemeris file\nFormat: %1\nPath: %2\nSize: %3 bytes").arg(format,name).arg(file.size()),viewer); details->setObjectName("ephemerisFileInfo"); details->setWordWrap(true); details->setTextInteractionFlags(Qt::TextSelectableByMouse); layout->addWidget(details);
          auto *folder=new QPushButton("Open folder",viewer); folder->setObjectName("ephemerisOpenFolder"); layout->addWidget(folder); connect(folder,&QPushButton::clicked,viewer,[file] { QDesktopServices::openUrl(QUrl::fromLocalFile(file.absolutePath())); });
          auto *copy=new QPushButton("Copy path",viewer); copy->setObjectName("ephemerisCopyPath"); layout->addWidget(copy); connect(copy,&QPushButton::clicked,viewer,[name] { QApplication::clipboard()->setText(name); }); layout->addStretch();
-         auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose); child->setWindowTitle(item->text(0)+" — "+format); child->resize(650,250); child->show();
+         auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose); child->setWindowTitle(item->text(0)+" — "+format); child->resize(650,250); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
       } else if (type=="report" || type=="ephemeris") {
          if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
+         if (dynamic_cast<EventLocator *>(Moderator::Instance()->GetConfiguredObject(item->text(0).toStdString()))) {
+            bool written=false;
+            if (modelValid && summaryAvailable && editor->toPlainText()==builtScript) {
+               try { if (auto *locator=dynamic_cast<EventLocator *>(Moderator::Instance()->GetInternalObject(item->text(0).toStdString()))) written=locator->FileWasWritten(); }
+               catch (BaseException &) { } // Initialization may fail before a running locator exists.
+            }
+            if (!written) {
+               // An older file may exist even though this build/run has not
+               // located events. Match wx's FileWasWritten guard before I/O.
+               auto *viewer=new QPlainTextEdit;
+               viewer->setObjectName("report:"+item->text(0)); viewer->setReadOnly(true);
+               viewer->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+               viewer->setLineWrapMode(QPlainTextEdit::NoWrap);
+               viewer->setPlainText("No event report was written for the current mission.\n\nEnable WriteReport and run the mission with the locator enabled.\nIn Manual mode, include FindEvents, then reopen this report.");
+               viewer->setToolTip(name);
+               auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose);
+               child->setWindowTitle(item->text(0)+" — "+name); child->resize(750,500); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus(); return;
+            }
+         }
          QFile file(name);
          if (!file.open(QIODevice::ReadOnly)) { statusBar()->showMessage("Report is not available: " + file.errorString()); return; }
          auto *viewer = new ReportViewer(name,item->text(0),nullptr,[this,name] { showFileComparison(name); });
@@ -264,7 +284,7 @@ MainWindow::MainWindow()
          child->setAttribute(Qt::WA_DeleteOnClose);
          child->setWindowTitle(item->text(0) + " — " + name);
          viewer->setToolTip(name);
-         child->resize(750,500); child->show();
+         child->resize(750,500); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
       } else if (!name.isEmpty()) plots->show(name);
    });
    navigation->setWidget(tabs);

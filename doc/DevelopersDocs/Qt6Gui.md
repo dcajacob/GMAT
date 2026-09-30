@@ -1555,3 +1555,11 @@ Primary and point-mass choices exclude bodies in the other pending gravity list;
 typed overlapping lists are rejected on Apply. Clearing shadows explicitly
 removes the implicit Earth shadow, including after save/reopen and execution.
 Body-list-only edits retain the surrounding script and implicit defaults.
+
+
+Event reports opened through Output are checked against the current mission's
+running locator. An old file is not shown as current output after a rebuild,
+unbuilt script edit, disabled locator, WriteReport-off run or Manual run without
+FindEvents. The read-only explanation identifies WriteReport and FindEvents;
+a generated report opens with the normal paging/search/comparison controls.
+Report and binary-ephemeris windows activate when opened.

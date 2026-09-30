@@ -424,3 +424,49 @@ gates remain open. No numerical algorithm was changed.
 The rebuilt user's GmatQt passed all 36 suites in 152.07 seconds in one run;
 full output is `check-source-deletion.txt`. The separate native Wayland workflow
 also passed. This checkpoint preserves the larger goal and its open gates.
+
+## Event report lifecycle and remaining source audit
+
+The wx EventFilePanel reads an existing file only after the running locator's
+FileWasWritten flag is true. Qt previously opened any existing path, allowing
+an old event report to appear after a rebuild, disabled/manual run, or pending
+source edit. Qt now checks the current model/run and running locator before
+reading. Unwritten output displays a read-only explanation and the Manual
+FindEvents requirement. Generated output retains ReportViewer paging/search/
+comparison. Report and binary-ephemeris windows explicitly activate, matching
+the existing resource editor behavior; reopening event output after several
+build/run/close operations had otherwise left the Script window active.
+
+EventLocatorTests opens the actual Output rows and checks current generated
+contents, read-only/no-wrap behavior, stale file retention without display for
+rebuilt/edited/Disabled/WriteReport-off/Manual cases, Manual FindEvents recovery, close/reopen
+and unchanged source. Existing GUI parameter/epoch/interval/report execution
+and save/reopen comparisons continue to pass. Native Wayland generated and
+unwritten windows were captured for inspection, alongside the grouped event
+configuration: `event-output-wayland.png.generated.png`,
+`event-output-wayland.png.unwritten.png` and `event-output-wayland.png`.
+The raw native run is `event-output-wayland.txt`.
+
+Ten additional source rows were audited. SolverVariables/Goals/Create are
+unused non-writing prototypes; SolverSetup is an uninstantiated reflection
+panel whose active generic caller is GmatBaseSetupPanel. Their active Qt
+Vary/Achieve/solver factory/settings counterparts already have execution and
+round-trip evidence. SQP, MatlabFunction and InteractiveMatlab are outside the
+selected no-MATLAB runtime (the interactive dialog also has no current caller).
+The active PropagatorSelectDialog maps to the tested configured-propagator
+controls. ViewText's comparison/read-only behavior maps to Qt; its About/license
+and folder-run callers remain explicit delivery gaps on their own rows. This
+separates source audit from implementation and qualification: no missing active
+operation is counted as completed merely because its helper was read.
+
+The inventory now has 10 of 108 Pending audit entries. Audited partial workflows,
+selected plugin/file limits, shared Help/portal/keyboard behavior and top-level
+Wayland minimize/restore remain open. No numerical algorithm was changed; the
+broader replacement objective remains unfinished.
+
+The rebuilt GmatQt passed all 36 suites in 155.72 seconds after the report guard
+and activation changes (`check-event-output.txt`). The final WriteReport-off
+execution case and more accurate explanatory text were then verified by the
+focused event suite in 3.84 seconds (`check-event-output-report-disabled.txt`)
+and the updated native Wayland run/captures. The actual application was rebuilt
+again with that final explanation. The replacement goal remains unfinished.

@@ -6,6 +6,11 @@
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "TestSettings.hpp"
+#include "ReportViewer.hpp"
+#include <QTreeWidget>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include <QStatusBar>
 #include <QApplication>
 #include <QCheckBox>
 #include <QComboBox>
@@ -66,8 +71,19 @@ int main(int argc,char **argv)
       const QString interval="Events.UseEntireInterval = false;\nEvents.InputEpochFormat = UTCGregorian;\nEvents.InitialEpoch = '01 Jan 2015 19:00:00.000';\nEvents.FinalEpoch = '02 Jan 2015 00:00:00.000';\nEvents.StepSize = 30;\n";
       auto runScript=[&](QString source,const QString &path) { editor->setPlainText(source); require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Event script reference execution failed"); return read(path); };
       auto direct=[&](const QString &base,const QString &assignments,const QString &path) { auto source=base; source.insert(source.indexOf("BeginMissionSequence"),assignments); return runScript(source,path); };
+      auto openOutput=[&](bool written,const QString &captureSuffix=QString()) {
+         const auto source=editor->toPlainText(); auto *tree=window.findChild<QTreeWidget *>("Output"); const auto items=tree->findItems("Events",Qt::MatchExactly|Qt::MatchRecursive); require(items.size()==1,"Event report missing from Output"); tree->itemDoubleClicked(items.first(),0); QApplication::processEvents();
+         auto *area=window.findChild<QMdiArea *>("workspace"); auto *child=area->activeSubWindow(); require(child,"Event output viewer did not open"); auto *viewer=qobject_cast<QPlainTextEdit *>(child->widget()); if (!viewer) viewer=child->findChild<QPlainTextEdit *>("report:Events"); require(viewer && viewer->isReadOnly() && viewer->lineWrapMode()==QPlainTextEdit::NoWrap,qPrintable(QString("Event report is not read-only/unwrapped (written=%1, title=%2, widget=%3, name=%4, status=%5)").arg(written).arg(child->windowTitle(),child->widget()->metaObject()->className(),child->widget()->objectName(),window.statusBar()->currentMessage())));
+         if (written) require(dynamic_cast<ReportViewer *>(child->widget()) && viewer->toPlainText()==read(contact),"Generated event report did not display current complete contents"); else require(viewer->toPlainText().contains("No event report was written") && viewer->toPlainText().contains("FindEvents") && !viewer->toPlainText().contains("Number of events"),"Unwritten event locator displayed a stale report");
+         if (!capture.isEmpty() && !captureSuffix.isEmpty()) require(child->grab().save(capture+captureSuffix+".png"),"Event output capture failed"); child->close(); QApplication::processEvents(); require(editor->toPlainText()==source,"Event output inspection changed script");
+      };
       const auto expected=direct(contactBase,interval,contact); require(expected.contains("Number of events : 2"),"Selected contact interval reference is not two events");
-      editor->setPlainText(contactBase); require(window.buildScript(),"Contact GUI fixture failed");
+      openOutput(true,".generated"); editor->setPlainText(editor->toPlainText()+"% pending source comment\n"); openOutput(false); editor->setPlainText(contactBase); require(window.buildScript(),"Contact GUI fixture failed"); openOutput(false,".unwritten");
+      auto disabled=contactBase; disabled.insert(disabled.indexOf("BeginMissionSequence"),"Events.RunMode = Disabled;\n"); editor->setPlainText(disabled); require(window.runMission()==MainWindow::RunResult::Completed && read(contact)==expected,"Disabled locator unexpectedly changed the prior report"); openOutput(false);
+      auto noReport=contactBase; noReport.insert(noReport.indexOf("BeginMissionSequence"),"Events.WriteReport = false;\n"); editor->setPlainText(noReport); require(window.runMission()==MainWindow::RunResult::Completed && read(contact)==expected,"WriteReport-off locator changed the prior report"); openOutput(false);
+      auto manual=contactBase; manual.insert(manual.indexOf("BeginMissionSequence"),"Events.RunMode = Manual;\n"); editor->setPlainText(manual); require(window.runMission()==MainWindow::RunResult::Completed && read(contact)==expected,"Manual locator without FindEvents unexpectedly wrote a report"); openOutput(false);
+      require(window.applyMissionChange(window.missionSnapshot(),0,MissionEdit::Append,"FindEvents Events {Append = false}; % manual report recovery").isEmpty() && window.runMission()==MainWindow::RunResult::Completed,"Manual FindEvents did not recover event output"); openOutput(true);
+      editor->setPlainText(contactBase); require(window.buildScript(),"Contact GUI fixture restore failed");
       auto edit=[&](const std::function<void(QDialog &)> &action,bool accepted=true) {
          const auto source=editor->toPlainText(); QString applyError="Apply not invoked"; QWidget owner; auto *object=Moderator::Instance()->GetConfiguredObject("Events"); const auto priorStep=object->GetRealParameter("StepSize"); const auto priorEntire=object->GetBooleanParameter("UseEntireInterval");
          ResourceEditor panel(*object,[&](const auto &values) { applyError=window.applyResourceChanges("Events",values,source); return applyError; },&owner,source); std::exception_ptr failure; bool opened=false; QString pendingStep;
@@ -101,7 +117,7 @@ int main(int argc,char **argv)
       const auto applied=editor->toPlainText(); require(applied.mid(applied.indexOf("BeginMissionSequence;"))==mission,"Event Apply rewrote mission comments");
       editor->undo(); require(editor->toPlainText()==original && window.buildScript(),"Event Undo not atomic"); editor->redo(); require(editor->toPlainText()==applied && window.buildScript(),"Event Redo failed");
       auto roundTrip=[&] { const auto source=editor->toPlainText(); require(window.saveScriptTo(saved) && read(saved)==source && window.loadScript(saved) && window.buildScript() && editor->toPlainText()==source,"Event save/reopen changed source"); };
-      roundTrip(); require(window.runMission()==MainWindow::RunResult::Completed,"GUI contact locator execution failed"); compareContacts(read(contact),expected);
+      roundTrip(); require(window.runMission()==MainWindow::RunResult::Completed,"GUI contact locator execution failed"); compareContacts(read(contact),expected); openOutput(true);
       {
          const auto before=editor->toPlainText(); EventLocatorDialog pending(*Moderator::Instance()->GetConfiguredObject("Events"),{{"InputEpochFormat","TAIModJulian"}});
          require(pending.findChild<QLineEdit *>("event_InitialEpoch")->text().toDouble()>27000 && pending.findChild<QLineEdit *>("event_FinalEpoch")->text().toDouble()>27000,"Pending format-only edit left epochs in old representation"); require(editor->toPlainText()==before,"Pending format preview changed script");
@@ -137,7 +153,7 @@ int main(int argc,char **argv)
          select(dialog,"Sensors",{"Sensor1"}); select(dialog,"IntrudingBodies",{"Mercury"}); auto *phase=dialog.findChild<QLineEdit *>("event_MinimumPhase"); phase->setText("1.1"); close(dialog); require(dialog.isVisible(),"Invalid intrusion phase accepted"); phase->setText("0");
          auto *coordinates=dialog.findChild<QComboBox *>("event_ReportCoordinates"); auto *grid=dialog.findChild<QLineEdit *>("event_SpiceGridFrameFile"); require(!grid->isEnabled(),"Sensor-frame mode enabled grid file"); coordinates->setCurrentText("FixedGrid"); require(grid->isEnabled() && dialog.findChild<QPushButton *>("eventBrowse_SpiceGridFrameFile")->isEnabled(),"Fixed-grid controls not enabled"); grid->setText(files.filePath("missing grid.tf")); close(dialog); require(dialog.isVisible(),"Missing fixed-grid file accepted"); coordinates->setCurrentText("SensorFrame"); grid->clear(); dialog.findChild<QLineEdit *>("event_StepSize")->setText("120");
       }); roundTrip(); require(window.runMission()==MainWindow::RunResult::Completed,"GUI-configured shipped Mercury intrusion failed"); compareReport(read(intrusion),intrusionReference);
-      std::cout<<"PASS: event-locator typed controls, paired epochs and rollback, light-time/report dependencies, pending Apply/Cancel/Undo/Redo, file picker, compact layout, save/reopen, bounded contacts, Transmit/Receive corrections, detailed reports, failed-output recovery, eclipse intervals and shipped Mercury intrusion\n";
+      std::cout<<"PASS: event-locator typed controls, paired epochs and rollback, light-time/report dependencies, pending Apply/Cancel/Undo/Redo, file picker, compact layout, save/reopen, bounded contacts, Transmit/Receive corrections, detailed reports, failed-output recovery, generated Output viewer and rebuilt/edited/Disabled/WriteReport-off/Manual stale-report guards, eclipse intervals and shipped Mercury intrusion\n";
       return 0;
    } catch (BaseException &failure) { std::cerr<<"Event check failed: "<<failure.GetFullMessage()<<'\n'; return 1; }
    catch (const std::exception &failure) { std::cerr<<"Event check failed: "<<failure.what()<<'\n'; return 1; }
