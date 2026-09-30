@@ -1301,3 +1301,37 @@ text, Cancel preserves it, and Apply validates the complete mission. Labels and
 comments, Undo/Redo and script save/reopen retain the normal command-editor
 behavior. A missing file or malformed input produces an error; repairing the
 input allows another run without reopening the script.
+
+
+### Tracking data, simulation and batch estimation
+
+Resources now includes Measurement Models, Error Models, Interfaces, Calculated
+Points, Celestial Bodies, Data Filters and Fields of View. Supported resource
+types also appear in the creation dialog. Open a TrackingFileSet and choose
+**Tracking configurations…** to edit its ordered signal paths and measurement
+types. Add/remove rows and use Up/Down to reorder them. **Signal path…** selects
+spacecraft/stations and their attached hardware; repeat a participant for a
+return path and drag entries to reorder the path. **Types…** selects one or more
+measurement types. Both table columns have adjustable widths.
+
+OK keeps tracking changes pending until the resource's Apply; Cancel preserves
+the earlier definitions. FileName and RampTable use ordered file pickers. FileName
+can select a future simulation output, which is not written until execution;
+the estimator reads the same selected file. RampTable selects existing inputs.
+
+Simulator AddData and estimator Measurements provide tracking-set checklists.
+Their Propagator selector edits the default propagator and retains explicit
+spacecraft mappings configured in the script. Spacecraft SolveFors and
+ground-station ErrorModels/AddHardware are editable lists; clearing a station
+list omits its assignment so the saved script retains the empty default.
+ErrorModel Type provides measurement choices, and noise/bias units follow the
+selected type. Noise and bias values use those units.
+
+Use the RunSimulator and RunEstimator mission templates and typed command
+selectors. Apply validates the complete script, retains command labels/comments
+and supports Undo/Redo and save/reopen. An unset optional antenna field of view
+stays unset during script reconstruction; explicitly configured references are
+retained. Antenna FOV pickers support selecting, replacing and clearing an
+optional reference. A bounded, noise-free range-skin simulation/batch workflow
+is covered; broader measurement types, filters, multiple propagator mappings
+and paired simulator epoch conversion remain on the replacement checklist.

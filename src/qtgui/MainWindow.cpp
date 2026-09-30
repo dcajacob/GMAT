@@ -1,5 +1,6 @@
 #include "ReportViewer.hpp"
 #include "MainWindow.hpp"
+#include "TrackingConfigDialog.hpp"
 #include "QtMessageReceiver.hpp"
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
@@ -71,11 +72,26 @@
 #include <set>
 
 namespace {
+QString omitUnsetHardwareFovs(QString script,GmatBase *replacement=nullptr)
+{
+   // Imager's empty optional FOV is serialized as a diagnostic placeholder.
+   // Reinterpreting that output would turn an unset reference into a missing
+   // object error, including for antennas that do not use a field of view.
+   for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::HARDWARE)) {
+      auto *object=Moderator::Instance()->GetConfiguredObject(name);
+      if (replacement && replacement->GetName()==name) object=replacement;
+      if (!object || !object->IsOfType("Imager") || !object->GetRefObjectName(Gmat::FIELD_OF_VIEW).empty()) continue;
+      const auto key=QString::fromStdString(name)+".FieldOfView";
+      script.remove(QRegularExpression("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+"[ \\t]*=[ \\t]*'?UndefinedFieldOfView'?[ \\t]*;",QRegularExpression::MultilineOption));
+   }
+   return script;
+}
 QStringList creatableResourceTypes()
 {
    QStringList result;
    for (const auto category : {Gmat::SPACECRAFT,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
-         Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER,Gmat::FUNCTION,Gmat::EVENT_LOCATOR})
+         Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER,Gmat::FUNCTION,Gmat::EVENT_LOCATOR,
+         Gmat::CALCULATED_POINT,Gmat::MEASUREMENT_MODEL,Gmat::ERROR_MODEL,Gmat::INTERFACE,Gmat::DATA_FILTER,Gmat::FIELD_OF_VIEW})
       for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
          result.append(QString::fromStdString(type));
    result.append({"Variable","String","Array"});
@@ -580,7 +596,10 @@ void MainWindow::refreshTrees()
       {"Force Models", Gmat::ODE_MODEL},
       {"Coordinate Systems", Gmat::COORDINATE_SYSTEM}, {"Solvers", Gmat::SOLVER},
       {"Output", Gmat::SUBSCRIBER}, {"Variables, Arrays, Strings", Gmat::PARAMETER},
-      {"Functions", Gmat::FUNCTION}, {"Event Locators",Gmat::EVENT_LOCATOR}};
+      {"Functions", Gmat::FUNCTION}, {"Event Locators",Gmat::EVENT_LOCATOR},
+      {"Calculated Points",Gmat::CALCULATED_POINT}, {"Celestial Bodies",Gmat::CELESTIAL_BODY},
+      {"Measurement Models",Gmat::MEASUREMENT_MODEL}, {"Error Models",Gmat::ERROR_MODEL},
+      {"Interfaces",Gmat::INTERFACE}, {"Data Filters",Gmat::DATA_FILTER}, {"Fields of View",Gmat::FIELD_OF_VIEW}};
    for (const auto &group : groups) {
       auto *category = new QTreeWidgetItem(root, {group.first});
       for (const auto &name : Moderator::Instance()->GetListOfObjects(group.second)) {
@@ -618,7 +637,7 @@ void MainWindow::refreshTrees()
    if (modelValid) {
       try {
          missionState = snapshotMission(Moderator::Instance()->GetFirstCommand(),
-            QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING)), builtScript);
+            omitUnsetHardwareFovs(QString::fromStdString(Moderator::Instance()->GetScript(Gmat::SCRIPTING))), builtScript);
          std::function<void(int,QTreeWidgetItem *)> addNode = [&](int index, QTreeWidgetItem *parent) {
             const auto &node = missionState.nodes[index];
             auto *item = new QTreeWidgetItem(parent, {node.label});
@@ -761,6 +780,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    if (builtInPoint) for (auto it=changes.cbegin();it!=changes.cend();++it)
       if (it.key()!="OrbitColor" && it.key()!="TargetColor") return "Only orbit and target colors can be changed on this built-in calculated point.";
    if (changes.contains("@DynamicData") && !object->IsOfType("DynamicDataDisplay")) return "Grid settings require a dynamic data display.";
+   if (changes.contains("@TrackingConfigs") && !object->IsOfType("TrackingFileSet")) return "Tracking configurations require a TrackingFileSet.";
    if (changes.contains("@ArrayExpressions") && !object->IsOfType("Array")) return "Cell expressions require an Array.";
    if (changes.contains("@ArrayExpressions") && changes.size()==1) {
       try {
@@ -784,7 +804,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto burnChanges=applyBurnProperties(*proposed,changes);
       const auto ephemerisChanges=applyEphemerisProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -825,13 +845,36 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = serialize(*object);
       auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : proposed->IsOfType("OrbitView") ? orbitViewScript(*proposed) : (proposed->IsOfType("ImpulsiveBurn") || proposed->IsOfType("FiniteBurn")) ? burnResourceScript(*proposed) : serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+      if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
+      if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
+         // Imager's getter can still read the clone's old FOV pointer after
+         // its string setter changes the reference name. Serialize the pending
+         // reference explicitly; the interpreter resolves it on rebuild.
+         const auto key=name+".FieldOfView";
+         newBlock.remove(QRegularExpression("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+"[ \\t]*=[^;\\n]*;",QRegularExpression::MultilineOption));
+         const auto value=changes.value("FieldOfView").trimmed();
+         if (!value.isEmpty()) newBlock+="\nGMAT "+key+" = "+value+";\n";
+      }
+      if (changes.contains("Propagator") && (object->IsOfType("Simulator") || object->IsOfType("Estimator"))) {
+         // These setters replace the first propagator name without removing
+         // its spacecraft map. The serializer then omits that map because it
+         // iterates only the new name list. Retain every original explicit
+         // mapping; the newly serialized scalar assignment sets the default.
+         const QRegularExpression mapping("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(name+".Propagator")+"[ \\t]*=[ \\t]*\\{[^;\\n]*\\}[ \\t]*;[^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption);
+         QString originalMappings;
+         auto matches=mapping.globalMatch(oldBlock);
+         while (matches.hasNext()) { const auto line=matches.next().captured(); originalMappings+=line; if (!line.endsWith('\n')) originalMappings+='\n'; }
+         newBlock.remove(mapping);
+         if (!newBlock.endsWith('\n')) newBlock+='\n';
+         newBlock+=originalMappings;
+      }
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
       // Unrelated resource edits also reconstruct the mission. Avoid repeated
       // representation drift or omitted anomaly elements in other spacecraft.
-      candidate=preserveSpacecraftOrbits(candidate,object);
+      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(candidate,proposed.get()),object);
       // Resource edits must not normalize/rewrite the existing mission commands,
       // including cell formulas, labels and user comments.
       const QRegularExpression missionStart("^[ \t]*BeginMissionSequence\\b",QRegularExpression::MultilineOption);
@@ -939,7 +982,7 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
          return "Built-in resources and generated parameters cannot be deleted here.";
       if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
          return "This resource is used by another resource or mission command. See Message Window for details.";
-      candidate=preserveSpacecraftOrbits(QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING)));
+      candidate=preserveSpacecraftOrbits(omitUnsetHardwareFovs(QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING))));
    } catch (BaseException &error) {
       const auto detail=QString::fromStdString(error.GetFullMessage());
       return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
@@ -1048,6 +1091,8 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
    if (availableEngineTypes().contains("Set")) templates.insert("Set (file import)",QString("Set %1 %2;").arg(sat,firstType(Gmat::INTERFACE,"DataInterface","FileInterfaceName")));
+   if (availableEngineTypes().contains("RunSimulator")) templates.insert("RunSimulator",QString("RunSimulator %1;").arg(firstType(Gmat::SOLVER,"Simulator","SimulatorName")));
+   if (availableEngineTypes().contains("RunEstimator")) templates.insert("RunEstimator",QString("RunEstimator %1;").arg(firstType(Gmat::SOLVER,"Estimator","EstimatorName")));
    QStringList propagationChoices,spacecraftChoices,formationChoices;
    for (const auto &value:propagators) propagationChoices.append(QString::fromStdString(value));
    for (const auto &value:spacecraft) spacecraftChoices.append(QString::fromStdString(value));

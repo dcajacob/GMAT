@@ -74,6 +74,8 @@ void CommandForm::setStatement(const QString &statement)
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
       {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
       {"File import","Set\\s+"+label+name+"\\s+"+name+"([ \\t]*(?:\\(\\s*Data\\s*=\\s*\\{[^{}();%\\n]*\\}\\s*\\))?)"+end,{"Target","Data source","Data"}},
+      {"Measurement simulation","RunSimulator\\s+"+label+name+end,{"Simulator"}},
+      {"Orbit estimation","RunEstimator\\s+"+label+name+end,{"Estimator"}},
       {"Event search","FindEvents\\s+"+label+name+"(?:\\s*\\{([^{};]*)\\})?"+end,{"Locator"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
@@ -97,6 +99,8 @@ void CommandForm::setStatement(const QString &statement)
       else if (title()=="Dynamic update" && name=="Display") resourceType="DynamicDataDisplay";
       else if (title()=="File import" && name=="Target") resourceType="Spacecraft";
       else if (title()=="File import" && name=="Data source") resourceType="DataInterface";
+      else if (name=="Simulator") resourceType="Simulator";
+      else if (name=="Estimator") resourceType="Estimator";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";

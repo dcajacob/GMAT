@@ -1,4 +1,5 @@
 #include "ResourceEditor.hpp"
+#include "TrackingConfigDialog.hpp"
 #include "FunctionFileDialog.hpp"
 #include "BallisticsMassDialog.hpp"
 #include "VisualModelDialog.hpp"
@@ -158,6 +159,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (name=="WarnColor" || name=="CritColor") pending.insert(name,table->item(row,1)->text()); }
          DynamicDataDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; const auto values=dialog.settings(); pendingDynamicData=values.value("@DynamicData");
          for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (values.contains(name)) table->item(row,1)->setText(values.value(name)); }
+      });
+   }
+   if (object.IsOfType("TrackingFileSet")) {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto *setup=new QPushButton("Tracking configurations…",this); setup->setObjectName("editTrackingConfigs"); layout->addWidget(setup);
+      connect(setup,&QPushButton::clicked,this,[this,initial] {
+         try { TrackingConfigDialog dialog(*initial,pendingTrackingConfigs,this); if (dialog.exec()==QDialog::Accepted) pendingTrackingConfigs=dialog.settings(); }
+         catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
+         catch (const std::exception &failure) { status->setText(QString::fromUtf8(failure.what())); }
       });
    }
    if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
@@ -417,7 +427,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          auto *value=new QTableWidgetItem(field.value);
          if (field.fileList) {
             value->setFlags(value->flags() & ~Qt::ItemIsEditable);
-            value->setToolTip("Ordered kernel file paths. Browse to add, remove or reorder files; Apply replaces the complete list.");
+            value->setToolTip("Ordered file paths. Browse to add, remove or reorder files; Apply replaces the complete list.");
          } else if (field.list) value->setToolTip("Comma-separated resource or parameter names. Apply replaces the complete list.");
          if (field.rows>0 && field.columns>0) {
             value->setFlags(value->flags() & ~Qt::ItemIsEditable);
@@ -465,7 +475,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                } else if (field.fileList) {
                   QDialog dialog(this); dialog.setObjectName("kernelFileDialog"); dialog.setWindowTitle(field.name); dialog.resize(650,360);
                   auto *layout=new QVBoxLayout(&dialog);
-                  layout->addWidget(new QLabel("Add kernel files. Drag rows to change their order.",&dialog));
+                  layout->addWidget(new QLabel("Add files. Drag rows to change their order.",&dialog));
                   auto *list=new QListWidget(&dialog); list->setObjectName("kernelFileList");
                   list->addItems(value->text().split('\n',Qt::SkipEmptyParts)); list->setSelectionMode(QAbstractItemView::ExtendedSelection);
                   list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
@@ -473,7 +483,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   auto *add=new QPushButton("Add files…",&dialog); add->setObjectName("kernelFileAdd"); actions->addWidget(add);
                   auto *remove=new QPushButton("Remove selected",&dialog); remove->setObjectName("kernelFileRemove"); actions->addWidget(remove); actions->addStretch();
                   connect(add,&QPushButton::clicked,&dialog,[&] {
-                     QFileDialog picker(&dialog,"Select kernel files"); picker.setObjectName("kernelFilePicker"); picker.setFileMode(QFileDialog::ExistingFiles);
+                     QFileDialog picker(&dialog,"Select files"); picker.setObjectName("kernelFilePicker"); picker.setFileMode(field.fileOutput ? QFileDialog::AnyFile : QFileDialog::ExistingFiles);
+                     if (field.fileOutput) { picker.setAcceptMode(QFileDialog::AcceptSave); picker.setOption(QFileDialog::DontConfirmOverwrite,true); }
                      if (picker.exec()!=QDialog::Accepted) return;
                      for (const auto &path:picker.selectedFiles()) if (list->findItems(path,Qt::MatchExactly).isEmpty()) list->addItem(path);
                   });
@@ -550,6 +561,16 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
+   }
+   if (object.IsOfType("ErrorModel")) {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone()); QComboBox *type=nullptr;
+      for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Type") type=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+      if (type) connect(type,&QComboBox::currentTextChanged,this,[this,initial](const QString &selected) {
+         try {
+            std::unique_ptr<GmatBase> copy(initial->Clone()); copy->SetStringParameter("Type",selected.toStdString()); const auto unit=QString::fromStdString(copy->GetParameterUnit(copy->GetParameterID("Bias")));
+            for (int row=0;row<table->rowCount();++row) if (QStringList{"NoiseSigma","Bias","BiasSigma","PassBiases"}.contains(table->item(row,0)->text())) table->item(row,2)->setText(unit);
+         } catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
+      });
    }
    if (object.IsOfType("EventLocator")) {
       auto *button=new QPushButton("Event locator…",this); button->setObjectName("editEventLocator"); layout->addWidget(button);
@@ -1068,6 +1089,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes=attitudeEdits;
       if (!pendingDynamicData.isEmpty()) changes.insert("@DynamicData",pendingDynamicData);
+      if (!pendingTrackingConfigs.isEmpty()) changes.insert("@TrackingConfigs",pendingTrackingConfigs);
       for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=stationEdits.cbegin();it!=stationEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=eventEdits.cbegin();it!=eventEdits.cend();++it) changes.insert(it.key(),it.value());
@@ -1116,7 +1138,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
-   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty()) return true;
+   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));

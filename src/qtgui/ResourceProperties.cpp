@@ -1,4 +1,5 @@
 #include "ResourceProperties.hpp"
+#include "TrackingConfigDialog.hpp"
 #include "ReportParameterDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
@@ -73,6 +74,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          field.name = QString::fromStdString(object.GetParameterText(id));
          if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
          field.unit = QString::fromStdString(object.GetParameterUnit(id));
+         if (object.IsOfType("ErrorModel") && field.name=="NoiseSigma") field.unit=QString::fromStdString(object.GetParameterUnit(object.GetParameterID("Bias")));
          if (object.IsOfType(Gmat::AXIS_SYSTEM) && field.name=="Epoch") field.unit="A1ModJulian";
          switch (object.GetParameterType(id)) {
          case Gmat::RVECTOR_TYPE: {
@@ -124,9 +126,16 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          case Gmat::COLOR_TYPE: field.color=true; [[fallthrough]];
          case Gmat::STRING_TYPE:
          case Gmat::FILENAME_TYPE:
-         case Gmat::OBJECT_TYPE: field.value = QString::fromStdString(object.GetStringParameter(id)); break;
+         case Gmat::OBJECT_TYPE:
+            field.value = QString::fromStdString(object.IsOfType("Imager") && field.name=="FieldOfView" ? object.GetRefObjectName(Gmat::FIELD_OF_VIEW) : object.GetStringParameter(id));
+            break;
          case Gmat::STRINGARRAY_TYPE:
          case Gmat::OBJECTARRAY_TYPE:
+            if ((object.IsOfType("Simulator") || object.IsOfType("Estimator")) && field.name=="Propagator") {
+               if (object.IsOfType("Estimator")) { const auto names=object.GetStringArrayParameter(id); field.value=names.empty() ? QString() : QString::fromStdString(names.front()); }
+               else field.value=QString::fromStdString(object.GetStringParameter(id));
+               break;
+            }
             if (!isResourceList(object, field.name)) continue;
             for (const auto &entry : object.GetStringArrayParameter(id)) field.choices.append(QString::fromStdString(entry));
             field.fileList=isResourceFileList(object,field.name);
@@ -139,11 +148,13 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          if (field.filename) {
             const auto type=object.GetTypeName();
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
+               (object.IsOfType("TrackingFileSet") && field.name=="FileName") ||
                (object.IsOfType("Solver") && field.name=="ReportFile") ||
                (object.IsOfType("Estimator") && (field.name=="MatlabFile" || field.name=="DataFile"));
             field.fileInput=atmosphereFile || object.IsOfType("GroundStation") || object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
                type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
+            if (object.IsOfType("TrackingFileSet") && field.name=="RampTable") field.fileInput=true;
          }
          if (object.GetParameterType(id)==Gmat::OBJECT_TYPE || object.GetParameterType(id)==Gmat::OBJECTARRAY_TYPE) {
             try {
@@ -205,6 +216,26 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.references.clear();
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
             field.references.sort();
+         }
+         if (object.IsOfType("ErrorModel")) {
+            if (field.name=="Type") field.choices=trackingMeasurementTypes();
+            if (field.name=="SolveFors") field.references={"Bias","PassBiases"};
+         }
+         if (object.IsOfType("Imager") && field.name=="FieldOfView") {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::FIELD_OF_VIEW)) field.references.append(QString::fromStdString(name));
+         }
+         if (object.IsOfType("GroundStation") && (field.name=="ErrorModels" || field.name=="AddHardware")) {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(field.name=="ErrorModels" ? Gmat::ERROR_MODEL : Gmat::HARDWARE)) field.references.append(QString::fromStdString(name));
+         }
+         if (object.IsOfType("Spacecraft") && field.name=="SolveFors") field.references={"CartesianState","KeplerianState","Cd","Cr","SPADDragScaleFactor","SPADSRPScaleFactor","AtmosDensityScaleFactor"};
+         if ((object.IsOfType("Simulator") && field.name=="AddData") || (object.IsOfType("Estimator") && field.name=="Measurements")) {
+            field.references.clear();
+            for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::MEASUREMENT_MODEL)) {
+               auto *measurement=Moderator::Instance()->GetConfiguredObject(name);
+               if (measurement && measurement->IsOfType("TrackingFileSet")) field.references.append(QString::fromStdString(name));
+            }
          }
          if (object.IsOfType("DragForce")) {
             if (field.name=="HistoricWeatherSource") field.choices={"ConstantFluxAndGeoMag","CSSISpaceWeatherFile"};
@@ -301,8 +332,9 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
 
 bool isResourceFileList(GmatBase &object,const QString &name)
 {
-   return object.IsOfType("Spacecraft") && (name=="OrbitSpiceKernelName" || name=="AttitudeSpiceKernelName" ||
-      name=="SCClockSpiceKernelName" || name=="FrameSpiceKernelName");
+   return (object.IsOfType("Spacecraft") && (name=="OrbitSpiceKernelName" || name=="AttitudeSpiceKernelName" ||
+      name=="SCClockSpiceKernelName" || name=="FrameSpiceKernelName")) ||
+      (object.IsOfType("TrackingFileSet") && (name=="FileName" || name=="RampTable"));
 }
 
 bool isResourceList(GmatBase &object, const QString &name)
@@ -324,6 +356,10 @@ bool isResourceList(GmatBase &object, const QString &name)
    if (auto *point=dynamic_cast<CalculatedPoint *>(&object)) if (name=="BodyNames" && point->IsBuiltIn()) return false;
    const bool supported=isResourceFileList(object,name) || (name=="Add" && (type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot" || type=="ReportFile" || type=="Formation")) ||
       (type=="Barycenter" && name=="BodyNames") ||
+      (object.IsOfType("GroundStation") && (name=="ErrorModels" || name=="AddHardware")) ||
+      ((object.IsOfType("Spacecraft") || object.IsOfType("ErrorModel")) && name=="SolveFors") ||
+      (object.IsOfType("Simulator") && name=="AddData") ||
+      (object.IsOfType("Estimator") && name=="Measurements") ||
       (name=="YVariables" && type=="XYPlot") ||
       (object.IsOfType("Spacecraft") && (name=="Tanks" || name=="Thrusters" || name=="AddHardware" || name=="AddPlates")) ||
       ((object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) && name=="Tank") ||
@@ -364,7 +400,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    if (!value.trimmed().isEmpty()) {
       for (const auto &part : (files ? value.split('\n',Qt::SkipEmptyParts) : splitResourceReferences(value))) {
          const auto entry=part.trimmed();
-         if (files && (entry.contains('\'') || entry.contains('\r') || entry.contains(';'))) throw std::runtime_error("Kernel paths cannot contain quotes, semicolons or line breaks");
+         if (files && (entry.contains('\'') || entry.contains('\r') || entry.contains(';'))) throw std::runtime_error("File paths cannot contain quotes, semicolons or line breaks");
          if (!files && !reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
          if (object.GetTypeName()=="XYPlot" && name=="YVariables" && !ReportParameterDialog::isPlottableReference(entry))
             throw std::runtime_error(("Select a numeric plot parameter or a valid array element: "+entry).toStdString());
@@ -395,6 +431,13 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
             auto *body=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!body || !body->IsOfType("CelestialBody") || body->GetName()!=entry.toStdString()) throw std::runtime_error("Select existing celestial bodies for the barycenter.");
          }
+         const QString expectedType=(object.IsOfType("GroundStation") && name=="ErrorModels") ? "ErrorModel" :
+            (object.IsOfType("GroundStation") && name=="AddHardware") ? "Hardware" :
+            ((object.IsOfType("Simulator") && name=="AddData") || (object.IsOfType("Estimator") && name=="Measurements")) ? "TrackingFileSet" : QString();
+         if (!expectedType.isEmpty()) {
+            auto *referenceObject=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
+            if (!referenceObject || !referenceObject->IsOfType(expectedType.toStdString())) throw std::runtime_error(("Select existing "+expectedType+" resources for "+name+".").toStdString());
+         }
          if (entries.contains(entry)) throw std::runtime_error("Each list entry must be unique");
          entries.append(entry);
       }
@@ -424,7 +467,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    QString result=block;
    // Empty spacecraft hardware lists are defaults, omitted by the engine's
    // serializer. Explicit {} is interpreted as a hardware name in these fields.
-   const bool omitEmpty=object.GetTypeName()=="ReportFile" || object.GetTypeName()=="XYPlot" || (object.IsOfType("FiniteBurn") && name=="Thrusters") || (object.IsOfType("Spacecraft") &&
+   const bool omitEmpty=object.GetTypeName()=="ReportFile" || object.GetTypeName()=="XYPlot" || (object.IsOfType("GroundStation") && (name=="AddHardware" || name=="ErrorModels")) || (object.IsOfType("FiniteBurn") && name=="Thrusters") || (object.IsOfType("Spacecraft") &&
       QSet<QString>{"Tanks","Thrusters","AddHardware","AddPlates"}.contains(name));
    if (!matches.hasNext()) {
       if (entries.isEmpty() && omitEmpty) return result;
@@ -635,6 +678,17 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QS
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   if (object.IsOfType("Imager") && name=="FieldOfView") {
+      const auto selected=value.trimmed().toStdString();
+      auto *fov=selected.empty() ? nullptr : Moderator::Instance()->GetConfiguredObject(selected);
+      if (!selected.empty() && (!fov || !fov->IsOfType(Gmat::FIELD_OF_VIEW) || fov->GetName()!=selected)) throw std::runtime_error("Select an existing field of view, or leave it empty.");
+      object.SetStringParameter("FieldOfView",selected); return;
+   }
+   if ((object.IsOfType("Simulator") || object.IsOfType("Estimator")) && name=="Propagator") {
+      auto *propagator=Moderator::Instance()->GetConfiguredObject(value.trimmed().toStdString());
+      if (!propagator || !propagator->IsOfType(Gmat::PROP_SETUP)) throw std::runtime_error("Select an existing default propagator.");
+      object.SetStringParameter("Propagator",value.trimmed().toStdString()); return;
+   }
    if (object.IsOfType("CoordinateSystem")) {
       // Even owned-axis edits must respect built-in coordinate-system protection.
       object.SetStringParameter("Axes",object.GetStringParameter("Axes"));

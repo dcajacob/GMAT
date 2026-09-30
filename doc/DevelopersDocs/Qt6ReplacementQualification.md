@@ -151,7 +151,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
 | `../plugins/libEKF` | Pending qualification |
-| `../plugins/libGmatEstimation` | Pending qualification |
+| `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Broader measurements, noisy/real data, filters, epoch conversion, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
@@ -2831,3 +2831,98 @@ Rebuilt the actual application/bin/GmatQt target. All 23 Qt suites passed in
 regressions, plotting/HiDPI and the new DataInterface suite. Evidence:
 Qt6ParityValidation/check-data-interface.txt. Full replacement acceptance remains
 open.
+
+
+## Tracking configuration and range-skin simulation/batch estimation
+
+Audited estimation plugin parameter/setter/serializer behavior and the shipped
+Ex_Estimate_RangeSkin mission. Compound AddTrackingConfig arrays and measurement,
+station and solve-for lists were absent from Qt's supported properties. Added a
+dedicated tracking table with add/remove/reorder controls, ordered spacecraft/
+station/attached-hardware signal paths, repeated participants, multiple type
+selection, pending edits and Cancel. Apply replaces all definitions and validates
+the entire candidate script; invalid participants, hardware, types, duplicate
+rows/types and malformed settings are rejected. Column widths use the shared
+content sizing and remain user adjustable.
+
+Simulator AddData, estimator Measurements, spacecraft/ErrorModel SolveFors and
+station ErrorModels/AddHardware now use supported list editing. Simulators and
+estimators expose their default propagator without replacing their additional
+propagator mappings. FileName/RampTable ordered file pickers support new
+simulation outputs and existing ramp inputs respectively. ErrorModel Type has
+measurement choices; NoiseSigma uses the measurement's bias unit metadata and
+noise/bias units update when the pending type changes. RunSimulator/RunEstimator
+have typed selectors and insertion templates. Algorithms and numerical values
+are not changed by these controls.
+
+The audit found missing Resources/creation categories for tracking sets, error
+models and interfaces, and added those along with calculated points, celestial
+bodies, data filters and FOV navigation. Tests open tracking controls through
+the actual Resources tree and create/delete unused tracking sets, error models
+and file interfaces through the normal resource transactions.
+
+Two script reconstruction gaps surfaced. Empty ground-station hardware/error
+lists must be omitted because the engine rejects their explicit {} assignments.
+Imager serializes an unset optional FOV as UndefinedFieldOfView, making antennas
+fail unrelated resource/mission edits when that nonexistent object is referenced.
+Qt reconstruction now omits this diagnostic placeholder only when the actual
+reference name is empty. Explicit FOVs remain, including a real FOV named
+UndefinedFieldOfView; another unset antenna does not acquire that object.
+
+EstimationTests uses the shipped range-skin example with explicit bounded test
+adjustments: simulation from 10 Jun 2012 00:00 to 08:00 UTC, 60-second sampling,
+noise off, OLSEAdditiveConstant=1, temporary files and supplementary state reports.
+The additive filter margin avoids rejecting the nearly noise-free fit; 60-second
+sampling supplies enough observations to solve six state components. The full
+two-day noisy example is not claimed qualified by this bounded test. The
+selected fixture converges in four iterations.
+Estimated initial positions recover the literal input truth within 1e-5 km and
+velocities within 1e-8 km/s. GUI configuration reproduces the independently
+script-configured mission's fourteen state/epoch report values and serialized
+observations. The shared propagation, signal/time conversion and estimation
+algorithms are unchanged.
+
+Changing the default propagator previously caused the engine serializer to
+omit the old default's explicit spacecraft mapping. Qt now retains the original
+compound mapping assignments while applying the new scalar default. The test
+selects an alternate default through both simulator/estimator pickers, checks
+that their original spacecraft mappings survive, saves/reopens and reproduces
+the reference observations and fit. Editing the mappings themselves and broader
+multiple-propagator execution remain pending.
+
+GUI coverage includes path/type picking, repeated participants, row reorder,
+add/remove, adjustable widths, pending reopen/Cancel, new output selection
+without file creation, station error-model clear/restore, solve-for and tracking
+lists, type-dependent units, exact Undo/Redo, Unicode script save/reopen, run
+command labels/comments and Output report access. Invalid references/types,
+negative noise, incompatible Bias/PassBiases and malformed tracking edits roll
+back. Estimation-only missing-observation failure recovers after file restoration
+without the simulator recreating it. Existing engine validation rejects Unicode
+estimator report paths; this is tested as a source-preserving rejection rather
+than claimed support. Unicode script paths and observation paths with spaces are
+covered. An unset antenna displays an empty FOV value, and selecting a real FOV
+named UndefinedFieldOfView through its picker retains that newly applied
+reference rather than removing it as an old diagnostic placeholder. Replacing
+an existing FOV serializes the new reference even if the cloned hardware still
+holds its old object pointer; clearing removes the assignment. Wrong-type FOV
+selection rolls back without changing source.
+
+The native Wayland workflow passed using isolated preferences. The inspected
+tracking capture shows readable signal/type columns and accessible row/path/type
+and Cancel/OK actions. Evidence: Qt6ParityValidation/estimation-wayland.txt and
+Qt6ParityValidation/estimation-wayland.tracking.png.
+
+Remaining cases include other measurement/data formats, noisy and real inputs,
+DSN ramp/media/relativistic corrections, filters, paired epoch conversion,
+multiple propagator mappings, pass biases, covariance/solve-for regimes and
+broader RF hardware operation. EKF remains a separate pending plugin. The wx
+inventory still has 47 of 108 entries marked Pending audit; this plugin work
+does not close generic-panel audits. Of 20 selected runtime plugins, 5 have no
+qualification evidence and 15 have partial evidence. Full replacement acceptance
+remains open.
+
+Rebuilt the actual application/bin/GmatQt target. All 24 Qt suites passed in
+106.28 seconds, including the estimation suite, native viewer/window checks,
+plotting/HiDPI, mission/plugin/file regressions and launcher validation. Evidence:
+Qt6ParityValidation/check-estimation.txt. This checkpoint leaves the broader
+replacement acceptance gates open.
