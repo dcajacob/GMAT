@@ -1,6 +1,11 @@
 #include "ReportViewer.hpp"
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
+#include "InspectionDialog.hpp"
+#include "GmatCommand.hpp"
+#include "CommandUtil.hpp"
+#include "CoordinateSystem.hpp"
+#include "SpacePoint.hpp"
 #include "TrackingConfigDialog.hpp"
 #include "EpochIntervalDialog.hpp"
 #include "QtMessageReceiver.hpp"
@@ -79,6 +84,38 @@
 #include <stdexcept>
 
 namespace {
+// wx assigns display names while populating the mission tree. Qt keeps its
+// snapshots independent of engine objects; give summaries those names only
+// while reading them, then restore every original name.
+class SummaryNames
+{
+public:
+   explicit SummaryNames(GmatCommand *first) {
+      try { collect(first,nullptr,0); }
+      catch (...) { restore(); throw; }
+   }
+   ~SummaryNames() { restore(); }
+private:
+   std::vector<std::pair<GmatCommand *,std::string>> originals;
+   std::set<GmatCommand *> visited;
+   QMap<QString,int> counts;
+   void restore() { for (const auto &entry:originals) entry.first->SetSummaryName(entry.second); }
+   void collect(GmatCommand *command,GmatCommand *stop,int depth)
+   {
+      if (depth>100) throw std::runtime_error("Mission nesting is too deep to summarize");
+      for (;command && command!=stop;command=command->GetNext()) {
+         if (!visited.insert(command).second) return;
+         originals.emplace_back(command,command->GetSummaryName());
+         auto name=command->GetName();
+         if (name.empty()) {
+            const auto type=QString::fromStdString(command->GetTypeName());
+            name=(type+QString::number(++counts[type])).toStdString();
+         }
+         command->SetSummaryName(name);
+         for (int branch=0;auto *child=command->GetChildCommand(branch);++branch) collect(child,command,depth+1);
+      }
+   }
+};
 QString omitUnsetHardwareFovs(QString script,GmatBase *replacement=nullptr)
 {
    // Imager's empty optional FOV is serialized as a diagnostic placeholder.
@@ -149,18 +186,22 @@ MainWindow::MainWindow()
       auto *item=mission->itemAt(position);
       const int index=item && item->data(0,Qt::UserRole).isValid() ? item->data(0,Qt::UserRole).toInt() : -1;
       QMenu menu(this);
-      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr;
+      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr,*summary=nullptr;
       if (index>=0 && index<missionState.nodes.size()) {
          edit=menu.addAction("Edit command…"); edit->setEnabled(missionState.nodes[index].editable);
          before=menu.addAction("Insert before…"); before->setEnabled(missionState.nodes[index].type!="BeginMissionSequence");
          after=menu.addAction("Insert after…");
          remove=menu.addAction("Delete command"); remove->setEnabled(missionState.nodes[index].editable);
+         summary=menu.addAction("Command summary…");
          menu.addSeparator();
       }
+      auto *missionSummary=menu.addAction("Mission summary…");
       auto *append=menu.addAction("Append command…");
       auto *chosen=menu.exec(mission->viewport()->mapToGlobal(position));
       if (!chosen) return;
-      if (chosen==append) openCommandEditor(-1,MissionEdit::Append);
+      if (chosen==missionSummary) showSummary();
+      else if (summary && chosen==summary) showSummary(index);
+      else if (chosen==append) openCommandEditor(-1,MissionEdit::Append);
       else if (chosen==edit) openCommandEditor(index,MissionEdit::Replace);
       else if (chosen==before) openCommandEditor(index,MissionEdit::InsertBefore);
       else if (chosen==after) openCommandEditor(index,MissionEdit::InsertAfter);
@@ -341,6 +382,8 @@ MainWindow::MainWindow()
    auto *saveRun=run->addAction("Save, build and run mission"); saveRun->setObjectName("saveRunMission");
    saveRun->setShortcut(QKeySequence("Ctrl+Shift+F5")); editingActions.append(saveRun);
    connect(saveRun,&QAction::triggered,this,[this] { saveAndBuildScript(true); });
+   auto *summary=run->addAction("Mission summary…"); summary->setObjectName("missionSummary"); editingActions.append(summary);
+   connect(summary,&QAction::triggered,this,[this] { showSummary(); });
    setRunning(false);
    windows->setObjectName("windowMenu");
    connect(windows,&QMenu::aboutToShow,this,[this,windows] {
@@ -471,6 +514,7 @@ bool MainWindow::initialize(const QString &startup)
 void MainWindow::newMission()
 {
    if (!ready || running) return;
+   ++modelGeneration; summaryAvailable=false;
    scriptPath.clear();
    setScriptDirectory();
    plots->cameraSettings.clear();
@@ -497,6 +541,7 @@ bool MainWindow::loadScript(const QString &path)
       QMessageBox::warning(this,"Open failed","This script is not valid UTF-8. Convert its encoding before opening it.");
       return false;
    }
+   ++modelGeneration; summaryAvailable=false;
    plots->clear(true);
    editor->setPlainText(text);
    scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); return true;
@@ -619,6 +664,7 @@ bool MainWindow::buildScript()
       }
       return true; // Conversion already validated and rebuilt the mission.
    }
+   ++modelGeneration; summaryAvailable=false;
    bool success = false;
    plots->clear();
    try {
@@ -783,6 +829,7 @@ MainWindow::RunResult MainWindow::runMission()
       messages->appendPlainText("Unexpected error during mission execution.");
    }
    paused = false;
+   summaryAvailable=true; lastRunResult=result;
    setRunning(false);
    solverListeners->missionFinished(result==RunResult::Stopped,result==RunResult::Failed);
    statusBar()->showMessage(result == RunResult::Completed ? "Mission completed" :
@@ -1070,6 +1117,7 @@ void MainWindow::setScriptDirectory()
 
 bool MainWindow::restoreBuiltModel()
 {
+   ++modelGeneration; summaryAvailable=false;
    plots->clear(); modelValid=false;
    try {
       setScriptDirectory();
@@ -1089,6 +1137,7 @@ QString MainWindow::applyModelScript(const QString &requested)
    } catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    auto *moderator = Moderator::Instance();
    QString error;
+   ++modelGeneration; summaryAvailable=false;
    plots->clear();
    try {
       setScriptDirectory();
@@ -1176,7 +1225,11 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    auto *panel=new CommandEditor(statement,operation!=MissionEdit::Replace,templates,
       [this,snapshot,index,operation](const QString &replacement) {
          return applyMissionChange(snapshot,index,operation,replacement);
-      },propagationChoices,spacecraftChoices,nullptr,formationChoices);
+      },propagationChoices,spacecraftChoices,nullptr,formationChoices,
+      operation==MissionEdit::Replace ? std::function<void()>([this,index,generation=modelGeneration] {
+         if (generation!=modelGeneration) { statusBar()->showMessage("The mission changed. Reopen this command panel to inspect its summary."); return; }
+         showSummary(index);
+      }) : std::function<void()>());
    auto *child=new EditorSubWindow;
    child->setWidget(panel); workspace->addSubWindow(child);
    child->setAttribute(Qt::WA_DeleteOnClose); child->setProperty("configurationPanel",true);
@@ -1224,4 +1277,76 @@ QString MainWindow::savePlotProjection(const QString &name,bool perspective,doub
    refreshTrees();
    statusBar()->showMessage("Projection added to script — save to keep it; Undo restores the previous settings");
    return {};
+}
+
+QStringList MainWindow::summaryFrames() const
+{
+   QStringList frames;
+   if (!ready || !modelValid) return frames;
+   for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) {
+      auto *coordinate=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject(name));
+      if (!coordinate) continue;
+      auto *origin=coordinate->GetOrigin();
+      GmatBase *configuredOrigin=origin;
+      if (!configuredOrigin) configuredOrigin=Moderator::Instance()->GetConfiguredObject(coordinate->GetStringParameter("Origin"));
+      if (!configuredOrigin || !configuredOrigin->IsOfType("SpacePoint") || configuredOrigin->IsOfType("Spacecraft") || coordinate->UsesSpacecraft()) continue;
+      // Configured axes can lack initialized reference pointers. Check names as
+      // well so a spacecraft-dependent frame cannot use cached states at a
+      // different epoch to construct a misleading summary.
+      bool usesSpacecraft=false;
+      auto *axes=coordinate->GetOwnedObject(0);
+      if (axes) for (const auto *property:{"Primary","Secondary","ReferenceObject"}) {
+         try {
+            auto *reference=Moderator::Instance()->GetConfiguredObject(axes->GetStringParameter(property));
+            usesSpacecraft=usesSpacecraft || (reference && reference->IsOfType("Spacecraft"));
+         } catch (BaseException &) { }
+      }
+      if (!usesSpacecraft) frames.append(QString::fromStdString(name));
+   }
+   frames.removeDuplicates(); frames.sort(); return frames;
+}
+QString MainWindow::summaryText(int index,const QString &frame,bool physicsOnly)
+{
+   if (!ready || running || !modelValid || !summaryAvailable || editor->toPlainText()!=builtScript)
+      throw std::runtime_error("Run the current mission before inspecting its summary. Rebuilding or editing invalidates the previous results.");
+   if (!summaryFrames().contains(frame)) throw std::runtime_error("Choose a coordinate system with a non-spacecraft origin and no spacecraft-dependent axes.");
+   QVector<GmatCommand *> commands;
+   snapshotMission(Moderator::Instance()->GetFirstCommand(),missionState.canonicalScript,builtScript,&commands);
+   if (index<-1 || index>=commands.size()) throw std::runtime_error("This command no longer exists. Reopen its panel.");
+   auto *command=index<0 ? Moderator::Instance()->GetFirstCommand() : commands[index];
+   if (!command) throw std::runtime_error("The mission has no commands to summarize.");
+   SummaryNames names(Moderator::Instance()->GetFirstCommand());
+   const auto name=command->GetSummaryName();
+   if (command->IsOfType("BeginScript")) {
+      auto *end=GmatCommandUtil::GetMatchingEnd(command);
+      if (!end) throw std::runtime_error("This script event has no matching EndScript.");
+      command=end;
+   }
+   const auto previousName=command->GetSummaryName();
+   struct RestoreName {
+      GmatCommand *command; std::string name;
+      ~RestoreName() { command->SetSummaryName(name); }
+   } restore{command,previousName};
+   if (index>=0) command->SetSummaryName(name);
+   command->SetupSummary(frame.toStdString(),index<0,physicsOnly && index<0);
+   return QString::fromStdString(command->GetStringParameter(index<0 ? "MissionSummary" : "Summary"));
+}
+void MainWindow::showSummary(int index)
+{
+   // Validate before constructing a dialog, including when invoked from an
+   // editor whose original command was removed by a rebuild.
+   try { summaryText(index,"EarthMJ2000Eq"); }
+   catch (BaseException &error) { statusBar()->showMessage(QString::fromStdString(error.GetFullMessage())); return; }
+   catch (const std::exception &error) { statusBar()->showMessage(QString::fromUtf8(error.what())); return; }
+   const auto generation=modelGeneration;
+   const auto originalPath=scriptPath;
+   const auto context=lastRunResult==RunResult::Completed ? "Results from the completed run. States are captured at each command." :
+      lastRunResult==RunResult::Stopped ? "Partial results from the stopped run. Unexecuted commands have no summary data." :
+      "Partial results from the failed run. Unexecuted commands have no summary data. See the Message Window for the failure.";
+   SummaryDialog dialog(index<0 ? "Mission summary" : "Command summary — "+missionState.nodes[index].label,
+      summaryFrames(),index<0,[this,index,generation](const QString &frame,bool physics) {
+         if (generation!=modelGeneration) throw std::runtime_error("The mission changed. Close this summary and run the current mission.");
+         return summaryText(index,frame,physics);
+      },context,this,[this,originalPath] { return QStringList{scriptPath,originalPath}; });
+   dialog.exec();
 }

@@ -1,4 +1,5 @@
 #include "CommandEditor.hpp"
+#include "InspectionDialog.hpp"
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
 #include "PropagationGroupsDialog.hpp"
@@ -13,7 +14,7 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QString,QString> &templates,
-                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations)
+                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations,std::function<void()> summary)
    : EditablePanel(parent),original(statement),inserting(adding)
 {
    auto *layout=new QVBoxLayout(this);
@@ -75,6 +76,16 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    });
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Apply|QDialogButtonBox::Close,this);
    layout->addWidget(buttons);
+   if (!adding) {
+      auto *preview=new QPushButton("Show script…",this); preview->setObjectName("showScript"); buttons->addButton(preview,QDialogButtonBox::ActionRole);
+      connect(preview,&QPushButton::clicked,this,[this,statement] {
+         InspectionDialog dialog("Command script",statement,"Applied command. Pending edits are not included.",this); dialog.exec();
+      });
+      if (summary) {
+         auto *inspect=new QPushButton("Summary…",this); inspect->setObjectName("showCommandSummary"); buttons->addButton(inspect,QDialogButtonBox::ActionRole);
+         connect(inspect,&QPushButton::clicked,this,[summary] { summary(); });
+      }
+   }
    connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status] {
       const auto error=apply(source->toPlainText());
       if (error.isEmpty()) { applied=true; parentWidget()->close(); }

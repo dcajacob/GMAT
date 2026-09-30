@@ -33,6 +33,7 @@ class Builder
 {
 public:
    MissionSnapshot result;
+   QVector<GmatCommand *> commands;
    QVector<Line> document;
    QSet<GmatCommand *> visited;
    void collect(GmatCommand *command, GmatCommand *stop, int parent,
@@ -69,7 +70,7 @@ public:
          node.start=range.first; node.end=range.second; node.parent=parent;
          const QSet<QString> structural={"BeginMissionSequence","Else","EndIf","EndFor","EndWhile","EndTarget","EndOptimize","EndScript"};
          node.editable=node.start>=0 && !structural.contains(type);
-         const int index=result.nodes.size(); result.nodes.append(node);
+         const int index=result.nodes.size(); result.nodes.append(node); commands.append(command);
          if (parent<0) result.roots.append(index); else result.nodes[parent].children.append(index);
          if (node.start>=0) {
             qsizetype childStart=node.start;
@@ -86,10 +87,11 @@ public:
    }
 };
 }
-MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,const QString &source)
+MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,const QString &source,QVector<GmatCommand *> *commands)
 {
    Builder builder; builder.result.sourceScript=source; builder.result.canonicalScript=canonical;
    builder.document=lines(canonical); builder.collect(first,nullptr,-1,0,canonical.size());
+   if (commands) *commands=builder.commands;
    return builder.result;
 }
 QString editMission(const MissionSnapshot &snapshot,int index,MissionEdit operation,const QString &replacement)

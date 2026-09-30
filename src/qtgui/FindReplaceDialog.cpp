@@ -12,12 +12,13 @@
 
 FindReplaceDialog::FindReplaceDialog(QPlainTextEdit *source,QWidget *parent) : QDialog(parent),editor(source)
 {
-   setObjectName("findReplaceDialog"); setWindowTitle("Find and replace in script");
+   setObjectName("findReplaceDialog"); setWindowTitle(source->isReadOnly() ? "Find in text" : "Find and replace in script");
    auto *layout=new QVBoxLayout(this); auto *form=new QFormLayout; layout->addLayout(form);
    search=new QComboBox(this); search->setEditable(true); search->setObjectName("findText");
    replacement=new QComboBox(this); replacement->setEditable(true); replacement->setObjectName("replaceText");
    for (auto *combo:{search,replacement}) { combo->setInsertPolicy(QComboBox::NoInsert); combo->setMinimumWidth(300); }
-   form->addRow("Find",search); form->addRow("Replace with",replacement);
+   form->addRow("Find",search);
+   if (!source->isReadOnly()) form->addRow("Replace with",replacement); else replacement->hide();
    auto *options=new QHBoxLayout; layout->addLayout(options);
    matchCase=new QCheckBox("Match case",this); matchCase->setObjectName("findMatchCase"); options->addWidget(matchCase);
    wholeWord=new QCheckBox("Whole words",this); wholeWord->setObjectName("findWholeWords"); options->addWidget(wholeWord);
@@ -28,8 +29,10 @@ FindReplaceDialog::FindReplaceDialog(QPlainTextEdit *source,QWidget *parent) : Q
    };
    add("Previous","findPrevious",[this] { findNext(true); });
    add("Next","findNext",[this] { findNext(); });
-   add("Replace","replaceCurrent",[this] { replaceCurrent(); });
-   add("Replace all","replaceAll",[this] { replaceAll(); });
+   if (!source->isReadOnly()) {
+      add("Replace","replaceCurrent",[this] { replaceCurrent(); });
+      add("Replace all","replaceAll",[this] { replaceAll(); });
+   }
    add("Close","findClose",[this] { hide(); });
    status=new QLabel(this); status->setObjectName("findStatus"); layout->addWidget(status);
    connect(search->lineEdit(),&QLineEdit::returnPressed,this,[this] { findNext(); });

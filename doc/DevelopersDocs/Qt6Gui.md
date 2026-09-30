@@ -1439,3 +1439,19 @@ a seed record strictly before the first observation. LastWarmStartRecord needs
 observations after the selected last record; a seed reaching the end of the data
 cannot continue estimation. File selections and dates remain pending until
 Apply. Failed conversions retain the earlier format and entered date.
+
+
+### Inspecting configuration and run results
+
+Resource and command panels offer **Show script…** for the applied configuration.
+The preview is read-only; pending panel edits stay in their editor and are not
+included. **Find…** searches within the preview and standard Copy works.
+
+After running a mission, use **Run > Mission summary…**, the Mission tree's
+summary context menu, or **Summary…** in a command panel. Command summaries show
+states captured at that command, including script-event end states. Choose a
+coordinate system or filter an entire mission to physics commands. Frames that
+depend on spacecraft are excluded. **Save as…** exports UTF-8 text and protects
+the mission script from being overwritten. Rebuilding/loading invalidates old
+summaries; editing the script requires a new run before inspecting results.
+Failed/stopped runs show partial results and identify commands without data.

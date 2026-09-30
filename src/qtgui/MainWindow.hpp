@@ -30,6 +30,9 @@ public:
    void pauseMission();
    void resumeMission();
    void stopMission();
+   QStringList summaryFrames() const;
+   QString summaryText(int index,const QString &frame,bool physicsOnly=false);
+   void showSummary(int index=-1);
    bool isRunning() const { return running; }
    QtPlotReceiver *plotReceiver() const { return plots.get(); }
    const MissionSnapshot &missionSnapshot() const { return missionState; }
@@ -78,6 +81,9 @@ private:
    QMap<QString, QString> reportFiles;
    QMap<QString,QPair<QString,QString>> ephemerisFiles;
    MissionSnapshot missionState;
+   quint64 modelGeneration=0;
+   bool summaryAvailable=false;
+   RunResult lastRunResult=RunResult::Failed;
    bool modelValid = false;
    bool ready = false;
    bool running = false;

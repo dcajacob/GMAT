@@ -30,6 +30,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    ScriptEventDialog.cpp ScriptEventDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
+   InspectionDialog.cpp InspectionDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
    ReportViewer.cpp ReportViewer.hpp
    FileComparison.cpp FileComparison.hpp ComparisonPanel.cpp ComparisonPanel.hpp
@@ -129,6 +130,9 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtDataInterfaceTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtEstimationTests tests/EstimationTests.cpp)
    target_link_libraries(GmatQtEstimationTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtInspectionTests tests/InspectionTests.cpp)
+   target_link_libraries(GmatQtInspectionTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtInspectionTests GmatQt)
    add_executable(GmatQtKalmanTests tests/KalmanTests.cpp)
    target_link_libraries(GmatQtKalmanTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtKalmanTests GmatQt)
@@ -177,6 +181,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.CalculatedPoints GmatQtCalculatedPointTests "${qt_test_startup}")
    add_qt_test(QtGui.DataInterface GmatQtDataInterfaceTests "${qt_test_startup}")
    add_qt_test(QtGui.Estimation GmatQtEstimationTests "${qt_test_startup}")
+   add_qt_test(QtGui.Inspection GmatQtInspectionTests "${qt_test_startup}")
    add_qt_test(QtGui.KalmanFilter GmatQtKalmanTests "${qt_test_startup}")
    add_qt_test(QtGui.Comparison GmatQtComparisonTests "${qt_test_startup}")
    add_qt_test(QtGui.ThrustFiles GmatQtThrustFileTests "${qt_test_startup}")
@@ -198,5 +203,5 @@ if(GMAT_QT_BUILD_TESTS)
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
       DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests GmatQtCalculatedPointTests GmatQtDataInterfaceTests GmatQtEstimationTests GmatQtComparisonTests GmatQtThrustFileTests GmatQtScriptEditingTests GmatQtExternalForceTests GmatQtPolyhedronTests
       USES_TERMINAL VERBATIM)
-   add_dependencies(check-qt GmatQtKalmanTests)
+   add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests)
 endif()

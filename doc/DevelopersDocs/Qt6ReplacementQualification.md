@@ -40,7 +40,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
-| `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
+| `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector and single-parameter left/right operand browser provided. Solver selector tested; constraint operand execution combinations pending. |
@@ -85,15 +85,15 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Pending audit |
 | `src/gui/foundation/ParameterSelectDialog.hpp` | Pending audit |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | Pending audit |
-| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Context Help, object-script preview, command summaries and staying open after Apply remain pending. |
+| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Context Help and staying open after Apply remain pending. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | Shared numeric grid; see ArraySetupPanel. Full wx dialog audit pending. |
-| `src/gui/foundation/ShowScriptDialog.hpp` | Pending audit |
+| `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
 | `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. FileTests, WorkflowTests and ScriptEditingTests cover the single Qt mission document, failure/cancel identity protection, encoding, save-before-run and pending/close protection. Multiple inactive documents, panel-specific reload/status and remaining shared editor cases remain pending. |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
-| `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
+| `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
@@ -3383,3 +3383,69 @@ warm-start filenames still reject non-ASCII characters; this suite rejects an
 unsupported Unicode output edit without changing source while qualifying Unicode
 mission filenames. The wx inventory remains 35 of 108 Pending audit and the
 broader GUI/camera/OF acceptance gates remain unfinished.
+
+
+## Applied-script previews and command/mission summaries
+
+The shared wx inspection workflows were audited in GmatPanel::OnScript and
+OnSummary, ShowScriptDialog::Create, ShowSummaryDialog's coordinate-system and
+Save As handlers, and MissionTree's command/mission summary actions. wx supplies
+summary display names while populating its tree; Qt now assigns temporary names
+while reading summaries and restores all original names afterward. BeginScript
+uses its matching EndScript's captured state with the script-event name, then
+restores the EndScript name. Summary construction and coordinate conversion use
+the existing engine; no propagation or numerical algorithms changed.
+
+Resource and command editors have Show script buttons displaying the applied
+configuration in read-only, monospaced, unwrapped text. The resource preview is
+captured when its panel opens, so an engine rebuild cannot leave a dangling
+object pointer. Pending resource/command text is retained and excluded from the
+preview. Command editors also offer Summary; Mission tree context menus and
+Run > Mission summary provide command/entire-mission access. A local Find dialog
+supports searching and Copy; read-only viewers no longer show ineffective
+replacement controls.
+
+Summary dialogs provide coordinate-system selection and a Physics commands only
+checkbox for entire missions. Spacecraft-origin and spacecraft-dependent axes
+are excluded, including configured axes whose reference pointers have not yet
+been initialized. Changing frame or filtering refreshes the engine text; an
+error restores the previous selection and text. A model-generation guard
+prevents an open summary or command panel from resolving an old index after a
+rebuild. Run is required, rebuilding/loading invalidates results, and source
+edits reject stale summaries. Failed/stopped runs can expose the states that
+executed; unexecuted commands retain the engine's explicit no-data explanation.
+
+InspectionTests reports the first and second coast states separately and compares
+both six-component command summaries against those reports in EarthMJ2000Eq,
+EarthFixed, Moon-centered MJ2000Eq and Earth-Moon barycenter MJ2000Eq frames.
+BeginScript's end state matches the first coast, its name is restored, a skipped
+If branch produces no fabricated state, and all/physics mission views differ
+while retaining the executed propagations. This compares two output routes
+through the same engine, not independent propagation mathematics. Actual MDI
+resource/command previews preserve pending edits and source, read-only typing is
+rejected, local Find/Copy works, and inspection adds no script undo entry.
+
+Save as exports UTF-8 atomically. The Qt widget chooser's accepted and canceled
+paths, Unicode output, unwritable-directory retry, and original/current mission
+filename protection are covered; symlinks to the mission are rejected as well.
+Tests use isolated settings, temporary reports/exports and a temporary engine
+output directory. A generic ClearPlot command without a specialized form retains
+editable command text: a missing-reference edit rolls back, correction to
+MarkPoint applies, and Unicode save/reopen preserves the independent state
+report. Runtime negative-mass rejection and a stopped While loop retain prior
+command summaries, then a corrected run reproduces the full report.
+
+Native Wayland passed; the saved summary layout was visually inspected:
+Qt6ParityValidation/inspection-wayland.png and inspection-wayland.txt.
+All 31 registered Qt suites passed across the headless/native runs. The
+initial check-qt invocation passed all 26 headless suites; five X11 checks could
+not connect to their temporary display inside the sandbox. All five passed
+with display access in 37.75 seconds. Both results are retained in
+Qt6ParityValidation/check-inspections.txt and check-inspections-native.txt.
+This does not qualify the desktop portal chooser, top-level Wayland
+minimize/restore, singleton previews, font zoom, broader command/plugin summary
+fields or solver-loop summary semantics. Resource Variable/String setup still
+needs its own wx audit; the generic property table hides their engine-read-only
+expression metadata. Context Help and keeping applied panels open also remain
+unfinished. The wx inventory now has 32 of 108 Pending audit; audited rows can
+still be partial, and the broad replacement goal remains active.

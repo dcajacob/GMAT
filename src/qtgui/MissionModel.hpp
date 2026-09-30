@@ -17,6 +17,6 @@ struct MissionSnapshot
    QVector<int> roots;
 };
 enum class MissionEdit { Replace, InsertBefore, InsertAfter, Append, Remove };
-MissionSnapshot snapshotMission(GmatCommand *first, const QString &canonical, const QString &source);
+MissionSnapshot snapshotMission(GmatCommand *first, const QString &canonical, const QString &source, QVector<GmatCommand *> *commands=nullptr);
 QString editMission(const MissionSnapshot &snapshot, int node, MissionEdit operation,
                     const QString &replacement);

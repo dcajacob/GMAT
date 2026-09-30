@@ -183,3 +183,28 @@ unchanged. The earlier command-edit failure is retained in
 GmatQt executable rebuilt. Full-day/noisy/real observations, additional models,
 creation/removal, covariance/residual graphics/prediction, warm-start smoothing,
 broader malformed/relative files and disk failures remain unqualified.
+
+
+## Script previews and run summaries
+
+InspectionTests exercises applied resource/command script previews through their
+actual MDI panels, preserving pending edits and the script undo history. Command
+and entire-mission summaries use captured engine states, typed coordinate-system
+selection and all/physics filtering. Separately reported first/second coast
+states agree with summaries in Earth inertial, Earth fixed, Moon inertial and
+barycenter frames. Script-event matching-end/name restoration, skipped branches,
+stale rebuild/source protection, failed/stopped recovery, read-only Find/Copy,
+Unicode export, chooser acceptance/Cancel, write-error retry and source-symlink
+protection are covered. Generic command text Apply is qualified with a ClearPlot
+missing-reference failure and correction to MarkPoint, followed by save/reopen
+and unchanged state reports.
+
+[Native Wayland passed](inspection-wayland.txt); the
+[summary layout](inspection-wayland.png) was inspected. All 31 registered suites
+passed across the headless/native runs: [the initial full invocation](check-inspections.txt)
+passed 26 headless checks but could not connect five X11 tests to their temporary
+display inside the sandbox; [all five reruns](check-inspections-native.txt)
+passed with display access in 37.75 seconds. Portal choosers,
+Wayland top-level minimize/restore, font zoom and broader summary/solver-loop
+semantics remain unqualified. The source audit is now 32 of 108 Pending audit;
+this checkpoint does not complete the broader replacement goal.

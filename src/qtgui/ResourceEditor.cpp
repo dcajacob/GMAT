@@ -1,4 +1,5 @@
 #include "ResourceEditor.hpp"
+#include "InspectionDialog.hpp"
 #include "TrackingConfigDialog.hpp"
 #include "EpochIntervalDialog.hpp"
 #include "FunctionFileDialog.hpp"
@@ -394,7 +395,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          }
       });
    }
-   table = new QTableWidget(this);
+   table = new QTableWidget(this); table->setObjectName("resourceProperties");
    table->setColumnCount(4);
    table->setHorizontalHeaderLabels({"Property", "Value", "Unit", ""});
    configureTableColumns(table,{20,28,5,10});
@@ -1121,6 +1122,13 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    status->setWordWrap(true); layout->addWidget(status);
    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close, this);
    layout->addWidget(buttons);
+   QString previewText;
+   try { previewText=QString::fromStdString(object.GetGeneratingString(Gmat::SHOW_SCRIPT)); }
+   catch (BaseException &error) { previewText=QString::fromStdString(error.GetFullMessage()); }
+   auto *preview=new QPushButton("Show script…",this); preview->setObjectName("showScript"); buttons->addButton(preview,QDialogButtonBox::ActionRole);
+   connect(preview,&QPushButton::clicked,this,[this,previewText] {
+      InspectionDialog dialog("Resource script",previewText,"Applied resource. Pending edits are not included.",this); dialog.exec();
+   });
    const auto filter=[this,search,sections] {
       const auto section=sections ? sections->tabText(sections->currentIndex()) : QString();
       bool actions=false;
