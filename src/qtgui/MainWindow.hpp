@@ -15,6 +15,9 @@ class QtMessageReceiver;
 class QtInterpreter;
 class QtPlotReceiver;
 class QtSolverListenerManager;
+class EditablePanel;
+class QMdiSubWindow;
+class GmatBase;
 class QAction;
 class MainWindow : public QMainWindow
 {
@@ -50,6 +53,8 @@ private:
    QString savePlotProjection(const QString &name,bool perspective,double fov);
    void refreshTrees();
    void refreshOutput();
+   EditablePanel *makeResourcePanel(GmatBase &object,const QString &snapshot);
+   void refreshAppliedResourcePanels();
    void openCommandEditor(int index, MissionEdit operation);
    void showCreateResource();
    void showPathSettings();

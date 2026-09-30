@@ -6,6 +6,7 @@
 #include <QPointer>
 #include <QStringList>
 #include <QSet>
+#include <QRect>
 #include <functional>
 #include <memory>
 class QMdiArea;
@@ -193,6 +194,8 @@ private:
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
       bool solverData = false;
+      bool automaticGeometry = false;
+      QRect automaticRect;
       bool useInitialView = true;
       QString provider;
    };

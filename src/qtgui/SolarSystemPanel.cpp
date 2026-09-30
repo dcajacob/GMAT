@@ -126,7 +126,7 @@ SolarSystemPanel::SolarSystemPanel(SolarSystem &system,Apply apply,QWidget *pare
    connect(preview,&QPushButton::clicked,this,[this,previewText] { InspectionDialog dialog("Solar-system script",previewText,"Applied settings. Pending edits are not included.",this); dialog.exec(); });
    connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply] {
       if (!hasChanges()) { status->setText("No changes to apply."); return; }
-      try { const auto error=apply(settings()); if (error.isEmpty()) { applied=true; parentWidget()->close(); } else status->setText(error); }
+      try { const auto error=apply(settings()); if (error.isEmpty()) { applied=true; appliedSuccessfully(); } else status->setText(error); }
       catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
    });
    connect(buttons,&QDialogButtonBox::rejected,this,[this] { parentWidget()->close(); });

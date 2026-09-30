@@ -2,6 +2,7 @@
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
 #include "InspectionDialog.hpp"
+#include "AboutDialog.hpp"
 #include "UserParameter.hpp"
 #include "SolarSystemPanel.hpp"
 #include "SolarSystem.hpp"
@@ -80,6 +81,9 @@
 #include <QSettings>
 #include <QStatusBar>
 #include <QTabWidget>
+#include <QTabBar>
+#include <QTableWidget>
+#include <QScrollBar>
 #include <QTextDocument>
 #include <QTextBlock>
 #include <QTextEdit>
@@ -459,8 +463,9 @@ MainWindow::MainWindow()
          });
       }
    });
-   connect(help->addAction("&About GMAT"), &QAction::triggered, this, [this] {
-      QMessageBox::about(this, "GMAT", "General Mission Analysis Tool\nQt 6 desktop interface");
+   auto *about=help->addAction("&About GMAT"); about->setObjectName("aboutGMAT");
+   connect(about, &QAction::triggered, this, [this] {
+      AboutDialog dialog(QString::fromStdString(FileManager::Instance()->GetRootPath()),this); dialog.exec();
    });
    auto *capabilities=help->addAction("Available engine types…");
    capabilities->setObjectName("engineCapabilities");
@@ -497,13 +502,7 @@ MainWindow::MainWindow()
          }
          child->close();
       }
-      const auto apply=[this, name, snapshot](const QMap<QString, QString> &changes) {
-         return applyResourceChanges(name, changes, snapshot);
-      };
-      EditablePanel *panel=nullptr;
-      if (auto *system=dynamic_cast<SolarSystem *>(object)) panel=new SolarSystemPanel(*system,apply);
-      else if (auto *body=dynamic_cast<CelestialBody *>(object)) panel=new CelestialBodyPanel(*body,apply);
-      else panel=new ResourceEditor(*object,apply,nullptr,snapshot);
+      auto *panel=makeResourcePanel(*object,snapshot);
       auto *child = new EditorSubWindow;
       child->setWidget(panel);
       workspace->addSubWindow(child);
@@ -517,6 +516,66 @@ MainWindow::MainWindow()
    restoreGeometry(settings.value("geometry").toByteArray());
    restoreState(settings.value("windowState").toByteArray());
    updateTitle();
+}
+
+EditablePanel *MainWindow::makeResourcePanel(GmatBase &object,const QString &snapshot)
+{
+   const auto name=QString::fromStdString(object.GetName());
+   const auto apply=[this,name,snapshot](const QMap<QString,QString> &changes) {
+      return applyResourceChanges(name,changes,snapshot);
+   };
+   EditablePanel *panel;
+   if (auto *system=dynamic_cast<SolarSystem *>(&object)) panel=new SolarSystemPanel(*system,apply);
+   else if (auto *body=dynamic_cast<CelestialBody *>(&object)) panel=new CelestialBodyPanel(*body,apply);
+   else panel=new ResourceEditor(object,apply,nullptr,snapshot);
+   if (auto *buttons=panel->findChild<QDialogButtonBox *>()) {
+      if (auto *button=buttons->button(QDialogButtonBox::Apply)) button->setObjectName("applyPanel");
+      if (auto *button=buttons->button(QDialogButtonBox::Close)) button->setObjectName("closePanel");
+   }
+   panel->onApplied=[this] { refreshAppliedResourcePanels(); };
+   return panel;
+}
+
+void MainWindow::refreshAppliedResourcePanels()
+{
+   for (auto *child:workspace->subWindowList()) {
+      const auto name=child->property("resourceName").toString();
+      auto *old=dynamic_cast<EditablePanel *>(child->widget());
+      if (name.isEmpty() || !old || old->hasChanges() || child->property("sourceScript").toString()==builtScript) continue;
+      auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+      if (!object) continue;
+      EditablePanel *replacement;
+      try { replacement=makeResourcePanel(*object,builtScript); }
+      catch (BaseException &error) {
+         messages->appendPlainText(QString::fromStdString(error.GetFullMessage()));
+         statusBar()->showMessage("Changes applied; close and reopen "+name+" to refresh its controls"); continue;
+      } catch (const std::exception &error) {
+         messages->appendPlainText(QString::fromUtf8(error.what()));
+         statusBar()->showMessage("Changes applied; close and reopen "+name+" to refresh its controls"); continue;
+      }
+      // Preserve the visible page, search, adjusted columns and table position.
+      for (auto *tabs:old->findChildren<QTabWidget *>()) if (!tabs->objectName().isEmpty())
+         if (auto *fresh=replacement->findChild<QTabWidget *>(tabs->objectName())) fresh->setCurrentIndex(tabs->currentIndex());
+      for (auto *tabs:old->findChildren<QTabBar *>()) if (!tabs->objectName().isEmpty())
+         if (auto *fresh=replacement->findChild<QTabBar *>(tabs->objectName())) fresh->setCurrentIndex(tabs->currentIndex());
+      if (auto *filter=old->findChild<QLineEdit *>("propertyFilter"))
+         if (auto *fresh=replacement->findChild<QLineEdit *>("propertyFilter")) fresh->setText(filter->text());
+      for (auto *table:old->findChildren<QTableWidget *>()) if (!table->objectName().isEmpty())
+         if (auto *fresh=replacement->findChild<QTableWidget *>(table->objectName())) {
+            for (int c=0;c<qMin(table->columnCount(),fresh->columnCount());++c) fresh->setColumnWidth(c,table->columnWidth(c));
+            if (table->currentRow()>=0 && table->currentRow()<fresh->rowCount()) fresh->setCurrentCell(table->currentRow(),qMax(0,table->currentColumn()));
+            fresh->verticalScrollBar()->setValue(table->verticalScrollBar()->value());
+         }
+      const auto *focus=QApplication::focusWidget();
+      const bool focused=focus && (focus==old || old->isAncestorOf(focus));
+      const auto focusName=focused ? focus->objectName() : QString();
+      child->setWidget(replacement); child->setProperty("sourceScript",builtScript);
+      old->hide(); old->deleteLater(); replacement->show();
+      if (focused) {
+         auto *target=focusName.isEmpty() ? nullptr : replacement->findChild<QWidget *>(focusName);
+         (target ? target : replacement)->setFocus();
+      }
+   }
 }
 
 void MainWindow::showFileComparison(const QString &baseline)

@@ -203,6 +203,27 @@ int main(int argc,char **argv)
       if (window.runMission()!=MainWindow::RunResult::Completed) { app.exit(1); return; }
       log("mission completed");
       if (surface.destroyed) { log("FAIL: first OrbitView destroyed the live native window"); app.exit(1); return; }
+      auto *orbit=plot("DefaultOrbitView"),*ground=plot("DefaultGroundTrackPlot");
+      if (!orbit || !ground || !orbit->isVisible() || !ground->isVisible() || orbit->geometry().intersects(ground->geometry()) ||
+          !area->viewport()->rect().contains(orbit->geometry()) || !area->viewport()->rect().contains(ground->geometry())) {
+         log("FAIL: initial default viewers overlap or leave the workspace"); app.exit(1); return;
+      }
+      log("default OrbitView and GroundTrack are both exposed in the workspace");
+      const auto orbitRect=orbit->geometry(),groundRect=ground->geometry(),bounds=area->viewport()->rect();
+      auto *receiver=window.plotReceiver();
+      receiver->CreateXyPlotWindow("ExplicitLayout","",.1,.2,.3,.4,false,"Explicit","time","value",true,true);
+      auto *explicitView=plot("ExplicitLayout");
+      const QRect requested(static_cast<int>(.1*bounds.width()),static_cast<int>(.2*bounds.height()),
+         qMax(200,static_cast<int>(.3*bounds.width())),qMax(160,static_cast<int>(.4*bounds.height())));
+      if (!explicitView || explicitView->geometry()!=requested || orbit->geometry()!=orbitRect || ground->geometry()!=groundRect) {
+         log("FAIL: explicit viewer position or existing layout changed"); app.exit(1); return;
+      }
+      receiver->DeleteXyPlot("ExplicitLayout");
+      orbit->move(orbitRect.topLeft()+QPoint(0,20)); const auto moved=orbit->geometry();
+      receiver->CreateXyPlotWindow("AutomaticLayout","",0,0,0,0,false,"Automatic","time","value",true,true);
+      if (orbit->geometry()!=moved) { log("FAIL: creating another viewer moved a manually positioned view"); app.exit(1); return; }
+      receiver->DeleteXyPlot("AutomaticLayout"); orbit->setGeometry(orbitRect); ground->setGeometry(groundRect);
+      log("explicit and manually adjusted viewer positions retained");
       actions.start();
    });
    return app.exec();

@@ -155,6 +155,29 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
    const int top=std::clamp(static_cast<int>((std::isfinite(y) ? std::clamp(y,0.0,1.0) : 0)*bounds.height()),0,std::max(0,bounds.height()-height));
    entry.window->showNormal(); entry.window->setGeometry(left,top,width,height);
    if (maximized) entry.window->showMaximized();
+   entry.automaticGeometry=!maximized && x==0 && y==0 && w==0 && h==0;
+   if (entry.automaticGeometry) {
+      QList<Entry *> automatic;
+      // A user move/resize ends automatic placement for that existing view.
+      for (auto &candidate:entries) if (candidate.automaticGeometry && candidate.window) {
+         if (!candidate.automaticRect.isNull() && candidate.window->geometry()!=candidate.automaticRect)
+            candidate.automaticGeometry=false;
+         else automatic.append(&candidate);
+      }
+      // Unspecified subscriber positions should expose every initial viewer.
+      // Equal (0,0) fallbacks let the last GroundTrack cover the OrbitView.
+      const int columns=static_cast<int>(std::ceil(std::sqrt(automatic.size())));
+      const int rows=(automatic.size()+columns-1)/columns;
+      for (int i=0;i<automatic.size();++i) {
+         auto &candidate=*automatic[i];
+         const int column=i%columns,row=i/columns;
+         const int x0=column*bounds.width()/columns,y0=row*bounds.height()/rows;
+         const int x1=(column+1)*bounds.width()/columns,y1=(row+1)*bounds.height()/rows;
+         candidate.automaticRect=QRect(x0,y0,x1-x0,y1-y0);
+         candidate.window->setGeometry(candidate.automaticRect);
+         candidate.window->raise();
+      }
+   }
    // Restoring normal geometry can reactivate the formerly maximized script.
    // Activate the plot only after its final window state has been applied.
    workspace->setActiveSubWindow(entry.window);

@@ -93,7 +93,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply] {
          if (!hasChanges()) { status->setText("No changes to apply."); return; }
          const auto error=apply({{"Value",scalarValue()}});
-         if (error.isEmpty()) { applied=true; parentWidget()->close(); } else status->setText(error);
+         if (error.isEmpty()) { applied=true; appliedSuccessfully(); } else status->setText(error);
       });
       connect(buttons,&QDialogButtonBox::rejected,this,[this] { parentWidget()->close(); });
       return;
@@ -128,7 +128,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          };
          connect(type,&QComboBox::currentTextChanged,&dialog,[&] { rebuild(); }); rebuild();
          dialog.resize(700,600); dialog.exec();
-         if (completed) { applied=true; parentWidget()->close(); }
+         if (completed) { applied=true; appliedSuccessfully(); }
       });
    }
    auto *search = new QLineEdit(this);
@@ -1255,10 +1255,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
       const QString error = apply(changes);
       if (error.isEmpty()) {
-         // Model reconstruction can normalize dependent properties. Close this
-         // snapshot so a subsequent edit always reads the current model.
+         // The workspace replaces this snapshot with the reconstructed model.
          applied = true;
-         parentWidget()->close();
+         appliedSuccessfully();
       } else status->setText(error);
    });
    connect(buttons, &QDialogButtonBox::rejected, this, [this] { parentWidget()->close(); });

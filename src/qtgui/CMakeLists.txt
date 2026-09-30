@@ -3,6 +3,7 @@ find_package(OpenSceneGraph 3.6 REQUIRED COMPONENTS osg osgDB osgViewer osgGA os
 add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
    UserParameter.cpp UserParameter.hpp
+   AboutDialog.cpp AboutDialog.hpp
    SolarSystemPanel.cpp SolarSystemPanel.hpp
    CelestialBodyPanel.cpp CelestialBodyPanel.hpp
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
@@ -100,10 +101,12 @@ if(GMAT_QT_BUILD_TESTS)
    endif()
    add_executable(GmatQtWindowTests tests/WindowTests.cpp)
    target_link_libraries(GmatQtWindowTests PRIVATE GmatQtFrontend)
-   add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
-   target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtSolverPlotTests tests/SolverPlotTests.cpp)
    target_link_libraries(GmatQtSolverPlotTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtDesktopTests tests/DesktopTests.cpp)
+   target_link_libraries(GmatQtDesktopTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
+   target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
    target_link_libraries(GmatQtFileTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtWorkflowTests tests/WorkflowTests.cpp)
@@ -218,8 +221,9 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.ExternalForces GmatQtExternalForceTests "${qt_test_startup}")
    add_qt_test(QtGui.Polyhedron GmatQtPolyhedronTests "${qt_test_startup}")
    add_qt_test(QtGui.OrbitSetup GmatQtOrbitSetupTests "${qt_test_startup}")
-   add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.SolverPlots GmatQtSolverPlotTests "${qt_test_startup}")
+   add_qt_test(QtGui.Desktop GmatQtDesktopTests "${qt_test_startup}")
+   add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
    add_qt_test(QtGui.PlotsHiDPI GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -237,5 +241,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests GmatQtSolarSystemTests GmatQtCelestialBodyTests)
    add_dependencies(check-qt GmatQtResourceRoundTripTests)
    add_dependencies(check-qt GmatQtSolverPlotTests)
+   add_dependencies(check-qt GmatQtDesktopTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()
