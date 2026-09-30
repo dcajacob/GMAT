@@ -42,7 +42,9 @@ int main(int argc, char **argv)
       std::fprintf(stderr, "Startup file or script does not exist.\n");
       return 2;
    }
-   QDir::setCurrent(QFileInfo(startup).absolutePath());
+   // Startup-relative entries are documented relative to the executable.
+   // A saved startup file may live outside the installation directory.
+   QDir::setCurrent(QCoreApplication::applicationDirPath());
    MainWindow window;
    window.show();
    const bool initialized = window.initialize(startup);

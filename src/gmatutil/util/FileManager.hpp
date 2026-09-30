@@ -41,6 +41,7 @@
 #include <map>
 #include <list>
 #include <fstream>
+#include <memory>
 
 class GMATUTIL_API FileManager
 {
@@ -174,8 +175,13 @@ public:
    std::string GetStartupFileDir();
    std::string GetStartupFileName();
    std::string GetFullStartupFilePath();
+   void SetStartupFilePath(const std::string &path);
 //   void ReadStartupFile(const char *fileName = ""); // remove redundant method
    void ReadStartupFile(const std::string &fileName = "");
+   // Preserve exact path/file state while validating a live startup reload.
+   struct State;
+   std::shared_ptr<const State> CaptureState() const;
+   void RestoreState(const State &state);
 //   void WriteStartupFile(const char *fileName = "");// remove redundant method
    void WriteStartupFile(const std::string &fileName = "");
    

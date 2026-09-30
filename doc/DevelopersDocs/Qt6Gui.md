@@ -199,6 +199,26 @@ GMAT cannot represent every combination of apostrophes and percent signs.
 An unsupported value leaves the prior source and model intact. **Show script…**
 displays the applied configuration, excluding pending edits.
 
+Use **Edit > Set paths…** to manage GMAT function search directories and the
+default output directory. Add puts a directory first; Replace, Remove, Up and
+Down edit the pending search order. The mission directory takes precedence
+when a mission is built. Repeated equivalent directories are shown once,
+retaining their first search position. Output must exist and be writable;
+Apply relocates the default reports and log. Explicit mission filenames keep
+their own destinations. Pending resource/command edits must be resolved before
+opening this dialog, and it is unavailable during execution.
+
+**Read another startup file…** validates and previews the full startup settings
+without changing the current session. Apply uses the pending settings and
+invalidates the built mission; build it again before running. Close discards
+unapplied changes. **Save startup settings…** writes a startup file separately
+from Apply, using the engine's canonical format, and protects the current
+mission filename and its symlinks. The Startup settings tab previews the saved
+content. Cached data and plugin changes require a new process; launch with
+`GmatQt --startup /absolute/path/to/saved-startup.txt`. Relative startup entries
+resolve from the executable location even when that file is saved elsewhere.
+MATLAB path editing remains outside this Linux/no-MATLAB qualification.
+
 Use **Edit > New resource** or the Resources context menu to add a resource.
 The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
 force-model, coordinate-system, solver and subscriber types, plus Variable and

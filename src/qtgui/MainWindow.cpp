@@ -3,6 +3,7 @@
 #include "MainWindow.hpp"
 #include "InspectionDialog.hpp"
 #include "UserParameter.hpp"
+#include "PathSettingsDialog.hpp"
 #include "GmatCommand.hpp"
 #include "CommandUtil.hpp"
 #include "CoordinateSystem.hpp"
@@ -348,6 +349,8 @@ MainWindow::MainWindow()
    });
 
    edit->addSeparator();
+   auto *paths=edit->addAction("Set paths…"); paths->setObjectName("setPaths"); editingActions.append(paths);
+   connect(paths,&QAction::triggered,this,&MainWindow::showPathSettings);
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);
    connect(create,&QAction::triggered,this,&MainWindow::showCreateResource);
@@ -507,6 +510,13 @@ bool MainWindow::initialize(const QString &startup)
    ListenerManagerInterface::SetListenerManager(solverListeners.get());
    try {
       startupDirectory = QFileInfo(startup).absolutePath();
+      startupFile = QFileInfo(startup).absoluteFilePath();
+      // FileManager's default executable name is GMAT.exe. Supply the Qt
+      // runtime explicitly so Linux paths do not depend on the working directory.
+      QString runtime=QCoreApplication::applicationDirPath()+"/GmatQt";
+      if (!QFileInfo::exists(runtime)) runtime=QDir::current().filePath("GmatQt");
+      if (!QFileInfo::exists(runtime)) runtime=QCoreApplication::applicationFilePath();
+      FileManager::Instance()->SetBinDirectory(QFileInfo(runtime).fileName().toStdString(),runtime.toStdString());
       ready = Moderator::Instance()->Initialize(startup.toStdString(), true);
       if (ready) {
          QStringList keywords;
@@ -1053,6 +1063,28 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }
    return applyModelScript("Create "+type+" "+name+dimensions+";\n"+initializer+builtScript,initialValue ? std::function<QString()>([name,type,value=*initialValue] { return userParameterValueError(name,type,value); }) : std::function<QString()>());
+}
+
+void MainWindow::showPathSettings()
+{
+   if (!ready || running) { statusBar()->showMessage("Stop the mission before changing paths"); return; }
+   for (auto *child:workspace->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget()))
+      if (panel->hasChanges()) { statusBar()->showMessage("Apply or discard panel changes before changing paths"); return; }
+   try {
+      PathSettingsDialog dialog(capturePathSettings(startupFile),*receiver,[this](const PathSettings &settings) {
+         if (running) return QString("Stop the mission before changing paths.");
+         const auto error=applyPathSettings(settings,*receiver); if (!error.isEmpty()) return error;
+         startupFile=settings.startupFile;
+         ++modelGeneration; summaryAvailable=false; modelValid=false;
+         for (auto *child:workspace->subWindowList()) if (dynamic_cast<EditablePanel *>(child->widget())) child->close();
+         plots->clear(true); resources->clear(); mission->clear(); missionState={};
+         reportFiles.clear(); ephemerisFiles.clear(); refreshOutput();
+         statusBar()->showMessage("Paths changed — rebuild the mission");
+         return QString();
+      },scriptPath,this);
+      dialog.exec();
+   } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
+   catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
 }
 
 void MainWindow::showCreateResource()

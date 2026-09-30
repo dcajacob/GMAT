@@ -1,0 +1,37 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 21: QtGui.Paths
+1/1 Test #21: QtGui.Paths ......................***Failed    0.70 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+First priority function failed: HELP_PATH directory does not exist: ../docs/help/
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to ../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to ../data/time/tai-utc.dat
+2026-09-30 11:13:52 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Utility Exception: FileManager::GetFilename() file type: HELP_DIRECTORY_FILE is unknown
+
+Utility Exception: FileManager::GetFilename() file type: HELP_DIRECTORY_FILE is unknown
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.70 sec*proc (1 test)
+
+Total Test time (real) =   0.70 sec
+
+The following tests FAILED:
+	 21 - QtGui.Paths (Failed)                              qt-gui
+Errors while running CTest

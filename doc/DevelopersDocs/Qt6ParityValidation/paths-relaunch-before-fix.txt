@@ -1,0 +1,49 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 21: QtGui.Paths
+1/1 Test #21: QtGui.Paths ......................***Failed    0.88 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Saved startup child launch failed (1): Unknown error
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+Error occurred during initialization: Utility Exception: At least 10 directories do not exist, including:
+TIME_PATH = ../data/time/
+PLANETARY_COEFF_PATH = ../data/planetary_coeff/
+PLANETARY_EPHEM_DE_PATH = ../data/planetary_ephem/de/
+PLANETARY_EPHEM_SPK_PATH = ../data/planetary_ephem/spk/
+VEHICLE_EPHEM_SPK_PATH = ../data/vehicle/ephem/spk/
+VEHICLE_EPHEM_CCSDS_PATH = ../data/vehicle/ephem/ccsds/
+EARTH_POT_PATH = ../data/gravity/earth/
+LUNA_POT_PATH = ../data/gravity/luna/
+VENUS_POT_PATH = ../data/gravity/venus/
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.88 sec*proc (1 test)
+
+Total Test time (real) =   0.88 sec
+
+The following tests FAILED:
+	 21 - QtGui.Paths (Failed)                              qt-gui
+Errors while running CTest

@@ -1016,17 +1016,121 @@ std::string FileManager::GetFullStartupFilePath()
       return mStartupFileName;
    else
    {
-      mStartupFileDir = GmatFileUtil::GetCurrentWorkingDirectory() + mPathSeparator;
       return mStartupFileDir + mStartupFileName;
    }
 }
 
+
+void FileManager::SetStartupFilePath(const std::string &path)
+{
+   mStartupFileDir = GmatFileUtil::ParsePathName(path);
+   mStartupFileName = GmatFileUtil::ParseFileName(path);
+}
 
 //void FileManager::ReadStartupFile(const char *fileName)
 //{
 //   ReadStartupFile(std::string(fileName));
 //}
 
+
+
+// A value snapshot owns no FileInfo pointers and remains valid across reloads.
+struct FileManager::State
+{
+   std::string mAbsBinDir;
+   std::string mGmatWorkingDir;
+   std::string mStartupFileDir;
+   std::string mStartupFileName;
+   std::string mRunMode;
+   std::string mPlotMode;
+   std::string mMatlabMode;
+   std::string mDebugMatlab;
+   std::string mDebugMissionTree;
+   std::string mWriteParameterInfo;
+   std::string mWriteFilePathInfo;
+   std::string mWriteGmatKeyword;
+   std::string mLastFilePathMessage;
+   std::list<std::string> mGmatIncludePaths;
+   std::list<std::string> mGmatFunctionPaths;
+   std::list<std::string> mMatlabFunctionPaths;
+   std::list<std::string> mPythonModulePaths;
+   StringArray mGmatIncludeFullPaths;
+   StringArray mGmatFunctionFullPaths;
+   StringArray mMatlabFunctionFullPaths;
+   StringArray mPythonModuleFullPaths;
+   StringArray mSavedComments;
+   StringArray mPathWrittenOuts;
+   StringArray mFileWrittenOuts;
+   StringArray mPluginList;
+   std::map<std::string,std::string> mPathMap;
+   std::map<std::string,std::pair<std::string,std::string>> files;
+};
+
+std::shared_ptr<const FileManager::State> FileManager::CaptureState() const
+{
+   auto state=std::make_shared<State>();
+   state->mAbsBinDir=mAbsBinDir;
+   state->mGmatWorkingDir=mGmatWorkingDir;
+   state->mStartupFileDir=mStartupFileDir;
+   state->mStartupFileName=mStartupFileName;
+   state->mRunMode=mRunMode;
+   state->mPlotMode=mPlotMode;
+   state->mMatlabMode=mMatlabMode;
+   state->mDebugMatlab=mDebugMatlab;
+   state->mDebugMissionTree=mDebugMissionTree;
+   state->mWriteParameterInfo=mWriteParameterInfo;
+   state->mWriteFilePathInfo=mWriteFilePathInfo;
+   state->mWriteGmatKeyword=mWriteGmatKeyword;
+   state->mLastFilePathMessage=mLastFilePathMessage;
+   state->mGmatIncludePaths=mGmatIncludePaths;
+   state->mGmatFunctionPaths=mGmatFunctionPaths;
+   state->mMatlabFunctionPaths=mMatlabFunctionPaths;
+   state->mPythonModulePaths=mPythonModulePaths;
+   state->mGmatIncludeFullPaths=mGmatIncludeFullPaths;
+   state->mGmatFunctionFullPaths=mGmatFunctionFullPaths;
+   state->mMatlabFunctionFullPaths=mMatlabFunctionFullPaths;
+   state->mPythonModuleFullPaths=mPythonModuleFullPaths;
+   state->mSavedComments=mSavedComments;
+   state->mPathWrittenOuts=mPathWrittenOuts;
+   state->mFileWrittenOuts=mFileWrittenOuts;
+   state->mPluginList=mPluginList;
+   state->mPathMap=mPathMap;
+   for (const auto &entry:mFileMap) if (entry.second) state->files[entry.first]={entry.second->mPath,entry.second->mFile};
+   return state;
+}
+
+void FileManager::RestoreState(const State &state)
+{
+   mAbsBinDir=state.mAbsBinDir;
+   mGmatWorkingDir=state.mGmatWorkingDir;
+   mStartupFileDir=state.mStartupFileDir;
+   mStartupFileName=state.mStartupFileName;
+   mRunMode=state.mRunMode;
+   mPlotMode=state.mPlotMode;
+   mMatlabMode=state.mMatlabMode;
+   mDebugMatlab=state.mDebugMatlab;
+   mDebugMissionTree=state.mDebugMissionTree;
+   mWriteParameterInfo=state.mWriteParameterInfo;
+   mWriteFilePathInfo=state.mWriteFilePathInfo;
+   mWriteGmatKeyword=state.mWriteGmatKeyword;
+   mLastFilePathMessage=state.mLastFilePathMessage;
+   mGmatIncludePaths=state.mGmatIncludePaths;
+   mGmatFunctionPaths=state.mGmatFunctionPaths;
+   mMatlabFunctionPaths=state.mMatlabFunctionPaths;
+   mPythonModulePaths=state.mPythonModulePaths;
+   mGmatIncludeFullPaths=state.mGmatIncludeFullPaths;
+   mGmatFunctionFullPaths=state.mGmatFunctionFullPaths;
+   mMatlabFunctionFullPaths=state.mMatlabFunctionFullPaths;
+   mPythonModuleFullPaths=state.mPythonModuleFullPaths;
+   mSavedComments=state.mSavedComments;
+   mPathWrittenOuts=state.mPathWrittenOuts;
+   mFileWrittenOuts=state.mFileWrittenOuts;
+   mPluginList=state.mPluginList;
+   mPathMap=state.mPathMap;
+   for (auto &entry:mFileMap) delete entry.second;
+   mFileMap.clear();
+   for (const auto &entry:state.files) mFileMap[entry.first]=new FileInfo(entry.second.first,entry.second.second);
+}
 
 //------------------------------------------------------------------------------
 // void ReadStartupFile(const std::string &fileName = "")
@@ -1920,13 +2024,15 @@ void FileManager::WriteStartupFile(const std::string &fileName)
    
    outStream << std::setw(22) << "HELP_PATH" << " = "
       << mPathMap["HELP_PATH"] << "\n";
-   if (GetFilename("HELP_DIRECTORY_FILE") == "")
+   if (mFileMap.find("HELP_DIRECTORY_FILE")==mFileMap.end() ||
+       !mFileMap["HELP_DIRECTORY_FILE"] || mFileMap["HELP_DIRECTORY_FILE"]->mFile.empty())
       outStream << std::setw(22) << "#HELP_DIRECTORY_FILE " << " = " << "\n";
    else
       WriteFiles(outStream, "HELP_DIRECTORY_FILE");
    mFileWrittenOuts.push_back("HELP_DIRECTORY_FILE");
 
-   if (GetFilename("HELP_HTML_FILE") == "")
+   if (mFileMap.find("HELP_HTML_FILE")==mFileMap.end() ||
+       !mFileMap["HELP_HTML_FILE"] || mFileMap["HELP_HTML_FILE"]->mFile.empty())
       outStream << std::setw(22) << "#HELP_HTML_FILE " << " = " << "\n";
    else
       WriteFiles(outStream, "HELP_HTML_FILE");
@@ -3404,6 +3510,7 @@ void FileManager::AddFileType(const std::string &type, const std::string &name)
    }
    else if (type.find("_FILE_ABS") != type.npos)
    {
+      delete mFileMap[type];
       mFileMap[type] = new FileInfo("", name);
    }
    else if (type.find("_FILE") != type.npos)
@@ -3420,6 +3527,7 @@ void FileManager::AddFileType(const std::string &type, const std::string &name)
       {
          std::string pathName = name.substr(0, pos);
          std::string fileName = name.substr(pos+1, name.npos);
+         delete mFileMap[type];
          mFileMap[type] = new FileInfo(pathName, fileName);
          
          #ifdef DEBUG_ADD_FILETYPE
@@ -3433,6 +3541,7 @@ void FileManager::AddFileType(const std::string &type, const std::string &name)
          std::string pathName = "CURRENT_PATH";
          mPathMap[pathName] = "./";
          std::string fileName = name;
+         delete mFileMap[type];
          mFileMap[type] = new FileInfo(pathName, fileName);
          
          #ifdef DEBUG_ADD_FILETYPE
@@ -3650,7 +3759,7 @@ void FileManager::RefreshFiles()
    mPluginList.clear();
 
    for (std::map<std::string, FileInfo*>::iterator iter = mFileMap.begin();
-        iter != mFileMap.begin(); ++iter)
+        iter != mFileMap.end(); ++iter)
       delete iter->second;
 
    mFileMap.clear();

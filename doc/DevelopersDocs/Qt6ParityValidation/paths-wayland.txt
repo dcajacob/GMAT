@@ -1,0 +1,7 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5f3cd2b91760
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5f3cd2b91760
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5f3cd2397580 with focusing surface 0x5f3cd353d960
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5f3cd353d960 with focusing surface 0x5f3cd2397580
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x5f3cd4b0bf70
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x5f3cd4b0bf70
+Qt paths: ordered Add/Replace/Remove/Up/Down, directory choosers, Cancel/Apply, invalid recovery, default/explicit reports, log relocation, exact startup preview rollback, aliases/Python/modes/log preservation, Unicode export/read/apply/child launch, independent function-path reports and Stop guard passed

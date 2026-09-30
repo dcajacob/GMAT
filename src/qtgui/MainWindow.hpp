@@ -52,6 +52,7 @@ private:
    void refreshOutput();
    void openCommandEditor(int index, MissionEdit operation);
    void showCreateResource();
+   void showPathSettings();
    void showFileComparison(const QString &baseline={});
    QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={});
    bool restoreBuiltModel();
@@ -79,6 +80,7 @@ private:
    QAction *stopAction = nullptr;
    QString scriptPath;
    QString startupDirectory;
+   QString startupFile;
    QString builtScript;
    QMap<QString, QString> reportFiles;
    QMap<QString,QPair<QString,QString>> ephemerisFiles;

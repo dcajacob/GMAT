@@ -1,7 +1,9 @@
 #include "QtMessageReceiver.hpp"
+#include "FileManager.hpp"
 
 #include <QMetaObject>
 #include <QStringDecoder>
+#include <QDir>
 
 #include <cstdarg>
 #include <cstdio>
@@ -79,6 +81,10 @@ void QtMessageReceiver::SetLogEnable(bool flag)
 void QtMessageReceiver::SetLogPath(const std::string &pathname, bool append)
 {
    mLogPath = pathname;
+   // A startup LOG_FILE supplies an absolute name. Relocating Output must
+   // relocate that name as well, as the wx receiver does.
+   mLogFileName = QDir(QString::fromStdString(pathname)).filePath(
+      QString::fromStdString(FileManager::Instance()->GetFilename("LOG_FILE"))).toStdString();
    mAppendLog = append;
    if (mLogStream.is_open())
       mLogStream.close();
@@ -91,9 +97,16 @@ void QtMessageReceiver::SetLogFile(const std::string &filename)
       mLogStream.close();
 }
 
+void QtMessageReceiver::RestoreLog(const std::string &filename, bool enabled)
+{
+   SetLogFile(filename);
+   mLogEnabled = enabled;
+   mAppendLog = true; // Resuming an existing destination must preserve its log.
+}
+
 void QtMessageReceiver::LogMessage(const std::string &msg)
 {
-   if (mLogEnabled)
+   if (mLogEnabled && !mLogSuspended)
    {
       OpenLogIfNeeded();
       if (mLogStream.is_open())

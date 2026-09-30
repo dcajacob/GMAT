@@ -237,3 +237,33 @@ audited rows and selected plugins still have incomplete acceptance cases.
 
 [All 32 Qt suites passed](check-parameters.txt) in 172.91 seconds, including
 native viewer and launch checks, with the user’s application/bin/GmatQt rebuilt.
+
+## Startup-path workflow
+
+PathTests drives Set paths Add/Replace/Remove/Up/Down and directory browsing,
+Cancel/Apply and invalid recovery. Identically named functions in two search
+directories produce the expected 10/15 as GUI priority changes, matching a
+separately scripted explicit FunctionPath. Default report/log output moves to a
+Unicode directory; explicit report destinations retain their paths, and the
+Output report viewer shows the relocated file.
+
+Malformed, missing-root and wx-only startup imports preserve the session. Exact
+rollback covers file aliases, Python order, startup identity, runtime modes and
+existing logs. Unicode export/read/Cancel/Apply, mission/symlink protection,
+write-error retry, a separately launched GmatQt using the saved startup and
+run/Stop guards are covered. Optional wx help entries no longer break export;
+relative startup paths now resolve from the executable for fresh launches from
+files saved elsewhere. Pre-fix diagnostics are retained for
+[startup export](paths-export-before-fix.txt) and
+[fresh reload](paths-relaunch-before-fix.txt).
+
+[Native Wayland passed](paths-wayland.txt); inspected captures show
+[ordered function paths](paths-wayland.functions.png),
+[output selection](paths-wayland.output.png) and
+[pending startup preview](paths-wayland.startup.png).
+Portal choosers, MATLAB editing, wider startup/storage formats and cached
+plugin/data hot replacement remain unqualified. The wx inventory now has 27 of
+108 Pending audit entries; the broader goal is still active.
+
+[All 33 Qt suites passed](check-paths.txt) in 135.35 seconds, with native
+viewer/launch checks and the user’s application/bin/GmatQt rebuilt.

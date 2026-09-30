@@ -33,6 +33,8 @@ public:
    void SetLogEnable(bool flag) override;
    void SetLogPath(const std::string &pathname, bool append = false) override;
    void SetLogFile(const std::string &filename) override;
+   void SuspendLogging(bool suspended) { mLogSuspended = suspended; }
+   void RestoreLog(const std::string &filename, bool enabled);
    void LogMessage(const std::string &msg) override;
    void LogMessage(const char *msg, ...) override;
 
@@ -52,10 +54,10 @@ private:
    std::string mLogPath;
    bool mLogEnabled;
    bool mAppendLog;
+   bool mLogSuspended = false;
    std::ofstream mLogStream;
    std::queue<std::string> mMessages;
    std::mutex mMutex;
 };
 
 #endif
-

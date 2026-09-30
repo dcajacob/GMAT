@@ -84,9 +84,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/GmatDialog.hpp` | Shared OK/Cancel/reset, validation-before-close and Help contract audited. Qt focused dialogs keep pending values until acceptance; field/dialog Cancel and invalid-input recovery are covered by the corresponding suites. Close/Escape/focus behavior across all dialogs and context Help remain pending. |
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Active wx numeric Variable, literal String, Array creation (dimensions 1–1000), name validation and existing-user-parameter operations audited. Qt New resource supplies typed initial values, retains values on type changes, rejects duplicate/reserved names and invalid dimensions, and opens the created resource in the tree. Parameters tests cover actual dialog Cancel, correction, creation Undo/Redo, Unicode String and maximum Array creation, then deletion without changing original report results. Existing parameters open from Resources; wx list/Clear layout and shared Help remain unqualified. |
 | `src/gui/foundation/ParameterSelectDialog.hpp` | Pending audit |
-| `src/gui/foundation/SinglePathSetupPanel.hpp` | Pending audit |
+| `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
 | `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Context Help and staying open after Apply remain pending. |
-| `src/gui/foundation/MultiPathSetupPanel.hpp` | Pending audit |
+| `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
@@ -140,7 +140,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
 | `src/gui/app/InteractiveMatlabDialog.hpp` | Pending audit |
-| `src/gui/app/SetPathDialog.hpp` | Pending audit |
+| `src/gui/app/SetPathDialog.hpp` | wx startup read/write, ordered GMAT/MATLAB function paths, output/log Apply and directory errors audited. Qt Set paths validates full startup imports as pending state, provides full read-only startup preview and atomic export, and uses exact file-manager/global/log rollback. PathTests covers malformed/invalid-root/wx-only imports, custom alias and Python-list retention, mode/log/source protection, Unicode save/read/Apply, a fresh GmatQt process, independently scripted reports, and run/Stop/pending-panel guards. Optional MATLAB editing, plugin/cached-data hot replacement, portal choosers and broader startup/storage formats remain unqualified. |
 
 ## Selected runtime plugin inventory
 
@@ -3524,3 +3524,99 @@ keyboard/focus operations, and all imported source/parser combinations remain
 unqualified. The wx inventory now has 30 of 108 entries Pending audit; audited
 rows and all 20 selected plugins still contain unfinished qualifications. The
 broader replacement goal remains active.
+
+
+## Startup paths, import/export and fresh-process reload
+
+Audited wx SetPathDialog, SinglePathSetupPanel and MultiPathSetupPanel: ordered
+function-directory lists, text and directory browsing, Add at top, Replace,
+Remove, Up/Down, directory errors, output/log updates, and startup read/write.
+The optional MATLAB tab is outside the current Linux/no-MATLAB target. wx reads
+another startup directly into the live FileManager, even before dialog
+acceptance; Qt instead validates and previews the complete imported settings
+while retaining the original session until Apply.
+
+Edit > Set paths provides GMAT Function, Output and a read-only monospaced
+Startup settings preview. Folder edits, import, and order changes remain local.
+Equivalent directories are shown once while retaining their first search
+position, because engine callers can add multiple slash spellings. Apply
+validates existing directories, probes output writability and checks the
+interpreted output/function paths and order before committing. It invalidates
+the built mission and closes its applied configuration snapshots; mission text,
+modified state and undo history are not changed. Pending configuration panels
+block opening Set paths; the action is disabled during execution and re-enabled
+after Stop. The mission directory retains the engine's first-search precedence
+when a mission is built. Cached data and plugins require a new process after
+startup changes; this does not implement hot replacement of those objects.
+
+Startup preview/import uses an opaque value snapshot of FileManager's exact
+path/file aliases, ordered include/GMAT/MATLAB/Python lists and metadata,
+together with the global modes changed by startup parsing and the receiver's
+log destination/enabling. Successful previews, malformed input and directory
+validation errors restore all of that state. Preview logging is suspended so
+parsing cannot create/truncate candidate logs; resuming the original log uses
+append. Qt's wx-only startup compatibility check runs before interpretation.
+The snapshot contains no FileInfo pointers. Existing file-entry replacement and
+RefreshFiles cleanup now release their owned entries; the old refresh loop
+compared begin against begin and never visited them. No propagation, numerical
+or estimation algorithms changed.
+
+Output Apply moves the receiver's log name as well as its path; the former
+absolute startup filename previously defeated relocation. Startup export uses
+QSaveFile and the engine's canonical startup serialization, with pending
+OUTPUT_PATH and ordered GMAT_FUNCTION_PATH entries applied. Original startup
+comment formatting is not preserved except the engine's saved ## comments.
+The mission path and symlinks to it are protected; save Cancel and missing-parent
+write failure retain the previous files and permit retry. Save and Apply are
+separate operations. Reading a valid file updates pending controls/preview;
+Close discards unapplied settings.
+
+The production Qt startup omits the optional wx HELP_DIRECTORY_FILE. The engine
+startup writer previously called GetFilename unconditionally and threw before
+Set paths could open; missing optional help entries now serialize as comments.
+The earlier message-window diagnostic is retained in
+Qt6ParityValidation/paths-export-before-fix.txt. A fresh launch from a startup
+saved elsewhere also failed because main changed the process directory to the
+startup file's directory and FileManager still tried the Windows GMAT.exe name.
+Qt now supplies its runtime executable directory to FileManager, and launch uses
+the executable's directory for relative startup/plugin entries. The startup-file
+getter also retains its stored directory instead of replacing it with the
+current process directory. The pre-fix fresh-process failure is retained in
+Qt6ParityValidation/paths-relaunch-before-fix.txt.
+
+PathTests drives the actual menu/dialog controls and widget choosers. Dotted and
+spaced function directories contain identically named functions multiplying 5
+by 2 or 3: GUI ordering selects the expected 10 or 15. Independently scripted
+explicit FunctionPath configuration produces the same numeric reports. Default
+report/log destinations move to a Unicode output directory, while an explicit
+mission report filename retains its destination. The Output tree and report
+viewer show the relocated file. Unicode mission save/reopen retains execution.
+These compare configuration routes through the existing engine, not independent
+calculation implementations.
+
+Malformed startup import changes run/echo modes before failing; validation
+checks prove restoration of function/output paths, startup identity, custom
+Unicode file alias, Python path order, testing/batch/echo modes and existing log
+contents. A missing-root import also rolls back, and an enabled wx OpenFrames
+plugin is rejected before changing session settings. Unicode startup
+export/read/Cancel/Apply, mission/symlink protection, write-error retry and Save
+Cancel are covered. A separately launched application/bin/GmatQt using the
+saved startup, isolated settings and reopened mission reproduces the complete
+report. A stopped loop re-enables path editing and recovers the same function
+execution afterward. Fixtures, settings, reports and the child process's
+screenshot are temporary.
+
+All 33 registered Qt suites passed in 135.35 seconds with display access,
+including native normal/HiDPI/fractional viewer checks, existing mission/plugin
+suites and launch. The user executable application/bin/GmatQt was rebuilt.
+Combined result: Qt6ParityValidation/check-paths.txt.
+
+Native Wayland passed; the functions, output and startup preview captures were
+inspected: Qt6ParityValidation/paths-wayland.txt and
+paths-wayland.{functions,output,startup}.png. This exercises Qt widget choosers;
+the desktop portal chooser, broader keyboard/focus, all startup option/file
+formats, cyclic aliases, cached-data/plugin replacement and wider permission,
+coverage or disk-failure cases remain unqualified. Shared Help and top-level
+Wayland minimize/restore remain open. The wx inventory now has 27 of 108 Pending
+audit entries; audited workflows and all 20 selected plugins retain unfinished
+qualification cases, so the broader replacement goal remains active.
