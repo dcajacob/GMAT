@@ -1230,3 +1230,18 @@ Finite burns use the **Thrusters** selection checklist with individual checks,
 Select all, Clear selection and drag reordering. Clearing all selections is
 saved as an empty configuration. The base engine rejects executing an active
 finite burn without thrusters; select an attached thruster and Apply to recover.
+
+
+EphemerisFile resources provide **Ephemeris output…** with output spacecraft/frame,
+format, filename browsing, write enable, sampling/interpolation and time interval.
+Code-500 exposes byte order; STK exposes distance units and event boundaries; SPK
+restricts frames and uses integrator samples. Step size and interval endpoints
+accept typed values. Changing epoch format converts both explicit dates together
+and retains spacecraft-epoch sentinels. OK keeps edits pending until resource
+Apply.
+
+**Output > Ephemeris files** opens OEM/STK text in the paged viewer. Binary files
+show their format, path and size with **Copy path** and **Open folder** actions.
+A spacecraft's **EphemerisName** field provides an existing-file chooser for
+OEM/STK/Code500 propagation, including first selection when blank. SPK propagation
+uses the spacecraft's ordered orbit-kernel list and matching NAIF ID.

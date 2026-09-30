@@ -124,7 +124,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/BarycenterPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
 | `src/gui/app/CompareTextDialog.hpp` | Pending audit |
-| `src/gui/subscriber/EphemerisFilePanel.hpp` | Pending audit |
+| `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
@@ -149,7 +149,7 @@ Every row requires real-engine evidence, not just registration.
 | Plugin | Configuration / execution / reports / recovery evidence |
 | --- | --- |
 | `../plugins/libDataInterface` | Pending qualification |
-| `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. Other ephemeris formats and coverage-boundary cases pending. |
+| `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
@@ -2586,3 +2586,81 @@ Qt6ParityValidation/check-burns.txt, burn-wayland.txt and burn-wayland.png.
 Broader burn bodies/attitudes/epochs, fuel limits and finite shared electric-power
 combinations remain unqualified. The larger workflow, viewer and plugin gates
 remain open; 52 wx workflow inventory entries are still marked Pending audit.
+
+
+## Ephemeris output setup and generated-file readback
+
+Audited the active wx EphemerisFilePanel controls: spacecraft, output frame, write
+enable, format/filename, interpolator/order, editable sampling step, Code-500 byte
+order, STK distance/event settings, epoch format and editable interval endpoints.
+The commented-out wx StateType control is not an active workflow. Qt's grouped
+Ephemeris output dialog supplies these controls with scrollable groups and fixed
+OK/Cancel actions. It retains format-specific pending sampling/frame settings,
+filters compatible frames, normalizes extensions when changing formats and
+converts both interval dates atomically while preserving spacecraft-epoch
+sentinels. Failed conversion restores the format and both dates. Cancel does not
+modify the resource; OK remains pending until Apply.
+
+Generic property controls now permit typed sampling/endpoints, convert paired
+dates and update format dependencies. STK settings remain available when switching
+from another format despite their conditional engine readonly metadata. Apply
+sets format/epoch format before their dependents, rebinds the cloned spacecraft
+and output-frame references, then uses engine validation. A Cartesian CK selection
+receives a corrective message; quaternion CK output is not qualified here.
+
+Spacecraft EphemerisName now offers an input-file chooser even when initially
+empty. The engine's readonly flag in this state controls serialization visibility,
+rather than preventing first assignment. The current OEM/STK/Code500 propagators
+read this spacecraft field; their retired EphemFile setters perform no assignment.
+Tests configure first input selection through the GUI rather than relying on the
+retired field. SPK uses the existing spacecraft kernel list and matching NAIF ID.
+
+Output now lists ephemeris files. OEM and STK text open in the paged report viewer;
+binary formats show format/path/size with Copy path and Open folder actions. The
+listed path retains custom extensions for non-SPK formats, matching engine
+writing rather than the wx new-filename extension suggestion.
+
+Qualification exposed two file-handling defects. An unresolved absolute output
+path could yield an empty resolved filename without the setter rejecting it.
+The setter now rejects that case. On Linux, the existing stream-based file check
+also accepted directories; startup remove() could remove an empty directory and
+replace it with ephemeris output. Startup now diagnoses a directory target before
+removal. Qt rejects directory selection before Apply, and the runtime check
+protects a target changed to a directory after Apply. These are file-handling
+changes; propagation, interpolation and time-conversion mathematics are unchanged.
+
+EphemerisTests executes OEM with a custom extension, STK in meters without event
+boundaries, Code-500 little/big endian and SPK. GUI exports match independently
+script-configured propagation reports within 1e-9 per reported component. The
+600-second reference propagation agrees with a circular point-mass Earth orbit
+within 1e-6 km position and 1e-9 km/s velocity. Generated files are read through
+their actual plugins after GUI step edits, file selection and Unicode script
+save/reopen; the state at 300 seconds is checked independently within 2e-4 km
+position and 2e-7 km/s velocity. Tests cover group/generic dependencies, chooser
+Cancel, pending reopen, failed date conversion, compact scrolling, exact
+Undo/Redo, labeled mission/comment preservation, invalid reference/step/order/
+interval rejection, Output access, directory preservation and recovery.
+
+FromSpacecraft intentionally clamps a start epoch before coverage to the first
+ephemeris epoch. Tests preserve that engine behavior and verify the same resulting
+state, reject starts beyond coverage, then recover through the saved script.
+Missing generated input files likewise fail and recover after restoration.
+
+CK quaternion, covariance/acceleration output, broader frames/bodies, event
+boundaries, segment gaps, backward propagation, exact boundary stepping, multiple
+kernels and disk-full/permission cases remain unqualified. The larger workflow,
+viewer and plugin gates remain open; 51 wx inventory entries remain Pending audit.
+
+The full new workflow passed on native Wayland with isolated settings. The
+compact-layout test waits for window exposure and resize acknowledgement before
+checking scrolling and fixed buttons, so initial compositor sizing cannot
+overwrite the tested resize. The native dialog capture was inspected: groups,
+labels, enabled/disabled fields, long dates, filename and action buttons remain
+readable. Observed readback maximum component errors were about 1.71e-6 km
+position and 5.20e-8 km/s velocity across these fixtures; SPK was smaller. Native
+evidence: Qt6ParityValidation/ephemeris-wayland.txt and ephemeris-wayland.png.
+
+Rebuilt the actual application/bin/GmatQt target. All 20 Qt suites passed in
+71.39 seconds with the final test implementation, including native viewer/window
+checks, mission/plugin/file regressions and the new Ephemeris suite. Evidence:
+Qt6ParityValidation/check-ephemeris.txt. Full replacement acceptance remains open.

@@ -19,6 +19,8 @@
 #include "OrbitViewDialog.hpp"
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
+#include "EphemerisDialog.hpp"
+#include "EphemerisFile.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -120,22 +122,26 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       sections->setExpanding(false);
       layout->addWidget(sections);
    }
-   if (thruster || impulsive) {
+   if (thruster || impulsive || object.IsOfType("EphemerisFile")) {
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
-      auto *setup=new QPushButton(impulsive ? "Impulsive burn setup…" : "Thruster setup…",this); setup->setObjectName(impulsive ? "editBurn" : "editThruster"); layout->addWidget(setup);
-      connect(setup,&QPushButton::clicked,this,[this,initial,impulsive] {
+      const bool ephemeris=object.IsOfType("EphemerisFile");
+      auto *setup=new QPushButton(ephemeris ? "Ephemeris output…" : impulsive ? "Impulsive burn setup…" : "Thruster setup…",this); setup->setObjectName(ephemeris ? "editEphemeris" : impulsive ? "editBurn" : "editThruster"); layout->addWidget(setup);
+      connect(setup,&QPushButton::clicked,this,[this,initial,impulsive,ephemeris] {
          QMap<QString,QString> pending;
          for (int row=0;row<table->rowCount();++row) {
             const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
             pending.insert(table->item(row,0)->text(),combo ? comboValue(combo) : table->item(row,1)->text());
          }
          QMap<QString,QString> values;
-         if (impulsive) { BurnDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         if (ephemeris) { EphemerisDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         else if (impulsive) { BurnDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
          else { ThrusterDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; values=dialog.settings(); }
+         table->setProperty("ephemerisGroupedUpdate",ephemeris);
          for (int row=0;row<table->rowCount();++row) {
             const auto name=table->item(row,0)->text(); if (!values.contains(name)) continue;
             if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values.value(name)); else table->item(row,1)->setText(values.value(name));
          }
+         table->setProperty("ephemerisGroupedUpdate",false);
       });
    }
    if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
@@ -522,6 +528,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       else {
          auto *choices = new QComboBox(table);
          choices->addItems(field.choices);
+         if (object.IsOfType("EphemerisFile") && QStringList{"StepSize","InitialEpoch","FinalEpoch"}.contains(field.name)) { choices->setEditable(true); choices->setInsertPolicy(QComboBox::NoInsert); }
          if (choices->findText(field.value) < 0) choices->addItem(field.value);
          choices->setCurrentText(field.value); table->setCellWidget(row, 1, choices);
       }
@@ -993,6 +1000,35 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             connect(model,&QComboBox::currentTextChanged,this,update); update();
          }
       }
+   }
+   if (object.IsOfType("EphemerisFile")) {
+      QMap<QString,int> rows; for (int row=0;row<table->rowCount();++row) rows.insert(table->item(row,0)->text(),row);
+      auto combo=[this,rows](const QString &name) { return qobject_cast<QComboBox *>(table->cellWidget(rows.value(name),1)); };
+      auto *format=combo("FileFormat"),*epochFormat=combo("EpochFormat"),*start=combo("InitialEpoch"),*end=combo("FinalEpoch");
+      auto dependencies=[combo,format] {
+         const auto value=format->currentText(); combo("DistanceUnit")->setEnabled(value=="STK-TimePosVel"); combo("IncludeEventBoundaries")->setEnabled(value=="STK-TimePosVel"); combo("OutputFormat")->setEnabled(value=="Code-500"); combo("StepSize")->setEnabled(value!="SPK");
+      };
+      connect(format,&QComboBox::currentTextChanged,this,[this,rows,combo,dependencies](const QString &next) {
+         dependencies();
+         if (table->property("ephemerisGroupedUpdate").toBool()) return;
+         const auto interpolator=next=="SPK" ? "Hermite" : "Lagrange";
+         if (auto *field=combo("Interpolator")) field->setCurrentText(interpolator); else if (rows.contains("Interpolator")) table->item(rows.value("Interpolator"),1)->setText(interpolator);
+         auto *step=combo("StepSize"); if (next=="SPK") step->setCurrentText("IntegratorSteps"); else if (next=="Code-500" && step->currentText()=="IntegratorSteps") step->setCurrentText("60");
+         const int filename=rows.value("Filename"); EphemerisFile naming("QtEphemerisNaming");
+         table->item(filename,1)->setText(QString::fromStdString(naming.GetProperFileName(table->item(filename,1)->text().toStdString(),next.toStdString(),false)));
+      }); dependencies();
+      connect(epochFormat,&QComboBox::currentTextChanged,this,[this,epochFormat,start,end,previous=epochFormat->currentText()](const QString &next) mutable {
+         if (table->property("ephemerisGroupedUpdate").toBool()) { previous=next; return; }
+         try {
+            QStringList converted;
+            for (auto *endpoint:{start,end}) {
+               const auto value=endpoint->currentText().trimmed();
+               if (value==(endpoint==start ? "InitialSpacecraftEpoch" : "FinalSpacecraftEpoch")) { converted.append(value); continue; }
+               Real mjd; std::string result; TimeSystemConverter::Instance()->Convert(previous.toStdString(),-999.999,value.toStdString(),next.toStdString(),mjd,result); converted.append(QString::fromStdString(result));
+            }
+            start->setCurrentText(converted[0]); end->setCurrentText(converted[1]); previous=next; status->setText("Both epochs converted. Apply retains the format and dates together.");
+         } catch (BaseException &failure) { const QSignalBlocker blocker(epochFormat); epochFormat->setCurrentText(previous); status->setText("Epoch conversion failed: "+QString::fromStdString(failure.GetFullMessage())); }
+      });
    }
    layout->addWidget(table, 1);
    status = new QLabel("Apply validates changes and updates the mission script.", this);

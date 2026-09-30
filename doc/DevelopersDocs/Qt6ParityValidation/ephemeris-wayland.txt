@@ -1,0 +1,25 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x59de8acbe7c0 with focusing surface 0x59de8b68d670
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x59de8b68d670 with focusing surface 0x59de8acbe7c0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x59de8ce6da40
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x59de8ce6da40
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x59de8b520170
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x59de8b520170
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x59de8b65e480
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x59de8b65e480
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x59de8e248bb0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x59de8e248bb0
+Analytic circular state at 600 s: max position error 8.18545e-12 km, max velocity error 6.21725e-15 km/s
+Analytic circular state at 300 s: max position error 1.70585e-06 km, max velocity error 1.83893e-09 km/s
+PASS: CCSDS-OEM grouped/generic dependencies, browse/pending/Cancel, paired epoch conversion/rollback, compact layout, Undo/Redo/Unicode round trips, unchanged mission report, Output access, invalid settings, directory preservation/recovery, plugin readback/input chooser/analytic circle, coverage and missing-file recovery
+Analytic circular state at 600 s: max position error 8.18545e-12 km, max velocity error 6.21725e-15 km/s
+Analytic circular state at 300 s: max position error 1.70585e-06 km, max velocity error 5.19077e-08 km/s
+PASS: STK-TimePosVel grouped/generic dependencies, browse/pending/Cancel, paired epoch conversion/rollback, compact layout, Undo/Redo/Unicode round trips, unchanged mission report, Output access, invalid settings, directory preservation/recovery, plugin readback/input chooser/analytic circle, coverage and missing-file recovery
+Analytic circular state at 600 s: max position error 8.18545e-12 km, max velocity error 6.21725e-15 km/s
+Analytic circular state at 300 s: max position error 1.70585e-06 km, max velocity error 1.83893e-09 km/s
+PASS: Code-500-LittleEndian grouped/generic dependencies, browse/pending/Cancel, paired epoch conversion/rollback, compact layout, Undo/Redo/Unicode round trips, unchanged mission report, Output access, invalid settings, directory preservation/recovery, plugin readback/input chooser/analytic circle, coverage and missing-file recovery
+Analytic circular state at 600 s: max position error 8.18545e-12 km, max velocity error 6.21725e-15 km/s
+Analytic circular state at 300 s: max position error 1.70585e-06 km, max velocity error 1.83893e-09 km/s
+PASS: Code-500-BigEndian grouped/generic dependencies, browse/pending/Cancel, paired epoch conversion/rollback, compact layout, Undo/Redo/Unicode round trips, unchanged mission report, Output access, invalid settings, directory preservation/recovery, plugin readback/input chooser/analytic circle, coverage and missing-file recovery
+Analytic circular state at 600 s: max position error 8.18545e-12 km, max velocity error 6.21725e-15 km/s
+Analytic circular state at 300 s: max position error 7.27596e-12 km, max velocity error 9.54792e-14 km/s
+PASS: SPK grouped/generic dependencies, browse/pending/Cancel, paired epoch conversion/rollback, compact layout, Undo/Redo/Unicode round trips, unchanged mission report, Output access, invalid settings, directory preservation/recovery, plugin readback/input chooser/analytic circle, coverage and missing-file recovery

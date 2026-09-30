@@ -72,6 +72,7 @@ private:
    QString scriptPath;
    QString builtScript;
    QMap<QString, QString> reportFiles;
+   QMap<QString,QPair<QString,QString>> ephemerisFiles;
    MissionSnapshot missionState;
    bool modelValid = false;
    bool ready = false;

@@ -10,6 +10,8 @@
 #include "OrbitViewDialog.hpp"
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
+#include "EphemerisDialog.hpp"
+#include "EphemerisFile.hpp"
 #include "EventLocatorDialog.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
@@ -38,6 +40,9 @@
 #include "FileManager.hpp"
 #include <QAction>
 #include <QApplication>
+#include <QClipboard>
+#include <QDesktopServices>
+#include <QUrl>
 #include <QCloseEvent>
 #include <QDockWidget>
 #include <QFile>
@@ -147,7 +152,16 @@ MainWindow::MainWindow()
    plots->saveProjection=[this](const QString &name,bool perspective,double fov) { return savePlotProjection(name,perspective,fov); };
    connect(output, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       const auto name = item->data(0, Qt::UserRole).toString();
-      if (item->data(0, Qt::UserRole+1).toString()=="report") {
+      const auto type=item->data(0,Qt::UserRole+1).toString(),format=item->data(0,Qt::UserRole+2).toString();
+      if (type=="ephemeris" && format!="CCSDS-OEM" && format!="STK-TimePosVel") {
+         if (running) { statusBar()->showMessage("Wait until the mission stops before opening its ephemeris file"); return; }
+         const QFileInfo file(name); if (!file.isFile()) { statusBar()->showMessage("Ephemeris file is not available: "+name); return; }
+         auto *viewer=new QWidget; viewer->setObjectName("ephemerisFileDetails"); auto *layout=new QVBoxLayout(viewer);
+         auto *details=new QLabel(QString("Binary ephemeris file\nFormat: %1\nPath: %2\nSize: %3 bytes").arg(format,name).arg(file.size()),viewer); details->setObjectName("ephemerisFileInfo"); details->setWordWrap(true); details->setTextInteractionFlags(Qt::TextSelectableByMouse); layout->addWidget(details);
+         auto *folder=new QPushButton("Open folder",viewer); folder->setObjectName("ephemerisOpenFolder"); layout->addWidget(folder); connect(folder,&QPushButton::clicked,viewer,[file] { QDesktopServices::openUrl(QUrl::fromLocalFile(file.absolutePath())); });
+         auto *copy=new QPushButton("Copy path",viewer); copy->setObjectName("ephemerisCopyPath"); layout->addWidget(copy); connect(copy,&QPushButton::clicked,viewer,[name] { QApplication::clipboard()->setText(name); }); layout->addStretch();
+         auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose); child->setWindowTitle(item->text(0)+" — "+format); child->resize(650,250); child->show();
+      } else if (type=="report" || type=="ephemeris") {
          if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
          QFile file(name);
          if (!file.open(QIODevice::ReadOnly)) { statusBar()->showMessage("Report is not available: " + file.errorString()); return; }
@@ -555,6 +569,7 @@ void MainWindow::refreshTrees()
 {
    resources->clear(); mission->clear(); output->clear();
    reportFiles.clear();
+   ephemerisFiles.clear();
    auto *root = new QTreeWidgetItem(resources, {"Resources"});
    const std::pair<const char *, UnsignedInt> groups[] = {
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
@@ -571,6 +586,13 @@ void MainWindow::refreshTrees()
             auto *object = Moderator::Instance()->GetConfiguredObject(name);
             if (object && object->IsOfType(Gmat::REPORT_FILE))
                reportFiles.insert(QString::fromStdString(name), QString::fromStdString(object->GetStringParameter("FullPathFileName")));
+            if (auto *ephemeris=dynamic_cast<EphemerisFile *>(object)) {
+               const auto format=ephemeris->GetStringParameter("FileFormat");
+               const auto resolved=ephemeris->GetStringParameter("FullPathFileName");
+               // Engine writing retains custom extensions except for SPK.
+               const auto path=format!="SPK" && !QFileInfo(QString::fromStdString(resolved)).suffix().isEmpty() ? resolved : ephemeris->GetProperFileName(resolved,format,false);
+               ephemerisFiles.insert(QString::fromStdString(name),{QString::fromStdString(path),QString::fromStdString(format)});
+            }
          }
          if (group.second==Gmat::EVENT_LOCATOR || group.second==Gmat::SOLVER) {
             auto *object=Moderator::Instance()->GetConfiguredObject(name);
@@ -620,6 +642,11 @@ void MainWindow::refreshOutput()
       item->setData(0, Qt::UserRole+1, "report");
    }
    reports->setExpanded(true);
+   auto *ephemerides=new QTreeWidgetItem(output,{"Ephemeris files"});
+   for (auto it=ephemerisFiles.cbegin();it!=ephemerisFiles.cend();++it) {
+      auto *item=new QTreeWidgetItem(ephemerides,{it.key()}); item->setData(0,Qt::UserRole,it.value().first); item->setData(0,Qt::UserRole+1,"ephemeris"); item->setData(0,Qt::UserRole+2,it.value().second); item->setToolTip(0,it.value().first);
+   }
+   ephemerides->setExpanded(true);
    auto *folder = new QTreeWidgetItem(output, {"Plots"});
    for (const auto &name : plots->names()) {
       auto *item = new QTreeWidgetItem(folder, {name});
@@ -747,8 +774,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
       const auto viewChanges=applyOrbitViewProperties(*proposed,changes);
       const auto burnChanges=applyBurnProperties(*proposed,changes);
+      const auto ephemerisChanges=applyEphemerisProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }

@@ -59,9 +59,13 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          const auto fieldName=QString::fromStdString(object.GetParameterText(id));
          const bool thrusterSetting=(object.IsOfType("Thruster") && QStringList{"Origin","Axes","MixRatio"}.contains(fieldName)) ||
             (object.IsOfType("ImpulsiveBurn") && QStringList{"Origin","Axes"}.contains(fieldName));
+         const bool ephemerisSetting=object.IsOfType("EphemerisFile") && QStringList{"DistanceUnit","IncludeEventBoundaries"}.contains(fieldName);
+         // This input becomes writable for serialization only once populated.
+         // The GUI must offer the first selection as well as later replacement.
+         const bool ephemerisInput=object.IsOfType("Spacecraft") && fieldName=="EphemerisName";
          bool orbitElementId=false;
          if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
-         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting) continue;
+         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId && !groundTexture && !thrusterSetting && !ephemerisSetting && !ephemerisInput) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
          if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
@@ -128,7 +132,7 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
          default: continue;
          }
          const bool atmosphereFile=object.IsOfType("DragForce") && QStringList{"CSSISpaceWeatherFile","SchattenFile","InputFile"}.contains(field.name);
-         field.filename=field.fileList || object.GetParameterType(id)==Gmat::FILENAME_TYPE || atmosphereFile;
+         field.filename=field.fileList || object.GetParameterType(id)==Gmat::FILENAME_TYPE || atmosphereFile || ephemerisInput;
          if (field.filename) {
             const auto type=object.GetTypeName();
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
@@ -603,7 +607,8 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
    }
    const bool arrayValues=object.GetTypeName()=="Array" && name=="RmatValue";
    const bool groundTexture=object.GetTypeName()=="GroundTrack" && name=="TextureMap";
-   if (object.IsParameterReadOnly(id) && !arrayValues && !groundTexture) throw std::runtime_error("Property is read-only");
+   const bool ephemerisInput=object.IsOfType("Spacecraft") && name=="EphemerisName";
+   if (object.IsParameterReadOnly(id) && !arrayValues && !groundTexture && !ephemerisInput) throw std::runtime_error("Property is read-only");
    bool valid = false;
    switch (object.GetParameterType(id)) {
    case Gmat::RVECTOR_TYPE:
