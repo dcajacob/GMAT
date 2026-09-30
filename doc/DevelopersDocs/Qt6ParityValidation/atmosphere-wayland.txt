@@ -1,0 +1,9 @@
+PASS: MSISE90 GUI configuration, Undo/Redo, save/reopen, density and 600-second trajectory; density=0.00609602
+PASS: JacchiaRoberts GUI configuration, Undo/Redo, save/reopen, density and 600-second trajectory; density=0.0060775
+PASS: NRLMSISE00 GUI configuration, Undo/Redo, save/reopen, density and 600-second trajectory; density=0.0059959
+PASS: historic CSSI and SchattenFile prediction GUI/configuration/save/reopen/report execution
+PASS: historic CSSI and CSSISpaceWeatherFile prediction GUI/configuration/save/reopen/report execution
+PASS: GUI-configured SPAD drag, Bilinear interpolation, scale 1.5, save/reopen and trajectory report
+PASS: GUI-configured SPAD drag, Bicubic interpolation, scale 1.5, save/reopen and trajectory report
+PASS: SPAD file runtime failure and unchanged-script reopen/recovery
+PASS: validation/chooser Cancel and acceptance, pending-mode retention, flux effect, missing-file runtime recovery and drag removal

@@ -5,6 +5,7 @@
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
 #include "SpacecraftOrbit.hpp"
+#include "AtmosphereDialog.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "StartupCompatibility.hpp"
@@ -735,8 +736,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString mixture=changes.value("MixRatio");
       const auto orbitChanges=applySpacecraftOrbitProperties(*proposed,changes);
       const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
+      const auto atmosphereChanges=applyAtmosphereProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -756,7 +758,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = serialize(*object);
       auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);

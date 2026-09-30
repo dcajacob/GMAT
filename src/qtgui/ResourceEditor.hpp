@@ -20,6 +20,7 @@ private:
    QLabel *status;
    QMap<QString, QString> original;
    QMap<QString, QString> attitudeEdits;
+   QMap<QString, QString> atmosphereEdits;
    QSet<QString> attitudeNames;
    std::function<QMap<QString,QString>()> pendingOrbit;
    QString originalExpressions="[]",expressions="[]";

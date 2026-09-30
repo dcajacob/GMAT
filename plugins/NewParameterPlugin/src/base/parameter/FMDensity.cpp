@@ -50,7 +50,7 @@
  */
 //------------------------------------------------------------------------------
 FMDensity::FMDensity(const std::string &name, GmatBase *obj) :
-   OdeReal(name, "AtmosDensity", obj, "Atmospheric Density", "Kg/m^3",
+   OdeReal(name, "AtmosDensity", obj, "Atmospheric Density", "kg/km^3",
              Gmat::SPACECRAFT, GmatParam::ODE_MODEL)
 {
    mDepObjectName = "";

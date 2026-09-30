@@ -69,7 +69,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities, specialized frames and Orbit Designer/Summary workflows remain to qualify. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consuming GUI-attached power remains to qualify. |
-| `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution and broader interpolation/scale combinations remain to qualify. |
+| `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution with Bilinear/Bicubic interpolation, scale 1.5 and missing-file recovery covered. Broader assets and interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | File, rotation/translation/scale sliders and numeric fields, recenter/autoscale, new-file pose reset, colors and Earth-reference preview audited. Qt visual editor implemented with pending Apply, engine normalization and model-read diagnostics. Cancel, file/color pickers, invalid input recovery, Undo/Redo and save/reopen propagation covered. Textured OBJ preview/rotation/Earth reference tested at normal, 150% and 200% scaling and directly on Wayland. Broader 3DS asset/material cases remain to qualify. |
@@ -94,11 +94,11 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Pending audit |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Pending audit |
-| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Specialized layout and remaining settings pending. |
+| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Pending audit |
 | `src/gui/asset/GroundStationPanel.hpp` | Pending audit |
 | `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
-| `src/gui/forcemodel/DragInputsDialog.hpp` | Pending audit |
+| `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
@@ -157,8 +157,8 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
-| `../plugins/libMsise00` | Pending qualification |
-| `../plugins/libNewParameters` | Pending qualification |
+| `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
+| `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | Pending qualification |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
@@ -2068,3 +2068,79 @@ after this workflow and does not claim full desktop or long-session validation.
 The final 2250x1620 capture was inspected for readable columns, selector fit,
 unit labels and Apply/Close controls. Evidence:
 `Qt6ParityValidation/orbit-frames-wayland.txt` and `orbit-frames-wayland.png`.
+
+
+## Grouped atmosphere and drag configuration
+
+Audited wx DragInputsDialog's nine controls: F107, F107A, MagneticIndex,
+historic/predicted sources, CSSI/Schatten filenames, Schatten error and timing.
+The force-model resource editor now offers **Atmosphere and drag…**, including
+primary-body, atmosphere and Spherical/SPAD shape selection. Weather sources
+and Schatten settings use typed choices; CSSI, Schatten and Exponential input
+files have existing-file pickers. The grouped controls retain pending inputs
+across model/source changes, reject invalid numbers and files, and keep edits
+separate from the configured mission until force-model Apply. A scrolling form
+keeps acceptance buttons available at 600 by 440 logical pixels.
+
+Apply adds, replaces or removes the engine-owned DragForce and its atmosphere
+model, consuming the dependent properties as one group. It also handles
+generic drag property edits. Merely setting the old atmosphere-name property
+did not replace the owned atmosphere object. Pending filenames and numeric
+settings are applied before attaching a replacement atmosphere. The current
+Earth factory qualifier still hides Exponential for an old R2013a limitation;
+Qt offers it because the current engine registers it and ships an Earth
+Exponential example. Selecting None removes drag through the same atomic
+script-edit/rebuild operation.
+
+The engine checks both weather filenames and formats during initialization,
+even when sources are ConstantFluxAndGeoMag. Qt now explains this requirement,
+keeps the weather pickers available, and validates both retained files before
+acceptance. CSSI prediction additionally requires its daily/monthly prediction
+sections. A prediction checker accepts either format, so Qt also rejects CSSI
+files selected as Schatten and Schatten files selected as CSSI. Directories and
+unreadable/missing files are rejected before entering the core format checker.
+These checks verify headers/section markers, not all numerical file contents
+or temporal coverage.
+
+AtmosphereTests creates independent script-configured reference missions and
+compares them with missions configured through ResourceEditor and the dialog.
+Constant-source Earth MSISE90, JacchiaRoberts and NRLMSISE00 cases compare
+initial/final density and state for 600 seconds of propagation. Changing F107,
+F107A and Kp increases the NRLMSISE00 density in the test. CSSI observed data
+is exercised at 1 January 2024, and CSSI and Schatten predictions at 1 January
+2027; the Schatten case selects PlusTwoSigma/LateCycle. Exponential input-file
+configuration and switching from/to NRLMSISE00 are exercised. Comparisons allow
+1e-8 relative density differences, 1e-6 km position and 1e-9 km/s velocity
+differences. These are calculation-preserving GUI comparisons, not independent
+validation of the atmosphere equations.
+
+The SPAD cases configure the spacecraft through **Ballistics and mass…** and
+select SPADFile through the force-model dialog. Bilinear and Bicubic
+interpolation with scale 1.5 use a temporary copy of SphericalModel.spo.
+Reports match independently script-configured cases, and the resulting
+trajectory differs from Spherical drag. Missing CSSI and SPAD files cause
+runtime failure; restoring the copied files and reopening the unchanged saved
+script recovers successful execution. Validation, chooser Cancel/acceptance,
+pending-model reopening, a paired ErrorControl edit, exact-source Undo/Redo,
+mission-command/comment preservation, save/reopen and complete drag removal
+are also exercised.
+
+The NewParameters AtmosDensity implementation already returns kg/km^3 by
+multiplying the drag model's kg/m^3 density by 1e9. Its parameter metadata
+incorrectly said Kg/m^3; the unit label is now kg/km^3. Numerical output and
+dynamics are unchanged. This qualifies AtmosDensity in these scenarios, not
+the complete NewParameters plugin. Other Schatten modes, malformed numeric
+weather data, coverage boundaries, additional SPAD assets/scales, non-Earth
+atmospheres and other force-model operations remain qualification work.
+
+Rebuilt the actual `application/bin/GmatQt`; all 13 Qt suites passed in
+79.53 seconds, including the new Atmosphere suite and native orbit/window/plot
+checks. The NewParameters plugin was also rebuilt for the unit metadata fix.
+A separate process with isolated settings exercised the complete atmosphere
+and SPAD workflow directly on the current Wayland desktop. The captured dialog
+was visually inspected for readable fields, file controls and visible buttons;
+compact-window scrolling is checked in the test. Evidence:
+`Qt6ParityValidation/check-atmosphere.txt`,
+`Qt6ParityValidation/atmosphere-wayland.txt` and
+`Qt6ParityValidation/atmosphere-wayland.png`. The broader workflow, viewer and
+plugin qualification gates remain open.

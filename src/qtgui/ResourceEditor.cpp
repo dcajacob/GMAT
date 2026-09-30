@@ -11,6 +11,7 @@
 #include <stdexcept>
 #include "ResourceProperties.hpp"
 #include "SpacecraftOrbit.hpp"
+#include "AtmosphereDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -477,6 +478,44 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
    }
+   if (forces) {
+      auto *button=new QPushButton("Atmosphere and drag…",this); button->setObjectName("forceAtmosphere"); layout->addWidget(button);
+      const auto name=object.GetName();
+      connect(button,&QPushButton::clicked,this,[this,name,button] {
+         try {
+            auto *configured=Moderator::Instance()->GetConfiguredObject(name);
+            if (!configured) throw std::runtime_error("This force model is no longer available.");
+            auto pending=atmosphereEdits;
+            if (pending.isEmpty()) for (int row=0;row<table->rowCount();++row) {
+               const auto field=table->item(row,0)->text();
+               if (field!="Drag" && !field.startsWith("Drag.")) continue;
+               const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+               const auto value=combo ? comboValue(combo) : table->item(row,1)->text();
+               if (value!=original.value(field)) pending.insert(field,value);
+            }
+            AtmosphereDialog dialog(*configured,pending,this);
+            if (dialog.exec()!=QDialog::Accepted) return;
+            atmosphereEdits=dialog.values();
+            for (int row=0;row<table->rowCount();++row) {
+               const auto field=table->item(row,0)->text();
+               if (field!="Drag" && !field.startsWith("Drag.")) continue;
+               const auto value=field=="Drag" ? atmosphereEdits.value("Drag.AtmosphereModel") :
+                  atmosphereEdits.value(field,"Not used by "+atmosphereEdits.value("Drag.AtmosphereModel"));
+               if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) {
+                  if (combo->findText(value)<0) combo->addItem(value);
+                  combo->setCurrentText(value);
+               } else if (auto *item=table->item(row,1)) item->setText(value);
+               for (int column=1;column<table->columnCount();++column) {
+                  if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(false);
+                  if (auto *item=table->item(row,column)) item->setFlags(item->flags() & ~Qt::ItemIsEditable);
+               }
+            }
+            button->setText("Atmosphere and drag… (pending)");
+            status->setText("Atmosphere settings are pending. Use Atmosphere and drag… to review them, then Apply the force model.");
+         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+      });
+   }
    if (spacecraft) {
       attitudeNames.insert("Attitude");
       if (auto *attitude=object.GetOwnedObject(0)) for (int id=0;id<attitude->GetParameterCount();++id) {
@@ -848,10 +887,12 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes=attitudeEdits;
+      for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
          if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
+         if (!atmosphereEdits.isEmpty() && (name=="Drag" || name.startsWith("Drag."))) continue;
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
          const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
@@ -890,7 +931,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
-   if (!attitudeEdits.isEmpty()) return true;
+   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));

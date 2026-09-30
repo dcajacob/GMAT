@@ -108,13 +108,14 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             field.choices.clear(); field.list = true; break;
          default: continue;
          }
-         field.filename=field.fileList || object.GetParameterType(id)==Gmat::FILENAME_TYPE;
+         const bool atmosphereFile=object.IsOfType("DragForce") && QStringList{"CSSISpaceWeatherFile","SchattenFile","InputFile"}.contains(field.name);
+         field.filename=field.fileList || object.GetParameterType(id)==Gmat::FILENAME_TYPE || atmosphereFile;
          if (field.filename) {
             const auto type=object.GetTypeName();
             field.fileOutput=object.IsOfType("ReportFile") || object.IsOfType("EphemerisFile") || object.IsOfType("EventLocator") ||
                (object.IsOfType("Solver") && field.name=="ReportFile") ||
                (object.IsOfType("Estimator") && (field.name=="MatlabFile" || field.name=="DataFile"));
-            field.fileInput=object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
+            field.fileInput=atmosphereFile || object.IsOfType("Function") || object.IsOfType("Spacecraft") ||
                type=="GroundTrack" || type=="GroundTrackPlot" || type=="FileInterface" || type=="ThrustHistoryFile" ||
                type=="CustomFOV" || type=="Code500" || type=="CCSDS-OEM" || type=="STK";
          }
@@ -141,6 +142,13 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             }
          }
          if (object.IsOfType("SolarPowerSystem") && field.name=="ShadowModel") field.choices={"None","DualCone"};
+         if (object.IsOfType("DragForce")) {
+            if (field.name=="HistoricWeatherSource") field.choices={"ConstantFluxAndGeoMag","CSSISpaceWeatherFile"};
+            if (field.name=="PredictedWeatherSource") field.choices={"ConstantFluxAndGeoMag","CSSISpaceWeatherFile","SchattenFile"};
+            if (field.name=="SchattenErrorModel") field.choices={"Nominal","PlusTwoSigma","MinusTwoSigma"};
+            if (field.name=="SchattenTimingModel") field.choices={"NominalCycle","EarlyCycle","LateCycle"};
+            if (field.name=="DragModel") field.choices={"Spherical","SPADFile"};
+         }
          // DifferentialCorrector marks these as enums but supplies no choice
          // metadata. Match its setters and the wx DC setup panel.
          if (object.IsOfType("DifferentialCorrector") && field.name=="Algorithm")
