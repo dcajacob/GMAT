@@ -1137,3 +1137,11 @@ Spherical and SPAD file controls from the wx interface. Enter mass, coefficients
 areas and SPAD scales; use Browse for the input files and the interpolation
 choices for each file. OK keeps changes pending in the property panel. Apply
 updates the mission, and Cancel leaves the pending values unchanged.
+
+
+Spacecraft tank and thruster attachment pickers include **Select all** and
+**Clear selection**. Individual checkboxes and row dragging control membership
+and order. OK keeps those choices pending until Apply. Clearing every attachment
+is supported. The spacecraft **PowerSystem** dropdown offers available nuclear
+and solar systems and **No power system** for detachment. Remove dependent mission
+references before detaching hardware that those commands or reports use.

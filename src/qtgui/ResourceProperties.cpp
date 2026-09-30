@@ -271,14 +271,19 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
       for (auto &entry:serialized) entry="'"+entry+"'";
    const QString replacement="GMAT "+key+" = {"+serialized.join(", ")+"};";
    QString result=block;
+   // Empty spacecraft hardware lists are defaults, omitted by the engine's
+   // serializer. Explicit {} is interpreted as a hardware name in these fields.
+   const bool omitEmpty=object.GetTypeName()=="ReportFile" || (object.IsOfType("Spacecraft") &&
+      QSet<QString>{"Tanks","Thrusters","AddHardware","AddPlates"}.contains(name));
    if (!matches.hasNext()) {
+      if (entries.isEmpty() && omitEmpty) return result;
       if (object.GetStringArrayParameter(id).empty())
          result+=(block.endsWith('\n') ? "" : "\n")+replacement+"\n";
       else throw std::runtime_error("Cannot locate the list safely in this resource's script");
    } else {
       const auto match=matches.next();
       if (matches.hasNext()) throw std::runtime_error("Multiple list assignments require the script editor");
-      if (entries.isEmpty() && object.GetTypeName()=="ReportFile") {
+      if (entries.isEmpty() && omitEmpty) {
          result.remove(match.capturedStart(),match.capturedLength());
          return result;
       }

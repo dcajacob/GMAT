@@ -319,7 +319,14 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *name = new QTableWidgetItem(field.name);
       name->setFlags(name->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 0, name);
-      if (object.GetTypeName()=="ReportFile" && field.name=="Delimiter") {
+      if (spacecraft && field.name=="PowerSystem") {
+         auto *choices=new QComboBox(table); choices->setObjectName("spacecraftPowerSystem");
+         choices->setProperty("resourceValueData",true);
+         choices->addItem("No power system",QString());
+         for (const auto &name:field.references) choices->addItem(name,name);
+         if (choices->findData(field.value)<0) choices->addItem(field.value,field.value);
+         choices->setCurrentIndex(choices->findData(field.value)); table->setCellWidget(row,1,choices);
+      } else if (object.GetTypeName()=="ReportFile" && field.name=="Delimiter") {
          auto *choices=new QComboBox(table);
          choices->setObjectName("reportDelimiter");
          choices->setEditable(true);
@@ -433,6 +440,17 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                      item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked);
                   }
                   layout->addWidget(list);
+                  auto *selectionActions=new QHBoxLayout;
+                  auto *selectAll=new QPushButton("Select all",&dialog); selectAll->setObjectName("resourceSelectAll");
+                  auto *clearAll=new QPushButton("Clear selection",&dialog); clearAll->setObjectName("resourceClearSelection");
+                  selectionActions->addWidget(selectAll); selectionActions->addWidget(clearAll); selectionActions->addStretch();
+                  layout->addLayout(selectionActions);
+                  connect(selectAll,&QPushButton::clicked,&dialog,[list] {
+                     for (int i=0;i<list->count();++i) list->item(i)->setCheckState(Qt::Checked);
+                  });
+                  connect(clearAll,&QPushButton::clicked,&dialog,[list] {
+                     for (int i=0;i<list->count();++i) list->item(i)->setCheckState(Qt::Unchecked);
+                  });
                   auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
                   layout->addWidget(buttons);
                   connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);

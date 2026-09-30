@@ -232,6 +232,64 @@ int main(int argc,char **argv)
             "Configured generation was not reflected in the power report");
       }
       {
+         const auto report=output.filePath("selected-power.csv");
+         editor->setPlainText("Create Spacecraft HardwareSat OtherSat;\nCreate ChemicalTank DetachTank;\nCreate ChemicalThruster DetachEngine;\n"
+            "DetachEngine.Tank = {DetachTank};\nHardwareSat.Tanks = {DetachTank};\nHardwareSat.Thrusters = {DetachEngine};\n"
+            "Create NuclearPowerSystem SelectedPower;\nCreate SolarPowerSystem AlternatePower;\n"
+            "SelectedPower.InitialMaxPower = 10;\nSelectedPower.AnnualDecayRate = 0;\nSelectedPower.Margin = 10;\n"
+            "SelectedPower.BusCoeff1 = 2;\nSelectedPower.BusCoeff2 = 0;\nSelectedPower.BusCoeff3 = 0;\n"
+            "Create ReportFile SelectedPowerReport;\nSelectedPowerReport.Filename = '"+report+"';\nSelectedPowerReport.WriteHeaders = false;\n"
+            "SelectedPowerReport.FixedWidth = false;\nSelectedPowerReport.Delimiter = ',';\nSelectedPowerReport.Precision = 16;\nBeginMissionSequence;\n");
+         require(window.buildScript(),"Spacecraft power selection fixture failed");
+         const auto source=editor->toPlainText(); QString error="Power attachment Apply not called";
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("HardwareSat"),[&](const auto &changes) {
+               error=window.applyResourceChanges("HardwareSat",changes,source); return error;
+            },&owner,source);
+            auto *choice=panel.findChild<QComboBox *>("spacecraftPowerSystem");
+            require(choice && choice->count()==3 && choice->findData("")>=0 && choice->findText("SelectedPower")>=0 &&
+               choice->findText("AlternatePower")>=0 && choice->findText("OtherSat")<0,"Spacecraft power choices are not typed or lack None");
+            choice->setCurrentText("AlternatePower"); require(panel.hasChanges(),"Power selection is not pending");
+            choice->setCurrentIndex(choice->findData("")); require(!panel.hasChanges(),"Returning to None did not restore pending power state");
+            choice->setCurrentText("SelectedPower");
+            require(editor->toPlainText()==source && Moderator::Instance()->GetConfiguredObject("HardwareSat")->GetStringParameter("PowerSystem").empty(),
+               "Power dropdown mutated the spacecraft before Apply");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error)); const auto attached=editor->toPlainText();
+         require(!window.applyResourceChanges("HardwareSat",{{"PowerSystem","OtherSat"}},attached).isEmpty() && editor->toPlainText()==attached,
+            "Wrong-type power attachment was accepted or changed the source");
+         editor->setPlainText(attached+"Report SelectedPowerReport HardwareSat.SelectedPower.TotalPowerAvailable HardwareSat.SelectedPower.RequiredBusPower HardwareSat.SelectedPower.ThrustPowerAvailable;\n");
+         require(window.buildScript(),"Selected power report failed to build"); roundTrip("selected-spacecraft-power");
+         require(window.runMission()==MainWindow::RunResult::Completed,"GUI-selected spacecraft power report failed");
+         const auto values=read(report).trimmed().split(',');
+         require(values.size()==3 && std::abs(values[0].toDouble()-10)<1e-10 && std::abs(values[1].toDouble()-2)<1e-10 &&
+            std::abs(values[2].toDouble()-7.2)<1e-10,"GUI-attached power did not reach reopened report calculations");
+         // Remove the dependent report command before detaching its power object.
+         editor->setPlainText(attached); require(window.buildScript(),"Power detach fixture failed");
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("HardwareSat"),[&](const auto &changes) {
+               error=window.applyResourceChanges("HardwareSat",changes,attached); return error;
+            },&owner,attached);
+            auto *choice=panel.findChild<QComboBox *>("spacecraftPowerSystem"); require(choice->currentText()=="SelectedPower","Attached power not selected on reopen");
+            choice->setCurrentIndex(choice->findData(""));
+            for (const auto &property:{QString("Tanks"),QString("Thrusters")}) {
+               QTimer::singleShot(0,&panel,[&] {
+                  auto *dialog=panel.findChild<QDialog *>("resourceSelectionDialog");
+                  dialog->findChild<QPushButton *>("resourceClearSelection")->click();
+                  dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+               }); panel.findChild<QPushButton *>("chooseProperty_"+property)->click();
+            }
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(error.isEmpty(),qPrintable(error)); roundTrip("detached-spacecraft-power");
+         auto *detached=Moderator::Instance()->GetConfiguredObject("HardwareSat");
+         require(detached->GetStringArrayParameter("Tanks").empty() && detached->GetStringArrayParameter("Thrusters").empty(),
+            "Clear selection did not remove all spacecraft tanks and thrusters after save/reopen");
+         require(detached->GetStringParameter("PowerSystem").empty() &&
+            window.runMission()==MainWindow::RunResult::Completed,"No power system failed to detach or survive save/reopen");
+      }
+      {
          const auto kernelRoot=QFileInfo(startup).dir().absoluteFilePath("../data/vehicle/ephem/spk/");
          QMap<QString,QString> kernels;
          for (const auto &pair:QList<QPair<QString,QString>>{
@@ -682,7 +740,8 @@ int main(int argc,char **argv)
          editor->setPlainText("Create ChemicalTank BurnTank BurnTank2;\nBurnTank.FuelMass = 150;\nBurnTank2.FuelMass = 150;\n"
             "Create ChemicalThruster BurnEngine;\nBurnEngine.Tank = {BurnTank};\nBurnEngine.DecrementMass = true;\n"
             "BurnEngine.C1 = 90;\nBurnEngine.K1 = 290;\nBurnEngine.CoordinateSystem = EarthMJ2000Eq;\n"
-            "Create Spacecraft BurnSat OtherSat;\nBurnSat.Tanks = {BurnTank, BurnTank2};\nBurnSat.Thrusters = {BurnEngine};\n"
+            "Create ChemicalThruster BurnDecoy;\nBurnDecoy.Tank = {BurnTank};\n"
+            "Create Spacecraft BurnSat OtherSat;\nBurnSat.Tanks = {BurnTank, BurnTank2};\nBurnSat.Thrusters = {BurnDecoy};\n"
             "Create FiniteBurn Continuous;\nContinuous.Thrusters = {BurnEngine};\n"
             "Create ForceModel BurnForces;\nBurnForces.PrimaryBodies = {};\nBurnForces.PointMasses = {Earth};\n"
             "Create Propagator BurnProp;\nBurnProp.FM = BurnForces;\n"
@@ -694,6 +753,52 @@ int main(int argc,char **argv)
             "Report BurnReport BurnSat.BurnTank.FuelMass BurnSat.BurnTank2.FuelMass;\n"
             "Propagate BurnProp(BurnSat) {BurnSat.ElapsedSecs = 10};\nReport BurnReport BurnSat.BurnTank.FuelMass BurnSat.BurnTank2.FuelMass;\n");
          require(window.buildScript(),"Finite-burn selector fixture failed");
+         {
+            const auto source=editor->toPlainText(); QString error="Attachment Apply not invoked";
+            {
+               QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("BurnSat"),[&](const auto &changes) {
+                  error=window.applyResourceChanges("BurnSat",changes,source); return error;
+               },&owner,source);
+               const auto choose=[&](const QString &property,bool cancel) {
+                  auto *button=panel.findChild<QPushButton *>("chooseProperty_"+property); require(button,"Spacecraft attachment selector missing");
+                  QTimer::singleShot(0,&panel,[&] {
+                     auto *dialog=panel.findChild<QDialog *>("resourceSelectionDialog"); auto *list=dialog->findChild<QListWidget *>("resourceSelectionList");
+                     require(list && list->count()==2,"Spacecraft attachment selector lost typed candidates");
+                     const auto type=property=="Tanks" ? Gmat::FUEL_TANK : Gmat::THRUSTER;
+                     for (int i=0;i<list->count();++i) require(Moderator::Instance()->GetConfiguredObject(list->item(i)->text().toStdString())->IsOfType(type),
+                        "Spacecraft attachment selector offered wrong resource type");
+                     dialog->findChild<QPushButton *>("resourceSelectAll")->click();
+                     for (int i=0;i<list->count();++i) require(list->item(i)->checkState()==Qt::Checked,"Attachment Select all failed");
+                     dialog->findChild<QPushButton *>("resourceClearSelection")->click();
+                     for (int i=0;i<list->count();++i) require(list->item(i)->checkState()==Qt::Unchecked,"Attachment Clear selection failed");
+                     if (property=="Tanks") dialog->findChild<QPushButton *>("resourceSelectAll")->click();
+                     else for (int i=0;i<list->count();++i) if (list->item(i)->text()=="BurnEngine") list->item(i)->setCheckState(Qt::Checked);
+                     if (property=="Tanks") list->insertItem(0,list->takeItem(1));
+                     if (cancel) dialog->reject(); else dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+                  }); button->click();
+               };
+               choose("Thrusters",true); require(!panel.hasChanges(),"Cancelled attachment selection changed properties");
+               choose("Tanks",false); choose("Thrusters",false);
+               require(panel.hasChanges() && editor->toPlainText()==source &&
+                  Moderator::Instance()->GetConfiguredObject("BurnSat")->GetStringArrayParameter("Thrusters")[0]=="BurnDecoy",
+                  "Attachment selection applied before spacecraft Apply");
+               panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+            }
+            require(error.isEmpty(),qPrintable(error));
+            auto *sat=Moderator::Instance()->GetConfiguredObject("BurnSat");
+            const auto &tanks=sat->GetStringArrayParameter("Tanks"); const auto &thrusters=sat->GetStringArrayParameter("Thrusters");
+            require(tanks.size()==2 && tanks[0]=="BurnTank2" && tanks[1]=="BurnTank" && thrusters.size()==1 && thrusters[0]=="BurnEngine",
+               "Attachment Apply lost tank order or engine selection");
+            const auto attached=editor->toPlainText(); editor->undo();
+            require(editor->toPlainText()==source && window.buildScript() &&
+               Moderator::Instance()->GetConfiguredObject("BurnSat")->GetStringArrayParameter("Thrusters")[0]=="BurnDecoy",
+               "Attachment Apply did not Undo atomically");
+            editor->redo(); require(editor->toPlainText()==attached && window.buildScript(),"Attachment Redo failed");
+            require(!window.applyResourceChanges("BurnSat",{{"Tanks","OtherSat"}},attached).isEmpty() && editor->toPlainText()==attached,
+               "Wrong-type tank reference was accepted or changed source");
+            require(!window.applyResourceChanges("BurnSat",{{"Thrusters","MissingEngine"}},attached).isEmpty() && editor->toPlainText()==attached,
+               "Missing thruster reference was accepted or changed source");
+         }
          {
             QWidget owner; QString applyError="Not applied";
             const auto before=editor->toPlainText();

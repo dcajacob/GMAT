@@ -68,16 +68,16 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
 | `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Cartesian/Keplerian pending-state conversion and label refresh covered; remaining representations and coordinate-selection workflows pending audit. |
-| `src/gui/spacecraft/PowerSystemPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consuming GUI-attached power remains to qualify. |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution and broader interpolation/scale combinations remain to qualify. |
-| `src/gui/spacecraft/TankPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/OrbitDesignerDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/VisualModelPanel.hpp` | Pending audit |
 | `src/gui/spacecraft/AttitudePanel.hpp` | Pending audit |
 | `src/gui/spacecraft/SpaceObjectSelectDialog.hpp` | ResourceEditor engine-typed reference picker. Ordered tank selection, Cancel, pending state and mixture-preserving Apply tested; all object-specific uses still need audit. |
 | `src/gui/spacecraft/OrbitSummaryDialog.hpp` | Pending audit |
 | `src/gui/spacecraft/SpacecraftPanel.hpp` | Pending audit |
-| `src/gui/spacecraft/ThrusterPanel.hpp` | Pending audit |
+| `src/gui/spacecraft/ThrusterPanel.hpp` | wx attachment operations audited. Typed checklist with bulk selection/removal covered by Cancel, pending Apply, replacement of a decoy engine, exact-source Undo/Redo, missing-reference rollback and reopened finite-burn execution. Full detachment covered; electric thruster attachment/execution combinations remain to qualify. |
 | `src/gui/spacecraft/SpicePanel.hpp` | Ordered SPK/CK/SCLK/FK file-list controls added. SPK add/duplicate/order/Cancel/Apply, Undo/Redo, save/reopen, clear and missing-file recovery tested with bundled kernel copies. Mars Express SPK/CK/SCLK execution, Qt trajectory/attitude capture and clock-file recovery tested. FK runtime use and other NAIF combinations pending. |
 | `src/gui/spacecraft/FormationSetupPanel.hpp` | ResourceEditor Add list and spacecraft picker; invalid member rejection, reordering, save/reopen and two-member propagation tested. Remaining wx-specific operations under audit. |
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Pending audit |
@@ -1836,3 +1836,41 @@ shows textured Earth, trajectory, starfield and constellation lines. This proves
 that sequence on the current desktop in this run, not extended-session or all
 viewer lifecycle qualification. Evidence: `Qt6ParityValidation/wayland-windows.txt`
 and `Qt6ParityValidation/wayland-orbit.png`.
+
+
+## Spacecraft hardware attachment and removal
+
+Audited wx TankPanel and ThrusterPanel: individual add/remove and add-all/remove-all
+operations, configured type filtering, selected-list order and replacement Apply.
+Qt's ordered attachment checklists now offer **Select all** and **Clear selection**.
+The shared controls also serve other typed resource-list pickers. Audited the wx
+PowerSystemPanel's single readonly selector and empty choice; Qt now offers a
+direct typed **PowerSystem** dropdown with **No power system**, retaining pending
+Apply semantics.
+
+Accepting complete tank/thruster removal exposed a serialization bug: explicit
+`Tanks = {};`/`Thrusters = {};` was interpreted as a hardware name `{}`. Empty
+spacecraft hardware lists now omit their assignments, matching fresh-object
+engine serialization. ReportFile empty lists use the same omission rule even
+when no prior assignment exists. Explicit empty assignments are not introduced
+for spacecraft Tanks, Thrusters, AddHardware or AddPlates.
+
+WorkflowTests checks Select all/Clear selection and Cancel on the ordered tank
+picker. CompatibilityTests replaces a spacecraft's decoy thruster through its
+GUI, selects all tanks, changes their order and applies both lists together.
+It checks typed candidates, Cancel, pending/configured-state separation,
+exact-source Undo/Redo and invalid tank/thruster rollback. The existing reopened
+two-tank finite burn now uses those GUI-selected attachments; its two report rows
+verify the 3:2 fuel split, analytic total consumption and coast shutdown.
+
+A separate fixture attaches a nuclear power system through the new dropdown,
+checks both nuclear/solar candidates and the None choice, rejects a spacecraft
+as a power reference and saves/reopens. A report verifies generated power 10,
+bus demand 2 and available thrust power 7.2. After removing that dependent report
+command, GUI edits detach power and clear all tanks/thrusters together. Save/reopen
+and execution confirm all three attachment fields are empty. Electric tank,
+thruster and power-consuming propulsion combinations remain open qualification.
+
+Validation: rebuilt the user's GmatQt; all 11 Qt suites passed in 38.79 seconds.
+Native viewer tests used isolated Xvfb/software OpenGL. Evidence:
+`Qt6ParityValidation/check-hardware-attachments.txt`.

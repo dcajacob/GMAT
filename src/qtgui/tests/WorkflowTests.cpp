@@ -964,7 +964,11 @@ int main(int argc, char **argv)
             if (!dialog) return;
             auto *list=dialog->findChild<QListWidget *>("resourceSelectionList");
             candidatesCorrect=list && list->count()==2 && list->item(0)->text()=="FuelA" && list->item(1)->text()=="FuelB";
-            if (candidatesCorrect) list->item(0)->setCheckState(Qt::Unchecked);
+            require(candidatesCorrect,"Tank picker candidates or order incorrect");
+            dialog->findChild<QPushButton *>("resourceClearSelection")->click();
+            for (int i=0;i<list->count();++i) require(list->item(i)->checkState()==Qt::Unchecked,"Clear selection retained a checked resource");
+            dialog->findChild<QPushButton *>("resourceSelectAll")->click();
+            for (int i=0;i<list->count();++i) require(list->item(i)->checkState()==Qt::Checked,"Select all omitted a resource");
             dialog->reject();
          });
          choose->click();
