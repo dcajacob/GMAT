@@ -13,6 +13,9 @@
 #include <array>
 #include "Rvector.hpp"
 #include "Attitude.hpp"
+#include "Spacecraft.hpp"
+#include "SpacecraftOrbit.hpp"
+#include <optional>
 #include <QRegularExpression>
 #include <QSet>
 #include <cmath>
@@ -37,14 +40,18 @@ GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
 QVector<ResourceProperty> resourceProperties(GmatBase &object)
 {
    QVector<ResourceProperty> fields;
+   std::optional<Rvector6> orbit;
    for (Integer id = 0; id < object.GetParameterCount(); ++id) {
       try {
          // Array values are marked read-only for ordinary property syntax;
          // their specialized editor writes the array's indexed initial values.
          const bool arrayValues=object.GetTypeName()=="Array" && object.GetParameterText(id)=="RmatValue";
-         if (object.IsParameterReadOnly(id) && !arrayValues) continue;
+         bool orbitElementId=false;
+         if (object.IsOfType("Spacecraft")) for (int i=1;i<=6;++i) orbitElementId=orbitElementId || id==object.GetParameterID("Element"+std::to_string(i));
+         if (object.IsParameterReadOnly(id) && !arrayValues && !orbitElementId) continue;
          ResourceProperty field;
          field.name = QString::fromStdString(object.GetParameterText(id));
+         if (object.IsOfType("Spacecraft") && field.name=="StateType") continue; // Deprecated input-state alias; DisplayStateType is the GUI choice.
          field.unit = QString::fromStdString(object.GetParameterUnit(id));
          if (object.IsOfType(Gmat::AXIS_SYSTEM) && field.name=="Epoch") field.unit="A1ModJulian";
          switch (object.GetParameterType(id)) {
@@ -66,7 +73,19 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             }
             field.value=rows.join("; "); break;
          }
-         case Gmat::REAL_TYPE: field.value = QString::number(object.GetRealParameter(id), 'g', 17); break;
+         case Gmat::REAL_TYPE: {
+            bool orbitElement=false;
+            if (auto *spacecraft=dynamic_cast<Spacecraft *>(&object)) for (int element=1;element<=6;++element) {
+               if (id!=spacecraft->GetParameterID("Element"+std::to_string(element))) continue;
+               // Read the complete displayed state. Individual anomaly getters
+               // are not a substitute for the converted state's sixth element.
+               if (!orbit) orbit=spacecraft->GetState(spacecraft->GetStringParameter("DisplayStateType"));
+               field.name=spacecraftOrbitElementNames(object)[element-1];
+               field.value=QString::number((*orbit)[element-1],'g',17); orbitElement=true; break;
+            }
+            if (!orbitElement) field.value=QString::number(object.GetRealParameter(id),'g',17);
+            break;
+         }
          case Gmat::INTEGER_TYPE: field.value = QString::number(object.GetIntegerParameter(id)); break;
          case Gmat::UNSIGNED_INT_TYPE: field.value = QString::number(object.GetUnsignedIntParameter(id)); break;
          case Gmat::BOOLEAN_TYPE:

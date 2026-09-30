@@ -10,6 +10,8 @@
 #include <memory>
 #include <stdexcept>
 #include "ResourceProperties.hpp"
+#include "SpacecraftOrbit.hpp"
+#include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
 #include <QColorDialog>
@@ -595,49 +597,118 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
    }
    if (spacecraft) {
-      QComboBox *representation=nullptr; QVector<int> elementRows;
-      for (int row=0;row<table->rowCount();++row)
-         if (table->item(row,0)->text()=="DisplayStateType") representation=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+      QComboBox *representation=nullptr,*frame=nullptr,*anomaly=nullptr; QVector<int> elementRows;
+      for (int row=0;row<table->rowCount();++row) {
+         const auto name=table->item(row,0)->text();
+         if (name=="DisplayStateType") representation=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+         else if (name=="CoordinateSystem" || name=="AnomalyType") {
+            auto *choice=new QComboBox(table);
+            if (name=="CoordinateSystem") {
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) choice->addItem(QString::fromStdString(name));
+               frame=choice; frame->setObjectName("spacecraftOrbitFrame");
+            } else { choice->addItems(spacecraftOrbitAnomalies(object)); anomaly=choice; anomaly->setObjectName("spacecraftAnomalyType"); }
+            if (choice->findText(original.value(name))<0) choice->addItem(original.value(name));
+            choice->setCurrentText(original.value(name)); table->setCellWidget(row,1,choice);
+            table->removeCellWidget(row,3);
+         }
+      }
       for (int element=1;element<=6;++element) {
-         const auto label=QString::fromStdString(object.GetParameterText(object.GetParameterID("Element"+std::to_string(element))));
+         const auto label=spacecraftOrbitElementNames(object)[element-1];
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()==label) { elementRows.append(row); break; }
       }
-      if (representation && elementRows.size()==6) {
+      if (representation && frame && anomaly && elementRows.size()==6) {
          representation->setObjectName("spacecraftStateRepresentation");
+         struct Selection { QString frame,representation,anomaly; QStringList displayed; Rvector6 internal; };
+         QStringList displayed;
+         for (const auto row:elementRows) displayed.append(table->item(row,1)->text());
+         auto previous=std::make_shared<Selection>(Selection{frame->currentText(),representation->currentText(),anomaly->currentText(),displayed,
+            static_cast<Spacecraft &>(object).GetState().GetState()});
+         anomaly->setEnabled(previous->representation=="Keplerian" || previous->representation=="ModifiedKeplerian");
          const auto resourceName=object.GetName();
-         connect(representation,&QComboBox::currentTextChanged,this,
-            [this,representation,elementRows,resourceName,previous=representation->currentText()](const QString &next) mutable {
+         pendingOrbit=[this,representation,frame,anomaly,elementRows,resourceName,previous] {
+            auto *current=Moderator::Instance()->GetConfiguredObject(resourceName);
+            if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
+            std::unique_ptr<GmatBase> preview(current->Clone());
+            auto *spacecraft=static_cast<Spacecraft *>(preview.get());
+            spacecraft->SetState(previous->internal);
+            QMap<QString,QString> source={{"CoordinateSystem",frame->currentText()},{"DisplayStateType",representation->currentText()},{"AnomalyType",anomaly->currentText()}};
+            for (int row=0;row<table->rowCount();++row) {
+               const auto name=table->item(row,0)->text();
+               if (name!="DateFormat" && name!="Epoch") continue;
+               const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+               source.insert(name,choice ? comboValue(choice) : table->item(row,1)->text());
+            }
+            bool edited=false;
+            for (int i=0;i<elementRows.size();++i) edited=edited || table->item(elementRows[i],1)->text()!=previous->displayed[i];
+            if (edited) for (const auto row:elementRows) source.insert(table->item(row,0)->text(),table->item(row,1)->text());
+            applySpacecraftOrbitProperties(*preview,source);
+            if (!edited) spacecraft->SetState(previous->internal);
+            QStringList state;
+            const auto *internal=spacecraft->GetState().GetState();
+            for (int i=0;i<6;++i) state.append(QString::number(internal[i],'g',17));
+            source.insert("@OrbitCartesianState",state.join(','));
+            return source;
+         };
+         auto convert=[this,representation,frame,anomaly,elementRows,resourceName,previous] {
             try {
-               for (int row=0;row<table->rowCount();++row) {
-                  const auto name=table->item(row,0)->text();
-                  if (name!="CoordinateSystem" && name!="Epoch" && name!="DateFormat" && name!="AnomalyType") continue;
-                  const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1));
-                  const auto value=choice ? comboValue(choice) : table->item(row,1)->text();
-                  if (value!=original.value(name)) throw std::runtime_error("Apply the pending coordinate, epoch or anomaly settings before converting the state representation.");
-               }
+               auto nextRepresentation=representation->currentText();
+               const auto nextFrame=frame->currentText(); auto nextAnomaly=anomaly->currentText();
+               const auto available=spacecraftOrbitRepresentations(*spacecraftOrbitFrame(nextFrame));
+               // Like wx, changing to a frame that cannot support the current
+               // representation falls back to Cartesian while retaining the orbit.
+               if (nextFrame!=previous->frame && !available.contains(nextRepresentation)) nextRepresentation="Cartesian";
                auto *current=Moderator::Instance()->GetConfiguredObject(resourceName);
                if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
                std::unique_ptr<GmatBase> preview(current->Clone());
-               preview->SetStringParameter("DisplayStateType",previous.toStdString());
-               for (const auto row:elementRows) setResourceProperty(*preview,table->item(row,0)->text(),table->item(row,1)->text());
-               preview->SetStringParameter("DisplayStateType",next.toStdString());
+               QMap<QString,QString> source={{"CoordinateSystem",previous->frame},{"DisplayStateType",previous->representation},{"AnomalyType",previous->anomaly}};
+               for (int row=0;row<table->rowCount();++row) {
+                  const auto name=table->item(row,0)->text();
+                  if (name!="DateFormat" && name!="Epoch") continue;
+                  const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+                  source.insert(name,choice ? comboValue(choice) : table->item(row,1)->text());
+               }
+               bool edited=false;
+               for (int i=0;i<elementRows.size();++i) edited=edited || table->item(elementRows[i],1)->text()!=previous->displayed[i];
+               // Keep the physical Cartesian state between display changes,
+               // as wx does. Some engine representation conversions are not
+               // exact inverses; repeatedly parsing untouched display values
+               // otherwise changes the orbit merely by browsing the choices.
+               static_cast<Spacecraft *>(preview.get())->SetState(previous->internal);
+               if (edited) for (const auto row:elementRows) source.insert(table->item(row,0)->text(),table->item(row,1)->text());
+               applySpacecraftOrbitProperties(*preview,source);
+               if (!edited) static_cast<Spacecraft *>(preview.get())->SetState(previous->internal);
+               applySpacecraftOrbitProperties(*preview,{{"CoordinateSystem",nextFrame},{"DisplayStateType",nextRepresentation}});
+               const auto availableAnomalies=spacecraftOrbitAnomalies(*preview);
+               if (!availableAnomalies.contains(nextAnomaly) && (nextFrame!=previous->frame || nextRepresentation!=previous->representation)) nextAnomaly="TA";
+               applySpacecraftOrbitProperties(*preview,{{"AnomalyType",nextAnomaly}});
+               const auto converted=static_cast<Spacecraft *>(preview.get())->GetState(nextRepresentation.toStdString());
                QStringList labels,values,units;
                for (int element=1;element<=6;++element) {
-                  const auto id=preview->GetParameterID("Element"+std::to_string(element));
-                  labels.append(QString::fromStdString(preview->GetParameterText(id)));
-                  values.append(QString::number(preview->GetRealParameter(id),'g',17));
+                  labels.append(spacecraftOrbitElementNames(*preview)[element-1]);
+                  values.append(QString::number(converted[element-1],'g',17));
                   units.append(QString::fromStdString(preview->GetStringParameter("Element"+std::to_string(element)+"Units")));
                }
                for (int i=0;i<6;++i) {
                   table->item(elementRows[i],0)->setText(labels[i]); table->item(elementRows[i],1)->setText(values[i]); table->item(elementRows[i],2)->setText(units[i]);
                }
-               previous=next; status->setText("State values converted. Apply validates and stores the selected representation.");
+               { const QSignalBlocker block(representation); representation->clear(); representation->addItems(available); representation->setCurrentText(nextRepresentation); }
+               { const QSignalBlocker block(anomaly); anomaly->clear(); anomaly->addItems(availableAnomalies); anomaly->setCurrentText(nextAnomaly); }
+               anomaly->setEnabled(nextRepresentation=="Keplerian" || nextRepresentation=="ModifiedKeplerian");
+               *previous={nextFrame,nextRepresentation,nextAnomaly,values,static_cast<Spacecraft *>(preview.get())->GetState().GetState()};
+               status->setText("Orbit values converted. Apply keeps the frame, representation and state together.");
             } catch (BaseException &error) {
-               const QSignalBlocker blocker(representation); representation->setCurrentText(previous); status->setText(QString::fromStdString(error.GetFullMessage()));
+               const QSignalBlocker blockRepresentation(representation),blockFrame(frame),blockAnomaly(anomaly);
+               representation->setCurrentText(previous->representation); frame->setCurrentText(previous->frame); anomaly->setCurrentText(previous->anomaly);
+               status->setText(QString::fromStdString(error.GetFullMessage()));
             } catch (const std::exception &error) {
-               const QSignalBlocker blocker(representation); representation->setCurrentText(previous); status->setText(QString::fromUtf8(error.what()));
+               const QSignalBlocker blockRepresentation(representation),blockFrame(frame),blockAnomaly(anomaly);
+               representation->setCurrentText(previous->representation); frame->setCurrentText(previous->frame); anomaly->setCurrentText(previous->anomaly);
+               status->setText(QString::fromUtf8(error.what()));
             }
-         });
+         };
+         connect(representation,&QComboBox::currentTextChanged,this,[convert] { convert(); });
+         connect(frame,&QComboBox::currentTextChanged,this,[convert] { convert(); });
+         connect(anomaly,&QComboBox::currentTextChanged,this,[convert] { convert(); });
       }
    }
    bool hasCellEditor=false;
@@ -708,10 +779,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    if (sections) {
       // Use the engine's current element labels (Cartesian, Keplerian, etc.).
       QSet<QString> orbit={"Epoch","DateFormat","StateType","DisplayStateType","AnomalyType","CoordinateSystem"};
-      for (int i=1;i<=6;++i) {
-         try { orbit.insert(QString::fromStdString(object.GetParameterText(object.GetParameterID("Element"+std::to_string(i))))); }
-         catch (BaseException &) {} // Unrecognized labels remain accessible in All Properties.
-      }
+      if (spacecraft) for (const auto &name:spacecraftOrbitElementNames(object)) orbit.insert(name);
       QSet<QString> attitudeFields;
       if (spacecraft) if (auto *attitude=object.GetOwnedObject(0))
          for (const auto &field:resourceProperties(*attitude)) attitudeFields.insert(field.name);
@@ -766,11 +834,14 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    layout->addWidget(buttons);
    const auto filter=[this,search,sections] {
       const auto section=sections ? sections->tabText(sections->currentIndex()) : QString();
+      bool actions=false;
       for (int row=0;row<table->rowCount();++row) {
          const auto *name=table->item(row,0);
          const bool inSection=!sections || section=="All Properties" || name->data(Qt::UserRole).toString()==section;
          table->setRowHidden(row,!inSection || !name->text().contains(search->text(),Qt::CaseInsensitive));
+         actions=actions || (!table->isRowHidden(row) && table->cellWidget(row,3));
       }
+      table->setColumnHidden(3,!actions);
    };
    connect(search, &QLineEdit::textChanged, this, filter);
    if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
@@ -792,6 +863,19 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          }
       }
       if (changes.isEmpty() && !applyUnchanged) { status->setText("No changes to apply."); return; }
+      if (pendingOrbit) {
+         bool orbitChanged=false;
+         for (int row=0;row<table->rowCount();++row)
+            orbitChanged=orbitChanged || (table->item(row,0)->data(Qt::UserRole).toString()=="Orbit" && changes.contains(table->item(row,0)->text()));
+         if (orbitChanged) try {
+            const auto orbit=pendingOrbit();
+            // The cached state supersedes the table snapshot. Include all
+            // dependent selectors so paired edits are interpreted together.
+            for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->data(Qt::UserRole).toString()=="Orbit") changes.remove(table->item(row,0)->text());
+            for (auto it=orbit.cbegin();it!=orbit.cend();++it) changes.insert(it.key(),it.value());
+         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); return; }
+         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
+      }
       const QString error = apply(changes);
       if (error.isEmpty()) {
          // Model reconstruction can normalize dependent properties. Close this

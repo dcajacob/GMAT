@@ -17,6 +17,8 @@
 #include "ResourceEditor.hpp"
 #include "VisualModelDialog.hpp"
 #include "AttitudeDialog.hpp"
+#include "SpacecraftOrbit.hpp"
+#include "ODEModel.hpp"
 #include "AttitudeConversionUtility.hpp"
 #include "GmatConstants.hpp"
 #include <QSlider>
@@ -72,11 +74,12 @@ int main(int argc, char **argv)
    app.setAttribute(Qt::AA_DontUseNativeDialogs);
    QApplication::setOrganizationName("GMATTests");
    QApplication::setApplicationName("QtWorkflow");
-   if (argc < 3 || argc > 5 || (argc==5 && QString(argv[3])!="--attitude-capture")) return 2;
+   if (argc < 3 || argc > 5 || (argc==5 && QString(argv[3])!="--attitude-capture" && QString(argv[3])!="--orbit-capture")) return 2;
    const auto startup = QFileInfo(argv[1]).absoluteFilePath();
    const auto script = QFileInfo(argv[2]).absoluteFilePath();
    const auto screenshot = argc == 4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
-   const auto attitudeCapture = argc == 5 ? QFileInfo(argv[4]).absoluteFilePath() : QString();
+   const auto attitudeCapture = argc == 5 && QString(argv[3])=="--attitude-capture" ? QFileInfo(argv[4]).absoluteFilePath() : QString();
+   const auto orbitCapture = argc == 5 && QString(argv[3])=="--orbit-capture" ? QFileInfo(argv[4]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
@@ -272,6 +275,244 @@ int main(int argc, char **argv)
             "Converted pending state edit was lost during Apply");
          editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Converted state edit Undo failed");
          sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+      }
+      {
+         const auto originalMission=editor->toPlainText(); QTemporaryDir files;
+         const auto reportPath=files.filePath("orbit-frames.txt");
+         auto fixture=originalMission;
+         // Use explicit input time in both runs. The engine's default
+         // constructor epoch is rounded through a double before precision-time
+         // initialization; parsing its printed time is a distinct operation.
+         fixture.replace("Create Spacecraft QtSat;","Create Spacecraft QtSat;\nQtSat.DateFormat = TAIModJulian;\nQtSat.Epoch = '21545';");
+         // Request a tight stopping epoch, then compare the actual epochs too.
+         fixture.replace(QRegularExpression("(QtSat\\.ElapsedSecs\\s*=\\s*600(?:\\.0*)?)(\\s*\\})"),"\\1, StopTolerance = 1e-10\\2");
+         require(fixture.contains("StopTolerance = 1e-10"),"Orbit-frame fixture stopping tolerance not set");
+         fixture.replace("BeginMissionSequence;", "Create CoordinateSystem QtEarthFixed QtMoonEq QtBaryFrame QtCircular;\n"
+            "QtEarthFixed.Origin = Earth;\nQtEarthFixed.Axes = BodyFixed;\nQtMoonEq.Origin = Luna;\nQtMoonEq.Axes = MJ2000Eq;\n"
+            "Create Barycenter QtBary;\nQtBary.BodyNames = {Earth, Luna};\nQtBaryFrame.Origin = QtBary;\nQtBaryFrame.Axes = MJ2000Eq;\n"
+            "QtCircular.Origin = Earth;\nQtCircular.Axes = ObjectReferenced;\nQtCircular.Primary = Earth;\nQtCircular.Secondary = QtSat;\nQtCircular.XAxis = R;\nQtCircular.ZAxis = N;\n"
+            "Create Variable OrbitUnused;\nCreate ReportFile FrameReport;\nFrameReport.Filename = '"+reportPath+"';\nFrameReport.WriteHeaders = false;\nFrameReport.Precision = 16;\n"
+            "FrameReport.Add = {QtSat.A1ModJulian, QtSat.EarthMJ2000Eq.X, QtSat.EarthMJ2000Eq.Y, QtSat.EarthMJ2000Eq.Z, QtSat.EarthMJ2000Eq.VX, QtSat.EarthMJ2000Eq.VY, QtSat.EarthMJ2000Eq.VZ};\n"
+            "QtProp.Accuracy = 1e-13;\nQtProp.InitialStepSize = 10;\nBeginMissionSequence;");
+         editor->setPlainText(fixture); require(window.buildScript(),"Orbit-frame fixture build failed");
+         auto readReport=[&] {
+            QFile file(reportPath); require(file.open(QIODevice::ReadOnly),"Orbit-frame report unavailable");
+            const auto lines=QString::fromUtf8(file.readAll()).trimmed().split('\n'); require(lines.size()>1,"Orbit-frame report lacks samples");
+            QVector<QVector<double>> samples;
+            for (const auto &line:{lines.front(),lines.back()}) {
+               const auto values=line.trimmed().split(QRegularExpression("\\s+"),Qt::SkipEmptyParts); require(values.size()==7,"Orbit-frame report columns missing");
+               QVector<double> sample; for (const auto &value:values) sample.append(value.toDouble()); samples.append(sample);
+            }
+            return samples;
+         };
+         require(window.runMission()==MainWindow::RunResult::Completed,"Orbit-frame reference run failed");
+         const auto reference=readReport(); const auto before=editor->toPlainText();
+         const auto referenceStop=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpochGT();
+         const auto referenceEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetEpochGT();
+         auto *referenceForces=dynamic_cast<ODEModel *>(Moderator::Instance()->GetInternalObject("QtForces"));
+         require(referenceForces,"Orbit-frame reference force model missing");
+         const auto derivatives=referenceForces->GetDerivativesForSpacecraft(dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat")));
+         auto compareOrbit=[&](const QVector<QVector<double>> &samples,const QString &description) {
+            const auto initialOffset=(dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetEpochGT()-referenceEpoch).GetTimeInSec();
+            require(std::abs(initialOffset)<1e-9,qPrintable(QString("Orbit round trip changed initial epoch by %1 sec").arg(initialOffset,0,'g',17)));
+            const auto stop=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpochGT();
+            const auto dt=(stop-referenceStop).GetTimeInSec();
+            require(std::abs(dt)<1e-6,"Round-trip propagation stopping epochs differ by more than one microsecond");
+            for (int sample=0;sample<2;++sample) {
+               require(std::abs(samples[sample][0]-reference[sample][0])<1e-10,"Orbit round trip changed epoch");
+               for (int i=0;i<6;++i) {
+                  // The engine can finish at slightly different epochs despite
+                  // the requested stop tolerance. Align only that bounded
+                  // sub-microsecond offset using reference velocity/acceleration;
+                  // the second-order remainder is far below these tolerances.
+                  const auto expected=reference[sample][i+1]+(sample ? derivatives[i]*dt : 0);
+                  require(std::abs(samples[sample][i+1]-expected)<(i<3 ? 1e-6 : 1e-9),qPrintable(QString("%1 changed sample %2 element %3: got %4 expected %5; epoch offset %6 sec").arg(description).arg(sample).arg(i).arg(samples[sample][i+1],0,'g',17).arg(expected,0,'g',17).arg(dt,0,'g',17)));
+               }
+            }
+         };
+         const auto initial=Moderator::Instance()->GetConfiguredObject("QtSat")->GetStringParameter("CoordinateSystem");
+         QString applied="Apply not invoked"; Rvector6 expectedFixed;
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const QMap<QString,QString> &changes) {
+               applied=window.applyResourceChanges("QtSat",changes,before); return applied;
+            },&owner,before);
+            auto *frame=panel.findChild<QComboBox *>("spacecraftOrbitFrame"),*representation=panel.findChild<QComboBox *>("spacecraftStateRepresentation"),*anomaly=panel.findChild<QComboBox *>("spacecraftAnomalyType");
+            auto *grid=panel.findChild<QTableWidget *>();
+            auto field=[&](const QString &name)->QTableWidgetItem * { for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()==name) return grid->item(row,1); return nullptr; };
+            require(frame && representation && anomaly,"Typed spacecraft orbit selectors missing");
+            require(!field("StateType") && grid->isColumnHidden(3),"Orbit tab exposes deprecated input-state alias or redundant action column");
+            const auto x=field("X")->text(); field("X")->setText("nan"); frame->setCurrentText("QtEarthFixed");
+            require(frame->currentText()==QString::fromStdString(initial) && field("X")->text()=="nan","Invalid frame conversion lost pending correction input");
+            field("X")->setText(x);
+            const auto epoch=field("Epoch")->text(); field("Epoch")->setText("bad epoch"); frame->setCurrentText("QtEarthFixed");
+            require(frame->currentText()==QString::fromStdString(initial) && field("Epoch")->text()=="bad epoch","Invalid epoch allowed orbit-frame conversion");
+            field("Epoch")->setText(epoch); frame->setCurrentText("QtEarthFixed");
+            require(frame->currentText()=="QtEarthFixed" && representation->findText("Planetodetic")>=0,"Body-fixed frame representations not refreshed");
+            Rvector6 oldState; for (int i=0;i<6;++i) oldState[i]=reference[0][i+1];
+            CoordinateConverter converter;
+            auto *clock=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+            if (clock->HasPrecisionTime()) converter.Convert(clock->GetEpochGT(),oldState,spacecraftOrbitFrame(QString::fromStdString(initial)),expectedFixed,spacecraftOrbitFrame("QtEarthFixed"));
+            else converter.Convert(clock->GetEpoch(),oldState,spacecraftOrbitFrame(QString::fromStdString(initial)),expectedFixed,spacecraftOrbitFrame("QtEarthFixed"));
+            for (int i=0;i<6;++i) {
+               const QStringList names={"X","Y","Z","VX","VY","VZ"};
+               require(std::abs(field(names[i])->text().toDouble()-expectedFixed[i])<1e-7,qPrintable(QString("Frame preview differs from engine coordinate conversion: %1 got %2 expected %3 epoch %4").arg(names[i],field(names[i])->text(),QString::number(expectedFixed[i],'g',17),field("Epoch")->text())));
+            }
+            representation->setCurrentText("Planetodetic"); require(field("PlanetodeticLAT") && field("PlanetodeticLON") && !field("X"),"Planetodetic labels missing");
+            frame->setCurrentText(QString::fromStdString(initial));
+            require(representation->currentText()=="Cartesian" && representation->findText("Planetodetic")<0 && field("X"),"Inertial frame did not fall back from fixed-only representation");
+            require(std::abs(field("X")->text().toDouble()-reference[0][1])<1e-7,qPrintable("Fixed/planetodetic round trip changed X: "+field("X")->text()));
+            representation->setCurrentText("Keplerian");
+            require(anomaly->isEnabled() && field("TA"),"Keplerian anomaly selector unavailable");
+            anomaly->setCurrentText("MA"); require(field("MA") && !field("TA"),"Anomaly selection reinterprets old element instead of converting");
+            anomaly->setCurrentText("EA"); require(field("EA"),"Eccentric anomaly labels missing"); anomaly->setCurrentText("TA");
+            require(anomaly->findText("HA")<0,"Elliptic orbit offers hyperbolic anomaly");
+            anomaly->addItem("HA"); anomaly->setCurrentText("HA"); require(anomaly->currentText()=="TA" && field("TA"),"Elliptic orbit accepted hyperbolic anomaly");
+            representation->setCurrentText("Cartesian");
+            require(std::abs(field("X")->text().toDouble()-reference[0][1])<1e-7,qPrintable("Anomaly round trip changed X: "+field("X")->text()));
+            for (const auto &type:QStringList{"ModifiedKeplerian","SphericalAZFPA","SphericalRADEC","Equinoctial","ModifiedEquinoctial","AlternateEquinoctial","Delaunay","BrouwerMeanShort","BrouwerMeanLong"}) {
+               representation->setCurrentText(type); require(representation->currentText()==type,qPrintable("Failed to display "+type));
+               representation->setCurrentText("Cartesian");
+               const QStringList names={"X","Y","Z","VX","VY","VZ"};
+               for (int i=0;i<6;++i) require(std::abs(field(names[i])->text().toDouble()-reference[0][i+1])<1e-7,qPrintable(type+" display round trip changed the orbit"));
+            }
+            representation->setCurrentText("Keplerian");
+            frame->setCurrentText("QtCircular"); require(frame->currentText()==QString::fromStdString(initial) && field("SMA"),"Circular-reference frame accepted");
+            frame->addItem("MissingFrame"); frame->setCurrentText("MissingFrame"); require(frame->currentText()==QString::fromStdString(initial),"Unknown frame accepted");
+            frame->setCurrentText("QtBaryFrame");
+            require(frame->currentText()=="QtBaryFrame" && representation->currentText()=="Cartesian" && representation->findText("Keplerian")<0,"Non-body-origin frame representation restrictions missing");
+            frame->setCurrentText("QtMoonEq");
+            require(representation->findText("Keplerian")>=0 && field("X"),"Moon-origin frame selection unavailable");
+            const auto shifted=field("X")->text().toDouble(); require(std::abs(shifted-reference[0][1])>1000,"Origin-changing conversion omitted translation");
+            frame->setCurrentText(QString::fromStdString(initial));
+            for (int i=0;i<6;++i) {
+               const QStringList names={"X","Y","Z","VX","VY","VZ"}; require(std::abs(field(names[i])->text().toDouble()-reference[0][i+1])<1e-7,qPrintable(QString("Frame/origin representation round trip changed physical state: %1 got %2 expected %3").arg(names[i],field(names[i])->text(),QString::number(reference[0][i+1],'g',17))));
+            }
+            require(Moderator::Instance()->GetConfiguredObject("QtSat")->GetStringParameter("CoordinateSystem")==initial && editor->toPlainText()==before,"Frame preview mutated configured mission");
+            frame->setCurrentText("QtEarthFixed"); representation->setCurrentText("Planetodetic");
+            if (!orbitCapture.isEmpty()) {
+               owner.setWindowTitle("Spacecraft orbit"); owner.resize(1000,720); panel.setGeometry(owner.rect()); owner.show(); panel.show();
+               QEventLoop exposed; QTimer::singleShot(200,&exposed,&QEventLoop::quit); exposed.exec();
+               require(panel.grab().save(orbitCapture),"Orbit panel capture failed");
+            }
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(applied.isEmpty(),qPrintable(applied)); const auto after=editor->toPlainText();
+         require(after.mid(after.indexOf("BeginMissionSequence;"))==before.mid(before.indexOf("BeginMissionSequence;")),"Orbit-frame Apply rewrote mission commands");
+         editor->undo(); require(editor->toPlainText()==before && window.buildScript(),"Orbit-frame paired Apply not one exact Undo");
+         editor->redo(); require(editor->toPlainText()==after && window.buildScript(),"Orbit-frame paired Apply not one exact Redo");
+         const auto path=files.filePath("orbit-frames.script"); require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Orbit-frame save/reopen failed");
+         auto *configured=Moderator::Instance()->GetConfiguredObject("QtSat");
+         require(configured->GetStringParameter("CoordinateSystem")=="QtEarthFixed" && configured->GetStringParameter("DisplayStateType")=="Planetodetic","Orbit-frame settings lost on reopen");
+         require(window.runMission()==MainWindow::RunResult::Completed,"GUI-converted orbit failed propagation"); const auto converted=readReport();
+         compareOrbit(converted,"Frame save/reopen");
+         require(editor->toPlainText().contains("QtSat.X =") && !editor->toPlainText().contains("QtSat.PlanetodeticLAT ="),"Planetodetic display did not retain Cartesian script input");
+         // Reconstructing an unrelated resource must preserve this spacecraft too.
+         const auto planetodeticScript=editor->toPlainText();
+         require(window.applyResourceChanges("QtProp",{{"InitialStepSize","45"}},planetodeticScript).isEmpty(),"Unrelated propagator Apply failed");
+         const auto unchanged=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetState("Cartesian");
+         for (int i=0;i<6;++i) require(std::abs(unchanged[i]-expectedFixed[i])<1e-7,"Unrelated Apply changed Planetodetic spacecraft state");
+         editor->undo(); require(editor->toPlainText()==planetodeticScript && window.buildScript(),"Unrelated orbit-preserving Apply Undo failed");
+         require(window.deleteResource("OrbitUnused",planetodeticScript).isEmpty(),"Unrelated resource deletion failed");
+         const auto afterDeletion=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"))->GetState("Cartesian");
+         for (int i=0;i<6;++i) require(std::abs(afterDeletion[i]-expectedFixed[i])<1e-7,"Unrelated resource deletion changed Planetodetic orbit");
+         editor->undo(); require(editor->toPlainText()==planetodeticScript && window.buildScript(),"Orbit-preserving deletion Undo failed");
+         // Exercise non-true anomaly through Apply, serialization and reopened
+         // table reads, then restore the body-fixed fixture for epoch edits.
+         for (const auto &selectedAnomaly:QStringList{"MA","EA"}) {
+            editor->setPlainText(planetodeticScript); require(window.buildScript(),"Anomaly fixture restore failed");
+            const auto source=editor->toPlainText(); QString result="Apply not invoked";
+            {
+               QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const auto &changes) {
+                  result=window.applyResourceChanges("QtSat",changes,source); return result;
+               },&owner,source);
+               panel.findChild<QComboBox *>("spacecraftOrbitFrame")->setCurrentText(QString::fromStdString(initial));
+               panel.findChild<QComboBox *>("spacecraftStateRepresentation")->setCurrentText("Keplerian");
+               panel.findChild<QComboBox *>("spacecraftAnomalyType")->setCurrentText(selectedAnomaly);
+               panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+               require(result.isEmpty(),qPrintable(result));
+            }
+            require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Anomaly save/reopen failed");
+            auto *anomalySat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+            require(QString::fromStdString(anomalySat->GetAnomalyType())==selectedAnomaly,"Anomaly selection lost on reopen");
+            const auto anomalyState=anomalySat->GetState("Keplerian"); bool displayed=false;
+            for (const auto &property:resourceProperties(*anomalySat)) if (property.name==selectedAnomaly) displayed=std::abs(property.value.toDouble()-anomalyState[5])<1e-10;
+            require(displayed,"Reopened anomaly table read a scalar value instead of the complete state");
+            require(window.runMission()==MainWindow::RunResult::Completed,"GUI anomaly orbit failed propagation");
+            compareOrbit(readReport(),"Anomaly save/reopen");
+         }
+         editor->setPlainText(planetodeticScript); require(window.buildScript(),"Planetodetic fixture restore after anomaly test failed");
+         // Pending state and epoch edits are converted at the new epoch, rather
+         // than requiring an intermediate Apply of either setting.
+         const auto currentScript=editor->toPlainText(); applied="Apply not invoked"; Rvector6 expectedPending;
+         require(!window.applyResourceChanges("QtSat",{{"CoordinateSystem",QString::fromStdString(initial)},{"DisplayStateType","Cartesian"},{"X","nan"}},currentScript).isEmpty() && editor->toPlainText()==currentScript,
+            "Invalid grouped orbit Apply changed the mission");
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const QMap<QString,QString> &changes) {
+               applied=window.applyResourceChanges("QtSat",changes,currentScript); return applied;
+            },&owner,currentScript);
+            auto *representation=panel.findChild<QComboBox *>("spacecraftStateRepresentation"); representation->setCurrentText("Cartesian");
+            auto *grid=panel.findChild<QTableWidget *>(); auto field=[&](const QString &name)->QTableWidgetItem * { for (int row=0;row<grid->rowCount();++row) if (grid->item(row,0)->text()==name) return grid->item(row,1); return nullptr; };
+            const double changedEpoch=field("Epoch")->text().toDouble()+1;
+            field("Epoch")->setText(QString::number(changedEpoch,'g',17)); field("X")->setText(QString::number(field("X")->text().toDouble()+10,'g',17));
+            Rvector6 editedFixed,expected; const QStringList names={"X","Y","Z","VX","VY","VZ"}; for (int i=0;i<6;++i) editedFixed[i]=field(names[i])->text().toDouble();
+            CoordinateConverter converter;
+            std::unique_ptr<Spacecraft> clock(dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat")->Clone()));
+            clock->SetStringParameter("Epoch",QString::number(changedEpoch,'g',17).toStdString());
+            if (clock->HasPrecisionTime()) converter.Convert(clock->GetEpochGT(),editedFixed,spacecraftOrbitFrame("QtEarthFixed"),expected,spacecraftOrbitFrame(QString::fromStdString(initial)));
+            else converter.Convert(clock->GetEpoch(),editedFixed,spacecraftOrbitFrame("QtEarthFixed"),expected,spacecraftOrbitFrame(QString::fromStdString(initial)));
+            expectedPending=expected;
+            panel.findChild<QComboBox *>("spacecraftOrbitFrame")->setCurrentText(QString::fromStdString(initial));
+            for (int i=0;i<6;++i) require(std::abs(field(names[i])->text().toDouble()-expected[i])<1e-7,"Pending epoch/state frame conversion used stale settings");
+            require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("A1Epoch")-changedEpoch)>0.5,"Pending epoch conversion mutated configured spacecraft");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(applied.isEmpty(),qPrintable(applied));
+         require(std::abs(Moderator::Instance()->GetConfiguredObject("QtSat")->GetRealParameter("A1Epoch")-reference[0][0]-1)<1e-8,"Pending epoch lost on paired Apply");
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.runMission()==MainWindow::RunResult::Completed,"Pending epoch/state save/reopen propagation failed");
+         const auto pendingReport=readReport();
+         for (int i=0;i<6;++i) require(std::abs(pendingReport[0][i+1]-expectedPending[i])<(i<3 ? 1e-6 : 1e-9),qPrintable(QString("Pending frame/epoch/state Apply changed element %1: got %2 expected %3").arg(i).arg(pendingReport[0][i+1],0,'g',17).arg(expectedPending[i],0,'g',17)));
+         auto hyperbolic=fixture;
+         hyperbolic.replace("Create Spacecraft QtSat;","Create Spacecraft QtSat;\nQtSat.DisplayStateType = Keplerian;\nQtSat.SMA = -18000;\nQtSat.ECC = 1.5;\nQtSat.INC = 35;\nQtSat.RAAN = 20;\nQtSat.AOP = 30;\nQtSat.TA = 20;");
+         editor->setPlainText(hyperbolic); require(window.runMission()==MainWindow::RunResult::Completed,"Hyperbolic orbit reference run failed");
+         const auto hyperReference=readReport(); const auto hyperStop=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpochGT();
+         const auto hyperDerivatives=dynamic_cast<ODEModel *>(Moderator::Instance()->GetInternalObject("QtForces"))->GetDerivativesForSpacecraft(dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat")));
+         QString hyperError="Apply not invoked";
+         {
+            QWidget owner; ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("QtSat"),[&](const auto &changes) {
+               hyperError=window.applyResourceChanges("QtSat",changes,hyperbolic); return hyperError;
+            },&owner,hyperbolic);
+            auto *representation=panel.findChild<QComboBox *>("spacecraftStateRepresentation"),*anomaly=panel.findChild<QComboBox *>("spacecraftAnomalyType");
+            require(anomaly->findText("HA")>=0 && anomaly->findText("EA")<0,"Hyperbolic orbit anomaly choices incorrect");
+            for (const auto &type:QStringList{"IncomingAsymptote","OutgoingAsymptote"}) {
+               representation->setCurrentText(type); require(representation->currentText()==type,"Hyperbolic asymptote conversion rejected");
+               representation->setCurrentText("Cartesian");
+               auto *grid=panel.findChild<QTableWidget *>(); int element=0;
+               for (int row=0;row<grid->rowCount();++row) if (QStringList{"X","Y","Z","VX","VY","VZ"}.contains(grid->item(row,0)->text())) {
+                  const auto index=QStringList{"X","Y","Z","VX","VY","VZ"}.indexOf(grid->item(row,0)->text());
+                  require(std::abs(grid->item(row,1)->text().toDouble()-hyperReference[0][index+1])<1e-7,"Asymptote display round trip changed orbit"); ++element;
+               }
+               require(element==6,"Hyperbolic Cartesian state fields missing");
+            }
+            representation->setCurrentText("Keplerian"); anomaly->setCurrentText("HA");
+            require(anomaly->currentText()=="HA","Hyperbolic anomaly conversion failed");
+            panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         }
+         require(hyperError.isEmpty(),qPrintable(hyperError));
+         require(window.saveScriptTo(path) && window.loadScript(path) && window.buildScript(),"Hyperbolic anomaly save/reopen failed");
+         auto *hyperSat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+         require(hyperSat->GetAnomalyType()=="HA","Hyperbolic anomaly lost on reopen");
+         const auto hyperState=hyperSat->GetState("Keplerian"); bool hyperDisplayed=false;
+         for (const auto &property:resourceProperties(*hyperSat)) if (property.name=="HA") hyperDisplayed=std::abs(property.value.toDouble()-hyperState[5])<1e-10;
+         require(hyperDisplayed,"Hyperbolic anomaly table value or label incorrect");
+         require(window.runMission()==MainWindow::RunResult::Completed,"Reopened hyperbolic orbit propagation failed"); const auto hyperReport=readReport();
+         const auto hyperDt=(dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("QtSat"))->GetEpochGT()-hyperStop).GetTimeInSec();
+         require(std::abs(hyperDt)<1e-6,"Hyperbolic stopping epoch changed");
+         for (int sample=0;sample<2;++sample) for (int i=0;i<6;++i)
+            require(std::abs(hyperReport[sample][i+1]-hyperReference[sample][i+1]-(sample ? hyperDerivatives[i]*hyperDt : 0))<(i<3 ? 1e-6 : 1e-9),"Hyperbolic anomaly save/reopen changed propagated state");
+         editor->setPlainText(originalMission); require(window.buildScript(),"Orbit-frame fixture restoration failed");
+         sat=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("QtSat"));
+         std::cout<<"PASS: spacecraft orbit frame/origin, representation/anomaly conversion, pending epoch/state Apply, Undo/Redo, save/reopen and report execution\n";
+         if (!orbitCapture.isEmpty()) return 0;
       }
       {
          const auto before=editor->toPlainText(); QTemporaryDir files;
@@ -1051,18 +1292,11 @@ int main(int argc, char **argv)
          QWidget owner;
          ResourceEditor panel(*Moderator::Instance()->GetConfiguredObject("Vehicle"),
             [](const QMap<QString,QString>&) { return QString(); },&owner);
-         auto *choose=panel.findChild<QPushButton *>("chooseProperty_CoordinateSystem");
-         require(choose,"Coordinate-system picker missing");
-         bool offered=false;
-         QTimer::singleShot(0,&panel,[&] {
-            auto *dialog=qobject_cast<QInputDialog *>(QApplication::activeModalWidget());
-            if (!dialog) return;
-            offered=dialog->comboBoxItems().contains("EarthFixed");
-            dialog->setTextValue("EarthFixed"); dialog->accept();
-         });
-         choose->click();
-         require(offered && panel.hasChanges() && Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringParameter("CoordinateSystem")!="EarthFixed",
-            "Coordinate picker missing choices or applied prematurely");
+         auto *choice=panel.findChild<QComboBox *>("spacecraftOrbitFrame");
+         require(choice && choice->findText("EarthFixed")>=0,"Coordinate-system selector missing choices");
+         choice->setCurrentText("EarthFixed");
+         require(choice->currentText()=="EarthFixed" && panel.hasChanges() && Moderator::Instance()->GetConfiguredObject("Vehicle")->GetStringParameter("CoordinateSystem")!="EarthFixed",
+            "Coordinate selector failed conversion or applied prematurely");
          panel.discardChanges();
       }
       {

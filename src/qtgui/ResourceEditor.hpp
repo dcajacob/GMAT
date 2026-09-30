@@ -21,6 +21,7 @@ private:
    QMap<QString, QString> original;
    QMap<QString, QString> attitudeEdits;
    QSet<QString> attitudeNames;
+   std::function<QMap<QString,QString>()> pendingOrbit;
    QString originalExpressions="[]",expressions="[]";
    bool applied = false;
    bool pairedTankEdits = false;

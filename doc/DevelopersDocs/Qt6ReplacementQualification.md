@@ -67,7 +67,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solver/SQPSetupPanel.hpp` | Pending audit |
 | `src/gui/controllogic/ForPanel.hpp` | CommandForm index/start/step/end with variable-only index selector and shared bound parameter browsers; Cancel, filtering, selected numeric bounds, execution and Undo tested. Broader parameter-valued loop execution pending. |
 | `src/gui/controllogic/ConditionPanel.hpp` | Comparison-row builder with numeric/parameter/array operands, six relations, AND/OR, add/remove and shared operand browser. Cancel, incomplete rows, header-only replacement, real If execution and Undo tested; grouped/expression syntax stays in text. Broader parameter selection and While execution cases pending. |
-| `src/gui/spacecraft/OrbitPanel.hpp` | Spacecraft epoch format conversion, invalid-date recovery, Apply and save/reopen propagation covered. Cartesian/Keplerian pending-state conversion and label refresh covered; remaining representations and coordinate-selection workflows pending audit. |
+| `src/gui/spacecraft/OrbitPanel.hpp` | Epoch-format conversion, invalid-date recovery and pending state edits covered. Typed frame/anomaly selectors, dependent representation restrictions, physical-state caching and grouped Apply implemented. All fourteen representation display round trips, Earth-fixed/Moon/barycenter frames, circular/missing-frame recovery, paired epoch/state conversion, exact Undo/Redo and Planetodetic/MA/EA/HA save/reopen/report execution covered. Unrelated Apply/deletion preserve these states. Broader representation editing, singularities, specialized frames and Orbit Designer/Summary workflows remain to qualify. |
 | `src/gui/spacecraft/PowerSystemPanel.hpp` | Single typed selection plus empty selection audited. Direct dropdown with No power system, nuclear/solar candidates and pending Apply implemented. Returning to None, wrong-type rollback, attachment, save/reopen report execution and detachment covered. Electric propulsion consuming GUI-attached power remains to qualify. |
 | `src/gui/spacecraft/BallisticsMassPanel.hpp` | All eleven wx controls audited. Focused Spherical/SPAD editor, input file choosers and engine interpolation choices implemented. Cancel, invalid-input recovery, pending edits, paired Apply, exact-source Undo/Redo, save/reopen and GUI-configured SPAD SRP execution/report values covered. SPAD drag force execution and broader interpolation/scale combinations remain to qualify. |
 | `src/gui/spacecraft/TankPanel.hpp` | wx add/remove/add-all/remove-all attachment operations audited. Typed checklist, ordering and bulk controls implemented. Cancel, pending selection, paired Apply, Undo/Redo, invalid references, save/reopen, chemical two-tank burn/report and complete detachment covered. Electric tank attachment/execution combinations remain to qualify. |
@@ -1986,3 +1986,85 @@ PrecessingSpinner/NadirPointing/CCSDS-AEM execution, changing reference-frame
 dependencies and broader attitude file/error cases remain qualification work.
 The existing SPICE execution coverage does not qualify every operation in this
 new dialog. The larger workflow, plugin and viewer acceptance gates remain open.
+
+
+## Spacecraft orbit frame, representation and anomaly workflow
+
+Audited wx OrbitPanel's frame binding, pending-state conversion, internal
+Cartesian cache, epoch ordering, representation restrictions and anomaly labels.
+Qt now offers a direct coordinate-system selector. A frame-name string change
+alone left the old coordinate-system pointer attached; preview and Apply now
+bind the chosen configured frame through the engine's public reference API.
+Frame changes refresh available representations and fall back to Cartesian
+when a body-fixed or celestial-body-origin requirement is no longer met.
+
+Display changes retain the physical internal Cartesian state between selections,
+as wx does. Only edited numbers are interpreted again; all six elements are
+submitted together through GMAT's StateConversionUtil and CoordinateConverter.
+Conversions use the pending epoch, including precision time when available.
+Invalid numbers, dates, missing frames and spacecraft-dependent circular frames
+restore the previous selector and leave correction inputs intact. Apply retains
+that cached state after setting the epoch: the engine epoch setter can otherwise
+reinterpret an already-converted state in the original frame. Preview changes
+remain separate from the configured model and mission source.
+
+Orbit values are read as complete converted state vectors. The engine's scalar
+MA/EA getters are unsuitable for these displayed values, and its default labels
+can still say TA after selecting another anomaly. Qt supplies the selected
+sixth-element label and exposes the grouped editing path even when that element
+is marked read-only for scalar assignment. Anomaly choices follow eccentricity:
+TA/MA/EA for elliptic orbits, TA/MA/HA for hyperbolic orbits. Frame/representation
+changes fall back to TA when the previous anomaly becomes unavailable. The
+anomaly selector is disabled for representations that do not use it.
+
+The engine's Planetodetic forward/inverse conversions are approximate; merely
+re-parsing unchanged display values produced a 1.4 mm X drift in the fixture.
+Its standard script writer also omits MA/EA/HA sixth elements through a read-only
+filter. Qt resource reconstruction therefore writes Cartesian inputs in the
+selected frame for Planetodetic and non-TA anomaly cases, retaining the selected
+DisplayStateType and explicit AnomalyType. This applies to other spacecraft
+when an unrelated resource is edited or deleted as well. No numerical engine
+source or conversion formulas were changed. The saved script's state input
+labels can be Cartesian while the GUI continues to display the selected type.
+
+WorkflowTests covers all fourteen representation display round trips, including
+Brouwer mean and hyperbolic incoming/outgoing asymptote displays. Frame cases
+include Earth BodyFixed, a Moon origin, a barycenter origin, an unavailable frame
+and a circular spacecraft reference. Cases include invalid numbers/dates,
+pending epoch plus Cartesian edits, configured-model isolation, paired Apply,
+unchanged mission-command source, exact Undo/Redo, save/reopen, unrelated Apply
+and resource deletion, and actual 600-second report execution. Planetodetic,
+mean/eccentric anomaly and hyperbolic anomaly round trips retain their display
+settings, correct table labels/values and propagated states. The Orbit tab uses
+one frame selector; the deprecated StateType alias and unused action column are
+hidden. Column resize behavior remains interactive.
+
+The numerical fixture specifies its initial epoch explicitly, uses 1e-13
+integrator accuracy and requests a 1e-10 elapsed-time stop tolerance. It verifies
+initial precision epochs within 1 ns. Actual stopping epochs can still differ
+by fractions of a microsecond in the existing engine; comparisons bound that
+offset below 1 microsecond and align only the endpoint offset using reference
+velocity/acceleration. Position and velocity residual bounds remain 1e-6 km and
+1e-9 km/s. Frame previews and display round trips use tighter 1e-7 component
+bounds. This does not claim bit-identical trajectories or qualification of the
+engine default constructor's rounded precision epoch.
+
+Broader element editing/Apply across every representation, coupled elliptic to
+hyperbolic changes, singular/parabolic cases, other specialized axes and epoch
+formats remain qualification cases. In particular, display round-trip coverage
+alone does not qualify all Brouwer mean input conversions. Orbit Designer and
+Orbit Summary remain separate unaudited workflows. The overall workflow,
+viewer and plugin acceptance gates remain open.
+
+
+Rebuilt the user's actual `application/bin/GmatQt` executable; all 12 Qt suites
+passed in 48.63 seconds. Native viewer/window/plot checks used isolated
+Xvfb/software OpenGL and include normal, 150% and 200% native orbit scaling.
+Evidence: `Qt6ParityValidation/check-orbit-frames.txt`. A separate process with
+isolated settings ran the orbit workflow directly on the current Wayland
+desktop, including the preceding epoch/representation tests, all frame/anomaly
+cases, round trips and engine report execution. Its `--orbit-capture` mode exits
+after this workflow and does not claim full desktop or long-session validation.
+The final 2250x1620 capture was inspected for readable columns, selector fit,
+unit labels and Apply/Close controls. Evidence:
+`Qt6ParityValidation/orbit-frames-wayland.txt` and `orbit-frames-wayland.png`.

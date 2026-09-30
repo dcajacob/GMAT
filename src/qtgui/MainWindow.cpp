@@ -4,6 +4,7 @@
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "SpacecraftOrbit.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "StartupCompatibility.hpp"
@@ -732,11 +733,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
       if (!proposed) return "This resource cannot be edited.";
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
       const QString mixture=changes.value("MixRatio");
-      const bool stateRepresentation=proposed->IsOfType("Spacecraft") && changes.contains("DisplayStateType");
-      if (stateRepresentation) setResourceProperty(*proposed,"DisplayStateType",changes.value("DisplayStateType"));
+      const auto orbitChanges=applySpacecraftOrbitProperties(*proposed,changes);
       const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (attitudeChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio") || (stateRepresentation && it.key()=="DisplayStateType")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -754,12 +754,15 @@ QString MainWindow::applyResourceChanges(const QString &name,
          return QString::fromStdString(copy->GetGeneratingString(Gmat::SCRIPTING));
       };
       const auto oldBlock = serialize(*object);
-      auto newBlock = serialize(*proposed);
+      auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);
+      // Unrelated resource edits also reconstruct the mission. Avoid repeated
+      // representation drift or omitted anomaly elements in other spacecraft.
+      candidate=preserveSpacecraftOrbits(candidate,object);
       // Resource edits must not normalize/rewrite the existing mission commands,
       // including cell formulas, labels and user comments.
       const QRegularExpression missionStart("^[ \t]*BeginMissionSequence\\b",QRegularExpression::MultilineOption);
@@ -867,7 +870,7 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
          return "Built-in resources and generated parameters cannot be deleted here.";
       if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
          return "This resource is used by another resource or mission command. See Message Window for details.";
-      candidate=QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
+      candidate=preserveSpacecraftOrbits(QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING)));
    } catch (BaseException &error) {
       const auto detail=QString::fromStdString(error.GetFullMessage());
       return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
