@@ -749,6 +749,10 @@ QString MainWindow::applyResourceChanges(const QString &name,
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
       }
       validateResourceProperties(*proposed);
+      if (proposed->GetTypeName()=="XYPlot" && proposed->GetBooleanParameter("ShowPlot")) {
+         const bool emptyY=changes.contains("YVariables") ? splitResourceReferences(changes.value("YVariables")).isEmpty() : proposed->GetStringArrayParameter("YVariables").empty();
+         if (emptyY) return "Select at least one Y parameter, or turn off Show plot.";
+      }
       if (!proposed->Validate()) return "The resource rejected these settings.";
       candidate = QString::fromStdString(moderator->GetScript(Gmat::SCRIPTING));
       auto serialize=[](GmatBase &resource) {

@@ -22,7 +22,8 @@
 ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
    const bool arguments=mode==Mode::FunctionInputs || mode==Mode::FunctionOutputs;
-   const bool single=mode!=Mode::Multiple && !arguments;
+   const bool plottable=mode==Mode::PlottableSingle || mode==Mode::PlottableMultiple;
+   const bool single=mode!=Mode::Multiple && mode!=Mode::PlottableMultiple && !arguments;
    const bool writable=mode==Mode::Writable || mode==Mode::WritableReal || mode==Mode::FunctionOutputs;
    const bool realOnly=mode==Mode::WritableReal;
    const bool stop=mode==Mode::StopParameter;
@@ -30,10 +31,11 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       const bool user=parameter->IsOfType("Variable") || parameter->IsOfType("Array") || parameter->IsOfType("String");
       return (user || parameter->IsSettable()) && (!realOnly || parameter->GetReturnType()==Gmat::REAL_TYPE || parameter->IsOfType("Array"));
    };
-   setObjectName("reportParameterDialog"); setWindowTitle(arguments ? (writable ? "Function outputs" : "Function inputs") : single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
+   setObjectName("reportParameterDialog"); setWindowTitle(plottable ? "Plot parameters" : arguments ? (writable ? "Function outputs" : "Function inputs") : single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
    auto *layout=new QVBoxLayout(this);
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
    help->setWordWrap(true); layout->addWidget(help);
+   if (plottable) help->setText("Choose a numeric plot parameter or an array element. Browse object properties and their reference frames below. Apply validates the complete plot.");
    auto *entry=new QComboBox(this); entry->setObjectName("reportParameterEntry");
    if (single) singleEntry=entry;
    entry->setEditable(true); entry->setInsertPolicy(QComboBox::NoInsert);
@@ -41,7 +43,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    QStringList names;
    for (const auto &name:moderator->GetListOfObjects(Gmat::PARAMETER)) {
       auto *parameter=moderator->GetParameter(name);
-      if (parameter && (writable ? writableParameter(parameter) : (parameter->IsReportable() || (stop && (parameter->GetTypeName()=="Periapsis" || parameter->GetTypeName()=="Apoapsis"))))) names.append(QString::fromStdString(name));
+      if (parameter && (plottable ? (parameter->IsPlottable() || parameter->IsOfType("Array")) : writable ? writableParameter(parameter) : (parameter->IsReportable() || (stop && (parameter->GetTypeName()=="Periapsis" || parameter->GetTypeName()=="Apoapsis"))))) names.append(QString::fromStdString(name));
    }
    if (arguments) {
       help->setText("Arguments are positional. Add, remove or reorder entries below; Apply validates the function signature and references.");
@@ -63,7 +65,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    auto *info=ParameterInfo::Instance();
    QMap<QString,QStringList> properties;
    for (const auto &type:info->GetTypesOfParameters()) {
-      if (writable ? (!info->IsSettable(type) || (realOnly && !info->IsPlottable(type))) : (!info->IsReportable(type) && !(stop && (type=="Periapsis" || type=="Apoapsis")))) continue;
+      if (plottable ? !info->IsPlottable(type) : writable ? (!info->IsSettable(type) || (realOnly && !info->IsPlottable(type))) : (!info->IsReportable(type) && !(stop && (type=="Periapsis" || type=="Apoapsis")))) continue;
       const auto ownerType=info->GetObjectType(type);
       if (ownerType==Gmat::UNKNOWN_OBJECT || ownerType==Gmat::PARAMETER) continue;
       for (const auto &name:moderator->GetListOfObjects(ownerType)) properties[QString::fromStdString(name)].append(QString::fromStdString(type));
@@ -137,9 +139,10 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    layout->addLayout(indices);
    list=new QListWidget(this); list->setObjectName("reportSelectedParameters"); list->addItems(selected);
    list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
-   auto addName=[this](const QString &name) {
+   auto addName=[this,plottable](const QString &name) {
       if (name.isEmpty()) return;
       if (singleEntry) { singleEntry->setEditText(name); return; }
+      if (plottable && (!isPlottableReference(name) || !list->findItems(name,Qt::MatchExactly).isEmpty())) return;
       list->addItem(name); list->setCurrentRow(list->count()-1);
    };
    connect(add,&QPushButton::clicked,this,[entry,addName] { addName(entry->currentText().trimmed()); });
@@ -209,8 +212,43 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       connect(list->model(),&QAbstractItemModel::rowsInserted,this,[=] { validate(); });
       connect(list->model(),&QAbstractItemModel::rowsRemoved,this,[=] { validate(); }); validate();
    }
+   if (plottable) {
+      auto validate=[this,buttons,entry,add] {
+         const auto values=selection(); bool valid=singleEntry ? !values.isEmpty() : true;
+         for (const auto &value:values) valid=valid && isPlottableReference(value);
+         buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
+         add->setEnabled(isPlottableReference(entry->currentText()));
+      };
+      connect(entry,&QComboBox::currentTextChanged,this,[validate] { validate(); });
+      connect(list->model(),&QAbstractItemModel::rowsInserted,this,[validate] { validate(); });
+      connect(list->model(),&QAbstractItemModel::rowsRemoved,this,[validate] { validate(); });
+      validate();
+   }
    connect(buttons,&QDialogButtonBox::accepted,this,&QDialog::accept);
    connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
+}
+bool ReportParameterDialog::isPlottableReference(const QString &reference)
+{
+   const auto value=reference.trimmed(); auto *moderator=Moderator::Instance();
+   static const QRegularExpression element(R"(^([A-Za-z_][A-Za-z0-9_]*)\(\s*([1-9][0-9]*)\s*,\s*([1-9][0-9]*)\s*\)$)");
+   const auto match=element.match(value);
+   if (match.hasMatch()) {
+      auto *array=dynamic_cast<Array *>(moderator->GetConfiguredObject(match.captured(1).toStdString()));
+      bool rowValid=false,columnValid=false;
+      const auto row=match.captured(2).toLongLong(&rowValid),column=match.captured(3).toLongLong(&columnValid);
+      return array && rowValid && columnValid && row<=array->GetIntegerParameter("NumRows") && column<=array->GetIntegerParameter("NumCols");
+   }
+   if (auto *object=moderator->GetConfiguredObject(value.toStdString())) {
+      auto *parameter=dynamic_cast<Parameter *>(object);
+      return parameter && parameter->IsPlottable();
+   }
+   static const QRegularExpression property(R"(^[A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)+$)");
+   if (!property.match(value).hasMatch()) return false;
+   auto *info=ParameterInfo::Instance(); const auto type=value.section('.',-1).toStdString();
+   const auto &types=info->GetTypesOfParameters();
+   if (std::find(types.begin(),types.end(),type)==types.end() || !info->IsPlottable(type)) return false;
+   auto *owner=moderator->GetConfiguredObject(value.section('.',0,0).toStdString());
+   return owner && owner->IsOfType(info->GetObjectType(type));
 }
 QStringList ReportParameterDialog::selection() const
 {

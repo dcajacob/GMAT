@@ -1163,3 +1163,12 @@ representation. Invalid values remain available for correction. Reference frame
 controls respect the model's restrictions; reference bodies and AEM input files
 have dedicated selectors. OK keeps the selected model's settings pending until
 spacecraft Apply, together with other spacecraft changes.
+
+
+XY plot resources now provide **XY plot setup…** with Show plot, Show grid,
+Solver iterations, a single X parameter and an ordered Y list. Select opens a
+numeric parameter browser with object properties, reference frames and indexed
+array elements. Remove, Up/Down and drag reordering edit the Y list. Strings and
+bare arrays are excluded; turn off Show plot to keep a plot with no Y selections.
+OK retains edits in the resource panel, and Apply validates and saves them to
+the mission. Cancel leaves the pending resource values unchanged.

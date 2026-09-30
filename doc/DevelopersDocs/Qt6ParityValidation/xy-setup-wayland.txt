@@ -1,0 +1,4 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5feef48058c0 with focusing surface 0x5feef4fa9c70
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5feef4fa9c70 with focusing surface 0x5feef48058c0
+REFERENCE: 59.99999988125637         3                         7                         7086.464536250405
+PASS: XY grouped controls, plottable parameter/array browser, Cancel/pending Apply, validation/recovery, exact Undo/Redo/save/reopen, grid/visibility and numerical curve/report agreement

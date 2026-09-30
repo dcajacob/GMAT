@@ -1,4 +1,5 @@
 #include "ResourceProperties.hpp"
+#include "ReportParameterDialog.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "Moderator.hpp"
@@ -292,8 +293,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    // Candidate interpretation resolves resource references and validates kernel
    // files. File lists use newlines so commas within paths remain intact.
    static const QRegularExpression reference("^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$");
-   static const QRegularExpression arrayElement("^[A-Za-z_][A-Za-z0-9_]*\\([1-9][0-9]*,\\s*[1-9][0-9]*\\)$");
-   const bool reportParameters=object.GetTypeName()=="ReportFile" && name=="Add";
+   static const QRegularExpression arrayElement("^[A-Za-z_][A-Za-z0-9_]*\\(\\s*[1-9][0-9]*\\s*,\\s*[1-9][0-9]*\\s*\\)$");
+   const bool reportParameters=(object.GetTypeName()=="ReportFile" && name=="Add") || (object.GetTypeName()=="XYPlot" && name=="YVariables");
    const bool files=isResourceFileList(object,name);
    QStringList entries;
    if (!value.trimmed().isEmpty()) {
@@ -301,6 +302,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
          const auto entry=part.trimmed();
          if (files && (entry.contains('\'') || entry.contains('\r') || entry.contains(';'))) throw std::runtime_error("Kernel paths cannot contain quotes, semicolons or line breaks");
          if (!files && !reference.match(entry).hasMatch() && !(reportParameters && arrayElement.match(entry).hasMatch())) throw std::runtime_error("Enter comma-separated resource or parameter names");
+         if (object.GetTypeName()=="XYPlot" && name=="YVariables" && !ReportParameterDialog::isPlottableReference(entry))
+            throw std::runtime_error(("Select a numeric plot parameter or a valid array element: "+entry).toStdString());
          if (name=="Add" && object.IsOfType("Formation")) {
             auto *member=Moderator::Instance()->GetConfiguredObject(entry.toStdString());
             if (!member || !member->IsOfType(Gmat::SPACECRAFT)) throw std::runtime_error("Formation members must be existing spacecraft");
@@ -320,6 +323,8 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
          entries.append(entry);
       }
    }
+   if (object.GetTypeName()=="XYPlot" && name=="YVariables" && entries.isEmpty() && object.GetBooleanParameter("ShowPlot"))
+      throw std::runtime_error("Select at least one Y parameter, or turn off Show plot.");
    const QString key=QString::fromStdString(object.GetName())+"."+name;
    const QRegularExpression assignment("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(key)+
       "[ \\t]*=[ \\t]*\\{[^;]*?\\}[ \\t]*;",QRegularExpression::MultilineOption);
@@ -331,7 +336,7 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    QString result=block;
    // Empty spacecraft hardware lists are defaults, omitted by the engine's
    // serializer. Explicit {} is interpreted as a hardware name in these fields.
-   const bool omitEmpty=object.GetTypeName()=="ReportFile" || (object.IsOfType("Spacecraft") &&
+   const bool omitEmpty=object.GetTypeName()=="ReportFile" || object.GetTypeName()=="XYPlot" || (object.IsOfType("Spacecraft") &&
       QSet<QString>{"Tanks","Thrusters","AddHardware","AddPlates"}.contains(name));
    if (!matches.hasNext()) {
       if (entries.isEmpty() && omitEmpty) return result;
@@ -401,6 +406,12 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
 
 void validateResourceProperties(GmatBase &object)
 {
+   if (object.GetTypeName()=="XYPlot") {
+      const auto x=QString::fromStdString(object.GetStringParameter("XVariable"));
+      if ((object.GetBooleanParameter("ShowPlot") && x.isEmpty()) || (!x.isEmpty() && !ReportParameterDialog::isPlottableReference(x)))
+         throw std::runtime_error("Select a numeric X plot parameter or a valid array element.");
+      return;
+   }
    if (!object.IsOfType("CoordinateSystem")) return;
    auto *axes=object.GetOwnedObject(0);
    if (!axes) return;

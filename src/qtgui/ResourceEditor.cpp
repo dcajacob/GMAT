@@ -14,6 +14,7 @@
 #include "AtmosphereDialog.hpp"
 #include "GroundStationDialog.hpp"
 #include "EventLocatorDialog.hpp"
+#include "XYPlotDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -315,6 +316,24 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       });
    }
    layout->addWidget(search);
+   if (object.GetTypeName()=="XYPlot") {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto *button=new QPushButton("XY plot setup…",this); button->setObjectName("editXYPlot"); layout->addWidget(button);
+      connect(button,&QPushButton::clicked,this,[this,initial] {
+         QMap<QString,QString> pending;
+         for (int row=0;row<table->rowCount();++row) {
+            const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+            pending.insert(table->item(row,0)->text(),combo ? comboValue(combo) : table->item(row,1)->text());
+         }
+         XYPlotDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return;
+         const auto values=dialog.settings();
+         for (int row=0;row<table->rowCount();++row) {
+            const auto name=table->item(row,0)->text(); if (!values.contains(name)) continue;
+            if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values.value(name));
+            else table->item(row,1)->setText(values.value(name));
+         }
+      });
+   }
    table = new QTableWidget(this);
    table->setColumnCount(4);
    table->setHorizontalHeaderLabels({"Property", "Value", "Unit", ""});
@@ -384,13 +403,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             });
          }
          const bool reportParameters=object.GetTypeName()=="ReportFile" && field.name=="Add";
-         if (field.filename || !field.references.isEmpty() || reportParameters) {
+         const bool plotParameters=object.GetTypeName()=="XYPlot" && (field.name=="XVariable" || field.name=="YVariables");
+         if (field.filename || !field.references.isEmpty() || reportParameters || plotParameters) {
             auto *choose=new QPushButton(field.filename ? "Browse…" : "Select…",table);
             choose->setObjectName("chooseProperty_"+field.name);
             table->setCellWidget(row,3,choose);
-            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters] {
-               if (reportParameters) {
-                  ReportParameterDialog dialog(splitResourceReferences(value->text()),this);
+            connect(choose,&QPushButton::clicked,this,[this,value,field,reportParameters,plotParameters] {
+               if (reportParameters || plotParameters) {
+                  const auto mode=plotParameters ? (field.name=="XVariable" ? ReportParameterDialog::Mode::PlottableSingle : ReportParameterDialog::Mode::PlottableMultiple) : ReportParameterDialog::Mode::Multiple;
+                  ReportParameterDialog dialog(splitResourceReferences(value->text()),this,mode);
                   if (dialog.exec()==QDialog::Accepted) value->setText(dialog.selection().join(", "));
                } else if (field.fileList) {
                   QDialog dialog(this); dialog.setObjectName("kernelFileDialog"); dialog.setWindowTitle(field.name); dialog.resize(650,360);

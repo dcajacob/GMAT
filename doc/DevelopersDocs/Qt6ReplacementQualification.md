@@ -119,7 +119,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Pending audit |
 | `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Pending audit |
-| `src/gui/subscriber/XyPlotSetupPanel.hpp` | Pending audit |
+| `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. Full solver-iteration modes and broader burn/hardware parameter execution remain to qualify. |
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Pending audit |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Pending audit |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Pending audit |
@@ -2289,3 +2289,45 @@ access and visible OK/Cancel buttons. Evidence:
 `Qt6ParityValidation/check-events.txt`,
 `Qt6ParityValidation/events-wayland.txt` and
 `Qt6ParityValidation/events-wayland.png`.
+
+
+## XY plot setup and plottable parameter selection
+
+Audited the active controls and save path in wx `XyPlotSetupPanel.cpp`.
+The Qt resource editor now has **XY plot setup…** with Show plot, Show grid,
+engine solver-iteration choices, one X parameter and ordered Y parameters.
+The Y list supports selection, remove, drag reordering and Up/Down. The generic
+X/Y Select buttons also use the same specialized parameter browser.
+
+The shared parameter browser now distinguishes plottable parameters from
+reportable parameters. It offers numeric variables and object properties with
+frame/body/hardware dependencies, plus indexed array elements; strings and bare
+arrays cannot be selected as plotted values. Array indices must be positive and
+within configured dimensions. Duplicate Y selections are prevented. The
+existing report, function-argument and command modes retain their filters.
+
+Qualification exposed a Qt serialization gap: XY Y lists rejected array-element
+syntax even though the engine supports it. Y-list replacement now accepts array
+elements and validates their plottability. Clearing a disabled Y list removes its
+assignment rather than emitting an empty parameter reference. Enabling a plot
+without X/Y selections is rejected with corrective feedback; wx instead warns
+and deactivates that plot. Qt keeps the requested visibility pending while the
+user corrects the selections. Turning a plot off retains its existing X
+parameter; clearing an existing X is not offered as a supported operation.
+
+`PlotSetupTests` selects `A(1,1)` for X and, in order, a variable, `A(1,2)` and
+`Sat.EarthMJ2000Eq.X` for Y through the GUI. It exercises filtering, array bounds,
+duplicate prevention, property/frame browsing, picker and dialog Cancel, pending
+Apply/reopen, list movement, invalid-input recovery and exact-source Undo/Redo.
+After a Unicode-path save/reopen, every X sample is 2, the variable/array curves
+remain 3/7, and the spacecraft curve endpoint agrees with an independently
+script-configured report within 1e-8 km. The reference elapsed-time check allows
+one microsecond for epoch precision. Disabling and clearing the plot survives
+save/reopen and suppresses its viewer; re-enabling an empty plot is rejected.
+
+All 16 Qt suites pass, including the new `QtGui.PlotSetup` suite, and the actual
+`application/bin/GmatQt` is rebuilt. The full new workflow also passes directly
+on Wayland, with the dialog capture visually inspected. Evidence:
+`Qt6ParityValidation/check-xy-setup.txt`, `xy-setup-wayland.txt` and
+`xy-setup-wayland.png`. Ground-track setup, remaining orbit redraw/camera modes,
+full solver-iteration combinations and broader parameter contexts remain open.
