@@ -1624,3 +1624,27 @@ tools already used by doc/help/Makefile. It copies help.html, html and files int
 application/docs/help, which the existing install rules include. The generated
 files are ignored by Git. GUI compilation itself does not require the help build;
 QtGui.Help requires the offline pages to be built before qualification.
+
+
+### Run scripts from a folder
+
+Mission / Run scripts from folder provides a sorted range, two filename filters,
+repeats, output and optional per-repeat directories, exact saved-script copies and
+ReportFile numerical comparison with an optional export. Functions and backup
+files are excluded. The range is selected before filters. Saved copies retain the
+original asset/include base; copy associated assets separately for a portable
+mission. OpenFrames scripts offer in-memory Qt conversion without rewriting the
+source or copy.
+
+Results classify each build/run failure and aggregate all selected repeats.
+Stop interrupts an active mission or prevents further runs. Close/Escape during
+execution requests Stop. The Results summary is written in the output directory;
+comparison export cannot overwrite a mission, copy, baseline, report or summary.
+Final batch viewers and solver progress remain in Plots, with Tile/Cascade controls.
+
+Pending configuration panels must be applied or discarded before the batch.
+Clean configuration windows close because their engine objects are replaced.
+The open script and Undo/Redo are retained; accepted engine configuration, paths,
+log and batch state are restored afterward. Ordinary viewer history is retained.
+The application reports a restoration failure and requires rebuilding the open
+mission if restoration fails.

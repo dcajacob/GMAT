@@ -7,6 +7,7 @@
 #include <QMap>
 #include <QPointer>
 #include "MissionModel.hpp"
+#include "FolderRun.hpp"
 class QMdiArea;
 class QPlainTextEdit;
 class QTreeWidget;
@@ -34,6 +35,8 @@ public:
    QStringList availableEngineTypes() const;
    enum class RunResult { Completed, Stopped, Failed, Busy };
    RunResult runMission();
+   FolderRunResult runFolderScripts(const FolderRunOptions &options,QtPlotReceiver &batchPlots,
+      const std::atomic_bool &cancel,const std::function<void(int,int,const FolderRunItem &)> &progress={});
    void pauseMission();
    void resumeMission();
    void stopMission();
@@ -74,6 +77,7 @@ private:
    QMdiArea *workspace;
    QPlainTextEdit *editor;
    QPlainTextEdit *messages;
+   QString *folderMessages=nullptr;
    QPointer<QWidget> textEditTarget;
    HelpController *contextHelp;
    QTreeWidget *resources;

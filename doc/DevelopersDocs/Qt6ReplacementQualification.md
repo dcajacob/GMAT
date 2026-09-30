@@ -131,7 +131,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
-| `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt single-document Run/Stop and file comparison exist; the folder-run configuration, execution/report aggregation and restoration workflow remain missing. |
+| `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Active grid resize/retained cells, cell editing/clearing and condition colors audited; grouped Qt setup with pending Apply/Cancel, Undo/Redo, Unicode save/reopen, live reports, adjustable widths and immediate close/reopen covered. Extreme dimensions and unnamed-cell styling remain pending. |
@@ -4091,3 +4091,75 @@ changes; no claim of a later full rerun is made. Windows/macOS and MATLAB remain
 deferred. The full replacement goal remains active: folder-run, debugger, mission
 filters/undocking, welcome/navigation, bulk parameter operations and the remaining
 viewer/plugin/file/shared-desktop acceptance evidence still require completion.
+
+
+## Folder-run delivery and Linux qualification
+
+Mission / Run scripts from folder now opens Options, Results and Plots in a
+separate modal workspace. The immediate folder list is sorted by name and includes
+.script/.m missions; function definitions and backup suffixes are excluded. The
+starting number and count select that list before two independent include/exclude
+filters. Repeats reuse the built engine objects. Output can use Run_1, Run_2 and
+so on, with ReportFile/EphemerisFile filenames re-resolved for each repeat;
+explicit destinations retain their configured paths.
+
+Saved copies retain exact source bytes, including UTF-8 comments. They are run
+from the selected copy folder, while relative includes/assets resolve from the
+original source folder. This provides the wx save-copy/run operation, not a
+self-contained asset archive. OpenFrames missions automatically offer conversion
+for the Qt viewer; acceptance converts the in-memory build, retaining both source
+and saved copy. Unsupported conversion reports the actual reason as a build
+failure, and declining skips that script.
+
+Numeric ReportFile comparison uses the existing absolute-tolerance line comparison
+on a worker while the GUI continues delivering Stop. Reference basenames replace
+GMAT with the requested text. Results include each repeat, loaded path, output
+path, engine status, failure details and comparison totals. A summary is saved in
+the output folder; comparison export is optional. Summary/report collisions select
+an unused numbered summary. Export rejects missions, saved copies, baselines,
+active reports and the summary as destinations, including resolved aliases.
+
+Build, initialization, unknown initialization, runtime, unknown runtime,
+interrupted, read, copy and output errors have distinct categories. Following
+missions continue after ordinary failures. Stop interrupts active engine execution
+or prevents subsequent runs; Close/Escape while busy requests Stop. Options and
+Run recover afterward. Each script's diagnostics are captured independently of the
+10,000-line Message Window cap. Logs use the batch output directory and the prior
+log destination/enabled state is restored.
+
+Pending configuration panels block batch execution without losing their values.
+Clean panels close before their referenced engine objects are replaced. The open
+script text, identity and Undo/Redo are retained, including unapplied text edits.
+Original output/ephemeris/source-folder/log/batch settings and the accepted engine
+model are restored after success and failures. Normal viewer histories remain
+available. The final batch OrbitView/GroundTrack and solver progress windows stay
+in the dialog's Plots workspace after restoration; Tile and Cascade are available.
+
+FolderRunTests covers the delivered menu/dialog, sort/range/filters/functions/
+backups, two repeats, output directories, source-exact copies/relative includes,
+independent numeric reports, comparison exports, build/initialization/runtime
+failure recovery, malformed UTF-8 repeated reads, active and between-run Stop,
+pending-resource protection, failed output path recovery, exact document Undo/Redo,
+normal viewer history, baseline/report overwrite protection, retained textured
+OrbitView/GroundTrack scenes, OF conversion and repeated converged solver windows
+without leaking into the ordinary workspace. The native Wayland test passed with
+captured Results and Plots images (folder-run-wayland-20260930.txt and associated
+PNGs); those images were inspected for readable output, textured Earth, starfield,
+map and spacecraft trajectory. These routes use actual Qt widgets with synthetic
+input; desktop portal chooser interaction is still unqualified.
+
+The first complete regression attempt retained in
+check-folder-run-prompt-timing-failed.txt timed out in the new native folder test.
+Its single-shot acceptance callback ran before the OF prompt existed after queued
+messages were drained. Polling for the actual prompt corrected the harness; the
+focused final folder test passed in 2.98 seconds. The raw failed log is retained.
+Large comparison files are streamed by the comparison engine, but exceptionally
+large combined result text and disk exhaustion/race failures are not qualified by
+these bounded cases. Full replacement remains in progress under the acceptance
+gates and the remaining active-workflow/desktop requirements.
+
+Final folder-run regression: check-folder-run.txt records all 43 Qt suites passing
+in 167.72 seconds, including NativeFolderRun and the existing native X11
+viewer/window suites. application/bin/GmatQt was rebuilt with these final changes.
+The separate Wayland folder test/captures passed; this does not close the outstanding
+GNOME top-level minimize/restore acceptance gate.

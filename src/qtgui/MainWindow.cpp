@@ -1,9 +1,12 @@
 #include "ReportViewer.hpp"
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
+#include <QScopedValueRollback>
 #include "InspectionDialog.hpp"
 #include "AboutDialog.hpp"
 #include "HelpDialog.hpp"
+#include "FolderRunDialog.hpp"
+#include "GmatGlobal.hpp"
 #include "UserParameter.hpp"
 #include "SolarSystemPanel.hpp"
 #include "SolarSystem.hpp"
@@ -440,6 +443,12 @@ MainWindow::MainWindow()
    stopAction->setObjectName("stopMission");
    editingActions.removeOne(stopAction);
    run->addSeparator();
+   auto *folder=run->addAction("Run scripts from folder…"); folder->setObjectName("runScriptFolder"); editingActions.append(folder);
+   connect(folder,&QAction::triggered,this,[this] {
+      FolderRunDialog dialog(QString::fromStdString(FileManager::Instance()->GetFullPathname("OUTPUT_PATH")),
+         [this](const FolderRunOptions &options,QtPlotReceiver &views,const std::atomic_bool &cancel,const auto &progress) { return runFolderScripts(options,views,cancel,progress); },
+         [this] { stopMission(); },this); dialog.exec();
+   });
    auto *saveBuild=run->addAction("Save and build script"); saveBuild->setObjectName("saveBuildScript");
    saveBuild->setShortcut(QKeySequence("Ctrl+Shift+F7")); editingActions.append(saveBuild);
    connect(saveBuild,&QAction::triggered,this,[this] { saveAndBuildScript(false); });
@@ -616,6 +625,7 @@ bool MainWindow::initialize(const QString &startup)
    receiver = std::make_unique<QtMessageReceiver>();
    receiver->SetMessageCallback(this, [this](const QString &text) {
       messages->moveCursor(QTextCursor::End); messages->insertPlainText(text);
+      if (folderMessages) *folderMessages+=text;
    });
    MessageInterface::SetMessageReceiver(receiver.get());
    PlotInterface::SetPlotReceiver(plots.get());
@@ -968,6 +978,118 @@ MainWindow::RunResult MainWindow::runMission()
    solverListeners->missionFinished(result==RunResult::Stopped,result==RunResult::Failed);
    statusBar()->showMessage(result == RunResult::Completed ? "Mission completed" :
       result == RunResult::Stopped ? "Mission stopped" : "Mission failed — see Message Window");
+   return result;
+}
+FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtPlotReceiver &batchPlots,
+   const std::atomic_bool &cancel,const std::function<void(int,int,const FolderRunItem &)> &progress)
+{
+   FolderRunResult result;
+   if (!ready || running) { result.error="Finish the current mission before running a folder."; return result; }
+   for (auto *child:workspace->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges()) {
+      result.error="Apply or discard pending panel changes before running a folder."; return result;
+   }
+   result.error=validateFolderRun(options); if (!result.error.isEmpty()) return result;
+   auto *fm=FileManager::Instance(); auto *global=GmatGlobal::Instance();
+   const auto originalOutput=fm->GetFullPathname("OUTPUT_PATH"),originalEphem=fm->GetFullPathname("VEHICLE_EPHEM_PATH"),originalWorking=fm->GetGmatWorkingDirectory();
+   const auto originalLog=receiver->GetLogFileName(); const bool originalLogging=receiver->GetLogEnable(),originalBatch=global->IsBatchMode(),originalValid=modelValid;
+   // Clean panels can hold references to engine objects replaced by a folder
+   // build. Pending panels were protected above; reopen clean ones afterward.
+   for (auto *child:workspace->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget())) { panel->discardChanges(); child->close(); }
+   ++modelGeneration; summaryAvailable=false; paused=false; stopRequested=false; setRunning(true); global->SetBatchMode(true);
+   PlotInterface::SetPlotReceiver(&batchPlots);
+   QtSolverListenerManager batchListeners(batchPlots.workspaceArea());
+   ListenerManagerInterface::SetListenerManager(&batchListeners);
+   QString previous;
+   QString buildFailureCategory,buildFailureDetails;
+   bool built=false;
+   try {
+      result=runScriptFolder(options,[&](const QString &path,const QString &assetBase,int repeat,const QString &output) {
+         QApplication::processEvents();
+         FolderRunItem item; QString diagnostics; QScopedValueRollback<QString *> capture(folderMessages,&diagnostics); bool solverRun=false;
+         if (cancel) { item.category="Interrupted"; return item; }
+         try {
+            fm->SetAbsPathname("OUTPUT_PATH",(output+"/").toStdString()); fm->SetAbsPathname("VEHICLE_EPHEM_PATH",(output+"/").toStdString());
+            receiver->SetLogPath(output.toStdString(),true); receiver->SetLogEnable(true);
+            if (repeat==1 || previous!=path) {
+               previous=path; built=false; buildFailureCategory.clear(); buildFailureDetails.clear(); batchPlots.clear(true);
+               if (!fm->SetGmatWorkingDirectory(assetBase.toStdString())) throw std::runtime_error("The source script folder is unavailable.");
+               QFile file(path);
+               if (!file.open(QIODevice::ReadOnly)) { item.category=buildFailureCategory="Read error"; item.details=buildFailureDetails=file.errorString(); return item; }
+               const auto bytes=file.readAll(); QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless); QString source=decoder(bytes);
+               if (file.error()!=QFileDevice::NoError || decoder.hasError()) { item.category=buildFailureCategory="Read error"; item.details=buildFailureDetails="Script is unreadable or is not UTF-8."; return item; }
+               const auto converted=convertOpenFramesViews(source);
+               if (!converted.error.isEmpty()) { item.category=buildFailureCategory="Build error"; item.details=buildFailureDetails=converted.error; return item; }
+               if (converted.plots) {
+                  QMessageBox prompt(QMessageBox::Question,"OpenFrames folder views",
+                     "Convert this mission's OpenFrames views for the Qt viewer? The source file and saved copy are retained.",
+                     QMessageBox::Yes|QMessageBox::No,QApplication::activeModalWidget());
+                  prompt.setObjectName("openFramesFolderConversionPrompt"); prompt.button(QMessageBox::Yes)->setText("Convert views"); prompt.button(QMessageBox::No)->setText("Skip script"); prompt.setDefaultButton(QMessageBox::Yes); prompt.setDetailedText(converted.notes.join('\n'));
+                  if (prompt.exec()!=QMessageBox::Yes) { item.category=buildFailureCategory="Conversion skipped"; item.details=buildFailureDetails="Original OpenFrames script preserved."; return item; }
+                  source=converted.script; item.details=converted.notes.join('\n')+"\n";
+               }
+               const auto cameras=qtCameraSettings(source); std::istringstream stream(source.toStdString()); built=Moderator::Instance()->InterpretScript(&stream,true);
+               if (built) { QtPlotReceiver::validateCameraReferences(cameras); batchPlots.cameraSettings=cameras; }
+            }
+            if (!built) { item.category=buildFailureCategory.isEmpty() ? "Build error" : buildFailureCategory; item.details=buildFailureDetails; }
+            else {
+               // Subscribers cache the resolved filename when configured.
+               // Repeats reuse objects, so re-resolve the same output setting
+               // against this repeat's directory before cloning the sandbox.
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) {
+                  auto *object=Moderator::Instance()->GetConfiguredObject(name);
+                  if (object && (object->IsOfType("ReportFile") || object->IsOfType("EphemerisFile")))
+                     object->SetStringParameter("Filename",object->GetStringParameter("Filename"));
+               }
+               batchListeners.missionStarted(); solverRun=true;
+               item.engineStatus=Moderator::Instance()->RunMission();
+               switch(item.engineStatus) {
+               case 1: item.category="Completed"; break;
+               case -2: item.category="Initialization error"; break;
+               case -3: item.category="Unknown initialization error"; break;
+               case -4: item.category="Interrupted"; break;
+               case -5: item.category="Runtime error"; break;
+               default: item.category="Unknown runtime error"; break;
+               }
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER)) {
+                  auto *object=Moderator::Instance()->GetConfiguredObject(name); if (!object || !object->IsOfType("ReportFile")) continue;
+                  const auto filename=QString::fromStdString(object->GetStringParameter("Filename"));
+                  item.reports.insert(QString::fromStdString(name),QFileInfo(filename).isAbsolute() ? filename : QDir(output).filePath(filename));
+               }
+            }
+         } catch (BaseException &error) { item.category=built ? "Runtime error" : "Build error"; item.details=QString::fromStdString(error.GetFullMessage()); }
+         catch (const std::exception &error) { item.category="Unknown error"; item.details=QString::fromUtf8(error.what()); }
+         catch (...) { item.category="Unknown error"; item.details="An unexpected exception interrupted this script."; }
+         if (solverRun) batchListeners.missionFinished(item.category=="Interrupted",item.category!="Completed");
+         QApplication::processEvents(); item.details+=diagnostics;
+         if (!built) { buildFailureCategory=item.category; buildFailureDetails=item.details; }
+         return item;
+      },cancel,progress);
+   } catch (BaseException &error) { result.error=QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { result.error=QString::fromUtf8(error.what()); }
+   catch (...) { result.error="An unexpected exception interrupted the folder run."; }
+   // Restore paths even when a build, initialization, run or comparison fails.
+   // Suppress subscriber callbacks while replacing the batch engine model so
+   // neither the ordinary viewer histories nor the final batch scenes vanish.
+   PlotInterface::SetPlotReceiver(nullptr);
+   ListenerManagerInterface::SetListenerManager(solverListeners.get());
+   const auto restore=[&](const char *name,const std::function<void()> &action) {
+      try { action(); }
+      catch (BaseException &error) { result.error+="\n"+QString(name)+": "+QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { result.error+="\n"+QString(name)+": "+QString::fromUtf8(error.what()); }
+      catch (...) { result.error+="\n"+QString(name)+": unexpected restoration error."; }
+   };
+   restore("Output restore",[&] { fm->SetAbsPathname("OUTPUT_PATH",originalOutput); });
+   restore("Ephemeris restore",[&] { fm->SetAbsPathname("VEHICLE_EPHEM_PATH",originalEphem); });
+   restore("Script-folder restore",[&] { if (!fm->SetGmatWorkingDirectory(originalWorking)) throw std::runtime_error("The original script folder is unavailable."); });
+   restore("Log restore",[&] { receiver->RestoreLog(originalLog,originalLogging); }); global->SetBatchMode(originalBatch);
+   try {
+      std::istringstream stream(builtScript.toStdString()); const bool restored=Moderator::Instance()->InterpretScript(&stream,true);
+      modelValid=restored && originalValid;
+      if (!restored) result.error+="\nThe original engine configuration could not be restored. Rebuild the open mission before running it.";
+   } catch (BaseException &error) { modelValid=false; result.error+="\nRestore failed: "+QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { modelValid=false; result.error+="\nRestore failed: "+QString::fromUtf8(error.what()); }
+   catch (...) { modelValid=false; result.error+="\nRestore failed unexpectedly. Rebuild the open mission before running it."; }
+   PlotInterface::SetPlotReceiver(plots.get()); paused=false; stopRequested=false; setRunning(false); refreshTrees();
    return result;
 }
 void MainWindow::pauseMission()
