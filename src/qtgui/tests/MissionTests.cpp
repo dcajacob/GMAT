@@ -535,6 +535,15 @@ int main(int argc,char **argv)
       require(window.runMission()==MainWindow::RunResult::Completed && std::abs(solved()-8)<1e-6,
          "Closing solver progress broke repeated execution");
       require(window.findChild<QTableWidget *>("solverProgress"),"Rerun did not recreate closed solver progress");
+      {
+         const QString original="% original compact source α\nCreate Variable i total; % grouped declarations\ntotal = 0;\nBeginMissionSequence\n% keep loop comment\nFor 'Implicit step' i = 1:2 % keep header\n   total = total + i % keep body\nEndFor\n";
+         editor->setPlainText(original); require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("total")->GetRealParameter("Value")==3,"Implicit unit-step loop reference failed");
+         const auto snapshot=window.missionSnapshot(); const int index=find(snapshot,"For"); QString changed; CommandForm form([&](const QString &value) { changed=value; }); form.setStatement(snapshot.nodes[index].statement);
+         auto *end=form.findChild<QLineEdit *>("commandField_End"); require(end && !form.findChild<QLineEdit *>("commandField_Step"),"Original two-bound semicolon-free loop was not retained in controls"); end->setText("3");
+         auto expected=original; expected.replace("i = 1:2","i = 1:3"); require(window.applyMissionChange(snapshot,index,MissionEdit::Replace,changed).isEmpty() && editor->toPlainText()==expected && window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("total")->GetRealParameter("Value")==6,"Implicit-step source edit changed comments/configuration or execution");
+         editor->undo(); require(editor->toPlainText()==original,"Implicit-step Undo not exact"); editor->redo(); require(editor->toPlainText()==expected,"Implicit-step Redo not exact"); QTemporaryDir files; require(window.saveScriptTo(files.filePath("implicit loop ü.script")) && window.loadScript(files.filePath("implicit loop ü.script")) && window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("total")->GetRealParameter("Value")==6,"Implicit-step loop save/reopen failed");
+         editor->setPlainText(expected); require(window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("total")->GetRealParameter("Value")==6,"Independent implicit-step edited source differs");
+      }
       std::cout<<"PASS: nested branches, duplicate-command identity, replace/insert/delete/append, script-event comments/body/nested labels and quoted literals, pending/Cancel/empty body/Unicode round trips, invalid-edit rollback, stale panel, undo, Mission tree and Apply\n";
    } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;

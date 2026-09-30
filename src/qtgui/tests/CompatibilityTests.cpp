@@ -1087,6 +1087,9 @@ int main(int argc,char **argv)
       FileManager::Instance()->SetAbsPathname("OUTPUT_PATH",output.path().toStdString());
       require(types.contains("Save"),"Save plugin is missing from available command types");
       const QString saveFixture="Create Spacecraft SavedSat;\nCreate Variable SavedNumber;\n"
+         // Auto-assigned NAIF identifiers change on each fresh object build.
+         // Fix their values in this byte-exact Save repeat/recovery fixture.
+         "SavedSat.NAIFId = -10100001;\nSavedSat.NAIFIdReferenceFrame = -9100001;\n"
          "BeginMissionSequence;\nSavedSat.DryMass = 825.25;\nSavedNumber = 42.5;\nSave SavedSat;\n";
       editor->setPlainText(saveFixture); require(window.buildScript(),"Save command fixture failed to build");
       const auto saveSnapshot=window.missionSnapshot(); int saveIndex=-1;

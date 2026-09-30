@@ -6,6 +6,7 @@ struct MissionNode
 {
    QString type, label, statement;
    int parent = -1;
+   // Coordinates in the original source, never the regenerated configuration.
    qsizetype start = -1, end = -1;
    bool editable = false;
    QVector<int> children;

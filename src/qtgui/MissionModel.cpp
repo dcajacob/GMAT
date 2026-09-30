@@ -1,6 +1,9 @@
 #include "MissionModel.hpp"
 #include "GmatCommand.hpp"
+#include "ScriptStatements.hpp"
 #include <QSet>
+#include <QMap>
+#include <QRegularExpression>
 #include <stdexcept>
 
 namespace {
@@ -86,18 +89,139 @@ public:
       }
    }
 };
+
+QString key(QString code)
+{
+   code=code.trimmed(); if (code.endsWith(';')) code.chop(1);
+   code.remove(QRegularExpression("^GMAT\\s+"));
+   QString result; bool quoted=false;
+   static const QRegularExpression number(R"(^(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?)");
+   for (qsizetype index=0;index<code.size();++index) {
+      const auto ch=code[index];
+      if (ch=='\'') quoted=!quoted;
+      if (!quoted && (ch.isDigit() || ch=='.') && (index==0 || (!code[index-1].isLetterOrNumber() && code[index-1]!='_' && code[index-1]!='.'))) {
+         const auto numeric=number.match(code.mid(index));
+         if (numeric.hasMatch()) {
+            const auto end=index+numeric.capturedLength();
+            if (end==code.size() || (!code[end].isLetterOrNumber() && code[end]!='_' && code[end]!='.')) {
+               bool ok=false; const auto value=numeric.captured().toDouble(&ok);
+               if (ok) { result+=QString::number(value,'g',17); index=end-1; continue; }
+            }
+         }
+      }
+      if (quoted || !ch.isSpace()) result+=ch;
+   }
+   return result;
+}
+bool sameStatement(const QString &generated,const QString &original)
+{
+   auto a=key(generated),b=key(original);
+   if (a==b) return true;
+   // For writes its implicit unit step even when the source uses start:end.
+   static const QRegularExpression implicitStep(R"(^(For(?:'[^']*')?[A-Za-z][A-Za-z0-9_]*=[^:]+):([^:]+)$)");
+   const auto loop=implicitStep.match(b);
+   if (loop.hasMatch() && a==loop.captured(1)+":1:"+loop.captured(2)) return true;
+   // These serializers explicitly fill in omitted option dictionaries. Their
+   // accepted header/operands identify the same command; retain the source's
+   // dictionary and implicit defaults in its editor instead of writing them.
+   const auto type=generated.trimmed().section(QRegularExpression("[\\s'(]"),0,0);
+   const QSet<QString> dictionaries={"Target","Optimize","Vary","Achieve","FindEvents","Minimize","NonlinearConstraint","Write"};
+   if (!dictionaries.contains(type)) return false;
+   static const QRegularExpression options(R"(,?\{[^{}]*\})");
+   a.remove(options); b.remove(options); return a==b;
+}
+qsizetype codeStart(const ScriptStatement &statement)
+{
+   for (qsizetype i=0;i<statement.code.size();++i) if (!statement.code[i].isSpace()) return statement.positions[i];
+   return -1;
+}
+qsizetype codeEnd(const ScriptStatement &statement)
+{
+   for (qsizetype i=statement.code.size()-1;i>=0;--i) if (!statement.code[i].isSpace()) return statement.positions[i]+1;
+   return -1;
+}
+void retainSource(MissionSnapshot &snapshot)
+{
+   const auto original=scriptStatements(snapshot.sourceScript),generated=scriptStatements(snapshot.canonicalScript);
+   qsizetype canonicalBegin=-1,sourceBegin=-1;
+   for (qsizetype i=0;i<generated.size();++i) if (key(generated[i].code)=="BeginMissionSequence") { canonicalBegin=i; break; }
+   const bool canonicalBoundary=canonicalBegin>=0;
+   if (!canonicalBoundary) {
+      for (const auto &node:snapshot.nodes) if (node.parent<0 && node.start>=0) {
+         for (qsizetype i=0;i<generated.size();++i) if (codeStart(generated[i])>=node.start && codeEnd(generated[i])<=node.end) { canonicalBegin=i; break; }
+         if (canonicalBegin>=0) break;
+      }
+   }
+   for (qsizetype i=0;i<original.size();++i) if (key(original[i].code)=="BeginMissionSequence") { sourceBegin=i; break; }
+   // The engine inserts BeginMissionSequence for an implicit mission. Locate
+   // its first actual command, rather than treating configuration assignments
+   // as executable source.
+   bool implicit=false;
+   if (sourceBegin<0 && canonicalBegin>=0 && canonicalBegin+(canonicalBoundary ? 1 : 0)<generated.size()) {
+      implicit=true;
+      for (qsizetype i=0;i<original.size();++i) if (sameStatement(generated[canonicalBegin+(canonicalBoundary ? 1 : 0)].code,original[i].code)) { sourceBegin=i; break; }
+   }
+   else if (sourceBegin>=0 && !canonicalBoundary) ++sourceBegin;
+   QMap<qsizetype,qsizetype> mapping;
+   bool matched=canonicalBegin>=0 && sourceBegin>=0;
+   auto sourceIndex=sourceBegin;
+   if (matched) for (auto i=canonicalBegin+(implicit && canonicalBoundary ? 1 : 0);i<generated.size();++i,++sourceIndex) {
+      if (sourceIndex>=original.size() || !sameStatement(generated[i].code,original[sourceIndex].code)) { matched=false; break; }
+      mapping[i]=sourceIndex;
+   }
+   if (sourceIndex!=original.size()) matched=false;
+   // Includes or engine rewrites that cannot be aligned exactly must remain a
+   // text edit. Never fall back to regenerating unrelated configurations.
+   for (auto &node:snapshot.nodes) {
+      const auto canonicalStart=node.start,canonicalEnd=node.end;
+      node.start=-1; node.end=-1; node.editable=false;
+      if (!matched || canonicalStart<0) continue;
+      qsizetype first=-1,last=-1;
+      for (auto i=canonicalBegin;i<generated.size();++i) {
+         if (codeStart(generated[i])>=canonicalStart && codeEnd(generated[i])<=canonicalEnd && mapping.contains(i)) {
+            if (first<0) first=mapping.value(i);
+            last=mapping.value(i);
+         }
+      }
+      if (first<0 || last<first) continue;
+      auto begin=codeStart(original[first]),end=codeEnd(original[last]);
+      const auto line=snapshot.sourceScript.lastIndexOf('\n',begin-1)+1;
+      if (snapshot.sourceScript.mid(line,begin-line).trimmed().isEmpty()) begin=line;
+      // Keep the engine-associated leading comments, with their original text.
+      const auto generatedLines=node.statement.split('\n');
+      int comments=0;
+      for (const auto &line:generatedLines) {
+         if (line.trimmed().startsWith('%')) ++comments;
+         else if (!line.trimmed().isEmpty()) break;
+      }
+      while (comments>0 && begin>0) {
+         const auto previousLine=snapshot.sourceScript.lastIndexOf('\n',begin-2)+1;
+         const auto text=snapshot.sourceScript.mid(previousLine,begin-previousLine).trimmed();
+         if (!text.isEmpty() && !text.startsWith('%')) break;
+         begin=previousLine; if (text.startsWith('%')) --comments;
+      }
+      const auto newline=snapshot.sourceScript.indexOf('\n',end);
+      const auto lineEnd=newline<0 ? snapshot.sourceScript.size() : newline+1;
+      const auto tail=snapshot.sourceScript.mid(end,lineEnd-end).trimmed();
+      if (tail.isEmpty() || tail.startsWith('%')) end=lineEnd;
+      node.start=begin; node.end=end; node.statement=snapshot.sourceScript.mid(begin,end-begin).trimmed();
+      const QSet<QString> structural={"BeginMissionSequence","Else","EndIf","EndFor","EndWhile","EndTarget","EndOptimize","EndScript"};
+      node.editable=!structural.contains(node.type);
+   }
+}
 }
 MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,const QString &source,QVector<GmatCommand *> *commands)
 {
    Builder builder; builder.result.sourceScript=source; builder.result.canonicalScript=canonical;
    builder.document=lines(canonical); builder.collect(first,nullptr,-1,0,canonical.size());
+   retainSource(builder.result);
    if (commands) *commands=builder.commands;
    return builder.result;
 }
 QString editMission(const MissionSnapshot &snapshot,int index,MissionEdit operation,const QString &replacement)
 {
    if (operation!=MissionEdit::Remove && replacement.trimmed().isEmpty()) throw std::runtime_error("Enter a command");
-   QString candidate=snapshot.canonicalScript;
+   QString candidate=snapshot.sourceScript;
    if (operation==MissionEdit::Append) {
       if (!candidate.endsWith('\n')) candidate+='\n';
       return candidate+replacement.trimmed()+"\n";

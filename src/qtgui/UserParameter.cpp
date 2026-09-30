@@ -1,4 +1,5 @@
 #include "UserParameter.hpp"
+#include "ScriptStatements.hpp"
 #include <QRegularExpression>
 #include <QVector>
 #include <QMap>
@@ -6,7 +7,7 @@
 #include <algorithm>
 #include <stdexcept>
 namespace {
-struct Statement { QString code; QVector<qsizetype> positions,continuations; };
+using Statement=ScriptStatement;
 QVector<Statement> statements(const QString &source)
 {
    QVector<Statement> result; Statement current;
@@ -50,6 +51,7 @@ QVector<Statement> statements(const QString &source)
    return result;
 }
 }
+QVector<ScriptStatement> scriptStatements(const QString &source) { return statements(source); }
 QString userParameterLiteral(const QString &type,const QString &value)
 {
    if (type=="Variable") {
