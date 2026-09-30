@@ -9,6 +9,7 @@
 #include "AxisSystem.hpp"
 #include "CoordinateSystem.hpp"
 #include "StateConversionUtil.hpp"
+#include "TimeSystemConverter.hpp"
 #include <memory>
 #include <array>
 #include "Rvector.hpp"
@@ -149,6 +150,35 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             if (field.name=="SchattenTimingModel") field.choices={"NominalCycle","EarlyCycle","LateCycle"};
             if (field.name=="DragModel") field.choices={"Spherical","SPADFile"};
          }
+         if (object.IsOfType("EventLocator")) {
+            if (field.name=="InputEpochFormat") for (const auto &format:TimeSystemConverter::Instance()->GetValidTimeRepresentations()) field.choices.append(QString::fromStdString(format));
+            if (field.name=="Spacecraft" || field.name=="Target") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT)) field.references.append(QString::fromStdString(name));
+               if (field.name=="Target") for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::REGION)) field.references.append(QString::fromStdString(name));
+            }
+            if (field.name=="Observers") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACE_POINT)) {
+                  auto *observer=Moderator::Instance()->GetConfiguredObject(name);
+                  if (observer && (observer->IsOfType("GroundStation") || observer->IsOfType("Spacecraft"))) field.references.append(QString::fromStdString(name));
+               }
+               field.references.removeAll(QString::fromStdString(object.GetStringParameter("Target")));
+            }
+            if (field.name=="EclipseTypes") for (const auto &choice:object.GetPropertyEnumStrings(id)) field.references.append(QString::fromStdString(choice));
+            if (field.name=="Sensors") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::HARDWARE)) {
+                  auto *sensor=Moderator::Instance()->GetConfiguredObject(name);
+                  if (sensor && sensor->IsOfType("Imager")) field.references.append(QString::fromStdString(name));
+               }
+            }
+            if (field.name=="IntrudingBodies") field.references.removeAll(QString::fromStdString(object.GetStringParameter("Spacecraft")));
+            if (field.name=="ReportCoordinates") for (const auto &choice:object.GetPropertyEnumStrings(id)) field.choices.append(QString::fromStdString(choice));
+            if (field.name=="SpiceGridFrameFile") { field.filename=true; field.fileInput=true; field.fileOutput=false; }
+            if (field.name=="ReportTimeFormat") field.choices={"UTCGregorian","UTCMJD","ISOYD"};
+            if (field.name=="ReportFormat") field.choices={"Legacy","AzimuthElevationRangeReport","AzimuthElevationRangeRangeRateReport","ContactRangeReport","SiteViewMaxElevationRangeReport","SiteViewMaxElevationReport"};
+         }
          // DifferentialCorrector marks these as enums but supplies no choice
          // metadata. Match its setters and the wx DC setup panel.
          if (object.IsOfType("DifferentialCorrector") && field.name=="Algorithm")
@@ -235,7 +265,7 @@ bool isResourceList(GmatBase &object, const QString &name)
       (type=="FiniteBurn" && name=="Thrusters") ||
       (type=="SolarPowerSystem" && name=="ShadowBodies") ||
       ((type=="ForceModel" || type=="ODEModel") && (name=="PrimaryBodies" || name=="PointMasses")) ||
-      (object.IsOfType("EventLocator") && (name=="OccultingBodies" || name=="Observers" || name=="EclipseTypes"));
+      (object.IsOfType("EventLocator") && (name=="OccultingBodies" || name=="Observers" || name=="EclipseTypes" || name=="IntrudingBodies" || name=="Sensors"));
    const auto parameterType=object.GetParameterType(id);
    return supported && (parameterType==Gmat::OBJECTARRAY_TYPE || parameterType==Gmat::STRINGARRAY_TYPE) && !object.IsParameterReadOnly(id);
 }

@@ -1925,7 +1925,10 @@ void EventLocator::LocateEvents(const std::string &reportNotice)
             MessageInterface::ShowMessage("In EL::LocateEvents, after ReportEventData (wasOK = %s) ...\n",
                   (wasOK? "true":"false"));
          #endif
-         if (wasOK) fileWasWritten = true;
+         if (!wasOK)
+            throw EventException("Unable to write event report for " + instanceName +
+                  " to \"" + filename + "\".\n");
+         fileWasWritten = true;
       }
    }
    #ifdef DEBUG_EVENTLOCATOR_DATA

@@ -1774,8 +1774,7 @@ bool ContactLocator::ReportEventData(const std::string &reportNotice)
 {
    if (reportColumnsInOrder.size() == 0)
    {
-      ReportEventDataLegacy(reportNotice);
-      return true;
+      return ReportEventDataLegacy(reportNotice);
    }
 
 #ifdef DEBUG_CONTACT_LOCATOR_WRITE

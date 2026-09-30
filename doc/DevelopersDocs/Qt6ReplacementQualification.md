@@ -38,7 +38,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/ThrusterConfigPanel.hpp` | Pending audit |
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, paired Apply, round trips and two-tank chemical burn covered. Broader electric tank combinations remain pending. |
-| `src/gui/event/EventLocatorPanel.hpp` | Pending audit |
+| `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
 | `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Pending audit |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested; other frames and mass-decrement cases pending. |
@@ -152,7 +152,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. Other ephemeris formats and coverage-boundary cases pending. |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
-| `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. Locator configuration, hardware/FOV, light-time and remaining workflows pending. |
+| `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
 | `../plugins/libExternalForceModel_py314` | Pending qualification |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
@@ -2214,3 +2214,78 @@ file/color controls and visible action buttons. Evidence:
 `Qt6ParityValidation/check-stations.txt`,
 `Qt6ParityValidation/stations-wayland.txt` and
 `Qt6ParityValidation/stations-wayland.png`.
+
+
+## Grouped event-locator controls and report failure propagation
+
+Audited the wx EventLocatorPanel common target/body selections, report path and
+run mode, write-report toggle, entire-interval toggle, paired epoch-format and
+endpoint conversion, search step, light-time/aberration dependencies, and
+Contact/Eclipse/Intrusion-specific observer/direction, shadow-type, sensor,
+central-body, phase and report-coordinate/grid-file controls. Qt now provides
+an **Event locator…** grouped editor with these operations. It also exposes
+current ContactLocator report format/time format/precision/alignment and
+interval-step settings. Typed target choices include spacecraft and, for
+ContactLocator, registered planetographic regions. Observer choices include
+ground stations and spacecraft supported by the current engine, excluding the
+selected target itself. Changing the contact target refreshes that exclusion. Intrusion
+sensor choices include imagers, and changing the target refreshes the
+intruding-body list to exclude the target, matching wx.
+
+Entire-interval selection disables the epoch controls. Changing input format
+converts both pending endpoints before updating either field; conversion
+failure restores the format and retains both original inputs. Opening the
+dialog with only a pending format change displays the engine-converted dates
+in that format. Apply sets the input format before either endpoint. Turning
+off light-time clears/disables stellar aberration and disables the contact
+direction selector. FixedGrid enables the grid-frame file and validates a
+readable regular file; SensorFrame retains the unused path. Azimuth/elevation
+report formats enable their interval step and require a positive value.
+
+Dialog OK validates a clone and retains pending settings; parent Apply updates
+the resource and mission source together. List replacement clears/adds typed
+engine lists on the clone, instead of passing individual entries through the
+generic scalar setter. Wrong target/observer types and reversed explicit
+intervals fail without changing the script. Input/output file chooser modes,
+Cancel, reopening pending values, compact scrolling and visible action buttons
+are tested. A pending edit does not alter the configured step or interval mode.
+
+EventLocatorTests compares Qt-configured missions with independently
+script-configured references. A one-day station-contact scenario uses a
+19:00-to-midnight explicit interval (two contacts), 30-second search steps,
+Transmit and Receive light-time with stellar aberration, and selected ISOYD
+SiteViewMaxElevationReport and AzimuthElevationRangeReport output with
+precision 8 and a 60-second report interval. The one-day eclipse case compares
+Umbra/Penumbra event rows, counts and summaries. The shipped
+Ex_IntrusionLocator_Mercury_Sun_Transit example is configured through Qt with
+its imager, Mercury intruder and a 120-second step; its report matches the
+script reference. Tests also reject phase values outside [0,1] and a missing
+FixedGrid file, and cover target exclusions, source-preserving Undo/Redo,
+mission comments, exact save/reopen and format-only Apply. Contact endpoints
+match the millisecond report precision; numeric report values allow absolute
+1e-5 differences (seconds, degrees or km according to the column), with all
+text tokens matching. These checks establish calculation-preserving GUI
+behavior, not independent scientific validation of locator algorithms.
+
+The failed-output-directory case uncovered two engine reporting defects:
+ContactLocator discarded ReportEventDataLegacy's failure result, and the base
+EventLocator ignored a false ReportEventData result. The legacy result is now
+returned and the base locator throws a named report failure, so Qt reports a
+failed run instead of successful completion without the requested file.
+Creating the directory and reopening the unchanged saved script recovers
+matching contacts. Successful reporting and numerical algorithms are unchanged.
+
+FixedGrid execution with a valid kernel, region/spacecraft-observer contacts,
+additional report formats, append combinations, coverage boundaries and
+write failures after successfully opening the report remain unqualified.
+The broader workflow/viewer/plugin gates remain open.
+
+Rebuilt the actual `application/bin/GmatQt` launcher target and EventLocator
+plugin. All 15 Qt suites passed in 56.42 seconds, including EventLocators and
+native viewer/window/plot checks. A separate isolated-settings Wayland process
+passed the entire contact/eclipse/intrusion workflow. The captured contact
+dialog was visually inspected for readable grouped controls, units, scroll
+access and visible OK/Cancel buttons. Evidence:
+`Qt6ParityValidation/check-events.txt`,
+`Qt6ParityValidation/events-wayland.txt` and
+`Qt6ParityValidation/events-wayland.png`.

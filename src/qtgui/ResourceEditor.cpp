@@ -13,6 +13,7 @@
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
 #include "GroundStationDialog.hpp"
+#include "EventLocatorDialog.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
 #include "RgbColor.hpp"
@@ -479,6 +480,26 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *unit = new QTableWidgetItem(field.unit); unit->setFlags(unit->flags() & ~Qt::ItemIsEditable);
       table->setItem(row, 2, unit);
    }
+   if (object.IsOfType("EventLocator")) {
+      auto *button=new QPushButton("Event locator…",this); button->setObjectName("editEventLocator"); layout->addWidget(button);
+      const auto name=object.GetName();
+      connect(button,&QPushButton::clicked,this,[this,name,button] {
+         try {
+            auto *configured=Moderator::Instance()->GetConfiguredObject(name); if (!configured) throw std::runtime_error("This locator is no longer available.");
+            auto pending=eventEdits;
+            if (pending.isEmpty()) for (int row=0;row<table->rowCount();++row) { const auto field=table->item(row,0)->text(); const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1)); const auto value=combo ? comboValue(combo) : table->item(row,1)->text(); if (value!=original.value(field)) pending.insert(field,value); }
+            EventLocatorDialog dialog(*configured,pending,this); if (dialog.exec()!=QDialog::Accepted) return;
+            eventEdits=dialog.values();
+            for (int row=0;row<table->rowCount();++row) {
+               const auto field=table->item(row,0)->text(); if (!eventEdits.contains(field)) continue;
+               if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(eventEdits.value(field)); else table->item(row,1)->setText(eventEdits.value(field));
+               for (int column=1;column<table->columnCount();++column) { if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(false); if (auto *item=table->item(row,column)) item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
+            }
+            button->setText("Event locator… (pending)"); status->setText("Locator settings are pending. Review them with Event locator…, then Apply.");
+         } catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
+         catch (const std::exception &failure) { status->setText(QString::fromUtf8(failure.what())); }
+      });
+   }
    if (object.IsOfType("GroundStation")) {
       auto *button=new QPushButton("Ground station…",this); button->setObjectName("editGroundStation"); layout->addWidget(button);
       const auto name=object.GetName();
@@ -922,12 +943,14 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       QMap<QString, QString> changes=attitudeEdits;
       for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=stationEdits.cbegin();it!=stationEdits.cend();++it) changes.insert(it.key(),it.value());
+      for (auto it=eventEdits.cbegin();it!=eventEdits.cend();++it) changes.insert(it.key(),it.value());
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
          if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
          if (!atmosphereEdits.isEmpty() && (name=="Drag" || name.startsWith("Drag."))) continue;
          if (stationEdits.contains(name)) continue;
+         if (eventEdits.contains(name)) continue;
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
          const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
          if (value != original.value(name)) changes.insert(name, value);
@@ -966,7 +989,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
-   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty()) return true;
+   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));

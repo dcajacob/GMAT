@@ -1,0 +1,3 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::enableSurface(wl_surface*) Try to enable surface 0x5891aa4f4650 with focusing surface 0x5891aa8e15e0
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x5891aa8e15e0 with focusing surface 0x5891aa4f4650
+PASS: event-locator typed controls, paired epochs and rollback, light-time/report dependencies, pending Apply/Cancel/Undo/Redo, file picker, compact layout, save/reopen, bounded contacts, Transmit/Receive corrections, detailed reports, failed-output recovery, eclipse intervals and shipped Mercury intrusion
