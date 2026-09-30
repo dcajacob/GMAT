@@ -1,0 +1,4 @@
+Orb Current points=50 all=140
+Ground Current points=35 all=140
+XY Current points=35 all=140
+FAIL: Solver viewer capture failed

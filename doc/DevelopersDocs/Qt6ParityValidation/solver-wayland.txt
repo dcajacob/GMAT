@@ -1,0 +1,10 @@
+Orb Current points=50 all=140
+Ground Current points=35 all=140
+XY Current points=35 all=140
+Orb None points=35 all=140
+Ground None points=35 all=140
+XY None points=35 all=140
+Orb All points=140 all=140
+Ground All points=140 all=140
+XY All points=140 all=140
+PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen

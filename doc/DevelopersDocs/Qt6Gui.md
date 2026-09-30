@@ -1507,7 +1507,7 @@ DE selection updates its filename and retains pending filenames when switching
 sources within the panel. With SPICE selected, the DE field shows its fallback
 and is disabled. Apply saves that fallback before selecting SPICE, so the saved
 script and subsequent resource/mission edits can rebuild it. Close offers
-Discard or Cancel if changes are pending; successful Apply closes the panel.
+Discard or Cancel if changes are pending; successful resource Apply refreshes the controls in the same window.
 Undo restores the exact previous script.
 
 The selected DE file must contain complete binary records; the engine validates
@@ -1541,7 +1541,7 @@ default texture. Textures must decode, and models must be readable by the
 viewer. Appearance changes leave propagation calculations unchanged.
 
 Values remain pending until Apply; invalid edits retain them for correction.
-Show script displays applied settings. Successful Apply closes the panel;
+Show script displays applied settings. Successful resource Apply refreshes the controls in the same window;
 Close offers Discard or Cancel for pending edits. Undo restores the prior
 script exactly. The four pages scroll and long rows wrap to fit desktop
 scaling. These controls configure the existing engine.
@@ -1563,3 +1563,35 @@ unbuilt script edit, disabled locator, WriteReport-off run or Manual run without
 FindEvents. The read-only explanation identifies WriteReport and FindEvents;
 a generated report opens with the normal paging/search/comparison controls.
 Report and binary-ephemeris windows activate when opened.
+
+
+## Desktop and viewer continuation (2026-09-30)
+
+Unspecified plot positions/sizes now arrange the initial viewers separately, so
+both default Orbit View and Ground Track are visible. Scripted geometry is
+retained, and manually moved/resized views leave automatic placement. Output
+activation continues to restore and raise a selected minimized viewer.
+
+Ground Track now honors solver None filtering and Current iteration removal;
+All retains trial samples with target colors. SolverPlotTests compares real GUI
+mode edits and display histories against independent accepted data and unchanged
+numeric solver/geodetic reports, including native rendering and replay.
+
+Help / About GMAT shows current engine/build/bitness and Qt/OSG versions, credits
+and View license. The license comes from the configured root License.txt and is
+read-only/searchable. File errors stay visible and retry rereads the file.
+
+Resource Apply keeps its MDI window open and refreshes accepted controls from
+the rebuilt model. Clean resource companions refresh their page/filter/columns;
+unapplied companion edits are preserved and stale Apply remains protected.
+Commands/insertion panels still close after successful Apply. Shared Help and
+broader keyboard/portal/refresh combinations remain under qualification.
+
+SPICE diagnostic initialization retains previous GMATSpiceKernelError.txt files
+and selects unused numbered siblings for new raw output. An unavailable output
+directory or diagnostic path beyond SPICE's 255-byte limit uses console output
+with a visible warning; underlying kernel errors still reach GMAT. Existing,
+repeated, fresh, read-only and long-path cases plus corrected kernel load/unload
+are covered by SpiceDiagnosticTests. Wider storage/race cases remain open.
+
+See Qt6ReplacementQualification.md for current evidence and incomplete gates.

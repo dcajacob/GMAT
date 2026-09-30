@@ -1,0 +1,83 @@
+UpdateCTestConfiguration  from :/home/dan/GIT/GMAT/GMAT/build/linux-gui/DartConfiguration.tcl
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 36
+    Start 36: QtGui.SpiceDiagnostics
+
+36: Test command: /usr/bin/python3 "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSpiceDiagnosticTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt"
+36: Working Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+36: Test timeout computed to be: 60
+36: DEVICE=/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/GMATSpiceKernelError.1.txt
+36: KERNEL_ERROR=The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel Δ.bsp" by the routine FURNSH failed. It could not be located.
+36: HELP_PATH directory does not exist: ../docs/help/
+36: Previous SPICE diagnostics retained. New diagnostics: /tmp/GmatQtSpiceDiagnosticTests-FdyRYG/GMATSpiceKernelError.1.txt
+36: Kernel ../data/time/SPICELeapSecondKernel.tls has been loaded.
+36: CHILD_PASS
+36: DEVICE=/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/GMATSpiceKernelError.2.txt
+36: KERNEL_ERROR=The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel Δ.bsp" by the routine FURNSH failed. It could not be located.
+36: HELP_PATH directory does not exist: ../docs/help/
+36: Previous SPICE diagnostics retained. New diagnostics: /tmp/GmatQtSpiceDiagnosticTests-FdyRYG/GMATSpiceKernelError.2.txt
+36: Kernel ../data/time/SPICELeapSecondKernel.tls has been loaded.
+36: CHILD_PASS
+36: DEVICE=/tmp/GmatQtSpiceDiagnosticTests-QJBLAL/GMATSpiceKernelError.txt
+36: KERNEL_ERROR=The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel Δ.bsp" by the routine FURNSH failed. It could not be located.
+36: HELP_PATH directory does not exist: ../docs/help/
+36: Kernel ../data/time/SPICELeapSecondKernel.tls has been loaded.
+36: CHILD_PASS
+36: DEVICE=SCREEN
+36:  
+36: ================================================================================
+36:  
+36: Toolkit version: N0067
+36:  
+36: SPICE(NOSUCHFILE) --
+36:  
+36: The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel
+36: Δ.bsp" by the routine FURNSH failed. It could not be located.
+36:  
+36: A traceback follows.  The name of the highest level module is first.
+36: furnsh_c --> FURNSH --> ZZLDKER
+36:  
+36: ================================================================================
+36: KERNEL_ERROR=The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel Δ.bsp" by the routine FURNSH failed. It could not be located.
+36: HELP_PATH directory does not exist: ../docs/help/
+36: Warning: Cannot create the SPICE diagnostic file in "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/read-only/". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.
+36: Kernel ../data/time/SPICELeapSecondKernel.tls has been loaded.
+36: CHILD_PASS
+36: DEVICE=SCREEN
+36:  
+36: ================================================================================
+36:  
+36: Toolkit version: N0067
+36:  
+36: SPICE(NOSUCHFILE) --
+36:  
+36: The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel
+36: Δ.bsp" by the routine FURNSH failed. It could not be located.
+36:  
+36: A traceback follows.  The name of the highest level module is first.
+36: furnsh_c --> FURNSH --> ZZLDKER
+36:  
+36: ================================================================================
+36: KERNEL_ERROR=The attempt to load "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/missing kernel Δ.bsp" by the routine FURNSH failed. It could not be located.
+36: HELP_PATH directory does not exist: ../docs/help/
+36: Warning: Cannot create the SPICE diagnostic file in "/tmp/GmatQtSpiceDiagnosticTests-FdyRYG/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb/". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.
+36: Kernel ../data/time/SPICELeapSecondKernel.tls has been loaded.
+36: CHILD_PASS
+36: PASS: existing/fresh/repeated SPICE diagnostics, preserved raw files, Unicode kernel errors, unwritable/long-path console fallback and corrected kernel load/unload
+1/1 Test #36: QtGui.SpiceDiagnostics ...........   Passed    0.44 sec
+
+The following tests passed:
+	QtGui.SpiceDiagnostics
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.44 sec*proc (1 test)
+
+Total Test time (real) =   0.45 sec

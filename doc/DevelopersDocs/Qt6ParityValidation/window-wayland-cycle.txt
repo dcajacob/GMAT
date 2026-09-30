@@ -1,0 +1,74 @@
+25 ms: run default mission
+440 ms: mission completed
+440 ms: default OrbitView and GroundTrack are both exposed in the workspace
+441 ms: explicit and manually adjusted viewer positions retained
+Window state=2
+919 ms: minimize ground
+919 ms: minimize click sent
+1392 ms: open orbit from Output
+1396 ms: open returned
+DefaultOrbitView ocean=62539 trajectory=1422
+1967 ms: restore ground
+2341 ms: minimize ground again
+2817 ms: resize main and both viewers
+DefaultOrbitView ocean=15310 trajectory=595
+DefaultGroundTrackPlot ocean=47248 trajectory=4515
+3350 ms: maximize orbit
+DefaultOrbitView ocean=89675 trajectory=1659
+3960 ms: close orbit and reopen immediately through Output
+DefaultOrbitView ocean=89675 trajectory=1659
+4460 ms: close ground and reopen immediately through Output
+DefaultGroundTrackPlot ocean=1284427 trajectory=18021
+4803 ms: ground scene retained; settling focus before main minimize
+5230 ms: UNQUALIFIED: top-level compositor minimize/restore skipped; viewer lifecycle checks continue
+DefaultOrbitView ocean=89675 trajectory=1659
+6453 ms: rerun with minimized ground and closed orbit
+DefaultOrbitView ocean=66450 trajectory=1463
+DefaultGroundTrackPlot ocean=241975 trajectory=8641
+6916 ms: repeat viewer lifecycle
+7230 ms: minimize ground
+7230 ms: minimize click sent
+7729 ms: open orbit from Output
+7730 ms: open returned
+DefaultOrbitView ocean=66450 trajectory=1463
+8344 ms: restore ground
+8730 ms: minimize ground again
+9229 ms: resize main and both viewers
+DefaultOrbitView ocean=15310 trajectory=595
+DefaultGroundTrackPlot ocean=47248 trajectory=4515
+9791 ms: maximize orbit
+DefaultOrbitView ocean=89675 trajectory=1659
+10579 ms: close orbit and reopen immediately through Output
+DefaultOrbitView ocean=89675 trajectory=1659
+11164 ms: close ground and reopen immediately through Output
+DefaultGroundTrackPlot ocean=1284427 trajectory=18021
+11355 ms: ground scene retained; settling focus before main minimize
+11730 ms: UNQUALIFIED: top-level compositor minimize/restore skipped; viewer lifecycle checks continue
+DefaultOrbitView ocean=89675 trajectory=1659
+13489 ms: rerun with minimized ground and closed orbit
+DefaultOrbitView ocean=66450 trajectory=1463
+DefaultGroundTrackPlot ocean=241975 trajectory=8641
+14931 ms: repeat viewer lifecycle
+14957 ms: minimize ground
+14958 ms: minimize click sent
+15335 ms: open orbit from Output
+15336 ms: open returned
+DefaultOrbitView ocean=66450 trajectory=1463
+16089 ms: restore ground
+16285 ms: minimize ground again
+16760 ms: resize main and both viewers
+DefaultOrbitView ocean=15310 trajectory=595
+DefaultGroundTrackPlot ocean=47248 trajectory=4515
+17406 ms: maximize orbit
+DefaultOrbitView ocean=89675 trajectory=1659
+18272 ms: close orbit and reopen immediately through Output
+DefaultOrbitView ocean=89675 trajectory=1659
+19358 ms: close ground and reopen immediately through Output
+DefaultGroundTrackPlot ocean=1284427 trajectory=18021
+19928 ms: ground scene retained; settling focus before main minimize
+20230 ms: UNQUALIFIED: top-level compositor minimize/restore skipped; viewer lifecycle checks continue
+DefaultOrbitView ocean=89675 trajectory=1659
+21590 ms: rerun with minimized ground and closed orbit
+DefaultOrbitView ocean=66450 trajectory=1463
+DefaultGroundTrackPlot ocean=241975 trajectory=8641
+22438 ms: PASS: three viewer lifecycle cycles, textured orbit/map and trajectories, immediate close/reopen, resize/maximize and rerun remain responsive; top-level minimize/restore remains unqualified

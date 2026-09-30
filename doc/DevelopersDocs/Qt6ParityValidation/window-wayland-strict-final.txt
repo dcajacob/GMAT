@@ -1,0 +1,27 @@
+26 ms: run default mission
+495 ms: mission completed
+495 ms: default OrbitView and GroundTrack are both exposed in the workspace
+498 ms: explicit and manually adjusted viewer positions retained
+Window state=2
+973 ms: minimize ground
+973 ms: minimize click sent
+1448 ms: open orbit from Output
+1452 ms: open returned
+DefaultOrbitView ocean=62539 trajectory=1422
+2036 ms: restore ground
+2397 ms: minimize ground again
+2879 ms: resize main and both viewers
+DefaultOrbitView ocean=15310 trajectory=595
+DefaultGroundTrackPlot ocean=47248 trajectory=4515
+3433 ms: maximize orbit
+DefaultOrbitView ocean=89675 trajectory=1659
+4091 ms: close orbit and reopen immediately through Output
+DefaultOrbitView ocean=89675 trajectory=1659
+4591 ms: close ground and reopen immediately through Output
+DefaultGroundTrackPlot ocean=1284427 trajectory=18021
+4962 ms: ground scene retained; settling focus before main minimize
+5379 ms: minimize main window
+Window state=1
+Window state=0
+Window state=2
+5879 ms: FAIL: main window did not minimize

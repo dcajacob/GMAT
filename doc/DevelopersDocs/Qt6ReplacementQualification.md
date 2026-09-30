@@ -83,21 +83,21 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/GmatBaseSetupPanel.hpp` | Generic writable/visible field generation, cloned validation and INI-based layout/units/help audited. Qt ResourceEditor supplies engine-typed controls, owned properties and atomic script rebuild/rollback; object-specific execution evidence is recorded in individual rows. INI metadata parity, omitted plugin types and all dynamic refresh cases remain pending. |
 | `src/gui/foundation/GmatDialog.hpp` | Shared OK/Cancel/reset, validation-before-close and Help contract audited. Qt focused dialogs keep pending values until acceptance; field/dialog Cancel and invalid-input recovery are covered by the corresponding suites. Close/Escape/focus behavior across all dialogs and context Help remain pending. |
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Active wx numeric Variable, literal String, Array creation (dimensions 1–1000), name validation and existing-user-parameter operations audited. Qt New resource supplies typed initial values, retains values on type changes, rejects duplicate/reserved names and invalid dimensions, and opens the created resource in the tree. Parameters tests cover actual dialog Cancel, correction, creation Undo/Redo, Unicode String and maximum Array creation, then deletion without changing original report results. Existing parameters open from Resources; wx list/Clear layout and shared Help remain unqualified. |
-| `src/gui/foundation/ParameterSelectDialog.hpp` | Pending audit |
+| `src/gui/foundation/ParameterSelectDialog.hpp` | Active report/XY/dynamic-data, Vary/Achieve/Minimize/constraints, loop/condition, propagation-stop, burn/group and function callers audited. wx supports single/multiple object/property selection, attached hardware, coordinate/body/ODE dependencies, writable/plottable/whole-object restrictions, array indices, Add/Remove/All/reorder and Cancel. Qt ReportParameterDialog and typed resource/group controls cover ordered scalar/array, dependency, hardware and caller-specific selection with existing execution/round-trip tests. Bulk multi-object/property selection, Add All/Remove All and remaining dependency/caller combinations remain delivery/qualification gaps; the audit does not qualify them. |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
-| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Context Help and staying open after Apply remain pending. |
+| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, close successful snapshots, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are now covered by InspectionTests. Resource windows now stay open and refresh accepted/clean model snapshots after Apply (DesktopTests); commands still close successful snapshots. Context Help and broader Apply/focus cases remain pending. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
 | `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. FileTests, WorkflowTests and ScriptEditingTests cover the single Qt mission document, failure/cancel identity protection, encoding, save-before-run and pending/close protection. Multiple inactive documents, panel-specific reload/status and remaining shared editor cases remain pending. |
-| `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Shared Help and staying open after Apply remain pending. |
+| `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Resource windows now stay open and refresh after Apply, with repeated Variable Apply/source/report evidence in DesktopTests. Shared Help and wider resource/keyboard cases remain pending. |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
-| `src/gui/debugger/InspectorPanel.hpp` | Pending audit |
+| `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Inspector pauses, displays runtime object DEBUG_INSPECT/current Parameter values, filters spacecraft/all objects, steps commands, resumes on Close and ends execution. Qt Pause/Resume/Stop and captured summaries exist, but breakpoint placement, stepping and live runtime-object inspection remain missing active operations. |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
@@ -105,8 +105,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
 | `src/gui/output/EventFilePanel.hpp` | Active read-only unwrapped text/Close, output-path resolution, FileWasWritten guard and disabled Help audited. Qt Output uses ReportViewer for generated reports and an explanatory read-only view for unwritten locators. EventLocatorTests covers generated contents, pending source, rebuild, Disabled, WriteReport-off and Manual-without-FindEvents stale-file rejection, Manual FindEvents recovery, close/reopen and unchanged source. Output windows explicitly activate; native Wayland generated/unwritten views inspected. Broader lifecycle/storage/keyboard cases remain pending. |
 | `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Broader search/menu and very large directory cases remain under their separate audits. |
-| `src/gui/mission/UndockedMissionPanel.hpp` | Pending audit |
-| `src/gui/mission/TreeViewOptionDialog.hpp` | Pending audit |
+| `src/gui/mission/UndockedMissionPanel.hpp` | Active MissionTree/GmatNotebook undock/restore caller audited. wx creates a separate mission tree and vertical MissionTreeToolBar, restoring the notebook on destruction. Qt can float the complete navigation dock and retains the Mission tree; a mission-only detachable view and its level/type toolbar operations remain delivery/qualification gaps. |
+| `src/gui/mission/TreeViewOptionDialog.hpp` | Active MissionTreeToolBar caller audited. Sorted command checklist, Check/Uncheck All and Include/Exclude Apply update the visible MissionTree without editing the mission; Equation and ScriptEvent map to GMAT and BeginScript. Qt expand/collapse and editing exist; command-type Include/Exclude filters and equivalent level/type view controls remain missing. |
 | `src/gui/view/ViewTextDialog.hpp` | Read-only multiline/Close and optional single-line OK/Cancel modes audited. Active callers are About license text, folder-run diagnostics and comparison results; editable rename caller is commented. Qt comparison/read-only report text is covered by ComparisonTests; About/license and folder-run delivery remain required under their separate unaudited rows. Shared keyboard/font/menu cases remain pending. |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
@@ -127,18 +127,18 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
-| `src/gui/app/FileUpdateDialog.hpp` | Pending audit |
-| `src/gui/app/TextEphemFileDialog.hpp` | Pending audit |
+| `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
+| `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
-| `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
-| `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
+| `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt single-document Run/Stop and file comparison exist; the folder-run configuration, execution/report aggregation and restoration workflow remain missing. |
+| `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
 | `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Active grid resize/retained cells, cell editing/clearing and condition colors audited; grouped Qt setup with pending Apply/Cancel, Undo/Redo, Unicode save/reopen, live reports, adjustable widths and immediate close/reopen covered. Extreme dimensions and unnamed-cell styling remain pending. |
 | `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types and solver-iteration combinations pending. |
 | `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Active parameter selection, text/background colors and warning/critical bounds audited. Real/string/array-element references, duplicate/whole-array/nonnumeric/reversed-bound rejection, Cancel, alarm/custom colors and calculation-preserving round trips covered. Broader parameter contexts and unnamed-cell styling remain pending. |
-| `src/gui/app/WelcomePanel.hpp` | Pending audit |
-| `src/gui/app/AboutDialog.hpp` | Pending audit |
+| `src/gui/app/WelcomePanel.hpp` | Active GmatMainFrame startup/menu caller audited. Recent scripts, sample navigation, local help/tutorial links and persisted ShowWelcomeOnStart preference exist in wx. Qt File Open and the default mission exist; recent-script history, sample/welcome navigation, help links and the welcome preference remain delivery/qualification gaps. |
+| `src/gui/app/AboutDialog.hpp` | Active Help/About caller audited. Qt AboutDialog delivers actual engine version/bitness/build details, Qt/OSG versions, credits/contact/project links and the exact offline License.txt through read-only InspectionDialog. DesktopTests covers menu opening, Close/Escape, compact layout, pending source/Undo retention and missing/malformed license correction; native Wayland captures inspected. External website/mail launch has not been exercised. |
 | `src/gui/app/InteractiveMatlabDialog.hpp` | Uninstantiated legacy interactive dialog audited: sends selected inputs/outputs to CallMatlabFunction, displays results and clears/closes. No current GUI caller creates it. MATLAB is outside the selected Linux runtime; no Qt MATLAB workflow or execution qualification is claimed. |
 | `src/gui/app/SetPathDialog.hpp` | wx startup read/write, ordered GMAT/MATLAB function paths, output/log Apply and directory errors audited. Qt Set paths validates full startup imports as pending state, provides full read-only startup preview and atomic export, and uses exact file-manager/global/log rollback. PathTests covers malformed/invalid-root/wx-only imports, custom alias and Python-list retention, mode/log/source protection, Unicode save/read/Apply, a fresh GmatQt process, independently scripted reports, and run/Stop/pending-panel guards. Optional MATLAB editing, plugin/cached-data hot replacement, portal choosers and broader startup/storage formats remain unqualified. |
 
@@ -3920,3 +3920,113 @@ execution case and more accurate explanatory text were then verified by the
 focused event suite in 3.84 seconds (`check-event-output-report-disabled.txt`)
 and the updated native Wayland run/captures. The actual application was rebuilt
 again with that final explanation. The replacement goal remains unfinished.
+
+
+## 2026-09-30 solver views, desktop Apply and diagnostic recovery
+
+This checkpoint continues the complete Linux replacement objective. Every broad
+acceptance gate above remains open until its remaining cases have affirmative
+evidence. Completing the source audit is not completing its missing operations.
+Windows/macOS remain deferred and MATLAB remains disabled.
+
+The initial native launcher capture showed both default viewers occupying the
+same fallback rectangle: Ground Track covered Orbit View. Unspecified (zero
+position and size) subscriber windows now receive distinct initial grid cells.
+Explicit/scripted geometry is retained, and existing windows moved or resized
+by the user leave automatic placement. The rebuilt application/bin/GmatQt,
+using its selected startup and isolated settings, now visibly exposes both
+textured Earth/orbit/starfield and the ground map/trajectory. The inspected
+capture is `launcher-wayland-20260930.png`; its process log is
+`launcher-wayland-20260930.txt` (empty, successful process exit).
+
+`window-wayland-cycle.txt` records three native cycles of title-bar Ground Track
+minimize/restore, focus/output activation, resize/maximize, immediate close and
+reopen and rerun with a minimized Ground Track and closed Orbit View. Rendered
+texture/trajectory pixels and mission source retention pass. This run explicitly
+skips top-level compositor minimize/restore; that gate remains open. The strict
+run `window-wayland-strict-20260930.txt` retains the failure: Qt reports a
+minimized state then restores/maximizes before the delayed assertion. Earlier
+plain Qt/MDI probes also fail that assertion; this is not proof of compositor
+behavior or a completed gate. A read-only GNOME window-state query was rejected
+by the compositor's AccessDenied policy; desktop settings were not changed.
+
+Ground Track previously retained trial solver samples even with None selected
+and did not receive the Current iteration breakpoints. Its subscriber now
+filters None before sampling, sends display-only solver state, and joins the
+solver's active display subscribers. Qt stores trial/accepted classification,
+uses target/orbit colors and removes old Current trial arcs at breakpoints.
+SolverPlotTests selects All/Current/None/All through real property controls,
+preserves exact source Undo/Redo and Unicode save/reopen, and compares complete
+numeric reports byte-for-byte with an independent no-display solve. The target
+objective is checked to 1e-6; Ground/XY accepted histories agree within 1e-8
+(display coordinates) and 1e-10 days (epoch). Native/fallback frames, camera
+tracking, replay/latest restoration and immediate close/reopen are checked.
+`solver-wayland.txt`, the tiled `.Current/.None/.All.png` captures and their
+individual `.Orb/.Ground/.XY.png` scenes retain native evidence. Broader
+optimization/nested/toggle/solver-summary combinations remain open. The optional
+new ground actions are ignored by the wx receiver; wx Current visual parity is
+not claimed. No numerical solver algorithm was changed.
+
+About/license now provides the configured offline license verbatim, current
+engine/build/runtime details and credits. `desktop-wayland.txt` and its
+`.about.png`/`.license.png` captures record menu opening, read-only/search,
+Close/Escape, compact layout, file error/correction and pending mission retention.
+Earlier failed captures used relative paths after changing to the startup
+folder; those harness failures are preserved in the two
+`*-wayland-capture-path-failure.txt` logs. Capture destinations are now resolved
+before changing working directory.
+
+Successful resource Apply now refreshes the editor in the same MDI window from
+the accepted engine model, so a second edit uses a new validated snapshot.
+Clean companion resource panels also refresh, retaining page/filter/columns.
+Other pending panels are retained and remain guarded against stale Apply.
+DesktopTests checks repeated actual workspace Apply, pending companion retention,
+stale rejection, exact Undo/Redo, Unicode save/reopen and independent numeric
+reports. Native Wayland passes. Command/insertion windows still close accepted
+snapshots; context Help, wider body/SolarSystem/dependent refresh, keyboard/focus
+and portal interactions remain open. A refresh error is reported with close/
+reopen recovery rather than escaping the Qt action callback.
+
+The SPICE FILEOPENFAILED/IOSTAT-128 problem was reproduced independently: the
+bundled WRLINE tries to create a new diagnostic file and fails if the previous
+file exists. Initialization now preserves that file and exclusively probes an
+unused sibling (GMATSpiceKernelError.1.txt, .2.txt, etc.) before selecting it.
+RETURN is configured before diagnostic setup. Unwritable or over-255-byte paths
+fall back visibly to SCREEN while GMAT still receives the kernel error. The
+filename bound follows NAIF's [errdev_c contract](https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/cspice/errdev_c.html).
+SpiceDiagnosticTests uses independent processes to verify flushed raw contents,
+byte-preserved previous files, repeated launches, fresh output, Unicode missing
+kernel errors, permission/long-path fallback and corrected load/unload.
+`check-spice-diagnostics.txt` retains verbose execution. Historical negative-run
+FILEOPENFAILED evidence remains in earlier logs. Concurrent diagnostics races,
+post-probe permission/storage changes and wider kernel/segment cases remain
+unqualified; no numerical SPICE calculation was changed.
+
+The ten remaining inventory entries have now received source/caller audits.
+FileUpdate is explicitly unimplemented on non-Windows in the wx utility;
+TextEphem's prototype menu is disabled; OpenGlOption's only frame creator is
+unused/uncompiled. Active debugger stepping/inspection, mission-only undocking
+and filters, welcome/recent/sample navigation, bulk parameter selection and
+folder-run reporting remain concrete delivery gaps on their audited rows.
+The inventory has zero original Pending audit rows, not zero incomplete rows.
+
+Validation before the final default-placement change: all 40 suites passed in
+187.98 seconds (`check-solver-about-spice-apply.txt`). The final rebuilt
+application passed all 40 suites in 172.30 seconds
+(`check-linux-checkpoint-20260930.txt`), including explicit/manual viewer
+position retention. The focused Desktop test also passed (`check-desktop-final.txt`).
+The Linux replacement goal remains active and unfinished.
+
+
+The final strict Wayland repeat still fails the top-level minimized-state
+assertion (`window-wayland-strict-final.txt`); its texture/trajectory capture is
+`window-wayland-strict-final.png`. The complete non-skipped viewer portion then
+passed three cycles again, including explicit/manual geometry retention
+(`window-wayland-cycle.txt`, 22.44 seconds), and the final solver capture run
+passed. The native Desktop capture was refreshed after the small final About
+mailto-link addition; its focused regression passed in 0.35 seconds. The full
+40-suite run predates only that link/test addition and final whitespace cleanup.
+The user's executable was rebuilt with all final source changes. Commits
+19be5d1 (SPICE), 5c01a5e (solver display) and 423ebea (desktop/viewer behavior)
+keep the changes reviewable on codex/qt6-gui. No acceptance gate is silently
+closed by this checkpoint.
