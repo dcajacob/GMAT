@@ -1,0 +1,81 @@
+[1/31] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/31] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[3/31] Building CXX object src/qtgui/CMakeFiles/GmatQtStationTests.dir/tests/StationTests.cpp.o
+[4/31] Building CXX object src/qtgui/CMakeFiles/GmatQtAtmosphereTests.dir/tests/AtmosphereTests.cpp.o
+[5/31] Building CXX object src/qtgui/CMakeFiles/GmatQtMissionTests.dir/tests/MissionTests.cpp.o
+[6/31] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotTests.dir/tests/PlotTests.cpp.o
+[7/31] Building CXX object src/qtgui/CMakeFiles/GmatQtEventLocatorTests.dir/tests/EventLocatorTests.cpp.o
+[8/31] Building CXX object src/qtgui/CMakeFiles/GmatQtOrbitSetupTests.dir/tests/OrbitSetupTests.cpp.o
+[9/31] Building CXX object src/qtgui/CMakeFiles/GmatQtCompatibilityTests.dir/tests/CompatibilityTests.cpp.o
+[10/31] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[11/31] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotSetupTests.dir/tests/PlotSetupTests.cpp.o
+[12/31] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[13/31] Linking CXX executable src/qtgui/GmatQtWindowTests
+[14/31] Linking CXX executable src/qtgui/GmatQtFileTests
+[15/31] Linking CXX executable src/qtgui/GmatQtPlotTests
+[16/31] Linking CXX executable src/qtgui/GmatQtMissionTests
+[17/31] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[18/31] Linking CXX executable src/qtgui/GmatQtAtmosphereTests
+[19/31] Linking CXX executable src/qtgui/GmatQtStationTests
+[20/31] Linking CXX executable src/qtgui/GmatQtEventLocatorTests
+[21/31] Linking CXX executable src/qtgui/GmatQtPlotSetupTests
+[22/31] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[23/31] Building CXX object src/qtgui/CMakeFiles/GmatQtThrusterTests.dir/tests/ThrusterTests.cpp.o
+[24/31] Linking CXX executable src/qtgui/GmatQtThrusterTests
+[25/31] Building CXX object src/qtgui/CMakeFiles/GmatQtBurnTests.dir/tests/BurnTests.cpp.o
+[26/31] Linking CXX executable src/qtgui/GmatQtBurnTests
+[27/31] Building CXX object src/qtgui/CMakeFiles/GmatQtEphemerisTests.dir/tests/EphemerisTests.cpp.o
+[28/31] Linking CXX executable src/qtgui/GmatQtEphemerisTests
+[29/31] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[30/31] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[30/31] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/21 Test  #1: QtGui.NativeOrbit ................   Passed    3.78 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/21 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    4.79 sec
+      Start  3: QtGui.NativeOrbitFractionalDPI
+ 3/21 Test  #3: QtGui.NativeOrbitFractionalDPI ...   Passed    4.24 sec
+      Start  4: QtGui.NativeWindows
+ 4/21 Test  #4: QtGui.NativeWindows ..............   Passed    3.33 sec
+      Start  5: QtGui.NativePlots
+ 5/21 Test  #5: QtGui.NativePlots ................   Passed    4.75 sec
+      Start  6: QtGui.Files
+ 6/21 Test  #6: QtGui.Files ......................   Passed    2.68 sec
+      Start  7: QtGui.Workflow
+ 7/21 Test  #7: QtGui.Workflow ...................   Passed   11.06 sec
+      Start  8: QtGui.Mission
+ 8/21 Test  #8: QtGui.Mission ....................   Passed    1.45 sec
+      Start  9: QtGui.Compatibility
+ 9/21 Test  #9: QtGui.Compatibility ..............   Passed    7.24 sec
+      Start 10: QtGui.Atmosphere
+10/21 Test #10: QtGui.Atmosphere .................   Passed    7.10 sec
+      Start 11: QtGui.Stations
+11/21 Test #11: QtGui.Stations ...................   Passed    4.84 sec
+      Start 12: QtGui.EventLocators
+12/21 Test #12: QtGui.EventLocators ..............   Passed    7.38 sec
+      Start 13: QtGui.Thrusters
+13/21 Test #13: QtGui.Thrusters ..................   Passed    6.99 sec
+      Start 14: QtGui.Burns
+14/21 Test #14: QtGui.Burns ......................   Passed    6.71 sec
+      Start 15: QtGui.Ephemeris
+15/21 Test #15: QtGui.Ephemeris ..................   Passed    7.82 sec
+      Start 16: QtGui.DynamicData
+16/21 Test #16: QtGui.DynamicData ................   Passed    1.76 sec
+      Start 17: QtGui.OrbitSetup
+17/21 Test #17: QtGui.OrbitSetup .................   Passed    2.70 sec
+      Start 18: QtGui.PlotSetup
+18/21 Test #18: QtGui.PlotSetup ..................   Passed    3.49 sec
+      Start 19: QtGui.Plots
+19/21 Test #19: QtGui.Plots ......................   Passed    5.87 sec
+      Start 20: QtGui.PlotsHiDPI
+20/21 Test #20: QtGui.PlotsHiDPI .................   Passed    3.04 sec
+      Start 21: QtGui.Launch
+21/21 Test #21: QtGui.Launch .....................   Passed    1.16 sec
+
+100% tests passed, 0 tests failed out of 21
+
+Label Time Summary:
+qt-gui    = 102.18 sec*proc (21 tests)
+
+Total Test time (real) = 102.19 sec

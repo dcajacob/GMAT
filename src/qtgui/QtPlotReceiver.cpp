@@ -85,6 +85,11 @@ bool QtPlotReceiver::show(const QString &name)
 {
    auto it=entries.find(name); if (it==entries.end()) return false;
    auto &entry=it.value();
+   // Close removes an MDI child before its deferred destruction. A live
+   // mission may service another Open action during that interval.
+   if (entry.window && !workspace->subWindowList().contains(entry.window.data())) {
+      entry.window.clear(); entry.widget.clear(); entry.table.clear();
+   }
    if (!entry.window) {
       if (entry.data->kind==PlotModel::Kind::Table) {
          entry.table=new QTableWidget;
@@ -697,9 +702,9 @@ bool QtPlotReceiver::UpdateDynamicDataDisplay(const std::string &name,std::vecto
    auto *entry=find(name); if (!entry) return false;
    int columns=0; for (const auto &row:rows) columns=std::max(columns,static_cast<int>(row.size()));
    entry->cells.resize(rows.size());
-   if (entry->table) { entry->table->setRowCount(rows.size()); entry->table->setColumnCount(columns); }
+   if (entry->table) { entry->table->setRowCount(rows.size()); entry->table->setColumnCount(columns); entry->table->clearContents(); }
    for (int r=0;r<static_cast<int>(rows.size());++r) {
-      entry->cells[r].resize(columns);
+      entry->cells[r].clear(); entry->cells[r].resize(columns);
       for (int c=0;c<static_cast<int>(rows[r].size());++c) {
          const auto &cell=rows[r][c]; const QString value=text(cell.paramName.empty() ? cell.paramValue : cell.paramName+" = "+cell.paramValue);
          entry->cells[r][c]={value,rgb(cell.paramTextColor),rgb(cell.paramBackgroundColor)};

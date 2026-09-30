@@ -1245,3 +1245,23 @@ show their format, path and size with **Copy path** and **Open folder** actions.
 A spacecraft's **EphemerisName** field provides an existing-file chooser for
 OEM/STK/Code500 propagation, including first selection when blank. SPK propagation
 uses the spacecraft's ordered orbit-kernel list and matching NAIF ID.
+
+
+### Dynamic-data display setup
+
+Open a DynamicDataDisplay resource and choose **Dynamic data setup…**. Set Rows
+and Columns, click **Resize grid**, then double-click a cell or use **Edit cell…**
+to choose a parameter, text/background colors and warning/critical bounds.
+**Clear selected** or Delete restores blank cells. Warning and critical colors
+apply to numeric cells whose text color is black; another text color overrides
+condition colors. Each parameter can appear once; arrays require an element such
+as `A(1,2)`. Both grid and live display columns can be resized by dragging headers,
+and live updates preserve those widths.
+
+OK keeps settings pending in the resource panel. Apply validates the full mission
+and updates the script as one undoable edit. Cancel leaves earlier settings
+intact. UpdateDynamicData command settings can select a display and individual
+parameters; leaving its checklist empty updates every cell. Unselected cells keep
+their preceding published values, matching the base engine. Closed displays retain
+published data for reopening, including immediate reopen before Qt finishes
+deleting the old MDI child.

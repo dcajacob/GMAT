@@ -24,6 +24,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    ThrusterDialog.cpp ThrusterDialog.hpp
    BurnDialog.cpp BurnDialog.hpp
    EphemerisDialog.cpp EphemerisDialog.hpp
+   DynamicDataDialog.cpp DynamicDataDialog.hpp
    ScriptEditor.cpp ScriptEditor.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
@@ -116,6 +117,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtBurnTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtEphemerisTests tests/EphemerisTests.cpp)
    target_link_libraries(GmatQtEphemerisTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtDynamicDataTests tests/DynamicDataTests.cpp)
+   target_link_libraries(GmatQtDynamicDataTests PRIVATE GmatQtFrontend)
    find_package(Python3 REQUIRED COMPONENTS Interpreter)
    set(qt_test_runner "${CMAKE_CURRENT_SOURCE_DIR}/tests/RunTest.py")
    function(add_qt_test name target)
@@ -146,6 +149,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.Thrusters GmatQtThrusterTests "${qt_test_startup}")
    add_qt_test(QtGui.Burns GmatQtBurnTests "${qt_test_startup}")
    add_qt_test(QtGui.Ephemeris GmatQtEphemerisTests "${qt_test_startup}")
+   add_qt_test(QtGui.DynamicData GmatQtDynamicDataTests "${qt_test_startup}")
    add_qt_test(QtGui.OrbitSetup GmatQtOrbitSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -159,6 +163,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_custom_target(check-qt
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG> -L qt-gui
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests
+      DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests
       USES_TERMINAL VERBATIM)
 endif()

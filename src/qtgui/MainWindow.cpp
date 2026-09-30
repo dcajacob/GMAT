@@ -11,6 +11,7 @@
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
 #include "EphemerisDialog.hpp"
+#include "DynamicDataDialog.hpp"
 #include "EphemerisFile.hpp"
 #include "EventLocatorDialog.hpp"
 #include "CommandEditor.hpp"
@@ -754,6 +755,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   if (changes.contains("@DynamicData") && !object->IsOfType("DynamicDataDisplay")) return "Grid settings require a dynamic data display.";
    if (changes.contains("@ArrayExpressions") && !object->IsOfType("Array")) return "Cell expressions require an Array.";
    if (changes.contains("@ArrayExpressions") && changes.size()==1) {
       try {
@@ -765,6 +767,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    try {
       std::unique_ptr<GmatBase> proposed(object->Clone());
       if (!proposed) return "This resource cannot be edited.";
+      if (changes.contains("@DynamicData")) applyDynamicDataSettings(*proposed,changes.value("@DynamicData"));
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
       const QString mixture=changes.value("MixRatio");
       const auto orbitChanges=applySpacecraftOrbitProperties(*proposed,changes);
@@ -776,7 +779,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto burnChanges=applyBurnProperties(*proposed,changes);
       const auto ephemerisChanges=applyEphemerisProperties(*proposed,changes);
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -804,7 +807,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = serialize(*object);
       auto newBlock = proposed->IsOfType("Spacecraft") ? spacecraftOrbitScript(*proposed) : proposed->IsOfType("OrbitView") ? orbitViewScript(*proposed) : (proposed->IsOfType("ImpulsiveBurn") || proposed->IsOfType("FiniteBurn")) ? burnResourceScript(*proposed) : serialize(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (oldBlock.isEmpty() || candidate.count(oldBlock) != 1)
          return "This resource requires a specialized editor. Use its script settings for now.";
       candidate.replace(candidate.indexOf(oldBlock), oldBlock.size(), newBlock);

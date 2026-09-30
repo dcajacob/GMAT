@@ -134,9 +134,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/RunScriptFolderDialog.hpp` | Pending audit |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Pending audit |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Pending audit |
-| `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Pending audit |
+| `src/gui/subscriber/DynamicDataDisplaySetupPanel.hpp` | Active grid resize/retained cells, cell editing/clearing and condition colors audited; grouped Qt setup with pending Apply/Cancel, Undo/Redo, Unicode save/reopen, live reports, adjustable widths and immediate close/reopen covered. Extreme dimensions and unnamed-cell styling remain pending. |
 | `src/gui/subscriber/ReportFileSetupPanel.hpp` | Report parameter lists accept numeric array elements; readable delimiter selector, precision/width rejection, exact save/reopen and explicit/automatic report values tested. Append across repeat runs, fixed-width headers, left/right alignment and zero fill tested. Shared ordered parameter selector added; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types and solver-iteration combinations pending. |
-| `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Pending audit |
+| `src/gui/subscriber/DynamicDataSettingsDialog.hpp` | Active parameter selection, text/background colors and warning/critical bounds audited. Real/string/array-element references, duplicate/whole-array/nonnumeric/reversed-bound rejection, Cancel, alarm/custom colors and calculation-preserving round trips covered. Broader parameter contexts and unnamed-cell styling remain pending. |
 | `src/gui/app/WelcomePanel.hpp` | Pending audit |
 | `src/gui/app/AboutDialog.hpp` | Pending audit |
 | `src/gui/app/InteractiveMatlabDialog.hpp` | Pending audit |
@@ -2664,3 +2664,55 @@ Rebuilt the actual application/bin/GmatQt target. All 20 Qt suites passed in
 71.39 seconds with the final test implementation, including native viewer/window
 checks, mission/plugin/file regressions and the new Ephemeris suite. Evidence:
 Qt6ParityValidation/check-ephemeris.txt. Full replacement acceptance remains open.
+
+
+## Dynamic-data setup, selective updates and retained viewer data
+
+Audited the active wx DynamicDataDisplaySetupPanel and DynamicDataSettingsDialog
+controls. Qt now has grouped Dynamic data setup with row/column resizing,
+retained cells and default new cells, parameter selection, text/background
+colors, warning/critical bounds, condition colors, double-click editing and
+Delete/Clear selected. Both dialogs keep changes pending until resource Apply;
+Cancel leaves the preceding state intact. Duplicate parameter references are
+rejected because the engine otherwise silently drops them and shifts the layout.
+Whole arrays require an indexed element; real and string parameters are accepted.
+Numeric bounds must be finite and ordered. Black text retains the wx convention
+of automatic condition colors; nonblack text overrides those colors.
+
+UpdateDynamicData command settings provide a typed display selector and a
+checklist of that display's actual parameters. An empty selection updates all
+cells; an explicit selection retains the engine's cached values for other cells.
+Edits preserve command labels/comments and validate the complete mission.
+
+Testing exposed a shared MDI lifecycle defect: close removes a child from the
+workspace before its deferred destruction, so immediate reopen could reuse a
+still-live but detached window. Reopen now creates a fresh child from retained
+plot/table data. Dynamic callbacks also clear stale padding when later updates
+contain shorter rows, retain user-adjusted widths on live updates, and update
+cached data while the window is closed.
+
+DynamicDataTests configures a two-row grid through the GUI and compares numeric
+reports with an independently script-configured mission. It covers real/string/
+array values, blank cells, selective/all updates, inclusive normal boundaries,
+warning/critical/custom colors, parameter browsing, resizing/clearing, pending
+reopen, Cancel, invalid-input rollback, exact Undo/Redo, Unicode save/reopen,
+command Apply and saved execution, immediate close/reopen, ragged and closed-table
+callbacks, adjustable widths and clearing the entire table. A missing reference
+fails full-candidate validation and recovers without changing the source script.
+No propagation or numerical algorithms changed.
+
+The focused suite and native Wayland workflow passed with isolated preferences.
+The captured setup dialog was inspected for readable fields, grid columns and
+accessible actions; compact resizing retains its buttons. Evidence:
+Qt6ParityValidation/dynamic-data-wayland.txt and dynamic-data-wayland.png.
+
+Extreme grid dimensions, styling unnamed cells and broader parameter/mission
+contexts remain qualification cases. There are now 49 wx inventory entries marked
+Pending audit; the broader workflow, camera/OF and plugin acceptance gates stay
+open.
+
+The actual application/bin/GmatQt executable was rebuilt. All 21 Qt suites passed
+in 102.19 seconds, including native orbit/window checks, plotting/HiDPI, mission
+and plugin/file regressions and the new DynamicData suite. Evidence:
+Qt6ParityValidation/check-dynamic-data.txt. Full replacement acceptance remains
+open.

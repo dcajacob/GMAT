@@ -20,6 +20,7 @@
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
 #include "EphemerisDialog.hpp"
+#include "DynamicDataDialog.hpp"
 #include "EphemerisFile.hpp"
 #include "Spacecraft.hpp"
 #include "ReportParameterDialog.hpp"
@@ -142,6 +143,16 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(values.value(name)); else table->item(row,1)->setText(values.value(name));
          }
          table->setProperty("ephemerisGroupedUpdate",false);
+      });
+   }
+   if (object.IsOfType("DynamicDataDisplay")) {
+      auto initial=std::shared_ptr<GmatBase>(object.Clone()); auto *setup=new QPushButton("Dynamic data setup…",this); setup->setObjectName("editDynamicData"); layout->addWidget(setup);
+      connect(setup,&QPushButton::clicked,this,[this,initial] {
+         QMap<QString,QString> pending;
+         if (!pendingDynamicData.isEmpty()) pending.insert("@DynamicData",pendingDynamicData);
+         for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (name=="WarnColor" || name=="CritColor") pending.insert(name,table->item(row,1)->text()); }
+         DynamicDataDialog dialog(*initial,pending,this); if (dialog.exec()!=QDialog::Accepted) return; const auto values=dialog.settings(); pendingDynamicData=values.value("@DynamicData");
+         for (int row=0;row<table->rowCount();++row) { const auto name=table->item(row,0)->text(); if (values.contains(name)) table->item(row,1)->setText(values.value(name)); }
       });
    }
    if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
@@ -1051,6 +1062,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes=attitudeEdits;
+      if (!pendingDynamicData.isEmpty()) changes.insert("@DynamicData",pendingDynamicData);
       for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=stationEdits.cbegin();it!=stationEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=eventEdits.cbegin();it!=eventEdits.cend();++it) changes.insert(it.key(),it.value());
@@ -1099,7 +1111,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
 bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
-   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty()) return true;
+   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));

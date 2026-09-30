@@ -13,6 +13,7 @@
 #include "ReportParameterDialog.hpp"
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
+#include "DynamicDataDisplay.hpp"
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -36,7 +37,11 @@ QString CommandForm::currentStatement() const
    // changed field length cannot displace another field, or a branch body.
    auto ordered=fields;
    std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start==b.start ? a.length>b.length : a.start>b.start; });
-   for (const auto &field:ordered) result.replace(field.start,field.length,field.input->text());
+   for (const auto &field:ordered) {
+      auto value=field.input->text();
+      if (title()=="Dynamic update" && field.input->objectName()=="commandField_Parameters" && !value.isEmpty() && !value.front().isSpace()) value.prepend(' ');
+      result.replace(field.start,field.length,value);
+   }
    return result;
 }
 void CommandForm::updateSource()
@@ -64,6 +69,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Solver","Objective"}},
       {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^,;{}\\n]+?)\\s*(<=|>=|=)\\s*"+expression+"\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
+      {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
       {"Event search","FindEvents\\s+"+label+name+"(?:\\s*\\{([^{};]*)\\})?"+end,{"Locator"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
@@ -84,6 +90,7 @@ void CommandForm::setStatement(const QString &statement)
       QString resourceType;
       if (title()=="For loop" && name=="Index") resourceType="Variable";
       else if (name=="Report file") resourceType="ReportFile";
+      else if (title()=="Dynamic update" && name=="Display") resourceType="DynamicDataDisplay";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
@@ -93,7 +100,18 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="Function call" && (name=="Inputs" || name=="Outputs")) {
+      if (title()=="Dynamic update" && name=="Parameters") {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input); auto *choose=new QPushButton("Select updates…",container); choose->setObjectName("commandChoose_Parameters"); row->addWidget(choose); layout->addRow("Parameters (empty updates all)",container);
+         connect(choose,&QPushButton::clicked,this,[this,input] {
+            auto *display=dynamic_cast<DynamicDataDisplay *>(Moderator::Instance()->GetConfiguredObject(findChild<QLineEdit *>("commandField_Display")->text().trimmed().toStdString()));
+            if (!display) return;
+            QDialog dialog(this); dialog.setObjectName("dynamicUpdateDialog"); dialog.setWindowTitle("Select parameters to update"); auto *layout=new QVBoxLayout(&dialog); layout->addWidget(new QLabel("Leave all unchecked to update every cell.",&dialog)); auto *list=new QListWidget(&dialog); list->setObjectName("dynamicUpdateList"); layout->addWidget(list);
+            const auto selected=input->text().split(QRegularExpression("\\s+(?![^()]*\\))"),Qt::SkipEmptyParts);
+            for (const auto &row:display->GetDynamicDataStruct()) for (const auto &cell:row) if (!cell.paramName.empty()) { const auto name=QString::fromStdString(cell.paramName); auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked); }
+            auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons); connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject); dialog.resize(450,350);
+            if (dialog.exec()==QDialog::Accepted) { QStringList names; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) names.append(list->item(i)->text()); input->setText(names.isEmpty() ? QString() : " "+names.join(" ")); }
+         });
+      } else if (title()=="Function call" && (name=="Inputs" || name=="Outputs")) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select arguments…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
          connect(choose,&QPushButton::clicked,this,[this,input,name] {
