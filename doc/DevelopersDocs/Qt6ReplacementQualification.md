@@ -148,7 +148,7 @@ Every row requires real-engine evidence, not just registration.
 
 | Plugin | Configuration / execution / reports / recovery evidence |
 | --- | --- |
-| `../plugins/libDataInterface` | Pending qualification |
+| `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
 | `../plugins/libEKF` | Pending qualification |
 | `../plugins/libGmatEstimation` | Pending qualification |
@@ -2775,3 +2775,59 @@ Rebuilt the actual application/bin/GmatQt target. All 22 Qt suites passed in
 checks, mission/plugin/file regressions, plotting/HiDPI and CalculatedPoints.
 Evidence: Qt6ParityValidation/check-calculated-points.txt. Full replacement
 acceptance remains open.
+
+
+## File-interface configuration, import selection and execution
+
+FileInterface already used the generic resource editor's format dropdown and
+input-file chooser. Apply now checks for an existing, readable regular input
+file and rejects blank names, directories and missing files before changing the
+script. The Set command now has typed spacecraft/data-interface reference
+selectors and a field checklist with an Import all fields option. A mission
+command template inserts Set using current resources when available. Labels,
+comments and unrepresented command syntax retain the shared editor behavior.
+
+The field list comes from an initialized clone, leaving the configured interface
+and target unchanged while browsing. TVHF_ASCII exposes Epoch, CartesianState
+and Cr as assignable fields. Its additional SupportedFields entries are internal
+vector components and coordinate/body metadata: selecting individual components
+does not assign them, while explicitly selecting frame/body metadata throws.
+They are therefore excluded from the picker. Previously entered unknown names
+remain visible and checked so Cancel preserves them; OK requires a nonempty
+supported subset or All. Returning to All removes the Data clause.
+
+DataInterfaceTests exercises the real input chooser's Cancel and selection,
+format dropdown, pending resource edits, Apply validation, exact Undo/Redo and
+Unicode save/reopen. It compares all seven nonempty field subsets plus default
+All against independently initialized missions, including initial epoch,
+Cartesian state and Cr and the state after 600 seconds of propagation. The
+reference epoch and state come from the bundled TVHF fixture's literal values;
+propagation/coordinate/time-conversion algorithms are unchanged. It checks typed
+target/source selection, existing subset and explicit All handling, unknown-field
+preservation/rejection, report output and the read-only Output report viewer.
+
+Missing-file, malformed-header, invalid-month, missing-epoch and unknown-field
+failures recover after restoring the input or valid script. File repair is tested
+with an immediate rerun as well as reopen. Task-9 input also reproduces the
+expected report. The shipped Ex_FileInterface example is exercised after Qt OF
+conversion, adding reports and shortening its two-day propagation to 600 seconds;
+its converted viewer exists and a Unicode save/reopen repeats its report. This
+does not qualify the unmodified two-day example or broader OF camera cases.
+
+The native Wayland test passed using isolated preferences. The inspected field
+picker capture has readable controls and accessible Cancel/OK actions. Evidence:
+Qt6ParityValidation/data-interface-wayland.txt and
+Qt6ParityValidation/data-interface-wayland.fields.png.
+
+Broader bodies/frames, multiple records, repeated imports within one mission and
+filesystem permission failures remain qualification cases. The 108-entry wx
+inventory still has 47 entries marked Pending audit; qualifying Set alone does
+not close the generic wx command panel audit. Of the 20 selected runtime plugins,
+6 still have no qualification evidence and 14 have partial evidence. Full
+workflow, viewer/OF and plugin acceptance gates remain open.
+
+Rebuilt the actual application/bin/GmatQt target. All 23 Qt suites passed in
+101.59 seconds, including native viewer/window checks, mission/plugin/file
+regressions, plotting/HiDPI and the new DataInterface suite. Evidence:
+Qt6ParityValidation/check-data-interface.txt. Full replacement acceptance remains
+open.

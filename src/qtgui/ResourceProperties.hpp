@@ -21,6 +21,7 @@ struct ResourceProperty
    int rows = 0, columns = 0;
 };
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
+QStringList dataInterfaceFields(GmatBase &object);
 void validateResourceProperties(GmatBase &object);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);

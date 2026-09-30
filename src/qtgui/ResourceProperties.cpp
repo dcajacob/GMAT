@@ -26,6 +26,7 @@
 #include <optional>
 #include <QRegularExpression>
 #include <QSet>
+#include <QFileInfo>
 #include <cmath>
 #include <algorithm>
 #include <limits>
@@ -496,6 +497,12 @@ void validateResourceProperties(GmatBase &object)
    validateBurnProperties(object);
    validateOrbitViewProperties(object);
    validateThrusterProperties(object);
+   if (object.IsOfType("FileInterface")) {
+      const auto filename=QString::fromStdString(object.GetStringParameter("Filename"));
+      const QFileInfo file(filename);
+      if (filename.isEmpty() || !file.isFile() || !file.isReadable()) throw std::runtime_error("Choose an existing, readable input file for the data interface.");
+      return;
+   }
    if (object.IsOfType("LibrationPoint")) {
       const auto primary=object.GetStringParameter("Primary"),secondary=object.GetStringParameter("Secondary");
       if (primary==secondary) throw std::runtime_error("Primary and secondary bodies must be different.");
@@ -547,6 +554,27 @@ void validateResourceProperties(GmatBase &object)
    }
    if (count!=2 || directions.size()!=2)
       throw std::runtime_error("Select exactly two different R, V or N directions; leave the third axis blank");
+}
+
+QStringList dataInterfaceFields(GmatBase &object)
+{
+   if (!object.IsOfType("DataInterface")) throw std::runtime_error("Select a data-interface resource.");
+   // FileInterface creates its reader during initialization. Inspect a clone
+   // so browsing its metadata does not alter the configured resource or read
+   // data into a mission target.
+   std::unique_ptr<GmatBase> copy(object.Clone());
+   if (!copy) throw std::runtime_error("Cannot inspect this data interface.");
+   validateResourceProperties(*copy);
+   if (!copy->Initialize()) throw std::runtime_error("The data interface could not initialize its field list.");
+   QStringList fields;
+   const bool tvhf=copy->IsOfType("FileInterface") && copy->GetStringParameter("Format")=="TVHF_ASCII";
+   for (const auto &field:copy->GetStringArrayParameter("SupportedFields")) {
+      // TVHF also advertises vector components and frame/body metadata. Set
+      // imports the whole CartesianState; selecting an individual component
+      // does not assign it, while selecting frame/body metadata throws.
+      if (!tvhf || field=="Epoch" || field=="CartesianState" || field=="Cr") fields.append(QString::fromStdString(field));
+   }
+   return fields;
 }
 
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QString> &values)

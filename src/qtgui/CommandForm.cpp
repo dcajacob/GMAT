@@ -14,6 +14,9 @@
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
 #include "DynamicDataDisplay.hpp"
+#include "ResourceProperties.hpp"
+#include "BaseException.hpp"
+#include <stdexcept>
 #include <QPushButton>
 #include <QHBoxLayout>
 #include <QInputDialog>
@@ -39,7 +42,7 @@ QString CommandForm::currentStatement() const
    std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start==b.start ? a.length>b.length : a.start>b.start; });
    for (const auto &field:ordered) {
       auto value=field.input->text();
-      if (title()=="Dynamic update" && field.input->objectName()=="commandField_Parameters" && !value.isEmpty() && !value.front().isSpace()) value.prepend(' ');
+      if (((title()=="Dynamic update" && field.input->objectName()=="commandField_Parameters") || (title()=="File import" && field.input->objectName()=="commandField_Data")) && !value.isEmpty() && !value.front().isSpace()) value.prepend(' ');
       result.replace(field.start,field.length,value);
    }
    return result;
@@ -70,6 +73,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^,;{}\\n]+?)\\s*(<=|>=|=)\\s*"+expression+"\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
       {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
+      {"File import","Set\\s+"+label+name+"\\s+"+name+"([ \\t]*(?:\\(\\s*Data\\s*=\\s*\\{[^{}();%\\n]*\\}\\s*\\))?)"+end,{"Target","Data source","Data"}},
       {"Event search","FindEvents\\s+"+label+name+"(?:\\s*\\{([^{};]*)\\})?"+end,{"Locator"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
@@ -91,6 +95,8 @@ void CommandForm::setStatement(const QString &statement)
       if (title()=="For loop" && name=="Index") resourceType="Variable";
       else if (name=="Report file") resourceType="ReportFile";
       else if (title()=="Dynamic update" && name=="Display") resourceType="DynamicDataDisplay";
+      else if (title()=="File import" && name=="Target") resourceType="Spacecraft";
+      else if (title()=="File import" && name=="Data source") resourceType="DataInterface";
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
@@ -100,7 +106,40 @@ void CommandForm::setStatement(const QString &statement)
          else if (title()=="Achieve" || QRegularExpression("^\\s*Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="Dynamic update" && name=="Parameters") {
+      if (title()=="File import" && name=="Data") {
+         auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
+         input->setToolTip("Leave empty to import all fields, or select fields from the data interface.");
+         auto *choose=new QPushButton("Select fields…",container); choose->setObjectName("commandChoose_Data"); row->addWidget(choose); layout->addRow("Data fields (empty imports all)",container);
+         auto *error=new QLabel(this); error->setObjectName("commandDataError"); error->setWordWrap(true); layout->addRow(error);
+         auto *source=findChild<QLineEdit *>("commandField_Data source");
+         connect(source,&QLineEdit::textChanged,error,&QLabel::clear); connect(input,&QLineEdit::textChanged,error,&QLabel::clear);
+         connect(choose,&QPushButton::clicked,this,[this,input,source,error] {
+            try {
+               auto *object=Moderator::Instance()->GetConfiguredObject(source->text().trimmed().toStdString());
+               if (!object) throw std::runtime_error("Select an existing data-interface resource.");
+               const auto fields=dataInterfaceFields(*object);
+               const auto options=QRegularExpression("\\{([^{}]*)\\}").match(input->text());
+               auto selected=options.captured(1).split(QRegularExpression("[\\s,'\\\"]+"),Qt::SkipEmptyParts);
+               QDialog dialog(this); dialog.setObjectName("dataImportDialog"); dialog.setWindowTitle("Select data to import"); auto *layout=new QVBoxLayout(&dialog);
+               auto *all=new QCheckBox("Import all fields",&dialog); all->setObjectName("dataImportAll"); all->setChecked(input->text().trimmed().isEmpty() || selected.contains("All")); layout->addWidget(all);
+               auto *list=new QListWidget(&dialog); list->setObjectName("dataImportFields"); layout->addWidget(list);
+               auto names=fields; for (const auto &name:selected) if (name!="All" && !names.contains(name)) names.append(name);
+               for (const auto &name:names) { auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked); if (!fields.contains(name)) item->setToolTip("This field is not supported by the selected interface."); }
+               auto *note=new QLabel("Select at least one supported field, or import all. Fields not selected leave the target's current values unchanged.",&dialog); note->setWordWrap(true); layout->addWidget(note);
+               auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+               auto validate=[all,list,buttons,fields] {
+                  list->setEnabled(!all->isChecked()); bool any=false,valid=true;
+                  for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) { any=true; valid=valid && fields.contains(list->item(i)->text()); }
+                  buttons->button(QDialogButtonBox::Ok)->setEnabled(all->isChecked() || (any && valid));
+               };
+               connect(all,&QCheckBox::toggled,&dialog,[validate] { validate(); }); connect(list,&QListWidget::itemChanged,&dialog,[validate] { validate(); }); validate();
+               connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject); dialog.resize(460,360);
+               if (dialog.exec()==QDialog::Accepted) { QStringList names; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) names.append("'"+list->item(i)->text()+"'"); input->setText(all->isChecked() ? QString() : " (Data = {"+names.join(", ")+"})"); }
+               error->clear();
+            } catch (BaseException &failure) { error->setText(QString::fromStdString(failure.GetFullMessage())); }
+            catch (const std::exception &failure) { error->setText(QString::fromUtf8(failure.what())); }
+         });
+      } else if (title()=="Dynamic update" && name=="Parameters") {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input); auto *choose=new QPushButton("Select updates…",container); choose->setObjectName("commandChoose_Parameters"); row->addWidget(choose); layout->addRow("Parameters (empty updates all)",container);
          connect(choose,&QPushButton::clicked,this,[this,input] {
             auto *display=dynamic_cast<DynamicDataDisplay *>(Moderator::Instance()->GetConfiguredObject(findChild<QLineEdit *>("commandField_Display")->text().trimmed().toStdString()));

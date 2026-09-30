@@ -1281,3 +1281,23 @@ that membership is fixed and permit only their colors to be changed. All edits
 remain pending until Apply, validate the complete mission, support Undo/Redo and
 persist through script save/reopen. Configured calculated points can be used as
 coordinate-system origins and OrbitView objects through the existing selectors.
+
+
+### File-interface imports
+
+A FileInterface resource provides its format dropdown and input-file chooser.
+Apply requires an existing, readable file and rejects directories. For the bundled
+TVHF_ASCII format, the Set command settings offer spacecraft and data-interface
+selectors plus **Select fields…**. Choose Epoch, CartesianState and/or Cr, or
+check **Import all fields**. Fields omitted from a subset leave the target's
+current values unchanged. CartesianState imports all six components together;
+the reader's internal component/frame/body metadata is not offered as separate
+assignments.
+
+Use **Set (file import)** in the mission command templates to insert an import.
+The field picker reads metadata from an initialized clone of the interface;
+browsing does not import data into the spacecraft. OK changes pending command
+text, Cancel preserves it, and Apply validates the complete mission. Labels and
+comments, Undo/Redo and script save/reopen retain the normal command-editor
+behavior. A missing file or malformed input produces an error; repairing the
+input allows another run without reopening the script.
