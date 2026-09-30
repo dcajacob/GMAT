@@ -192,6 +192,7 @@ private:
       SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
+      bool solverData = false;
       bool useInitialView = true;
       QString provider;
    };

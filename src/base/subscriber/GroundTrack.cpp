@@ -1641,6 +1641,13 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
    if (len <= 0 || dat == NULL)
       return true;
 
+   // Solver iterations are display data, not part of the accepted trajectory.
+   // Match the OrbitPlot/XY subscriber's None filtering before sampling.
+   const bool solving = runstate == Gmat::TARGETING ||
+         runstate == Gmat::OPTIMIZING || runstate == Gmat::SOLVING;
+   if (mSolverIterations == "None" && solving)
+      return true;
+
    // Keep the initial point and then every collectFrequency-th publication.
    // A bounded countdown avoids overflow during long missions.
    if (samplesUntilCollect > 0)
@@ -1679,6 +1686,10 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
    if (!hasPosition)
       return true;
 
+   // The ground-track callback has no run-state argument. Supply it as an
+   // optional action for receivers that distinguish trial and accepted arcs.
+   PlotInterface::TakeGroundTrackAction(instanceName,
+         solving ? "SolverData=On" : "SolverData=Off");
    retval = PlotInterface::UpdateGroundTrackData(instanceName,
          dat[0], longlat, theSats.size());
 
@@ -1720,6 +1731,13 @@ bool GroundTrack::TakeAction(const std::string &action,
    if (action == "PenDown")
    {
       PlotInterface::TakeGroundTrackAction(instanceName, "PenDown");
+      return true;
+   }
+   if (action == "MarkBreak" || action == "ClearFromBreak")
+   {
+      if (mSolverIterations == "Current")
+         PlotInterface::TakeGroundTrackAction(instanceName,
+               action == "MarkBreak" ? action : action + "=" + actionData);
       return true;
    }
 

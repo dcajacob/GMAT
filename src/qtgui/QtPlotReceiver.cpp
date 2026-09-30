@@ -647,14 +647,24 @@ bool QtPlotReceiver::UpdateGroundTrackData(const std::string &name,const double 
    auto *entry=find(name); if (!entry || count<0 || (count>0 && !points)) return false;
    auto &data=*entry->data; ++data.frame;
    if (data.frame>1 && epoch<data.lastEpoch) data.breakLines();
-   for (int i=0;i<count;++i) data.append(i,points[2*i],points[2*i+1],0,epoch);
+   for (int i=0;i<count;++i) data.append(i,points[2*i],points[2*i+1],0,epoch,true,entry->solverData);
    refresh(*entry); return true;
 }
 bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::string &action)
 {
    auto *entry=find(name); if (!entry) return false;
    const auto command=text(action).section('=',0,0), argument=text(action).section('=',1);
-   if (command=="Satellites") {
+   if (command=="SolverData") {
+      entry->solverData=argument=="On";
+      for (auto &curve:entry->data->curves)
+         if (auto *point=Moderator::Instance()->GetSpacePoint(curve.name.toStdString()))
+            curve.color=rgb(entry->solverData ? point->GetCurrentTargetColor() : point->GetCurrentOrbitColor());
+   } else if (command=="MarkBreak") XyPlotMarkBreak(name);
+   else if (command=="ClearFromBreak") {
+      bool ok=false; const auto index=argument.toInt(&ok);
+      if (!ok) return false;
+      XyPlotClearFromBreak(name,index); refresh(*entry,true);
+   } else if (command=="Satellites") {
       const auto names=argument.split('|',Qt::SkipEmptyParts);
       for (int i=0;i<names.size();++i) {
          auto &curve=entry->data->curves[i]; curve.name=names[i];

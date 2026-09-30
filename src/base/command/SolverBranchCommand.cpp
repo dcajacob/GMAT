@@ -1176,7 +1176,8 @@ void SolverBranchCommand::ApplySolution()
 void SolverBranchCommand::GetActiveSubscribers()
 {
    // Builds a table of Subscribers that are currently receiving data
-   // Currently only set to work with XY Plots
+   // XY and ground-track plots use the solver's iteration breakpoints.
+   // OrbitPlot manages its own solver buffer through end-of-receive.
 
    activeSubscribers.clear();
 
@@ -1191,6 +1192,8 @@ void SolverBranchCommand::GetActiveSubscribers()
             if (obj->GetBooleanParameter("Drawing"))
                activeSubscribers.push_back((Subscriber*)(obj));
          }
+         else if (obj->IsOfType("GroundTrack") && obj->GetBooleanParameter("ShowPlot"))
+            activeSubscribers.push_back((Subscriber*)(obj));
       }
    }
 
@@ -1206,6 +1209,8 @@ void SolverBranchCommand::GetActiveSubscribers()
             if (obj->GetBooleanParameter("Drawing"))
                activeSubscribers.push_back((Subscriber*)(obj));
          }
+         else if (obj->IsOfType("GroundTrack") && obj->GetBooleanParameter("ShowPlot"))
+            activeSubscribers.push_back((Subscriber*)(obj));
       }
    }
 }
