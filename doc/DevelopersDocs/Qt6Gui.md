@@ -130,9 +130,11 @@ folder; startup assets continue to use the startup directory. When using Save
 As in another folder, relative asset references retain their script spelling
 and may need to be selected again for the new location.
 
-For an existing external Python force model, its resource editor provides a
-module selector from the configured Python search paths, a function field and
-the option to exclude other forces. Enter a Python module name without `.py`;
+The force-model editor's **Python external force…** controls add the first
+external contributor, edit its module/function and exclusion settings, or remove
+it by unchecking **Use external Python force**. These changes stay pending until
+the parent force model's Apply; Cancel discards the dialog changes. The module
+selector lists configured Python search paths. Enter a module name without `.py`;
 the engine does not import an absolute file path in this field. Restart GMAT
 after modifying an imported Python module, because Python caches its code.
 

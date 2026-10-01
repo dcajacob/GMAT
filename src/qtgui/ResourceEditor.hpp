@@ -23,6 +23,7 @@ private:
    QMap<QString, QString> original;
    QMap<QString, QString> attitudeEdits;
    QMap<QString, QString> atmosphereEdits;
+   QMap<QString, QString> externalEdits,originalExternal;
    QMap<QString, QString> stationEdits;
    QMap<QString, QString> eventEdits;
    QString pendingDynamicData;

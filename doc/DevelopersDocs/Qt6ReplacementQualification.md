@@ -153,7 +153,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libEKF` | KalmanTests: one-hour, noise-free GPS version of the shipped filter/smoother example with SNC process noise and Gauss-Markov drag. Typed run/reference/solve-for controls, owned model settings, warm-start input/output browsing and paired epoch conversion, both continuation boundaries, exact state/covariance CSV equivalence with independent script configuration, report access, pending/Cancel/Undo/Redo/Unicode mission reopen, invalid-edit rollback and missing/malformed/late-seed recovery covered. Native Wayland panels/execution passed. Creation/removal, full-day/noisy or real data, other measurement/model regimes, covariance editing, residual graphics, prediction, warm-start smoothing and broader malformed/disk cases remain pending. |
 | `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. KalmanTests also covers GPS simulation and concrete RunSmoother serialization, including labels/comments and command edits. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
-| `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. New contributor creation/removal, full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
+| `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. First contributor creation/removal is now covered through the actual retained force-model panel, atomic mixed Apply, invalid input and Cancel, exact source Undo/Redo/Unicode save/reopen and independent script-configured reports; see the external-force creation appendix. Full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. Remaining settings/output coverage pending. |
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
@@ -4411,3 +4411,54 @@ application/bin/GmatQt target is rebuilt.
 This delivers the main-mission inspector operations, not full replacement
 qualification. Remaining document/plugin/viewer operations, native desktop
 input and the wider acceptance gates above still require affirmative evidence.
+
+
+## External-force creation, removal and mixed Apply
+
+The force-model editor now provides Python external force controls when the
+selected runtime exposes ExternalModel. They enable the first contributor, choose
+a configured module or a typed Python module name, edit the derivative function
+and Exclude other forces, or disable the contributor. Module filenames/paths and
+invalid function identifiers are rejected with a recoverable explanation. The
+dialog inherits Help from its real resource panel. Accepted dialog settings stay
+pending until the parent's Apply and combine with ordinary force-model fields in
+one validated source transaction. Successful Apply refreshes the retained MDI
+panel; Cancel preserves both engine and pending parent fields.
+
+Creation writes only the external creator and its supported settings; removal
+removes that contributor's configuration while preserving other source/comments.
+Ordinary force-model scalar and owned-leaf edits no longer regenerate unrelated
+owned forces or make their implicit defaults explicit. Actual creator changes
+still retain the existing dependency-order reconstruction, including atmosphere
+model/body changes. Wider selector/source and configuration-include cases remain
+subject to the full source-preservation gate; this bounded improvement does not
+qualify every creator transition.
+
+ExternalForceTests opens the actual Resources/MDI force editor and verifies
+Cancel, first enable, invalid module/function recovery, inherited Help, mixed
+Error Control plus contributor Apply, retained-panel refresh, pending removal
+and removal Cancel. Error Control now offers the engine's five supported methods
+rather than a free-text value. The tests compare created and removed missions
+with independently configured script references, preserve unrelated implicit
+force defaults and Unicode/comments, and check one exact Undo/Redo transaction,
+Unicode save/reopen and rerun. Existing missing-import/function runtime failures
+and recovery, combined forces and internal two-body agreement remain covered.
+
+The four affected suites (Atmosphere, ResourceRoundTrips, ExternalForces and
+Polyhedron) passed after retaining atmosphere creator ordering. The first native
+capture failed because its relative output path was resolved after the test
+changed directories; external-force-create-capture-path-failed.txt retains that
+failure. The rerun used an absolute output path and passed in
+external-force-create-wayland-20260930.txt. The .png.create.png capture explicitly
+asserts native window exposure and was visually inspected: module/function,
+exclusion and Help/Cancel/OK controls are readable. The older base .png is a
+standalone panel grab and supplies no additional desktop-input evidence. Native
+portal and GNOME minimize/restore acceptance remain outstanding.
+
+Final regression: check-external-force-creation.txt records all 48 Qt suites
+passing in 208.32 seconds after the final external-force controls, mixed Apply,
+retained-panel assertions and narrowed force-source changes. The actual
+application/bin/GmatQt target was rebuilt. This closes the first external
+contributor's creation/removal workflow; the full acceptance checklist remains
+in progress, including remaining polyhedron/document/plugin/viewer operations
+and native desktop-input gates.

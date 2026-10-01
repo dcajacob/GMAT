@@ -61,6 +61,15 @@ GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
 }
 }
 
+QStringList pythonModuleNames()
+{
+   QStringList names;
+   for (const auto &path:FileManager::Instance()->GetAllPythonModulePaths())
+      for (const auto &file:QDir(QString::fromStdString(path)).entryInfoList({"*.py"},QDir::Files|QDir::Readable,QDir::Name)) {
+         const auto module=file.completeBaseName(); if (!module.startsWith('_') && !names.contains(module)) names.append(module);
+      }
+   return names;
+}
 QVector<ResourceProperty> resourceProperties(GmatBase &object)
 {
    QVector<ResourceProperty> fields;
@@ -186,13 +195,10 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             // absolute path and lose portability when saving the mission.
             field.filename=false; field.fileInput=false;
             field.help="Python module name without .py, found in the configured Python search paths. Imported code is cached; restart GMAT after changing the Python module.";
-            for (const auto &path:FileManager::Instance()->GetAllPythonModulePaths()) {
-               for (const auto &file:QDir(QString::fromStdString(path)).entryInfoList({"*.py"},QDir::Files|QDir::Readable,QDir::Name)) {
-                  const auto module=file.completeBaseName();
-                  if (!module.startsWith('_') && !field.references.contains(module)) field.references.append(module);
-               }
-            }
+            field.references=pythonModuleNames();
          }
+         if (object.IsOfType("ODEModel") && field.name=="ErrorControl")
+            field.choices={"RSSState","LargestState","None","LargestStep","RSSStep"};
          if (object.IsOfType("SeqEstimator")) {
             if (field.name=="InputWarmStartFile" || field.name=="OutputWarmStartFile") {
                field.filename=true; field.fileInput=field.name=="InputWarmStartFile"; field.fileOutput=!field.fileInput;

@@ -203,7 +203,11 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
    QStringList changed;
    for (auto it=old.values.cbegin();it!=old.values.cend();++it) if (it.value()!=pending.values.value(it.key())) changed.append(it.key());
    for (auto it=pending.values.cbegin();it!=pending.values.cend();++it) if (!old.values.contains(it.key())) changed.append(it.key());
-   if (replaceOwnedConfiguration && !changed.isEmpty()) {
+   const QStringList forceSelectors={"PrimaryBodies","PointMasses","PolyhedralBodies","Drag","SRP","RelativisticCorrection","UserDefined","External"};
+   const bool changedForceSelector=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) {
+      return forceSelectors.contains(field) || field=="Drag.AtmosphereModel" || field=="Drag.AtmosphereBody";
+   });
+   if (replaceOwnedConfiguration && changedForceSelector) {
       // A root selector creates its owned force. Moving just that selector
       // behind unchanged subfields makes valid source fail interpretation.
       // Legacy scripts may also use unqualified aliases absent from the

@@ -40,6 +40,7 @@
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
 #include "Debugger.hpp"
+#include "ExternalForceDialog.hpp"
 #include <QTreeWidgetItemIterator>
 #include "StartupCompatibility.hpp"
 #include "ScriptCompatibility.hpp"
@@ -1225,8 +1226,9 @@ void MainWindow::stopMission()
 }
 
 QString MainWindow::applyResourceChanges(const QString &name,
-      const QMap<QString, QString> &changes, const QString &expectedScript)
+      const QMap<QString, QString> &requested, const QString &expectedScript)
 {
+   QMap<QString,QString> changes=requested;
    if (running) return "Stop the mission before editing resources.";
    if (!modelValid || expectedScript != builtScript || editor->toPlainText() != builtScript)
       return "The mission has changed. Build the current script and reopen this panel.";
@@ -1234,6 +1236,23 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   QMap<QString,QString> external;
+   for (auto it=changes.cbegin();it!=changes.cend();++it) if (it.key().startsWith("@ExternalForce.")) external[it.key()]=it.value();
+   bool structuralExternal=false;
+   if (!external.isEmpty()) {
+      if (!object->IsOfType("ODEModel")) return "External forces belong to a force model.";
+      const auto error=validateExternalForceSettings(external); if (!error.isEmpty()) return error;
+      const auto original=externalForceSettings(*object);
+      structuralExternal=original.value("@ExternalForce.Enabled")!=external.value("@ExternalForce.Enabled");
+      if (!structuralExternal && external.value("@ExternalForce.Enabled")=="true") {
+         // Existing contributors use the ordinary source-preserving field
+         // patcher, retaining implicit settings and declaration ordering.
+         const QMap<QString,QString> fields={{"@ExternalForce.Module","External.ScriptFileName"},{"@ExternalForce.Function","External.DerivativesFunction"},{"@ExternalForce.ExcludeOtherForces","External.ExcludeOtherForces"}};
+         for (auto it=fields.cbegin();it!=fields.cend();++it) if (original.value(it.key())!=external.value(it.key())) changes[it.value()]=external.value(it.key());
+         for (auto it=external.cbegin();it!=external.cend();++it) changes.remove(it.key());
+      }
+   }
+   if (changes.isEmpty()) return external.isEmpty() ? QString() : externalForceSettingsError(*object,external);
    const bool shadows=object->IsOfType("SolarPowerSystem") && changes.size()==1 && changes.contains("ShadowBodies");
    const bool forceBodyLists=object->IsOfType("ODEModel") && std::all_of(changes.keyBegin(),changes.keyEnd(),[](const QString &field) { return field=="PrimaryBodies" || field=="PointMasses"; });
    if (shadows || forceBodyLists) {
@@ -1340,7 +1359,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1390,7 +1409,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
       auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
       if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
          // Imager's getter can still read the clone's old FOV pointer after
@@ -1439,6 +1458,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   if (!external.isEmpty()) {
+      try {
+         QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+         if (structuralExternal) candidate=externalForceScript(candidate,name,external,firstCommand);
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+      return applyModelScript(candidate,[name,external] { auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); return model ? externalForceSettingsError(*model,external) : QString("The force model was not retained."); });
+   }
    return applyModelScript(candidate);
 }
 

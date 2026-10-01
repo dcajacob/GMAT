@@ -4,6 +4,7 @@
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
+#include "ExternalForceDialog.hpp"
 #include <QApplication>
 #include <QPlainTextEdit>
 #include <QDir>
@@ -16,6 +17,15 @@
 #include <QComboBox>
 #include <QTimer>
 #include <QRegularExpression>
+#include <QGroupBox>
+#include <QLineEdit>
+#include <QCheckBox>
+#include <QLabel>
+#include <QTreeWidget>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include <QEventLoop>
+#include <QWindow>
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
@@ -72,7 +82,64 @@ int main(int argc,char **argv)
       require(!window.applyResourceChanges("ExternalFM",{{"External.ExcludeOtherForces","invalid"}},before).isEmpty() && editor->toPlainText()==before,"Invalid external setting did not roll back");
       require(window.applyResourceChanges("Values",{{"Precision","15"}},editor->toPlainText()).isEmpty(),"Unrelated report edit failed"); run(window); equivalent(numbers(report),combinedExpected);
       require(editor->toPlainText().contains("ExternalFM.External = 'SimpleExternalForceModel_NoAPI'") && editor->toPlainText().contains("ExternalFM.External.ExcludeOtherForces = false"),"Unrelated resource edit lost external contributor");
-      std::cout<<"PASS: configured Python module selector and Cancel, pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body states, exact Undo/Redo/Unicode save/reopen, missing module/function failure and recovery, and script-reference combined-force execution.\n"; return 0;
+      // Add the first contributor through the real force-model controls, with
+      // an ordinary pending field in the same transaction, then remove it.
+      QString without=reference;
+      without.remove(QRegularExpression("^ExternalFM\\.(?:External(?:\\.[A-Za-z]+)?|DerivativesFunction)[ \\t]*=[^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption));
+      without.prepend("% retained creation source α\n"); without.replace("ExternalFM.ErrorControl                = 'RSSStep'","ExternalFM.ErrorControl                = 'RSSStep' % retain mixed comment");
+      editor->setPlainText(without); require(window.runMission()==MainWindow::RunResult::Completed,"Without-external reference failed");
+      const auto withoutSource=editor->toPlainText(); require(externalForceSettings(*Moderator::Instance()->GetConfiguredObject("ExternalFM")).value("@ExternalForce.Enabled")=="false","Without-external fixture still has a contributor");
+      auto removalReference=withoutSource; removalReference.replace("'RSSStep' % retain mixed comment","'RSSState' % retain mixed comment"); editor->setPlainText(removalReference); run(window); const auto removalExpected=numbers(report);
+      QString mixedReference=reference; mixedReference.replace("ExternalFM.ErrorControl                = 'RSSStep'","ExternalFM.ErrorControl                = 'RSSState'"); editor->setPlainText(mixedReference); run(window); const auto mixedExpected=numbers(report);
+      editor->setPlainText(withoutSource); require(window.buildScript(),"Creation source restore failed");
+      auto open=[&](ResourceEditor &panel,std::function<void(ExternalForceDialog *)> inspect) {
+         std::exception_ptr failure;
+         QTimer::singleShot(0,&panel,[&] { auto *dialog=dynamic_cast<ExternalForceDialog *>(panel.findChild<QDialog *>("externalForceDialog")); try { require(dialog,"External force controls missing"); inspect(dialog); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); } });
+         panel.findChild<QPushButton *>("forceExternal")->click(); if (failure) std::rethrow_exception(failure);
+      };
+      auto accept=[](ExternalForceDialog *dialog) { dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); };
+      auto choose=[](ExternalForceDialog *dialog) {
+         dialog->findChild<QGroupBox *>("externalForceEnabled")->setChecked(true);
+         auto *module=dialog->findChild<QComboBox *>("externalForceModule"); require(module->findText("SimpleExternalForceModel_NoAPI")>=0,"Module choices missing from creation"); module->setCurrentText("SimpleExternalForceModel_NoAPI");
+         dialog->findChild<QLineEdit *>("externalForceFunction")->setText("GetDerivatives"); dialog->findChild<QCheckBox *>("externalForceExclusive")->setChecked(true);
+      };
+      auto openPanel=[&] {
+         auto *tree=window.findChild<QTreeWidget *>("Resources"); const auto matches=tree->findItems("ExternalFM",Qt::MatchExactly|Qt::MatchRecursive); require(matches.size()==1,"External force resource tree missing"); tree->itemDoubleClicked(matches.first(),0);
+         for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (child->property("resourceName").toString()=="ExternalFM") return child;
+         throw std::runtime_error("Actual external force panel unavailable");
+      };
+      {
+         auto *child=openPanel(); auto *previous=dynamic_cast<ResourceEditor *>(child->widget()); require(previous,"Actual force editor unavailable"); auto &panel=*previous;
+         open(panel,[&](ExternalForceDialog *dialog) { require(!dialog->findChild<QGroupBox *>("externalForceEnabled")->isChecked(),"First force creation already enabled"); choose(dialog); dialog->reject(); });
+         require(!panel.hasChanges() && editor->toPlainText()==withoutSource,"Creation Cancel changed pending source");
+         auto *table=panel.findChild<QTableWidget *>(); for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ErrorControl") { auto *control=qobject_cast<QComboBox *>(table->cellWidget(row,1)); require(control && control->count()==5,"Force-model error-control choices missing"); control->setCurrentText("RSSState"); }
+         open(panel,[&](ExternalForceDialog *dialog) {
+            choose(dialog); auto *module=dialog->findChild<QComboBox *>("externalForceModule"); module->setCurrentText("SimpleExternalForceModel_NoAPI.py"); accept(dialog);
+            require(dialog->isVisible() && dialog->findChild<QLabel *>("externalForceError")->text().contains("without .py"),"Creation accepted a Python filename");
+            module->setCurrentText("SimpleExternalForceModel_NoAPI"); dialog->findChild<QLineEdit *>("externalForceFunction")->setText("bad function"); accept(dialog); require(dialog->isVisible(),"Creation accepted an invalid function");
+            dialog->findChild<QLineEdit *>("externalForceFunction")->setText("GetDerivatives");
+            require(dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Help),"External controls did not inherit Help");
+            if (argc>2) { QEventLoop wait; QTimer::singleShot(250,&wait,&QEventLoop::quit); wait.exec(); require(dialog->windowHandle() && dialog->windowHandle()->isExposed() && dialog->grab().save(QString::fromLocal8Bit(argv[2])+".create.png"),"External creation window not exposed or capture failed"); }
+            accept(dialog);
+         });
+         require(panel.hasChanges() && editor->toPlainText()==withoutSource && externalForceSettings(*Moderator::Instance()->GetConfiguredObject("ExternalFM")).value("@ExternalForce.Enabled")=="false","Creation changed engine/source before Apply");
+         panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(child->isVisible() && child->widget()!=previous && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges() && child->property("sourceScript").toString()==editor->toPlainText(),"Creation did not refresh the retained real force panel");
+      }
+      const auto created=editor->toPlainText(); require(created.startsWith("% retained creation source α") && created.contains("% retain mixed comment") && created.contains("RSSState") && externalForceSettings(*Moderator::Instance()->GetConfiguredObject("ExternalFM")).value("@ExternalForce.Enabled")=="true","Creation lost mixed field/comment or force");
+      require(!created.contains("ExternalFM.PrimaryBodies") && !created.contains("ExternalFM.PolyhedralBodies") && !created.contains("ExternalFM.RelativisticCorrection"),"Mixed creation made unrelated implicit force settings explicit");
+      run(window); equivalent(numbers(report),mixedExpected); editor->undo(); require(editor->toPlainText()==withoutSource,"Mixed external creation was not one exact Undo"); editor->redo(); require(editor->toPlainText()==created,"Mixed external creation Redo failed");
+      const auto createdFile=files.filePath("Created external ü.script"); require(window.saveScriptTo(createdFile) && window.loadScript(createdFile),"Created external save/reopen failed"); run(window); equivalent(numbers(report),mixedExpected);
+      {
+         auto *child=openPanel(); auto *previous=dynamic_cast<ResourceEditor *>(child->widget()); require(previous,"Created real force editor unavailable"); auto &panel=*previous;
+         open(panel,[&](ExternalForceDialog *dialog) { require(dialog->findChild<QGroupBox *>("externalForceEnabled")->isChecked() && dialog->findChild<QComboBox *>("externalForceModule")->currentText()=="SimpleExternalForceModel_NoAPI","Created settings not restored"); dialog->findChild<QGroupBox *>("externalForceEnabled")->setChecked(false); dialog->reject(); });
+         require(!panel.hasChanges() && editor->toPlainText()==created,"Removal Cancel changed pending settings");
+         open(panel,[&](ExternalForceDialog *dialog) { dialog->findChild<QGroupBox *>("externalForceEnabled")->setChecked(false); accept(dialog); });
+         require(panel.hasChanges() && editor->toPlainText()==created,"Removal mutated source before Apply"); panel.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(child->isVisible() && child->widget()!=previous && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges() && !child->widget()->findChild<QPushButton *>("chooseProperty_External.ScriptFileName"),"Removal did not refresh retained panel or remove owned fields");
+      }
+      const auto removed=editor->toPlainText(); require(!removed.contains("ExternalFM.External") && removed.contains("% retain mixed comment") && externalForceSettings(*Moderator::Instance()->GetConfiguredObject("ExternalFM")).value("@ExternalForce.Enabled")=="false","Removal retained contributor or lost unrelated comment");
+      run(window); equivalent(numbers(report),removalExpected); editor->undo(); require(editor->toPlainText()==created,"Removal Undo was not exact"); editor->redo(); require(editor->toPlainText()==removed,"Removal Redo was not exact");
+      const auto removedFile=files.filePath("Removed external Δ.script"); require(window.saveScriptTo(removedFile) && window.loadScript(removedFile),"Removal save/reopen failed"); run(window); equivalent(numbers(report),removalExpected);
+      std::cout<<"PASS: configured Python module selector and Cancel, pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body states, exact Undo/Redo/Unicode save/reopen, missing module/function failure and recovery, script-reference combined-force execution; first contributor creation/removal through pending controls, Cancel and invalid module/function recovery, atomic mixed force-model Apply with retained comments and independent reports.\n"; return 0;
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; }
      catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
 }

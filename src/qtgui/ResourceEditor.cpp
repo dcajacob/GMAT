@@ -15,6 +15,7 @@
 #include "ResourceProperties.hpp"
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
+#include "ExternalForceDialog.hpp"
 #include "GroundStationDialog.hpp"
 #include "EventLocatorDialog.hpp"
 #include "XYPlotDialog.hpp"
@@ -667,6 +668,39 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       });
    }
    if (forces) {
+      originalExternal=externalForceSettings(object);
+      auto *external=new QPushButton("Python external force…",this); external->setObjectName("forceExternal"); layout->addWidget(external);
+      const auto types=Moderator::Instance()->GetListOfAllFactoryItems();
+      external->setEnabled(std::find(types.begin(),types.end(),"ExternalModel")!=types.end());
+      const auto externalName=object.GetName();
+      connect(external,&QPushButton::clicked,this,[this,externalName,external] {
+         try {
+            auto *model=Moderator::Instance()->GetConfiguredObject(externalName); if (!model) throw std::runtime_error("This force model is no longer available.");
+            auto pending=externalEdits;
+            if (pending.isEmpty()) {
+               pending=externalForceSettings(*model);
+               const QMap<QString,QString> names={{"External.ScriptFileName","@ExternalForce.Module"},{"External.DerivativesFunction","@ExternalForce.Function"},{"External.ExcludeOtherForces","@ExternalForce.ExcludeOtherForces"}};
+               for (int row=0;row<table->rowCount();++row) if (names.contains(table->item(row,0)->text())) {
+                  const auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1)); pending[names.value(table->item(row,0)->text())]=combo ? comboValue(combo) : table->item(row,1)->text();
+               }
+            }
+            ExternalForceDialog dialog(*model,pending,this); if (dialog.exec()!=QDialog::Accepted) return;
+            externalEdits=dialog.values();
+            const bool changed=externalEdits!=originalExternal;
+            const QMap<QString,QString> names={{"External.ScriptFileName","@ExternalForce.Module"},{"External.DerivativesFunction","@ExternalForce.Function"},{"External.ExcludeOtherForces","@ExternalForce.ExcludeOtherForces"}};
+            for (int row=0;row<table->rowCount();++row) if (names.contains(table->item(row,0)->text())) {
+               const auto value=externalEdits.value(names.value(table->item(row,0)->text()));
+               if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(value); else table->item(row,1)->setText(value);
+               for (int column=1;column<table->columnCount();++column) {
+                  if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(!changed);
+                  if (auto *item=table->item(row,column);item && column==1 && !table->cellWidget(row,column)) item->setFlags(changed ? item->flags() & ~Qt::ItemIsEditable : item->flags() | Qt::ItemIsEditable);
+               }
+            }
+            if (!changed) externalEdits.clear();
+            external->setText(changed ? "Python external force… (pending)" : "Python external force…"); status->setText(changed ? "External force settings are pending. Review them with Python external force…, then Apply." : "External force settings are unchanged.");
+         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+      });
       auto *button=new QPushButton("Atmosphere and drag…",this); button->setObjectName("forceAtmosphere"); layout->addWidget(button);
       const auto name=object.GetName();
       connect(button,&QPushButton::clicked,this,[this,name,button] {
@@ -1220,6 +1254,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       if (!pendingDynamicData.isEmpty()) changes.insert("@DynamicData",pendingDynamicData);
       if (!pendingTrackingConfigs.isEmpty()) changes.insert("@TrackingConfigs",pendingTrackingConfigs);
       for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
+      if (externalEdits!=originalExternal) for (auto it=externalEdits.cbegin();it!=externalEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=stationEdits.cbegin();it!=stationEdits.cend();++it) changes.insert(it.key(),it.value());
       for (auto it=eventEdits.cbegin();it!=eventEdits.cend();++it) changes.insert(it.key(),it.value());
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
@@ -1227,6 +1262,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          const QString name = table->item(row, 0)->text();
          if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
          if (!atmosphereEdits.isEmpty() && (name=="Drag" || name.startsWith("Drag."))) continue;
+         if (!externalEdits.isEmpty() && name.startsWith("External.")) continue;
          if (stationEdits.contains(name)) continue;
          if (eventEdits.contains(name)) continue;
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
@@ -1268,9 +1304,11 @@ bool ResourceEditor::hasChanges() const
    if (applied) return false;
    if (scalarValue) return scalarValue()!=originalScalarValue;
    if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
+   if (!externalEdits.isEmpty() && externalEdits!=originalExternal) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
+      if (!externalEdits.isEmpty() && table->item(row,0)->text().startsWith("External.")) continue;
       const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
       if (value != original.value(table->item(row, 0)->text())) return true;
    }

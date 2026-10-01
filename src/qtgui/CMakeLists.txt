@@ -27,6 +27,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    AttitudeDialog.cpp AttitudeDialog.hpp
    SpacecraftOrbit.cpp SpacecraftOrbit.hpp
    AtmosphereDialog.cpp AtmosphereDialog.hpp
+   ExternalForceDialog.cpp ExternalForceDialog.hpp
    GroundStationDialog.cpp GroundStationDialog.hpp
    EventLocatorDialog.cpp EventLocatorDialog.hpp
    XYPlotDialog.cpp XYPlotDialog.hpp
