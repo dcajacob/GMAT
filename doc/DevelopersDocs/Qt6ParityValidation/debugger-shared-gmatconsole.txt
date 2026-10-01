@@ -1,0 +1,58 @@
+
+********************************************
+***  GMAT Console Application
+********************************************
+
+General Mission Analysis Tool
+Console Based Version
+Build Date: Sep 30 2026  11:06:03
+
+
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-30 18:21:06 GMAT Moderator successfully created core engine
+
+Interpreting scripts from the file.
+***** file: /tmp/gmat debugger shared ch_7z30g/shared dispatch.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully interpreted the script
+.................... Print out the whole sequence ........................................
+   Command::NoOp
+   Command::BeginMissionSequence
+   Command::GMAT
+   Command::For
+   ... branch 0::If
+   ...... branch 0::GMAT
+   ...... branch 0::Report
+   ...... branch 0::EndIf
+   ... branch 0::EndFor
+   Command::Propagate
+   Command::Report
+.................... End sequence ........................................................
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+Mission run completed.
+===> Total Run Time: 0.019 seconds
+
+========================================
+
+
+*** GMAT Integration test (Console version) successful! ***
+
+Moderator is deleting core engine...

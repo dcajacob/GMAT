@@ -1284,6 +1284,7 @@ bool BranchCommand::ExecuteBranch(Integer which)
          // Save current command and set it after current command finished executing
          // in case for calling GmatFunction.
          GmatCommand *curcmd = current;
+         GmatCommand::NotifyBeforeExecution(current);
          if (current->Execute() == false)
             retval = false;
          

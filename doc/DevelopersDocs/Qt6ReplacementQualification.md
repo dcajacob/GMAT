@@ -97,7 +97,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
-| `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Inspector pauses, displays runtime object DEBUG_INSPECT/current Parameter values, filters spacecraft/all objects, steps commands, resumes on Close and ends execution. Qt Pause/Resume/Stop and captured summaries exist, but breakpoint placement, stepping and live runtime-object inspection remain missing active operations. |
+| `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Qt now supplies mission-tree breakpoint markers, Run/Debug, read-only live DEBUG_INSPECT/current Parameter values, spacecraft/all filters, command stepping, resume on Close/Escape and End/Stop. DebuggerTests exercises real context menus, For/If/propagation, Target/Optimize iteration values/reports, script events and function step-over, independent byte-exact reports, source/pending protection, Undo/Redo/save/reopen, Pause, safe main-window close and build/initialization/execution recovery. Offscreen/native X11 keyboard routing, Help and exposed native Wayland inspection were verified. Fresh desktop input and larger nested combinations remain under shared qualification; function-local stepping is outside this main-mission inspector. |
 | `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
@@ -4341,3 +4341,73 @@ The separate final native Wayland parameter-selection run/capture also passed.
 The acceptance checklist remains in progress: debugger stepping/live inspection,
 remaining document/plugin/viewer operations, portal input and top-level GNOME
 minimize/restore still need their required affirmative evidence.
+
+## Main-mission debugger delivery and shared execution qualification
+
+The active wx Inspector/Breakpoint workflow now has a Qt implementation. A
+Mission-tree context-menu checkbox adds a transient visible breakpoint before
+that command. Normal Run honors selected markers. Debug mission (Ctrl+F5)
+stops before the first meaningful command when no markers are selected. Build
+retains placements for identical source; accepted source changes clear stale
+placements. Clear breakpoints removes all markers. These operations never insert
+serialized Breakpoint commands or change mission source.
+
+The inspector pauses before execution and displays read-only live sandbox
+objects, with Spacecraft/All objects filtering, DEBUG_INSPECT configuration and
+Parameter current values. Step (F10) executes through normal engine dispatch;
+Resume (F5) continues, End (Shift+F5) stops, and Close/Escape resumes. Pause
+during an active debug run waits for the next command boundary. Function calls
+are a single step; function-local inspection/stepping is outside this main-mission
+inspector. Help opens the existing offline Breakpoint topic without resuming.
+Runtime inspection does not enable resource/source editing.
+
+The shared engine has a nullable, synchronous command-execution observer at the
+Sandbox and BranchCommand dispatch boundaries. The Qt run owns its installation
+and restores the previous observer on exit. No command is executed directly by
+the inspector, no command graph/configuration is modified, and no numerical
+algorithm changes. An inactive observer adds no frontend behavior. Solver branch
+maintenance ticks are skipped using the existing GetNext self-return contract,
+while entry and child commands remain observable.
+
+DebuggerTests uses actual mission-context controls and normal Run, stepping a
+labeled report, nested For/If commands and propagation. Its stepped report is
+byte-exact against ordinary execution, with live variable/array/spacecraft values
+and unchanged source. It covers marker retention/invalidation, protected pending
+edits, exact Undo/Redo/Unicode save/reopen, Close/Escape, End/Stop/rerun, Pause while
+dispatching, recursive-run rejection, safe main-window close while paused and
+build/initialization/execution failure recovery. A function call steps over local
+commands and retains its independent output. Target and Optimize stop at branch
+entry and child commands; repeated iteration reports match ordinary execution
+byte-exactly, inspector values satisfy the independently specified cost/target
+expressions, and final solutions match 3/2 respectively. Script-event stepping
+also preserves the independent report and original boundaries/source.
+
+The additional solver checks initially failed because IsExecuting reports only
+child-branch activity, allowing the inspector to pause on Target maintenance.
+check-debugger-solver-boundary-failed.txt retains that failed check. The GetNext
+filter corrected this; focused offscreen/native X11 debugger and Help passed,
+followed by the stronger iteration-value checks. Native X11 and offscreen exercise
+synthetic F10/F5/Shift+F5 routing. The separate Wayland run uses widget/action
+controls for those shortcuts; it does not claim fresh compositor keyboard input.
+
+debugger-wayland-20260930.txt records the final native Wayland run. Its exposed
+inspector capture was visually inspected: readable command/object values, usable
+splitter/scroll area and all Help/Step/Resume/End/Close controls. Wayland synthetic
+popup-grab and text-input warnings are retained. No GNOME security/input settings
+were changed. Main-window top-level minimize/restore and portal chooser input
+remain outstanding under their separate acceptance requirements.
+
+The shared frontends were rebuilt. debugger-shared-frontends.txt and its per-app
+logs/reports record separate actual GmatConsole, wx GMAT and GmatQt processes,
+with isolated temporary startup/output/preferences, running the same For/If and
+60-second propagation fixture. All three produce identical three-row reports
+with the observer inactive. The original 48-suite regression before the final
+solver/Help checks passed in 199.70 seconds and is retained as
+check-debugger-before-solver-final.txt. The final complete regression passed all
+48 suites in 210.60 seconds (check-debugger.txt), including the final solver,
+Help, current-iteration and safe-close assertions. The actual
+application/bin/GmatQt target is rebuilt.
+
+This delivers the main-mission inspector operations, not full replacement
+qualification. Remaining document/plugin/viewer operations, native desktop
+input and the wider acceptance gates above still require affirmative evidence.

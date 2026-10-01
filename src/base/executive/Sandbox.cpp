@@ -1148,7 +1148,7 @@ bool Sandbox::Execute()
          // Added try/catch block to catch exception when user paused the run
          try
          {
-            // Update here if we add another runmode to show command location
+            GmatCommand::NotifyBeforeExecution(current);
 
             // Printing of command is skipped for propagate after it has 
             // already been printed once

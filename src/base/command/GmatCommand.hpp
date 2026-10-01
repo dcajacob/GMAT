@@ -60,6 +60,7 @@ class Function;
 
 // Other forward references
 class Parameter;
+class CommandExecutionObserver;
 
 /**
  * GmatCommand Base Class, used for Mission Control Sequence elements in scripts
@@ -74,6 +75,10 @@ class Parameter;
 class GMAT_API GmatCommand : public GmatBase
 {
 public:
+   // Process-local and inactive by default. Restore the returned observer when
+   // the owning run ends; no command configuration or sequence is modified.
+   static CommandExecutionObserver *SetExecutionObserver(CommandExecutionObserver *observer);
+   static void NotifyBeforeExecution(GmatCommand *command);
    // class constructor
    GmatCommand(const std::string &typeStr);
    // class destructor

@@ -1,0 +1,4 @@
+GmatConsole: completed, three expected report rows
+GMAT: completed, three expected report rows
+GmatQt: completed, three expected report rows
+PASS: rebuilt Console, wx and Qt run the same For/If/propagation fixture with byte-exact reports; observer inactive in all three normal runs. Temporary startup/output/preferences isolated.

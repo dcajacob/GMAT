@@ -31,6 +31,7 @@
 
 
 #include "GmatCommand.hpp"       // class's header file
+#include "CommandExecutionObserver.hpp"
 #include "CommandException.hpp"
 #include "Parameter.hpp"
 #include "CoordinateConverter.hpp"
@@ -91,6 +92,20 @@
 //------------------------------------------------------------------------------
 //  static members
 //------------------------------------------------------------------------------
+namespace { CommandExecutionObserver *executionObserver = nullptr; }
+
+CommandExecutionObserver *GmatCommand::SetExecutionObserver(CommandExecutionObserver *observer)
+{
+   auto *previous = executionObserver;
+   executionObserver = observer;
+   return previous;
+}
+
+void GmatCommand::NotifyBeforeExecution(GmatCommand *command)
+{
+   if (executionObserver) executionObserver->BeforeExecution(command);
+}
+
 const std::string 
    GmatCommand::PARAMETER_TEXT[GmatCommandParamCount - GmatBaseParamCount] =
    {

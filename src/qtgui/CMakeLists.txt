@@ -7,6 +7,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    HelpDialog.cpp HelpDialog.hpp
    FolderRun.cpp FolderRun.hpp FolderRunDialog.cpp FolderRunDialog.hpp
    MissionNavigation.cpp MissionNavigation.hpp
+   Debugger.cpp Debugger.hpp
    WelcomeDialog.cpp WelcomeDialog.hpp
    SolarSystemPanel.cpp SolarSystemPanel.hpp
    CelestialBodyPanel.cpp CelestialBodyPanel.hpp
@@ -128,6 +129,8 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtWelcomeTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtParameterSelectionTests tests/ParameterSelectionTests.cpp)
    target_link_libraries(GmatQtParameterSelectionTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtDebuggerTests tests/DebuggerTests.cpp)
+   target_link_libraries(GmatQtDebuggerTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtSpiceDiagnosticTests tests/SpiceDiagnosticTests.cpp)
    target_link_libraries(GmatQtSpiceDiagnosticTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtFileTests tests/FileTests.cpp)
@@ -216,6 +219,10 @@ if(GMAT_QT_BUILD_TESTS)
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
          $<TARGET_FILE:GmatQtFolderRunTests> "${qt_test_startup}")
       set_tests_properties(QtGui.NativeFolderRun PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
+      add_test(NAME QtGui.NativeDebugger COMMAND ${QT_XVFB_RUN} -a
+         ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
+         $<TARGET_FILE:GmatQtDebuggerTests> "${qt_test_startup}")
+      set_tests_properties(QtGui.NativeDebugger PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
       add_test(NAME QtGui.NativePlots COMMAND ${QT_XVFB_RUN} -a
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
          $<TARGET_FILE:GmatQtPlotTests> "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -255,6 +262,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.MissionNavigation GmatQtMissionNavigationTests "${qt_test_startup}")
    add_qt_test(QtGui.Welcome GmatQtWelcomeTests "${qt_test_startup}")
    add_qt_test(QtGui.ParameterSelection GmatQtParameterSelectionTests "${qt_test_startup}")
+   add_qt_test(QtGui.Debugger GmatQtDebuggerTests "${qt_test_startup}")
    add_qt_test(QtGui.SpiceDiagnostics GmatQtSpiceDiagnosticTests "${qt_test_startup}")
    add_qt_test(QtGui.PlotSetup GmatQtPlotSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.Plots GmatQtPlotTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/plots.script")
@@ -279,5 +287,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtMissionNavigationTests)
    add_dependencies(check-qt GmatQtWelcomeTests)
    add_dependencies(check-qt GmatQtParameterSelectionTests)
+   add_dependencies(check-qt GmatQtDebuggerTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

@@ -39,6 +39,8 @@
 #include "EventLocator.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
+#include "Debugger.hpp"
+#include <QTreeWidgetItemIterator>
 #include "StartupCompatibility.hpp"
 #include "ScriptCompatibility.hpp"
 #include "ScriptEditor.hpp"
@@ -184,6 +186,15 @@ QString qtConfiguredScript()
 
 MainWindow::MainWindow()
 {
+   debugger=new Debugger(this);
+   debugger->resumeRequested=[this] { resumeMission(); };
+   debugger->stopRequested=[this] { stopMission(); };
+   debugger->helpRequested=[this] { contextHelp->show("Breakpoint"); };
+   debugger->paused=[this](const QString &command) {
+      paused=true; runAction->setText("&Resume mission"); runAction->setEnabled(true);
+      pauseAction->setEnabled(false); stepAction->setEnabled(true);
+      statusBar()->showMessage("Debug paused before "+command);
+   };
    // Establish OpenGL composition before the top-level window is first shown.
    // Otherwise Qt replaces the native surface when the first OrbitView is
    // added during Run, which can disrupt Wayland input/focus on the old surface.
@@ -227,13 +238,15 @@ MainWindow::MainWindow()
       auto *item=mission->itemAt(position);
       const int index=item && item->data(0,Qt::UserRole).isValid() ? item->data(0,Qt::UserRole).toInt() : -1;
       QMenu menu(this);
-      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr,*summary=nullptr;
+      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr,*summary=nullptr,*breakpoint=nullptr;
       if (index>=0 && index<missionState.nodes.size()) {
          edit=menu.addAction("Edit command…"); edit->setEnabled(missionState.nodes[index].editable);
          before=menu.addAction("Insert before…"); before->setEnabled(missionState.nodes[index].type!="BeginMissionSequence");
          after=menu.addAction("Insert after…");
          remove=menu.addAction("Delete command"); remove->setEnabled(missionState.nodes[index].editable);
          summary=menu.addAction("Command summary…");
+         breakpoint=menu.addAction("Breakpoint before command"); breakpoint->setObjectName("missionBreakpoint");
+         breakpoint->setCheckable(true); breakpoint->setChecked(breakpoints.contains(index)); breakpoint->setEnabled(!running && modelValid && editor->toPlainText()==builtScript && missionState.nodes[index].type!="BeginMissionSequence");
          menu.addSeparator();
       }
       auto *missionSummary=menu.addAction("Mission summary…");
@@ -242,6 +255,7 @@ MainWindow::MainWindow()
       if (!chosen) return;
       if (chosen==missionSummary) showSummary();
       else if (summary && chosen==summary) showSummary(index);
+      else if (breakpoint && chosen==breakpoint) setBreakpoint(index,breakpoint->isChecked());
       else if (chosen==append) openCommandEditor(-1,MissionEdit::Append);
       else if (chosen==edit) openCommandEditor(index,MissionEdit::Replace);
       else if (chosen==before) openCommandEditor(index,MissionEdit::InsertBefore);
@@ -448,6 +462,11 @@ MainWindow::MainWindow()
    stopAction = add(run, "&Stop", QStyle::SP_MediaStop, QKeySequence("Shift+F5"), [this] { stopMission(); });
    stopAction->setObjectName("stopMission");
    editingActions.removeOne(stopAction);
+   auto *debug=add(run,"Debug mission…",QStyle::SP_MediaPlay,QKeySequence("Ctrl+F5"),[this] { debugMission(); }); debug->setObjectName("debugMission");
+   stepAction=run->addAction("Step command"); stepAction->setObjectName("stepMission"); stepAction->setShortcut(QKeySequence("F10")); stepAction->setShortcutContext(Qt::ApplicationShortcut);
+   connect(stepAction,&QAction::triggered,this,[this] { stepMission(); });
+   auto *clearBreakpoints=run->addAction("Clear breakpoints"); clearBreakpoints->setObjectName("clearBreakpoints"); editingActions.append(clearBreakpoints);
+   connect(clearBreakpoints,&QAction::triggered,this,[this] { breakpoints.clear(); refreshBreakpoints(); });
    run->addSeparator();
    auto *folder=run->addAction("Run scripts from folder…"); folder->setObjectName("runScriptFolder"); editingActions.append(folder);
    connect(folder,&QAction::triggered,this,[this] {
@@ -858,6 +877,7 @@ bool MainWindow::buildScript()
 }
 void MainWindow::refreshTrees()
 {
+   if (breakpointSource!=builtScript) { breakpoints.clear(); breakpointSource=builtScript; }
    resources->clear(); mission->clear(); output->clear();
    reportFiles.clear();
    ephemerisFiles.clear();
@@ -927,6 +947,7 @@ void MainWindow::refreshTrees()
             for (const auto child : node.children) addNode(child,item);
          };
          for (const auto index : missionState.roots) addNode(index,sequence);
+         refreshBreakpoints();
       } catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); }
       catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
    }
@@ -987,18 +1008,57 @@ void MainWindow::setRunning(bool value)
    runAction->setText("&Run mission");
    pauseAction->setEnabled(value);
    stopAction->setEnabled(value);
+   stepAction->setEnabled(false);
 }
 MainWindow::RunResult MainWindow::runMission()
 {
+   return executeMission(false);
+}
+MainWindow::RunResult MainWindow::debugMission()
+{
+   return executeMission(true);
+}
+bool MainWindow::setBreakpoint(int index,bool enabled)
+{
+   if (running || !modelValid || editor->toPlainText()!=builtScript || index<0 || index>=missionState.nodes.size() || missionState.nodes[index].type=="BeginMissionSequence") return false;
+   if (enabled) breakpoints.insert(index); else breakpoints.remove(index);
+   breakpointSource=builtScript; refreshBreakpoints(); return true;
+}
+void MainWindow::refreshBreakpoints()
+{
+   for (QTreeWidgetItemIterator it(mission);*it;++it) {
+      const auto index=(*it)->data(0,Qt::UserRole);
+      if (!index.isValid() || index.toInt()<0 || index.toInt()>=missionState.nodes.size()) continue;
+      const bool selected=breakpoints.contains(index.toInt()); (*it)->setData(0,Qt::UserRole+2,selected);
+      (*it)->setText(0,(selected ? QString("● ") : QString())+missionState.nodes[index.toInt()].label);
+   }
+}
+void MainWindow::stepMission()
+{
+   if (running && paused && debugger->isWaiting()) debugger->step();
+}
+MainWindow::RunResult MainWindow::executeMission(bool debug)
+{
    if (running) return RunResult::Busy;
    if (!buildScript()) return RunResult::Failed;
+   debug=debug || !breakpoints.isEmpty();
    solverListeners->missionStarted();
    paused = false;
    stopRequested = false;
    setRunning(true);
    statusBar()->showMessage("Running mission…");
    RunResult result = RunResult::Failed;
+   struct ObserverScope {
+      CommandExecutionObserver *previous;
+      explicit ObserverScope(CommandExecutionObserver *observer) : previous(GmatCommand::SetExecutionObserver(observer)) {}
+      ~ObserverScope() { GmatCommand::SetExecutionObserver(previous); }
+   } observer(debug ? debugger : nullptr);
    try {
+      if (debug) {
+         QVector<GmatCommand *> commands;
+         snapshotMission(Moderator::Instance()->GetFirstCommand(),missionState.canonicalScript,builtScript,&commands);
+         debugger->begin(commands,breakpoints);
+      }
       const auto status = Moderator::Instance()->RunMission();
       if (status == 1) result = RunResult::Completed;
       else if (status == -4 && stopRequested) result = RunResult::Stopped;
@@ -1009,7 +1069,7 @@ MainWindow::RunResult MainWindow::runMission()
    } catch (...) {
       messages->appendPlainText("Unexpected error during mission execution.");
    }
-   paused = false;
+   debugger->finish(); paused = false;
    summaryAvailable=true; lastRunResult=result;
    setRunning(false);
    solverListeners->missionFinished(result==RunResult::Stopped,result==RunResult::Failed);
@@ -1132,6 +1192,7 @@ FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtP
 void MainWindow::pauseMission()
 {
    if (!running || paused || stopRequested) return;
+   if (debugger->isActive()) { debugger->requestPause(); pauseAction->setEnabled(false); statusBar()->showMessage("Pausing at the next command…"); return; }
    Moderator::Instance()->ChangeRunState("Pause");
    paused = true;
    runAction->setText("&Resume mission");
@@ -1142,11 +1203,12 @@ void MainWindow::pauseMission()
 void MainWindow::resumeMission()
 {
    if (!running || !paused || stopRequested) return;
-   Moderator::Instance()->ChangeRunState("Resume");
+   if (debugger->isWaiting()) debugger->resume(); else Moderator::Instance()->ChangeRunState("Resume");
    paused = false;
    runAction->setText("&Run mission");
    runAction->setEnabled(false);
    pauseAction->setEnabled(true);
+   stepAction->setEnabled(false);
    statusBar()->showMessage("Running mission…");
 }
 void MainWindow::stopMission()
@@ -1154,9 +1216,11 @@ void MainWindow::stopMission()
    if (!running || stopRequested) return;
    stopRequested = true;
    Moderator::Instance()->ChangeRunState("Stop");
+   if (debugger->isActive()) debugger->stop();
    runAction->setEnabled(false);
    pauseAction->setEnabled(false);
    stopAction->setEnabled(false);
+   stepAction->setEnabled(false);
    statusBar()->showMessage("Stopping mission…");
 }
 

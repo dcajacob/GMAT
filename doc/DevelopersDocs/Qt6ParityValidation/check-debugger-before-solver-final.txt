@@ -1,0 +1,294 @@
+[1/173] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/173] Building CXX object src/console/CMakeFiles/GmatConsole.dir/ConsoleMessageReceiver.cpp.o
+[3/173] Building CXX object src/console/CMakeFiles/GmatConsole.dir/PrintUtility.cpp.o
+[4/173] Building CXX object src/console/CMakeFiles/GmatConsole.dir/driver.cpp.o
+[5/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/AboutDialog.cpp.o
+[6/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatAppData.cpp.o
+[7/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatConnection.cpp.o
+[8/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/CompareFilesDialog.cpp.o
+[9/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/FileUpdateDialog.cpp.o
+[10/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/CompareTextDialog.cpp.o
+[11/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatMenuBar.cpp.o
+[12/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatApp.cpp.o
+[13/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GuiListenerManager.cpp.o
+[14/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GuiMessageReceiver.cpp.o
+[15/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatToolBar.cpp.o
+[16/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatTreeItemData.cpp.o
+[17/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GuiInterpreter.cpp.o
+[18/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/MissionTreeItemData.cpp.o
+[19/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatMainFrame.cpp.o
+/home/dan/GIT/GMAT/GMAT/src/gui/app/GmatMainFrame.cpp: In member function ‘void GmatMainFrame::OnScreenshot(wxCommandEvent&)’:
+/home/dan/GIT/GMAT/GMAT/src/gui/app/GmatMainFrame.cpp:6014:14: warning: ‘char* __builtin___strncat_chk(char*, const char*, long unsigned int, long unsigned int)’ specified bound depends on the length of the source argument [-Wstringop-overflow=]
+ 6014 |       strncat(imageFilename, nameVer, strlen(nameVer));
+      |              ^
+/home/dan/GIT/GMAT/GMAT/src/gui/app/GmatMainFrame.cpp:6014:14: note: length computed here
+ 6014 |       strncat(imageFilename, nameVer, strlen(nameVer));
+      |       ~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[20/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/InteractiveMatlabDialog.cpp.o
+[21/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GuiPlotReceiver.cpp.o
+[22/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/GmatNotebook.cpp.o
+[23/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/ScriptPanel.cpp.o
+[24/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/SetPathDialog.cpp.o
+[25/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/RunScriptFolderDialog.cpp.o
+[26/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/TextEphemFileDialog.cpp.o
+[27/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/AchievePanel.cpp.o
+[28/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/AssignmentPanel.cpp.o
+[29/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/BeginFiniteBurnPanel.cpp.o
+[30/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/WelcomePanel.cpp.o
+[31/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/GmatCommandPanel.cpp.o
+[32/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/FindEventsPanel.cpp.o
+[33/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/EndFiniteBurnPanel.cpp.o
+[34/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/CallFunctionPanel.cpp.o
+[35/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/ManageObjectPanel.cpp.o
+[36/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/app/ResourceTree.cpp.o
+[37/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/NonlinearConstraintPanel.cpp.o
+[38/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/ManeuverPanel.cpp.o
+[39/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/MinimizePanel.cpp.o
+[40/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/ReportPanel.cpp.o
+[41/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/OptimizePanel.cpp.o
+[42/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/ScriptEventPanel.cpp.o
+[43/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/PropagatePanel.cpp.o
+[44/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/TogglePanel.cpp.o
+[45/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/TargetPanel.cpp.o
+[46/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/debugger/Breakpoint.cpp.o
+[47/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/controllogic/ForPanel.cpp.o
+[48/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/debugger/DebuggerCommandFactory.cpp.o
+[49/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/controllogic/ConditionPanel.cpp.o
+[50/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/command/VaryPanel.cpp.o
+[51/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/debugger/InspectorPanel.cpp.o
+[52/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GmatMdiChildFrame.cpp.o
+[53/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GmatDialog.cpp.o
+[54/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GmatPanel.cpp.o
+[55/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GmatSavePanel.cpp.o
+[56/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/MultiPathSetupPanel.cpp.o
+[57/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GmatBaseSetupPanel.cpp.o
+[58/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/ShowSummaryDialog.cpp.o
+[59/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/ParameterCreateDialog.cpp.o
+[60/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/mission/MissionTreeToolBar.cpp.o
+[61/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/function/FunctionSetupPanel.cpp.o
+[62/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/mission/TreeViewOptionDialog.cpp.o
+[63/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/mission/UndockedMissionPanel.cpp.o
+[64/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/output/EventFilePanel.cpp.o
+[65/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/foundation/GuiItemManager.cpp.o
+[66/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/output/CompareReportPanel.cpp.o
+[67/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/mission/MissionTree.cpp.o
+/home/dan/GIT/GMAT/GMAT/src/gui/mission/MissionTree.cpp: In member function ‘void MissionTree::WriteCommand(const std::string&, const std::string&, GmatCommand*, const std::string&, GmatCommand*)’:
+/home/dan/GIT/GMAT/GMAT/src/gui/mission/MissionTree.cpp:5219:54: warning: ‘this’ pointer is null [-Wnonnull]
+ 5219 |                                  cmd1->GetSummaryName().c_str());
+      |                                  ~~~~~~~~~~~~~~~~~~~~^~
+/home/dan/GIT/GMAT/GMAT/src/gui/mission/MissionTree.cpp:5230:40: warning: ‘this’ pointer is null [-Wnonnull]
+ 5230 |              cmd1, cmd1->GetSummaryName().c_str(), title2.c_str(),
+      |                    ~~~~~~~~~~~~~~~~~~~~^~
+/home/dan/GIT/GMAT/GMAT/src/gui/mission/MissionTree.cpp:5236:76: warning: ‘this’ pointer is null [-Wnonnull]
+ 5236 |                                  title2.c_str(), cmd2, cmd2->GetSummaryName().c_str());
+      |                                                        ~~~~~~~~~~~~~~~~~~~~^~
+[68/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/plugin/WxGuiInterface.cpp.o
+[69/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/output/ReportFilePanel.cpp.o
+[70/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/rendering/GLStars.cpp.o
+[71/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/output/OutputTree.cpp.o
+[72/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/spacecraft/FormationSetupPanel.cpp.o
+[73/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/rendering/ModelObject.cpp.o
+[74/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackArea.cpp.o
+[75/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/spacecraft/VisualModelPanel.cpp.o
+[76/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackCanvas.cpp.o
+[77/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/propagator/PropagationConfigPanel.cpp.o
+[78/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackPlotPanel.cpp.o
+[79/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackWindow.cpp.o
+[80/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiChild3DViewFrame.cpp.o
+[81/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiChildGroundTrackFrame.cpp.o
+[82/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiChildViewFrame.cpp.o
+[83/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiChildDynamicDataFrame.cpp.o
+[84/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiChildTsFrame.cpp.o
+[85/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/MdiTableViewFrame.cpp.o
+[86/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/OrbitViewCanvas.cpp.o
+[87/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/view/EditorPanel.cpp.o
+[88/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/OrbitViewPanel.cpp.o
+[89/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/view/ViewTextDialog.cpp.o
+[90/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/view/ScriptEditor.cpp.o
+[91/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/subscriber/ViewCanvas.cpp.o
+[92/173] Building CXX object src/gui/CMakeFiles/GmatGUI.dir/view/ViewTextFrame.cpp.o
+[93/173] Building CXX object src/qtgui/CMakeFiles/GmatQtWindowTests.dir/tests/WindowTests.cpp.o
+[94/173] Building CXX object src/qtgui/CMakeFiles/GmatQtDesktopTests.dir/tests/DesktopTests.cpp.o
+[95/173] Building CXX object src/qtgui/CMakeFiles/GmatQtHelpTests.dir/tests/HelpTests.cpp.o
+[96/173] Building CXX object src/qtgui/CMakeFiles/GmatQtWelcomeTests.dir/tests/WelcomeTests.cpp.o
+[97/173] Building CXX object src/qtgui/CMakeFiles/GmatQtFolderRunTests.dir/tests/FolderRunTests.cpp.o
+[98/173] Building CXX object src/qtgui/CMakeFiles/GmatQtFileTests.dir/tests/FileTests.cpp.o
+[99/173] Building CXX object src/qtgui/CMakeFiles/GmatQtParameterSelectionTests.dir/tests/ParameterSelectionTests.cpp.o
+[100/173] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverPlotTests.dir/tests/SolverPlotTests.cpp.o
+[101/173] Building CXX object src/qtgui/CMakeFiles/GmatQtMissionNavigationTests.dir/tests/MissionNavigationTests.cpp.o
+[102/173] Building CXX object src/qtgui/CMakeFiles/GmatQtAtmosphereTests.dir/tests/AtmosphereTests.cpp.o
+[103/173] Building CXX object src/qtgui/CMakeFiles/GmatQtEventLocatorTests.dir/tests/EventLocatorTests.cpp.o
+[104/173] Building CXX object src/qtgui/CMakeFiles/GmatQtMissionTests.dir/tests/MissionTests.cpp.o
+[105/173] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotTests.dir/tests/PlotTests.cpp.o
+[106/173] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotSetupTests.dir/tests/PlotSetupTests.cpp.o
+[107/173] Building CXX object src/qtgui/CMakeFiles/GmatQtStationTests.dir/tests/StationTests.cpp.o
+[108/173] Building CXX object src/qtgui/CMakeFiles/GmatQtOrbitSetupTests.dir/tests/OrbitSetupTests.cpp.o
+[109/173] Building CXX object src/qtgui/CMakeFiles/GmatQtThrusterTests.dir/tests/ThrusterTests.cpp.o
+[110/173] Building CXX object src/qtgui/CMakeFiles/GmatQtBurnTests.dir/tests/BurnTests.cpp.o
+[111/173] Building CXX object src/qtgui/CMakeFiles/GmatQtCompatibilityTests.dir/tests/CompatibilityTests.cpp.o
+[112/173] Building CXX object src/qtgui/CMakeFiles/GmatQtDynamicDataTests.dir/tests/DynamicDataTests.cpp.o
+[113/173] Building CXX object src/qtgui/CMakeFiles/GmatQtCalculatedPointTests.dir/tests/CalculatedPointTests.cpp.o
+[114/173] Building CXX object src/qtgui/CMakeFiles/GmatQtEphemerisTests.dir/tests/EphemerisTests.cpp.o
+[115/173] Building CXX object src/qtgui/CMakeFiles/GmatQtDataInterfaceTests.dir/tests/DataInterfaceTests.cpp.o
+[116/173] Building CXX object src/qtgui/CMakeFiles/GmatQtPathTests.dir/tests/PathTests.cpp.o
+[117/173] Building CXX object src/qtgui/CMakeFiles/GmatQtResourceRoundTripTests.dir/tests/ResourceRoundTripTests.cpp.o
+[118/173] Building CXX object src/qtgui/CMakeFiles/GmatQtSolarSystemTests.dir/tests/SolarSystemTests.cpp.o
+[119/173] Building CXX object src/qtgui/CMakeFiles/GmatQtEstimationTests.dir/tests/EstimationTests.cpp.o
+[120/173] Building CXX object src/qtgui/CMakeFiles/GmatQtParameterTests.dir/tests/ParameterTests.cpp.o
+[121/173] Building CXX object src/qtgui/CMakeFiles/GmatQtInspectionTests.dir/tests/InspectionTests.cpp.o
+[122/173] Building CXX object src/qtgui/CMakeFiles/GmatQtCelestialBodyTests.dir/tests/CelestialBodyTests.cpp.o
+[123/173] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatConsole-R2026a
+[124/173] Building CXX object src/qtgui/CMakeFiles/GmatQtComparisonTests.dir/tests/ComparisonTests.cpp.o
+[125/173] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GMAT-R2026a
+[126/173] Linking CXX executable src/qtgui/GmatQtOrbitRendererTests
+[127/173] Linking CXX executable src/qtgui/GmatQtWindowTests
+[128/173] Linking CXX executable src/qtgui/GmatQtSolverPlotTests
+[129/173] Building CXX object src/qtgui/CMakeFiles/GmatQtKalmanTests.dir/tests/KalmanTests.cpp.o
+[130/173] Linking CXX executable src/qtgui/GmatQtDesktopTests
+[131/173] Building CXX object src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o
+[132/173] Linking CXX executable src/qtgui/GmatQtHelpTests
+[133/173] Linking CXX executable src/qtgui/GmatQtFolderRunTests
+[134/173] Building CXX object src/qtgui/CMakeFiles/GmatQtExternalForceTests.dir/tests/ExternalForceTests.cpp.o
+[135/173] Linking CXX executable src/qtgui/GmatQtWelcomeTests
+[136/173] Linking CXX executable src/qtgui/GmatQtMissionNavigationTests
+[137/173] Linking CXX executable src/qtgui/GmatQtSpiceDiagnosticTests
+[138/173] Linking CXX executable src/qtgui/GmatQtParameterSelectionTests
+[139/173] Linking CXX executable src/qtgui/GmatQtFileTests
+[140/173] Linking CXX executable src/qtgui/GmatQtPlotTests
+[141/173] Linking CXX executable src/qtgui/GmatQtMissionTests
+[142/173] Building CXX object src/qtgui/CMakeFiles/GmatQtScriptEditingTests.dir/tests/ScriptEditingTests.cpp.o
+[143/173] Linking CXX executable src/qtgui/GmatQtCompatibilityTests
+[144/173] Linking CXX executable src/qtgui/GmatQtAtmosphereTests
+[145/173] Linking CXX executable src/qtgui/GmatQtStationTests
+[146/173] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[147/173] Linking CXX executable src/qtgui/GmatQtEventLocatorTests
+[148/173] Linking CXX executable src/qtgui/GmatQtThrusterTests
+[149/173] Building CXX object src/qtgui/CMakeFiles/GmatQtThrustFileTests.dir/tests/ThrustFileTests.cpp.o
+[150/173] Linking CXX executable src/qtgui/GmatQtBurnTests
+[151/173] Linking CXX executable src/qtgui/GmatQtPlotSetupTests
+[152/173] Linking CXX executable src/qtgui/GmatQtEphemerisTests
+[153/173] Linking CXX executable src/qtgui/GmatQtDynamicDataTests
+[154/173] Linking CXX executable src/qtgui/GmatQtCalculatedPointTests
+[155/173] Linking CXX executable src/qtgui/GmatQtEstimationTests
+[156/173] Linking CXX executable src/qtgui/GmatQtDataInterfaceTests
+[157/173] Linking CXX executable src/qtgui/GmatQtPathTests
+[158/173] Linking CXX executable src/qtgui/GmatQtParameterTests
+[159/173] Linking CXX executable src/qtgui/GmatQtSolarSystemTests
+[160/173] Linking CXX executable src/qtgui/GmatQtResourceRoundTripTests
+[161/173] Linking CXX executable src/qtgui/GmatQtCelestialBodyTests
+[162/173] Linking CXX executable src/qtgui/GmatQtKalmanTests
+[163/173] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatConsole
+[164/173] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GMAT
+[165/173] Linking CXX executable src/qtgui/GmatQtComparisonTests
+[166/173] Linking CXX executable src/qtgui/GmatQtInspectionTests
+[167/173] Linking CXX executable src/qtgui/GmatQtThrustFileTests
+[168/173] Linking CXX executable src/qtgui/GmatQtScriptEditingTests
+[169/173] Linking CXX executable src/qtgui/GmatQtPolyhedronTests
+[170/173] Linking CXX executable src/qtgui/GmatQtExternalForceTests
+[171/173] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[172/173] Linking CXX executable src/qtgui/GmatQtWorkflowTests
+[172/173] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/ctest --output-on-failure -C Release -L qt-gui
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+      Start  1: QtGui.NativeOrbit
+ 1/48 Test  #1: QtGui.NativeOrbit ................   Passed    3.84 sec
+      Start  2: QtGui.NativeOrbitHiDPI
+ 2/48 Test  #2: QtGui.NativeOrbitHiDPI ...........   Passed    5.01 sec
+      Start  3: QtGui.NativeOrbitFractionalDPI
+ 3/48 Test  #3: QtGui.NativeOrbitFractionalDPI ...   Passed    4.45 sec
+      Start  4: QtGui.NativeWindows
+ 4/48 Test  #4: QtGui.NativeWindows ..............   Passed   21.16 sec
+      Start  5: QtGui.NativeSolverPlots
+ 5/48 Test  #5: QtGui.NativeSolverPlots ..........   Passed    9.05 sec
+      Start  6: QtGui.NativeFolderRun
+ 6/48 Test  #6: QtGui.NativeFolderRun ............   Passed    9.88 sec
+      Start  7: QtGui.NativeDebugger
+ 7/48 Test  #7: QtGui.NativeDebugger .............   Passed    3.99 sec
+      Start  8: QtGui.NativePlots
+ 8/48 Test  #8: QtGui.NativePlots ................   Passed    6.42 sec
+      Start  9: QtGui.Files
+ 9/48 Test  #9: QtGui.Files ......................   Passed    2.80 sec
+      Start 10: QtGui.Workflow
+10/48 Test #10: QtGui.Workflow ...................   Passed   12.00 sec
+      Start 11: QtGui.Mission
+11/48 Test #11: QtGui.Mission ....................   Passed    2.32 sec
+      Start 12: QtGui.Compatibility
+12/48 Test #12: QtGui.Compatibility ..............   Passed    5.23 sec
+      Start 13: QtGui.Atmosphere
+13/48 Test #13: QtGui.Atmosphere .................   Passed    3.90 sec
+      Start 14: QtGui.Stations
+14/48 Test #14: QtGui.Stations ...................   Passed    2.47 sec
+      Start 15: QtGui.EventLocators
+15/48 Test #15: QtGui.EventLocators ..............   Passed    4.92 sec
+      Start 16: QtGui.Thrusters
+16/48 Test #16: QtGui.Thrusters ..................   Passed    3.94 sec
+      Start 17: QtGui.Burns
+17/48 Test #17: QtGui.Burns ......................   Passed    4.02 sec
+      Start 18: QtGui.Ephemeris
+18/48 Test #18: QtGui.Ephemeris ..................   Passed    3.96 sec
+      Start 19: QtGui.DynamicData
+19/48 Test #19: QtGui.DynamicData ................   Passed    1.08 sec
+      Start 20: QtGui.CalculatedPoints
+20/48 Test #20: QtGui.CalculatedPoints ...........   Passed    1.35 sec
+      Start 21: QtGui.DataInterface
+21/48 Test #21: QtGui.DataInterface ..............   Passed    2.74 sec
+      Start 22: QtGui.Estimation
+22/48 Test #22: QtGui.Estimation .................   Passed    6.95 sec
+      Start 23: QtGui.Parameters
+23/48 Test #23: QtGui.Parameters .................   Passed   10.70 sec
+      Start 24: QtGui.Paths
+24/48 Test #24: QtGui.Paths ......................   Passed    1.70 sec
+      Start 25: QtGui.SolarSystem
+25/48 Test #25: QtGui.SolarSystem ................   Passed    1.87 sec
+      Start 26: QtGui.CelestialBodies
+26/48 Test #26: QtGui.CelestialBodies ............   Passed    5.74 sec
+      Start 27: QtGui.ResourceRoundTrips
+27/48 Test #27: QtGui.ResourceRoundTrips .........   Passed    5.61 sec
+      Start 28: QtGui.Inspection
+28/48 Test #28: QtGui.Inspection .................   Passed    2.75 sec
+      Start 29: QtGui.KalmanFilter
+29/48 Test #29: QtGui.KalmanFilter ...............   Passed   15.59 sec
+      Start 30: QtGui.Comparison
+30/48 Test #30: QtGui.Comparison .................   Passed    2.42 sec
+      Start 31: QtGui.ThrustFiles
+31/48 Test #31: QtGui.ThrustFiles ................   Passed    4.64 sec
+      Start 32: QtGui.ScriptEditing
+32/48 Test #32: QtGui.ScriptEditing ..............   Passed    0.98 sec
+      Start 33: QtGui.ExternalForces
+33/48 Test #33: QtGui.ExternalForces .............   Passed    1.22 sec
+      Start 34: QtGui.Polyhedron
+34/48 Test #34: QtGui.Polyhedron .................   Passed    2.79 sec
+      Start 35: QtGui.OrbitSetup
+35/48 Test #35: QtGui.OrbitSetup .................   Passed    1.67 sec
+      Start 36: QtGui.SolverPlots
+36/48 Test #36: QtGui.SolverPlots ................   Passed    1.64 sec
+      Start 37: QtGui.Desktop
+37/48 Test #37: QtGui.Desktop ....................   Passed    0.90 sec
+      Start 38: QtGui.Help
+38/48 Test #38: QtGui.Help .......................   Passed    0.70 sec
+      Start 39: QtGui.FolderRun
+39/48 Test #39: QtGui.FolderRun ..................   Passed    3.00 sec
+      Start 40: QtGui.MissionNavigation
+40/48 Test #40: QtGui.MissionNavigation ..........   Passed    0.56 sec
+      Start 41: QtGui.Welcome
+41/48 Test #41: QtGui.Welcome ....................   Passed    0.75 sec
+      Start 42: QtGui.ParameterSelection
+42/48 Test #42: QtGui.ParameterSelection .........   Passed    1.97 sec
+      Start 43: QtGui.Debugger
+43/48 Test #43: QtGui.Debugger ...................   Passed    1.30 sec
+      Start 44: QtGui.SpiceDiagnostics
+44/48 Test #44: QtGui.SpiceDiagnostics ...........   Passed    0.15 sec
+      Start 45: QtGui.PlotSetup
+45/48 Test #45: QtGui.PlotSetup ..................   Passed    2.06 sec
+      Start 46: QtGui.Plots
+46/48 Test #46: QtGui.Plots ......................   Passed    3.14 sec
+      Start 47: QtGui.PlotsHiDPI
+47/48 Test #47: QtGui.PlotsHiDPI .................   Passed    3.11 sec
+      Start 48: QtGui.Launch
+48/48 Test #48: QtGui.Launch .....................   Passed    1.22 sec
+
+100% tests passed, 0 tests failed out of 48
+
+Label Time Summary:
+qt-gui    = 199.68 sec*proc (48 tests)
+
+Total Test time (real) = 199.70 sec

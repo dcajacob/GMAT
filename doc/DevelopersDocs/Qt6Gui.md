@@ -105,6 +105,23 @@ an unrelated directory, and failure exit codes for missing or invalid inputs.
 
 ## Current evidence and remaining work
 
+Mission-tree context menus provide transient **Breakpoint before command**
+markers. Run (`F5`) honors those markers; **Debug mission** (`Ctrl+F5`) stops
+before the first command when none are set. The paused inspector shows read-only
+runtime objects with Spacecraft/All objects filters and current parameter values.
+**Step command** (`F10`) runs the current command and pauses before the next;
+function calls run as one step. **Resume** (`F5`) continues to the next breakpoint,
+and **End mission** (`Shift+F5`) stops execution. Close/Escape resumes. Pause during
+debugging takes effect at the next command boundary, rather than inside an
+integrator step. The engine's normal dispatcher executes all commands.
+
+Breakpoints do not modify or serialize script source. A rebuild of unchanged
+source retains them; an accepted source change clears placements to avoid stale
+command identity. **Clear breakpoints** removes all markers. Pending panel edits
+must be applied/discarded before running or debugging, and runtime inspection
+does not allow configuration editing. The debugger is limited to the main mission
+scope; stepping into function-local scopes is not provided.
+
 The Mission menu includes **Save and build script** (`Ctrl+Shift+F7`) and
 **Save, build and run mission** (`Ctrl+Shift+F5`). Saving must succeed before
 either action builds or runs. Edit > **Go to line** (`Ctrl+L`) navigates without

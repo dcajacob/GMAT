@@ -6,6 +6,7 @@
 #include <QList>
 #include <QMap>
 #include <QPointer>
+#include <QSet>
 #include "MissionModel.hpp"
 #include "FolderRun.hpp"
 class QMdiArea;
@@ -21,6 +22,7 @@ class HelpController;
 class CommandEditor;
 class MissionNavigation;
 class WelcomeDialog;
+class Debugger;
 class QMenu;
 class QMdiSubWindow;
 class GmatBase;
@@ -39,6 +41,10 @@ public:
    QStringList availableEngineTypes() const;
    enum class RunResult { Completed, Stopped, Failed, Busy };
    RunResult runMission();
+   RunResult debugMission();
+   bool setBreakpoint(int index,bool enabled);
+   QSet<int> breakpointIndices() const { return breakpoints; }
+   void stepMission();
    FolderRunResult runFolderScripts(const FolderRunOptions &options,QtPlotReceiver &batchPlots,
       const std::atomic_bool &cancel,const std::function<void(int,int,const FolderRunItem &)> &progress={});
    void pauseMission();
@@ -80,6 +86,8 @@ private:
    bool confirmDiscard();
    void updateTitle();
    void setRunning(bool value);
+   RunResult executeMission(bool debug);
+   void refreshBreakpoints();
    QMdiArea *workspace;
    QPlainTextEdit *editor;
    QPlainTextEdit *messages;
@@ -89,6 +97,9 @@ private:
    QTreeWidget *resources;
    QTreeWidget *mission;
    MissionNavigation *missionNavigation;
+   Debugger *debugger;
+   QSet<int> breakpoints;
+   QString breakpointSource;
    QPointer<WelcomeDialog> welcome;
    QMenu *recentMenu;
    QTreeWidget *output;
@@ -100,6 +111,7 @@ private:
    QAction *runAction = nullptr;
    QAction *pauseAction = nullptr;
    QAction *stopAction = nullptr;
+   QAction *stepAction = nullptr;
    QString scriptPath;
    QString startupDirectory;
    QString startupFile;
