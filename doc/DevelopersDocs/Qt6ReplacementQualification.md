@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
-| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. Ephemeris and solver-loop Toggle combinations remain pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. Ephemeris and solver-loop Toggle combinations remain pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
@@ -5139,3 +5139,46 @@ The full Linux qualification goal remains active, with the original outstanding
 Wayland main-window restore/input, portals and remaining workflow/plugin gates.
 Windows/macOS remain deferred. check-documents.txt remains the latest complete
 regression checkpoint; this targeted display fix adds only its focused evidence.
+
+
+## Completed retained plots after a final ToggleOff
+
+The resumed-arc checkpoint did not cover a mission ending with a plot disabled.
+OrbitView returns before its end-of-run notification when inactive. Qt's retained
+history consequently kept endOfRun false: with NumPointsToRedraw = 1, Latest
+showed only the most recent segment after a successful mission. This is visible
+output behavior, not a loss of propagation data or a numerical discrepancy.
+check-disabled-completion-initial.txt records that Orbit View failure. Ground
+already had its completion marker in this fixture, and XY always displays its
+retained history independently of the 3D recent-segment setting.
+
+The Qt mission coordinator now finalizes retained Orbit/Ground display histories
+when RunMission reports Completed. It refreshes existing viewers and updates
+closed viewers' retained models, without changing plot activity, points, colors,
+cameras, script or sampling. Latest shows the whole retained trajectory; earlier
+replay positions keep the existing recent-segment behavior. Failure and Stop do
+not enter this new completion path. The folder coordinator uses the same display
+method for Completed items; its final-ToggleOff execution is not separately
+qualified by this main-mission fixture. New plot creation/builds retain their
+existing history/completion reset. No engine or renderer algorithm changed.
+
+The new QtGui.CompletedDisabledPlots check uses TogglePlotTests' separate
+--finish-disabled mode. It does not repeat the preceding TogglePlots workflow.
+An independent uninterrupted display run supplies twelve-state report bytes and
+retained spacecraft paths. Actual Mission/MDI checklist editing changes a final
+ReportFile-only ToggleOff to Orbit/Ground/XY, with pending source protection,
+retained clean-panel Apply, exact Undo/Redo, original comments and Unicode
+save/reopen. The disabled completed mission must reproduce the independent report
+and retained spacecraft coordinates/colors/counts. Orbit/Ground must expose all
+retained points at Latest despite the recent-segment limit; Ground/XY remain
+inactive. All three plots close/reopen into the same retained model/history.
+This verifies the new main-mission completion behavior; previous native
+window/rendering, replay and Stop/error evidence is reused rather than rerun.
+
+check-disabled-completion-final.txt records the focused check passing in 0.61
+seconds. build-disabled-completion-final.txt records the final MainWindow/receiver
+and actual GmatQt-R2026a rebuild plus GmatQt launcher recreation. No full-suite,
+previous TogglePlots numerical workflow or native-layout rerun was needed.
+The full Linux qualification goal remains active, including Wayland main-window
+restore/input, portals and remaining selected workflow/plugin gates. Windows/macOS
+remain deferred; check-documents.txt remains the latest complete regression.

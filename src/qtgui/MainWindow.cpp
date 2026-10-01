@@ -1070,6 +1070,7 @@ MainWindow::RunResult MainWindow::executeMission(bool debug)
    } catch (...) {
       messages->appendPlainText("Unexpected error during mission execution.");
    }
+   if (result==RunResult::Completed) plots->missionCompleted();
    debugger->finish(); paused = false;
    summaryAvailable=true; lastRunResult=result;
    setRunning(false);
@@ -1141,7 +1142,7 @@ FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtP
                batchListeners.missionStarted(); solverRun=true;
                item.engineStatus=Moderator::Instance()->RunMission();
                switch(item.engineStatus) {
-               case 1: item.category="Completed"; break;
+               case 1: item.category="Completed"; batchPlots.missionCompleted(); break;
                case -2: item.category="Initialization error"; break;
                case -3: item.category="Unknown initialization error"; break;
                case -4: item.category="Interrupted"; break;

@@ -76,6 +76,16 @@ void QtPlotReceiver::clear(bool resetViews)
    for (auto &entry : entries) if (entry.window) delete entry.window.data();
    entries.clear(); warnings.clear(); if (changed) changed();
 }
+void QtPlotReceiver::missionCompleted()
+{
+   // A disabled subscriber may omit its end-of-run callback. Completion still
+   // finalizes retained display history, including a viewer currently closed.
+   for (auto &entry:entries) {
+      if (entry.data->kind!=PlotModel::Kind::Orbit && entry.data->kind!=PlotModel::Kind::GroundTrack) continue;
+      entry.data->endOfRun=true;
+      refresh(entry,true);
+   }
+}
 QStringList QtPlotReceiver::names() const { return entries.keys(); }
 std::shared_ptr<const PlotModel> QtPlotReceiver::model(const QString &name) const
 {

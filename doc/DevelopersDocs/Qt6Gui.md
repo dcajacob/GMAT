@@ -940,7 +940,10 @@ Apply before updating the mission. Orbit View, Ground Track and XY plots retain
 existing samples while switched off, suppress the disabled interval and start a
 separate trajectory when switched on again. Ground Track uses any spacecraft
 color assigned during the disabled interval when sampling resumes. Closing and
-reopening a plot keeps its retained history.
+reopening a plot keeps its retained history. When a mission completes with a plot
+switched off, Latest still displays all retained samples rather than only the
+recent segments used during a live run. Completion does not switch the plot on;
+a later run starts with fresh history.
 
 
 Global, Clear and Save command forms now have **Select…** object checklists.
