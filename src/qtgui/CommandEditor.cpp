@@ -18,7 +18,7 @@
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
 CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QString,QString> &templates,
-                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations,std::function<void()> summary)
+                             Apply apply,const QStringList &propagators,const QStringList &spacecraft,QWidget *parent,const QStringList &formations,std::function<void()> summary,std::function<QString()> corrections)
    : EditablePanel(parent),original(statement),inserting(adding)
 {
    auto *layout=new QVBoxLayout(this);
@@ -90,6 +90,7 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    source->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
    source->setLineWrapMode(QPlainTextEdit::NoWrap); layout->addWidget(source,1);
    auto *status=new QLabel("Apply validates the complete mission and updates the script. Branches include their enclosed commands.",this);
+   status->setObjectName("commandStatus");
    status->setWordWrap(true); layout->addWidget(status);
    connect(source,&QPlainTextEdit::textChanged,status,[status] {
       status->setText("Apply validates the complete mission and updates the script. Branches include their enclosed commands.");
@@ -111,6 +112,16 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       if (summary) {
          auto *inspect=new QPushButton("Summary…",this); inspect->setObjectName("showCommandSummary"); buttons->addButton(inspect,QDialogButtonBox::ActionRole);
          connect(inspect,&QPushButton::clicked,this,[summary] { summary(); });
+      }
+      if (corrections) {
+         auto *correct=new QPushButton("Apply Corrections",this); correct->setObjectName("applySolverCorrections");
+         correct->setToolTip("Use the last solver result for numeric Vary initial guesses. Reference guesses are retained. The script change can be undone.");
+         buttons->addButton(correct,QDialogButtonBox::ActionRole);
+         connect(correct,&QPushButton::clicked,this,[this,corrections,status] {
+            const auto error=hasChanges() ? QString("Apply or discard this panel's pending changes before applying solver corrections.") : corrections();
+            if (error.isEmpty()) { applied=true; appliedSuccessfully(); }
+            else status->setText(error);
+         });
       }
    }
    connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status] {

@@ -1,0 +1,28 @@
+Active solver correction source audit, 2026-10-01
+
+wx TargetPanel.cpp OnApplyButton: refuses corrections while Vary panels are open,
+then invokes the command's TakeAction("ApplyCorrections"). OptimizePanel.cpp has
+the same active Apply Corrections operation without that Vary-panel guard.
+
+SolverBranchCommand.cpp TakeAction: a solver clone must exist, and its status
+must be beyond CREATED/COPIED/INITIALIZED. Convergence is not required.
+ApplySolution visits Vary commands in the selected branch's direct Next chain.
+Vary.cpp SetInitialValue: uses that Vary's owning solver variable and converts
+solver scaling back to initial-value units. Variable/array/object/parameter
+references are retained. Numeric names use the existing precision-16 conversion.
+
+Qt formerly had Apply/Close, Show script and Summary but no Apply Corrections.
+CommandEditor now exposes the action only for existing Target/Optimize panels.
+MainWindow protects pending panels/source and the current run; it captures
+command/source ownership before execution, including script-event internals.
+Mapped direct Vary numeric guesses use the existing engine method, then patch
+only source numeric spans and validate/rebuild one undoable transaction. Nested
+solver guesses belong to their own panel. Reference guesses are retained with
+a user-visible explanation. Clean companion MDI panels refresh after success.
+
+QtGui.SolverCorrections and its focused evidence qualify the listed operations.
+The unary-plus mapping repair is limited to unquoted unary numeric literals;
+binary addition and labels still participate in statement identity. Numerical
+algorithms, core solver code, Publisher state and solver reports were unchanged.
+The exact coverage and initial failed fixture observations are in the latest
+Qt6ReplacementQualification.md appendix. This is not full solver-mode parity.

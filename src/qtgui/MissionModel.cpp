@@ -40,6 +40,7 @@ public:
    QVector<GmatCommand *> commands;
    QVector<Line> document;
    QSet<GmatCommand *> visited;
+   bool expandScriptEvents=false;
    void collect(GmatCommand *command, GmatCommand *stop, int parent,
                 qsizetype begin, qsizetype end, int depth = 0)
    {
@@ -60,6 +61,10 @@ public:
          const auto name=QString::fromStdString(command->GetName());
          node.label=name.isEmpty() ? type : type+" — "+name;
          node.statement=QString::fromStdString(command->GetGeneratingString(Gmat::SCRIPTING)).trimmed();
+         if (expandScriptEvents && type=="BeginScript") {
+            const auto statements=scriptStatements(node.statement);
+            if (!statements.isEmpty()) node.statement=statements.first().code.trimmed();
+         }
          if (name.isEmpty()) {
             for (auto line : node.statement.split('\n')) {
                line=line.trimmed();
@@ -85,7 +90,7 @@ public:
             }
             begin=node.end;
          }
-         if (type=="BeginScript") scriptDepth=1;
+         if (type=="BeginScript" && !expandScriptEvents) scriptDepth=1;
          command=command->GetNext();
       }
    }
@@ -100,6 +105,11 @@ QString key(QString code)
    for (qsizetype index=0;index<code.size();++index) {
       const auto ch=code[index];
       if (ch=='\'') quoted=!quoted;
+      // A numeric unary plus is omitted by command serialization. Keep binary
+      // addition and quoted labels significant while accepting the source's
+      // explicit positive initial guess (including scientific notation).
+      if (!quoted && ch=='+' && !result.isEmpty() && QString("=([{,:").contains(result.back()) &&
+          number.match(code.mid(index+1)).hasMatch()) continue;
       if (!quoted && (ch.isDigit() || ch=='.') && (index==0 || (!code[index-1].isLetterOrNumber() && code[index-1]!='_' && code[index-1]!='.'))) {
          const auto numeric=number.match(code.mid(index));
          if (numeric.hasMatch()) {
@@ -272,9 +282,10 @@ void retainSource(MissionSnapshot &snapshot)
    }
 }
 }
-MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,const QString &source,QVector<GmatCommand *> *commands)
+MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,const QString &source,QVector<GmatCommand *> *commands,bool expandScriptEvents)
 {
    Builder builder; builder.result.sourceScript=source; builder.result.canonicalScript=canonical;
+   builder.expandScriptEvents=expandScriptEvents;
    builder.document=lines(canonical); builder.collect(first,nullptr,-1,0,canonical.size());
    retainSource(builder.result);
    if (commands) *commands=builder.commands;

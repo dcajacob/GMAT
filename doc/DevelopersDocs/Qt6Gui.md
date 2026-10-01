@@ -1882,3 +1882,29 @@ even when the mission resource has a different name. Choose a filename beginning
 with a letter and containing letters, digits or underscores; invalid new template
 names produce feedback before any file is written. Directory names may contain
 spaces or Unicode. Existing-file imports retain their original contents.
+
+
+### Apply solver corrections
+
+Target and Optimize command panels have an Apply Corrections button. Run the
+current mission first, then use it to update numeric Vary initial guesses from
+that block's last solver result. The result need not have converged. Scale
+factors are converted back to the command's initial-value units; guesses that
+refer to variables, arrays or object properties remain source references and
+are listed in the Message Window.
+
+Apply or discard pending panel edits first. Pending/stale source, an unexecuted
+block or a rebuild without a subsequent run cannot use old results. Corrections
+preserve unrelated source and can be undone/redone as one change. Successful
+changes rebuild the mission and refresh clean retained command panels, including
+open Vary controls. Nested solvers keep their own corrections; Vary commands
+inside script events are also mapped. A new run is required before applying
+another block's correction after the rebuild. Save the changed mission to keep
+its updated guesses.
+
+QtGui.SolverCorrections covers actual controls, scaled/reference/nested and
+script-event cases, unexecuted/pending/stale guards, interruption/nonconvergence
+recovery, known variable goals, exact source/Undo/Redo and Unicode reopen. The
+native Wayland panel capture and its precise coverage limits are recorded in
+Qt6ReplacementQualification.md. Broader solver mode and desktop acceptance
+requirements remain under qualification.

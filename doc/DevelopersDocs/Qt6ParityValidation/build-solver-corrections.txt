@@ -1,0 +1,52 @@
+[1/7] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/7] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[3/7] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[4/7] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[5/7] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[6/7] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[7/7] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/3] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/3] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[3/3] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/3] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/3] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[3/3] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/6] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/6] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MissionModel.cpp.o
+[3/6] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[4/6] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[5/6] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[6/6] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/3] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/3] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[3/3] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/3] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/3] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[3/3] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/10] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/10] Building CXX object src/qtgui/CMakeFiles/GmatQt.dir/main.cpp.o
+[3/10] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[4/10] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MissionModel.cpp.o
+[5/10] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[6/10] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[7/10] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[8/10] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[9/10] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[10/10] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/7] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/7] Building CXX object src/qtgui/CMakeFiles/GmatQtDebuggerTests.dir/tests/DebuggerTests.cpp.o
+[3/7] Building CXX object src/qtgui/CMakeFiles/GmatQtInspectionTests.dir/tests/InspectionTests.cpp.o
+[4/7] Linking CXX executable src/qtgui/GmatQtDebuggerTests
+[5/7] Linking CXX executable src/qtgui/GmatQtInspectionTests
+[6/7] Building CXX object src/qtgui/CMakeFiles/GmatQtMissionTests.dir/tests/MissionTests.cpp.o
+[7/7] Linking CXX executable src/qtgui/GmatQtMissionTests
+[1/7] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/7] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[3/7] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[4/7] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[5/7] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[6/7] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[7/7] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests
+[1/3] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/3] Building CXX object src/qtgui/CMakeFiles/GmatQtSolverCorrectionTests.dir/tests/SolverCorrectionTests.cpp.o
+[3/3] Linking CXX executable src/qtgui/GmatQtSolverCorrectionTests

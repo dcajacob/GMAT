@@ -1,0 +1,1 @@
+PASS: actual Target/Optimize Apply Corrections controls; independently known goals 4/5/7/2, scale factors, reference retention, nested ownership, pending/stale guards, retained clean companion panels, exact unrelated source/Undo/Redo and Unicode save/reopen execution. No prior viewer suite repeated.

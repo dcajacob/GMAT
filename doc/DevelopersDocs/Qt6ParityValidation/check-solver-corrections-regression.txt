@@ -1,0 +1,14 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 12: QtGui.Mission
+1/3 Test #12: QtGui.Mission ....................   Passed    2.18 sec
+    Start 32: QtGui.Inspection
+2/3 Test #32: QtGui.Inspection .................   Passed    0.91 sec
+    Start 73: QtGui.Debugger
+3/3 Test #73: QtGui.Debugger ...................   Passed    1.89 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =   4.98 sec*proc (3 tests)
+
+Total Test time (real) =   4.98 sec

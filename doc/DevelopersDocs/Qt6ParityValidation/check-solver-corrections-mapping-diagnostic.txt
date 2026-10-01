@@ -1,0 +1,103 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 48: QtGui.SolverCorrections
+1/1 Test #48: QtGui.SolverCorrections ..........***Failed    0.18 sec
+This plugin does not support propagateSizeHints()
+% preserve corrections α and implicit settings
+
+%----------------------------------------
+%---------- Solvers
+%----------------------------------------
+
+Create DifferentialCorrector Outer;
+Outer.ShowProgress = true;
+Outer.ReportStyle = Normal;
+Outer.ReportFile = 'DifferentialCorrectorOuter.data';
+Outer.MaximumIterations = 25;
+Outer.DerivativeMethod = ForwardDifference;
+Outer.Algorithm = NewtonRaphson;
+
+Create DifferentialCorrector Inner;
+Inner.ShowProgress = true;
+Inner.ReportStyle = Normal;
+Inner.ReportFile = 'DifferentialCorrectorInner.data';
+Inner.MaximumIterations = 25;
+Inner.DerivativeMethod = ForwardDifference;
+Inner.Algorithm = NewtonRaphson;
+
+Create Yukon Opt;
+Opt.ShowProgress = false;
+Opt.ReportStyle = Normal;
+Opt.ReportFile = 'YukonOpt.data';
+Opt.MaximumIterations = 200;
+Opt.UseCentralDifferences = false;
+Opt.FeasibilityTolerance = 0.0001;
+Opt.HessianUpdateMethod = SelfScaledBFGS;
+Opt.MaximumFunctionEvals = 1000;
+Opt.OptimalityTolerance = 0.0001;
+Opt.FunctionTolerance = 0.0001;
+Opt.MaximumElasticWeight = 10000;
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create ReportFile Results;
+Results.SolverIterations = Current;
+Results.UpperLeft = [ 0 0 ];
+Results.Size = [ 0 0 ];
+Results.RelativeZOrder = 0;
+Results.Maximized = false;
+Results.Filename = '/tmp/QtSolverCorrections-yqVXQN/results.txt';
+Results.Precision = 16;
+Results.WriteHeaders = false;
+Results.LeftJustify = On;
+Results.ZeroFill = Off;
+Results.FixedWidth = true;
+Results.Delimiter = ' ';
+Results.ColumnWidth = 23;
+Results.WriteReport = true;
+Results.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable Alpha Beta Gamma Delta Seed;
+Seed = 1;
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Target 'outer corrections' Outer {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = false}; % keep branch
+   Vary 'scaled guess' Outer(Alpha = 1, {Perturbation = 0.01, Lower = 0, Upper = 10, MaxStep = 1, AdditiveScaleFactor = 3, MultiplicativeScaleFactor = 2}); % keep literal
+   Vary 'reference guess' Outer(Beta = Seed, {Perturbation = 0.01, Lower = 0, Upper = 10, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0}); % keep reference
+   Target 'inner corrections' Inner {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = false};
+      Vary 'inner guess' Inner(Gamma = 2, {Perturbation = 0.01, Lower = 0, Upper = 10, MaxStep = 1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+      Achieve Inner(Gamma = 7, {Tolerance = 0.000001});
+   EndTarget; % retain inner
+   Achieve Outer(Alpha = 4, {Tolerance = 0.000001});
+   Achieve Outer(Beta = 5, {Tolerance = 0.000001});
+EndTarget; % retain outer
+Optimize 'optimizer corrections' Opt {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = false};
+   Vary 'optimizer guess' Opt(Delta = 1, {Perturbation = 0.001, MaxStep = 9.999999e300, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Seed = (Delta - 2)^2;
+   Minimize Opt(Seed);
+EndOptimize;  % For optimizer Opt
+Report Results Alpha Beta Gamma Delta; % retain final report
+
+FAIL: Solver correction source mapping unavailable for outer corrections
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.18 sec*proc (1 test)
+
+Total Test time (real) =   0.18 sec
+
+The following tests FAILED:
+	 48 - QtGui.SolverCorrections (Failed)                  qt-gui
+Errors while running CTest

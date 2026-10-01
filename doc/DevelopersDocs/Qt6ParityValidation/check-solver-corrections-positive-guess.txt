@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 48: QtGui.SolverCorrections
+1/1 Test #48: QtGui.SolverCorrections ..........***Failed    0.26 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Correction changed independently known solver goals
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.26 sec*proc (1 test)
+
+Total Test time (real) =   0.26 sec
+
+The following tests FAILED:
+	 48 - QtGui.SolverCorrections (Failed)                  qt-gui
+Errors while running CTest

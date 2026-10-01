@@ -47,8 +47,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
-| `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options in tests; full optimizer mode combinations pending. |
-| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
+| `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options. Active Apply Corrections was missing from the earlier inventory; it now updates numeric initial guesses with source retention, pending/stale guards and Undo/Redo. Actual Yukon controls, known optimum and Unicode reopen tested; native Wayland panel captured and inspected. Full optimizer mode combinations remain pending. |
+| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified. Apply Corrections now covers scaled numeric guesses, retained references, nested ownership, script-event Vary commands, unexecuted guards and corrections/recovery after ExitMode Stop or nonconvergence. Known goals and Unicode reopen pass. Default DiscardAndContinue is used in this bounded variable fixture; broader spacecraft Stop/Discard and other combinations remain pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
@@ -5807,3 +5807,73 @@ launcher recreation and selected plugin relinks. No full-suite repeat was made.
 The covered two-level Target case closes that bounded viewer gap. Optimizer
 nested/toggle and mixed/deeper solver cases, other plugin/workflow requirements
 and the original compositor/portal gates remain open. Windows/macOS are deferred.
+
+
+## Apply solver corrections qualification — 2026-10-01
+
+A fresh audit of active TargetPanel.cpp and OptimizePanel.cpp identified an
+operation omitted from the earlier rows: both wx panels have Apply Corrections,
+while Qt had none. This is now an actual button in retained Target/Optimize
+command panels. It uses the engine's existing Vary::SetInitialValue, including
+inverse additive/multiplicative scaling, and patches only mapped numeric initial
+guesses in the original script. Reference-based guesses remain unchanged and
+are explained in the Message Window. No solver algorithm or numerical execution
+was rewritten. A changed correction is one undoable source transaction, followed
+by validation/rebuild and refresh of clean companion command/resource panels.
+Pending panel changes and pending/stale source are protected; rebuilds invalidate
+old results. A solver block that did not execute cannot apply another block's
+result. The existing wx rule does not require convergence.
+
+Command pointers and an additional source snapshot exposing script-event
+commands are captured before execution. Ordinary Mission navigation still treats
+BeginScript as one editable event. This matters after ExitMode=Stop or an
+incomplete solver, because GetNext can throw or return the same executing
+command. Corrections use pre-run ownership instead of traversing that state.
+The numerical unary plus omitted by serialization is now accepted in source
+alignment; binary addition and quoted labels remain significant. The fixture's
++1.000e0 is retained until that particular guess is intentionally corrected.
+
+check-solver-corrections-final.txt passes QtGui.SolverCorrections in 3.58 seconds.
+Actual MDI buttons target the independently known variable goals Alpha=4,
+Beta=5, nested Gamma=7 and Yukon's quadratic Delta=2 (1e-5 optimizer tolerance).
+It verifies scaling, exact unrelated source/comments/labels/options, retained
+Seed reference, pending branch and Vary guards, refreshed clean companions,
+exact Undo/Redo and Unicode save/reopen execution. Additional cases cover a Vary
+inside BeginScript, an unexecuted If branch, corrections after ExitMode=Stop,
+and an iteration-limited DC's actual last value followed by correction/recovery
+to the known goal 4. ExitMode=Stop currently reports the engine interruption as
+MainWindow::RunResult::Failed; this test does not claim broader stop-status UI
+parity. The source fixture uses default DiscardAndContinue, with Variables; it
+does not qualify spacecraft restoration under every solver mode.
+
+check-solver-corrections-regression.txt passes the three affected existing suites
+Mission, Inspection and Debugger in 4.98 seconds. This precedes the final small
+reference-retention message and nonconvergence fixture addition; those are
+covered by the final focused suite. No full regression suite or earlier viewer
+mode matrix was unnecessarily repeated. build-solver-corrections.txt records the
+actual GmatQt-R2026a relink and GmatQt launcher recreation as well as test builds.
+
+solver-corrections-wayland-20261001.txt/.png records a native Wayland run and
+inspected optimizer panel: corrected numeric source, readable retained command
+form, visible Apply Corrections/Apply/Close, and the engine change message. That
+run includes the script-event/unexecuted/ExitMode=Stop cases and predates only
+the added reference-retention explanation/nonconvergence case. It establishes
+native panel layout and programmatic control operation, not fresh desktop input,
+top-level compositor minimize/restore, portal choosers or native viewer rendering.
+
+Raw initial observations are retained. build-solver-corrections-initial.txt is
+the compile-time parameter-overload error; no test was run against that failed
+build. check-solver-corrections-initial/mapping/mapping-diagnostic.txt preserve
+the unavailable panel and serialized source before the unary-plus fix.
+check-solver-corrections-positive-guess/goals-diagnostic.txt records the test's
+incorrectly tight optimizer assertion with default perturbation 0.001 (Delta
+1.9995). Explicit perturbation 0.000001 and tighter configured tolerances correct
+the fixture, without changing the numerical engine. The scaled and branches
+checkpoints pass before the final additions. The nonconverged-initial checkpoint
+used MaximumIterations=1 and stopped before any step; the final limit of 2
+produces a new, nonconverged last value and covers the intended operation.
+
+This closes the missing active solver correction action for these mapped source
+cases. Full replacement qualification remains open: other plugin/workflow
+requirements, broader solver combinations, and the compositor/portal acceptance
+gates still need affirmative evidence. Windows/macOS remain deferred.

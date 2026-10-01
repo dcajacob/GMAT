@@ -26,6 +26,7 @@ class Debugger;
 class QMenu;
 class QMdiSubWindow;
 class GmatBase;
+class GmatCommand;
 class QAction;
 struct ScriptDocument;
 class MainWindow : public QMainWindow
@@ -60,6 +61,7 @@ public:
    const MissionSnapshot &missionSnapshot() const { return missionState; }
    QString applyMissionChange(const MissionSnapshot &snapshot, int index,
                               MissionEdit operation, const QString &replacement);
+   QString applySolverCorrections(const MissionSnapshot &snapshot,int index);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
    QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1, const std::optional<QString> &initialValue=std::nullopt, const QString &functionPath={});
@@ -133,6 +135,8 @@ private:
    QMap<QString, QString> reportFiles;
    QMap<QString,QPair<QString,QString>> ephemerisFiles;
    MissionSnapshot missionState;
+   MissionSnapshot runCorrectionState;
+   QVector<GmatCommand *> runCommands,runCorrectionCommands;
    quint64 modelGeneration=0;
    bool summaryAvailable=false;
    RunResult lastRunResult=RunResult::Failed;

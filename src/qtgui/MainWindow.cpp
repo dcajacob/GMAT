@@ -40,6 +40,11 @@
 #include "EventLocator.hpp"
 #include "CommandEditor.hpp"
 #include "MissionModel.hpp"
+#include "ScriptStatements.hpp"
+#include "SolverBranchCommand.hpp"
+#include "Vary.hpp"
+#include "Solver.hpp"
+#include <cmath>
 #include "Debugger.hpp"
 #include "ExternalForceDialog.hpp"
 #include "PolyhedronDialog.hpp"
@@ -1068,10 +1073,13 @@ MainWindow::RunResult MainWindow::executeMission(bool debug)
       ~ObserverScope() { GmatCommand::SetExecutionObserver(previous); }
    } observer(debug ? debugger : nullptr);
    try {
+      // Capture before execution: GetNext on a stopped/incomplete solver can
+      // return itself or throw for ExitMode=Stop. Post-run corrections must
+      // not traverse that execution state to find source-owned Vary commands.
+      snapshotMission(Moderator::Instance()->GetFirstCommand(),missionState.canonicalScript,builtScript,&runCommands);
+      runCorrectionState=snapshotMission(Moderator::Instance()->GetFirstCommand(),missionState.canonicalScript,builtScript,&runCorrectionCommands,true);
       if (debug) {
-         QVector<GmatCommand *> commands;
-         snapshotMission(Moderator::Instance()->GetFirstCommand(),missionState.canonicalScript,builtScript,&commands);
-         debugger->begin(commands,breakpoints);
+         debugger->begin(runCommands,breakpoints);
       }
       const auto status = Moderator::Instance()->RunMission();
       if (status == 1) result = RunResult::Completed;
@@ -1829,7 +1837,9 @@ CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)
       operation==MissionEdit::Replace ? std::function<void()>([this,index,generation=modelGeneration] {
          if (generation!=modelGeneration) { statusBar()->showMessage("The mission changed. Reopen this command panel to inspect its summary."); return; }
          showSummary(index);
-      }) : std::function<void()>());
+      }) : std::function<void()>(),
+      operation==MissionEdit::Replace && (snapshot.nodes[index].type=="Target" || snapshot.nodes[index].type=="Optimize") ?
+         std::function<QString()>([this,snapshot,index] { return applySolverCorrections(snapshot,index); }) : std::function<QString()>());
    contextHelp->attach(panel,panel->property("helpTopic").toString());
    panel->onApplied=[this,panel,snapshot,index,operation] {
       auto *child=qobject_cast<QMdiSubWindow *>(panel->parentWidget());
@@ -1870,6 +1880,89 @@ QString MainWindow::applyMissionChange(const MissionSnapshot &snapshot,int index
    try { return applyModelScript(editMission(snapshot,index,operation,replacement)); }
    catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+}
+
+QString MainWindow::applySolverCorrections(const MissionSnapshot &snapshot,int index)
+{
+   if (running) return "Stop the mission before applying solver corrections.";
+   if (!modelValid || snapshot.sourceScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "The mission has changed. Build the current script and reopen this panel.";
+   if (!summaryAvailable) return "Run the current mission before applying solver corrections. Rebuilding invalidates previous results.";
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges())
+         return "Apply or discard pending panel changes before applying solver corrections.";
+   bool mutated=false;
+   try {
+      if (index<0 || index>=runCommands.size() || index>=snapshot.nodes.size() || runCorrectionState.sourceScript!=builtScript)
+         return "This solver command no longer exists. Reopen its panel.";
+      auto *branch=dynamic_cast<SolverBranchCommand *>(runCommands[index]);
+      if (!branch || (snapshot.nodes[index].type!="Target" && snapshot.nodes[index].type!="Optimize"))
+         return "Corrections require a Target or Optimize command.";
+      auto *solver=dynamic_cast<Solver *>(branch->GetClone(0));
+      if (!solver) return "Run this solver block before applying corrections.";
+      const auto status=solver->GetIntegerParameter(solver->GetParameterID("IntegerSolverStatus"));
+      if (status==Gmat::CREATED || status==Gmat::COPIED || status==Gmat::INITIALIZED)
+         return "Run this solver block before applying corrections.";
+      struct Correction { Vary *vary; qsizetype start,length; QString initial; };
+      QVector<Correction> corrections;
+      QStringList references;
+      const int branchIndex=runCorrectionCommands.indexOf(branch);
+      if (branchIndex<0) return "The solver's source mapping is unavailable. Rebuild and rerun the mission.";
+      static const QRegularExpression guess(R"(^\s*(?:GMAT\s+)?Vary\s+(?:'[^'\n]*'\s+)?[A-Za-z][A-Za-z0-9_]*\s*\([\s\S]*?=\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*(?=,|\)))");
+      for (int i=0;i<runCorrectionState.nodes.size();++i) {
+         const auto &node=runCorrectionState.nodes[i];
+         if (node.parent!=branchIndex || node.type!="Vary") continue;
+         if (i>=runCorrectionCommands.size() || !node.editable) return "Cannot safely locate a Vary command in the source. Rebuild and reopen this panel.";
+         auto *vary=dynamic_cast<Vary *>(runCorrectionCommands[i]); if (!vary) return "The Vary commands changed. Reopen this panel.";
+         const auto initial=QString::fromStdString(vary->GetStringParameter("InitialValue"));
+         bool numeric=false; const auto value=initial.toDouble(&numeric);
+         if (!numeric || !std::isfinite(value)) {
+            references.append(QString::fromStdString(vary->GetStringParameter("Variable"))+" = "+initial);
+            continue; // Engine reference guesses remain source expressions.
+         }
+         const auto statements=scriptStatements(builtScript.mid(node.start,node.end-node.start));
+         if (statements.size()!=1) return "Cannot safely locate this Vary initial guess in the source.";
+         const auto &statement=statements.first(); const auto match=guess.match(statement.code);
+         if (!match.hasMatch() || match.captured(1).toDouble()!=value) return "The Vary initial guess no longer matches the source. Rebuild and reopen this panel.";
+         const auto positions=statement.positions.mid(match.capturedStart(1),match.capturedLength(1));
+         if (positions.isEmpty() || positions.last()-positions.first()+1!=positions.size())
+            return "Cannot safely replace a continued Vary initial guess. Edit this guess in the script.";
+         corrections.append({vary,node.start+positions.first(),positions.size(),initial});
+      }
+      QString candidate=builtScript;
+      for (auto it=corrections.crbegin();it!=corrections.crend();++it) {
+         mutated=true; it->vary->SetInitialValue(solver);
+         const auto value=QString::fromStdString(it->vary->GetStringParameter("InitialValue"));
+         bool numeric=false; const auto number=value.toDouble(&numeric);
+         if (!numeric || !std::isfinite(number)) throw std::runtime_error("The solver returned an invalid initial guess. No source changes were applied.");
+         if (number!=it->initial.toDouble()) candidate.replace(it->start,it->length,value);
+      }
+      if (candidate==builtScript) return "No numeric Vary initial guesses changed. Reference guesses are retained.";
+      if (!references.isEmpty()) messages->appendPlainText("Apply Corrections retained reference guesses: "+references.join(", "));
+      const auto error=applyModelScript(candidate); mutated=false;
+      if (!error.isEmpty()) return error;
+      // The owning solver panel refreshes through onApplied. Refresh clean
+      // companions with their new source snapshots, retaining their MDI windows.
+      for (auto *child:workspace->subWindowList()) {
+         if (!child->property("commandIndex").isValid()) continue;
+         const int other=child->property("commandIndex").toInt();
+         auto *old=dynamic_cast<CommandEditor *>(child->widget());
+         if (!old || other==index || other<0 || other>=missionState.nodes.size() || !missionState.nodes[other].editable) continue;
+         CommandEditor *fresh=nullptr;
+         try { fresh=makeCommandPanel(other,MissionEdit::Replace); }
+         catch (BaseException &error) { messages->appendPlainText(QString::fromStdString(error.GetFullMessage())); continue; }
+         catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); continue; }
+         child->setWidget(fresh); child->setProperty("sourceScript",builtScript); child->setWindowTitle(missionState.nodes[other].label);
+         old->hide(); old->deleteLater(); fresh->show();
+      }
+      return {};
+   } catch (BaseException &error) {
+      if (mutated) { summaryAvailable=false; restoreBuiltModel(); }
+      return QString::fromStdString(error.GetFullMessage());
+   } catch (const std::exception &error) {
+      if (mutated) { summaryAvailable=false; restoreBuiltModel(); }
+      return QString::fromUtf8(error.what());
+   }
 }
 
 QString MainWindow::savePlotProjection(const QString &name,bool perspective,double fov)
