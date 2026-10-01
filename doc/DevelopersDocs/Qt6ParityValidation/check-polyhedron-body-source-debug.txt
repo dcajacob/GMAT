@@ -1,0 +1,45 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 41: QtGui.PolyhedronBodySource
+1/1 Test #41: QtGui.PolyhedronBodySource .......***Failed    0.19 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Build failed — see Message Window
+Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.39.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-09-30 21:24:02 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: : **** ERROR **** ODEModel Exception Thrown: Attempted to add a PolyhedronGravityModel force to the force model for the body Earth, but there is already a GravityField force in place for that body. in line:
+   "  12: FM.UserDefined = {PolyhedronGravityModel}; % legacy creator"
+
+2: : **** ERROR **** GmatBase Exception Thrown: GmatBase::GetParameterID() The object named "_DefaultInternalForce_" of type "GravityField" has no parameter defined with "CreateForceBody" in line:
+   "  13: FM.CreateForceBody = Earth;"
+
+3: : **** ERROR **** GmatBase Exception Thrown: GmatBase::GetParameterID() The object named "_DefaultInternalForce_" of type "GravityField" has no parameter defined with "ShapeFileName" in line:
+   "  14: FM.ShapeFileName = '/tmp/QtPolyhedron-eaGQQL/cube shape ü.txt';"
+
+
+========================================
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.19 sec*proc (1 test)
+
+Total Test time (real) =   0.19 sec
+
+The following tests FAILED:
+	 41 - QtGui.PolyhedronBodySource (Failed)               qt-gui
+Errors while running CTest

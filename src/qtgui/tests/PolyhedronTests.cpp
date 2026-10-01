@@ -36,9 +36,71 @@ static void require(bool ok,const char *message) { if (!ok) throw std::runtime_e
 static void write(const QString &path,const QString &text) { QFile file(path); require(file.open(QIODevice::WriteOnly),"Fixture write failed"); require(file.write(text.toUtf8())==text.toUtf8().size(),"Fixture write incomplete"); }
 static QString read(const QString &path) { QFile file(path); require(file.open(QIODevice::ReadOnly),"Report unavailable"); return QString::fromUtf8(file.readAll()); }
 static QVector<double> numbers(const QString &path) { QVector<double> result; for (const auto &word:read(path).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts)) { bool ok; const double number=word.toDouble(&ok); require(ok && std::isfinite(number),"Nonnumeric polyhedron report"); result.append(number); } return result; }
-static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) throw std::runtime_error((window.statusBar()->currentMessage()+"\n"+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText()).toStdString()); }
+static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) { QApplication::processEvents(); throw std::runtime_error((window.statusBar()->currentMessage()+"\n"+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText()).toStdString()); } }
 static void equivalent(const QVector<double> &a,const QVector<double> &b) { require(a.size()==b.size(),"Polyhedron report dimensions changed"); for (int i=0;i<a.size();++i) require(std::abs(a[i]-b[i])<1e-11*std::max(1.0,std::abs(b[i])),"GUI polyhedron result differs from script reference"); }
 static QTableWidgetItem *field(ResourceEditor &panel,const QString &name) { auto *table=panel.findChild<QTableWidget *>(); require(table,"Properties table missing"); for (int i=0;i<table->rowCount();++i) if (table->item(i,0)->text()==name) return table->item(i,1); throw std::runtime_error(("Missing property "+name).toStdString()); }
+static void bodySourceCases(MainWindow &window,QPlainTextEdit &editor,QTemporaryDir &files,const QString &shape,const QString &report,const QString &reference)
+{
+   auto source=reference; source.remove("FM.BodyDensity = 2000;\n"); source.remove("FM.Drag = None;\n"); source.remove("FM.SRP = Off;\n");
+   source.replace("FM.CentralBody = Earth;","  GMAT FM.CentralBody = Earth; % retained central spelling"); source.replace(" Sat.FM.SurfaceHeight;",";");
+   source.replace("FM.PolyhedralBodies = {Earth};","FM.PointMasses = {Sun}; % retained point mass\nFM.UserDefined = {PolyhedronGravityModel}; % legacy creator"); source.prepend("% implicit polyhedron density and unrelated defaults\n");
+   const auto suffix=source.mid(source.indexOf("BeginMissionSequence;")),copied=files.filePath("moved cube Δ.txt"); require(QFile::copy(shape,copied),"Moved shape fixture copy failed");
+   editor.setPlainText(source); run(window); const auto earth=numbers(report); require(earth.size()==6,"Moved body state report incomplete");
+   auto independent=source; independent.replace("FM.UserDefined = {PolyhedronGravityModel};","FM.PolyhedralBodies = {Mars};"); independent.replace("FM.CreateForceBody = Earth;","FM.CreateForceBody = Mars;"); independent.replace(shape,copied); independent.insert(independent.indexOf("BeginMissionSequence;"),"FM.ErrorControl = LargestStep;\n");
+   editor.setPlainText(independent); run(window); const auto mars=numbers(report);
+   editor.setPlainText(source); require(window.buildScript(),"Legacy body source restore failed");
+   auto *model=Moderator::Instance()->GetConfiguredObject("FM"); const auto pending=QJsonArray{QJsonObject{{"body","Mars"},{"shape",shape},{"density","1000"}}};
+   auto qualified=source; qualified.replace("FM.ShapeFileName =", "FM.PolyhedronGravityModel.Earth.ShapeFileName =");
+   const auto mapped=polyhedronScript(qualified,*model,pending,"",{{"Earth","Mars"}});
+   require(mapped.contains("FM.PolyhedronGravityModel.Mars.ShapeFileName") && !mapped.contains("FM.PolyhedronGravityModel.Earth.") && !mapped.contains("BodyDensity ="),"Mapped creator lost qualified ownership or implicit density");
+   const auto future=source.left(source.indexOf("BeginMissionSequence;"))+"FM.PolyhedronGravityModel.Earth.FutureOption = 'keep exactly'; % unknown option\n"+suffix;
+   require(polyhedronScript(future,*model,pending,"",{{"Earth","Mars"}}).contains("FM.PolyhedronGravityModel.Mars.FutureOption = 'keep exactly';"),"Moved body dropped an unrelated owned source option");
+   {
+      PolyhedronDialog fresh({}); fresh.findChild<QPushButton *>("polyhedronAdd")->click(); auto *rows=fresh.findChild<QTableWidget *>("polyhedronTable");
+      qobject_cast<QComboBox *>(rows->cellWidget(0,0))->setCurrentText("Earth"); rows->item(0,1)->setText(shape); fresh.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+      require(fresh.values().size()==1 && fresh.values().first().toObject().contains("previousBody") && fresh.values().first().toObject().value("previousBody").toString().isEmpty(),"New pending row lacks an empty origin");
+      PolyhedronDialog reopened(fresh.values()); rows=reopened.findChild<QTableWidget *>("polyhedronTable"); qobject_cast<QComboBox *>(rows->cellWidget(0,0))->setCurrentText("Mars"); reopened.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+      require(reopened.values().first().toObject().value("previousBody").toString().isEmpty(),"Reopened new row impersonates an existing contributor");
+   }
+   auto open=[&] {
+      auto *tree=window.findChild<QTreeWidget *>("Resources"); const auto matches=tree->findItems("FM",Qt::MatchExactly|Qt::MatchRecursive); require(matches.size()==1,"Force resource missing"); tree->itemDoubleClicked(matches.first(),0);
+      for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (child->property("resourceName").toString()=="FM") return child;
+      throw std::runtime_error("Actual polyhedron panel missing");
+   };
+   auto *child=open(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel,"Polyhedron editor missing");
+   field(*panel,"PolyhedronGravityModel.Earth.CreateForceBody")->setText("Sat"); field(*panel,"PolyhedronGravityModel.Earth.ShapeFileName")->setText(copied);
+   auto *table=panel->findChild<QTableWidget *>(); for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ErrorControl") qobject_cast<QComboBox *>(table->cellWidget(row,1))->setCurrentText("LargestStep");
+   auto *apply=panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply); apply->click();
+   require(editor.toPlainText()==source && child->widget()==panel && panel->hasChanges(),"Invalid moved body changed source or lost pending values");
+   field(*panel,"PolyhedronGravityModel.Earth.CreateForceBody")->setText("Mars"); apply->click();
+   const auto moved=editor.toPlainText(); if (moved==source) throw std::runtime_error(window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().toStdString());
+   require(child->isVisible() && child->widget()!=panel && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges(),"Moved body did not refresh retained panel");
+   require(moved.contains("  GMAT FM.CentralBody = Earth; % retained central spelling") && moved.contains("FM.PointMasses = {Sun}; % retained point mass") && moved.endsWith(suffix) && moved.contains("% legacy creator") && moved.contains("LargestStep"),"Moved body lost unrelated source/comments or mixed field");
+   for (const auto &property:QStringList{"PrimaryBodies","Drag","SRP","RelativisticCorrection","BodyDensity"}) require(!moved.contains("FM."+property+" ="),"Moved body made an implicit force default explicit");
+   require(!moved.contains(".BodyDensity ="),"Moved body made implicit density explicit");
+   const auto settings=polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM")); require(settings.size()==1 && settings.first().toObject().value("body")=="Mars" && settings.first().toObject().value("shape")==copied,"Moved contributor settings were not retained");
+   editor.undo(); require(editor.toPlainText()==source,"Moved body Undo was not exact"); editor.redo(); require(editor.toPlainText()==moved,"Moved body Redo was not exact");
+   const auto saved=files.filePath("moved body ü.script"); require(window.saveScriptTo(saved) && window.loadScript(saved) && window.buildScript(),"Moved body Unicode save/reopen failed"); run(window); equivalent(numbers(report),mars);
+   const auto error=window.applyResourceChanges("FM",{{"PolyhedronGravityModel.Mars.CreateForceBody","Earth"},{"PolyhedronGravityModel.Mars.ShapeFileName",shape},{"ErrorControl","RSSStep"}},editor.toPlainText()); if (!error.isEmpty()) throw std::runtime_error(error.toStdString());
+   require(window.saveScriptTo(saved) && window.loadScript(saved),"Restored body save/reopen failed"); run(window); equivalent(numbers(report),earth);
+   const auto restored=editor.toPlainText(); child=open(); panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel,"Restored polyhedron editor missing");
+   std::exception_ptr failure;
+   auto dialog=[&](bool change) {
+      QTimer::singleShot(0,panel,[&] { auto *controls=dynamic_cast<PolyhedronDialog *>(panel->findChild<QDialog *>("polyhedronDialog")); try {
+         require(controls,"Polyhedron contributor dialog missing"); auto *rows=controls->findChild<QTableWidget *>("polyhedronTable"); auto *body=qobject_cast<QComboBox *>(rows->cellWidget(0,0));
+         if (change) { body->setCurrentText("Mars"); rows->item(0,1)->setText(copied); }
+         else require(body->currentText()=="Mars","Reopened pending body was not retained");
+         controls->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
+      } catch (...) { failure=std::current_exception(); if (controls) controls->reject(); } });
+      panel->findChild<QPushButton *>("forcePolyhedron")->click(); if (failure) std::rethrow_exception(failure);
+   };
+   dialog(true); dialog(false); table=panel->findChild<QTableWidget *>(); for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ErrorControl") qobject_cast<QComboBox *>(table->cellWidget(row,1))->setCurrentText("LargestStep");
+   require(panel->hasChanges() && editor.toPlainText()==restored,"Dialog body move did not stay pending"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+   const auto dialogMoved=editor.toPlainText(); require(dialogMoved!=restored && child->widget()!=panel && !dialogMoved.contains(".BodyDensity =") && dialogMoved.endsWith(suffix),"Dialog body move lost retained panel, implicit density or mission");
+   editor.undo(); require(editor.toPlainText()==restored,"Dialog body move Undo was not exact"); editor.redo(); require(editor.toPlainText()==dialogMoved,"Dialog body move Redo was not exact");
+   require(window.saveScriptTo(saved) && window.loadScript(saved),"Dialog moved body save/reopen failed"); run(window); equivalent(numbers(report),mars);
+   std::cout<<"PASS: actual per-field polyhedron body/path move with mixed ErrorControl, invalid-body correction and retained panel, legacy creator conversion, unrelated source/defaults and implicit density, owned unknown-option mapping, exact Undo/Redo/Unicode save/reopen and independent Earth/Mars six-state reports.\n";
+}
 static void pickShape(ResourceEditor &panel,const QString &path,bool accept) {
    std::exception_ptr failure; auto *button=panel.findChild<QPushButton *>("chooseProperty_PolyhedronGravityModel.Earth.ShapeFileName"); require(button,"Shape file picker missing");
    QTimer::singleShot(0,&panel,[&] { auto *dialog=panel.findChild<QFileDialog *>(); try { require(dialog && dialog->fileMode()==QFileDialog::ExistingFile,"Shape picker is not an existing-input picker"); dialog->selectFile(path); if (accept) QMetaObject::invokeMethod(dialog,"accept",Qt::DirectConnection); else dialog->reject(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); } });
@@ -53,6 +115,7 @@ int main(int argc,char **argv)
       const auto shape=files.filePath("cube shape ü.txt"),report=files.filePath("polyhedron state.txt");
       write(shape,"8\n1 -10 -10 -10\n2 10 -10 -10\n3 10 10 -10\n4 -10 10 -10\n5 -10 -10 10\n6 10 -10 10\n7 10 10 10\n8 -10 10 10\n12\n1 1 3 2\n2 1 4 3\n3 5 6 7\n4 5 7 8\n5 1 5 8\n6 1 8 4\n7 2 3 7\n8 2 7 6\n9 1 2 6\n10 1 6 5\n11 4 8 7\n12 4 7 3\n");
       const QString reference="Create Spacecraft Sat;\nSat.DisplayStateType = Cartesian;\nSat.X = 100;\nSat.Y = 50;\nSat.Z = 30;\nSat.VX = 0;\nSat.VY = 0;\nSat.VZ = 0;\nCreate ForceModel FM;\nFM.CentralBody = Earth;\nFM.PolyhedralBodies = {Earth};\nFM.CreateForceBody = Earth;\nFM.ShapeFileName = '"+shape+"';\nFM.BodyDensity = 2000;\nFM.Drag = None;\nFM.SRP = Off;\nCreate Propagator Prop;\nProp.FM = FM;\nProp.Accuracy = 1e-12;\nProp.InitialStepSize = 1;\nProp.MaxStep = 1;\nCreate ReportFile Values;\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nValues.Precision = 16;\nBeginMissionSequence;\nPropagate Prop(Sat) {Sat.ElapsedSecs = 60};\nReport Values Sat.EarthMJ2000Eq.X Sat.EarthMJ2000Eq.Y Sat.EarthMJ2000Eq.Z Sat.EarthMJ2000Eq.VX Sat.EarthMJ2000Eq.VY Sat.EarthMJ2000Eq.VZ Sat.FM.SurfaceHeight;\n";
+      if (argc==3 && QString::fromLocal8Bit(argv[2])=="--body-source") { bodySourceCases(window,*editor,files,shape,report,reference); return 0; }
       editor->setPlainText(reference); require(window.buildScript(),"Polyhedron reference failed to build"); run(window); const auto expected=numbers(report); require(expected.size()==7,"Polyhedron state report missing");
       require(expected[3]<0 && expected[4]<0 && expected[5]<0,"Cube gravity does not point toward its center");
       {

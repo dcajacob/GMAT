@@ -1,0 +1,38 @@
+[1/13] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ExternalForceDialog.cpp.o
+[3/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/SolarSystemPanel.cpp.o
+[4/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PolyhedronDialog.cpp.o
+[5/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CelestialBodyPanel.cpp.o
+[6/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/UserParameter.cpp.o
+[7/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[8/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[9/13] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[10/13] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[11/13] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[12/13] Building CXX object src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o
+FAILED: [code=1] src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o 
+/usr/bin/c++ -DLINUX_MAC -DNO_GCC_PRAGMA -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DUSE_64_BIT_LONGS -D_UNICODE -D__USE_SPICE__ -I/home/dan/GIT/GMAT/GMAT/src/qtgui -I/home/dan/GIT/GMAT/GMAT/src/base/api -I/home/dan/GIT/GMAT/GMAT/src/base/asset -I/home/dan/GIT/GMAT/GMAT/src/base/attitude -I/home/dan/GIT/GMAT/GMAT/src/base/burn -I/home/dan/GIT/GMAT/GMAT/src/base/command -I/home/dan/GIT/GMAT/GMAT/src/base/configs -I/home/dan/GIT/GMAT/GMAT/src/base/coordsystem -I/home/dan/GIT/GMAT/GMAT/src/base/event -I/home/dan/GIT/GMAT/GMAT/src/base/executive -I/home/dan/GIT/GMAT/GMAT/src/base/factory -I/home/dan/GIT/GMAT/GMAT/src/base/factory/guicomponents -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel/harmonic -I/home/dan/GIT/GMAT/GMAT/src/base/foundation -I/home/dan/GIT/GMAT/GMAT/src/base/function -I/home/dan/GIT/GMAT/GMAT/src/base/hardware -I/home/dan/GIT/GMAT/GMAT/src/base/include -I/home/dan/GIT/GMAT/GMAT/src/base/interface -I/home/dan/GIT/GMAT/GMAT/src/base/interpreter -I/home/dan/GIT/GMAT/GMAT/src/base/math -I/home/dan/GIT/GMAT/GMAT/src/base/parameter -I/home/dan/GIT/GMAT/GMAT/src/base/plugin -I/home/dan/GIT/GMAT/GMAT/src/base/propagator -I/home/dan/GIT/GMAT/GMAT/src/base/solarsys -I/home/dan/GIT/GMAT/GMAT/src/base/solver -I/home/dan/GIT/GMAT/GMAT/src/base/spice -I/home/dan/GIT/GMAT/GMAT/src/base/spacecraft -I/home/dan/GIT/GMAT/GMAT/src/base/stopcond -I/home/dan/GIT/GMAT/GMAT/src/base/subscriber -I/home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/datawriter -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/interpolator -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/matrixoperations -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGLWidgets -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGL -fno-strict-aliasing -fPIC -O3 -std=c++17 -MD -MT src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o -MF src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o.d -o src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o -c /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/PolyhedronTests.cpp
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h:10,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qmainwindow.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QMainWindow:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/MainWindow.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/PolyhedronTests.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h: In instantiation of ‘T QObject::findChild(QAnyStringView, Qt::FindChildOptions) const [with T = PolyhedronDialog*; Qt::FindChildOptions = QFlags<Qt::FindChildOption>]’:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:180:28:   required from ‘T QObject::findChild(Qt::FindChildOptions) const [with T = PolyhedronDialog*; Qt::FindChildOptions = QFlags<Qt::FindChildOption>]’
+  180 |         return findChild<T>({}, options);
+      |                ~~~~~~~~~~~~^~~~~~~~~~~~~
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/PolyhedronTests.cpp:82:91:   required from here
+   82 |       QTimer::singleShot(0,panel,[&] { auto *controls=panel->findChild<PolyhedronDialog *>(); try {
+      |                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:160:62: error: static assertion failed: No Q_OBJECT in the class passed to QObject::findChild
+  160 |         static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
+      |                                                              ^~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:160:62: note: ‘QtPrivate::HasQ_OBJECT_Macro<PolyhedronDialog>::Value’ evaluates to false
+ninja: build stopped: subcommand failed.
+[1/7] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/7] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PolyhedronDialog.cpp.o
+[3/7] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[4/7] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[5/7] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[6/7] Building CXX object src/qtgui/CMakeFiles/GmatQtPolyhedronTests.dir/tests/PolyhedronTests.cpp.o
+[7/7] Linking CXX executable src/qtgui/GmatQtPolyhedronTests

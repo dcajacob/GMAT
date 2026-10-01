@@ -1673,6 +1673,13 @@ insertion becomes an editor for the first inserted command, so the next Apply
 changes that command rather than inserting a duplicate. Failed Apply retains the
 pending text. Broader companion refresh/keyboard/portal cases remain under qualification.
 
+Force-model body edits through the polyhedron fields or contributor dialog retain
+the moved contributor's source settings and implicit density. Reopening pending
+rows retains their original identity; newly added rows remain new. Changing an
+existing Python external-force module updates its declaration in place. Both
+paths preserve unrelated force settings and comments through mixed Apply,
+Undo/Redo and save/reopen. Wider plugin and desktop qualification remains open.
+
 SPICE diagnostic initialization retains previous GMATSpiceKernelError.txt files
 and selects unused numbered siblings for new raw output. An unavailable output
 directory or diagnostic path beyond SPICE's 255-byte limit uses console output

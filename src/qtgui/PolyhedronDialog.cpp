@@ -45,7 +45,7 @@ QString validatePolyhedronSettings(const QJsonArray &settings)
    }
    return {};
 }
-QString polyhedronScript(const QString &source,GmatBase &model,const QJsonArray &settings,const QString &firstCommand)
+QString polyhedronScript(const QString &source,GmatBase &model,const QJsonArray &settings,const QString &firstCommand,const QMap<QString,QString> &bodyMoves)
 {
    const auto invalid=validatePolyhedronSettings(settings); if (!invalid.isEmpty()) throw std::runtime_error(invalid.toStdString());
    const auto name=QString::fromStdString(model.GetName());
@@ -77,16 +77,18 @@ QString polyhedronScript(const QString &source,GmatBase &model,const QJsonArray 
       }
       if (body.isEmpty()) continue;
       properties.append(property);
-      if (!pending.contains(body)) continue;
+      const auto target=bodyMoves.value(body,body);
+      if (!pending.contains(target)) continue;
       const QString key=leaf=="ShapeFileName" ? "shape" : leaf=="BodyDensity" ? "density" : QString();
-      if (!key.isEmpty() && old.value(body).value(key)!=pending.value(body).value(key)) continue;
+      if (!key.isEmpty() && old.value(body).value(key)!=pending.value(target).value(key)) continue;
       // Retain existing expressions and unknown settings, without filling in
       // implicit defaults of this or unrelated forces. Legacy aliases acquire
       // a body prefix so adding another contributor cannot change ownership.
       QString code=statement.code.trimmed(); const auto start=code.indexOf('=');
       if (start<0) throw std::runtime_error("Cannot locate the polyhedron assignment.");
-      if (!property.startsWith("PolyhedronGravityModel.")) code="GMAT "+name+".PolyhedronGravityModel."+body+"."+leaf+" "+code.mid(start);
-      if (!code.endsWith(';')) code+=';'; retained+=code+'\n'; written.insert(body+"."+leaf);
+      if (target!=body || !property.startsWith("PolyhedronGravityModel.")) code="GMAT "+name+".PolyhedronGravityModel."+target+"."+leaf+" "+code.mid(start);
+      if (leaf=="CreateForceBody" && target!=body) code="GMAT "+name+".PolyhedronGravityModel."+target+".CreateForceBody = "+target+";";
+      if (!code.endsWith(';')) code+=';'; retained+=code+'\n'; written.insert(target+"."+leaf);
    }
    for (auto it=legacyCreators.crbegin();it!=legacyCreators.crend();++it) {
       for (auto position=it->positions.crbegin();position!=it->positions.crend();++position) candidate.remove(*position,1);
@@ -95,10 +97,11 @@ QString polyhedronScript(const QString &source,GmatBase &model,const QJsonArray 
    QString block="GMAT "+name+".PolyhedralBodies = {"+bodies.join(", ")+"};\n"+retained;
    for (const auto &body:bodies) {
       const auto row=pending.value(body); const auto prefix="GMAT "+name+".PolyhedronGravityModel."+body+".";
+      const auto original=bodyMoves.key(body,body);
       if (!written.contains(body+".CreateForceBody")) block+=prefix+"CreateForceBody = "+body+";\n";
       for (const auto &field:QStringList{"ShapeFileName","BodyDensity"}) {
          const auto key=field=="ShapeFileName" ? "shape" : "density";
-         if (written.contains(body+"."+field) || (old.contains(body) && old.value(body).value(key)==row.value(key))) continue;
+         if (written.contains(body+"."+field) || (old.contains(original) && old.value(original).value(key)==row.value(key))) continue;
          block+=prefix+field+" = "+(field=="ShapeFileName" ? literal(row.value(key).toString()) : row.value(key).toString())+";\n";
       }
    }
@@ -122,7 +125,7 @@ PolyhedronDialog::PolyhedronDialog(const QJsonArray &settings,QWidget *parent) :
    setObjectName("polyhedronDialog"); setWindowTitle("Polyhedron gravity"); resize(850,480);
    auto *layout=new QVBoxLayout(this); auto *note=new QLabel("Add one contributor per celestial body. Remove a row to remove that contributor. Changes stay pending until you Apply the force model.",this); note->setWordWrap(true); layout->addWidget(note);
    table=new QTableWidget(0,3,this); table->setObjectName("polyhedronTable"); table->setHorizontalHeaderLabels({"Body","Shape file (coordinates in km)","Density (kg/m³)"}); table->setSelectionBehavior(QAbstractItemView::SelectRows); table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive); table->horizontalHeader()->setStretchLastSection(false); table->setColumnWidth(0,150); table->setColumnWidth(1,470); table->setColumnWidth(2,160); layout->addWidget(table);
-   for (const auto &entry:settings) { const auto row=entry.toObject(); addRow(row.value("body").toString(),row.value("shape").toString(),row.value("density").toString()); }
+   for (const auto &entry:settings) { const auto row=entry.toObject(); const auto body=row.value("body").toString(); addRow(body,row.value("shape").toString(),row.value("density").toString(),row.value("previousBody").toString(body)); }
    auto *actions=new QHBoxLayout; layout->addLayout(actions);
    const auto button=[&](const QString &text,const QString &name) { auto *item=new QPushButton(text,this); item->setObjectName(name); actions->addWidget(item); return item; };
    connect(button("Add contributor","polyhedronAdd"),&QPushButton::clicked,this,[this] { addRow(); error->clear(); });
@@ -133,14 +136,22 @@ PolyhedronDialog::PolyhedronDialog(const QJsonArray &settings,QWidget *parent) :
    connect(table,&QTableWidget::itemChanged,error,&QLabel::clear);
    connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
    connect(buttons->button(QDialogButtonBox::Ok),&QPushButton::clicked,this,[this] {
-      QJsonArray pending; for (int row=0;row<table->rowCount();++row) pending.append(QJsonObject{{"body",qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()},{"shape",table->item(row,1)->text().trimmed()},{"density",table->item(row,2)->text().trimmed()}});
+      QJsonArray pending; for (int row=0;row<table->rowCount();++row) {
+         auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,0)); const auto body=choice->currentText(),original=choice->property("originalBody").toString();
+         QJsonObject value{{"body",body},{"shape",table->item(row,1)->text().trimmed()},{"density",table->item(row,2)->text().trimmed()}};
+         // An explicit empty origin distinguishes a new pending row when the
+         // dialog is reopened, so moving it never impersonates an old force.
+         if (original.isEmpty() || original!=body) value["previousBody"]=original;
+         pending.append(value);
+      }
       const auto invalid=validatePolyhedronSettings(pending); if (!invalid.isEmpty()) { error->setText(invalid); return; }
       accepted=pending; accept();
    });
 }
-void PolyhedronDialog::addRow(const QString &body,const QString &shape,const QString &density)
+void PolyhedronDialog::addRow(const QString &body,const QString &shape,const QString &density,const QString &originalBody)
 {
    const auto row=table->rowCount(); table->insertRow(row); auto *choice=new QComboBox(table);
+   choice->setProperty("originalBody",originalBody);
    for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) choice->addItem(QString::fromStdString(name));
    if (!body.isEmpty()) choice->setCurrentText(body); table->setCellWidget(row,0,choice); table->setItem(row,1,new QTableWidgetItem(shape)); table->setItem(row,2,new QTableWidgetItem(density)); table->setCurrentCell(row,1); table->selectRow(row);
    connect(choice,&QComboBox::currentTextChanged,this,[this] { if (error) error->clear(); });

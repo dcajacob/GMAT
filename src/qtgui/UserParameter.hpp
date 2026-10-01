@@ -9,9 +9,10 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
 // Apply the changed assignments in two engine-generated resource snapshots to
 // the original source. Unchanged properties and other resources stay implicit
 // or retain their original syntax. Array declarations may change dimensions.
-// Gravity body lists, drag, SRP and relativistic creator changes retain original
-// selector positions/spelling; removal edits only the affected force family.
-// Remaining force selectors reconstruct the model in serializer order.
+// Gravity body lists, drag, SRP, relativistic and existing external module
+// creator changes retain selector positions/spelling; removal edits only the
+// affected force family. Remaining raw force selectors reconstruct the model
+// in serializer order; specialized polyhedron/external controls handle them.
 QString patchResourceConfiguration(const QString &source,const QString &name,const QString &before,const QString &after,const QString &firstMissionStatement={},bool replaceOwnedConfiguration=false);
 // Delete only this resource's declaration and configuration assignments. A
 // grouped Create keeps its other resources; comments and mission source remain.

@@ -5,6 +5,7 @@
 #include "GmatBase.hpp"
 #include "BaseException.hpp"
 #include "ExternalForceDialog.hpp"
+#include "UserParameter.hpp"
 #include <QApplication>
 #include <QPlainTextEdit>
 #include <QDir>
@@ -33,12 +34,40 @@ static void require(bool ok,const char *message) { if (!ok) throw std::runtime_e
 static QString read(const QString &path) { QFile file(path); require(file.open(QIODevice::ReadOnly),"Fixture/report unavailable"); return QString::fromUtf8(file.readAll()); }
 static QVector<double> numbers(const QString &path) { QVector<double> result; for (const auto &word:read(path).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts)) { bool ok; const double number=word.toDouble(&ok); require(ok && std::isfinite(number),"Nonnumeric external force report"); result.append(number); } return result; }
 static void equivalent(const QVector<double> &a,const QVector<double> &b) { require(a.size()==b.size(),"External force report dimensions changed"); for (int i=0;i<a.size();++i) require(std::abs(a[i]-b[i])<1e-10*std::max(1.0,std::abs(b[i])),"GUI external force result differs from script reference"); }
-static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) throw std::runtime_error(window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().toStdString()); }
+static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) { QApplication::processEvents(); throw std::runtime_error(window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().toStdString()); } }
 static QTableWidgetItem *field(ResourceEditor &panel,const QString &name) { auto *table=panel.findChild<QTableWidget *>(); require(table,"Properties table missing"); for (int i=0;i<table->rowCount();++i) if (table->item(i,0)->text()==name) return table->item(i,1); throw std::runtime_error(("Missing property "+name).toStdString()); }
 static void module(ResourceEditor &panel,const QString &name,bool accept) {
    std::exception_ptr failure; auto *choose=panel.findChild<QPushButton *>("chooseProperty_External.ScriptFileName"); require(choose,"Python module selector missing");
    QTimer::singleShot(0,&panel,[&] { auto *dialog=panel.findChild<QInputDialog *>(); try { require(dialog && dialog->comboBoxItems().contains(name),"Configured Python module missing from choices"); require(!dialog->comboBoxItems().contains(name+".py"),"Module selector includes file extension"); dialog->setTextValue(name); accept ? dialog->accept() : dialog->reject(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); } });
    choose->click(); if (failure) std::rethrow_exception(failure);
+}
+static void moduleSourceCases(MainWindow &window,QPlainTextEdit &editor,QTemporaryDir &files,const QString &report,const QString &reference)
+{
+   auto source=reference;
+   source.remove(QRegularExpression("^ExternalFM\\.(?:Drag|SRP)[^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption));
+   source.replace("ExternalFM.External                    = 'SimpleExternalForceModel_NoAPI'","% retain creator\n  GMAT ExternalFM.External = 'MissingQtForceModule'; % module comment");
+   source.replace("'GetDerivatives'","'MissingFunction'"); source.replace("ExcludeOtherForces = True","ExcludeOtherForces = False");
+   const auto suffix=source.mid(source.indexOf("BeginMissionSequence"));
+   auto independent=source; independent.replace("MissingQtForceModule","SimpleExternalForceModel_NoAPI"); independent.replace("MissingFunction","GetDerivatives"); independent.replace("ExternalFM.ErrorControl                = 'RSSStep'","ExternalFM.ErrorControl                = 'LargestStep'");
+   editor.setPlainText(independent); run(window); const auto expected=numbers(report); require(expected.size()==12,"Module source state report incomplete");
+   editor.setPlainText(source); require(window.buildScript(),"Module source fixture failed");
+   auto *model=Moderator::Instance()->GetConfiguredObject("ExternalFM"); const auto before=QString::fromStdString(model->GetGeneratingString(Gmat::SCRIPTING));
+   auto *tree=window.findChild<QTreeWidget *>("Resources"); const auto matches=tree->findItems("ExternalFM",Qt::MatchExactly|Qt::MatchRecursive); require(matches.size()==1,"Module source resource missing"); tree->itemDoubleClicked(matches.first(),0);
+   QMdiSubWindow *child=nullptr; for (auto *item:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (item->property("resourceName").toString()=="ExternalFM") child=item;
+   require(child,"Module source MDI panel missing"); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel,"Module source editor missing");
+   module(*panel,"SimpleExternalForceModel_NoAPI",true); field(*panel,"External.DerivativesFunction")->setText("GetDerivatives");
+   auto *table=panel->findChild<QTableWidget *>(); for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ErrorControl") qobject_cast<QComboBox *>(table->cellWidget(row,1))->setCurrentText("LargestStep");
+   require(panel->hasChanges() && editor.toPlainText()==source,"Module changes did not remain pending"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+   const auto changed=editor.toPlainText(); require(changed!=source && child->isVisible() && child->widget()!=panel && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges(),"Module Apply did not refresh retained panel");
+   require(changed.contains("  GMAT ExternalFM.External = ") && changed.contains("% retain creator") && changed.contains("% module comment") && changed.contains("ExternalFM.PointMasses                 = {Earth}") && changed.endsWith(suffix),"Module rename lost unrelated source/comment/mission");
+   for (const auto &field:QStringList{"PrimaryBodies","Drag","SRP","RelativisticCorrection","PolyhedralBodies","UserDefined"}) require(!changed.contains("ExternalFM."+field+" ="),"Module rename printed an unrelated force default");
+   const auto after=QString::fromStdString(Moderator::Instance()->GetConfiguredObject("ExternalFM")->GetGeneratingString(Gmat::SCRIPTING));
+   auto unknown=source; unknown.replace("= 'MissingQtForceModule'","= ... % mapped continuation\n 'MissingQtForceModule'"); unknown.insert(unknown.indexOf("BeginMissionSequence"),"ExternalFM.External.FutureOption = 'retain'; % unknown option\n");
+   const auto mapped=patchResourceConfiguration(unknown,"ExternalFM",before,after,{},true);
+   require(mapped.contains("ExternalFM.External.FutureOption = 'retain'; % unknown option") && mapped.contains("% mapped continuation") && !mapped.contains("MissingQtForceModule") && mapped.contains("SimpleExternalForceModel_NoAPI"),"Module rename dropped unknown owned source or continued creator");
+   editor.undo(); require(editor.toPlainText()==source,"Module source Undo was not exact"); editor.redo(); require(editor.toPlainText()==changed,"Module source Redo was not exact");
+   const auto saved=files.filePath("module source Δ.script"); require(window.saveScriptTo(saved) && window.loadScript(saved),"Module source Unicode save/reopen failed"); run(window); equivalent(numbers(report),expected);
+   std::cout<<"PASS: actual MDI pending module/function/mixed ErrorControl Apply, retained panel refresh, continued creator and legacy function/comment/source preservation, implicit unrelated force defaults, unknown owned source, exact Undo/Redo/Unicode save/reopen and independent 600-second twelve-state report.\n";
 }
 int main(int argc,char **argv)
 {
@@ -50,6 +79,7 @@ int main(int argc,char **argv)
       QString reference=read(sample); reference.replace("ElapsedDays = 1","ElapsedSecs = 600");
       reference.replace("BeginMissionSequence","Create ReportFile Values;\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nValues.Precision = 16;\nBeginMissionSequence");
       reference+="\nReport Values SatInternal.EarthMJ2000Eq.X SatInternal.EarthMJ2000Eq.Y SatInternal.EarthMJ2000Eq.Z SatInternal.EarthMJ2000Eq.VX SatInternal.EarthMJ2000Eq.VY SatInternal.EarthMJ2000Eq.VZ SatExternal.EarthMJ2000Eq.X SatExternal.EarthMJ2000Eq.Y SatExternal.EarthMJ2000Eq.Z SatExternal.EarthMJ2000Eq.VX SatExternal.EarthMJ2000Eq.VY SatExternal.EarthMJ2000Eq.VZ;\n";
+      if (argc==3 && QString::fromLocal8Bit(argv[2])=="--module-source") { moduleSourceCases(window,*editor,files,report,reference); return 0; }
       editor->setPlainText(reference); require(window.buildScript(),"External force reference failed to build"); run(window); const auto expected=numbers(report); require(expected.size()==12,"External state report missing");
       for (int i=0;i<6;++i) require(std::abs(expected[i]-expected[i+6])<(i<3 ? 1e-5 : 1e-8),"Python two-body state disagrees with internal force model");
       QString source=reference; source.replace("SimpleExternalForceModel_NoAPI","MissingQtForceModule"); source.replace("'GetDerivatives'","'MissingFunction'"); source.replace("ExcludeOtherForces = True","ExcludeOtherForces = False"); editor->setPlainText(source); require(window.buildScript(),"Pending missing module fixture did not build");

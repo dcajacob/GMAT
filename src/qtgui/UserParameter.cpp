@@ -283,6 +283,15 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       }
       changed.removeAll(field);
    }
+   if (replaceOwnedConfiguration && changed.contains("External") && old.values.contains("External") && pending.values.contains("External")) {
+      const QRegularExpression value("=\\s*('.*')\\s*;\\s*$");
+      const auto module=value.match(pending.values.value("External").last()).captured(1);
+      if (module.isEmpty()) throw std::runtime_error("Cannot safely patch this external force module.");
+      // The owned module field serializes as the force creator. Updating its
+      // RHS must retain the other forces and their implicit configuration.
+      forceSource=forceSelectorSource(forceSource,name,"External",module,{},firstMissionStatement,{}, {"External.ScriptFileName","ScriptFileName"});
+      changed.removeAll("External");
+   }
    const QStringList forceSelectors={"PrimaryBodies","PointMasses","PolyhedralBodies","Drag","SRP","RelativisticCorrection","UserDefined","External"};
    const bool changedForceSelector=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) {
       return forceSelectors.contains(field) || field=="Drag.AtmosphereModel" || field=="Drag.AtmosphereBody";

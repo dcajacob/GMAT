@@ -4813,3 +4813,78 @@ The established window/viewer, body chooser and broader regression evidence is
 reused. No full-suite or native-layout rerun was needed for these transaction and
 source changes. Full replacement qualification remains in progress under the
 original acceptance gates and outstanding plugin/source/native-input limits.
+
+
+## Polyhedron body moves and external module edits preserve force source
+
+The remaining active owned fields that changed a root force creator could still
+trigger whole-model regeneration: PolyhedronGravityModel.CreateForceBody and
+External.ScriptFileName. Body moves now use the existing narrow polyhedron
+writer, retaining settings under the new owner and leaving unchanged density
+implicit. Known mesh/density edits for all contributors are included in the same
+pending transaction. Invalid bodies or duplicate destinations reject before
+source changes; the existing rebuilt-model settings check and rollback remain
+in force. Unknown owned source assignments are mapped to the new body rather
+than dropped. Comments, unrelated force text and the mission suffix survive.
+The original body is also carried through the contributor dialog, including
+reopening pending settings and edits first made in the per-field controls. An
+explicit empty origin distinguishes a new pending row from a configured force.
+Restoring an unchanged original row produces the original settings again.
+
+Changing an existing external module now replaces the creator's RHS in place
+before dependent function/scalar deltas are applied. Root and module-field
+creator aliases are recognized. This also serves the existing contributor
+dialog's nonstructural module edit; adding/removing the force retains the
+specialized external writer. Unrelated force defaults are not printed. The
+generic raw PolyhedralBodies/UserDefined/External structural fallback still
+exists: ResourceProperties exposes neither of the first two compound arrays,
+and ODEModel marks root External read-only. The active specialized creation,
+removal and owned-body/module paths are handled separately. This bounds the
+earlier fallback warning; it does not qualify arbitrary raw root transactions
+or every possible multi-force combination. No numerical algorithm is changed.
+
+Two dedicated modes in the existing executables avoid replaying their older
+plugin suites. QtGui.PolyhedronBodySource exercises the actual Resources/MDI
+per-field body/path edit with mixed ErrorControl, rejection/correction of a
+non-celestial body with the old panel and pending values retained, accepted panel
+refresh, legacy creator conversion, unchanged explicit point mass/central-body
+source, implicit density and unrelated defaults. It restores the body and then
+moves it through the contributor dialog, reopens pending settings and applies.
+Both paths check exact Undo/Redo and Unicode save/reopen against independent
+Earth/Mars six-state script reports. Pure writer checks cover qualified and
+unknown owned settings; an isolated dialog check confirms a reopened new row
+retains its empty origin. It reuses the cube fixture and the already established
+loader/far-field evidence, rather than repeating mesh or numerical qualification.
+
+QtGui.ExternalModuleSource uses the actual MDI module picker, pending function
+and mixed ErrorControl, retained refreshed panel, legacy function alias, creator
+spelling/comments and unchanged point mass/mission. Unrelated implicit force
+defaults stay absent. Exact Undo/Redo and Unicode save/reopen precede agreement
+with an independently configured shortened no-API example's twelve-state report.
+Unknown owned assignments and commented continuations are pure source-mapping
+checks; commented continuation execution is not claimed. Existing missing-module,
+missing-function and creation/removal recovery evidence is reused.
+
+The first polyhedron build missed a QJsonObject include. A separately launched
+check then ran the stale executable's older suite, recorded in
+check-polyhedron-body-source.txt; it is not evidence for the new mode. Its
+generated capture was removed. Subsequent checks are conditional on successful
+builds. check-polyhedron-body-source-final.txt records the new fixture failing;
+check-polyhedron-body-source-debug.txt includes GMAT's explanation that the
+legacy creator conflicts with default Earth gravity. The fixture now explicitly
+retains a Sun point mass, matching the established legacy setup.
+check-polyhedron-body-source-fixture.txt passed the per-field case in 1.32 seconds.
+The dialog build also records a test-only findChild type correction in
+build-polyhedron-body-dialog.txt. The final expanded check,
+check-polyhedron-body-dialog.txt, passed in 0.66 seconds.
+
+check-external-module-source.txt and its debug companion record the new fixture
+failing because GMAT rejects its commented continuation. Execution now uses
+valid single-line source; check-external-module-source-fixture.txt passed in 0.35
+seconds. Build logs preserve the corrections and actual application rebuilds;
+build-polyhedron-body-dialog.txt records the final GmatQt-R2026a relink and
+GmatQt launcher recreation. Existing complete regression and native
+window/viewer evidence is reused, with no full-suite or native-layout rerun.
+Full Linux replacement qualification remains active under the original gates,
+including native Wayland main-window restore/input, desktop portal and remaining
+plugin/workflow limits. Windows/macOS remain deferred.

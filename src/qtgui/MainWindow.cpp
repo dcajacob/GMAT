@@ -43,6 +43,7 @@
 #include "ExternalForceDialog.hpp"
 #include "PolyhedronDialog.hpp"
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QJsonParseError>
 #include <QTreeWidgetItemIterator>
 #include "StartupCompatibility.hpp"
@@ -1251,12 +1252,38 @@ QString MainWindow::applyResourceChanges(const QString &name,
          for (auto it=external.cbegin();it!=external.cend();++it) changes.remove(it.key());
       }
    }
+   QMap<QString,QString> polyhedronMoves;
+   if (object->IsOfType("ODEModel") && !changes.contains("@PolyhedronForces")) {
+      const auto original=polyhedronSettings(*object); auto pending=original; QStringList consumed;
+      for (int index=0;index<original.size();++index) {
+         auto row=original[index].toObject(); const auto body=row.value("body").toString(); const auto prefix="PolyhedronGravityModel."+body+'.';
+         if (changes.contains(prefix+"CreateForceBody") && changes.value(prefix+"CreateForceBody").trimmed()!=body) {
+            polyhedronMoves[body]=changes.value(prefix+"CreateForceBody").trimmed();
+            row["body"]=polyhedronMoves.value(body); consumed.append(prefix+"CreateForceBody");
+         }
+         for (const auto &field:QStringList{"ShapeFileName","BodyDensity"}) if (changes.contains(prefix+field)) {
+            row[field=="ShapeFileName" ? "shape" : "density"]=changes.value(prefix+field); consumed.append(prefix+field);
+         }
+         pending[index]=row;
+      }
+      if (!polyhedronMoves.isEmpty()) {
+         changes["@PolyhedronForces"]=QString::fromUtf8(QJsonDocument(pending).toJson(QJsonDocument::Compact));
+         for (const auto &field:consumed) changes.remove(field);
+      }
+   }
    const bool replacePolyhedron=changes.contains("@PolyhedronForces"); QJsonArray polyhedron;
    if (replacePolyhedron) {
       if (!object->IsOfType("ODEModel")) return "Polyhedron contributors belong to a force model.";
       QJsonParseError parse; const auto value=QJsonDocument::fromJson(changes.value("@PolyhedronForces").toUtf8(),&parse);
       if (parse.error!=QJsonParseError::NoError || !value.isArray()) return "Invalid polyhedron contributor settings.";
       polyhedron=value.array(); const auto error=validatePolyhedronSettings(polyhedron); if (!error.isEmpty()) return error;
+      QStringList originalBodies; for (const auto &entry:polyhedronSettings(*object)) originalBodies.append(entry.toObject().value("body").toString());
+      for (const auto &entry:polyhedron) {
+         const auto row=entry.toObject(); const auto origin=row.value("previousBody").toString();
+         if (origin.isEmpty()) continue;
+         if (!originalBodies.removeOne(origin)) return "The original polyhedron contributor is unavailable. Reopen the panel.";
+         polyhedronMoves[origin]=row.value("body").toString();
+      }
    }
    if (changes.isEmpty()) return external.isEmpty() ? QString() : externalForceSettingsError(*object,external);
    const bool shadows=object->IsOfType("SolarPowerSystem") && changes.size()==1 && changes.contains("ShadowBodies");
@@ -1472,7 +1499,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       try {
          QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
          if (structuralExternal) candidate=externalForceScript(candidate,name,external,firstCommand);
-         if (replacePolyhedron) candidate=polyhedronScript(candidate,*object,polyhedron,firstCommand);
+         if (replacePolyhedron) candidate=polyhedronScript(candidate,*object,polyhedron,firstCommand,polyhedronMoves);
       } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
       return applyModelScript(candidate,[name,external,replacePolyhedron,polyhedron,gravityCheck] {

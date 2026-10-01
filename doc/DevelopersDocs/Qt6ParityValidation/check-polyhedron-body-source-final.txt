@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 41: QtGui.PolyhedronBodySource
+1/1 Test #41: QtGui.PolyhedronBodySource .......***Failed    0.34 sec
+This plugin does not support propagateSizeHints()
+FAIL: Build failed — see Message Window
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.34 sec*proc (1 test)
+
+Total Test time (real) =   0.35 sec
+
+The following tests FAILED:
+	 41 - QtGui.PolyhedronBodySource (Failed)               qt-gui
+Errors while running CTest

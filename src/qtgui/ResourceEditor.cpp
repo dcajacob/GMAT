@@ -730,6 +730,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text().startsWith(prefix)) {
                   const auto leaf=table->item(row,0)->text().mid(prefix.size()); if (names.contains(leaf)) force[names.value(leaf)]=table->item(row,1)->text();
                }
+               const auto originalBody=settings[index].toObject().value("body").toString();
+               if (originalBody!=force.value("body").toString()) force["previousBody"]=originalBody;
                settings[index]=force;
             }
             PolyhedronDialog dialog(settings,this); if (dialog.exec()!=QDialog::Accepted) return;
