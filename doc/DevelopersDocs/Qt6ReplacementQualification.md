@@ -44,18 +44,18 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Active optimizer/left/right/relation controls audited; inactive wx tolerance control excluded. Constraints adds array-element source mapping, read-only <=/>=/= choices, numeric single operand browser and literal-index pre-Apply bounds checks. Actual MDI Cancel/pending/retained Apply, exact labels/comments/source/Undo/Redo/Unicode Save/Save As/reopen, invalid type/reference/index rollback and correction/rerun are covered. Five fixed-bound Yukon cases match analytic optima and independent complete iteration reports; native Wayland controls inspected. A separate literal-left/varying-right script produces NaN before any GUI edit; this numerical regime remains unqualified with raw evidence, without an engine rewrite. Dynamic-index and broader operand/property combinations remain pending. |
-| `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
+| `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. SolverOperands now adds actual MDI array goal/value/tolerance selectors (including the missing tolerance browser), numeric caller filtering, literal-index rejection, exact source/Undo/Redo/Unicode Save/Save As/reopen, independently known goal 4 and byte-identical full iteration reports after correction/rerun; native Wayland panel/picker inspected. Broader tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options. Active Apply Corrections was missing from the earlier inventory; it now updates numeric initial guesses with source retention, pending/stale guards and Undo/Redo. Actual Yukon controls, known optimum and Unicode reopen tested; native Wayland panel captured and inspected. SolverModes covers all Solve/RunInitialGuess × SaveAndContinue/DiscardAndContinue/Stop combinations in a repeated spacecraft propagation loop, documented next-invocation guesses, exact independent reports and retained source. Disabled stopped/failed viewer histories and output-path recovery now pass offscreen and native Wayland. Other optimizer/constraint and nested combinations remain pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified. Apply Corrections now covers scaled numeric guesses, retained references, nested ownership, script-event Vary commands, unexecuted guards and corrections/recovery after ExitMode Stop or nonconvergence. Known goals and Unicode reopen pass. SolverModes now covers every Solve/RunInitialGuess × ExitMode combination in a repeated spacecraft propagation loop, the documented saved/discarded next-invocation guess, known goals/epochs, exact independent state/geodetic reports and source round trips. Intentional Stop classification and disabled partial viewer completion/recovery pass. More complex nested/mixed solver and plot-mode combinations remain pending. |
-| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
+| `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. SolverOperands adds array variable/initial/all-option source spans, selected array Vary for DC/Yukon, mixed reference/literal bounds, scale factors, exact source/Undo/Redo/Unicode Save/Save As/reopen and independent full iteration reports for goal 4/optimum 3. Invalid literal indices, edited inverted bounds and out-of-range literal initial guesses stay pending with inline explanations; correction/rerun matches reference. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested. Actual MDI spacecraft runtime OrbitColor/TargetColor string/RGB expression edits, rejected-syntax correction, retained Apply, exact Undo/Redo/Unicode save/reopen, independent reports and Orbit/Ground color histories are now covered; see the runtime-color appendix. Other destination-specific execution and complex syntax audit remain pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Python module/function and ordered arguments, labeled calls, empty/bare inputs and unbracketed scalar outputs are covered in the Python appendices. GmatCallSyntax adds GMAT empty/bare calls, scalar output spelling, labeled serialization/source mapping, retained MDI Apply/Undo/reopen and independent zero-input/no-output execution. Broader GMAT object/string/array signatures remain pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
-| `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
+| `src/gui/command/MinimizePanel.hpp` | Active optimizer/objective browser and numeric-reference restrictions audited. Solver selector previously tested. SolverOperands adds array objective source mapping, actual MDI array choice/Cancel/pending/retained Apply, exact labels/comments/source/Undo/Redo/Unicode Save/Save As/reopen, independently known Yukon optimum 3 and byte-identical complete iteration report, out-of-range index rejection/correction/rerun; native Wayland panel inspected. Broader objective/property combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
 | `src/gui/function/MatlabFunctionSetupPanel.hpp` | FunctionPath load/save and browse controls audited. It requires MATLAB function execution outside the selected startup/runtime (PLUGIN_MATLABINTERFACE=OFF); no MATLAB execution qualification is claimed. Supported GMAT function path/editing/creation workflows remain under FunctionSetupPanel. |
 | `src/gui/function/FunctionSetupPanel.hpp` | In-app GMAT function-file editing, Save/Cancel and find/replace provided. BOM/CRLF preservation, external-change protection and edited-function execution after mission save/reopen covered. Save As, pending path Apply and execution from the copy covered. New template-based file creation, Cancel, path Apply and reopened execution covered; broader multi-output/function-signature cases remain pending. |
@@ -167,7 +167,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. PluginCreation adds GroundStation New/Delete menu operations, Cancel, exact unrelated source/Undo/Redo and Unicode save/reopen. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
 | `../plugins/libThrustFile` | ThrustFileTests: history creation and input selection, typed segment/tank/solve-for lists and clear/restore, pending/Cancel angle and sigma vector resizing, Begin/EndFileThrust selectors, independent state reports, analytic scaled fuel depletion and post-End coast, exact Undo/Redo/Unicode Save/Save As/reopen, wrong-reference rollback, missing/malformed-file recovery and Output access covered. All four data formats with None/Linear interpolation, relative-file Build/Apply/reopen and the full-day bundled example covered. Multiple spacecraft/segments, cubic interpolation, time-varying angles, estimator solve-fors and file-boundary regimes remain pending. |
 | `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
-| `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. OptimizerPlots adds All/Current/None Orbit/Ground/XY modes, pending Apply/Undo/reopen, independently known quadratic optimum, exact display-independent state/geodetic reports, accepted camera/replay and native viewer close/reopen. Constraints adds the actual command controls, five fixed-bound scalar/array/property cases with analytic optima and byte-identical script-reference iteration reports, source/Undo/Redo/Unicode Save/Save As/reopen, operand rollback/recovery and native Wayland captures. A varying-right bound with literal left produces NaN in the independent script before any GUI edit; that regime and additional settings/error modes remain unqualified. |
+| `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. OptimizerPlots adds All/Current/None Orbit/Ground/XY modes, pending Apply/Undo/reopen, independently known quadratic optimum, exact display-independent state/geodetic reports, accepted camera/replay and native viewer close/reopen. Constraints adds the actual command controls, five fixed-bound scalar/array/property cases with analytic optima and byte-identical script-reference iteration reports, source/Undo/Redo/Unicode Save/Save As/reopen, operand rollback/recovery and native Wayland captures. SolverOperands adds selected array Vary/initial/options and Minimize with scale factors/mixed bounds, optimum 3, complete independent iteration reports, invalid-index/bound correction/rerun and exact source/file round trips. A varying-right bound with literal left produces NaN in the independent script before any GUI edit; that regime and additional settings/error modes remain unqualified. |
 
 ## Implementation checkpoint 1
 
@@ -6121,3 +6121,80 @@ requests the already current actual application. Initial build/failure records
 are preserved as diagnostic evidence, not final passes. All changes remain on
 codex/qt6-gui. Windows/macOS are deferred and the full replacement goal remains
 in progress against the original gates.
+
+
+## Vary/Achieve/Minimize array operand workflows — 2026-10-01
+
+The active wx Vary panel accepts array elements for the variable and initial,
+perturbation, lower/upper, maximum step and scale fields. It checks edited literal
+initial/bound ranges before saving; reference values remain engine expressions.
+Achieve has active single-parameter browsers for goal, value and tolerance.
+Minimize's objective browser accepts numeric parameter/Variable/array elements,
+excluding literal numbers. audit-solver-operands.txt records the source contracts.
+
+QtGui.SolverOperands first runs the independent array targeter reference but
+fails the actual Vary panel: comma exclusion hides its Variable form field.
+The Vary/Achieve/Minimize scalar capture now retains parenthesized array commas;
+recognized options use the same capture, so commas in option array indices do
+not split fields. Option order, surrounding spaces, labels, comments and all
+unrelated source stay exact. Add-default-options behavior retains the existing
+scalar Mission regression. Unsupported syntax remains in the text fallback.
+No numerical engine or solver algorithm was changed.
+
+Achieve now exposes its missing tolerance browser. Achieve goal/Minimize
+objective use NumericReference, which selects numeric scalar references without
+literal numbers or whole arrays. Achieve value/tolerance use NumericSingle,
+which additionally permits finite real literals. Vary retains WritableReal.
+Both new and existing caller restrictions are asserted in actual modal widgets.
+The existing constraint literal-index validation now also checks Vary operands
+and recognized option fields, Achieve goal/value/tolerance, and Minimize objective.
+It rejects literal indices outside the current dimensions before Apply, retaining
+pending input and the applied source/model; dynamic indices remain engine-owned.
+
+check-solver-operands-controls.txt passes the targeter controls/round trip/report
+and invalid-index recovery, then finds inverted literal Vary bounds accepted in
+the Yukon panel. The new range preflight matches wx when initial/lower/upper fields
+change: lower <= upper and any finite literal initial value within available
+literal bounds. It does not evaluate reference-valued bounds or reject unchanged
+legacy settings merely when another field changes. Errors appear inline without
+committing source. The final fixture tests inverted bounds, an initial guess
+above the upper bound, index correction and reference-result rerun.
+
+The DC mission changes State(1,1) to State(1,2) through the Vary browser, initial
+Params(1,1) to Params(1,5), Achieve goal to State(1,2), desired value to Goals(1,2)
+and tolerance to Goals(1,3). Perturbation, lower/upper, maximum step and both
+scale options are array references with retained nondefault option order.
+The independently known final State(1,2) is 4. The Yukon mission selects the
+same array decision variable/reference initial value, edits lower/upper to -5/8,
+and selects CostGrid(1,2) instead of CostGrid(1,1) through Minimize. Its selected
+cost is (State(1,2)-3)^2, with known optimum 3 and cost below 1e-10. Both retain
+AdditiveScaleFactor=Params(1,6) (2) and MultiplicativeScaleFactor=Params(1,7) (3).
+State(1,1) must remain zero; it is not silently varied instead.
+
+Each actual MDI transaction has picker Cancel/pending/Apply, a retained clean
+panel, one exact source Undo/Redo, Unicode Save and Save As/reopen, and execution.
+Every complete trial/accepted four-column report must be byte identical to an
+independently constructed script reference and meet the known goal/optimum.
+Failed index/range edits preserve the complete applied source; correcting them
+and rerunning reproduces the full report. No prior viewer or solver-mode matrix
+was repeated. check-solver-operands-accepted.txt passes SolverOperands (0.84 s),
+Mission (2.11 s) and Constraints (1.28 s), 4.23 s total. These are the affected
+shared scalar/option/picker/preflight regressions, not a full-suite rerun.
+
+solver-operands-wayland-20261001.txt passes both workflows and recovery on native
+Wayland. The .Target.png, .Optimize.png and .tolerance.png were inspected:
+Achieve array goal/value/tolerance and its browser, Minimize array objective,
+retained exact command text, Help/Apply and completed status are visible. Vary's
+actual native widgets are exercised by the harness but are behind the captured
+active objective panel; these images do not claim a separate Vary layout capture.
+This is programmatic actual-widget evidence; fresh input, top-level compositor
+minimize/restore and portal chooser gates remain unqualified.
+
+The preserved full .Target.state.txt report has SHA-256
+27d1d10a003dd63eeaad25d8109f536e6a12d16ac2b82e2694cf5e4b68db6d07;
+.Optimize.state.txt has
+0c4897308aae6fe5c3b45f69d1baf4024683eef07f8fa7065bdd659bf328de5b.
+build-solver-operands-controls.txt and build-solver-operands-accepted.txt record
+the real GmatQt-R2026a relinks and GmatQt launcher recreation. Earlier failed
+checks/builds are preserved as diagnostics. All changes remain on codex/qt6-gui;
+Windows/macOS are deferred and original full qualification gates remain open.

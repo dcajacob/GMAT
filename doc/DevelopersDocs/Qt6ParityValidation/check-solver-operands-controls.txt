@@ -1,0 +1,29 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 51: QtGui.SolverOperands
+1/1 Test #51: QtGui.SolverOperands .............***Failed    0.76 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS: Target array Vary/initial/options and array Achieve/value/tolerance, goal 4; picker filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen, complete independent report and invalid-index/bound correction/rerun.
+FAIL: Inverted literal Vary bounds accepted
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.76 sec*proc (1 test)
+
+Total Test time (real) =   0.77 sec
+
+The following tests FAILED:
+	 51 - QtGui.SolverOperands (Failed)                     qt-gui
+Errors while running CTest

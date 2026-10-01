@@ -1960,3 +1960,14 @@ see the NonlinearConstraint qualification appendix. A separate varying-right
 bound produces NaN in the script reference before any GUI edit and remains
 unqualified; no numerical-engine rewrite was made. Other original qualification
 gates remain open and Windows/macOS remain deferred.
+
+
+Vary, Achieve and Minimize forms retain array-element operands and option values
+without treating index commas as field separators. Achieve now includes a
+Tolerance parameter browser. Goal/objective browsers offer numeric references;
+value/tolerance browsers also accept finite real literals. Literal array indices
+are checked before Apply, and edited Vary literal bounds/initial values get
+inline range validation while reference expressions and untouched settings stay
+intact. Actual DC/Yukon array workflows preserve source/Undo/Redo/Unicode file
+round trips and match complete independently configured iteration reports; see
+the solver operand qualification appendix. The actual application was rebuilt.

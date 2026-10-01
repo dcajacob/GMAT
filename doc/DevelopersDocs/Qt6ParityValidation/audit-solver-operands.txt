@@ -1,0 +1,33 @@
+Scope: Linux selected DC/Yukon active Vary/Achieve/Minimize workflows.
+VaryPanel.cpp SaveData CheckVariable accepts Number/Variable/Array Element/
+Plottable Parameter for initial, perturbation, lower/upper, maximum step and both
+scale fields. Variable browser requires a writable numeric destination. Edited
+literal initial/lower/upper fields are compared before SaveData commits: inverted
+bounds and initial value outside a literal bound are rejected. See lines 326–477.
+AchievePanel.cpp OnButtonClick uses ParameterSelectDialog for all three active
+buttons: Goal, GoalValue and Tolerance (lines 356–389); numeric value/tolerance
+CheckVariable permits numbers and array elements. Core Achieve wrapper rejects
+literal number as goal, while value/tolerance allow numeric scalars.
+MinimizePanel.cpp SaveData accepts Variable/Array Element/Spacecraft Parameter
+but not numbers. Core Minimize::SetElementWrapper rejects number/whole array.
+Qt CommandForm previously excluded all commas from Vary/Achieve/Minimize scalar
+operands and recognized options, hiding valid array forms or splitting options.
+The Achieve Tolerance browser was missing. Single allowed reportable String
+choices in goal/objective/value browsers despite their numeric contexts.
+New scalar captures permit parenthesized commas; fields still patch only source
+spans. NumericReference/NumericSingle preserve each caller's literal restrictions.
+Achieve tolerance browser added. Literal-index preflight expanded to these fields.
+Initial independent DC reference executes; actual array Vary field unavailable.
+After array/picker fixes, DC complete workflow passes; Yukon inverted literal
+bounds still accepted. Edited-literal range preflight added, matching wx without
+evaluating reference expressions or changing untouched legacy settings.
+SolverOperands uses actual MDI/modal widgets for DC/Yukon array Vary and options,
+Achieve array goal/value/tolerance, and Minimize array objective. Known goal 4
+and quadratic optimum 3, all trial/accepted report rows equal separate source.
+Cancel, pending/retained Apply, exact unrelated source/Undo/Redo/Unicode Save/
+Save As/reopen, rejected literal indices/bounds and correction/rerun covered.
+Native Wayland actual-widget run passes; objective panels/tolerance picker
+captured and inspected. Vary widgets tested but behind active captured panel.
+No numerical-engine rewrite. No old renderer/solver-mode matrix/full-suite repeat.
+Affected regressions: Mission and Constraints; both pass with SolverOperands.
+Remaining full Linux desktop/plugin/workflow gates stay open; Windows/macOS deferred.

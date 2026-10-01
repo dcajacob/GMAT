@@ -1,0 +1,4 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x58f9928a0360
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x58f9928a0360
+PASS: Target array Vary/initial/options and array Achieve/value/tolerance, goal 4; picker filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen, complete independent report and invalid-index/bound correction/rerun.
+PASS: Optimize array Vary/initial/options and array Minimize, optimum 3; picker filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen, complete independent report and invalid-index/bound correction/rerun.

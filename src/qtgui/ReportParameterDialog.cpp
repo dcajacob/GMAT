@@ -25,7 +25,8 @@
 ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
    const bool arguments=mode==Mode::FunctionInputs || mode==Mode::FunctionOutputs;
-   const bool numeric=mode==Mode::NumericSingle;
+   const bool numeric=mode==Mode::NumericSingle || mode==Mode::NumericReference;
+   const bool literal=mode==Mode::NumericSingle;
    const bool plottable=mode==Mode::PlottableSingle || mode==Mode::PlottableMultiple || numeric;
    const bool single=mode!=Mode::Multiple && mode!=Mode::PlottableMultiple && !arguments;
    const bool writable=mode==Mode::Writable || mode==Mode::WritableReal || mode==Mode::FunctionOutputs;
@@ -40,7 +41,7 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
    help->setWordWrap(true); layout->addWidget(help);
    if (plottable) help->setText("Choose a numeric plot parameter or an array element. Browse object properties and their reference frames below. Apply validates the complete plot.");
-   if (numeric) help->setText("Choose a Variable, array element or numeric object property, or enter a finite real number. Apply validates the complete command.");
+   if (numeric) help->setText(literal ? "Choose a Variable, array element or numeric object property, or enter a finite real number. Apply validates the complete command." : "Choose a Variable, array element or numeric object property. Apply validates the complete command.");
    auto *entry=new QComboBox(this); entry->setObjectName("reportParameterEntry");
    if (single) singleEntry=entry;
    entry->setEditable(true); entry->setInsertPolicy(QComboBox::NoInsert);
@@ -194,10 +195,10 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       connect(list->model(),&QAbstractItemModel::rowsRemoved,this,[=] { validate(); }); validate();
    }
    if (plottable) {
-      auto validate=[this,buttons,entry,add,numeric] {
-         auto allowed=[numeric](const QString &value) {
+      auto validate=[this,buttons,entry,add,literal] {
+         auto allowed=[literal](const QString &value) {
             bool number=false; const auto real=value.toDouble(&number);
-            return (numeric && number && std::isfinite(real)) || isPlottableReference(value);
+            return (literal && number && std::isfinite(real)) || isPlottableReference(value);
          };
          const auto values=selection(); bool valid=singleEntry ? !values.isEmpty() : true;
          for (const auto &value:values) valid=valid && allowed(value);

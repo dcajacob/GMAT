@@ -10,6 +10,7 @@
 #include <QLineEdit>
 #include <QRegularExpression>
 #include <algorithm>
+#include <cmath>
 #include "ReportParameterDialog.hpp"
 #include "Moderator.hpp"
 #include "GmatBase.hpp"
@@ -57,12 +58,18 @@ void CommandForm::updateSource()
 
 QString CommandForm::validationError() const
 {
-   if (title()!="Constraint" || fields.isEmpty()) return {};
+   if (fields.isEmpty() || !Moderator::Instance()->IsInitialized()) return {};
+   QStringList operands;
+   if (title()=="Constraint") operands={"Left side","Right side"};
+   else if (title()=="Vary") operands={"Variable","Initial value","Perturbation","Lower","Upper","MaxStep","AdditiveScaleFactor","MultiplicativeScaleFactor"};
+   else if (title()=="Achieve") operands={"Goal","Value","Tolerance"};
+   else if (title()=="Minimize") operands={"Objective"};
+   else return {};
    // Interpretation checks operand types but defers array bounds until run.
    // Match wx's pre-Apply check for literal indices; dynamic indices remain
    // the engine's responsibility and their source is retained.
-   static const QRegularExpression element(R"(^([A-Za-z][A-Za-z0-9_]*)\(\s*([+-]?[0-9]+)\s*,\s*([+-]?[0-9]+)\s*\)$)");
-   for (const auto &side:{QString("Left side"),QString("Right side")}) {
+   static const QRegularExpression element(R"(^([A-Za-z][A-Za-z0-9_]*)\s*\(\s*([+-]?[0-9]+)\s*,\s*([+-]?[0-9]+)\s*\)$)");
+   for (const auto &side:operands) {
       const auto *input=findChild<QLineEdit *>("commandField_"+side);
       if (!input) continue;
       const auto match=element.match(input->text().trimmed());
@@ -74,6 +81,25 @@ QString CommandForm::validationError() const
       const auto rows=array->GetIntegerParameter("NumRows"),columns=array->GetIntegerParameter("NumCols");
       if (!rowValid || !columnValid || row<1 || column<1 || row>rows || column>columns)
          return side+QString(" array indices must be within rows 1–%1 and columns 1–%2.").arg(rows).arg(columns);
+   }
+   if (title()=="Vary") {
+      // wx checks literal ranges when initial/bound fields change. Keep
+      // untouched legacy settings and reference-valued ranges intact.
+      bool rangeChanged=false;
+      for (const auto &field:fields)
+         if ((field.input->objectName()=="commandField_Initial value" || field.input->objectName()=="commandField_Lower" || field.input->objectName()=="commandField_Upper") &&
+             field.input->text()!=original.mid(field.start,field.length)) rangeChanged=true;
+      if (rangeChanged) {
+         auto number=[this](const QString &name,double &value) {
+            auto *input=findChild<QLineEdit *>("commandField_"+name); if (!input) return false;
+            bool valid=false; value=input->text().toDouble(&valid); return valid && std::isfinite(value);
+         };
+         double initial=0,lower=0,upper=0;
+         const bool hasInitial=number("Initial value",initial),hasLower=number("Lower",lower),hasUpper=number("Upper",upper);
+         if (hasLower && hasUpper && lower>upper) return "The lower bound is greater than the upper bound. Adjust the bounds before Apply.";
+         if (hasInitial && hasLower && initial<lower) return "The initial value is below the lower bound. Adjust the initial value or bound before Apply.";
+         if (hasInitial && hasUpper && initial>upper) return "The initial value exceeds the upper bound. Adjust the initial value or bound before Apply.";
+      }
    }
    return {};
 }
@@ -87,6 +113,9 @@ void CommandForm::setStatement(const QString &statement)
    const QString label="(?:'[^'\\n]*'\\s+)?";
    const QString name="([A-Za-z][A-Za-z0-9_]*)";
    const QString expression="([^,;{}\\n]+?)";
+   // Solver scalars can be indexed array elements. Commas inside their
+   // parentheses are operand text, not the separator before an option block.
+   const QString scalar="((?:[^,;{}()\\n]|\\([^;{}()\\n]*\\))+?)";
    const QString pythonName="([A-Za-z_][A-Za-z0-9_]*)";
    const QString end="\\s*;?[ \\t]*(?:%[^\\n]*)?\\s*$";
    const QString branchEnd="\\s*;?[ \\t]*(?:%[^\\n]*)?(?:\\n[\\s\\S]*)?$";
@@ -95,9 +124,9 @@ void CommandForm::setStatement(const QString &statement)
       {"Maneuver","Maneuver\\s+"+label+"(?:BackProp\\s+)?"+name+"\\s*\\(\\s*"+name+"\\s*\\)"+end,{"Burn","Spacecraft"}},
       {"Finite burn","(?:BeginFiniteBurn|EndFiniteBurn)\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Burn","Spacecraft"}},
       {"File thrust","(?:BeginFileThrust|EndFileThrust)\\s+"+label+name+"\\s*\\(\\s*([^;()\\n]+?)\\s*\\)"+end,{"Thrust history","Spacecraft"}},
-      {"Vary","Vary\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Variable","Initial value"}},
-      {"Achieve","Achieve\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Goal","Value"}},
-      {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Solver","Objective"}},
+      {"Vary","Vary\\s+"+label+name+"\\s*\\(\\s*"+scalar+"\\s*=\\s*"+scalar+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Variable","Initial value"}},
+      {"Achieve","Achieve\\s+"+label+name+"\\s*\\(\\s*"+scalar+"\\s*=\\s*"+scalar+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Goal","Value"}},
+      {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+scalar+"\\s*\\)"+end,{"Solver","Objective"}},
       {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^;{}<>=\\n]+?)\\s*(<=|>=|=)\\s*([^;{}<>=\\n]+?)\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
       {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
@@ -315,7 +344,7 @@ void CommandForm::setStatement(const QString &statement)
             }
          });
       } else if ((title()=="Vary" && name=="Variable") || (title()=="Assignment" && name=="Destination") ||
-                 (title()=="Achieve" && (name=="Goal" || name=="Value")) ||
+                 (title()=="Achieve" && (name=="Goal" || name=="Value" || name=="Tolerance")) ||
                  (title()=="Minimize" && name=="Objective") ||
                  (title()=="Constraint" && (name=="Left side" || name=="Right side")) ||
                  (title()=="For loop" && (name=="Start" || name=="Step" || name=="End"))) {
@@ -323,7 +352,8 @@ void CommandForm::setStatement(const QString &statement)
          auto *choose=new QPushButton("Select parameter…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
          const auto mode=title()=="Vary" ? ReportParameterDialog::Mode::WritableReal :
             title()=="Assignment" ? ReportParameterDialog::Mode::Writable :
-            title()=="Constraint" ? ReportParameterDialog::Mode::NumericSingle : ReportParameterDialog::Mode::Single;
+            title()=="Constraint" || (title()=="Achieve" && name!="Goal") ? ReportParameterDialog::Mode::NumericSingle :
+            title()=="Minimize" || title()=="Achieve" ? ReportParameterDialog::Mode::NumericReference : ReportParameterDialog::Mode::Single;
          connect(choose,&QPushButton::clicked,this,[this,input,mode] {
             ReportParameterDialog dialog({input->text()},this,mode);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.selection().first());
@@ -384,7 +414,7 @@ void CommandForm::setStatement(const QString &statement)
       // become controls; all other option text is retained verbatim.
       const int options=spec.labels.size()+1;
       if (match.lastCapturedIndex()>=options && match.capturedStart(options)>=0) {
-         const QRegularExpression option("(?:^|,)\\s*(Perturbation|Lower|Upper|MaxStep|AdditiveScaleFactor|MultiplicativeScaleFactor|Tolerance|SolveMode|ExitMode|ShowProgressWindow|Append)\\s*=\\s*([^,]+?)\\s*(?=,|$)");
+         const QRegularExpression option("(?:^|,)\\s*(Perturbation|Lower|Upper|MaxStep|AdditiveScaleFactor|MultiplicativeScaleFactor|Tolerance|SolveMode|ExitMode|ShowProgressWindow|Append)\\s*=\\s*"+scalar+"\\s*(?=,|$)");
          auto matches=option.globalMatch(match.captured(options));
          while (matches.hasNext()) {
             const auto setting=matches.next();
