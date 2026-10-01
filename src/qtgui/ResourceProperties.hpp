@@ -28,6 +28,7 @@ QStringList pythonModuleNames();
 QStringList dataInterfaceFields(GmatBase &object);
 void validateResourceProperties(GmatBase &object,bool replacingPolyhedron=false);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
+QString orbitCovarianceError(const QString &value);
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);

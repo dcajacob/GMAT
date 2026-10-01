@@ -47,6 +47,8 @@
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QHeaderView>
+#include <QStyledItemDelegate>
+#include <QLocale>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -69,6 +71,16 @@
 #include <algorithm>
 
 namespace {
+class CovarianceCellDelegate final : public QStyledItemDelegate
+{
+public:
+   using QStyledItemDelegate::QStyledItemDelegate;
+   QString displayText(const QVariant &value,const QLocale &locale) const override
+   {
+      bool valid=false; const auto number=value.toString().toDouble(&valid);
+      return valid ? locale.toString(number,'g',12) : QStyledItemDelegate::displayText(value,locale);
+   }
+};
 QString comboValue(const QComboBox *combo)
 {
    if (!combo->property("resourceValueData").toBool()) return combo->currentText();
@@ -463,6 +475,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             value->setData(Qt::UserRole+1,field.columns);
             value->setData(Qt::UserRole+2,object.IsOfType("Array") && field.name=="RmatValue");
             value->setData(Qt::UserRole+3,field.resizableVector);
+            value->setData(Qt::UserRole+4,spacecraft && field.name=="OrbitErrorCovariance");
             value->setToolTip("Double-click to edit the numeric cells.");
             auto *edit=new QPushButton("Edit cells…",table);
             edit->setObjectName("editCells_"+field.name);
@@ -1024,6 +1037,24 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *layout=new QVBoxLayout(&dialog);
       auto *grid=new QTableWidget(rows,columns,&dialog);
       grid->setObjectName("numericGrid");
+      const bool covariance=item->data(Qt::UserRole+4).toBool();
+      if (covariance) {
+         // Shorten presentation only. EditRole retains all original digits;
+         // opening/accepting the grid must not round the stored covariance.
+         grid->setItemDelegate(new CovarianceCellDelegate(grid));
+         connect(grid,&QTableWidget::itemChanged,&dialog,[](QTableWidgetItem *cell) { if (cell->toolTip()!=cell->text()) cell->setToolTip(cell->text()); });
+         bool keplerian=false;
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="SolveFors") keplerian=splitResourceReferences(table->item(row,1)->text()).contains("KeplerianState");
+         const QStringList labels=keplerian ? QStringList{"SMA (km)","ECC","INC (deg)","RAAN (deg)","AOP (deg)","MA (deg)"} : QStringList{"X (km)","Y (km)","Z (km)","VX (km/s)","VY (km/s)","VZ (km/s)"};
+         grid->setHorizontalHeaderLabels(labels); grid->setVerticalHeaderLabels(labels);
+         dialog.setProperty("helpTopic","SpacecraftNavigation");
+         auto *help=new QLabel("Enter a symmetric, positive-definite initial state covariance. Each cell's units are the product of its row and column units. Estimation uses EarthMJ2000Eq regardless of the displayed orbit frame; Keplerian solve-fors use mean anomaly (MA). Covariance propagation requires MJ2000Eq axes. EKF warm starts use the input file's covariance; batch estimation uses this matrix only with UseInitialCovariance enabled.",&dialog);
+         help->setText(help->text()+" Labels follow pending solve-fors; changing solve-fors does not convert these values.");
+         help->setText(help->text()+" Cells show 12 significant digits; editing or hovering shows the full value.");
+         help->setWordWrap(true); help->setObjectName("covarianceHelp"); layout->addWidget(help);
+         auto *mirror=new QPushButton("Copy upper triangle to lower triangle",&dialog); mirror->setObjectName("covarianceMirrorUpper"); layout->addWidget(mirror);
+         connect(mirror,&QPushButton::clicked,&dialog,[grid] { for (int r=0;r<grid->rowCount();++r) for (int c=r+1;c<grid->columnCount();++c) grid->item(c,r)->setText(grid->item(r,c)->text()); });
+      }
       const auto values=item->text().split(';');
       for (int r=0;r<rows;++r) {
          const auto cells=values.value(r).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
@@ -1053,7 +1084,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       configureTableColumns(grid);
       fitTableColumns(grid);
       layout->addWidget(grid);
-      auto *error=new QLabel(&dialog); error->setWordWrap(true); layout->addWidget(error);
+      auto *error=new QLabel(&dialog); error->setObjectName("numericGridError"); error->setWordWrap(true); layout->addWidget(error);
       if (item->data(Qt::UserRole+2).toBool()) {
          auto *cellControls=new QWidget(&dialog); auto *row=new QHBoxLayout(cellControls); row->setContentsMargins(0,0,0,0);
          auto *cellRow=new QSpinBox(cellControls),*cellColumn=new QSpinBox(cellControls);
@@ -1113,11 +1144,18 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             }
             output.append(cells.join(" "));
          }
+         if (covariance) { const auto invalid=orbitCovarianceError(output.join("; ")); if (!invalid.isEmpty()) { error->setText(invalid); return; } }
          item->setData(Qt::UserRole,grid->rowCount());
          item->setData(Qt::UserRole+1,grid->columnCount());
          item->setText(output.join("; ")); dialog.accept();
       });
-      dialog.resize(560,320); dialog.exec();
+      dialog.resize(covariance ? QSize(920,520) : QSize(560,320));
+      if (covariance) {
+         layout->activate(); grid->setProperty("sizingColumns",true);
+         for (int c=0;c<columns;++c) grid->setColumnWidth(c,std::max(80,grid->viewport()->width()/columns));
+         grid->setProperty("sizingColumns",false);
+      }
+      dialog.exec();
    });
    if (sections) {
       // Use the engine's current element labels (Cartesian, Keplerian, etc.).

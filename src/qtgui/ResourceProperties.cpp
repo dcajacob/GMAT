@@ -15,6 +15,7 @@
 #include "FileUtil.hpp"
 #include "FileManager.hpp"
 #include "Rmatrix.hpp"
+#include "CholeskyFactorization.hpp"
 #include "Array.hpp"
 #include "PropSetup.hpp"
 #include "Propagator.hpp"
@@ -40,10 +41,24 @@
 #include <stdexcept>
 
 namespace {
+void validateOrbitCovariance(const Rmatrix &matrix)
+{
+   if (matrix.GetNumRows()!=6 || matrix.GetNumColumns()!=6) throw std::runtime_error("Orbit covariance must have six rows and six columns.");
+   for (int r=0;r<6;++r) for (int c=0;c<6;++c) {
+      if (!std::isfinite(matrix(r,c))) throw std::runtime_error("Every covariance cell must contain a finite number.");
+      if (matrix(r,c)!=matrix(c,r)) throw std::runtime_error("Covariance must be symmetric. Match each pair of off-diagonal cells, or copy the upper triangle to the lower triangle.");
+   }
+   // Use the same existing factorization as the filter; never alter the
+   // covariance or substitute a different estimation/propagation algorithm.
+   Rmatrix factor(6,6); CholeskyFactorization cholesky; cholesky.Factor(matrix,factor);
+   for (int r=0;r<6;++r) for (int c=r;c<6;++c)
+      if (!std::isfinite(factor(r,c)) || (r==c && factor(r,c)<=0)) throw std::runtime_error("Covariance must have a finite positive-definite factorization.");
+}
 bool externalForceSetting(GmatBase &object,const QString &name)
 {
    return object.IsOfType("ExternalModel") && QStringList{"ScriptFileName","ExcludeOtherForces","DerivativesFunction"}.contains(name);
 }
+
 GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
 {
    if (!object.IsOfType("ODEModel")) return nullptr;
@@ -61,6 +76,21 @@ GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
 }
 }
 
+QString orbitCovarianceError(const QString &value)
+{
+   try {
+      const auto rows=value.trimmed().split(';');
+      if (rows.size()!=6) return "Orbit covariance must have six rows and six columns.";
+      Rmatrix matrix(6,6);
+      for (int r=0;r<6;++r) {
+         const auto cells=rows[r].trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         if (cells.size()!=6) return "Orbit covariance must have six rows and six columns.";
+         for (int c=0;c<6;++c) { bool valid=false; matrix(r,c)=cells[c].toDouble(&valid); if (!valid) return "Every covariance cell must contain a finite number."; }
+      }
+      validateOrbitCovariance(matrix); return {};
+   } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+}
 QStringList pythonModuleNames()
 {
    QStringList names;
@@ -942,6 +972,7 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
          for (int c=0;c<columns;++c) values[c]=matrix(0,c);
          object.SetRvectorParameter(id,values);
       } else {
+         if (object.IsOfType("Spacecraft") && name=="OrbitErrorCovariance") validateOrbitCovariance(matrix);
          if (arrayValues) static_cast<Array &>(object).SetSize(rows,columns);
          object.SetRmatrixParameter(id,matrix);
       }

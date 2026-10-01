@@ -1,0 +1,1 @@
+PASS: exposed native covariance editor preview with six visible columns and full stored precision; numerical workflow was not repeated.

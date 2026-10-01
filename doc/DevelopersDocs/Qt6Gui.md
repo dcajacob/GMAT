@@ -171,6 +171,18 @@ loaded; View / **Active script** or reopening its path restores the editor. Run
 protects every document from editing, closing or switching. Application close
 also checks unsaved inactive scripts.
 
+Spacecraft **OrbitErrorCovariance / Edit cells…** opens a fixed 6×6 initial
+covariance grid. Labels and units follow the pending Cartesian or Keplerian
+solve-for choice; Keplerian covariance uses mean anomaly (MA). The dialog explains
+EarthMJ2000Eq estimation input, propagation axes, warm-start input precedence and
+the batch estimator's UseInitialCovariance setting. Changing solve-fors changes
+labels without converting the numbers. **Copy upper triangle to lower triangle**
+is an explicit operation. OK checks finite values, symmetry and positive
+definiteness using GMAT's existing filter factorization, then keeps the matrix
+pending until the spacecraft panel's Apply. Cancel preserves the original values.
+The display abbreviates numbers while editing/tooltips retain full precision;
+initial columns fit the six state components and remain adjustable.
+
 The initial shell compiles with Qt 6.10.2 on Linux, initializes the engine,
 loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only

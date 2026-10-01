@@ -150,7 +150,7 @@ Every row requires real-engine evidence, not just registration.
 | --- | --- |
 | `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
 | `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
-| `../plugins/libEKF` | KalmanTests: one-hour, noise-free GPS version of the shipped filter/smoother example with SNC process noise and Gauss-Markov drag. Typed run/reference/solve-for controls, owned model settings, warm-start input/output browsing and paired epoch conversion, both continuation boundaries, exact state/covariance CSV equivalence with independent script configuration, report access, pending/Cancel/Undo/Redo/Unicode mission reopen, invalid-edit rollback and missing/malformed/late-seed recovery covered. Native Wayland panels/execution passed. Creation/removal, full-day/noisy or real data, other measurement/model regimes, covariance editing, residual graphics, prediction, warm-start smoothing and broader malformed/disk cases remain pending. |
+| `../plugins/libEKF` | KalmanTests: one-hour, noise-free GPS version of the shipped filter/smoother example with SNC process noise and Gauss-Markov drag. Typed run/reference/solve-for controls, owned model settings, warm-start input/output browsing and paired epoch conversion, both continuation boundaries, exact state/covariance CSV equivalence with independent script configuration, report access, pending/Cancel/Undo/Redo/Unicode mission reopen, invalid-edit rollback and missing/malformed/late-seed recovery covered. Native Wayland panels/execution passed. CovarianceTests now qualifies the actual spacecraft initial covariance grid, pending/Cancel and invalid-value recovery, retained Apply, exact Undo/Redo/Unicode save/reopen and independently configured cold-start state/covariance CSV agreement; the native preview confirms layout and full stored precision. Creation/removal, full-day/noisy or real data, other measurement/model regimes, residual graphics, prediction, warm-start smoothing and broader malformed/disk cases remain pending. |
 | `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. KalmanTests also covers GPS simulation and concrete RunSmoother serialization, including labels/comments and command edits. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
 | `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. First contributor creation/removal is now covered through the actual retained force-model panel, atomic mixed Apply, invalid input and Cancel, exact source Undo/Redo/Unicode save/reopen and independent script-configured reports; see the external-force creation appendix. Full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
@@ -4612,3 +4612,55 @@ was rebuilt; the final launcher verification is retained in
 build-documents-application.txt. Full Linux replacement qualification remains
 in progress under the acceptance gates above, including wider source/plugin
 operations and the outstanding native desktop-input gates.
+
+
+## Initial spacecraft covariance editing
+
+The existing numeric matrix editor now identifies the six spacecraft covariance
+components and their units. Labels follow pending SolveFors: Cartesian X/Y/Z and
+VX/VY/VZ, or Keplerian SMA/ECC/INC/RAAN/AOP/MA. DisplayStateType does not change the
+covariance basis. The dialog states the documented EarthMJ2000Eq estimation input,
+MJ2000Eq propagation axes, warm-start covariance precedence and batch
+UseInitialCovariance condition. Changing solve-fors does not convert the numeric
+values. Help resolves to the offline SpacecraftNavigation topic.
+
+Copy upper triangle to lower triangle is explicit; opening or accepting the grid
+never silently symmetrizes or changes its covariance basis. Both dialog OK and
+the resource Apply setter reject nonfinite, asymmetric, singular or indefinite
+matrices before modifying source/configuration. Positive definiteness uses the
+existing CholeskyFactorization called by EKF, with finite-result checking; no
+estimation, propagation or matrix factorization algorithm changes. These checks
+apply to GUI edits, without rewriting how arbitrary script inputs are interpreted.
+
+CovarianceTests runs the shipped GPS filter fixture shortened to ten minutes with
+noise disabled, plus independently specified correlated position/velocity input.
+The shipped runtime diag expression must become a literal configuration matrix
+for this GUI-owned cold-start input; the first invalid fixture is retained in
+check-covariance-initial-fixture-failed.txt. It opens the actual Resources/MDI
+spacecraft editor, checks fixed dimensions, Cartesian/Keplerian-MA labels,
+Cancel, explicit symmetry, invalid correction, pending acceptance and retained
+Apply, exact Undo/Redo, comments and Unicode save/reopen. GUI execution and
+reopened execution produce byte-identical state and covariance CSV output to the
+independently configured script. Direct Apply cannot bypass symmetry checks;
+singular input is also rejected. Keplerian labeling is qualified here without
+claiming a new Keplerian estimation regime or batch covariance execution.
+
+check-covariance.txt records that one focused suite passing in 1.08 seconds.
+The subsequent native Wayland preview deliberately omits numerical execution and
+uses only the new editor. Its first capture revealed long floating-point text
+clipping the last column (covariance-wayland-before-width.png/.txt). The display
+now abbreviates cell text through a delegate while EditRole/tooltips retain all
+stored digits, and starts with six balanced, adjustable columns. The final
+covariance-wayland-20260930.txt/.png records an exposed preview with viewport-fit
+and full stored precision assertions; the capture was visually inspected.
+Widget actions are used, without claiming fresh compositor input or portal
+chooser qualification.
+
+The functional focused check predates only those display/column corrections;
+the final native preview checks the corrected layout/data presentation. The
+previous complete 50-suite document regression is reused as baseline and was not
+repeated for this change. The new focused test is included in check-qt for a later
+broader run. build-covariance.txt and build-covariance-display.txt record the target
+builds, which also rebuild the actual application/bin/GmatQt dependency. The full
+Linux acceptance checklist remains in progress with its remaining plugin/source
+operations and native desktop-input gates intact.
