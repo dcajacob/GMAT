@@ -1,0 +1,2 @@
+CCSDS-OEM: all26 serialized accepted ephemeris epoch/state rows and full 16-row trial/accepted ReportFile unchanged across Ground Track initialization fix.
+STK-TimePosVel: all26 serialized accepted ephemeris epoch/state rows and full 40-row trial/accepted ReportFile unchanged across Ground Track initialization fix.

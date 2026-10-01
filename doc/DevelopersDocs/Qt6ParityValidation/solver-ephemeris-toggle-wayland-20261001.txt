@@ -1,0 +1,10 @@
+Orb accepted=26 retained=52 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=104 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+DifferentialCorrector Target: Current viewers, accepted-only ephemeris, 16 complete trial/accepted state rows, known Alpha=2; CCSDS-OEM: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, two enabled arcs (0-120/240-360), final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, segment metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer suppression/replay/camera/close-reopen.
+CCSDS-OEM: PASS independently filtered None Orbit/Ground/XY accepted histories equal all 26 Current accepted epochs/XYZ/connection boundaries; full solver report/ephemeris unchanged.
+Orb accepted=26 retained=52 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=260 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Yukon Optimize: Current viewers, accepted-only ephemeris, 40 complete trial/accepted state rows, known Alpha=2 Cost<1e-10; STK-TimePosVel: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, two enabled arcs (0-120/240-360), final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, segment metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer suppression/replay/camera/close-reopen.
+STK-TimePosVel: PASS independently filtered None Orbit/Ground/XY accepted histories equal all 26 Current accepted epochs/XYZ/connection boundaries; full solver report/ephemeris unchanged.

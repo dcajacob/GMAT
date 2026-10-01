@@ -1950,8 +1950,8 @@ and complete independent state/geodetic reports. Ground/XY accepted histories
 also match an independently filtered None-mode run. The nested case solves an
 entire inner Target while those plots are disabled. Both cases have native
 Wayland captures, camera/replay and immediate close/reopen evidence in
-Qt6ReplacementQualification.md. Other mixed/deeper and ephemeris subscriber
-combinations remain under qualification.
+Qt6ReplacementQualification.md. Other mixed/deeper combinations remain under qualification; bounded solver
+ephemeris evidence is recorded in the later qualification appendix.
 
 
 NonlinearConstraint now retains typed controls for array-element operands,
@@ -1993,3 +1993,13 @@ trips, correction/rerun and native rendering/replay evidence. STK event-boundary
 metadata now records the resumed arc's actual start after a Toggle gap; captured
 state rows and reports are unchanged. See the ephemeris/window-placement
 qualification appendix for the affected checks and remaining desktop limits.
+
+
+Ground Track now names empty spacecraft curves during initialization, so a
+solver used as the first mission branch can anchor Current history before its
+first propagation. Target/OEM and Yukon/STK Toggle cases now retain only the
+accepted Ground/XY arcs; their complete trial reports and accepted ephemeris
+state rows remain byte identical across the fix. Native replay/close-reopen,
+Current/None accepted-history agreement and exact source/file recovery are
+recorded in the solver-contained ephemeris qualification appendix. The actual
+application was rebuilt; broader solver/binary cases and desktop gates remain.

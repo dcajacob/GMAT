@@ -1,0 +1,50 @@
+Solver-contained ephemeris / first-branch Ground Track audit, 2026-10-01
+
+Scope: selected Linux runtime, codex/qt6-gui. Two representative actual-widget
+cases: DifferentialCorrector Target / CCSDS-OEM and Yukon / STK-TimePosVel.
+Both begin in a solver before any Propagate. Alpha solves to 2 independently
+of the known circular spacecraft trajectory; no algorithm qualification claim.
+
+Contracts reviewed:
+- EphemerisFile Initialize forces SI_NONE; solving trials are not serialized.
+  ToggleOn activates an initially disabled writer; ToggleOff closes its segment.
+- SolverBranchCommand gets active subscribers and sets breakpoints before
+  first propagation. Current Ground/XY ClearFromBreak uses those anchors.
+- GroundTrack Initialize previously cleared its model but only SetDataLabels
+  named curves. Qt MarkBreak iterates existing curves; none meant no anchor.
+- Initialize now sends existing Satellites metadata after Reinitialize/ClearData.
+  It creates named empty curves before MarkBreak, without publishing samples.
+  Qt handles metadata and later labels normally. wx GroundTrackArea already
+  handles Satellites, initializing names/colors when startColors is empty.
+- Orbit Current keeps the buffered solved-pass callback convention. Latest
+  camera follows the complete retained final point/frame, not an earlier
+  filtered accepted frame. No camera product code was changed.
+
+Initial failures/evidence retained, not rewritten as success:
+- Initial/camera checks exposed an incorrect filtered camera expectation.
+- Filter check passed 2.27 s but did not prove Ground trial cleanup.
+- Initial native Ground counts were 104 and 260, with 26 accepted each;
+  check-solver-ephemeris-toggle-retention-initial.txt explicitly fails them.
+
+Final evidence:
+- Stronger Current Ground/XY counts are exactly 26 accepted points per case.
+  Orbit accepted26/retained52 follows its existing convention.
+- Independent None display agrees at all 26 accepted epochs/XYZ/connect flags.
+- Both accepted-only ephemeris outputs have 26 analytic epoch/six-state rows,
+  two enabled arcs, no suppressed interiors and correct OEM/STK metadata.
+- Complete All iteration ReportFiles retain 16 Target / 40 Yukon state rows.
+- Initial/final serialized ephemeris state rows and complete reports are byte
+  identical; calculation-preservation check retained separately.
+- Actual ordered MDI checklist, source/Undo/Redo/Unicode Save/Save As/reopen,
+  missing-subscriber rollback/correction, repeat output cleanup, Output access,
+  panel placement, native render/replay/camera and close/reopen were exercised.
+- Actual GmatQt rebuilt. Four affected tests passed: SolverToggle,
+  SolverEphemerisToggle, NestedSolverPlots, NestedSolverCleanup, 5.58 s total.
+  One final native Wayland run with stronger counts passed; inspected captures
+  are listed precisely in Qt6ReplacementQualification.md.
+
+Limits: no broad solver/format matrix, binary/Code-500 Toggle, nested ephemeris,
+state-dependent solver requalification, full suite or unrelated repeated tests.
+Native programmatic widget evidence does not qualify fresh desktop input,
+top-level Wayland minimize/restore or portals. No compositor policy bypass.
+Windows/macOS remain deferred. Full Linux replacement goal remains active.

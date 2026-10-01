@@ -366,6 +366,17 @@ bool GroundTrack::Initialize()
       PlotInterface::TakeGroundTrackAction(instanceName, "Reinitialize");
       PlotInterface::TakeGroundTrackAction(instanceName, "ClearData");
 
+      // A solver may start before the first propagator sets its data labels.
+      // Name the empty curves now so its Current-mode break can be anchored
+      // before trial data arrives. This publishes no trajectory samples.
+      std::string satellites = "Satellites=";
+      for (auto *satellite : theSats)
+      {
+         if (satellites.back() != '=') satellites += '|';
+         satellites += satellite->GetName();
+      }
+      PlotInterface::TakeGroundTrackAction(instanceName, satellites);
+
       if (updateFrequency > 0)
       {
          std::string theAction = "PlotUpdateFrequency=" +

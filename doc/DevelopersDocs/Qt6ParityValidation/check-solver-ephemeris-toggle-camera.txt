@@ -1,0 +1,26 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 53: QtGui.SolverEphemerisToggle
+1/1 Test #53: QtGui.SolverEphemerisToggle ......***Failed    0.76 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL CCSDS-OEM: Mixed Toggle camera endpoint not retained: accepted frame 117 XYZ(6479.4539553608447,2648.9009872697652,0), retained last frame 130 solver=1, camera frame 130 target(6479.4539553608447,2648.9009872697652,0), model frame 130
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.76 sec*proc (1 test)
+
+Total Test time (real) =   0.76 sec
+
+The following tests FAILED:
+	 53 - QtGui.SolverEphemerisToggle (Failed)              qt-gui
+Errors while running CTest

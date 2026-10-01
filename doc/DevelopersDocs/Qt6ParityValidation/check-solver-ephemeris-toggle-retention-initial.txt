@@ -1,0 +1,3 @@
+FAIL: initial native Current Ground Track contains all trial passes when the solver is the first mission branch.
+Target/OEM: accepted26, retained104; Optimize/STK: accepted26, retained260; expected complete Current Ground history26 in each.
+The initial subset/None comparison passed but did not reject retained trials. Ground curves are first named by SetDataLabels during propagation, after SolverBranchCommand::SetSubscriberBreakpoint; the empty receiver has no per-curve anchor.
