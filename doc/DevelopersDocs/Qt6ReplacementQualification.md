@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
-| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. Plot/ephemeris and solver-loop Toggle combinations pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. Ephemeris and solver-loop Toggle combinations remain pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
@@ -87,7 +87,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
 | `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, retain and refresh accepted panels after Apply, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are covered by InspectionTests. Desktop/Mission tests cover retained resource and command panels, clean companion refresh and protected pending companions. Offline context Help and inherited modal Help are implemented and exercised; broader mixed Apply/focus/desktop cases remain under qualification. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
-| `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Propagate's segment override has matching controls and independent trajectory/color-history checks, including Ground Track display metadata and default restoration; see the segment-color appendix. Per-view override controls and other resource types remain pending. |
+| `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Propagate's segment override has matching controls and independent trajectory/color-history checks, including Ground Track display metadata and default restoration; see the segment-color appendix. Legacy per-view orbit/target color controls are compiled out in this selected wx build and their engine parameters are removed; active colors come from SpacePoint or Propagate controls. Other resource color types remain pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
 | `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. ScriptDocumentTests qualifies independent active/inactive MDI scripts, per-document Save/search/Undo, explicit activation, pending Apply/Discard/Cancel and rejected-Apply recovery, selected save-build-run, active/inactive reload, encoding/write/collision failure protection and all-document runtime/close guards with independent relative-include reports. FileTests, WorkflowTests and ScriptEditingTests retain existing mission/file evidence. Widget choosers and synthetic shortcuts are covered; native portal input remains unqualified. |
@@ -5074,3 +5074,68 @@ No full-suite rerun was needed; check-documents.txt remains the latest complete
 regression checkpoint. The full Linux qualification goal remains active, including
 Wayland main-window restore/input, portal and remaining plugin/workflow gates.
 Windows/macOS remain deferred.
+
+
+## Toggle plot discontinuities and selected color-control audit
+
+The Toggle checklist already supported all subscribers, but report-only execution
+evidence did not establish plot behavior. Orbit View processes data-state changes
+at propagation-block flushes; GroundTrack returned before forwarding them, and XY
+never notified its receiver. Disabled subscribers stop receiving real samples, so
+Qt could not infer the missing interval. The initial focused fixture confirms
+Ground and XY connected the resumed trajectory to the old endpoint across an
+interval with no samples. Orbit View already separated its arcs correctly.
+
+GroundTrack now forwards the existing ToggleOn/ToggleOff command actions through
+its optional display channel. Qt changes its display activity and marks each
+curve's next sample as a new arc. This preserves manual pen settings and all
+previous samples. XY forwards those same command notifications using the existing
+PlotInterface ActivateXyPlot/DeactivateXyPlot APIs; the Qt implementation already
+marks breaks when deactivated. The wx receiver has implementations of both XY
+APIs. The wx Ground receiver may ignore the optional actions, as it does other
+Qt display metadata. This is no claim of a new wx Ground behavior qualification.
+No publication ordering, sample collection, state conversion, propagation force,
+solver or numerical algorithm changes. The native renderer and fallback both
+honor each point's existing connect flag; rendering code did not change.
+
+TogglePlotTests is a new separate focused executable. A two-spacecraft mission
+propagates three thirty-second arcs, suppressing Orbit/Ground/XY during the middle
+arc and changing one spacecraft's color before reactivation. Independently scripted
+uninterrupted and toggled variants supply identical twelve-state report bytes.
+The test checks the displayed spacecraft has no disabled-interval samples and
+exactly one disconnected resume in all three plots. Ground and Orbit use the live
+Green palette after the hidden assignment. Orbit retains camera frames within the
+trajectory history. Actual Mission/MDI subscriber checklists then replace two
+ReportFile-only Toggle selections with the three plots, preserving pending source,
+retained clean command panels, exact Undo/Redo, labels/comments and unrelated
+configuration. Unicode save/reopen execution reproduces the independent report
+and inspected spacecraft's trajectory, color and connect history. Immediate plot
+close/reopen retains the same model and samples. Existing checklist Cancel/filter
+and native window/replay/rendering evidence is reused; no native numerical rerun
+or full-suite repeat was needed. Solver-loop/ephemeris Toggle remains open.
+
+build-toggle-plots-initial.txt retains a test-only missing QDialog include, fixed
+before the first check. check-toggle-plots-initial.txt records the two actual
+joined-arc failures. It also contains an overly broad harness assertion that XY
+must set the 3D endOfRun flag: XY's existing display contract always retains all
+points and ignores the 3D recent-segment finalization flag. That assertion is now
+limited to Orbit/Ground; no unrelated XY finalization change was made. The fixed
+focused test passes in check-toggle-plots-notifications.txt (0.79 seconds).
+build-toggle-plots-notifications.txt records the shared subscriber library/native
+plugins and actual GmatQt-R2026a rebuild and GmatQt launcher recreation.
+
+The source review also resolves the earlier per-view orbit/target color pending
+item. The wx OrbitViewPanel and GroundTrackPlotPanel creation, load and save code
+for these colors is guarded by __USE_COLOR_FROM_SUBSCRIBER__. The selected build
+and source headers do not define it. OrbitPlot::GetParameterID explicitly returns
+PARAMETER_REMOVED for OrbitColor and TargetColor. These are disabled legacy
+subscriber controls, not missing active selected-runtime operations. The active
+SpacePoint color pickers, runtime Assignment colors and Propagate segment controls
+have separate implementation/execution evidence in the preceding appendices.
+audit-view-color-controls.txt records the relevant source and current wx compile
+defines. This disposition does not qualify other resource color families.
+
+The full Linux qualification goal remains active, with the original outstanding
+Wayland main-window restore/input, portals and remaining workflow/plugin gates.
+Windows/macOS remain deferred. check-documents.txt remains the latest complete
+regression checkpoint; this targeted display fix adds only its focused evidence.

@@ -1749,6 +1749,14 @@ bool GroundTrack::TakeAction(const std::string &action,
       stateMap.clear();
       return true;
    }
+   if (action == "ToggleOn" || action == "ToggleOff")
+   {
+      // ReceiveData skips inactive subscribers, so the receiver cannot infer
+      // the disabled interval from samples. Keep retained arcs separated when
+      // Toggle resumes without changing the sampled states or coordinates.
+      PlotInterface::TakeGroundTrackAction(instanceName, action);
+      return true;
+   }
    if (action == "PenUp")
    {
       PlotInterface::TakeGroundTrackAction(instanceName, "PenUp");

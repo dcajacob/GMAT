@@ -503,6 +503,8 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
    if (action.compare(0,16,"SetDataProvider:")==0) { entry->provider=text(action.substr(16)); return true; }
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }
    else if (action=="PenDown") entry->data->penDown=true;
+   else if (action=="ToggleOff") { entry->data->active=false; entry->data->breakLines(); }
+   else if (action=="ToggleOn") entry->data->active=true;
    else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
    else if (action=="ClearSolverData") {
       auto clearSolver=[](std::deque<PlotCamera> &cameras) {

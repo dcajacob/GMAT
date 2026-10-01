@@ -1,0 +1,148 @@
+[0/1] Re-running CMake...
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64
+-- Found F2C: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:301 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) 
+==============================
+Setting up install directory structure for GMAT 
+-- Will install GMAT to /home/dan/GIT/GMAT/GMAT/GMAT-R2026a-Linux-x64
+==============================
+GMAT util setup 
+==============================
+GMAT base setup 
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup 
+==============================
+GMAT GUI setup 
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+==============================
+GMAT DataInterface Plugin setup 
+==============================
+GMAT EphemPropagator Plugin setup 
+==============================
+GMAT EKF Plugin setup 
+==============================
+GMAT Estimation Plugin setup 
+==============================
+GMAT EventLocator Plugin setup 
+==============================
+GMAT External Force Model Plugin setup (for Python 3.14)
+-- Found Python3: /usr/include/python3.14 (found suitable exact version "3.14.4") found components: Development Development.Module Development.Embed
+==============================
+GMAT ExtraPropagators Plugin setup 
+==============================
+GMAT Formation Plugin setup 
+==============================
+GMAT GmatFunction Plugin setup 
+==============================
+GMAT Msise00 Plugin setup 
+==============================
+GMAT NewParameter Plugin setup 
+==============================
+GMAT PolyhedronGravity Plugin setup 
+==============================
+GMAT ProductionPropagators Plugin setup 
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.14)
+==============================
+GMAT SaveCommand Plugin setup 
+==============================
+GMAT ScriptTools Plugin setup 
+==============================
+GMAT Station Plugin setup 
+==============================
+GMAT ThrustFile Plugin setup 
+==============================
+GMAT TLE Propagator Plugin setup 
+==============================
+GMAT Yukon Optimizer Plugin setup 
+==============================
+GMAT OpenFramesInterface Plugin setup 
+-- Enabling wxWidgets support
+-- Setting up OpenSceneGraph [a827840ba], this could take a while...
+-- Local validation: retaining prebuilt openscenegraph
+-- Setting up osgEarth [f7a922ba], this could take a while...
+-- Local validation: retaining prebuilt osgearth
+-- Setting up OpenFrames [67e90d8]...
+-- Local validation: retaining prebuilt openframes
+==============================
+GMAT OVtoOFI Plugin setup 
+==============================
+Setting up wxWidgets install instructions for GMAT 
+-- Configuring done (1.0s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/dan/GIT/GMAT/GMAT/build/linux-gui
+[1/4] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/4] Building CXX object src/qtgui/CMakeFiles/GmatQtTogglePlotTests.dir/tests/TogglePlotTests.cpp.o
+FAILED: [code=1] src/qtgui/CMakeFiles/GmatQtTogglePlotTests.dir/tests/TogglePlotTests.cpp.o 
+/usr/bin/c++ -DLINUX_MAC -DNO_GCC_PRAGMA -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DUSE_64_BIT_LONGS -D_UNICODE -D__USE_SPICE__ -I/home/dan/GIT/GMAT/GMAT/src/qtgui -I/home/dan/GIT/GMAT/GMAT/src/base/api -I/home/dan/GIT/GMAT/GMAT/src/base/asset -I/home/dan/GIT/GMAT/GMAT/src/base/attitude -I/home/dan/GIT/GMAT/GMAT/src/base/burn -I/home/dan/GIT/GMAT/GMAT/src/base/command -I/home/dan/GIT/GMAT/GMAT/src/base/configs -I/home/dan/GIT/GMAT/GMAT/src/base/coordsystem -I/home/dan/GIT/GMAT/GMAT/src/base/event -I/home/dan/GIT/GMAT/GMAT/src/base/executive -I/home/dan/GIT/GMAT/GMAT/src/base/factory -I/home/dan/GIT/GMAT/GMAT/src/base/factory/guicomponents -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel/harmonic -I/home/dan/GIT/GMAT/GMAT/src/base/foundation -I/home/dan/GIT/GMAT/GMAT/src/base/function -I/home/dan/GIT/GMAT/GMAT/src/base/hardware -I/home/dan/GIT/GMAT/GMAT/src/base/include -I/home/dan/GIT/GMAT/GMAT/src/base/interface -I/home/dan/GIT/GMAT/GMAT/src/base/interpreter -I/home/dan/GIT/GMAT/GMAT/src/base/math -I/home/dan/GIT/GMAT/GMAT/src/base/parameter -I/home/dan/GIT/GMAT/GMAT/src/base/plugin -I/home/dan/GIT/GMAT/GMAT/src/base/propagator -I/home/dan/GIT/GMAT/GMAT/src/base/solarsys -I/home/dan/GIT/GMAT/GMAT/src/base/solver -I/home/dan/GIT/GMAT/GMAT/src/base/spice -I/home/dan/GIT/GMAT/GMAT/src/base/spacecraft -I/home/dan/GIT/GMAT/GMAT/src/base/stopcond -I/home/dan/GIT/GMAT/GMAT/src/base/subscriber -I/home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/datawriter -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/interpolator -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/matrixoperations -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGLWidgets -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGL -fno-strict-aliasing -fPIC -O3 -std=c++17 -MD -MT src/qtgui/CMakeFiles/GmatQtTogglePlotTests.dir/tests/TogglePlotTests.cpp.o -MF src/qtgui/CMakeFiles/GmatQtTogglePlotTests.dir/tests/TogglePlotTests.cpp.o.d -o src/qtgui/CMakeFiles/GmatQtTogglePlotTests.dir/tests/TogglePlotTests.cpp.o -c /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp: In lambda function:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:153: error: invalid use of incomplete type ‘class QDialog’
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                         ^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qmainwindow.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QMainWindow:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/MainWindow.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qwindowdefs.h:20:7: note: forward declaration of ‘class QDialog’
+   20 | class QDialog;
+      |       ^~~~~~~
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:177: error: expected primary-expression before ‘*’ token
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                 ^
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:178: error: expected primary-expression before ‘>’ token
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                  ^
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:371: error: invalid use of incomplete type ‘class QDialog’
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                                                                                                                                                                                                                   ^~
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qwindowdefs.h:20:7: note: forward declaration of ‘class QDialog’
+   20 | class QDialog;
+      |       ^~~~~~~
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:400: error: expected primary-expression before ‘*’ token
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                                                                                                                                                                                                                                                ^
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:401: error: expected primary-expression before ‘>’ token
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                                                                                                                                                                                                                                                 ^
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:403: error: expected primary-expression before ‘)’ token
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:513: error: invalid use of incomplete type ‘class QDialog’
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ^~
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qwindowdefs.h:20:7: note: forward declaration of ‘class QDialog’
+   20 | class QDialog;
+      |       ^~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/qwindowdefs.h:8:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobjectdefs.h: In instantiation of ‘struct QtPrivate::HasQ_OBJECT_Macro<QDialog>’:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:160:62:   required from ‘T QObject::findChild(QAnyStringView, Qt::FindChildOptions) const [with T = QDialog*; Qt::FindChildOptions = QFlags<Qt::FindChildOption>]’
+  160 |         static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
+      |                                                              ^~~~~
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:53:   required from here
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobjectdefs.h:739:37: error: incomplete type ‘QDialog’ used in nested name specifier
+  739 |         enum { Value =  sizeof(test(&Object::qt_metacall)) == sizeof(int) };
+      |                                     ^~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h:10:
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h: In instantiation of ‘T QObject::findChild(QAnyStringView, Qt::FindChildOptions) const [with T = QDialog*; Qt::FindChildOptions = QFlags<Qt::FindChildOption>]’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/TogglePlotTests.cpp:74:53:   required from here
+   74 |             auto *dialog=panel->findChild<QDialog *>("toggleSubscriberDialog"); try { require(dialog,"Toggle plot checklist missing"); auto *list=dialog->findChild<QListWidget *>("toggleSubscriberList"); for (int i=0;i<list->count();++i) list->item(i)->setCheckState(QStringList{"Orb","Ground","XY"}.contains(list->item(i)->text()) ? Qt::Checked : Qt::Unchecked); dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); }
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:160:62: error: static assertion failed: No Q_OBJECT in the class passed to QObject::findChild
+  160 |         static_assert(QtPrivate::HasQ_OBJECT_Macro<ObjType>::Value,
+      |                                                              ^~~~~
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:160:62: note: ‘QtPrivate::HasQ_OBJECT_Macro<QDialog>::Value’ evaluates to false
+/usr/include/x86_64-linux-gnu/qt6/QtCore/qobject.h:162:74: error: incomplete type ‘ObjType’ {aka ‘QDialog’} used in nested name specifier
+  162 |         return static_cast<T>(qt_qFindChild_helper(this, aName, ObjType::staticMetaObject, options));
+      |                                                                          ^~~~~~~~~~~~~~~~
+ninja: build stopped: subcommand failed.

@@ -1,0 +1,65 @@
+Selected Linux wx view color controls source/build audit
+
+src/gui/subscriber/OrbitViewPanel.cpp:1481-1507
+1481:       #ifdef __USE_COLOR_FROM_SUBSCRIBER__
+1482:       //--------------------------------------------------------------
+1483:       // save orbit color
+1484:       //--------------------------------------------------------------
+1485:       if (mHasOrbitColorChanged)
+1486:       {
+1487:          #if DEBUG_OPENGL_PANEL_SAVE
+1488:          MessageInterface::ShowMessage("   Saving orbit colors\n");
+1489:          #endif
+1490:          
+1491:          mHasOrbitColorChanged = false;
+1492:          
+1493:          // change spacecraft orbit color
+1494:          for (int i=0; i<mScCount; i++)
+1495:          {
+1496:             mSelSpName = std::string(mSelectedScListBox->GetString(i).c_str());
+1497:             
+1498:             #if DEBUG_OPENGL_PANEL_SAVE
+1499:             MessageInterface::ShowMessage
+1500:                ("OrbitViewPanel::SaveData() objName=%s, orbColor=%u\n",
+1501:                 mSelSpName.c_str(), mOrbitColorMap[mSelSpName].GetIntColor());
+1502:             #endif
+1503:             
+1504:             mOrbitView->
+1505:                SetColor("Orbit", mSelSpName,
+1506:                         mOrbitColorMap[mSelSpName].GetIntColor());
+1507:          }
+src/gui/subscriber/GroundTrackPlotPanel.cpp:259-273
+259:       theGuiManager->GetSpacePointCheckListBox(this, ID_CHECKLISTBOX, wxSize(200,100),
+260:                                                false, false, true, true);
+261: 
+262:    #ifdef __USE_COLOR_FROM_SUBSCRIBER__
+263:    //-----------------------------------
+264:    // Drawing color
+265:    wxStaticText *orbitColorLabel =
+266:       new wxStaticText(this, -1, wxT("Orbit Color"),
+267:                        wxDefaultPosition, wxSize(-1,-1), wxALIGN_CENTRE);
+268:    mOrbitColorCtrl =
+269:       new wxColourPickerCtrl(this, ID_COLOR_CTRL, *wxRED,
+270:                              wxDefaultPosition, wxSize(colorW, -1), 0);
+271:    wxStaticText *targetColorLabel =
+272:       new wxStaticText(this, -1, wxT("Target Color"),
+273:                        wxDefaultPosition, wxSize(-1,-1), wxALIGN_CENTRE);   
+src/base/subscriber/OrbitPlot.cpp:826-835
+826: //------------------------------------------------------------------------------
+827: Integer OrbitPlot::GetParameterID(const std::string &str) const
+828: {
+829:    if (str == "OrbitColor" || str == "TargetColor")
+830:       return Gmat::PARAMETER_REMOVED;
+831:    
+832:    for (int i=SubscriberParamCount; i<OrbitPlotParamCount; i++)
+833:    {
+834:       if (str == PARAMETER_TEXT[i - SubscriberParamCount])
+835:          return i;
+
+Current build/linux-gui/build.ninja selected wx object compile definitions:
+build src/gui/CMakeFiles/GmatGUI.dir/subscriber/GroundTrackPlotPanel.cpp.o: CXX_COMPILER__GmatGUI_unscanned_Release /home/dan/GIT/GMAT/GMAT/src/gui/subscriber/GroundTrackPlotPanel.cpp || cmake_object_order_depends_target_GmatGUI
+  DEFINES = -DLINUX_MAC -DNO_GCC_PRAGMA -DUNICODE -DUSE_64_BIT_LONGS -DWXUSINGDLL -D_DYNAMICLINK -D_FILE_OFFSET_BITS=64 -D_UNICODE -D__USE_SPICE__ -D__USE_STC_EDITOR__ -D__WXGTK__
+build src/gui/CMakeFiles/GmatGUI.dir/subscriber/OrbitViewPanel.cpp.o: CXX_COMPILER__GmatGUI_unscanned_Release /home/dan/GIT/GMAT/GMAT/src/gui/subscriber/OrbitViewPanel.cpp || cmake_object_order_depends_target_GmatGUI
+  DEFINES = -DLINUX_MAC -DNO_GCC_PRAGMA -DUNICODE -DUSE_64_BIT_LONGS -DWXUSINGDLL -D_DYNAMICLINK -D_FILE_OFFSET_BITS=64 -D_UNICODE -D__USE_SPICE__ -D__USE_STC_EDITOR__ -D__WXGTK__
+
+No source definition or selected build define of __USE_COLOR_FROM_SUBSCRIBER__ found.

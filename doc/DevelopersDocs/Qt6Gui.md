@@ -936,7 +936,11 @@ checkbox for applying its burn backwards in time.
 Toggle commands offer a **Select…** checklist for outputs and an **On/Off** dropdown.
 Choose one or more subscribers; Cancel leaves the command unchanged. The checklist
 supports dragging to retain your preferred order. Changes still go through command
-Apply before updating the mission.
+Apply before updating the mission. Orbit View, Ground Track and XY plots retain
+existing samples while switched off, suppress the disabled interval and start a
+separate trajectory when switched on again. Ground Track uses any spacecraft
+color assigned during the disabled interval when sampling resumes. Closing and
+reopening a plot keeps its retained history.
 
 
 Global, Clear and Save command forms now have **Select…** object checklists.
