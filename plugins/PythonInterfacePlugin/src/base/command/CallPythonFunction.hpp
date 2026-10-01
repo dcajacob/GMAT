@@ -90,6 +90,8 @@ public:
 	DEFAULT_TO_NO_CLONES
 
 protected:
+   virtual void         InsertCommandName(std::string &genString);
+
    /// Variant that takes the currently supported inputs to the Python Interface
    typedef std::variant<std::monostate, Real, std::string, Rmatrix> PyIfVariant;
 

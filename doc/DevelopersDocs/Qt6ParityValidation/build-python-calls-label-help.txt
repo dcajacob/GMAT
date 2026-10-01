@@ -1,0 +1,13 @@
+[1/13] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/13] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/factory/PythonCommandFactory.cpp.o
+[3/13] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/command/CallPythonFunction.cpp.o
+[4/13] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so.R2026a
+[5/13] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so
+[6/13] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so.R2026a
+[7/13] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so
+[8/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CommandEditor.cpp.o
+[9/13] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[10/13] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[11/13] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[12/13] Building CXX object src/qtgui/CMakeFiles/GmatQtPythonCallTests.dir/tests/PythonCallTests.cpp.o
+[13/13] Linking CXX executable src/qtgui/GmatQtPythonCallTests

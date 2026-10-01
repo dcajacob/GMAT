@@ -383,19 +383,27 @@ bool CallPythonFunction::SetStringParameter(const std::string& label,
 
 
 //------------------------------------------------------------------------------
-// bool Initialize()
+// void InsertCommandName(std::string &genString)
 //------------------------------------------------------------------------------
 /**
- * Initialize Python engine
- *
- * This method initializes Python by loading the Python engine and setting the 
- * PYTHONPATH.
- *
- * @param none
- *
- * @return bool
+ * Preserve a Python call's leading label when serializing its command.
  */
 //------------------------------------------------------------------------------
+void CallPythonFunction::InsertCommandName(std::string &genString)
+{
+   // Python calls have no command keyword. A label precedes the optional
+   // output list, never the module path inside Python.Module.Function.
+   if (instanceName.empty()) return;
+   auto position = genString.find_first_not_of(" \t\r\n");
+   if (position == std::string::npos) return;
+   if (genString.compare(position, 5, "GMAT ") == 0) position += 5;
+   genString.insert(position, "'" + instanceName + "' ");
+}
+
+//------------------------------------------------------------------------------
+// bool Initialize()
+//------------------------------------------------------------------------------
+/** Initialize Python and configure its module search paths. */
 bool CallPythonFunction::Initialize()
 {
 	bool ret = false;

@@ -32,7 +32,8 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       text.remove(QRegularExpression("(?m)^\\s*%[^\\n]*\\n?"));
       const auto match=QRegularExpression("^\\s*([A-Za-z][A-Za-z0-9_]*)").match(text);
       auto type=match.hasMatch() ? match.captured(1) : QString("CallGmatFunction");
-      if (type=="GMAT" || type=="Equation" || QRegularExpression("^\\s*[A-Za-z][A-Za-z0-9_.]*(?:\\([^)]*\\))?\\s*=").match(text).hasMatch()) type="Assignment";
+      if (QRegularExpression(R"(^\s*(?:GMAT\s+)?(?:'[^'\n]*'\s+)?(?:(?:\[[^\];\n]*\]|[A-Za-z][A-Za-z0-9_]*)\s*=\s*)?Python\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\s*\()").match(text).hasMatch()) type="CallPythonFunction";
+      else if (type=="GMAT" || type=="Equation" || QRegularExpression("^\\s*[A-Za-z][A-Za-z0-9_.]*(?:\\([^)]*\\))?\\s*=").match(text).hasMatch()) type="Assignment";
       else if (auto *object=Moderator::Instance()->GetConfiguredObject(type.toStdString());object && object->IsOfType("Function")) type="CallGmatFunction";
       if (text.trimmed().isEmpty()) type="index";
       setProperty("helpTopic",type);

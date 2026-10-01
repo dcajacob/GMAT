@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.PythonCalls
+1/1 Test #45: QtGui.PythonCalls ................***Failed    0.25 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Python call is not safely mapped to original source
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.25 sec*proc (1 test)
+
+Total Test time (real) =   0.26 sec
+
+The following tests FAILED:
+	 45 - QtGui.PythonCalls (Failed)                        qt-gui
+Errors while running CTest

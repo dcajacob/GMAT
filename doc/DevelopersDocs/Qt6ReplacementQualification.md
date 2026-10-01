@@ -161,7 +161,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
-| `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
+| `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. PythonCalls adds actual MDI module/function and ordered arguments, labeled scalar-from-array and no-output string execution, lookup failure/correction/reopen, and context Help; native Wayland controls inspected. Zero-input, package syntax, other return/error types and changed-module cache recovery remain unqualified. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
 | `../plugins/libScriptTools` | ScriptEditingTests: the sole registered CommandEcho command has typed On/Off editing, pending Apply, label/comment preservation, exact Undo/Redo/Unicode save/reopen, bounded execution tracing, independently checked 2/5 reports, invalid-edit rollback and initially disabled/enabled RunComplete state restoration. Its generator now retains the terminating semicolon so the GUI can locate/edit it. One stopped While/If case, post-echo file-write failure, initially on/off settings, unexecuted/repeated cleanup and configuration-preserving clones are covered; cleanup/copy defects corrected. Broader completed nested/loop and argument-validation cases remain pending. |
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
@@ -5227,3 +5227,57 @@ suite, old Toggle modes or native-rendering repeat was needed. Previous native
 rendering/window/replay and complete check-documents.txt evidence is reused.
 The full Linux qualification remains active with the original outstanding desktop
 and workflow/plugin gates. Windows/macOS remain deferred.
+
+
+## Python call controls and labeled serialization checkpoint (2026-09-30)
+
+The mission editor now distinguishes Python calls from configured GMAT Function
+resources. Simple module/function identifiers receive an editable module selector
+and a function field; ordered input/output argument browsers use the existing
+parameter selector. The module list enumerates configured readable Python files
+without importing them and accepts runtime modules such as builtins. The Python
+command template appears only when its factory is loaded. Source-span edits retain
+labels, comments, argument spelling and unrelated mission/configuration text.
+Context Help now routes both labeled and no-output calls to CallPythonFunction.
+
+The actual MDI fixture exposed a plugin serializer defect: the inherited command
+label insertion produced `[Magnitude] = Python 'Compute norm'.ArrayFunctions.mag`
+instead of a leading label. This prevented safe source alignment even though the
+original script built and ran. CallPythonFunction now overrides label insertion
+and places the label before the optional output list. The fix is restricted to
+Python serialization; engine argument conversion, module caching and numerical
+functions are unchanged. check-python-calls-diagnostic.txt retains the malformed
+canonical source, and check-python-calls-magtimes.txt retains the initial mapping
+failure. Existing unlabeled vector-result evidence is reused from Compatibility.
+
+QtGui.PythonCalls independently configures the shipped ArrayFunctions.magtimes
+with scalar/array inputs and checks the expected scalar result 15. The GUI then
+changes mag to magtimes and selects ordered inputs through the actual MDI panel,
+compares report bytes with that independent configuration, and verifies Cancel,
+pending edits, retained clean Apply, exact Undo/Redo and Unicode save/reopen.
+The same mission exercises a no-output builtins.print call with a String input.
+Missing module and missing function names are applied through the GUI; execution
+fails without losing source, then GUI correction/save/reopen recovers the same
+report. The actual Help button opens the installed Python command page. Pure
+source-span checks retain nested and quoted commas, labels and trailing comments;
+they do not establish runtime support for literal arguments or arbitrary Python
+expressions. The final focused check passes in check-python-calls-label-help.txt,
+0.64 seconds. No complete regression, previous Python vector or viewer cases were
+repeated. The earlier initial check incorrectly named the shipped function
+scaleMag; that fixture error and test-only compile corrections remain in the raw
+evidence and are not treated as product failures.
+
+python-calls-wayland-20260930.txt and .png record one native Wayland actual MDI
+preview. The module/function fields and ordered argument buttons were captured
+and inspected; controls fit without clipping. This preview performs no Python
+calls and does not claim top-level minimization, portal interaction or fresh
+compositor input. build-python-calls-label-help.txt records the rebuilt native
+Python/ExternalForce plugins and actual GmatQt-R2026a application. The final
+application rebuild after documentation/comment cleanup is recorded separately.
+
+This closes the missing call-control and representative lookup recovery cases,
+not every Python function shape. Zero-input calls, package/dotted function syntax,
+other return/error types and modified-module cache recovery remain unqualified;
+unsupported syntax stays available in the source editor. Shared Wayland desktop
+and other selected workflow/plugin acceptance gates remain active. Windows/macOS
+remain deferred, MATLAB remains off, and full Linux replacement is not yet claimed.

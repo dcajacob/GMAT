@@ -138,6 +138,15 @@ selector lists configured Python search paths. Enter a module name without `.py`
 the engine does not import an absolute file path in this field. Restart GMAT
 after modifying an imported Python module, because Python caches its code.
 
+Mission Python calls provide a module selector, function name and ordered input
+and output argument browsers. The module selector lists configured Python paths
+and also accepts a runtime module name. These controls use the simple
+`Python.Module.Function(inputs)` syntax, with optional outputs and a leading
+command label. Apply validates the script; missing modules or functions are
+reported at execution and can be corrected in the retained mission editor.
+Help opens the CallPythonFunction reference. Restart GMAT after changing imported
+module code. More complex Python syntax remains a script editing workflow.
+
 **Polyhedron gravity…** in the force-model editor manages one contributor per
 celestial body. Add a row, select its body and closed triangle mesh, and enter
 density in kg/m³; mesh coordinates are in kilometres. Remove selected rows to

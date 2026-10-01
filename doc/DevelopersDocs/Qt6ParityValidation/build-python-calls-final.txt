@@ -1,0 +1,6 @@
+[1/6] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/6] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/command/CallPythonFunction.cpp.o
+[3/6] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so.R2026a
+[4/6] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so
+[5/6] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so.R2026a
+[6/6] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so

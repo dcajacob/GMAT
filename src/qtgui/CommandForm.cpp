@@ -63,6 +63,7 @@ void CommandForm::setStatement(const QString &statement)
    const QString label="(?:'[^'\\n]*'\\s+)?";
    const QString name="([A-Za-z][A-Za-z0-9_]*)";
    const QString expression="([^,;{}\\n]+?)";
+   const QString pythonName="([A-Za-z_][A-Za-z0-9_]*)";
    const QString end="\\s*;?[ \\t]*(?:%[^\\n]*)?\\s*$";
    const QString branchEnd="\\s*;?[ \\t]*(?:%[^\\n]*)?(?:\\n[\\s\\S]*)?$";
    struct Spec { QString type,pattern; QStringList labels; };
@@ -81,6 +82,8 @@ void CommandForm::setStatement(const QString &statement)
       {"Orbit estimation","RunEstimator\\s+"+label+name+end,{"Estimator"}},
       {"Orbit smoothing","RunSmoother\\s+"+label+name+end,{"Smoother"}},
       {"Event search","FindEvents\\s+"+label+name+"(?:\\s*\\{([^{};]*)\\})?"+end,{"Locator"}},
+      {"Python call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*Python\\."+pythonName+"\\."+pythonName+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Module","Function","Inputs"}},
+      {"Python call",label+"Python\\."+pythonName+"\\."+pythonName+"\\s*\\(([^;\\n]*?)\\)"+end,{"Module","Function","Inputs"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
       {"Toggle","Toggle\\s+"+label+"([A-Za-z][A-Za-z0-9_]*(?:\\s+[A-Za-z][A-Za-z0-9_]*)*)\\s+(On|Off)"+end,{"Subscribers","State"}},
@@ -111,13 +114,17 @@ void CommandForm::setStatement(const QString &statement)
       else if (name=="Burn") resourceType=title()=="Maneuver" ? "ImpulsiveBurn" : "FiniteBurn";
       else if (name=="Spacecraft" && (title()=="Maneuver" || title()=="Finite burn")) resourceType="Spacecraft";
       else if (name=="Locator") resourceType="EventLocator";
-      else if (name=="Function") resourceType="Function";
+      else if (name=="Function" && title()!="Python call") resourceType="Function";
       else if (name=="Solver") {
          if (title()=="Minimize" || title()=="Constraint" || QRegularExpression(prefix+"Optimize\\b").match(statement).hasMatch()) resourceType="Optimizer";
          else if (title()=="Achieve" || QRegularExpression(prefix+"Target\\b").match(statement).hasMatch()) resourceType="BoundaryValueSolver";
          else resourceType="Solver";
       }
-      if (title()=="File thrust" && name=="Spacecraft") {
+      if (title()=="Python call" && name=="Module") {
+         auto *module=new QComboBox(this); module->setObjectName("commandPythonModule"); module->setEditable(true); module->addItems(pythonModuleNames()); module->setCurrentText(input->text());
+         module->setToolTip("Python module name without .py, from configured search paths or the Python installation. Restart GMAT after changing imported module code."); input->hide(); layout->addRow(name,module);
+         connect(module,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
+      } else if (title()=="File thrust" && name=="Spacecraft") {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select spacecraft…",container); choose->setObjectName("commandChoose_Spacecraft"); row->addWidget(choose); layout->addRow(name,container);
          connect(choose,&QPushButton::clicked,this,[this,input] {
@@ -176,7 +183,7 @@ void CommandForm::setStatement(const QString &statement)
             auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons); connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject); dialog.resize(450,350);
             if (dialog.exec()==QDialog::Accepted) { QStringList names; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) names.append(list->item(i)->text()); input->setText(names.isEmpty() ? QString() : " "+names.join(" ")); }
          });
-      } else if (title()=="Function call" && (name=="Inputs" || name=="Outputs")) {
+      } else if ((title()=="Function call" || title()=="Python call") && (name=="Inputs" || name=="Outputs")) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select arguments…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
          connect(choose,&QPushButton::clicked,this,[this,input,name] {

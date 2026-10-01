@@ -1,0 +1,66 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.PythonCalls
+1/1 Test #45: QtGui.PythonCalls ................***Failed    0.24 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Canonical mission:
+% retain Python source α
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create ReportFile Values;
+Values.SolverIterations = Current;
+Values.UpperLeft = [ 0 0 ];
+Values.Size = [ 0 0 ];
+Values.RelativeZOrder = 0;
+Values.Maximized = false;
+Values.Filename = '/tmp/QtPythonCalls-QGIwVo/python scalar.txt';
+Values.Precision = 16;
+Values.WriteHeaders = false;
+Values.LeftJustify = On;
+Values.ZeroFill = Off;
+Values.FixedWidth = true;
+Values.Delimiter = ' ';
+Values.ColumnWidth = 23;
+Values.WriteReport = true;
+Values.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+
+Create Array A[1,3];
+Create Variable Count Scale Magnitude;
+Create String Message;
+A(1, 1) = 3;
+A(1, 2) = 4;
+Count = 3;
+Scale = 3;
+Message = 'Python GUI string input';
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+[Magnitude] = Python 'Compute norm'.ArrayFunctions.mag(A, Count); % retain Python call
+Python.builtins.print(Message); % no outputs, string input
+Report Values Magnitude;
+
+FAIL: Python call is not safely mapped to original source
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.24 sec*proc (1 test)
+
+Total Test time (real) =   0.25 sec
+
+The following tests FAILED:
+	 45 - QtGui.PythonCalls (Failed)                        qt-gui
+Errors while running CTest
