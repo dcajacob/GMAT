@@ -277,6 +277,13 @@ MainWindow::MainWindow()
    });
    plots->changed = [this] { refreshOutput(); };
    plots->saveProjection=[this](const QString &name,bool perspective,double fov) { return savePlotProjection(name,perspective,fov); };
+   plots->protectedPaths=[this] {
+      QStringList paths{scriptPath,startupFile};
+      for (const auto &document:scriptDocuments) paths.append(document->path);
+      paths.append(reportFiles.values());
+      for (auto it=ephemerisFiles.cbegin();it!=ephemerisFiles.cend();++it) paths.append(it.value().first);
+      return paths;
+   };
    connect(output, &QTreeWidget::itemDoubleClicked, this, [this](QTreeWidgetItem *item, int) {
       const auto name = item->data(0, Qt::UserRole).toString();
       const auto type=item->data(0,Qt::UserRole+1).toString(),format=item->data(0,Qt::UserRole+2).toString();

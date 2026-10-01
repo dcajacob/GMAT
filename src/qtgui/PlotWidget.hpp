@@ -2,6 +2,7 @@
 #include <functional>
 #include "PlotModel.hpp"
 #include <QWidget>
+#include <QStringList>
 #include <memory>
 class QAction;
 class QSlider;
@@ -42,6 +43,8 @@ public:
    void refresh();
    void restoreView(const PlotViewState &state);
    void setProjectionSaver(std::function<QString(bool,double)> callback);
+   void setProtectedPaths(std::function<QStringList()> callback);
+   QString exportData(const QString &path) const;
    PlotCanvas *canvas() const { return drawing; }
 private:
    std::shared_ptr<PlotModel> data;
@@ -52,6 +55,7 @@ private:
    QLabel *replayPosition=nullptr;
    QAction *saveProjection=nullptr;
    std::function<QString(bool,double)> projectionSaver;
+   std::function<QStringList()> protectedPaths;
    quint64 historyGeneration=0;
    void updateReplayFrame();
    void editPlotStyle();

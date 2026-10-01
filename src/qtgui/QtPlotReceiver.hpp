@@ -27,6 +27,7 @@ public:
    std::shared_ptr<const PlotModel> model(const QString &name) const;
    std::function<void()> changed;
    std::function<QString(const QString &,bool,double)> saveProjection;
+   std::function<QStringList()> protectedPaths;
    QMap<QString,QtCameraSetting> cameraSettings;
 virtual bool CreateGlPlotWindow(const std::string &plotName,
                         const std::string &oldName,

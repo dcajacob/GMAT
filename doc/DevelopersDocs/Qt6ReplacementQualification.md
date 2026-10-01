@@ -129,7 +129,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
-| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis appendix. |
+| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
@@ -5401,3 +5401,65 @@ final numeric-gutter change does not alter the inspected dialog layout, so its
 preview was not repeated. Top-level compositor input/minimize and portal gates
 remain unqualified; this does not close those gates or claim full Linux
 replacement completion. Windows/macOS remain deferred.
+
+
+## XY retained-data export and populated display evidence (2026-09-30)
+
+TsPlotCanvas's active right-click menu exposes Export Data and its SaveData caller
+uses DumpData. Qt previously provided Save image without this data operation.
+audit-xy-export-format.txt records the wx writer: title, X/Y labels, then one
+curve-name section containing ordered `x, y` rows and a blank separator. Qt's new
+XY Export data action preserves that text structure with UTF-8 names and 17-digit
+C-locale doubles, rather than wx's 15-digit values. The extra precision permits
+stored doubles to round-trip independently of axis-label precision. Export includes
+all retained curves, hidden curves and out-of-range points; evicted MaxPlotPoints
+history is not reconstructed, and plot-error metadata is not added to the legacy
+X/Y format. No collection, subscriber publication or numerical behavior changes.
+
+The writer uses QSaveFile and bounded streaming rather than a whole-export text
+buffer. Cancel writes nothing. Open/write/commit errors return a diagnosis and
+preserve the previous destination through atomic replacement. The live receiver
+supplies current open-document, startup, report/solver/event and ephemeris paths;
+export refuses to overwrite those files, including canonical symlink aliases.
+The actual menu displays a write diagnosis. Regular user-chosen export files can
+be replaced through the existing save chooser confirmation. This protection is
+specific to the new data action and does not claim a broader image-export audit.
+
+The first algebraic fixture produced zero XY samples: assignments/Report alone
+were not publishing chart data. Its 20-byte headers fit below the induced file
+limit, so the supposed write-failure assertion failed. check-xy-export-initial.txt
+and check-xy-export-diagnostic.txt preserve the failure and its nonempty-error/
+zero-sample diagnosis. The fixture was replaced with a short spacecraft
+propagation and now explicitly requires more than three actual engine-published
+samples. This was a fixture weakness, not a failed atomic writer.
+
+That observation also bounds the preceding XYAxes algebraic MDI fixture: its
+sample-count assertions covered an empty model. Its independent synthetic chart
+still proves rendered limits, clipping, ticks and precision; its MDI controls,
+Cancel/correction, exact source/report and close/reopen assertions remain useful.
+XYExport now adds populated actual MDI display evidence: hide the collected curve,
+set a minimum beyond the data and low axis precision through the Style dialog,
+then export every retained sample exactly. These GUI settings retain the collected
+samples and source/state reports and survive viewer close/reopen; rebuilding the
+saved source recreates the same independent state report.
+
+QtGui.XYExport invokes the actual export action and widget chooser for Cancel
+and acceptance to a Unicode file. It checks headers, ordered samples against the
+retained engine model, unchanged display/source/report, source/output/startup and
+symlink rejection, missing-directory failure, close/reopen and repeat export,
+and save/reopen/rerun state-report invariance. A process-local 128-byte file-size
+limit forces an actual post-write failure on a populated export; the prior file
+must remain byte exact, and removing the limit must recover the same complete
+export. A synthetic sparse-ID, hidden/empty-curve case separately checks Unicode,
+C-locale syntax under German defaults and exact double values despite view
+range/precision changes. check-xy-export-populated.txt passes in 0.37 seconds.
+No prior XYAxes, broader PlotTests, native-rendering or full-suite repeat was made.
+
+build-xy-export-initial.txt records the real GmatQt-R2026a rebuild and launcher
+recreation with the final product changes; subsequent builds change only the
+fixture. xy-export-wayland-20260930.txt and its .picker/.plot.png captures record
+the new action and exposed Wayland widget chooser, with Cancel/no file creation.
+Both were inspected. The native preview uses synthetic display points and no
+mission execution; it does not qualify desktop portals. The full Linux acceptance
+goal remains active with original compositor-input, portal and other selected
+workflow/plugin gates; Windows/macOS remain deferred.

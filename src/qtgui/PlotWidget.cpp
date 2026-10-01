@@ -26,6 +26,9 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QSaveFile>
+#include <QFileInfo>
+#include <QTextStream>
+#include <QLocale>
 #include <QMessageBox>
 #include <QSlider>
 #include <QStyle>
@@ -464,6 +467,13 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
    if (data->kind==PlotModel::Kind::XY) {
       auto *style=bar->addAction("Style…"); style->setObjectName("plotStyleAction");
       connect(style,&QAction::triggered,this,&PlotWidget::editPlotStyle);
+      auto *exportAction=bar->addAction("Export data…"); exportAction->setObjectName("plotExportData");
+      exportAction->setToolTip("Save all retained curves, including points outside the visible range");
+      connect(exportAction,&QAction::triggered,this,[this] {
+         const auto path=QFileDialog::getSaveFileName(this,"Export plot data",QFileInfo(data->title).fileName()+".txt","Text files (*.txt);;All files (*)");
+         if (path.isEmpty()) return;
+         const auto error=exportData(path); if (!error.isEmpty()) QMessageBox::warning(this,"Could not export plot data",error);
+      });
    }
    auto *save = bar->addAction("Save image…");
    connect(save,&QAction::triggered,this,[this] {
@@ -661,4 +671,33 @@ void PlotWidget::setProjectionSaver(std::function<QString(bool,double)> callback
 {
    projectionSaver=std::move(callback);
    if (saveProjection) saveProjection->setEnabled(bool(projectionSaver));
+}
+
+void PlotWidget::setProtectedPaths(std::function<QStringList()> callback) { protectedPaths=std::move(callback); }
+QString PlotWidget::exportData(const QString &path) const
+{
+   if (data->kind!=PlotModel::Kind::XY) return "Only XY plots have this data export format.";
+   if (path.isEmpty()) return "Choose a file for the plot data.";
+   const QFileInfo destination(path);
+   if (protectedPaths) for (const auto &name:protectedPaths()) {
+      if (name.isEmpty()) continue;
+      const QFileInfo input(name);
+      if (destination.absoluteFilePath()==input.absoluteFilePath() || (!destination.canonicalFilePath().isEmpty() && destination.canonicalFilePath()==input.canonicalFilePath()))
+         return "Choose a different file; plot data cannot overwrite an open mission, startup file or mission output.";
+   }
+   QSaveFile file(path);
+   if (!file.open(QIODevice::WriteOnly)) return "Cannot export plot data: "+file.errorString();
+   QTextStream output(&file); output.setLocale(QLocale::c()); output.setRealNumberPrecision(17);
+   // Retain wx's title/axis headers and per-curve X,Y sections. Full stored
+   // double precision is independent of the viewer's tick-label precision.
+   output<<data->title<<'\n'<<data->xLabel<<"   "<<data->yLabel<<'\n';
+   for (const auto &curve:data->curves) {
+      output<<curve.name<<'\n';
+      for (const auto &point:curve.points) output<<point.x<<", "<<point.y<<'\n';
+      output<<'\n';
+   }
+   output.flush();
+   if (output.status()!=QTextStream::Ok) { file.cancelWriting(); return "Cannot export plot data: "+file.errorString(); }
+   if (!file.commit()) return "Cannot export plot data: "+file.errorString();
+   return {};
 }

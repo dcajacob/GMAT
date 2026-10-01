@@ -1,0 +1,21 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.XYExport
+1/1 Test #45: QtGui.XYExport ...................***Failed    0.25 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Export failure diagnostic: points=0, export bytes=20, error=, destination bytes=20
+FAIL: Post-write export failure did not preserve old destination
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.25 sec*proc (1 test)
+
+Total Test time (real) =   0.25 sec
+
+The following tests FAILED:
+	 45 - QtGui.XYExport (Failed)                           qt-gui
+Errors while running CTest

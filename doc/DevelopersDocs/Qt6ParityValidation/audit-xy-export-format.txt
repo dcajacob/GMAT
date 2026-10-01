@@ -1,0 +1,36 @@
+void TsPlotCanvas::DumpData(const std::string &fn)
+{
+   std::ofstream outfile;
+   std::string outname = filename;
+   if (fn != "")
+      outname = fn;
+
+   if (outname != "")
+   {
+      outfile.open(outname.c_str());
+      outfile.precision(15);
+
+      outfile << plotTitle << std::endl
+              << xLabel << "   " << yLabel << std::endl;
+
+      /// @todo Determine a better format to write out the plot data
+      int curveNum = 0;
+      for (std::vector<TsPlotCurve*>::iterator i = data.begin();
+           i != data.end(); ++i)
+      {
+         int j;
+         outfile << names[curveNum++] << "\n";
+         for (j = 0; j < (int)((*i)->abscissa.size()); ++j)
+            outfile << (*i)->abscissa[j] << ", " << (*i)->ordinate[j] << "\n";
+         outfile << "\n";
+      }
+      outfile.close();
+   }
+}
+
+
+//------------------------------------------------------------------------------
+// void wxPlotWindow::ClearAllCurveData()
+//------------------------------------------------------------------------------
+void TsPlotCanvas::ClearAllCurveData()
+{

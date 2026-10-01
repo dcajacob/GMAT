@@ -1839,3 +1839,11 @@ data; invalid values keep OK disabled until corrected. Cancel retains the
 current view. Accepted display options survive viewer close/reopen and reset
 when the mission rebuilds. Changing limits restores the plot's pan/zoom so the
 new range is visible. Use the resource editor for settings saved in the script.
+
+
+The XY viewer's **Export data…** action saves its title, axis labels and retained
+curves as UTF-8 text with ordered X/Y pairs at full stored precision. Hidden curves
+and points outside the displayed range are included. Export does not recover
+history already removed by MaxPlotPoints. Choose a separate file from open
+missions, startup files and mission outputs. Failed writes preserve the previous
+file, and Cancel leaves the mission and plot unchanged.

@@ -118,6 +118,7 @@ bool QtPlotReceiver::show(const QString &name)
          entry.window=workspace->addSubWindow(entry.table);
       } else {
          entry.widget=new PlotWidget(entry.data);
+         entry.widget->setProtectedPaths([this] { return protectedPaths ? protectedPaths() : QStringList(); });
          if (saveProjection) entry.widget->setProjectionSaver([this,name](bool perspective,double fov) { return saveProjection(name,perspective,fov); });
          entry.widget->setFocusPolicy(Qt::StrongFocus);
          entry.window=workspace->addSubWindow(entry.widget);
