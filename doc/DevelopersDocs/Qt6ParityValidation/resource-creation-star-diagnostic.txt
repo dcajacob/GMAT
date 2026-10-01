@@ -1,0 +1,4 @@
+Captured from application/output/GmatLog.txt after the isolated Star creation probe:
+1: : **** ERROR **** SolarSystem exception: Cannot set central body for body "NewStar" because body "" cannot be found.
+ in line:
+   "   1: Create Star NewStar;"

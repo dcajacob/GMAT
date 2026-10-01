@@ -7192,7 +7192,6 @@ fresh desktop input. Top-level Wayland minimize/restore and portal gates are
 unchanged; blocked experiments were not repeated. Full Linux qualification
 remains active, Windows/macOS deferred and MATLAB off.
 
-
 ## Stored OF label fonts and persistent Qt placement — 2026-10-01
 
 DrawFontSize and DrawFontPosition were retained only as comments during Qt
@@ -7424,3 +7423,58 @@ numerical report, shared-animation or old broad suite was repeated. All live
 desktop testing remains stopped following the GNOME Shell crash. Native safety,
 Wayland/portal and broader replacement gates remain open; full Linux qualification
 remains active, Windows/macOS deferred and MATLAB off.
+
+## Required references during resource creation — 2026-10-01
+
+The user reported EphemerisFile creation failing with “The Spacecraft was not
+set” and suspected similar failures in other types. The Qt creator prepended a
+bare Create statement and rebuilt the entire candidate before opening the new
+resource editor. Interpreter::FinalPassSubscribers requires EphemerisFile's
+Spacecraft reference during that build, so the editor could never supply it.
+The legacy wx subscriber creation path sets a default spacecraft first.
+
+New resource now includes an EphemerisFile-only Spacecraft selector populated
+from the currently built mission. The selected reference and Create declaration
+are one undoable source edit; selection remains pending across type switches.
+Direct creation callers use an existing spacecraft by default. No spacecraft or
+a wrong-type/stale reference is rejected before applyModelScript, without model
+reconstruction/source mutation. The user receives a clear instruction to create
+a spacecraft first. Existing validation, rollback, tree synchronization and
+opening the editor remain in the normal transaction path.
+
+The new ResourceCreationDefaultsTests --probe checked the creator's 61 types
+not covered by the prior 18-type plugin/user-parameter cases. Each was attempted
+against the same built baseline with an explicitly named Vehicle spacecraft;
+successful creation was undone/rebuilt and failure rollback was checked. No
+missions ran. resource-creation-probe.txt records 59 successful builds and two
+failures: EphemerisFile and Star. This is a creation/build check, not proof that
+all default resources can execute without further configuration. The prior
+plugin/user-parameter suites were not repeated.
+
+An isolated --star probe and resource-creation-star-diagnostic.txt establish
+that Create Star fails in Moderator::CreateCelestialBody/CelestialBody::SetUpBody
+because its default central-body name is empty. This occurs before subsequent
+script settings could repair it. Star is now excluded from generic and category
+creation menus, preventing an operation the selected runtime cannot complete;
+the existing Sun remains editable. No celestial/numerical engine change was made.
+The initial probe's queued UI messages omitted that error; the retained diagnostic
+was captured from the engine's application/output/GmatLog.txt after the isolated
+probe. It is not a successful Star qualification claim.
+
+The final QtGui.ResourceCreationDefaults check is focused on the changed cases:
+EphemerisFile creation using an existing spacecraft, no-spacecraft/wrong-type
+prevalidation, actual dialog error correction, pending type switches and Cancel,
+explicit choice between two spacecraft, exact unrelated source, tree/editor
+activation, Undo/Redo and Unicode Save/reopen. It also checks Star is no longer
+offered and a direct unsupported request leaves the mission intact.
+check-resource-creation-defaults.txt records the offscreen pass. The harness
+refuses non-offscreen platforms. The successful 59-type diagnostic cases were
+not repeated after the focused implementation, nor were old plugin, animation,
+sky, numerical report or other broad matrices.
+
+build-resource-creation-defaults.txt records successful final frontend/test
+compilation, actual application/bin/GmatQt-R2026a relink and GmatQt launcher
+recreation. All live desktop testing remains stopped following the GNOME Shell
+crash. Native interaction/Wayland/portal and broader replacement gates remain
+open; full Linux qualification remains active, Windows/macOS deferred and MATLAB
+off.

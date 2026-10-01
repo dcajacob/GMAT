@@ -1,0 +1,64 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS create Angle
+PASS create Antenna
+PASS create Asteroid
+PASS create Barycenter
+PASS create BatchEstimatorInv
+PASS create ChemicalTank
+PASS create ChemicalThruster
+PASS create Comet
+PASS create ConicalFOV
+PASS create ContactLocator
+PASS create ConvertTime
+PASS create CoordinateSystem
+PASS create CustomFOV
+PASS create DifferentialCorrector
+PASS create DynamicDataDisplay
+PASS create ElectricTank
+PASS create ElectricThruster
+FAIL EphemerisFile: The mission rejected these changes. See Message Window.
+PASS create FiniteBurn
+PASS create ForceModel
+PASS create FuelTank
+PASS create GetEphemStates
+PASS create GetLastState
+PASS create GroundTrack
+PASS create GroundTrackPlot
+PASS create Imager
+PASS create ImpulsiveBurn
+PASS create IntrusionLocator
+PASS create LibrationPoint
+PASS create MessageWindow
+PASS create Moon
+PASS create NuclearPowerSystem
+PASS create Num2str
+PASS create ODEModel
+PASS create OrbitView
+PASS create Pause
+PASS create Planet
+PASS create PropSetup
+PASS create QuaternionProduct
+PASS create QuaternionRotation
+PASS create QuaternionToDCM
+PASS create Receiver
+PASS create RectangularFOV
+PASS create ReportFile
+PASS create RotationMatrix
+PASS create SetSeed
+PASS create Sign
+PASS create SolarPowerSystem
+PASS create Spacecraft
+FAIL Star: The mission rejected these changes. See Message Window.
+PASS create Str2num
+PASS create SystemTime
+PASS create TextEphemFile
+PASS create Thruster
+PASS create Transmitter
+PASS create Transponder
+PASS create XYPlot
+PASS create num2str
+PASS create pause
+PASS create sign
+PASS create str2num
+Checked 61 previously untested creator types; failures: EphemerisFile, Star

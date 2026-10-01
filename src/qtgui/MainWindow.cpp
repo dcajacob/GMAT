@@ -196,6 +196,10 @@ QStringList creatableResourceTypes()
       for (const auto &type:Moderator::Instance()->GetListOfViewableItems(category)) result.append(QString::fromStdString(type));
    }
    result.append({"Variable","String","Array"});
+   // The engine fails in CreateCelestialBody/SetUpBody for a new Star before
+   // script properties can supply its missing central body. Keep that factory
+   // item out of creation menus; the existing Sun remains editable.
+   result.removeAll("Star");
    result.removeDuplicates(); result.sort(); return result;
 }
 QString qtConfiguredScript()
@@ -1624,7 +1628,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    return applyModelScript(candidate,gravityCheck);
 }
 
-QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue,const QString &functionPath)
+QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue,const QString &functionPath,const QString &spacecraft)
 {
    if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
       return "Build the current script before creating a resource.";
@@ -1641,6 +1645,17 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       return "Choose array dimensions from 1 to 1000.";
    const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
    QString initializer;
+   if (type=="EphemerisFile") {
+      auto selected=spacecraft;
+      if (selected.isEmpty()) {
+         const auto configured=Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT);
+         if (configured.empty()) return "Create a Spacecraft before adding an EphemerisFile.";
+         selected=QString::fromStdString(configured.front());
+      }
+      auto *object=Moderator::Instance()->GetConfiguredObject(selected.toStdString());
+      if (!object || !object->IsOfType(Gmat::SPACECRAFT)) return "Select a configured Spacecraft for the EphemerisFile.";
+      initializer="GMAT "+name+".Spacecraft = "+selected+";\n";
+   }
    if (type=="GmatFunction") {
       if (functionPath.trimmed().isEmpty()) return "Choose a function file, or use New file to create one before adding this function.";
       const QFileInfo file(functionPath);
@@ -1693,6 +1708,10 @@ void MainWindow::showCreateResource(const QString &initialType)
    auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
    auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setObjectName("resourceCreationStatus"); status->setWordWrap(true);
    layout->addRow("Type",type); layout->addRow("Name",name);
+   auto *spacecraft=new QComboBox(&dialog); spacecraft->setObjectName("resourceSpacecraft");
+   for (const auto &configured:Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT)) spacecraft->addItem(QString::fromStdString(configured));
+   layout->addRow("Spacecraft",spacecraft);
+   auto *spacecraftNote=new QLabel("Create a Spacecraft first, then select it for this ephemeris output.",&dialog); spacecraftNote->setWordWrap(true); layout->addRow(spacecraftNote);
    auto *rows=new QSpinBox(&dialog); rows->setObjectName("arrayRows"); rows->setRange(1,1000);
    auto *columns=new QSpinBox(&dialog); columns->setObjectName("arrayColumns"); columns->setRange(1,1000);
    layout->addRow("Rows",rows); layout->addRow("Columns",columns);
@@ -1725,6 +1744,8 @@ void MainWindow::showCreateResource(const QString &initialType)
       if (initialValues->contains(*previousType)) (*initialValues)[*previousType]=value->text();
       *previousType=type->currentText();
       const bool array=type->currentText()=="Array";
+      const bool ephemeris=type->currentText()=="EphemerisFile";
+      layout->setRowVisible(spacecraft,ephemeris); layout->setRowVisible(spacecraftNote,ephemeris && spacecraft->count()==0);
       layout->setRowVisible(rows,array); layout->setRowVisible(columns,array);
       const bool scalar=type->currentText()=="Variable" || type->currentText()=="String";
       layout->setRowVisible(value,scalar);
@@ -1738,7 +1759,7 @@ void MainWindow::showCreateResource(const QString &initialType)
    buttons->button(QDialogButtonBox::Ok)->setText("Create"); layout->addRow(buttons);
    connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
-      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value(),(type->currentText()=="Variable" || type->currentText()=="String") ? std::optional<QString>(value->text()) : std::nullopt,functionPath->text());
+      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value(),(type->currentText()=="Variable" || type->currentText()=="String") ? std::optional<QString>(value->text()) : std::nullopt,functionPath->text(),spacecraft->currentText());
       if (error.isEmpty()) dialog.accept(); else status->setText(error);
    });
    dialog.resize(460,180); name->setFocus();

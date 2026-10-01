@@ -333,6 +333,12 @@ property panel opens after successful creation. Some resource types require
 further configuration before they can execute; specialized force-model and
 attitude forms remain future work. Force models have their own Resources category.
 
+EphemerisFile creation includes a Spacecraft selector and writes that required
+reference together with its declaration before validating the candidate mission.
+If there is no spacecraft, create one first; the error leaves the script/model
+unchanged. The existing Sun remains editable, but new Star creation is excluded:
+the selected engine fails before its missing central-body setting can be assigned.
+
 The Resources context menu can delete unused resources. GMAT's dependency
 checks protect resources referenced by other resources or mission commands;
 built-in resources and generated parameters are protected separately. Pending

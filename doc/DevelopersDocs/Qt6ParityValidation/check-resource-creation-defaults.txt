@@ -1,0 +1,19 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS create EphemerisFile
+Checked 1 previously untested creator types; failures: 
+PASS: required spacecraft selection/default, missing/wrong-type correction before transaction, pending selection and Cancel, selected spacecraft/source/tree/editor, Undo/Redo/Unicode Save/reopen; uncreatable Star not offered. No mission or old plugin matrix.
