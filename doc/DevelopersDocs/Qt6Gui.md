@@ -725,7 +725,7 @@ alone did not expose this hardware failure.
 The [workflow/viewer/plugin checklist](Qt6ReplacementQualification.md) tracks
 remaining wx replacement work. Command settings now include For loop bounds
 and step, If/While conditions, assignment destinations/expressions, Toggle
-subscribers/state, and Global/Clear object lists. Editing branch headers leaves
+subscribers/state, and Global/Save object lists. Editing branch headers leaves
 nested commands unchanged; Apply validates the complete mission.
 
 
@@ -964,11 +964,14 @@ recent segments used during a live run. Completion does not switch the plot on;
 a later run starts with fresh history.
 
 
-Global, Clear and Save command forms now have **Select…** object checklists.
-Choose configured resources or user variables, arrays and strings. Global omits
-resources that are automatically global from new choices; Save and Clear retain
-those choices. Computed parameter values are not objects in this selector.
-Cancel preserves the command, and Apply still validates it before execution.
+Global and Save command forms have **Select…** object checklists. Choose
+configured resources or user variables, arrays and strings. Global omits resources
+that are automatically global from new choices; Save retains those choices.
+Computed parameter values are not objects in this selector. Cancel preserves
+the command. Global is also available in the insertion templates when registered
+by the runtime. Apply validates structure; Global resolves deferred object names
+during execution. Clear is not an executable command in the selected runtime;
+the legacy text-form selector does not provide Clear runtime support.
 
 ### Script search and replacement
 
@@ -1971,3 +1974,12 @@ inline range validation while reference expressions and untouched settings stay
 intact. Actual DC/Yukon array workflows preserve source/Undo/Redo/Unicode file
 round trips and match complete independently configured iteration reports; see
 the solver operand qualification appendix. The actual application was rebuilt.
+
+
+Clean retained command panels now skip Apply when their source has not changed,
+so another Apply does not rebuild/invalidate the run or add an extra Undo step.
+Global insertion/editing and shared Variable/Array/String/Spacecraft execution
+across repeated function calls now have independent known reports and exact
+source/Undo/Redo/Unicode file round trips, including deferred-reference runtime
+failure and correction/rerun. See the Global scope qualification appendix for
+native widget evidence and the original desktop acceptance limits.

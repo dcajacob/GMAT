@@ -1,0 +1,36 @@
+Scope: active selected-Linux ManageObjectPanel and libGmatFunction Global command.
+wx ManageObjectPanel.cpp Create/LoadData/SaveData: Global/Save resource checklists,
+automatic-global distinction, nonempty selection, replace ObjectNames; pending
+common Apply/OK/Cancel. GmatMainFrame cases SAVE/MANAGE_OBJECT create the panel.
+MissionTree::GetCommandId maps Global to MANAGE_OBJECT, Save to SAVE. No active
+Clear command caller. ClearPlot is a separate plotting command.
+GmatFunctionCommandFactory registers CallGmatFunction/Global only; core factory
+registers ClearPlot but not Clear. Live GlobalScopes asserts selected command
+factory list includes Global/ClearPlot and excludes Clear. Previous synthetic
+Clear form/Cancel tests are not an executable runtime workflow.
+Global::Initialize marks found objects global; Execute moves/reuses objects in
+stores and throws on a missing name. Deferred reference lookup is intentional.
+ManageObject/GmatCommand generating strings retain named Global commands.
+Qt already had Global object editing but MainWindow omitted Global insertion
+from its templates. Added runtime-gated Global template with existing checklist.
+GlobalScopes verifies actual Mission insertion menu/template activation and
+ordered selection; inserted repeated Global is numerically/report idempotent.
+CommandEditor repeated Apply on a clean retained panel previously called the
+backend, adding a no-op Undo transaction. New hasChanges guard skips that call;
+new scope harness asserts one Undo/Redo after a second clean Apply. Mission and
+Desktop pass after that product change; other previous matrices not repeated.
+Function fixture shares Counter/Grid/Text/Sat across two input/output calls;
+local Keep=123 shadows main Keep=99. Known outputs 135/138, Counter12/15,
+Grid5/11, SatX7002/7005; retained second array element7 and global flags checked.
+Complete GUI/source-reference report is byte identical; function file unchanged.
+Global checklist Cancel/pending/retained Apply, exact labels/comments/source,
+Undo/Redo/Unicode Save/Save As/reopen, repeated declaration and deferred-reference
+Failed result with released controls then correction/rerun covered.
+Harness diagnostics retained: missing QDialog include, Create after Global
+entered command mode, queued messages not yet flushed, unactivated combo signal,
+and invalid assumption that Global resolves unknown names on Apply. Those are
+not counted as application defects or final passes.
+Native Wayland passes actual-widget assertions; command/checklist PNGs inspected.
+Compositor popup-grab warning retained: no fresh-serial or desktop input claim.
+Full qualification remains active; other dependency/dynamic-scope combinations
+and original desktop/plugin gates remain open. Windows/macOS deferred.

@@ -1,0 +1,17 @@
+1: /tmp/QtGlobalScopes-zYSJPK/ScopeTouch.gmf: **** ERROR **** Interpreter Exception:  Command mode entered at 'Global Counter Grid Text Sat'.  Create command is not allowed after command mode started in line:
+(On line 13 in Function "/tmp/QtGlobalScopes-zYSJPK/ScopeTouch.gmf")
+   "   3: Create Variable output Keep;"
+
+2: /tmp/QtGlobalScopes-zYSJPK/ScopeTouch.gmf: **** ERROR **** Interpreter Exception: Cannot find LHS object named "Keep" in line:
+(On line 13 in Function "/tmp/QtGlobalScopes-zYSJPK/ScopeTouch.gmf")
+   "   4: Keep = 123;"
+
+Sandbox Exception: Sandbox::HandleGmatFunction - error creating FCS
+
+**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
+
+ *** Mission run failed.
+===> Total Run Time: 0.074 seconds
+
+========================================
+Moderator is deleting core engine...

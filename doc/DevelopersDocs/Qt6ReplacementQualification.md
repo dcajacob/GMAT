@@ -45,7 +45,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
 | `src/gui/command/NonlinearConstraintPanel.hpp` | Active optimizer/left/right/relation controls audited; inactive wx tolerance control excluded. Constraints adds array-element source mapping, read-only <=/>=/= choices, numeric single operand browser and literal-index pre-Apply bounds checks. Actual MDI Cancel/pending/retained Apply, exact labels/comments/source/Undo/Redo/Unicode Save/Save As/reopen, invalid type/reference/index rollback and correction/rerun are covered. Five fixed-bound Yukon cases match analytic optima and independent complete iteration reports; native Wayland controls inspected. A separate literal-left/varying-right script produces NaN before any GUI edit; this numerical regime remains unqualified with raw evidence, without an engine rewrite. Dynamic-index and broader operand/property combinations remain pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. SolverOperands now adds actual MDI array goal/value/tolerance selectors (including the missing tolerance browser), numeric caller filtering, literal-index rejection, exact source/Undo/Redo/Unicode Save/Save As/reopen, independently known goal 4 and byte-identical full iteration reports after correction/rerun; native Wayland panel/picker inspected. Broader tolerance/property combinations pending. |
-| `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
+| `src/gui/command/ManageObjectPanel.hpp` | Active Global/Save checklist contract audited; automatic-global filtering and Save export/recovery evidence retained. GlobalScopes adds actual MDI ordered selection, Cancel/pending/retained Apply, missing Global insertion template, exact source/Undo/Redo/Unicode Save/Save As/reopen, shared Variable/Array/String/Spacecraft updates across two function calls, local shadow isolation, repeated Global idempotence and deferred-reference runtime failure/correction/rerun with independent complete reports. Clean command Apply now skips a no-op rebuild/Undo transaction. Native Wayland panel/checklist inspected. Clear is not registered by the selected runtime and has no active wx mission caller; the old synthetic Clear selector did not establish an executable workflow. Broader dependency/dynamic-scope cases remain under qualification. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
 | `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options. Active Apply Corrections was missing from the earlier inventory; it now updates numeric initial guesses with source retention, pending/stale guards and Undo/Redo. Actual Yukon controls, known optimum and Unicode reopen tested; native Wayland panel captured and inspected. SolverModes covers all Solve/RunInitialGuess × SaveAndContinue/DiscardAndContinue/Stop combinations in a repeated spacecraft propagation loop, documented next-invocation guesses, exact independent reports and retained source. Disabled stopped/failed viewer histories and output-path recovery now pass offscreen and native Wayland. Other optimizer/constraint and nested combinations remain pending. |
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified. Apply Corrections now covers scaled numeric guesses, retained references, nested ownership, script-event Vary commands, unexecuted guards and corrections/recovery after ExitMode Stop or nonconvergence. Known goals and Unicode reopen pass. SolverModes now covers every Solve/RunInitialGuess × ExitMode combination in a repeated spacecraft propagation loop, the documented saved/discarded next-invocation guess, known goals/epochs, exact independent state/geodetic reports and source round trips. Intentional Stop classification and disabled partial viewer completion/recovery pass. More complex nested/mixed solver and plot-mode combinations remain pending. |
@@ -156,7 +156,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. First contributor creation/removal is now covered through the actual retained force-model panel, atomic mixed Apply, invalid input and Cancel, exact source Undo/Redo/Unicode save/reopen and independent script-configured reports; see the external-force creation appendix. Full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. PluginCreation adds actual Formation New/Delete menu operations, Cancel, exact unrelated source/Undo/Redo and Unicode save/reopen. Remaining settings/output coverage pending. |
-| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. FunctionFileNames adds creator/existing-resource templates for differing file basenames, invalid filename recovery, retained aliases/Apply/Undo/reopen and independently expected pass-through execution. GmatCallSyntax adds configured-function-only empty/bare/scalar source alignment, leading-label retention and independent zero-input/no-output result checks. Broader function and report audit pending. |
+| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. FunctionFileNames adds creator/existing-resource templates for differing file basenames, invalid filename recovery, retained aliases/Apply/Undo/reopen and independently expected pass-through execution. GmatCallSyntax adds configured-function-only empty/bare/scalar source alignment, leading-label retention and independent zero-input/no-output result checks. GlobalScopes now adds Variable/Array/String/Spacecraft shared objects across repeated scalar-input/output calls, local shadow isolation, repeated Global and failed-reference correction/rerun with known outputs and exact source/report/file round trips. Broader function argument signatures and report audit pending. |
 | `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
@@ -6198,3 +6198,89 @@ build-solver-operands-controls.txt and build-solver-operands-accepted.txt record
 the real GmatQt-R2026a relinks and GmatQt launcher recreation. Earlier failed
 checks/builds are preserved as diagnostics. All changes remain on codex/qt6-gui;
 Windows/macOS are deferred and original full qualification gates remain open.
+
+
+## Global scope execution, insertion and clean command Apply — 2026-10-01
+
+ManageObjectPanel's active callers in GmatMainFrame/MissionTree are Save and
+Global. Its checklist includes configured objects, with automatic globals
+omitted from new Global choices and retained for Save; empty selection is
+rejected and accepted selections replace ObjectNames. The selected factory
+GmatFunctionCommandFactory registers CallGmatFunction and Global. Neither the
+core CommandFactory nor selected plugins register Clear, and MissionTree has
+no active Clear caller. GlobalScopes verifies the live runtime contains Global
+and ClearPlot but not Clear. The earlier synthetic Clear form/Cancel evidence
+was not runtime qualification. Clear's absence is the selected-runtime
+workflow disposition, not a reason to implement a new engine command. The
+legacy text/form fallback remains; it is not offered as an insertion template.
+audit-global-scopes.txt records these source/runtime distinctions.
+
+QtGui.GlobalScopes uses an isolated ScopeTouch.gmf with a function-local Keep=123
+and shared Counter/Grid/Text/Sat resources. Starting Counter=10, Grid(1,1)=1,
+Grid(1,2)=7 and Sat.X=7000, calls with inputs 2 then 3 must produce Counter=12/15,
+Grid(1,1)=5/11, unchanged Grid(1,2)=7, Text=shared and Sat.X=7002/7005. Main Keep
+must stay 99 despite the function's same-named local variable. Returned values
+are independently known 135/138; selected internal run objects must be global.
+The complete two-row eight-column report from GUI-edited source is byte
+identical to an independently constructed mission. The function file stays exact.
+
+The actual MDI Global checklist selects/reorders Grid, Counter, Text and Sat,
+replacing Decoy, with Cancel/pending/retained Apply, exact labels/comments and
+unrelated source, one Undo/Redo and Unicode Save/Save As/reopen. The fixture then
+uses the actual Mission context menu's Insert before action. Qt previously
+omitted Global from its insertion templates despite the registered command.
+check-global-scopes-fixture.txt reproduces that omission after the independent
+reference and existing Global editor/report work pass. MainWindow now offers
+Global only when the runtime registers it, with the existing object selector.
+Insertion of a labeled/commented duplicate Global preserves all other source
+and the same complete report, verifying repeated declaration idempotence.
+
+check-global-scopes-activation.txt finds that another Apply on the retained clean
+inserted panel adds a no-op transaction, so one Undo does not restore the prior
+script. CommandEditor now returns before the backend when hasChanges is false.
+This avoids that rebuild/transaction and its run-result invalidation. Dirty and
+inserting panels retain validation/Apply behavior. The new fixture verifies
+one exact insertion Undo/Redo after a second clean Apply, without duplicate
+commands. Mission/Desktop exercise affected shared command/editor behavior.
+No numerical-engine or resource-editor Apply behavior was changed.
+
+Global deliberately resolves object names at execution; its Initialize only
+marks found objects, and Execute reports missing objects. The initial assertion
+in check-global-scopes-accepted.txt incorrectly expected MissingResource to fail
+Apply. The corrected fixture retains that engine contract for the text fallback:
+Apply accepts the structurally valid command, the run is Failed with a visible
+MissingResource diagnostic and released controls, then selecting the correct
+resources through the same panel and rerunning reproduces the full independent
+report. It does not silently reject all dynamically provided names. The original
+error expectation was a harness assumption, not a new Qt validation defect.
+
+check-global-scopes-accepted.txt passes Mission (2.17 s) and Desktop (0.78 s) after
+the final two product changes. It fails only the old missing-reference Apply
+expectation. check-global-scopes-recovery.txt passes the corrected complete
+GlobalScopes fixture (0.61 s). Only that changed harness was rebuilt/repeated;
+the already passing shared regressions, existing function suites, viewer/mode
+matrices and full suite were not rerun. build-global-scopes-accepted.txt records
+the actual GmatQt-R2026a relink/launcher recreation; the recovery build also
+requests the already current application.
+
+Earlier diagnostic records are retained explicitly: the first harness compile
+lacked QDialog's header (build-global-scopes-compile-error.txt), with no stale
+binary test run. The initial function placed Create after Global, which enters
+command mode; check-global-scopes-function-syntax.txt preserves the actual engine
+log. Declarations were moved before BeginMissionSequence/Global, without engine
+changes. The empty initial/diagnostic test errors also preceded flushing queued
+message-window callbacks; the harness now drains them before reading errors.
+check-global-scopes-controls.txt's unavailable checklist was a harness activation
+error: setCurrentText does not emit QComboBox::textActivated; the check now drives
+the actual template activation signal. Those records are not passing evidence.
+
+The final global-scopes-wayland-20261001.txt passes the same workflow and recovery
+on native Wayland. Its .png and .picker.png were inspected: ordered four-resource
+checklist, retained exact Global command, Help/Apply and completed status are
+visible. The .state.txt full reference report has SHA-256
+5f5ae16aad970855ce3aacf2f8f4fa1041aa1ef703f8727d618bd48e4074271f.
+The native log also retains a compositor popup-grab warning without a fresh
+input serial. Menu selection here is programmatic Qt widget evidence; it does
+not qualify fresh desktop popup input, top-level minimize/restore or portals.
+No compositor policy was bypassed or repeated. Original Linux replacement gates
+remain active; Windows/macOS are deferred.

@@ -1822,6 +1822,7 @@ CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("CallPythonFunction")) templates.insert("Call Python function","[OutputVariable] = Python.ModuleName.FunctionName(InputVariable);");
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
+   if (availableEngineTypes().contains("Global")) templates.insert("Global",QString("Global %1;").arg(sat));
    if (availableEngineTypes().contains("CommandEcho")) templates.insert("CommandEcho","CommandEcho On;");
    if (availableEngineTypes().contains("Set")) templates.insert("Set (file import)",QString("Set %1 %2;").arg(sat,firstType(Gmat::INTERFACE,"DataInterface","FileInterfaceName")));
    if (availableEngineTypes().contains("RunSimulator")) templates.insert("RunSimulator",QString("RunSimulator %1;").arg(firstType(Gmat::SOLVER,"Simulator","SimulatorName")));

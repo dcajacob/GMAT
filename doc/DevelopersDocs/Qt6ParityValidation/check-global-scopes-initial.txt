@@ -1,0 +1,17 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 51: QtGui.GlobalScopes
+1/1 Test #51: QtGui.GlobalScopes ...............***Failed    0.21 sec
+This plugin does not support propagateSizeHints()
+FAIL: 
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.21 sec*proc (1 test)
+
+Total Test time (real) =   0.22 sec
+
+The following tests FAILED:
+	 51 - QtGui.GlobalScopes (Failed)                       qt-gui
+Errors while running CTest

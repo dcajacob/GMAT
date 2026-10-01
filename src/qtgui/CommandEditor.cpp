@@ -125,6 +125,9 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       }
    }
    connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status,command] {
+      // A retained clean panel has nothing to commit. Rebuilding it would
+      // invalidate run results and put a no-op ahead of the actual Undo edit.
+      if (!hasChanges()) return;
       auto error=command->validationError();
       if (error.isEmpty()) error=apply(source->toPlainText());
       if (error.isEmpty()) { applied=true; appliedSuccessfully(); }
