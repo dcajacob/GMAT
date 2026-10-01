@@ -1,0 +1,4 @@
+Orb valid retained=20; SPK unavailable interval omitted with separated resumed arc.
+Ground valid retained=20; SPK unavailable interval omitted with separated resumed arc.
+XY valid retained=20; SPK unavailable interval omitted with separated resumed arc.
+PASS finite SPK unavailable marker omitted from XY/Orbit/primary+alternate cameras and Ground conversion; actual reader retains both valid arcs, reports unchanged including invalid engine row, exact Unicode reopen, native replay/close-reopen and clean rerun. This does not qualify numerical gap traversal.

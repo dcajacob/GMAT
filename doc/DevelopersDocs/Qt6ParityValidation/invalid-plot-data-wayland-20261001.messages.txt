@@ -1,0 +1,59 @@
+Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.42.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-10-01 04:55:18 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/doc/DevelopersDocs/Qt6ParityValidation/binary-ephemeris-toggle-wayland-20261001.SPK.bsp has been loaded.
+WARNING data gaps in Spice file present for body "Sat". Message received from CSPICE is: Insufficient ephemeris data has been loaded to compute the state of -100055 relative to 399 (EARTH) at the ephemeris epochs: 2000 JAN 01 12:04:04.183 to 2000 JAN 01 12:05:04.183.
+
+
+Mission run completed.
+===> Total Run Time: 0.081 seconds
+
+========================================
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/doc/DevelopersDocs/Qt6ParityValidation/binary-ephemeris-toggle-wayland-20261001.SPK.bsp has been loaded.
+Qt plot 'Orb': invalid scripted camera (using available camera or manual view) is not yet supported.
+Qt plot 'Orb': unresolved camera Alternate (using its available history or manual view) is not yet supported.
+WARNING data gaps in Spice file present for body "Sat". Message received from CSPICE is: Insufficient ephemeris data has been loaded to compute the state of -100055 relative to 399 (EARTH) at the ephemeris epochs: 2000 JAN 01 12:04:04.183 to 2000 JAN 01 12:05:04.183.
+
+
+Mission run completed.
+===> Total Run Time: 0.294 seconds
+
+========================================

@@ -1,0 +1,10 @@
+Unavailable SPK display data audit — 2026-10-01
+Source contract: src/base/spice/SpiceOrbitKernelReader.cpp returns six -REAL_MAX components on failed state queries inside overall coverage; plugins/EphemPropagatorPlugin/src/base/propagator/SPKPropagator.cpp uses legacy skipEphemerisProp. Both remain unchanged.
+PlotModel::usableValue excludes nonfinite and +/-maximum-double markers. append rejects absent samples, breaks the next segment and sanitizes invalid error magnitudes.
+Orbit positions must fit osg::Vec3Array float vertices. QtPlotReceiver checks primary/alternate camera references before transforms, final eye/target before retention, and trajectory positions before Orbit/legacy Ground conversion.
+GroundTrack::Distribute rejects unavailable raw states before coordinate/geodetic conversion and sends NaN absent slots when all spacecraft are unavailable. Existing src/gui/subscriber/GroundTrackArea.cpp AddData finite-slot guard already supports absent callbacks.
+Reproduction: independent no-viewer SPK mission reports 60/180/300 seconds, including six finite invalid markers at 180. Initial direct-model assertion fails before any unsafe native scene is rendered.
+Focused regression selection: new InvalidPlotData plus OrbitSetup and Plots for shared camera/append behavior. All three pass; no full-suite, binary fixture regeneration or prior complete matrices repeated.
+Native actual-widget evidence: 20 valid points each in Orbit/Ground/XY, disconnected recovered arc, usable tracked/alternate cameras, Earlier/Latest, close/reopen, clean rerun, exact Unicode source reopen. Four captures inspected.
+Preservation: complete no-viewer and viewer reports byte identical, including unavailable engine row. No reader/propagator algorithm, Publisher state, scientific report or Completed-status rewriting.
+Limits: numerical SPK gap traversal, Code-500 internal gaps, arbitrary scientific extremes and blocked desktop input/minimize/portal gates remain unqualified. Raw SPICE/fallback messages preserved.

@@ -341,19 +341,24 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
    auto &data=*entry->data; ++data.frame;
    if (data.kind==PlotModel::Kind::Orbit && data.scriptedCamera) {
       auto resolve=[&](bool vector,SpacePoint *object,const std::array<double,3> &value) {
-         if (vector) return value;
+         auto checked=[](const std::array<double,3> &position) {
+            if (!PlotModel::usableOrbitPosition(position[0],position[1],position[2]))
+               throw std::runtime_error("Unavailable or unrenderable camera position");
+            return position;
+         };
+         if (vector) return checked(value);
          if (!object) throw std::runtime_error("Missing camera reference object");
          const auto found=std::find(names.begin(),names.end(),object->GetName());
          if (found!=names.end()) {
             const auto index=static_cast<size_t>(found-names.begin());
-            if (index<x.size() && index<y.size() && index<z.size()) return std::array<double,3>{x[index],y[index],z[index]};
+            if (index<x.size() && index<y.size() && index<z.size()) return checked({x[index],y[index],z[index]});
          }
          auto state=object->GetMJ2000State(epoch);
          if (entry->internal && entry->view && entry->internal!=entry->view) {
             Rvector6 converted; CoordinateConverter converter;
             converter.Convert(epoch,state,entry->internal,converted,entry->view); state=converted;
          }
-         return std::array<double,3>{state[0],state[1],state[2]};
+         return checked({state[0],state[1],state[2]});
       };
       const auto settings=cameraSettings.value(text(name));
       auto transform=[&](SpacePoint *object,const std::array<double,3> &origin,const std::array<double,3> &target,bool aligned,bool shortest) {
@@ -403,6 +408,9 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             if (!std::isfinite(camera.eye[i]) || !std::isfinite(camera.target[i]) || !std::isfinite(camera.up[i]))
                throw std::runtime_error("Nonfinite camera coordinates");
          }
+         if (!PlotModel::usableOrbitPosition(camera.eye[0],camera.eye[1],camera.eye[2]) ||
+             !PlotModel::usableOrbitPosition(camera.target[0],camera.target[1],camera.target[2]))
+            throw std::runtime_error("Unrenderable camera coordinates");
          if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
             throw std::runtime_error("Camera eye and target coincide");
          data.cameras.push_back(camera);
@@ -437,6 +445,9 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
                camera.target[axis]=(view.lookAtRotation ? origin[axis] : target[axis])+center[axis];
                if (!std::isfinite(camera.eye[axis]) || !std::isfinite(camera.target[axis]) || !std::isfinite(camera.up[axis])) throw std::runtime_error("Nonfinite camera position");
             }
+            if (!PlotModel::usableOrbitPosition(camera.eye[0],camera.eye[1],camera.eye[2]) ||
+                !PlotModel::usableOrbitPosition(camera.target[0],camera.target[1],camera.target[2]))
+               throw std::runtime_error("Unrenderable camera coordinates");
             if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
                throw std::runtime_error("Camera eye and target coincide");
             auto &history=data.cameraViews[index+1].cameras;
@@ -475,6 +486,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          }
          px=state[0]; py=state[1]; pz=state[2];
       } else { curve.breakNext=true; continue; }
+      if (!PlotModel::usableOrbitPosition(px,py,pz)) { curve.breakNext=true; continue; }
       if (data.kind==PlotModel::Kind::GroundTrack) {
          if (curve.radius>0 || (px==0 && py==0 && pz==0)) continue;
          const double lon=std::atan2(py,px)*degrees, lat=std::atan2(pz,std::hypot(px,py))*degrees;

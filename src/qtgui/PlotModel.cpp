@@ -7,14 +7,15 @@ void PlotModel::append(int index, double x, double y, double z, double epoch,
 {
    auto &curve = curves[index];
    if (!active) { curve.breakNext = true; return; }
-   if (!std::isfinite(x) || !std::isfinite(y) || !std::isfinite(z) || !std::isfinite(epoch)) {
+   if (!usableValue(x) || !usableValue(y) || !usableValue(z) || !usableValue(epoch) ||
+       (kind==Kind::Orbit && !usableOrbitPosition(x,y,z))) {
       curve.breakNext = true; return;
    }
    bool connect = penDown && drawing && !curve.breakNext && !curve.points.empty();
    // Solver iterations and backward propagation must not join unrelated arcs.
    if (!curve.points.empty() && curve.points.back().solver != solver) connect = false;
-   high = std::isfinite(high) && high >= 0 ? high : 0;
-   low = std::isfinite(low) && low >= 0 ? low : 0;
+   high = usableValue(high) && high >= 0 ? high : 0;
+   low = usableValue(low) && low >= 0 ? low : 0;
    curve.points.push_back({x, y, z, epoch, frame, curve.color, connect, solver, high, low});
    curve.points.back().marker=curve.markerType;
    curve.breakNext = !penDown || !drawing;

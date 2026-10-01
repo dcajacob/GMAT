@@ -1705,7 +1705,10 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
          if (complete)
          {
             state[component] = dat[index];
-            complete = std::isfinite(state[component]);
+            // The finite SPICE unavailable marker must not become a
+            // plausible latitude/longitude after coordinate conversion.
+            complete = std::isfinite(state[component]) &&
+                  std::abs(state[component])<std::numeric_limits<double>::max();
          }
       }
       if (!complete || !std::isfinite(dat[0]))
@@ -1716,7 +1719,12 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
       hasPosition = true;
    }
    if (!hasPosition)
-      return true;
+   {
+      // Notify the receiver of absent slots even when every spacecraft is
+      // unavailable, so the next valid sample cannot bridge this interval.
+      return PlotInterface::UpdateGroundTrackData(instanceName,
+            dat[0], longlat, theSats.size());
+   }
 
    // Colors belong to the live sandbox objects, not the configuration copies.
    // Include them as display metadata so runtime assignments and late-opened

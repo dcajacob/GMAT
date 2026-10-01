@@ -2013,3 +2013,12 @@ reader gap traversal exposed legacy engine limitations and remain unqualified;
 the continuous Code-500 case keeps Export enabled while only viewers pause.
 See the binary Toggle qualification appendix for raw failures and scope limits.
 No numerical engine or product behavior was changed in that increment.
+
+
+Unavailable SPK reader states now leave gaps in retained Orbit, Ground and XY
+trajectories. Valid camera history remains usable, and valid samples after the
+gap recover without a joining line. Raw numerical reports and the engine's
+completion status remain unchanged; this display repair does not qualify
+scientific propagation through an ephemeris hole. The actual application was
+rebuilt. See the unavailable SPK states qualification appendix for the reproduced
+failure, three affected checks, native rendering/recovery and unchanged reports.

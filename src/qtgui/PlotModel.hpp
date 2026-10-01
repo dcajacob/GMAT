@@ -9,6 +9,7 @@
 #include <limits>
 #include <array>
 #include <optional>
+#include <cmath>
 #include "StarCatalog.hpp"
 
 struct PlotViewState
@@ -86,6 +87,16 @@ struct PlotAxisOptions
 struct PlotModel
 {
    enum class Kind { Orbit, GroundTrack, XY, Table };
+   // SPICE can publish +/-REAL_MAX as a finite unavailable-state marker.
+   static bool usableValue(double value) {
+      return std::isfinite(value) && std::abs(value)<std::numeric_limits<double>::max();
+   }
+   static bool usableOrbitPosition(double x,double y,double z) {
+      // OSG trajectory vertices are floats even though GMAT states are doubles.
+      const auto limit=static_cast<double>(std::numeric_limits<float>::max());
+      return usableValue(x) && usableValue(y) && usableValue(z) &&
+            std::abs(x)<=limit && std::abs(y)<=limit && std::abs(z)<=limit;
+   }
    explicit PlotModel(Kind value) : kind(value) {}
    Kind kind;
    QString title, xLabel, yLabel, coordinates;

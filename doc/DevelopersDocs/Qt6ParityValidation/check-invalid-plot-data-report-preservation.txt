@@ -1,0 +1,6 @@
+Static comparison of captured artifacts; no mission or test rerun.
+Independent no-viewer report == viewer report, byte for byte: PASS
+Complete report: 3 rows, elapsed seconds plus six state components.
+Middle engine row at 180 seconds preserves all six finite -REAL_MAX markers: PASS
+SHA-256 (both complete files): c0333c4b173a56621bdd75b76ba8231dcafb444c5e23213def5a2ea850ce80e9
+Viewer filtering does not qualify the numerical SPK gap traversal.
