@@ -5463,3 +5463,34 @@ Both were inspected. The native preview uses synthetic display points and no
 mission execution; it does not qualify desktop portals. The full Linux acceptance
 goal remains active with original compositor-input, portal and other selected
 workflow/plugin gates; Windows/macOS remain deferred.
+
+
+## Plot image export protects mission files and recovers atomically (2026-09-30)
+
+The existing Save image action used QSaveFile but did not reject open mission,
+startup or configured output paths. It could replace source or a report with PNG
+bytes. The action now shares the data export's live protected-path validation
+before capturing/writing. Canonical symlink aliases are rejected. Failed image
+encoding cancels the temporary writer; open/encode/commit failures return a
+corrective diagnosis through the existing warning. Ordinary chosen image files
+retain save-chooser replacement confirmation and atomic replacement.
+
+QtGui.PlotImageExport uses the initialized MainWindow and actual MDI Save image
+actions for XY, Ground Track and Orbit receiver entries. Widget chooser Cancel
+writes nothing; acceptance writes a Unicode PNG whose decoded pixels equal the
+current canvas. Current mission, startup, configured ReportFile/EphemerisFile
+paths and a mission symlink are rejected and remain byte exact. Empty/missing
+destinations return errors. A process-local 128-byte file limit induces a real
+post-write failure for each viewer kind, preserving the prior destination;
+removing it recovers the complete PNG. Retained model/frame/generation/display
+and close/reopen export checks pass. check-plot-image-export.txt passes in 0.90
+seconds. Synthetic receiver entries and sentinel outputs isolate the file-writing
+operation; no numerical execution or native renderer qualification is claimed.
+
+The previous native widget chooser/action layout and rendering evidence is reused:
+this change adds validation and a diagnostic path, without changing layout or
+rendering. No native preview, XY-export, broad viewer or full-suite repeat was
+needed. build-plot-image-export.txt records the real GmatQt-R2026a relink and
+GmatQt launcher recreation. This closes the image-export file protection gap,
+not the full Linux replacement goal or the remaining compositor-input/portal
+gates. Windows/macOS remain deferred.

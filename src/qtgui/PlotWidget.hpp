@@ -45,6 +45,7 @@ public:
    void setProjectionSaver(std::function<QString(bool,double)> callback);
    void setProtectedPaths(std::function<QStringList()> callback);
    QString exportData(const QString &path) const;
+   QString exportImage(const QString &path);
    PlotCanvas *canvas() const { return drawing; }
 private:
    std::shared_ptr<PlotModel> data;
@@ -59,4 +60,5 @@ private:
    quint64 historyGeneration=0;
    void updateReplayFrame();
    void editPlotStyle();
+   QString exportPathError(const QString &path) const;
 };

@@ -475,13 +475,12 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          const auto error=exportData(path); if (!error.isEmpty()) QMessageBox::warning(this,"Could not export plot data",error);
       });
    }
-   auto *save = bar->addAction("Save image…");
+   auto *save = bar->addAction("Save image…"); save->setObjectName("plotSaveImage");
    connect(save,&QAction::triggered,this,[this] {
       const auto path=QFileDialog::getSaveFileName(this,"Save plot image",data->title+".png","PNG image (*.png)");
       if (path.isEmpty()) return;
-      QSaveFile file(path);
-      if (!file.open(QIODevice::WriteOnly) || !drawing->captureImage().save(&file,"PNG") || !file.commit())
-         QMessageBox::warning(this,"Could not save plot",file.errorString());
+      const auto error=exportImage(path);
+      if (!error.isEmpty()) QMessageBox::warning(this,"Could not save plot",error);
    });
    timeline = new QSlider(Qt::Horizontal,this); timeline->setObjectName("plotTimeline"); timeline->setRange(0,1000); timeline->setValue(1000);
    timeline->hide();
@@ -677,14 +676,7 @@ void PlotWidget::setProtectedPaths(std::function<QStringList()> callback) { prot
 QString PlotWidget::exportData(const QString &path) const
 {
    if (data->kind!=PlotModel::Kind::XY) return "Only XY plots have this data export format.";
-   if (path.isEmpty()) return "Choose a file for the plot data.";
-   const QFileInfo destination(path);
-   if (protectedPaths) for (const auto &name:protectedPaths()) {
-      if (name.isEmpty()) continue;
-      const QFileInfo input(name);
-      if (destination.absoluteFilePath()==input.absoluteFilePath() || (!destination.canonicalFilePath().isEmpty() && destination.canonicalFilePath()==input.canonicalFilePath()))
-         return "Choose a different file; plot data cannot overwrite an open mission, startup file or mission output.";
-   }
+   const auto error=exportPathError(path); if (!error.isEmpty()) return error;
    QSaveFile file(path);
    if (!file.open(QIODevice::WriteOnly)) return "Cannot export plot data: "+file.errorString();
    QTextStream output(&file); output.setLocale(QLocale::c()); output.setRealNumberPrecision(17);
@@ -699,5 +691,26 @@ QString PlotWidget::exportData(const QString &path) const
    output.flush();
    if (output.status()!=QTextStream::Ok) { file.cancelWriting(); return "Cannot export plot data: "+file.errorString(); }
    if (!file.commit()) return "Cannot export plot data: "+file.errorString();
+   return {};
+}
+QString PlotWidget::exportPathError(const QString &path) const
+{
+   if (path.isEmpty()) return "Choose a file for the plot export.";
+   const QFileInfo destination(path);
+   if (protectedPaths) for (const auto &name:protectedPaths()) {
+      if (name.isEmpty()) continue;
+      const QFileInfo input(name);
+      if (destination.absoluteFilePath()==input.absoluteFilePath() || (!destination.canonicalFilePath().isEmpty() && destination.canonicalFilePath()==input.canonicalFilePath()))
+         return "Choose a different file; plot export cannot overwrite an open mission, startup file or mission output.";
+   }
+   return {};
+}
+QString PlotWidget::exportImage(const QString &path)
+{
+   const auto error=exportPathError(path); if (!error.isEmpty()) return error;
+   QSaveFile file(path);
+   if (!file.open(QIODevice::WriteOnly)) return "Cannot save plot image: "+file.errorString();
+   if (!drawing->captureImage().save(&file,"PNG")) { file.cancelWriting(); return "Cannot save plot image: "+file.errorString(); }
+   if (!file.commit()) return "Cannot save plot image: "+file.errorString();
    return {};
 }

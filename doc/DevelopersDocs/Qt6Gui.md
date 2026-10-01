@@ -1847,3 +1847,9 @@ and points outside the displayed range are included. Export does not recover
 history already removed by MaxPlotPoints. Choose a separate file from open
 missions, startup files and mission outputs. Failed writes preserve the previous
 file, and Cancel leaves the mission and plot unchanged.
+
+
+Plot Save image writes PNG atomically and refuses current open missions, startup
+files and configured mission outputs, including symlink aliases. A failed write
+preserves the previous destination and reports the problem. XY Export data uses
+the same protection; these display/export operations do not edit the mission.
