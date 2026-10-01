@@ -215,6 +215,7 @@ private:
    Entry *find(const std::string &name);
    Entry &create(const std::string &name, PlotModel::Kind kind, Real x, Real y, Real w, Real h, bool maximized);
    void refresh(Entry &entry, bool force = false);
+   void loadSkyCatalogs(Entry &entry,const std::string &name);
    bool remove(const std::string &name);
    void warn(const std::string &name, const std::string &option);
    template<class Fn> void curves(const std::string &name, int index, Fn fn) {

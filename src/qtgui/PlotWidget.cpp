@@ -490,14 +490,19 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          {"Axes","axes",&PlotModel::axes},{"Grid","grid",&PlotModel::grid},
          {"Object labels","labels",&PlotModel::labels},{"Legend","legend",&PlotModel::legend},
          {"XY plane","xyPlane",&PlotModel::xyPlane},{"Ecliptic plane","eclipticPlane",&PlotModel::eclipticPlane},
-         {"Wireframe bodies","wireframe",&PlotModel::wireframe},{"Origin–Sun line","sunLine",&PlotModel::sunLine}};
+         {"Wireframe bodies","wireframe",&PlotModel::wireframe},{"Origin–Sun line","sunLine",&PlotModel::sunLine},
+         {"Stars","stars",&PlotModel::starsEnabled},{"Constellations","constellations",&PlotModel::constellationsEnabled}};
       QList<QPair<QCheckBox *,bool PlotModel::*>> displayControls;
       int optionIndex=0;
       for (const auto &option:displayOptions) {
          auto *control=new QCheckBox(option.label,displayDialog); control->setObjectName(QString("orbitDisplay_")+option.name);
          control->setChecked(data.get()->*option.value); options->addWidget(control,optionIndex/2,optionIndex%2); ++optionIndex;
          displayControls.append({control,option.value});
-         connect(control,&QCheckBox::toggled,this,[this,member=option.value](bool checked) { data.get()->*member=checked; drawing->refresh(); });
+         connect(control,&QCheckBox::toggled,this,[this,member=option.value](bool checked) {
+            data.get()->*member=checked;
+            if (checked && (member==&PlotModel::starsEnabled || member==&PlotModel::constellationsEnabled) && skyRequested) skyRequested();
+            drawing->refresh();
+         });
       }
       auto *displayClose=new QDialogButtonBox(QDialogButtonBox::Close,displayDialog); displayLayout->addWidget(displayClose);
       connect(displayClose,&QDialogButtonBox::rejected,displayDialog,&QDialog::reject);

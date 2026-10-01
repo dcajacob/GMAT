@@ -7391,3 +7391,36 @@ crash. Native animation smoothness, multi-monitor/HiDPI toolbar behavior, theme
 changes, common-epoch playback and table replay are not qualified by this work.
 Top-level Wayland/portal and broader replacement gates remain open. The full
 Linux goal remains active, Windows/macOS deferred and MATLAB off.
+
+## Stars and constellations display switches — 2026-10-01
+
+The user requested the ability to turn off stars and constellations in displays.
+OrbitView's existing Display panel now exposes separate Stars and Constellations
+checkboxes. They update the renderer's existing visibility flags and refresh the
+viewer immediately. They retain live per-view choices across panel Close and
+retained MDI close/reopen; other viewers, StarCount, cached catalogs, camera and
+source settings are unchanged. Rebuilding/rerunning uses the script settings,
+consistent with the panel's other live controls. Ground Track and XY plots have
+no celestial sky and are unchanged.
+
+The existing receiver startup catalog loading is shared with the new enable
+path: a sky initially disabled can be enabled from the panel and resolve its
+STAR_FILE or CONSTELLATION_FILE without rebuilding the mission. Disabling does
+not discard the catalog; re-enabling uses the existing cache. Existing catalog
+diagnostics and failure fallback are retained.
+
+New QtGui.SkyControls / SkyControlsTests checks the actual MainWindow and display
+panel with enabled/disabled initial states, independent toggles, cached re-enable,
+lazy loading from the selected runtime paths, per-view isolation, MDI close/reopen,
+StarCount/unrelated option preservation and exact editor text/modified-state
+preservation. check-sky-controls.txt records the focused offscreen pass through
+RunTest.py. The harness refuses non-offscreen platforms. The inspected
+sky-controls-offscreen.png confirms both controls fit the panel. This checks UI,
+receiver and model behavior; native celestial rendering was not retested.
+
+build-sky-controls.txt records successful frontend/harness compilation, actual
+application/bin/GmatQt-R2026a relink and GmatQt launcher recreation. No mission,
+numerical report, shared-animation or old broad suite was repeated. All live
+desktop testing remains stopped following the GNOME Shell crash. Native safety,
+Wayland/portal and broader replacement gates remain open; full Linux qualification
+remains active, Windows/macOS deferred and MATLAB off.

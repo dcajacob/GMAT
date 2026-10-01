@@ -1,0 +1,8 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+PASS: independent Stars/Constellations display toggles, enabled/disabled initial states, cached re-enable, lazy startup catalog loading, per-view isolation, closed/reopened state, StarCount and unrelated options preserved, source unchanged. Offscreen only.

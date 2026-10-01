@@ -1101,7 +1101,12 @@ view, Fit and Sunlight remain available on the viewer toolbar.
 ### Live orbit display controls
 
 **Display…** opens controls for axes, grid, object labels, legend, XY/ecliptic
-planes, wireframe bodies and the origin–Sun line. Changes update the current view
+planes, wireframe bodies, the origin–Sun line, stars and constellations. Stars and
+constellations can be switched independently; enabling a previously disabled sky
+loads its catalog from the selected startup paths. Turning them off retains the
+catalog and StarCount for re-enabling. These choices survive closing/reopening
+the retained viewer; a new build/run uses the script's settings.
+Changes update the current view
 without rerunning the mission or clearing replay history. Close retains the live
 settings. These controls do not save script properties; use the plot resource
 editor for persistent settings. Reopening the panel reflects the current view.

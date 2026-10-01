@@ -44,6 +44,7 @@ public:
    void refresh();
    void setSharedReplayPosition(int value);
    std::function<void()> replayRequested;
+   std::function<void()> skyRequested;
    void restoreView(const PlotViewState &state);
    void setProjectionSaver(std::function<QString(bool,double)> callback);
    void setProtectedPaths(std::function<QStringList()> callback);

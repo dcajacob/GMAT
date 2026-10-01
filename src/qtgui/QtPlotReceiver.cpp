@@ -185,6 +185,7 @@ bool QtPlotReceiver::show(const QString &name)
       } else {
          entry.widget=new PlotWidget(entry.data);
          entry.widget->replayRequested=[this] { releaseSharedReplay(); };
+         entry.widget->skyRequested=[this,name] { if (auto *current=find(name.toStdString())) loadSkyCatalogs(*current,name.toStdString()); };
          if (sharedReplayPosition) entry.widget->setSharedReplayPosition(*sharedReplayPosition);
          entry.widget->setProtectedPaths([this] { return protectedPaths ? protectedPaths() : QStringList(); });
          if (saveProjection) entry.widget->setProjectionSaver([this,name](bool perspective,double fov) { return saveProjection(name,perspective,fov); });
@@ -366,26 +367,31 @@ void QtPlotReceiver::SetGl3dDrawingOption(const std::string &name,bool labels,bo
       data.labels=labels; data.axes=axes; data.grid=grid;
       data.xyPlane=xy; data.eclipticPlane=ec; data.wireframe=wire; data.sunLine=sun;
       data.constellationsEnabled=constellations;
-      if (constellations && !data.constellationCatalogLoaded) {
-         data.constellationCatalogLoaded=true;
-         try {
-            data.constellationCatalog=ConstellationCatalog::read(text(FileManager::Instance()->FindPath("","CONSTELLATION_FILE",true,false,true)));
-         } catch (BaseException &error) { data.constellationCatalog.error=text(error.GetFullMessage()); }
-         if (!data.constellationCatalog.error.isEmpty())
-            MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load constellations: %s\n",name.c_str(),data.constellationCatalog.error.toStdString().c_str());
-      }
       data.starsEnabled=stars; data.starCount=static_cast<int>(std::clamp<Integer>(count,0,std::numeric_limits<int>::max()));
-      if (stars && !data.starCatalogLoaded) {
-         data.starCatalogLoaded=true;
-         try {
-            const auto path=FileManager::Instance()->FindPath("","STAR_FILE",true,false,true);
-            data.starCatalog=StarCatalog::read(text(path));
-         } catch (BaseException &error) { data.starCatalog.error=text(error.GetFullMessage()); }
-         if (!data.starCatalog.error.isEmpty())
-            MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load star catalog: %s\n",name.c_str(),data.starCatalog.error.toStdString().c_str());
-         else if (data.starCatalog.rejectedLines)
-            MessageInterface::ShowMessage("Qt OrbitView '%s': skipped %d invalid star catalog lines.\n",name.c_str(),data.starCatalog.rejectedLines);
-      }
+      loadSkyCatalogs(*entry,name);
+   }
+}
+void QtPlotReceiver::loadSkyCatalogs(Entry &entry,const std::string &name)
+{
+   auto &data=*entry.data;
+   if (data.constellationsEnabled && !data.constellationCatalogLoaded) {
+      data.constellationCatalogLoaded=true;
+      try {
+         data.constellationCatalog=ConstellationCatalog::read(text(FileManager::Instance()->FindPath("","CONSTELLATION_FILE",true,false,true)));
+      } catch (BaseException &error) { data.constellationCatalog.error=text(error.GetFullMessage()); }
+      if (!data.constellationCatalog.error.isEmpty())
+         MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load constellations: %s\n",name.c_str(),data.constellationCatalog.error.toStdString().c_str());
+   }
+   if (data.starsEnabled && !data.starCatalogLoaded) {
+      data.starCatalogLoaded=true;
+      try {
+         const auto path=FileManager::Instance()->FindPath("","STAR_FILE",true,false,true);
+         data.starCatalog=StarCatalog::read(text(path));
+      } catch (BaseException &error) { data.starCatalog.error=text(error.GetFullMessage()); }
+      if (!data.starCatalog.error.isEmpty())
+         MessageInterface::ShowMessage("Qt OrbitView '%s': cannot load star catalog: %s\n",name.c_str(),data.starCatalog.error.toStdString().c_str());
+      else if (data.starCatalog.rejectedLines)
+         MessageInterface::ShowMessage("Qt OrbitView '%s': skipped %d invalid star catalog lines.\n",name.c_str(),data.starCatalog.rejectedLines);
    }
 }
 void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *reference,SpacePoint *position,SpacePoint *direction,Real scale,
