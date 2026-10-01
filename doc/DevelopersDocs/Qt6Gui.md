@@ -1983,3 +1983,13 @@ across repeated function calls now have independent known reports and exact
 source/Undo/Redo/Unicode file round trips, including deferred-reference runtime
 failure and correction/rerun. See the Global scope qualification appendix for
 native widget evidence and the original desktop acceptance limits.
+
+
+New command, resource and report windows now open within the workspace instead
+of cascading partly offscreen and hiding their controls. Existing window
+positions stay intact. Mixed EphemerisFile/Orbit/Ground/XY Toggle workflows now
+have OEM/STK two-arc output, initial activation, terminal Off, source/file round
+trips, correction/rerun and native rendering/replay evidence. STK event-boundary
+metadata now records the resumed arc's actual start after a Toggle gap; captured
+state rows and reports are unchanged. See the ephemeris/window-placement
+qualification appendix for the affected checks and remaining desktop limits.

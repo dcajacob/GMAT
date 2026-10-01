@@ -1,0 +1,31 @@
+Scope: selected Linux wx TogglePanel and EphemerisFilePanel output/Qt MDI workflow.
+TogglePanel uses the full subscriber checklist for Toggle; XY/Pen variants are
+separate callers. Core Toggle activates selected Subscribers and invokes
+ToggleOn/ToggleOff. EphemerisFile creates an initially disabled writer on ToggleOn
+and closes allowed segments on ToggleOff; selected OEM/STK support multiple arcs.
+Qt ordered checklist already exposes EphemerisFile/Orbit/Ground/XY. New actual
+MDI fixture verifies filtering/empty Cancel/pending/retained Apply, exact source,
+Undo/Redo/Unicode Save/Save As/reopen, missing-reference rollback/correction,
+initial activation/two arcs/terminal Off, complete file/report Output and repeat.
+Two Earth circular-orbit arcs 0-120 and 240-360 s, mission continues Off to420:
+26 output/view points per format; independent GUI/reference states and analytic
+circle validated. Disabled viewers finalize history, gaps stay disconnected,
+Orbit camera matches all XYZ, replay Latest and close/reopen preserve histories.
+Native initial captures exposed new command/report windows outside viewport.
+Geometry assertion reproduces 700x500 at545,163 in1004x601; raw failed check kept.
+MainWindow clamps only new command/resource/report cascade size/position. New
+assertions cover visible Apply, resource/report bounds and no existing-window
+moves; existing script and viewer placement policies are untouched.
+Initial native STK SegmentBoundaryTimes second value120 did not match resumed
+first data epoch240. Utility WriteDataSegment replaces pending placeholder with
+actual first received epoch; new exact boundary assertions0/240 and metadata
+blocks qualify this case. State/propagation calculations are unchanged; raw
+initial/final26 rows and four-row reports compare byte identical.
+Actual GmatQt relink/launcher recorded. Final four affected suites pass8.85s:
+Mission2.24, Ephemeris3.94, EphemerisToggle1.76, Desktop0.90. Initial workflow
+passed4.10s before stronger geometry/boundary assertions; it is not finalproof.
+Final native Wayland passes bothcases; captures inspected and all command
+buttons visible. Native programmatic widget evidence, not fresh desktop input.
+No full suite/old solver-viewer matrix/unrelated plugin repetition. Tiny-window,
+portal, top-level Wayland minimize and broader/binary/solver ephemeris cases and
+original Linux gates remain open. Windows/macOS deferred; no algorithm rewrite.

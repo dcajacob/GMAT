@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 52: QtGui.EphemerisToggle
+1/1 Test #52: QtGui.EphemerisToggle ............***Failed    0.37 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL CCSDS-OEM: New command panel outside workspace: child 545,163 700x500, viewport 1004x601
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.37 sec*proc (1 test)
+
+Total Test time (real) =   0.38 sec
+
+The following tests FAILED:
+	 52 - QtGui.EphemerisToggle (Failed)                    qt-gui
+Errors while running CTest

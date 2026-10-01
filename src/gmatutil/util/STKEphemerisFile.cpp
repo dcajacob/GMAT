@@ -712,6 +712,12 @@ bool STKEphemerisFile::WriteDataSegment(const EpochArray &epochArray,
       scenarioEpochA1Mjd = (epochArray[0])->GetReal();
       openForTempOutput = true;
    }
+
+   // Closing the preceding segment reserves its end epoch as a placeholder.
+   // ToggleOff/On may leave a gap before the next data arrives: record the
+   // actual first epoch of the resumed segment, leaving the states unchanged.
+   if (numberOfSegmentPoints == 0 && !beginSegmentArray.empty())
+      beginSegmentArray.back() = (epochArray[0]->GetReal() - scenarioEpochA1Mjd) * 86400.0;
    
    if (ephemTypeForWrite == "TimePosVel")
       WriteTimePosVel(epochArray, stateArray);

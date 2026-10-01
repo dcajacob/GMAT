@@ -115,6 +115,17 @@
 #include <stdexcept>
 
 namespace {
+void showNewWorkspaceWindow(QMdiArea *workspace,QMdiSubWindow *child)
+{
+   child->show();
+   // Qt's cascade position can put a new panel below or beyond the viewport
+   // after several viewers have opened. Keep its controls reachable without
+   // rearranging any window the user has already positioned.
+   const auto bounds=workspace->viewport()->rect();
+   child->resize(child->size().boundedTo(bounds.size()));
+   child->move(qBound(bounds.left(),child->x(),qMax(bounds.left(),bounds.right()-child->width()+1)),
+               qBound(bounds.top(),child->y(),qMax(bounds.top(),bounds.bottom()-child->height()+1)));
+}
 // wx assigns display names while populating the mission tree. Qt keeps its
 // snapshots independent of engine objects; give summaries those names only
 // while reading them, then restore every original name.
@@ -305,7 +316,7 @@ MainWindow::MainWindow()
          auto *details=new QLabel(QString("Binary ephemeris file\nFormat: %1\nPath: %2\nSize: %3 bytes").arg(format,name).arg(file.size()),viewer); details->setObjectName("ephemerisFileInfo"); details->setWordWrap(true); details->setTextInteractionFlags(Qt::TextSelectableByMouse); layout->addWidget(details);
          auto *folder=new QPushButton("Open folder",viewer); folder->setObjectName("ephemerisOpenFolder"); layout->addWidget(folder); connect(folder,&QPushButton::clicked,viewer,[file] { QDesktopServices::openUrl(QUrl::fromLocalFile(file.absolutePath())); });
          auto *copy=new QPushButton("Copy path",viewer); copy->setObjectName("ephemerisCopyPath"); layout->addWidget(copy); connect(copy,&QPushButton::clicked,viewer,[name] { QApplication::clipboard()->setText(name); }); layout->addStretch();
-         auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose); child->setWindowTitle(item->text(0)+" — "+format); child->resize(650,250); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
+         auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose); child->setWindowTitle(item->text(0)+" — "+format); child->resize(650,250); showNewWorkspaceWindow(workspace,child); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
       } else if (type=="report" || type=="ephemeris") {
          if (running) { statusBar()->showMessage("Wait until the mission stops before opening its report"); return; }
          if (dynamic_cast<EventLocator *>(Moderator::Instance()->GetConfiguredObject(item->text(0).toStdString()))) {
@@ -324,7 +335,7 @@ MainWindow::MainWindow()
                viewer->setPlainText("No event report was written for the current mission.\n\nEnable WriteReport and run the mission with the locator enabled.\nIn Manual mode, include FindEvents, then reopen this report.");
                viewer->setToolTip(name);
                auto *child=workspace->addSubWindow(viewer); child->setAttribute(Qt::WA_DeleteOnClose);
-               child->setWindowTitle(item->text(0)+" — "+name); child->resize(750,500); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus(); return;
+               child->setWindowTitle(item->text(0)+" — "+name); child->resize(750,500); showNewWorkspaceWindow(workspace,child); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus(); return;
             }
          }
          QFile file(name);
@@ -334,7 +345,7 @@ MainWindow::MainWindow()
          child->setAttribute(Qt::WA_DeleteOnClose);
          child->setWindowTitle(item->text(0) + " — " + name);
          viewer->setToolTip(name);
-         child->resize(750,500); child->show(); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
+         child->resize(750,500); showNewWorkspaceWindow(workspace,child); workspace->setActiveSubWindow(child); child->raise(); viewer->setFocus();
       } else if (!name.isEmpty()) plots->show(name);
    });
    navigation->setWidget(tabs);
@@ -581,7 +592,7 @@ MainWindow::MainWindow()
       child->setProperty("configurationPanel", true);
       child->setProperty("resourceName",name);
       child->setProperty("sourceScript",snapshot);
-      child->setWindowTitle(name); child->resize(680,(object->GetTypeName()=="Variable" || object->GetTypeName()=="String") ? 240 : 540); child->show();
+      child->setWindowTitle(name); child->resize(680,(object->GetTypeName()=="Variable" || object->GetTypeName()=="String") ? 240 : 540); showNewWorkspaceWindow(workspace,child);
    });
    QSettings settings;
    restoreGeometry(settings.value("geometry").toByteArray());
@@ -1778,7 +1789,7 @@ void MainWindow::openCommandEditor(int index,MissionEdit operation)
    child->setProperty("commandIndex",index);
    child->setProperty("sourceScript",missionState.sourceScript);
    child->setWindowTitle(operation==MissionEdit::Replace ? missionState.nodes[index].label : "Insert mission command");
-   child->resize(700,500); child->show();
+   child->resize(700,500); showNewWorkspaceWindow(workspace,child);
    workspace->setActiveSubWindow(child);
 }
 CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)

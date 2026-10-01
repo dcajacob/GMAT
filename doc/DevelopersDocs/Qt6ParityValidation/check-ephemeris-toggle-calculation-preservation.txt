@@ -1,0 +1,3 @@
+CCSDS-OEM: 26 serialized epoch/state rows byte identical before/after both fixes; four-row complete state report byte identical. SHA-256 1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431
+STK-TimePosVel: 26 serialized epoch/state rows byte identical before/after both fixes; four-row complete state report byte identical. SHA-256 1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431
+STK boundary metadata corrected from [0, ~120] to [0, ~240]; propagation samples unchanged. OEM timestamp header is excluded from the state-row comparison.

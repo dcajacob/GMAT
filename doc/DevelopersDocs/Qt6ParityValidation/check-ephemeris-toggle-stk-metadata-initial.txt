@@ -1,0 +1,4 @@
+Initial native STK output before any writer fix: 26 state rows
+SegmentBoundaryTimes: [0.0, 120.0000000768341]
+Actual enabled arc starts: [0.0, 240.0000001536682]
+FAIL: second serialized boundary is the prior arc end (~120 s), not the resumed arc start (~240 s). State rows remain correct.

@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
-| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. SolverToggle covers actual Current-mode differential-corrector loop toggles. OptimizerToggle/NestedSolverToggle now add Yukon and a complete inner targeter inside the disabled interval: exact source/Undo/Redo/Unicode reopen, independent full reports/known goals, suppression/separated resumption, Ground/XY accepted paths matching None, full camera/replay and native close/reopen. Ephemeris and other mixed/deeper Toggle combinations remain pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. SolverToggle covers actual Current-mode differential-corrector loop toggles. OptimizerToggle/NestedSolverToggle now add Yukon and a complete inner targeter inside the disabled interval: exact source/Undo/Redo/Unicode reopen, independent full reports/known goals, suppression/separated resumption, Ground/XY accepted paths matching None, full camera/replay and native close/reopen. EphemerisToggle now covers actual ordered EphemerisFile/Orbit/Ground/XY selection, initially disabled writer activation, two enabled arcs, terminal Off, OEM/STK complete state rows, analytic circle and script-reference reports, correct resumed STK segment starts, Output access, invalid-subscriber correction and repeat-run cleanup. New command/resource/report placement stays within the workspace; native Wayland controls and scenes inspected. Binary/Code-500 ephemeris toggles, solver-contained ephemeris and other mixed/deeper combinations remain pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
@@ -85,7 +85,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterCreateDialog.hpp` | Active wx numeric Variable, literal String, Array creation (dimensions 1–1000), name validation and existing-user-parameter operations audited. Qt New resource supplies typed initial values, retains values on type changes, rejects duplicate/reserved names and invalid dimensions, and opens the created resource in the tree. Parameters tests cover actual dialog Cancel, correction, creation Undo/Redo, Unicode String and maximum Array creation, then deletion without changing original report results. Existing parameters open from Resources; wx list/Clear layout and shared Help remain unqualified. |
 | `src/gui/foundation/ParameterSelectDialog.hpp` | Active report/XY/dynamic-data, Vary/Achieve/Minimize/constraints, loop/condition, propagation-stop, burn/group and function callers audited. wx supports single/multiple object/property selection, attached hardware, coordinate/body/ODE dependencies, writable/plottable/whole-object restrictions, array indices, Add/Remove/All/reorder and Cancel. Qt ReportParameterDialog and typed resource/group controls cover ordered scalar/array, dependency, hardware and caller-specific selection with existing execution/round-trip tests. Bulk multi-object/property selection and Add All/Remove All are now implemented. ParameterSelectionTests covers typed shared frames, caller filtering, conflict/recovery for different attached tanks, ordered Report Apply with independent numeric output, source/Undo/Redo/save/reopen, bulk deduplication and positional function duplicates; native Wayland controls were captured and inspected. Broader caller/dependency combinations and desktop input remain under qualification. |
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
-| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, retain and refresh accepted panels after Apply, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are covered by InspectionTests. Desktop/Mission tests cover retained resource and command panels, clean companion refresh and protected pending companions. Offline context Help and inherited modal Help are implemented and exercised; broader mixed Apply/focus/desktop cases remain under qualification. |
+| `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, retain and refresh accepted panels after Apply, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are covered by InspectionTests. Desktop/Mission tests cover retained resource and command panels, clean companion refresh and protected pending companions. Offline context Help and inherited modal Help are implemented and exercised. New command/resource/report windows now clamp their cascade geometry to the workspace; EphemerisToggle reproduces off-viewport controls, verifies visible Apply and resource/report bounds without moving existing windows, and passes native Wayland. Broader mixed Apply/focus/desktop cases remain under qualification. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Propagate's segment override has matching controls and independent trajectory/color-history checks, including Ground Track display metadata and default restoration; see the segment-color appendix. Legacy per-view orbit/target color controls are compiled out in this selected wx build and their engine parameters are removed; active colors come from SpacePoint or Propagate controls. Other resource color types remain pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
@@ -124,7 +124,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Runtime source choices, protected built-in source/file/central-body fields, NAIF ID and SPK lists audited. New Asteroid Ceres from the resource dialog, copied Unicode SPK, ephemeris-relative reports and separate scripts agree; unknown-ID and missing-SPK execution failures recover after correction. Dormant wx TwoBody/source-file controls are not enabled. Wider bodies, coverage and relative kernel paths remain unqualified. |
 | `src/gui/app/CompareTextDialog.hpp` | Source audited: this compiled legacy class has no caller in the current wx GUI. GmatMainFrame::CompareFiles uses CompareFilesDialog for text/numeric comparison, mapped to the qualified Qt comparison workspace above. No separate exposed workflow was found. |
-| `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. CK quaternion, covariance/acceleration, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
+| `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. EphemerisToggle adds initially disabled activation, OEM/STK two-arc suppression/resumption and terminal Off, exact GUI source transactions, complete independent state rows/reports and analytic circular states, Output access and repeat-run cleanup. STK resumed segment metadata now uses its first actual data epoch, with pre/post state rows unchanged. Native Wayland mixed viewer/workspace checks pass. CK quaternion, covariance/acceleration, binary toggles, solver-contained ephemeris, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
@@ -6284,3 +6284,93 @@ input serial. Menu selection here is programmatic Qt widget evidence; it does
 not qualify fresh desktop popup input, top-level minimize/restore or portals.
 No compositor policy was bypassed or repeated. Original Linux replacement gates
 remain active; Windows/macOS are deferred.
+
+
+## Ephemeris/viewer Toggle arcs and new-window placement — 2026-10-01
+
+This increment follows the remaining Toggle/EphemerisFile output and native
+workspace requirements. wx TogglePanel uses the full subscriber checklist for
+Toggle (its XY-only and PenUp/PenDown variants are distinct callers). The selected
+runtime EphemerisFile is a subscriber: Toggle activates it and invokes ToggleOn/
+ToggleOff; an initially disabled writer is created on ToggleOn, and ToggleOff
+closes an enabled output segment. These operations are already exposed by Qt's
+ordered subscriber checklist and On/Off control.
+
+GmatQtEphemerisToggleTests / QtGui.EphemerisToggle now exercises actual Mission/
+MDI controls for Export, Orb, Ground and XY together. Every checklist rejects
+empty acceptance, omits spacecraft Sat, accepts the ordered four outputs and
+preserves Cancel/pending state. Each Apply retains the clean panel and changes
+only the selected names, preserving the named command/comment and every unrelated
+source byte. Exact Undo/Redo, Unicode Save/Save As/reopen and missing-subscriber
+Apply rollback/checklist correction are covered. A repeat run replaces old output
+without accumulating segments.
+
+The bounded mission uses Earth point-mass gravity, a 7000 km equatorial circular
+orbit, fixed 10-second integration, EarthMJ2000Eq output and explicit report
+precision 17. It starts the initially disabled ephemeris, writes 0–120 s,
+suppresses 120–240 s, resumes 240–360 s, then finishes Off through 420 s. The
+independent script selects the same four outputs without GUI edits. Both
+CCSDS-OEM and STK-TimePosVel (kilometers/event boundaries enabled) have 26 complete
+epoch/six-state rows, no interior suppressed samples and exactly two enabled arcs.
+Every output state agrees with the analytic circle (position tolerance 2e-5 km,
+velocity 2e-8 km/s); all GUI output rows equal the independent script rows. The
+four complete ReportFile states at 120/240/360/420 s remain byte identical. Text
+outputs open through Output with their complete file contents and exact path.
+
+Each Orbit/Ground/XY model retains 26 points with a separated resume boundary and
+no samples in either disabled interior. Disabled Orbit/Ground are finalized at
+completion; Orbit's complete final camera target matches its retained trajectory.
+Earlier/Latest replay changes/restores pixels, all three viewers render and
+close/reopen preserves their model/history. These checks add the mixed ephemeris
+subscriber case; previous solver/optimizer/nested mode matrices were not repeated.
+
+Initial results exposed two additional defects; the raw initial records remain:
+
+- check-ephemeris-toggle-initial.txt passed the initial workflow (4.10 s), and
+  ephemeris-toggle-wayland-20261001.* captured its native data/UI. The initial
+  assertions did not qualify placement or actual STK boundary values. Capture
+  inspection showed command controls outside the viewport. Adding the geometry
+  assertion reproduced a 700×500 command panel at (545,163) in a 1004×601
+  workspace; check-ephemeris-toggle-placement.txt fails that condition (0.38 s).
+- check-ephemeris-toggle-stk-metadata-initial.txt extracts the original native
+  STK header: its second SegmentBoundaryTimes value was about 120 s while the
+  resumed data started at about 240 s. Matching an independently configured
+  script did not establish that metadata's correctness.
+
+MainWindow now fits only each newly opened command/resource/report window to the
+workspace viewport after Qt chooses its cascade position. It preserves existing
+window geometry; the new fixture checks resource opening does not move existing
+viewers/reports, and command Apply plus resource/report bounds are accessible.
+This does not assert arbitrary tiny-window layouts or alter manually moved
+windows. The initial script-window and plot auto-placement policies remain.
+
+STKEphemerisFile::WriteDataSegment now replaces a pending segment-boundary
+placeholder with the first actual epoch when new segment data arrives. A gap
+therefore records 240 s, rather than retaining the prior arc's 120 s end. The
+assertion now checks actual 0/240 s STK boundaries and both OEM metadata blocks.
+This is output metadata serialization; propagation, numerical algorithms and
+state rows are unchanged. check-ephemeris-toggle-calculation-preservation.txt
+compares initial/final captured data: all 26 serialized epoch/state rows in each
+format and both four-row reports are byte identical across the fixes (OEM's
+creation-date header is excluded from the state-row comparison). Both native
+report SHA-256 values are
+1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431.
+
+build-ephemeris-toggle-fixed.txt records the utility/frontend rebuild and actual
+GmatQt-R2026a relink with GmatQt launcher recreation. The four affected suites
+pass in check-ephemeris-toggle-fixed.txt: Mission 2.24 s, existing Ephemeris exports/
+readback 3.94 s, new EphemerisToggle 1.76 s and Desktop 0.90 s (8.85 s total). The
+existing Ephemeris checks are relevant to the shared STK writer and new output
+window placement; Mission/Desktop cover shared panel behavior. No full-suite,
+old solver/viewer matrix or unrelated plugin rerun was performed.
+
+ephemeris-toggle-wayland-20261001-fixed.txt passes both final cases with the
+placement/boundary assertions on native Wayland. Initial and final scene/control
+captures were inspected: textured Earth, starfield, Ground map and separated XY
+arcs render; the final command panels show all Help/Show script/Summary/Apply/Close
+controls within the workspace. The final .oem/.e files and .state.txt reports are
+preserved alongside the captures. This is programmatic actual-widget evidence;
+it does not qualify fresh desktop input, top-level Wayland minimize/restore or
+portal choosers. No compositor/input policy was bypassed. Binary/Code-500 Toggle
+and solver-contained ephemeris cases remain under qualification, as do the
+original Linux gates. Windows/macOS remain deferred.
