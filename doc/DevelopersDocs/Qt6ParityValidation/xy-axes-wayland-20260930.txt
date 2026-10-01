@@ -1,0 +1,1 @@
+PASS: native actual MDI XY Plot/X-axis/Y-axis/Curves controls exposed and captured, with no numerical execution.

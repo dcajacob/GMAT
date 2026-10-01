@@ -1,0 +1,24 @@
+src/gui/subscriber/TsPlotCanvas.cpp:1245:   dlg.SetPlotTitle(plotTitle);
+src/gui/subscriber/TsPlotCanvas.cpp:1246:   dlg.SetXLabel(xLabel);
+src/gui/subscriber/TsPlotCanvas.cpp:1247:   dlg.SetYLabel(yLabel);
+src/gui/subscriber/TsPlotCanvas.cpp:1266:   dlg.SetXTickCount(xticks);
+src/gui/subscriber/TsPlotCanvas.cpp:1267:   dlg.SetYTickCount(yticks);
+src/gui/subscriber/TsPlotCanvas.cpp:1283:      xLabelPrecision = dlg.GetXPrecision();
+src/gui/subscriber/TsPlotCanvas.cpp:1284:      yLabelPrecision = dlg.GetYPrecision();
+src/gui/subscriber/TsPlotCanvas.cpp:1286:      overrideXMin = dlg.GetXMinState();
+src/gui/subscriber/TsPlotCanvas.cpp:1289:      overrideYMax = dlg.GetYMaxState();
+src/gui/subscriber/TsPlotOptionsDialog.cpp:147:   xLogScale->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:162:   xMinorTickCount->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:167:   xMinorTickLines->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:202:   yLogScale->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:217:   yMinorTickCount->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:222:   yMinorTickLines->Enable(false);
+src/gui/subscriber/TsPlotOptionsDialog.cpp:284:void TsPlotOptionsDialog::SetPlotTitle(const wxString &str)
+src/gui/subscriber/TsPlotOptionsDialog.cpp:289:void TsPlotOptionsDialog::SetXLabel(const wxString &str)
+src/gui/subscriber/TsPlotOptionsDialog.cpp:294:void TsPlotOptionsDialog::SetYLabel(const wxString &str)
+src/gui/subscriber/TsPlotOptionsDialog.cpp:328:int TsPlotOptionsDialog::GetXPrecision()
+src/gui/subscriber/TsPlotOptionsDialog.cpp:333:int TsPlotOptionsDialog::GetYPrecision()
+src/gui/subscriber/TsPlotOptionsDialog.cpp:338:bool TsPlotOptionsDialog::GetXMinState()
+src/gui/subscriber/TsPlotOptionsDialog.cpp:353:bool TsPlotOptionsDialog::GetYMaxState()
+src/gui/subscriber/TsPlotOptionsDialog.cpp:465:void TsPlotOptionsDialog::SetXTickCount(int count)
+src/gui/subscriber/TsPlotOptionsDialog.cpp:477:void TsPlotOptionsDialog::SetYTickCount(int count)

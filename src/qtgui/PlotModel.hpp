@@ -78,12 +78,18 @@ struct PlotCameraView
    double automaticRadius=0;
    QString automaticBody;
 };
+struct PlotAxisOptions
+{
+   std::optional<double> minimum,maximum;
+   int ticks=5,precision=5;
+};
 struct PlotModel
 {
    enum class Kind { Orbit, GroundTrack, XY, Table };
    explicit PlotModel(Kind value) : kind(value) {}
    Kind kind;
    QString title, xLabel, yLabel, coordinates;
+   PlotAxisOptions xAxis,yAxis;
    QMap<int, PlotCurve> curves;
    QVector<PlotStation> stations;
    QImage map;

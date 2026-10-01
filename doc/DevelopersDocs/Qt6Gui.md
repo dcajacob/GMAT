@@ -1830,3 +1830,12 @@ reference explains the conflict and keeps OK disabled. Select fewer objects to
 add different attached hardware separately. Accepted additions use object/property
 order; Cancel leaves the parent selection unchanged. The parent command/resource
 still requires Apply before changing the mission.
+
+
+The XY viewer's **Style…** dialog has Plot, X axis, Y axis and Curves tabs.
+Edit plot/axis labels, choose independent fixed minimum and maximum values,
+and set major tick intervals and label precision. Unchecked limits follow the
+data; invalid values keep OK disabled until corrected. Cancel retains the
+current view. Accepted display options survive viewer close/reopen and reset
+when the mission rebuilds. Changing limits restores the plot's pan/zoom so the
+new range is visible. Use the resource editor for settings saved in the script.

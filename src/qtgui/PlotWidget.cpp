@@ -9,6 +9,8 @@
 #include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QStackedWidget>
+#include <QTabWidget>
+#include <QLineEdit>
 #include <QColorDialog>
 #include <functional>
 #include "PlotWidget.hpp"
@@ -206,6 +208,24 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       const double dx = xmax == xmin ? std::max(1.0, std::abs(xmin)*0.05) : (xmax-xmin)*0.05;
       const double dy = ymax == ymin ? std::max(1.0, std::abs(ymin)*0.05) : (ymax-ymin)*0.08;
       xmin -= dx; xmax += dx; ymin -= dy; ymax += dy;
+      auto limits=[](const PlotAxisOptions &axis,double &minimum,double &maximum) {
+         if (axis.minimum) minimum=*axis.minimum;
+         if (axis.maximum) maximum=*axis.maximum;
+         // A fixed edge may lie beyond all current data. Keep the other,
+         // automatic edge valid as new points arrive, without moving the fix.
+         if (minimum>=maximum) {
+            if (axis.minimum && !axis.maximum) maximum=minimum+std::max(1.,std::abs(minimum)*0.05);
+            else if (axis.maximum && !axis.minimum) minimum=maximum-std::max(1.,std::abs(maximum)*0.05);
+         }
+      };
+      limits(data->xAxis,xmin,xmax); limits(data->yAxis,ymin,ymax);
+      int yWidth=0,xWidth=0;
+      for (int i=0;i<=data->yAxis.ticks;++i) yWidth=std::max(yWidth,metrics.horizontalAdvance(QString::number(ymin+(ymax-ymin)*i/data->yAxis.ticks,'g',data->yAxis.precision)));
+      for (int i=0;i<=data->xAxis.ticks;++i) xWidth=std::max(xWidth,metrics.horizontalAdvance(QString::number(xmin+(xmax-xmin)*i/data->xAxis.ticks,'g',data->xAxis.precision)));
+      // Reserve space for the requested precision instead of clipping long
+      // numeric labels into the old fixed-width axis gutters.
+      area.setLeft(std::max(area.left(),std::min(width()/2.,double(yWidth+33))));
+      area.setRight(width()-std::max(26.,std::min(width()/4.,xWidth/2.+6)));
    }
    const double cx = (xmin+xmax)/2, cy = (ymin+ymax)/2;
    const double dx = (xmax-xmin)/zoom, dy = (ymax-ymin)/zoom;
@@ -220,7 +240,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    }
    if (data->grid) {
       painter.setPen(QPen(ground ? QColor(255,255,255,100) : orbit ? QColor(90,110,140,75) : QColor(215,222,231), 1));
-      const int nx = ground ? data->longitudeLines : 5, ny = ground ? data->latitudeLines : 5;
+      const int nx = ground ? data->longitudeLines : orbit ? 5 : data->xAxis.ticks, ny = ground ? data->latitudeLines : orbit ? 5 : data->yAxis.ticks;
       for (int i=0;i<=nx;++i) {
          const double x = ground ? -180.0+360.0*i/nx : xmin+(xmax-xmin)*i/nx;
          painter.drawLine(screen({x,ymin}), screen({x,ymax}));
@@ -314,11 +334,15 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    painter.restore(); painter.setPen(foreground);
    if (!orbit) {
       painter.drawRect(area);
-      for (int i=0;i<=5;++i) {
-         const double x=xmin+(xmax-xmin)*i/5, y=ymin+(ymax-ymin)*i/5;
-         const double xp=area.left()+area.width()*i/5, yp=area.bottom()-area.height()*i/5;
-         painter.drawText(QRectF(xp-38,area.bottom()+4,76,20),Qt::AlignCenter,QString::number(x,'g',5));
-         painter.drawText(QRectF(24,yp-10,area.left()-31,20),Qt::AlignRight|Qt::AlignVCenter,QString::number(y,'g',5));
+      const int nx=ground ? 5 : data->xAxis.ticks,ny=ground ? 5 : data->yAxis.ticks;
+      for (int i=0;i<=nx;++i) {
+         const double x=xmin+(xmax-xmin)*i/nx,xp=area.left()+area.width()*i/nx;
+         const auto label=QString::number(x,'g',ground ? 5 : data->xAxis.precision); const int labelWidth=std::max(76,metrics.horizontalAdvance(label)+8);
+         painter.drawText(QRectF(xp-labelWidth/2.,area.bottom()+4,labelWidth,20),Qt::AlignCenter,label);
+      }
+      for (int i=0;i<=ny;++i) {
+         const double y=ymin+(ymax-ymin)*i/ny,yp=area.bottom()-area.height()*i/ny;
+         painter.drawText(QRectF(24,yp-10,area.left()-31,20),Qt::AlignRight|Qt::AlignVCenter,QString::number(y,'g',ground ? 5 : data->yAxis.precision));
       }
       painter.drawText(QRectF(area.left(),height()-28,area.width(),22),Qt::AlignCenter,metrics.elidedText(data->xLabel,Qt::ElideMiddle,static_cast<int>(area.width())));
       painter.save(); painter.translate(1,area.center().y()); painter.rotate(-90); painter.drawText(QRectF(-area.height()/2,0,area.height(),20),Qt::AlignCenter,painter.fontMetrics().elidedText(data->yLabel,Qt::ElideRight,static_cast<int>(area.height()))); painter.restore();
@@ -531,13 +555,33 @@ void PlotWidget::editPlotStyle()
 {
    QDialog dialog(this); dialog.setObjectName("plotStyleDialog"); dialog.setWindowTitle("XY plot style");
    auto *layout=new QVBoxLayout(&dialog);
+   auto *tabs=new QTabWidget(&dialog); tabs->setObjectName("plotStyleTabs"); layout->addWidget(tabs);
+   auto *general=new QWidget(tabs); auto *generalLayout=new QVBoxLayout(general); tabs->addTab(general,"Plot");
+   auto *labels=new QFormLayout; generalLayout->addLayout(labels);
+   auto label=[&](const QString &name,const QString &id,const QString &value) { auto *field=new QLineEdit(value,general); field->setObjectName(id); labels->addRow(name,field); return field; };
+   auto *title=label("Title","plotTitle",data->title),*xLabel=label("X axis label","plotXLabel",data->xLabel),*yLabel=label("Y axis label","plotYLabel",data->yLabel);
    auto *grid=new QCheckBox("Show grid",&dialog),*legend=new QCheckBox("Show legend",&dialog);
    grid->setObjectName("plotGrid"); legend->setObjectName("plotLegend");
    grid->setChecked(data->grid); legend->setChecked(data->legend);
-   layout->addWidget(grid); layout->addWidget(legend);
+   generalLayout->addWidget(grid); generalLayout->addWidget(legend); generalLayout->addStretch();
    layout->addWidget(new QLabel("Changes apply to this plot until the mission is rebuilt.",&dialog));
-   auto *selector=new QComboBox(&dialog); selector->setObjectName("styleCurve"); layout->addWidget(selector);
-   auto *pages=new QStackedWidget(&dialog); layout->addWidget(pages);
+   struct AxisControls { QCheckBox *minimumEnabled,*maximumEnabled; QLineEdit *minimum,*maximum; QSpinBox *ticks,*precision; };
+   QVector<AxisControls> axes;
+   for (int index=0;index<2;++index) {
+      const auto &axis=index==0 ? data->xAxis : data->yAxis; const QString id=index==0 ? "plotXAxis" : "plotYAxis";
+      auto *page=new QWidget(tabs); auto *form=new QFormLayout(page); tabs->addTab(page,index==0 ? "X axis" : "Y axis");
+      auto limit=[&](const QString &name,const std::optional<double> &value,double fallback) {
+         auto *enabled=new QCheckBox(name,page); enabled->setObjectName(id+name+"Enabled"); enabled->setChecked(value.has_value());
+         auto *field=new QLineEdit(QString::number(value.value_or(fallback),'g',17),page); field->setObjectName(id+name); field->setEnabled(enabled->isChecked()); form->addRow(enabled,field);
+         connect(enabled,&QCheckBox::toggled,field,&QLineEdit::setEnabled); return qMakePair(enabled,field);
+      };
+      const auto minimum=limit("Minimum",axis.minimum,0),maximum=limit("Maximum",axis.maximum,10);
+      auto spin=[&](const QString &name,int value,int low,int high) { auto *field=new QSpinBox(page); field->setObjectName(id+name); field->setRange(low,high); field->setValue(value); form->addRow(name,field); return field; };
+      axes.append({minimum.first,maximum.first,minimum.second,maximum.second,spin("Ticks",axis.ticks,1,index==0 ? 20 : 25),spin("Precision",axis.precision,2,16)});
+   }
+   auto *curves=new QWidget(tabs); auto *curveLayout=new QVBoxLayout(curves); tabs->addTab(curves,"Curves");
+   auto *selector=new QComboBox(curves); selector->setObjectName("styleCurve"); curveLayout->addWidget(selector);
+   auto *pages=new QStackedWidget(curves); curveLayout->addWidget(pages);
    QVector<std::function<void()>> apply;
    for (auto it=data->curves.cbegin();it!=data->curves.cend();++it) {
       const auto key=it.key(); const auto &curve=it.value();
@@ -580,12 +624,37 @@ void PlotWidget::editPlotStyle()
    }
    connect(selector,&QComboBox::currentIndexChanged,pages,&QStackedWidget::setCurrentIndex);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
+   auto *status=new QLabel(&dialog); status->setObjectName("plotAxisStatus"); status->setWordWrap(true); layout->insertWidget(layout->count()-1,status);
+   auto validate=[axes,status,buttons] {
+      QString error;
+      for (const auto &axis:axes) {
+         bool minOk=true,maxOk=true; const double minimum=axis.minimum->text().toDouble(&minOk),maximum=axis.maximum->text().toDouble(&maxOk);
+         auto valid=[](double value,bool ok) { return ok && std::isfinite(value) && std::abs(value)<=1e100; };
+         if ((axis.minimumEnabled->isChecked() && !valid(minimum,minOk)) || (axis.maximumEnabled->isChecked() && !valid(maximum,maxOk))) error="Enter a finite axis limit between -1e100 and 1e100.";
+         else if (axis.minimumEnabled->isChecked() && axis.maximumEnabled->isChecked() && minimum>=maximum) error="Each axis minimum must be less than its maximum.";
+      }
+      status->setText(error); buttons->button(QDialogButtonBox::Ok)->setEnabled(error.isEmpty());
+   };
+   for (const auto &axis:axes) {
+      connect(axis.minimum,&QLineEdit::textChanged,&dialog,[validate] { validate(); }); connect(axis.maximum,&QLineEdit::textChanged,&dialog,[validate] { validate(); });
+      connect(axis.minimumEnabled,&QCheckBox::toggled,&dialog,[validate] { validate(); }); connect(axis.maximumEnabled,&QCheckBox::toggled,&dialog,[validate] { validate(); });
+   }
+   validate();
    connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept);
    connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
    if (dialog.exec()!=QDialog::Accepted) return;
+   if (!buttons->button(QDialogButtonBox::Ok)->isEnabled()) return;
+   bool changedLimits=false;
+   for (int index=0;index<axes.size();++index) {
+      const auto &controls=axes[index]; auto &axis=index==0 ? data->xAxis : data->yAxis;
+      const auto minimum=controls.minimumEnabled->isChecked() ? std::optional<double>(controls.minimum->text().toDouble()) : std::nullopt;
+      const auto maximum=controls.maximumEnabled->isChecked() ? std::optional<double>(controls.maximum->text().toDouble()) : std::nullopt;
+      changedLimits|=minimum!=axis.minimum || maximum!=axis.maximum; axis.minimum=minimum; axis.maximum=maximum; axis.ticks=controls.ticks->value(); axis.precision=controls.precision->value();
+   }
+   data->title=title->text(); data->xLabel=xLabel->text(); data->yLabel=yLabel->text();
    data->grid=grid->isChecked(); data->legend=legend->isChecked();
    for (const auto &change:apply) change();
-   drawing->refresh();
+   if (changedLimits) drawing->fit(); else drawing->refresh();
 }
 
 void PlotWidget::setProjectionSaver(std::function<QString(bool,double)> callback)

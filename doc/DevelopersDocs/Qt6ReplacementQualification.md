@@ -129,7 +129,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
-| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Remaining axes/range options pending audit. |
+| `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis appendix. |
 | `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. Broader solver-loop display and camera/frame combinations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
@@ -5340,3 +5340,64 @@ repeated. Other Python return/error types, packages and changed-code cache
 recovery remain under the inventory limits. Native Wayland main-window input,
 portal and other selected workflow/plugin gates remain open; full Linux
 replacement is still in progress and Windows/macOS remain deferred.
+
+
+## Active XY plot axis and label controls (2026-09-30)
+
+TsPlotCanvas::SetOptions is the active TsPlotOptionsDialog caller. It loads and
+applies plot title, X/Y labels, line width, independent minimum/maximum overrides,
+major tick counts and label precision. Qt's existing Style action supplied curve
+styling/grid/legend but omitted those active axis/label operations. The audit also
+finds that both logarithmic checkboxes and minor-tick controls are disabled and
+are not read/applied by SetOptions. The line-style text field has no applied
+GetStyle call; Qt's already implemented curve-style selector is more capable.
+audit-xy-active-options.txt records the caller/settings and disabled controls.
+No extra logarithmic or minor-tick behavior is inferred from inactive widgets.
+
+The Qt Style dialog now has Plot, X axis, Y axis and Curves tabs. Plot provides
+title and axis labels with the existing grid/legend choices. Each axis provides
+independent fixed minimum/maximum checkboxes and text values, major tick intervals
+(X 1–20, Y 1–25) and significant-digit label precision (2–16), matching the active
+wx ranges. Unchecked limits follow data. Invalid/nonfinite/out-of-range values or
+minimum greater than/equal to maximum disable OK with an explanation; correction
+re-enables it. Values remain private until OK, and Cancel changes nothing.
+Changing limits resets the viewer's pan/zoom to show the chosen range. A single
+fixed edge beyond current data keeps a valid automatic opposite edge as data
+arrives. Curves clip to the selected bounds. Numeric gutters grow for longer
+precision labels; extremely narrow views can still constrain label space.
+
+These are display settings, matching the wx plot options workflow. They do not
+change the mission resource or script and reset on rebuild. Accepted settings
+and collected points remain in the receiver model when a viewer closes/reopens.
+Orbit/Ground drawing/camera behavior and their default tick labels are retained;
+new limits/ticks/precision are applied only in the XY paint branch. No subscriber
+publication or numerical algorithm changed.
+
+QtGui.XYAxes runs a small actual mission/MDI workflow. Ordinary execution provides
+independent report bytes. Through the real Style action the test edits labels,
+limits, ticks and precision, checks Cancel, equal/nonfinite/nonnumeric correction,
+accepted rendering, unchanged sample count/source/report, close/reopen values,
+independent one-sided limits beyond data, removal of all overrides and exact
+Unicode save/reopen/rerun results. Rebuilding must reset transient options. A
+separate deterministic chart checks a point at independent expected screen
+coordinates under two ranges and its clipping outside the selected range. It
+also checks X/Y grid-line positions after tick changes and rendered numeric-label
+regions after precision changes. This qualifies those GUI operations, not the
+engine's numerical methods or every possible data range/precision combination.
+
+The initial check passed in check-xy-axes-initial.txt (0.45 seconds). Rendered
+X/Y tick/precision checks were added and passed in check-xy-axes-ticks.txt. The
+final product change reserves wider numeric gutters; check-xy-axes-final.txt
+passes in 0.52 seconds. No broad PlotTests, previous solver/Toggle/native-rendering
+or full regression rerun was performed. Earlier curve-style/callback and viewer
+history evidence is reused. build-xy-axes-final.txt records the actual
+GmatQt-R2026a relink and GmatQt launcher recreation.
+
+xy-axes-wayland-20260930.txt and .0/.1/.2/.3.png capture all four native tabs in
+an actual MDI plot inside the initialized MainWindow. The tabs were inspected;
+editable fields fit and the prior curve controls remain accessible. This preview
+uses synthetic display points and performs no numerical mission execution. The
+final numeric-gutter change does not alter the inspected dialog layout, so its
+preview was not repeated. Top-level compositor input/minimize and portal gates
+remain unqualified; this does not close those gates or claim full Linux
+replacement completion. Windows/macOS remain deferred.
