@@ -26,6 +26,7 @@ private:
    QMap<QString, QString> externalEdits,originalExternal;
    QMap<QString, QString> stationEdits;
    QMap<QString, QString> eventEdits;
+   QString originalPolyhedron,pendingPolyhedron;
    QString pendingDynamicData;
    QString pendingTrackingConfigs;
    QSet<QString> attitudeNames;

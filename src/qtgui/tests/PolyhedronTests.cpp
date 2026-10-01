@@ -1,6 +1,12 @@
 #include "MainWindow.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceProperties.hpp"
+#include "PolyhedronDialog.hpp"
+#include <QJsonObject>
+#include <QLabel>
+#include <QEventLoop>
+#include <QWindow>
+#include <QStatusBar>
 #include "ReportParameterDialog.hpp"
 #include "TestSettings.hpp"
 #include "Moderator.hpp"
@@ -30,7 +36,7 @@ static void require(bool ok,const char *message) { if (!ok) throw std::runtime_e
 static void write(const QString &path,const QString &text) { QFile file(path); require(file.open(QIODevice::WriteOnly),"Fixture write failed"); require(file.write(text.toUtf8())==text.toUtf8().size(),"Fixture write incomplete"); }
 static QString read(const QString &path) { QFile file(path); require(file.open(QIODevice::ReadOnly),"Report unavailable"); return QString::fromUtf8(file.readAll()); }
 static QVector<double> numbers(const QString &path) { QVector<double> result; for (const auto &word:read(path).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts)) { bool ok; const double number=word.toDouble(&ok); require(ok && std::isfinite(number),"Nonnumeric polyhedron report"); result.append(number); } return result; }
-static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) throw std::runtime_error(window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().toStdString()); }
+static void run(MainWindow &window) { if (window.runMission()!=MainWindow::RunResult::Completed) throw std::runtime_error((window.statusBar()->currentMessage()+"\n"+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText()).toStdString()); }
 static void equivalent(const QVector<double> &a,const QVector<double> &b) { require(a.size()==b.size(),"Polyhedron report dimensions changed"); for (int i=0;i<a.size();++i) require(std::abs(a[i]-b[i])<1e-11*std::max(1.0,std::abs(b[i])),"GUI polyhedron result differs from script reference"); }
 static QTableWidgetItem *field(ResourceEditor &panel,const QString &name) { auto *table=panel.findChild<QTableWidget *>(); require(table,"Properties table missing"); for (int i=0;i<table->rowCount();++i) if (table->item(i,0)->text()==name) return table->item(i,1); throw std::runtime_error(("Missing property "+name).toStdString()); }
 static void pickShape(ResourceEditor &panel,const QString &path,bool accept) {
@@ -115,7 +121,105 @@ int main(int argc,char **argv)
       const auto relative=files.filePath("relative polyhedron.script"); write(relative,QString(reference).replace(shape,QFileInfo(shape).fileName())); require(window.loadScript(relative) && window.buildScript(),"Relative shape mission failed"); run(window); equivalent(numbers(report),expected);
       require(window.applyResourceChanges("Values",{{"Precision","15"}},editor->toPlainText()).isEmpty(),"Unrelated resource edit lost relative shape context"); run(window); equivalent(numbers(report),expected);
       require(window.saveScriptTo(saved) && window.loadScript(saved) && window.buildScript(),"Relative shape round trip failed"); run(window); equivalent(numbers(report),expected);
-      std::cout<<"PASS: typed body/shape selection and Cancel, density units, pending Apply, independent cube far-field check and script state agreement, exact Undo/Redo/Unicode save/reopen, invalid density/body/missing/malformed shape rollback and recovery, whitespace and legacy record labels, SurfaceHeight browser, Output access, relative paths and unrelated resource editing.\n"; return 0;
+      // Exercise structural editing in the actual retained force-model panel.
+      // Keep an unrelated solar point mass so removing the final polyhedron
+      // leaves a runnable model, and avoid a SurfaceHeight reference after removal.
+      QString creationReference=reference;
+      creationReference.replace("FM.CentralBody = Earth;","FM.CentralBody = Earth;\nFM.PointMasses = {Sun};");
+      creationReference.replace(" Sat.FM.SurfaceHeight;",";"); creationReference.prepend("% retained polyhedron source α\n");
+      creationReference.replace("FM.BodyDensity = 2000;","FM.BodyDensity = 2000; % retain density comment");
+      editor->setPlainText(creationReference); run(window); const auto creationExpected=numbers(report); require(creationExpected.size()==6,"Creation report dimensions wrong");
+      auto without=creationReference; without.remove(QRegularExpression("^FM\\.(?:PolyhedralBodies|CreateForceBody|ShapeFileName|BodyDensity)[^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption));
+      editor->setPlainText(without); run(window); const auto withoutExpected=numbers(report);
+      require(polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM")).isEmpty(),"Creation fixture already has a polyhedron");
+      auto openPanel=[&] {
+         auto *tree=window.findChild<QTreeWidget *>("Resources"); const auto items=tree->findItems("FM",Qt::MatchExactly|Qt::MatchRecursive); require(items.size()==1,"Polyhedron model missing from Resources"); tree->itemDoubleClicked(items.first(),0);
+         for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (child->property("resourceName").toString()=="FM") return child;
+         throw std::runtime_error("Real polyhedron editor unavailable");
+      };
+      auto openForces=[&](ResourceEditor &panel,std::function<void(PolyhedronDialog *)> action) {
+         std::exception_ptr failure; auto *button=panel.findChild<QPushButton *>("forcePolyhedron"); require(button && button->isEnabled(),"Polyhedron creation button unavailable");
+         QTimer::singleShot(0,&panel,[&] { auto *dialog=dynamic_cast<PolyhedronDialog *>(panel.findChild<QDialog *>("polyhedronDialog")); try { require(dialog,"Polyhedron controls unavailable"); action(dialog); } catch (...) { failure=std::current_exception(); if (dialog) dialog->reject(); } }); button->click(); if (failure) std::rethrow_exception(failure);
+      };
+      auto add=[&](PolyhedronDialog *dialog,const QString &body,const QString &path,const QString &density) {
+         dialog->findChild<QPushButton *>("polyhedronAdd")->click(); auto *table=dialog->findChild<QTableWidget *>("polyhedronTable"); const auto row=table->rowCount()-1; auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,0)); require(choice && choice->findText(body)>=0 && choice->findText("Sat")==-1,"Polyhedron choices are not celestial bodies"); choice->setCurrentText(body); table->item(row,1)->setText(path); table->item(row,2)->setText(density);
+      };
+      auto accept=[](PolyhedronDialog *dialog) { dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); };
+      auto apply=[&](QMdiSubWindow *child,ResourceEditor *previous) {
+         previous->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+         if (child->widget()==previous) throw std::runtime_error(("Polyhedron Apply rejected: "+previous->findChild<QLabel *>("resourceStatus")->text()).toStdString());
+         require(child->isVisible() && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges() && child->property("sourceScript").toString()==editor->toPlainText(),"Polyhedron Apply did not refresh retained panel");
+      };
+      const auto shapeFile=files.filePath("creation cube ü.txt"); write(shapeFile,valid);
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel,"Force panel unavailable");
+         openForces(*panel,[&](PolyhedronDialog *dialog) { require(dialog->findChild<QTableWidget *>("polyhedronTable")->rowCount()==0,"First creation table not empty"); add(dialog,"Earth",shapeFile,"2000"); dialog->reject(); });
+         require(!panel->hasChanges() && editor->toPlainText()==without,"Creation Cancel changed pending source");
+         openForces(*panel,[&](PolyhedronDialog *dialog) {
+            add(dialog,"Earth",shapeFile,"nan"); accept(dialog); require(dialog->isVisible() && !dialog->findChild<QLabel *>("polyhedronError")->text().isEmpty(),"Creation accepted nonfinite density");
+            auto *table=dialog->findChild<QTableWidget *>("polyhedronTable"); table->item(0,2)->setText("2000");
+            add(dialog,"Earth",shapeFile,"1000"); accept(dialog); require(dialog->isVisible() && dialog->findChild<QLabel *>("polyhedronError")->text().contains("one"),"Duplicate body accepted"); table->selectRow(1); dialog->findChild<QPushButton *>("polyhedronRemove")->click();
+            table->selectRow(0); auto *browse=dialog->findChild<QPushButton *>("polyhedronBrowse");
+            QTimer::singleShot(0,dialog,[&] { auto *chooser=dialog->findChild<QFileDialog *>(); require(chooser,"Shape creation chooser unavailable"); chooser->selectFile(decoy); chooser->reject(); }); browse->click(); require(table->item(0,1)->text()==shapeFile,"Creation Browse Cancel changed shape");
+            require(dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Help),"Polyhedron dialog did not inherit Help");
+            if (argc>2) { QEventLoop wait; QTimer::singleShot(250,&wait,&QEventLoop::quit); wait.exec(); require(dialog->windowHandle() && dialog->windowHandle()->isExposed() && dialog->grab().save(QString::fromLocal8Bit(argv[2])+".create.png"),"Native polyhedron controls not exposed or capture failed"); }
+            accept(dialog);
+         });
+         require(panel->hasChanges() && editor->toPlainText()==without && polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM")).isEmpty(),"Pending creation changed engine/source"); apply(child,panel);
+      }
+      const auto created=editor->toPlainText(); require(created.startsWith("% retained polyhedron source α") && created.contains("FM.PointMasses = {Sun}") && !created.contains("FM.PrimaryBodies") && !created.contains("FM.External") && !created.contains("FM.RelativisticCorrection"),"Creation changed unrelated implicit force configuration");
+      run(window); equivalent(numbers(report),creationExpected); editor->undo(); require(editor->toPlainText()==without,"Creation Undo not exact"); editor->redo(); require(editor->toPlainText()==created,"Creation Redo not exact");
+      const auto createdFile=files.filePath("Created polyhedron Δ.script"); require(window.saveScriptTo(createdFile) && window.loadScript(createdFile),"Created force save/reopen failed"); run(window); equivalent(numbers(report),creationExpected);
+      // A rejected mesh leaves both original configuration and Undo history;
+      // correct the still-pending dialog and apply through the same panel.
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget());
+         const auto bad=files.filePath("bad creation cube.txt"); write(bad,"broken shape\n");
+         openForces(*panel,[&](PolyhedronDialog *dialog) { dialog->findChild<QTableWidget *>("polyhedronTable")->item(0,1)->setText(bad); accept(dialog); });
+         panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(child->widget()==panel && panel->hasChanges() && editor->toPlainText()==created,"Malformed creation edit did not roll back"); require(polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM"))[0].toObject().value("shape").toString()==shapeFile,"Rejected mesh changed the configured force");
+         openForces(*panel,[&](PolyhedronDialog *dialog) { dialog->findChild<QTableWidget *>("polyhedronTable")->item(0,1)->setText(shapeFile); accept(dialog); }); require(!panel->hasChanges(),"Restoring identical polyhedron settings left pending changes");
+      }
+      auto twoReference=creationReference; twoReference.replace("FM.PolyhedralBodies = {Earth};","FM.PolyhedralBodies = {Earth, Mars};");
+      // Qualify source ownership after adding a second body to legacy root
+      // aliases: independent reference uses explicit body-qualified settings.
+      twoReference.replace("FM.CreateForceBody = Earth;\nFM.ShapeFileName = '"+shape+"';\nFM.BodyDensity = 2000;", "FM.PolyhedronGravityModel.Earth.CreateForceBody = Earth;\nFM.PolyhedronGravityModel.Earth.ShapeFileName = '"+shapeFile+"';\nFM.PolyhedronGravityModel.Earth.BodyDensity = 2000;\nFM.PolyhedronGravityModel.Mars.CreateForceBody = Mars;\nFM.PolyhedronGravityModel.Mars.ShapeFileName = '"+shapeFile+"';\nFM.PolyhedronGravityModel.Mars.BodyDensity = 1000;");
+      editor->setPlainText(twoReference); run(window); const auto twoExpected=numbers(report);
+      editor->setPlainText(creationReference.replace(shape,shapeFile)); require(window.buildScript(),"Legacy source restore failed"); const auto legacySource=editor->toPlainText();
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget());
+         openForces(*panel,[&](PolyhedronDialog *dialog) { add(dialog,"Mars",shapeFile,"1000"); accept(dialog); }); apply(child,panel);
+      }
+      const auto two=editor->toPlainText(); require(two.contains("% retain density comment") && two.contains("FM.PolyhedronGravityModel.Earth.BodyDensity = 2000") && !two.contains("FM.BodyDensity ="),"Second body lost density comment or legacy ownership"); run(window); equivalent(numbers(report),twoExpected);
+      editor->undo(); require(editor->toPlainText()==legacySource,"Multiple contributor Undo not exact"); editor->redo(); require(editor->toPlainText()==two,"Multiple contributor Redo not exact");
+      const auto twoFile=files.filePath("Two polyhedra ü.script"); require(window.saveScriptTo(twoFile) && window.loadScript(twoFile),"Multiple contributors save/reopen failed"); run(window); equivalent(numbers(report),twoExpected);
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget());
+         openForces(*panel,[&](PolyhedronDialog *dialog) { auto *table=dialog->findChild<QTableWidget *>("polyhedronTable"); require(table->rowCount()==2,"Two contributors not restored"); table->selectRow(0); dialog->findChild<QPushButton *>("polyhedronRemove")->click(); dialog->reject(); }); require(!panel->hasChanges() && editor->toPlainText()==two,"Removal Cancel changed pending/source");
+         openForces(*panel,[&](PolyhedronDialog *dialog) { auto *table=dialog->findChild<QTableWidget *>("polyhedronTable"); for (int row=0;row<table->rowCount();++row) if (qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()=="Mars") { table->selectRow(row); break; } dialog->findChild<QPushButton *>("polyhedronRemove")->click(); accept(dialog); }); apply(child,panel);
+      }
+      run(window); equivalent(numbers(report),creationExpected); const auto one=editor->toPlainText(); require(!one.contains("FM.PolyhedronGravityModel.Mars"),"Removed contributor retained settings");
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); openForces(*panel,[&](PolyhedronDialog *dialog) { dialog->findChild<QTableWidget *>("polyhedronTable")->selectRow(0); dialog->findChild<QPushButton *>("polyhedronRemove")->click(); accept(dialog); }); require(panel->hasChanges() && editor->toPlainText()==one,"Final removal changed source before Apply"); apply(child,panel);
+      }
+      const auto removed=editor->toPlainText(); require(polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM")).isEmpty() && !removed.contains("FM.PolyhedronGravityModel.") && removed.contains("% retain density comment"),"Final removal retained force or lost comment"); run(window); equivalent(numbers(report),withoutExpected);
+      editor->undo(); require(editor->toPlainText()==one,"Removal Undo not exact"); editor->redo(); require(editor->toPlainText()==removed,"Removal Redo not exact"); const auto removedFile=files.filePath("Removed polyhedra Δ.script"); require(window.saveScriptTo(removedFile) && window.loadScript(removedFile),"Removed forces save/reopen failed"); run(window); equivalent(numbers(report),withoutExpected);
+      // Preserve an implicit density and convert the legacy UserDefined
+      // creator without leaving a duplicate contributor behind.
+      auto legacy=creationReference.replace(shape,shapeFile); legacy.replace("FM.PolyhedralBodies = {Earth};","FM.UserDefined = {PolyhedronGravityModel};"); legacy.remove(QRegularExpression("^FM\\.BodyDensity[^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption)); legacy.prepend("% implicit legacy density\n");
+      auto legacyExpectedSource=twoReference; legacyExpectedSource.replace("Earth.BodyDensity = 2000","Earth.BodyDensity = 1000"); editor->setPlainText(legacyExpectedSource); run(window); const auto legacyExpected=numbers(report);
+      editor->setPlainText(legacy); run(window);
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); openForces(*panel,[&](PolyhedronDialog *dialog) { add(dialog,"Mars",shapeFile,"1000"); accept(dialog); }); apply(child,panel);
+      }
+      const auto legacyTwo=editor->toPlainText(); require(legacyTwo.contains("FM.UserDefined = {}") && !legacyTwo.contains("Earth.BodyDensity") && legacyTwo.contains("% implicit legacy density") && polyhedronSettings(*Moderator::Instance()->GetConfiguredObject("FM")).size()==2,"Legacy creator duplicated forces or made retained density explicit"); run(window); equivalent(numbers(report),legacyExpected);
+      editor->undo(); require(editor->toPlainText()==legacy,"Legacy creator Undo not exact"); editor->redo(); require(editor->toPlainText()==legacyTwo,"Legacy creator Redo not exact");
+      const auto legacyFile=files.filePath("Legacy polyhedra Δ.script"); require(window.saveScriptTo(legacyFile) && window.loadScript(legacyFile),"Legacy creator save/reopen failed"); run(window); equivalent(numbers(report),legacyExpected);
+      auto wrongBody=legacyTwo; wrongBody.replace("BeginMissionSequence;","FM.PolyhedronGravityModel.Venus.BodyDensity = 1000;\nBeginMissionSequence;"); editor->setPlainText(wrongBody); require(!window.buildScript(),"Qualified setting accepted a body without a contributor"); require(window.loadScript(legacyFile),"Wrong-body source recovery failed"); run(window); equivalent(numbers(report),legacyExpected);
+      {
+         auto *child=openPanel(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); openForces(*panel,[&](PolyhedronDialog *dialog) { dialog->findChild<QTableWidget *>("polyhedronTable")->selectAll(); dialog->findChild<QPushButton *>("polyhedronRemove")->click(); require(dialog->findChild<QTableWidget *>("polyhedronTable")->rowCount()==0,"Multi-row removal skipped contributors"); accept(dialog); }); apply(child,panel);
+      }
+      run(window); equivalent(numbers(report),withoutExpected);
+      std::cout<<"PASS: typed body/shape selection and Cancel, density units, pending Apply, independent cube far-field check and script state agreement, exact Undo/Redo/Unicode save/reopen, invalid density/body/missing/malformed shape rollback and recovery, whitespace and legacy record labels, SurfaceHeight browser, Output access, relative paths and unrelated resource editing; real-panel first and multiple contributor creation/removal, typed bodies and duplicate/invalid-density rejection, pending and Cancel/Help, malformed shape rollback/correction, retained-panel refresh, legacy alias ownership/comments, exact Undo/Redo and independent report/save-reopen equivalence, legacy UserDefined conversion with implicit density retained, wrong-body qualified source recovery and multi-row removal.\n"; return 0;
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; }
      catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
 }

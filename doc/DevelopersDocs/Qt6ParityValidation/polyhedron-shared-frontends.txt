@@ -1,0 +1,4 @@
+GmatConsole: completed, six expected state columns
+GMAT: completed, six expected state columns
+GmatQt: completed, six expected state columns
+PASS: rebuilt Console, wx and Qt run the same Earth/Mars body-qualified polyhedron fixture with byte-exact six-column state reports. Temporary startup/output/preferences isolated; existing force and propagation algorithms unchanged.

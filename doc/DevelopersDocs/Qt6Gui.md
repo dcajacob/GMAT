@@ -138,6 +138,13 @@ selector lists configured Python search paths. Enter a module name without `.py`
 the engine does not import an absolute file path in this field. Restart GMAT
 after modifying an imported Python module, because Python caches its code.
 
+**Polyhedron gravity…** in the force-model editor manages one contributor per
+celestial body. Add a row, select its body and closed triangle mesh, and enter
+density in kg/m³; mesh coordinates are in kilometres. Remove selected rows to
+remove their contributors. OK keeps changes pending until the parent Apply,
+which validates the mesh and refreshes the retained panel. Invalid settings
+leave the previous mission intact so the pending values can be corrected.
+
 The initial shell compiles with Qt 6.10.2 on Linux, initializes the engine,
 loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only

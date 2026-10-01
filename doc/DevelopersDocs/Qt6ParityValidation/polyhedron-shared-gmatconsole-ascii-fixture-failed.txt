@@ -1,0 +1,58 @@
+
+********************************************
+***  GMAT Console Application
+********************************************
+
+General Mission Analysis Tool
+Console Based Version
+Build Date: Sep 30 2026  11:06:03
+
+
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/data/time/tai-utc.dat
+2026-09-30 19:25:33 GMAT Moderator successfully created core engine
+
+Interpreting scripts from the file.
+***** file: /tmp/gmat polyhedron shared atfa49e8/shared dispatch.script
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Unable to complete messaging
+Interpreter Exception: The script "/tmp/gmat polyhedron shared atfa49e8/shared dispatch.script" contains characters outside of the ASCII character set; please fix the file before proceeding.
+
+
+***Could not read script.***
+
+Usage: One of the following
+   GmatConsole
+   GmatConsole ScriptFileName
+   GmatConsole <option> <string>
+
+The first selection runs an interactive session.
+The second runs the input script once and then exits.
+The third selection executes specific testing scenarios.
+
+Valid options are:
+   --help, -h                    Shows available options
+   --version, -v                 Show version and build information
+   --batch, -b <filename>        Runs multiple scripts listed in specified file
+   --run, -r <filename>          Runs the input script once, then exits
+   --logfile, -l <filename>      Specify the log file (ignored in Console interactive mode)
+   --startup_file, -s <filename> Specify the startup file (ignored in Console interactive mode)
+   --minimize, -m                Opens with GUI minimized (ignored for Console)
+   --start-server                Starts GMAT Server on start-up (ignored for Console)
+   --save                        Saves current script (interactive mode only)
+   --summary                     Writes command summary (interactive mode only)
+   --verbose <on/off>            Dump info messages to screen during run (default is on)
+   --exit, -x                    Exit after run (default)
+
+
+ERROR!!!!!! ---- Console Application Execution Failed: Errors were found in the script named "/tmp/gmat polyhedron shared atfa49e8/shared dispatch.script"
+
+EXITing GmatConsole with exit code 1
+Console Application Execution Failed: Errors were found in the script named "/tmp/gmat polyhedron shared atfa49e8/shared dispatch.script"
+

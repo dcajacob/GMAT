@@ -26,7 +26,7 @@ struct ResourceProperty
 QVector<ResourceProperty> resourceProperties(GmatBase &object);
 QStringList pythonModuleNames();
 QStringList dataInterfaceFields(GmatBase &object);
-void validateResourceProperties(GmatBase &object);
+void validateResourceProperties(GmatBase &object,bool replacingPolyhedron=false);
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);
 QStringList splitResourceReferences(const QString &value);

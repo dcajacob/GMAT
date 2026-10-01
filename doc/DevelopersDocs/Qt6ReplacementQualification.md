@@ -159,7 +159,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. Broader function and report audit pending. |
 | `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
-| `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. New-contributor creation/removal, real asteroid meshes, custom bodies, multiple bodies/spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
+| `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. Remaining call types and runtime-error recovery pending. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
@@ -4462,3 +4462,77 @@ application/bin/GmatQt target was rebuilt. This closes the first external
 contributor's creation/removal workflow; the full acceptance checklist remains
 in progress, including remaining polyhedron/document/plugin/viewer operations
 and native desktop-input gates.
+
+
+## Polyhedron contributor creation/removal and body-qualified dispatch
+
+The force-model editor now supplies Polyhedron gravity controls when the selected
+runtime exposes the plugin. A table manages one contributor per celestial body,
+with typed body selection, input-shape Browse and density in kg/m³. Initial columns
+are readable and remain adjustable. Add/Remove support first, additional, partial
+and complete contributor changes. OK leaves the table pending; the parent Apply
+combines these settings with its ordinary fields in one validated rebuild and
+refreshes the retained MDI panel. Cancel retains existing parent/source settings.
+Help inherits the actual resource panel's offline topic.
+
+Source patching is confined to the polyhedron family. It preserves unrelated
+forces, comments, existing expressions/unknown family assignments for retained
+bodies and implicit defaults. Legacy CreateForceBody/ShapeFileName/BodyDensity
+aliases receive body ownership before another body is added. Legacy UserDefined
+polyhedron creation is removed from that list before the PolyhedralBodies creator
+is written, avoiding duplicates while retaining other user forces. Each new force
+requires an explicit CreateForceBody binding as well as the body-list entry.
+The first missing-binding failure is retained in
+check-polyhedron-create-body-binding-failed.txt; the final writer supplies it.
+
+The independent Earth/Mars reference also exposed shared interpretation behavior:
+qualified CreateForceBody, ShapeFileName and BodyDensity went through legacy
+ODEModel aliases, updating the first contributor. The observed configured objects
+were one Mars force with the last shape/density and another force with empty
+binding/shape. Interpreter now routes body-qualified polyhedron assignments to the
+owned force whose type and body match the qualifier, and rejects a qualifier with
+no contributor. Unqualified legacy syntax retains its existing behavior. This is
+a configuration-dispatch fix; no force evaluation or propagation algorithms change.
+
+PolyhedronTests exercises the actual Resources/MDI editor, first creation Cancel,
+nonfinite density and duplicate-body rejection/recovery, widget Browse Cancel,
+Help, pending creation and Apply, retained-panel refresh, malformed-mesh rollback
+and pending correction back to the unchanged configuration. It compares first and
+Earth/Mars contributor reports against independent scripts, checks exact source
+Undo/Redo and Unicode save/reopen, then partial and complete removal with separate
+reference states. Removal selects the named body, independently of engine-owned
+force ordering. Legacy UserDefined conversion retains an omitted density assignment
+at its default, with report equivalence and round trips. Wrong-body qualified
+source failure/recovery and multi-row removal are also covered. The existing cube
+far-field mass check, SurfaceHeight browser, malformed geometry and relative-asset
+checks remain applicable. This qualifies representative GUI configurations, not
+new scientific propagation regimes or every possible mesh.
+
+polyhedron-create-wayland-20260930.txt records a passing native Wayland run. Its
+.png.create.png explicitly asserts exposure and was visually inspected: body,
+shape and density columns, Add/Remove/Browse and Help/Cancel/OK are readable. The
+base .png is an older standalone panel grab and adds no desktop-input evidence.
+Widget choosers are used; native portal and GNOME minimize/restore gates remain
+outstanding. The focused final Polyhedron suite passed in 4.02 seconds before
+native capture. Full regression and shared frontend results are recorded below.
+
+
+PolyhedronFrontendTests.py supplies a repeatable Linux check of the shared
+interpretation fix after rebuilding GmatQt/GmatGUI/GmatConsole. Separate actual
+console, wx and Qt processes run the same body-qualified Earth/Mars fixture with
+isolated startup, output and preferences. polyhedron-shared-frontends.txt and
+its per-application logs/reports record byte-identical six-column state reports.
+The initial shared fixture used a Unicode shape filename; the legacy console
+file reader rejects non-ASCII script contents before interpretation. That failure
+is retained in polyhedron-shared-ascii-fixture-failed.txt and its console log.
+The comparison rerun uses an ASCII path. Qt's Unicode configuration and
+save/reopen coverage remains in PolyhedronTests; the shared comparison does not
+claim Unicode support for the legacy console/wx readers.
+
+Final regression: check-polyhedron-creation.txt records all 48 Qt suites passing
+in 195.81 seconds after the final controls, body-qualified dispatch, recovery and
+legacy/multiple/removal assertions. GmatQt, GmatGUI and GmatConsole were rebuilt;
+the actual application/bin/GmatQt launcher points to the rebuilt executable.
+This closes representative first/multiple polyhedron contributor creation and
+removal. The full acceptance checklist remains in progress, including broader
+document/plugin/viewer operations and native desktop-input gates.

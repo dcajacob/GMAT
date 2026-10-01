@@ -7666,6 +7666,33 @@ bool Interpreter::SetForceModelProperty(GmatBase *obj, const std::string &prop,
    Integer propId;
    Gmat::ParameterType propType;
 
+   // Body-qualified polyhedron fields must address that owned contributor.
+   // ODEModel also exposes the legacy unqualified CreateForceBody,
+   // ShapeFileName and BodyDensity aliases, which address the first force.
+   // Looking those aliases up first silently overwrites a different body's
+   // configuration when the model contains more than one polyhedron.
+   if ((pmType == "PolyhedronGravityModel" ||
+        forceType == "PolyhedronGravityModel") && parts.size() == 3)
+   {
+      for (Integer i = 0; i < forceModel->GetOwnedObjectCount(); ++i)
+      {
+         GmatBase *owned = forceModel->GetOwnedObject(i);
+         if (owned && owned->IsOfType("PolyhedronGravityModel") &&
+             static_cast<PhysicalModel*>(owned)->GetBodyName() == qualifier)
+         {
+            id = owned->GetParameterID(parts.back());
+            type = owned->GetParameterType(id);
+            retval = SetPropertyValue(owned, id, type, value);
+            if (fromObj != NULL)
+               owned->SetRefObject(fromObj, fromObj->GetType(), value);
+            return retval;
+         }
+      }
+      throw InterpreterException(currentScriptBeingRead +
+            ": No polyhedron gravity contributor for body \"" + qualifier +
+            "\" in force model \"" + obj->GetName() + "\"");
+   }
+
    if (FindPropertyID(forceModel, propertyName, &owner, propId, propType, qualifier))
    {
       #ifdef DEBUG_SET_FORCE_MODEL

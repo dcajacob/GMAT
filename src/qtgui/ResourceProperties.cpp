@@ -682,9 +682,9 @@ QString replaceResourceList(GmatBase &object, const QString &block, const QStrin
    return result;
 }
 
-void validateResourceProperties(GmatBase &object)
+void validateResourceProperties(GmatBase &object,bool replacingPolyhedron)
 {
-   if (object.IsOfType("ODEModel")) for (int i=0;i<object.GetOwnedObjectCount();++i) {
+   if (object.IsOfType("ODEModel") && !replacingPolyhedron) for (int i=0;i<object.GetOwnedObjectCount();++i) {
       auto *force=object.GetOwnedObject(i);
       if (force && force->IsOfType("PolyhedronGravityModel")) {
          const auto body=force->GetStringParameter("CreateForceBody");

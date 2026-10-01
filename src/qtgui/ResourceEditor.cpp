@@ -16,6 +16,9 @@
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
 #include "ExternalForceDialog.hpp"
+#include "PolyhedronDialog.hpp"
+#include <QJsonDocument>
+#include <QJsonObject>
 #include "GroundStationDialog.hpp"
 #include "EventLocatorDialog.hpp"
 #include "XYPlotDialog.hpp"
@@ -701,6 +704,41 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
          catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
       });
+      originalPolyhedron=QString::fromUtf8(QJsonDocument(polyhedronSettings(object)).toJson(QJsonDocument::Compact));
+      auto *polyhedron=new QPushButton("Polyhedron gravity…",this); polyhedron->setObjectName("forcePolyhedron"); layout->addWidget(polyhedron);
+      polyhedron->setEnabled(std::find(types.begin(),types.end(),"PolyhedronGravityModel")!=types.end());
+      connect(polyhedron,&QPushButton::clicked,this,[this,externalName,polyhedron] {
+         try {
+            auto *model=Moderator::Instance()->GetConfiguredObject(externalName); if (!model) throw std::runtime_error("This force model is no longer available.");
+            auto settings=QJsonDocument::fromJson((pendingPolyhedron.isEmpty() ? originalPolyhedron : pendingPolyhedron).toUtf8()).array();
+            if (pendingPolyhedron.isEmpty()) for (int index=0;index<settings.size();++index) {
+               auto force=settings[index].toObject(); const auto prefix="PolyhedronGravityModel."+force.value("body").toString()+".";
+               const QMap<QString,QString> names={{"CreateForceBody","body"},{"ShapeFileName","shape"},{"BodyDensity","density"}};
+               for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text().startsWith(prefix)) {
+                  const auto leaf=table->item(row,0)->text().mid(prefix.size()); if (names.contains(leaf)) force[names.value(leaf)]=table->item(row,1)->text();
+               }
+               settings[index]=force;
+            }
+            PolyhedronDialog dialog(settings,this); if (dialog.exec()!=QDialog::Accepted) return;
+            pendingPolyhedron=QString::fromUtf8(QJsonDocument(dialog.values()).toJson(QJsonDocument::Compact)); const bool changed=pendingPolyhedron!=originalPolyhedron;
+            const auto originals=QJsonDocument::fromJson(originalPolyhedron.toUtf8()).array();
+            for (const auto &entry:originals) {
+               const auto force=entry.toObject(); const auto prefix="PolyhedronGravityModel."+force.value("body").toString()+".";
+               const QMap<QString,QString> names={{"CreateForceBody","body"},{"ShapeFileName","shape"},{"BodyDensity","density"}};
+               for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text().startsWith(prefix)) {
+                  const auto leaf=table->item(row,0)->text().mid(prefix.size());
+                  if (!changed && names.contains(leaf)) table->item(row,1)->setText(force.value(names.value(leaf)).toString());
+                  for (int column=1;column<table->columnCount();++column) {
+                     if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(!changed);
+                     if (auto *item=table->item(row,column);item && column==1 && !table->cellWidget(row,column)) item->setFlags(changed ? item->flags() & ~Qt::ItemIsEditable : item->flags() | Qt::ItemIsEditable);
+                  }
+               }
+            }
+            if (!changed) pendingPolyhedron.clear();
+            polyhedron->setText(changed ? "Polyhedron gravity… (pending)" : "Polyhedron gravity…"); status->setText(changed ? "Polyhedron contributors are pending. Review them with Polyhedron gravity…, then Apply." : "Polyhedron settings are unchanged.");
+         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+      });
       auto *button=new QPushButton("Atmosphere and drag…",this); button->setObjectName("forceAtmosphere"); layout->addWidget(button);
       const auto name=object.GetName();
       connect(button,&QPushButton::clicked,this,[this,name,button] {
@@ -1188,7 +1226,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       });
    }
    layout->addWidget(table, 1);
-   status = new QLabel("Apply validates changes and updates the mission script.", this);
+   status = new QLabel("Apply validates changes and updates the mission script.", this); status->setObjectName("resourceStatus");
    if (object.IsOfType("SeqEstimator")) {
       int formatRow=-1,epochRow=-1;
       for (int row=0;row<table->rowCount();++row) {
@@ -1251,6 +1289,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes=attitudeEdits;
+      if (!pendingPolyhedron.isEmpty()) changes.insert("@PolyhedronForces",pendingPolyhedron);
       if (!pendingDynamicData.isEmpty()) changes.insert("@DynamicData",pendingDynamicData);
       if (!pendingTrackingConfigs.isEmpty()) changes.insert("@TrackingConfigs",pendingTrackingConfigs);
       for (auto it=atmosphereEdits.cbegin();it!=atmosphereEdits.cend();++it) changes.insert(it.key(),it.value());
@@ -1263,6 +1302,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
          if (!atmosphereEdits.isEmpty() && (name=="Drag" || name.startsWith("Drag."))) continue;
          if (!externalEdits.isEmpty() && name.startsWith("External.")) continue;
+         if (!pendingPolyhedron.isEmpty() && name.startsWith("PolyhedronGravityModel.")) continue;
          if (stationEdits.contains(name)) continue;
          if (eventEdits.contains(name)) continue;
          const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
@@ -1305,10 +1345,12 @@ bool ResourceEditor::hasChanges() const
    if (scalarValue) return scalarValue()!=originalScalarValue;
    if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (!externalEdits.isEmpty() && externalEdits!=originalExternal) return true;
+   if (!pendingPolyhedron.isEmpty()) return true;
    if (expressions!=originalExpressions) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
       if (!externalEdits.isEmpty() && table->item(row,0)->text().startsWith("External.")) continue;
+      if (!pendingPolyhedron.isEmpty() && table->item(row,0)->text().startsWith("PolyhedronGravityModel.")) continue;
       const QString value = combo ? comboValue(combo) : table->item(row, 1)->text();
       if (value != original.value(table->item(row, 0)->text())) return true;
    }

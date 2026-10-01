@@ -41,6 +41,9 @@
 #include "MissionModel.hpp"
 #include "Debugger.hpp"
 #include "ExternalForceDialog.hpp"
+#include "PolyhedronDialog.hpp"
+#include <QJsonDocument>
+#include <QJsonParseError>
 #include <QTreeWidgetItemIterator>
 #include "StartupCompatibility.hpp"
 #include "ScriptCompatibility.hpp"
@@ -1252,6 +1255,13 @@ QString MainWindow::applyResourceChanges(const QString &name,
          for (auto it=external.cbegin();it!=external.cend();++it) changes.remove(it.key());
       }
    }
+   const bool replacePolyhedron=changes.contains("@PolyhedronForces"); QJsonArray polyhedron;
+   if (replacePolyhedron) {
+      if (!object->IsOfType("ODEModel")) return "Polyhedron contributors belong to a force model.";
+      QJsonParseError parse; const auto value=QJsonDocument::fromJson(changes.value("@PolyhedronForces").toUtf8(),&parse);
+      if (parse.error!=QJsonParseError::NoError || !value.isArray()) return "Invalid polyhedron contributor settings.";
+      polyhedron=value.array(); const auto error=validatePolyhedronSettings(polyhedron); if (!error.isEmpty()) return error;
+   }
    if (changes.isEmpty()) return external.isEmpty() ? QString() : externalForceSettingsError(*object,external);
    const bool shadows=object->IsOfType("SolarPowerSystem") && changes.size()==1 && changes.contains("ShadowBodies");
    const bool forceBodyLists=object->IsOfType("ODEModel") && std::all_of(changes.keyBegin(),changes.keyEnd(),[](const QString &field) { return field=="PrimaryBodies" || field=="PointMasses"; });
@@ -1359,13 +1369,13 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { return it.key() + ": " + QString::fromUtf8(error.what()); }
       }
-      validateResourceProperties(*proposed);
+      validateResourceProperties(*proposed,replacePolyhedron);
       if (proposed->IsOfType("ODEModel") && (changes.contains("PrimaryBodies") || changes.contains("PointMasses"))) {
          const auto effective=[&](const QString &field) {
             if (changes.contains(field)) return splitResourceReferences(changes.value(field));
@@ -1409,7 +1419,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
       auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
       if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
          // Imager's getter can still read the clone's old FOV pointer after
@@ -1458,13 +1468,18 @@ QString MainWindow::applyResourceChanges(const QString &name,
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
-   if (!external.isEmpty()) {
+   if (!external.isEmpty() || replacePolyhedron) {
       try {
          QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
          if (structuralExternal) candidate=externalForceScript(candidate,name,external,firstCommand);
+         if (replacePolyhedron) candidate=polyhedronScript(candidate,*object,polyhedron,firstCommand);
       } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
-      return applyModelScript(candidate,[name,external] { auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); return model ? externalForceSettingsError(*model,external) : QString("The force model was not retained."); });
+      return applyModelScript(candidate,[name,external,replacePolyhedron,polyhedron] {
+         auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); if (!model) return QString("The force model was not retained.");
+         if (!external.isEmpty()) { const auto error=externalForceSettingsError(*model,external); if (!error.isEmpty()) return error; }
+         return replacePolyhedron ? polyhedronSettingsError(*model,polyhedron) : QString();
+      });
    }
    return applyModelScript(candidate);
 }
