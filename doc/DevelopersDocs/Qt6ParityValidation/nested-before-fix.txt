@@ -1,0 +1,8 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=48 all=72
+Ground Current points=27 all=72
+XY Current points=27 all=72
+Orb None points=45 all=72
+Ground None points=45 all=72
+FAIL: Current mode has a different accepted sample count from None

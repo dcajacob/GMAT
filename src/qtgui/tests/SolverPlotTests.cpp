@@ -1,4 +1,7 @@
 #include "MainWindow.hpp"
+#include "SolverBranchCommand.hpp"
+#include "FileManager.hpp"
+#include "Debugger.hpp"
 #include "ResourceEditor.hpp"
 #include "QtPlotReceiver.hpp"
 #include "PlotWidget.hpp"
@@ -18,6 +21,7 @@
 #include <QMdiSubWindow>
 #include <QMdiArea>
 #include <QSlider>
+#include <QTimer>
 #include <iostream>
 #include <stdexcept>
 #include <cmath>
@@ -38,8 +42,10 @@ int main(int argc,char **argv)
 {
    QApplication app(argc,argv); QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("QtSolverPlots");
    const bool optimizer=argc>=3 && QString::fromLocal8Bit(argv[2])=="--optimizer";
-   if (argc!=2 && argc!=3 && !(optimizer && argc==4)) return 2;
-   const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : argc==3 && !optimizer ? QFileInfo(argv[2]).absoluteFilePath() : QString();
+   const bool cleanup=argc>=3 && QString::fromLocal8Bit(argv[2])=="--nested-cleanup";
+   const bool nested=cleanup || (argc>=3 && QString::fromLocal8Bit(argv[2])=="--nested");
+   if (argc!=2 && argc!=3 && !((optimizer || nested) && argc==4)) return 2;
+   const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : argc==3 && !optimizer && !nested ? QFileInfo(argv[2]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings settings; QTemporaryDir files; require(files.isValid(),"Solver fixture directory unavailable");
@@ -74,18 +80,41 @@ int main(int argc,char **argv)
          source.replace("Achieve DC(Sat.X = 7100, {Tolerance = 0.000001});", "Cost = (Alpha - 2)^2;\nMinimize Opt(Cost);");
          source.replace("EndTarget;", "EndOptimize;").replace("Propagate Prop(Sat) {Sat.ElapsedSecs = 160};", "Propagate Prop(Sat) {Sat.ElapsedSecs = 20};");
       }
+      if (nested) {
+         source.replace("Orb.ViewPointVector = [0 0 20000];", "Orb.ViewPointVector = [0 0 40000];");
+         source.replace("Create DifferentialCorrector DC;", "Create DifferentialCorrector DC Inner;\nInner.ReportFile = '"+files.filePath("inner.txt")+"';\nCreate Variable Alpha Beta;");
+         source.replace("Vary DC(Sat.X = 7000, {Perturbation = 1, Lower = 6000, Upper = 8000, MaxStep = 100});",
+            "Vary DC(Alpha = 1, {Perturbation = 0.01, Lower = 0, Upper = 4, MaxStep = 1});\nSat.X = 7000 + 100 * Alpha;");
+         source.replace("Propagate Prop(Sat) {Sat.ElapsedSecs = 140};", "Propagate Prop(Sat) {Sat.ElapsedSecs = 20};");
+         source.replace("Achieve DC(Sat.X = 7100, {Tolerance = 0.000001});",
+            "Target 'retain inner label' Inner {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = false};\n"
+            "Vary Inner(Beta = 1, {Perturbation = 0.01, Lower = 0, Upper = 5, MaxStep = 1});\n"
+            "Sat.Y = 100 * Beta;\nPropagate Prop(Sat) {Sat.ElapsedSecs = 20};\n"
+            "Achieve Inner(Beta = 3, {Tolerance = 0.000001});\n"
+            "Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.Earth.Longitude Sat.Earth.Latitude;\n"
+            "EndTarget; % retain inner comment\nPropagate Prop(Sat) {Sat.ElapsedSecs = 20};\n"
+            "Achieve DC(Alpha = 2, {Tolerance = 0.000001});");
+         source.replace("Propagate Prop(Sat) {Sat.ElapsedSecs = 160};", "Propagate Prop(Sat) {Sat.ElapsedSecs = 20};");
+      }
       const auto reference=QString(source).replace("Orb.SolverIterations = All;","Orb.SolverIterations = All;\nOrb.ShowPlot = false;")
          .replace("Ground.SolverIterations = All;","Ground.SolverIterations = All;\nGround.ShowPlot = false;")
          .replace("XY.SolverIterations = All;","XY.SolverIterations = All;\nXY.ShowPlot = false;");
       editor->setPlainText(reference); require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Independent solver reference failed");
       const auto expected=read(report); require(!expected.isEmpty(),"Solver produced no report");
+      if (nested && !capture.isEmpty()) {
+         QFile evidence(capture+".state.txt");
+         require(evidence.open(QIODevice::WriteOnly) && evidence.write(expected)==expected.size(),"Nested baseline evidence unavailable");
+      }
       std::istringstream input(expected.toStdString()); std::vector<std::array<double,4>> rows; std::array<double,4> row;
       while (input>>row[0]>>row[1]>>row[2]>>row[3]) rows.push_back(row);
-      require(rows.size()>3 && std::abs(rows.back()[0]-(optimizer ? 100 : 320))<1e-5,"Independent solve did not produce multiple iterations and the expected epoch");
+      require(rows.size()>3 && std::abs(rows.back()[0]-((optimizer || nested) ? 100 : 320))<1e-5,"Independent solve did not produce multiple iterations and the expected epoch");
       auto checkObjective=[&] {
          if (optimizer) {
             auto *alpha=Moderator::Instance()->GetInternalObject("Alpha"),*cost=Moderator::Instance()->GetInternalObject("Cost");
             require(alpha && cost && std::abs(alpha->GetRealParameter("Value")-2)<1e-5 && std::abs(cost->GetRealParameter("Value"))<1e-10,"Yukon did not retain the independently known quadratic optimum");
+         } else if (nested) {
+            auto *alpha=Moderator::Instance()->GetInternalObject("Alpha"),*beta=Moderator::Instance()->GetInternalObject("Beta");
+            require(alpha && beta && std::abs(alpha->GetRealParameter("Value")-2)<1e-6 && std::abs(beta->GetRealParameter("Value")-3)<1e-6,"Nested targeters did not retain independently known goals 2 and 3");
          } else require(std::abs(rows[rows.size()-2][1]-7100)<1e-6,"Differential corrector did not reach the requested objective");
       };
       checkObjective();
@@ -94,7 +123,7 @@ int main(int argc,char **argv)
       QMap<QString,size_t> allCounts;
       for (const auto &name:QStringList{"Orb","Ground","XY"}) allCounts[name]=curve(*window.plotReceiver()->model(name)).points.size();
       QMap<QString,std::vector<std::array<double,4>>> acceptedPaths;
-      for (const auto &mode:QStringList{"Current","None","All"}) {
+      for (const auto &mode:cleanup ? QStringList{} : QStringList{"Current","None","All"}) {
          for (const auto &name:QStringList{"Orb","Ground","XY"}) {
             const auto before=editor->toPlainText(); auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
             QWidget owner; QString error="Not applied";
@@ -129,6 +158,10 @@ int main(int argc,char **argv)
                      require(std::abs(path[i][j]-accepted[i][j])<(j==3 ? 1e-10 : 1e-8),"Current mode's accepted path differs from independently filtered None history");
                }
             }
+            if (nested && mode=="None" && name=="XY") {
+               for (const auto &point:points) if (point.x>20.00001)
+                  require(point.y>7150,"Accepted history retained inner initialization/outer trial samples");
+            }
             const auto &last=points.back();
             if (name=="Orb") {
                require(std::abs(last.x-final[1])<1e-8,"Orbit solver endpoint differs from report");
@@ -162,7 +195,53 @@ int main(int argc,char **argv)
             require(window.grab().save(capture+"."+mode+".png"),"Solver viewer capture failed");
          }
       }
-      std::cout<<(optimizer ? "Yukon optimization: " : "Differential corrector: ")<<"PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen\n";
+      if (cleanup) {
+         auto broken=source; broken.replace("Achieve Inner(Beta", "Save Alpha; % force inner runtime write failure\nAchieve Inner(Beta");
+         auto *fm=FileManager::Instance();
+         struct OutputRestore { FileManager *manager; std::string path; ~OutputRestore() { manager->SetAbsPathname("OUTPUT_PATH",path); } };
+         {
+            OutputRestore restore{fm,fm->GetAbsPathname("OUTPUT_PATH")};
+            fm->SetAbsPathname("OUTPUT_PATH",files.filePath("missing/nested").toStdString());
+            editor->setPlainText(broken);
+            require(window.runMission()==MainWindow::RunResult::Failed && !window.isRunning() && editor->toPlainText()==broken,"Inner write failure did not retain source/release mission");
+            require(SolverBranchCommand::GetPlotRunState(Gmat::RUNNING)==Gmat::RUNNING,"Failed nested run retained a trial display context");
+         }
+         editor->setPlainText(source); require(window.saveScriptTo(saved) && window.loadScript(saved) && window.buildScript(),"Nested write failure correction did not reopen");
+         const auto snapshot=window.missionSnapshot(); int inner=-1;
+         for (int i=0;i<snapshot.nodes.size();++i) {
+            const auto &node=snapshot.nodes[i];
+            if (node.type=="Propagate" && node.parent>=0 && snapshot.nodes[node.parent].label.contains("retain inner label")) inner=i;
+         }
+         require(inner>=0 && window.setBreakpoint(inner,true),"Inner solver breakpoint unavailable");
+         Debugger *controller=nullptr; for (auto *child:window.children()) if (auto *candidate=dynamic_cast<Debugger *>(child)) controller=candidate;
+         require(controller,"Nested cleanup debugger missing");
+         bool stopped=false,timedOut=false; QTimer poll,timeout; poll.setInterval(10); timeout.setSingleShot(true); timeout.setInterval(5000);
+         QObject::connect(&poll,&QTimer::timeout,&window,[&] { if (controller->isWaiting()) { stopped=true; window.stopMission(); } });
+         QObject::connect(&timeout,&QTimer::timeout,&window,[&] { timedOut=true; window.stopMission(); });
+         poll.start(); timeout.start(); const auto result=window.debugMission(); poll.stop(); timeout.stop();
+         require(stopped && !timedOut && result==MainWindow::RunResult::Stopped && !window.isRunning() && !controller->isActive() && !controller->isWaiting() && editor->toPlainText()==source,"Stop at inner command did not release nested execution/source");
+         require(SolverBranchCommand::GetPlotRunState(Gmat::RUNNING)==Gmat::RUNNING && window.setBreakpoint(inner,false),"Stopped nested run retained display context/breakpoint state");
+         require(window.runMission()==MainWindow::RunResult::Completed && read(report)==expected,"Nested correction/rerun changed pre-failure numerical reports"); checkObjective();
+         for (const auto &name:QStringList{"Orb","Ground","XY"}) {
+            const auto model=window.plotReceiver()->model(name);
+            require(model && curve(*model).points.size()==allCounts[name] && !curve(*model).points.back().solver,"Nested failure/Stop rerun lost plot history or retained trial classification");
+         }
+         auto *receiver=window.plotReceiver(); const std::string retained="RetainedScope";
+         require(receiver->CreateXyPlotWindow(retained,"",0,0,0,0,false,"","","",true,false),"Retained-scope fixture unavailable");
+         require(receiver->AddXyPlotCurve(retained,0,"Value",0xff0000),"Retained-scope curve unavailable");
+         receiver->SetMaxGlDataPoints(retained,2); receiver->TakeXYAction(retained,"SolverScope=outer"); receiver->XyPlotMarkBreak(retained,-1,-1);
+         const auto sample=[&](int value) { require(receiver->UpdateXyPlot(retained,"",value,Rvector(1,static_cast<double>(10*value)),"","","",false,true),"Retained-scope sample unavailable"); };
+         sample(1); sample(2); receiver->TakeXYAction(retained,"SolverScope=inner"); receiver->XyPlotMarkBreak(retained,-1,-1); sample(3); sample(4); sample(5);
+         require(curve(*receiver->model("RetainedScope")).points.size()==2,"Retained-scope limit not applied");
+         receiver->TakeXYAction(retained,"SolverScope=outer"); receiver->XyPlotClearFromBreak(retained,-1,-1,-1);
+         require(curve(*receiver->model("RetainedScope")).points.empty(),"Trimmed parent anchor failed to discard retained nested trial samples"); sample(6);
+         const auto &retainedPoints=curve(*receiver->model("RetainedScope")).points;
+         require(retainedPoints.size()==1 && retainedPoints.back().x==6 && retainedPoints.back().y==60 && !retainedPoints.back().connect,"Resumed retained history bridged discarded nested samples");
+         receiver->DeleteXyPlot(retained);
+         std::cout<<"PASS: runtime Save failure inside nested targeter, exact failed source retention/output-path restoration/Unicode correction, inner-command breakpoint Stop with full observer/context cleanup, corrected rerun with identical full reports/known goals/All histories; bounded retention discards scoped trials even after pruning a parent anchor.\n";
+         return 0;
+      }
+      std::cout<<(optimizer ? "Yukon optimization: " : nested ? "Nested differential correctors: " : "Differential corrector: ")<<"PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen\n";
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
 }

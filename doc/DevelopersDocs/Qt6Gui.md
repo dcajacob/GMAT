@@ -580,6 +580,13 @@ known spherical projection; the current script factory cannot exercise it.
 Ground station
 markers reject objects that are not body-fixed points. Replay does not mutate
 the retained histories. QPainter handles physical display scaling.
+
+The plot resource's **SolverIterations** setting controls trial history: All
+keeps all passes, Current replaces earlier iteration histories, and None keeps
+accepted passes. In nested targeters, an inner solution remains a trial while
+its enclosing targeter is solving. Plot filtering and colors respect that
+enclosing state, including inner initialization. Stop and failed execution
+release the display context before a corrected run.
 `ShowFootPrints = All` draws the legacy five-degree reference circles, with
 spherical geometry and dateline splitting even near a pole. These are not
 computed sensor coverage or visibility-horizon footprints.

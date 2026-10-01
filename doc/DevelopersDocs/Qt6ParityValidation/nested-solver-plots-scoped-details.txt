@@ -1,0 +1,33 @@
+Start testing: Oct 01 00:58 MDT
+----------------------------------------------------------
+64/76 Testing: QtGui.NestedSolverPlots
+64/76 Test: QtGui.NestedSolverPlots
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt" "--nested"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.NestedSolverPlots" start time: Oct 01 00:58 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=21 all=72
+Ground Current points=18 all=72
+XY Current points=18 all=72
+Orb None points=18 all=72
+Ground None points=18 all=72
+XY None points=18 all=72
+Orb All points=72 all=72
+Ground All points=72 all=72
+XY All points=72 all=72
+Nested differential correctors: PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen
+<end of output>
+Test time =   2.75 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.NestedSolverPlots" end time: Oct 01 00:59 MDT
+"QtGui.NestedSolverPlots" time elapsed: 00:00:02
+----------------------------------------------------------
+
+End testing: Oct 01 00:59 MDT
+
+qt-gui =   2.75 sec*proc
+

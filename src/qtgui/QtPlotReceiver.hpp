@@ -197,6 +197,8 @@ private:
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
       bool solverData = false;
+      QString solverScope;
+      QMap<QString,QMap<QString,quint64>> solverBreaks;
       QMap<QString,QColor> segmentColors;
       QMap<QString,QColor> orbitColors,targetColors;
       bool automaticGeometry = false;

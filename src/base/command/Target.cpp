@@ -623,6 +623,7 @@ bool Target::Initialize()
 //------------------------------------------------------------------------------
 bool Target::Execute()
 {
+   PlotExecutionScope plotScope(this);
    #ifdef DEBUG_TARGET_EXEC
    MessageInterface::ShowMessage
       ("\nTarget::Execute() entered, theSolver=<%p>'%s', ", (GmatBase*)theSolver,
@@ -804,6 +805,10 @@ bool Target::Execute()
                   currentCmd = branch[0];
                   targeterConverged = false;
                   StoreLoopData();
+                  // Inner Target initialization can publish trial samples.
+                  // Anchor the parent plot history before dispatching it.
+                  GetActiveSubscribers();
+                  SetSubscriberBreakpoint();
                   while (currentCmd != this)  
                   {
                      std::string type = currentCmd->GetTypeName();
@@ -816,8 +821,6 @@ bool Target::Execute()
                      }
                      currentCmd = currentCmd->GetNext();
                   }
-                  GetActiveSubscribers();
-                  SetSubscriberBreakpoint();
                   break;
                      
                case Solver::NOMINAL:

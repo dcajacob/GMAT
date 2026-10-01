@@ -39,6 +39,7 @@
 class GMAT_API OrbitPlot : public Subscriber
 {
 public:
+   virtual void SetRunState(Gmat::RunState state);
    OrbitPlot(const std::string &type, const std::string &name);
    OrbitPlot(const OrbitPlot &op);
    OrbitPlot& operator=(const OrbitPlot&);

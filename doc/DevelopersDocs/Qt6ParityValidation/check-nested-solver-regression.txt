@@ -1,0 +1,16 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 47: QtGui.SolverToggle
+1/4 Test #47: QtGui.SolverToggle ...............   Passed    0.62 sec
+    Start 62: QtGui.SolverPlots
+2/4 Test #62: QtGui.SolverPlots ................   Passed    1.38 sec
+    Start 63: QtGui.OptimizerPlots
+3/4 Test #63: QtGui.OptimizerPlots .............   Passed    1.36 sec
+    Start 65: QtGui.NestedSolverCleanup
+4/4 Test #65: QtGui.NestedSolverCleanup ........   Passed    0.93 sec
+
+100% tests passed, 0 tests failed out of 4
+
+Label Time Summary:
+qt-gui    =   4.30 sec*proc (4 tests)
+
+Total Test time (real) =   4.30 sec

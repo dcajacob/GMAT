@@ -1,0 +1,26 @@
+Start testing: Oct 01 01:07 MDT
+----------------------------------------------------------
+65/77 Testing: QtGui.NestedSolverCleanup
+65/77 Test: QtGui.NestedSolverCleanup
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt" "--nested-cleanup"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.NestedSolverCleanup" start time: Oct 01 01:07 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+PASS: runtime Save failure inside nested targeter, exact failed source retention/output-path restoration/Unicode correction, inner-command breakpoint Stop with full observer/context cleanup, corrected rerun with identical full reports/known goals/All histories; bounded retention discards scoped trials even after pruning a parent anchor.
+<end of output>
+Test time =   2.52 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.NestedSolverCleanup" end time: Oct 01 01:08 MDT
+"QtGui.NestedSolverCleanup" time elapsed: 00:00:02
+----------------------------------------------------------
+
+End testing: Oct 01 01:08 MDT
+
+qt-gui =   2.52 sec*proc
+

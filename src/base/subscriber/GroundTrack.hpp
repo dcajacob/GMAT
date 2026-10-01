@@ -43,6 +43,7 @@
 class GMAT_API GroundTrack : public Subscriber
 {
 public:
+   virtual void SetRunState(Gmat::RunState state);
    GroundTrack(const std::string &name);
    virtual ~GroundTrack();
    GroundTrack(const GroundTrack& gt);

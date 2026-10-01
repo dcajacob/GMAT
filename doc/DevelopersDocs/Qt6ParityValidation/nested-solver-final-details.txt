@@ -1,0 +1,127 @@
+Start testing: Oct 01 01:14 MDT
+----------------------------------------------------------
+47/77 Testing: QtGui.SolverToggle
+47/77 Test: QtGui.SolverToggle
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverToggleTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.SolverToggle" start time: Oct 01 01:14 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS: actual solver-loop Orbit/Ground/XY Toggle controls, exact source/comments/Undo/Redo/Unicode reopen, independent full iteration state/geodetic report, suppressed interval and separated resumed buffered histories, render capture and close/reopen retention. Current mode; no previous solver-mode or native rendering repeat.
+<end of output>
+Test time =   0.64 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.SolverToggle" end time: Oct 01 01:14 MDT
+"QtGui.SolverToggle" time elapsed: 00:00:00
+----------------------------------------------------------
+
+62/77 Testing: QtGui.SolverPlots
+62/77 Test: QtGui.SolverPlots
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.SolverPlots" start time: Oct 01 01:14 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=50 all=140
+Ground Current points=35 all=140
+XY Current points=35 all=140
+Orb None points=35 all=140
+Ground None points=35 all=140
+XY None points=35 all=140
+Orb All points=140 all=140
+Ground All points=140 all=140
+XY All points=140 all=140
+Differential corrector: PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen
+<end of output>
+Test time =   1.42 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.SolverPlots" end time: Oct 01 01:14 MDT
+"QtGui.SolverPlots" time elapsed: 00:00:01
+----------------------------------------------------------
+
+63/77 Testing: QtGui.OptimizerPlots
+63/77 Test: QtGui.OptimizerPlots
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt" "--optimizer"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.OptimizerPlots" start time: Oct 01 01:14 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=13 all=76
+Ground Current points=13 all=76
+XY Current points=13 all=76
+Orb None points=13 all=76
+Ground None points=13 all=76
+XY None points=13 all=76
+Orb All points=76 all=76
+Ground All points=76 all=76
+XY All points=76 all=76
+Yukon optimization: PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen
+<end of output>
+Test time =   1.30 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.OptimizerPlots" end time: Oct 01 01:14 MDT
+"QtGui.OptimizerPlots" time elapsed: 00:00:01
+----------------------------------------------------------
+
+64/77 Testing: QtGui.NestedSolverPlots
+64/77 Test: QtGui.NestedSolverPlots
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt" "--nested"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.NestedSolverPlots" start time: Oct 01 01:14 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=18 all=72
+Ground Current points=15 all=72
+XY Current points=15 all=72
+Orb None points=15 all=72
+Ground None points=15 all=72
+XY None points=15 all=72
+Orb All points=72 all=72
+Ground All points=72 all=72
+XY All points=72 all=72
+Nested differential correctors: PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen
+<end of output>
+Test time =   1.37 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.NestedSolverPlots" end time: Oct 01 01:15 MDT
+"QtGui.NestedSolverPlots" time elapsed: 00:00:01
+----------------------------------------------------------
+
+65/77 Testing: QtGui.NestedSolverCleanup
+65/77 Test: QtGui.NestedSolverCleanup
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT/GMAT/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT/GMAT/build/linux-gui/src/qtgui/GmatQtSolverPlotTests" "/home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt" "--nested-cleanup"
+Directory: /home/dan/GIT/GMAT/GMAT/application/bin
+"QtGui.NestedSolverCleanup" start time: Oct 01 01:15 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+PASS: runtime Save failure inside nested targeter, exact failed source retention/output-path restoration/Unicode correction, inner-command breakpoint Stop with full observer/context cleanup, corrected rerun with identical full reports/known goals/All histories; bounded retention discards scoped trials even after pruning a parent anchor.
+<end of output>
+Test time =   0.99 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.NestedSolverCleanup" end time: Oct 01 01:15 MDT
+"QtGui.NestedSolverCleanup" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 01 01:15 MDT
+
+qt-gui =   5.72 sec*proc
+

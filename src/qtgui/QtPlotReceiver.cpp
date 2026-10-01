@@ -528,7 +528,7 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
          curve.breakNext=true;
       }
    } else if (action=="IgnoreTimeSequence") entry->ignoreTimeSequence=true;
-   else if (action=="ClearData") entry->data->clear();
+   else if (action=="ClearData") { entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); }
    else { warn(name,action); return false; }
    refresh(*entry,true); return true;
 }
@@ -547,7 +547,7 @@ bool QtPlotReceiver::AddXyPlotCurve(const std::string &name,int index,const std:
 }
 bool QtPlotReceiver::DeleteAllXyPlotCurves(const std::string &name,const std::string &) { if (auto *entry=find(name)) { entry->data->curves.clear(); return true; } return false; }
 bool QtPlotReceiver::DeleteXyPlotCurve(const std::string &name,int index) { if (auto *entry=find(name)) return entry->data->curves.remove(index)>0; return false; }
-void QtPlotReceiver::ClearXyPlotData(const std::string &name) { if (auto *entry=find(name)) { entry->data->clear(); refresh(*entry,true); } }
+void QtPlotReceiver::ClearXyPlotData(const std::string &name) { if (auto *entry=find(name)) { entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); refresh(*entry,true); } }
 void QtPlotReceiver::XyPlotPenUp(const std::string &name) { if (auto *entry=find(name)) { entry->data->penDown=false; entry->data->breakLines(); } }
 void QtPlotReceiver::XyPlotPenDown(const std::string &name) { if (auto *entry=find(name)) entry->data->penDown=true; }
 void QtPlotReceiver::XyPlotDarken(const std::string &name,Integer factor,Integer index,Integer curve)
@@ -566,18 +566,33 @@ void QtPlotReceiver::XyPlotMarkPoint(const std::string &name,Integer index,Integ
 }
 void QtPlotReceiver::XyPlotMarkBreak(const std::string &name,Integer index,Integer curve)
 {
+   auto *entry=find(name); if (!entry) return;
    curves(name,curve,[&](PlotCurve &c) {
       const size_t position=index<0 ? c.points.size() : std::min(c.points.size(),static_cast<size_t>(index));
       const auto frame=position<c.points.size() ? c.points[position].frame : c.points.empty() ? 0 : c.points.back().frame+1;
+      if (!entry->solverScope.isEmpty()) entry->solverBreaks[entry->solverScope][c.name]=frame;
       if (!c.breaks.contains(frame)) c.breaks.append(frame);
       c.breakNext=true;
    });
 }
 void QtPlotReceiver::XyPlotClearFromBreak(const std::string &name,Integer which,Integer end,Integer curve)
 {
+   auto *entry=find(name); if (!entry) return;
    curves(name,curve,[&](PlotCurve &c) {
       if (c.breaks.isEmpty()) return;
-      const int index=which<0 ? c.breaks.size()-1 : static_cast<int>(which);
+      int index=which<0 ? c.breaks.size()-1 : static_cast<int>(which);
+      if (which<0 && !entry->solverScope.isEmpty()) {
+         const auto anchors=entry->solverBreaks.value(entry->solverScope);
+         if (!anchors.contains(c.name)) return;
+         const auto anchor=anchors.value(c.name);
+         index=c.breaks.indexOf(anchor);
+         if (index<0) {
+            // Retention may prune an older parent anchor while preserving the
+            // inner one. Its stored frame still identifies all trial samples.
+            index=0; while (index<c.breaks.size() && c.breaks[index]<anchor) ++index;
+            c.breaks.insert(index,anchor);
+         }
+      }
       if (index<0 || index>=c.breaks.size()) return;
       const auto frame=c.breaks[index];
       const auto last=end>=0 && end<c.breaks.size() ? c.breaks[end] : std::numeric_limits<quint64>::max();
@@ -642,6 +657,7 @@ bool QtPlotReceiver::DeactivateXyPlot(const std::string &name) { if (auto *entry
 bool QtPlotReceiver::ActivateXyPlot(const std::string &name) { if (auto *entry=find(name)) { entry->data->active=true; return true; } return false; }
 bool QtPlotReceiver::TakeXYAction(const std::string &name,const std::string &action)
 {
+   if (action.compare(0,12,"SolverScope=")==0) { if (auto *entry=find(name)) { entry->solverScope=text(action.substr(12)); return true; } return false; }
    if (action=="AlwaysRedraw") { SetGlUpdateFrequency(name,1); return find(name)!=nullptr; }
    if (action=="RunModeRedraw") return find(name)!=nullptr;
    if (action=="Clear") { ClearXyPlotData(name); return find(name)!=nullptr; }
@@ -690,7 +706,8 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
 {
    auto *entry=find(name); if (!entry) return false;
    const auto command=text(action).section('=',0,0), argument=text(action).section('=',1);
-   if (command=="SolverData") {
+   if (command=="SolverScope") entry->solverScope=argument;
+   else if (command=="SolverData") {
       entry->solverData=argument=="On";
       for (auto &curve:entry->data->curves)
          if (auto *point=Moderator::Instance()->GetSpacePoint(curve.name.toStdString()))
@@ -738,7 +755,7 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       bool ok=false; int value=argument.toInt(&ok); if (!ok || value<1 || value>1000) return false;
       if (command=="LatitudeLineCount") entry->data->latitudeLines=value; else entry->data->longitudeLines=value;
    } else if (command=="Reinitialize" || command=="ClearData" || command=="Reset") {
-      entry->data->clear(); entry->data->stations.clear();
+      entry->data->clear(); entry->data->stations.clear(); entry->solverBreaks.clear(); entry->solverScope.clear();
       if (command=="Reinitialize") { entry->data->curves.clear(); entry->segmentColors.clear(); entry->orbitColors.clear(); entry->targetColors.clear(); }
    } else if (command=="Refresh" || command=="RunComplete") {
       if (command=="RunComplete") entry->data->endOfRun=true;

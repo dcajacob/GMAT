@@ -29,6 +29,7 @@
  */
 //------------------------------------------------------------------------------
 
+#include "SolverBranchCommand.hpp"
 #include "OrbitPlot.hpp"
 #include "PlotInterface.hpp"       // for UpdateGlPlot()
 #include "SubscriberException.hpp" // for SubscriberException()
@@ -112,6 +113,11 @@ OrbitPlot::PARAMETER_TYPE[OrbitPlotParamCount - SubscriberParamCount] =
    Gmat::INTEGER_TYPE            //"MaxPlotPoints"
 };
 
+
+void OrbitPlot::SetRunState(Gmat::RunState state)
+{
+   Subscriber::SetRunState(SolverBranchCommand::GetPlotRunState(state));
+}
 
 //------------------------------------------------------------------------------
 // OrbitPlot(const std::string &type, const std::string &name)

@@ -29,6 +29,7 @@
  */
 //------------------------------------------------------------------------------
 
+#include "SolverBranchCommand.hpp"
 #include "GroundTrack.hpp"
 #include "PlotInterface.hpp"         // for XY plot
 #include "SubscriberException.hpp"
@@ -81,6 +82,11 @@ GroundTrack::PARAMETER_TYPE[GroundTrackParamCount - SubscriberParamCount] =
          Gmat::INTEGER_TYPE,
          Gmat::INTEGER_TYPE
       };
+
+void GroundTrack::SetRunState(Gmat::RunState state)
+{
+   Subscriber::SetRunState(SolverBranchCommand::GetPlotRunState(state));
+}
 
 //------------------------------------------------------------------------------
 // GroundTrack(const std::string &name)
@@ -1768,6 +1774,11 @@ bool GroundTrack::TakeAction(const std::string &action,
    if (action == "PenDown")
    {
       PlotInterface::TakeGroundTrackAction(instanceName, "PenDown");
+      return true;
+   }
+   if (action == "SolverScope")
+   {
+      PlotInterface::TakeGroundTrackAction(instanceName, "SolverScope=" + actionData);
       return true;
    }
    if (action == "MarkBreak" || action == "ClearFromBreak")

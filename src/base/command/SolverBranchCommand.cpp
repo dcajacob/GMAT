@@ -54,6 +54,43 @@
 #endif
 
 
+namespace {
+thread_local std::vector<SolverBranchCommand *> plotSolvers;
+void setPlotState(Publisher *publisher, Gmat::RunState state)
+{
+   if (!publisher) return;
+   for (auto *subscriber : publisher->GetSubscriberList())
+      if (subscriber->IsOfType("OrbitPlot") || subscriber->IsOfType("XYPlot") ||
+          subscriber->IsOfType("GroundTrack"))
+         subscriber->SetRunState(SolverBranchCommand::GetPlotRunState(state));
+}
+}
+
+Gmat::RunState SolverBranchCommand::GetPlotRunState(Gmat::RunState state)
+{
+   // An inner accepted pass is still a trial until every enclosing solver is
+   // accepted. This affects plot filtering/colors only, never publisher state.
+   for (const auto *command : plotSolvers)
+      if (command->currentRunState == Gmat::SOLVING) return Gmat::SOLVING;
+   return state;
+}
+
+SolverBranchCommand::PlotExecutionScope::PlotExecutionScope(SolverBranchCommand *value)
+   : command(value)
+{
+   // Track live states: Target/Optimize change from trial to accepted within
+   // one dispatch, and can execute an inner solver during initialization.
+   plotSolvers.push_back(command);
+}
+
+SolverBranchCommand::PlotExecutionScope::~PlotExecutionScope()
+{
+   plotSolvers.pop_back();
+   // Scope destruction also removes the context on Stop or runtime failure.
+   // Restore the enclosing display state, without replacing any engine error.
+   try { setPlotState(command->publisher, command->currentRunState); } catch (...) {}
+}
+
 //------------------------------------------------------------------------------
 //  SolverBranchCommand(const std::string &typeStr)
 //------------------------------------------------------------------------------
@@ -1297,8 +1334,13 @@ void SolverBranchCommand::LightenSubscribers(Integer denominator)
 //------------------------------------------------------------------------------
 void SolverBranchCommand::SetSubscriberBreakpoint()
 {
+   std::ostringstream scope;
+   scope << this;
    for (UnsignedInt i = 0; i < activeSubscribers.size(); ++i)
+   {
+      activeSubscribers[i]->TakeAction("SolverScope", scope.str());
       activeSubscribers[i]->TakeAction("MarkBreak");
+   }
 }
 
 //------------------------------------------------------------------------------
@@ -1315,8 +1357,13 @@ void SolverBranchCommand::ApplySubscriberBreakpoint(Integer bp)
 {
    std::stringstream breakpoint;
    breakpoint << bp;
+   std::ostringstream scope;
+   scope << this;
    for (UnsignedInt i = 0; i < activeSubscribers.size(); ++i)
+   {
+      activeSubscribers[i]->TakeAction("SolverScope", scope.str());
       activeSubscribers[i]->TakeAction("ClearFromBreak", breakpoint.str());
+   }
 }
 
 

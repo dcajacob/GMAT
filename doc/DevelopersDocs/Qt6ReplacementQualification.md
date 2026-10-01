@@ -118,8 +118,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Both active wx callers audited: solar-shadow lists hide Sun; primary/point-mass selection excludes the opposite pending gravity list. Qt checked lists provide add/remove, Select all/Clear, reorder, Cancel and Apply. Existing and user Asteroid choices, typed invalid/overlap rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact power/propagation agreement with separately written scripts covered. Body-only edits preserve surrounding raw configuration; Wayland dialogs inspected. Optional calculated-point mode, broader pending transitions, keyboard/focus/portal and shared Help remain unqualified. |
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Four wx pages audited and exposed through a dedicated Qt MDI editor. Pending controls, applied-only preview, Close Cancel/Discard, invalid correction/rollback, exact Undo/Redo, Run/Stop guards, body creation and Unicode save/reopen covered. Native Wayland pages inspected. Shared Help, wider keyboard/focus, portal choosers and multi-panel lifecycle cases remain unqualified. |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Texture chooser/preview, supported 3DS/OBJ model chooser, offset/rotation/scale bounds and orbit/target colors audited. Applied assets reach PlotCurve; native Wayland rendered checker texture and posed body model were inspected and exceed pixel-change gates while calculation reports stay identical. Invalid image/model/path rollback, default texture/model clearing and Unicode save/reopen covered. Wider formats, materials and relative paths remain unqualified. |
-| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. LivePlotFlush additionally checks intermediate propagation-block refreshes, recent-segment limits during actual command pauses, live close/reopen and true completion with unchanged state reports. SolverPlots and OptimizerPlots now cover DC/Yukon All/Current/None histories, report invariance, camera/replay and native close/reopen; SolverToggle covers Current-mode targeter toggles. Nested/toggle solver, broader body/station and runtime asset-loss combinations remain to qualify. |
-| `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories and report invariance; SolverToggle covers Current-mode targeter toggles. Nested/toggle solver and broader burn/hardware parameter execution remain to qualify. |
+| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. LivePlotFlush additionally checks intermediate propagation-block refreshes, recent-segment limits during actual command pauses, live close/reopen and true completion with unchanged state reports. SolverPlots and OptimizerPlots now cover DC/Yukon All/Current/None histories, report invariance, camera/replay and native close/reopen; SolverToggle covers Current-mode targeter toggles. NestedSolverPlots/Cleanup now add two-level targeter history, scoped initialization/trial filtering, failure/Stop recovery and bounded parent-anchor retention. Optimizer/mixed/deeper nested cases, broader body/station and runtime asset-loss combinations remain to qualify. |
+| `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories and report invariance; SolverToggle covers Current-mode targeter toggles. NestedSolverPlots/Cleanup add two-level targeter history, scoped initialization/trial filtering and failure/Stop/retention recovery. Optimizer/mixed/deeper nested cases and broader burn/hardware parameter execution remain to qualify. |
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Mu/radius/flattening validation and ordered PCK lists audited. Earth physical edits and Ceres configuration match separate raw-script reports. PCK Add/Replace/Remove/reorder/Cancel and wrong-type rollback covered; Luna startup PCK replacement/removal survives save/reopen with explicit kernel-list clear. Wider bodies/epochs/physical extremes and SPICE error-file diagnostics remain unqualified. |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Runtime source choices, protected built-in source/file/central-body fields, NAIF ID and SPK lists audited. New Asteroid Ceres from the resource dialog, copied Unicode SPK, ephemeris-relative reports and separate scripts agree; unknown-ID and missing-SPK execution failures recover after correction. Dormant wx TwoBody/source-file controls are not enabled. Wider bodies, coverage and relative kernel paths remain unqualified. |
@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle covers Current-mode targeter toggles. Nested/toggle solver and broader camera/frame combinations remain pending. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle covers Current-mode targeter toggles. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
@@ -5726,3 +5726,84 @@ rebuilt launcher/binary from 4ba98b6 because product source did not change here.
 Optimizer toggles, nested solver cases, broader plugin/error settings and the
 original native desktop/portal gates remain open. Windows/macOS are deferred;
 no optimizer algorithm or mathematical engine was rewritten.
+
+
+## Nested targeter plot scope, initialization and recovery (2026-10-01)
+
+NestedSolverPlots adds a separate --nested fixture to the solver viewer harness,
+with two correctly paired differential-corrector Target sequences. Alpha starts
+at 1 and targets 2; inner Beta starts at 1 and targets 3. Both controls affect
+spacecraft state before propagation. Pre/three branch/post propagations are 20
+seconds each, so the accepted final elapsed time is 100 seconds. The complete
+iteration report and both independently known goals are checked against a
+separately source-configured no-display baseline. Plot-mode edits retain pending
+Apply, exact Undo/Redo, labels/comments and Unicode save/reopen.
+
+The original check-nested-solver-plots-initial.txt failed: Current Ground/XY
+retained 27 points while None retained 45, and both disagreed with the intended
+accepted history. audit-nested-solver-display.txt traces two causes. The inner
+solver's globally published accepted state previously reclassified plot data
+while its parent was still solving. Current-mode clearing also used the latest
+inner breakpoint when the outer solver needed its own anchor. The fixes are
+plot metadata: Target/Optimize scope their complete dispatch with live solver
+states; Orbit/Ground/XY alone consult the effective enclosing plot state.
+Publisher state, report subscriber filtering and all mathematical execution
+remain unchanged. This separation matters because Propagate consults publisher
+state when setting up stop conditions. Per-solver/per-curve frame anchors now
+identify the matching Current-mode clear, including an ancestor pruned from the
+ordinary breakpoint list by point retention.
+
+The intermediate branch-only change passed check-nested-solver-plots-scoped.txt
+(2.75 seconds), but native inspection of nested-solver-wayland-20261001.Current.png
+revealed initialization samples still present through elapsed 40 seconds. That
+passing result is insufficient for complete nested scope. An inner Target can
+execute during its parent's initialization, outside ExecuteBranch. A complete
+Target/Optimize dispatch scope and the parent Target breakpoint placed before
+inner initialization cover that path. check-nested-solver-initialization.txt
+retains the resulting trial-classification failure while this was corrected.
+The final None XY assertion rejects all post-20-second samples below X=7150,
+which excludes the independently identified initialization/outer trial paths;
+endpoints still must match the numerical report exactly within display tolerances.
+
+check-nested-solver-final.txt passes all five affected suites in 5.73 seconds:
+ordinary SolverPlots, OptimizerPlots, SolverToggle, NestedSolverPlots and
+NestedSolverCleanup. Final All retains 72 samples per plot. Current retains
+Orbit 18 and Ground/XY 15; None retains 15 in each. Current Ground/XY paths agree
+with None within 1e-8 coordinates and 1e-10 days; they contain no trial samples.
+Orbit Current keeps its established latest trial in addition to accepted history.
+Camera target/final Orbit state, Ground geodetic endpoints and XY elapsed/state
+endpoints agree with reports. The final native Wayland run and all three modes'
+scene captures are nested-solver-wayland-final-20261001.txt/.Current/.None/.All.png
+and their individual plot images. Current and All tiled captures were inspected:
+full textured Earth/starfield, Ground map, distinct XY trials/accepted history,
+replay/Latest restoration and immediate viewer close/reopen pass. This does not
+qualify top-level compositor minimize/restore or fresh native input.
+
+The pre-fix nested-before-fix.state.txt and final native .state.txt reports contain
+19 complete explicit state/geodetic rows and compare byte identical. Both SHA-256
+values are 82c7ee3f13eee1bccf40ff66cb989f993d666fe1c787fa12bfa5abdcdef723e2;
+nested-report-invariance.txt records the comparison and known goals. Numerical
+or report behavior was not rewritten to make the display checks pass.
+
+NestedSolverCleanup executes Save Alpha inside the inner solver with an invalid
+output directory, retains the failed source, restores the output path and
+corrects/reopens the Unicode mission. An actual debugger breakpoint in a command
+owned by the inner Target triggers Stop. Both failures remove the nested trial
+context and release the debugger/mission. A corrected rerun reproduces the full
+report, goals and All histories. Its two-point synthetic retention case discards
+all inner trial samples from the outer anchor even after trimming that anchor,
+then requires a disconnected resumed sample. The initial harness called the
+clear helper without its required break index; build-nested-solver-plots.txt
+retains the compile error. check-nested-solver-retention-stale.txt ran the prior
+binary and is not evidence for that added assertion. The rebuilt assertion
+passes in check-nested-solver-retention-built.txt (2.52 seconds), and the final
+five-suite regression includes it. Stop breakpoint ownership was tightened to
+the inner node label before the final checks. Raw failed and intermediate
+observations are retained; earlier broad suites were repeated only where these
+material shared display changes affected their behavior.
+
+build-nested-solver-plots.txt records the final real GmatQt-R2026a relink, GmatQt
+launcher recreation and selected plugin relinks. No full-suite repeat was made.
+The covered two-level Target case closes that bounded viewer gap. Optimizer
+nested/toggle and mixed/deeper solver cases, other plugin/workflow requirements
+and the original compositor/portal gates remain open. Windows/macOS are deferred.

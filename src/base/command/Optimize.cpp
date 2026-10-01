@@ -567,6 +567,7 @@ bool Optimize::Initialize()
 //------------------------------------------------------------------------------
 bool Optimize::Execute()
 {
+   PlotExecutionScope plotScope(this);
    #ifdef DEBUG_OPTIMIZE_EXEC
    MessageInterface::ShowMessage("Optimize::Execute() <%p> entered\n", this);
    #endif

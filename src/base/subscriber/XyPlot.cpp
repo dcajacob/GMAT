@@ -29,6 +29,7 @@
  */
 //------------------------------------------------------------------------------
 
+#include "SolverBranchCommand.hpp"
 #include "XyPlot.hpp"
 #include "PlotInterface.hpp"         // for XY plot
 #include "SubscriberException.hpp"
@@ -587,6 +588,11 @@ bool XyPlot::TakeAction(const std::string &action,
    else if (action == "MarkPoint")
    {
       return MarkPoint();
+   }
+   else if (action == "SolverScope")
+   {
+      PlotInterface::TakeXYAction(instanceName, "SolverScope=" + actionData);
+      return true;
    }
    else if (action == "MarkBreak")
    {
@@ -1482,7 +1488,7 @@ void XyPlot::SetRunState(Gmat::RunState rs)
       PlotInterface::TakeXYAction(instanceName, "AlwaysRedraw");
    else
       PlotInterface::TakeXYAction(instanceName, "RunModeRedraw");
-   Subscriber::SetRunState(rs);
+   Subscriber::SetRunState(SolverBranchCommand::GetPlotRunState(rs));
 }
 
 //---------------------------------

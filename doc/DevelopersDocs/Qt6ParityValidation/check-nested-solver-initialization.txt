@@ -1,0 +1,28 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 47: QtGui.SolverToggle
+1/5 Test #47: QtGui.SolverToggle ...............   Passed    0.61 sec
+    Start 62: QtGui.SolverPlots
+2/5 Test #62: QtGui.SolverPlots ................   Passed    1.32 sec
+    Start 63: QtGui.OptimizerPlots
+3/5 Test #63: QtGui.OptimizerPlots .............   Passed    1.32 sec
+    Start 64: QtGui.NestedSolverPlots
+4/5 Test #64: QtGui.NestedSolverPlots ..........***Failed    0.75 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb Current points=18 all=72
+Ground Current points=18 all=72
+FAIL: Ground solver history has incorrect trial classification
+
+    Start 65: QtGui.NestedSolverCleanup
+5/5 Test #65: QtGui.NestedSolverCleanup ........   Passed    0.96 sec
+
+80% tests passed, 1 tests failed out of 5
+
+Label Time Summary:
+qt-gui    =   4.96 sec*proc (5 tests)
+
+Total Test time (real) =   4.97 sec
+
+The following tests FAILED:
+	 64 - QtGui.NestedSolverPlots (Failed)                  qt-gui
+Errors while running CTest

@@ -1,0 +1,32 @@
+Nested solver plot source audit, 2026-10-01
+
+Interpreter::ValidateSolverCmdLevels recursively permits direct nested solver
+branches. It rejects solver sequence commands placed directly inside unrelated
+control branches; the test uses two properly paired Target sequences.
+Target::Execute INITIALIZING can execute the inner Target before the outer
+SetSubscriberBreakpoint. Branch-only scope is insufficient for these emissions.
+Publisher::SetRunState updates subscribers globally. Inner SOLVEDPASS previously
+reclassified plots despite an outer SOLVING pass. Propagate.cpp consults the
+publisher state for stop-condition setup; changing that global state would alter
+the numerical engine. Publisher/ReportFile behavior is deliberately preserved.
+Target/Optimize now scope display classification over each complete dispatch.
+Live enclosing command states let the plot-only GetPlotRunState override an
+inner accepted state until its enclosing solver passes are accepted. OrbitPlot,
+GroundTrack and XyPlot use that classification; other subscribers do not.
+The scope restores the enclosing display state and removes itself on normal
+return, Stop and exceptions. Target's parent plot breakpoint precedes nested
+initialization, without reordering solver commands or mathematical operations.
+SolverBranchCommand now sends SolverScope metadata before plot MarkBreak and
+ClearFromBreak. XyPlot/GroundTrack forward it through existing optional receiver
+actions. Qt retains per-solver/per-curve frame anchors, instead of clearing from
+whichever nested anchor happens to be latest. Trimmed ancestors retain their
+separate stored frame; cleared/reinitialized plots discard the scope metadata.
+wx ignores the optional scoped-break action; nested wx Current visual parity is
+not claimed by the Qt renderer evidence. No new plot API or source keyword was
+added and no numerical solver algorithm was modified.
+
+Evidence: original failing check-nested-solver-plots-initial.txt, preserved
+before/after state reports, final affected five-suite regression, native final
+histories/captures, runtime nested Save failure and actual inner breakpoint Stop,
+corrected rerun and retained-parent-anchor sample check. Earlier branch-only
+passing evidence is insufficient for the later initialization requirement.

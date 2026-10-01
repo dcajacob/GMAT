@@ -1,0 +1,10 @@
+Nested targeter numerical report comparison, 2026-10-01
+
+cmp nested-before-fix.state.txt nested-solver-wayland-final-20261001.state.txt
+Result: byte identical (19 complete explicit state/geodetic report rows).
+SHA-256 for both:
+82c7ee3f13eee1bccf40ff66cb989f993d666fe1c787fa12bfa5abdcdef723e2
+
+Known independent goals: Alpha=2, Beta=3, each within 1e-6; final elapsed=100
+seconds within 1e-5. Every GUI mode run also compares full report bytes with a
+separately source-configured no-display baseline and checks both goals.

@@ -59,6 +59,9 @@ public:
 
    virtual GmatCommand*    GetNext();
    virtual bool            Initialize();
+   // Plot-only classification: the publisher state remains available unchanged
+   // to propagation, report subscribers and the numerical solver machinery.
+   static Gmat::RunState    GetPlotRunState(Gmat::RunState state);
    virtual bool            TakeAction(const std::string &action, 
                                       const std::string &actionData = "");
    virtual void            RunComplete();
@@ -107,6 +110,16 @@ public:
          Integer updatedParameterId);
 
 protected:
+   class PlotExecutionScope
+   {
+   public:
+      explicit PlotExecutionScope(SolverBranchCommand *command);
+      ~PlotExecutionScope();
+      PlotExecutionScope(const PlotExecutionScope &) = delete;
+      PlotExecutionScope &operator=(const PlotExecutionScope &) = delete;
+   private:
+      SolverBranchCommand *command;
+   };
    // Mode definitions for the state machine overrides
    enum solverStartMode
    {
