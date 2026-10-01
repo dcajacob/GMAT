@@ -5,6 +5,7 @@
 #include <functional>
 class QPlainTextEdit;
 class QLineEdit;
+class QCheckBox;
 class QFile;
 class QTimer;
 class QLabel;
@@ -20,11 +21,15 @@ private:
    void searchFile(qint64 start);
    void stopSearch();
    QLineEdit *searchText;
+   QCheckBox *matchCase,*wholeWords;
+   QString needle;
+   Qt::CaseSensitivity searchCase=Qt::CaseSensitive;
+   bool searchWholeWords=false;
    QPushButton *nextMatch,*stop;
    QFile *searchInput;
    QTimer *searchTimer;
-   QByteArray needle,overlap,visibleBytes;
-   qint64 nextOffset=0,visibleStart=0;
+   QByteArray overlap,visibleBytes;
+   qint64 nextOffset=0,visibleStart=0,searchFrom=0;
    QString path;
    qint64 currentPage=0;
    QPlainTextEdit *text;

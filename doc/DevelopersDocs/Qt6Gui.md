@@ -1120,11 +1120,14 @@ if the file shrank, the page is adjusted automatically. Read failures retain the
 previous display and show an error. Viewing a report does not modify its file.
 
 Report windows also provide **Search file**, which starts at the beginning and
-searches the complete file for the entered text, matching case exactly. **Next
-match** continues after the current result; **Stop** cancels a scan. Searches run
-in bounded chunks, navigate to the matching page, and highlight the visible part
-of the result. A message identifies matches continuing on the next page. The
-existing **Find…** control remains available for richer searches within one page.
+searches the complete file for the entered text. **Match case** is enabled by
+default; turn it off for case-insensitive Unicode text. **Whole words** excludes
+matches within longer names, including names containing Unicode letters or
+combining marks. **Next match** continues after the current result; **Stop**
+cancels a scan. Changing an option cancels the scan and resets Next match.
+Searches run in bounded chunks, navigate to the matching page, and highlight the
+visible original text. A message identifies matches continuing on the next page.
+The existing **Find…** control independently searches the displayed page.
 
 ### Propagate stop-condition selectors
 

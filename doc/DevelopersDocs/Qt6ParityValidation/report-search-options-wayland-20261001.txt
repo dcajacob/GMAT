@@ -1,0 +1,1 @@
+PASS actual Output case/whole-word controls; Unicode/different-byte-length/supplementary/CRLF and chunk-boundary search, Next beyond 18 MiB, embedded-word exclusion, options/Stop/navigation/close cancellation and missing-file recovery; complete fixture/source/calculation bytes unchanged.

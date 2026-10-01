@@ -102,9 +102,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
-| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Case-sensitive full-file search added; richer full-file search options remain pending. |
+| `src/gui/output/ReportFilePanel.hpp` | Read-only, unwrapped report text, full path in title, text selection, close and unavailable-file handling tested. Standard Qt copy controls provided; large reports now have bounded paging, navigation, page-local search and reload recovery. Complete-file Match case/Whole words now cover Unicode and stream/page boundaries, Next beyond 18 MiB, cancellation/close and missing-file recovery, with unchanged complete input/source/calculation bytes and inspected native Wayland controls. Broader encoding and in-scan replacement remain unqualified. |
 | `src/gui/output/EventFilePanel.hpp` | Active read-only unwrapped text/Close, output-path resolution, FileWasWritten guard and disabled Help audited. Qt Output uses ReportViewer for generated reports and an explanatory read-only view for unwritten locators. EventLocatorTests covers generated contents, pending source, rebuild, Disabled, WriteReport-off and Manual-without-FindEvents stale-file rejection, Manual FindEvents recovery, close/reopen and unchanged source. Output windows explicitly activate; native Wayland generated/unwritten views inspected. Broader lifecycle/storage/keyboard cases remain pending. |
-| `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Broader search/menu and very large directory cases remain under their separate audits. |
+| `src/gui/output/CompareReportPanel.hpp` | wx read-only, unwrapped comparison output and Close audited. Qt comparison workspace uses the paged ReportViewer with complete-file search and Close. ComparisonTests covers complete results/export beyond 16 MiB, error summaries, Stop/close and generated-report agreement; native Wayland layout inspected. Shared ReportViewer full-file case/whole-word controls have ReportSearchOptions evidence; broader comparison menu and very large directory cases remain under their separate audits. |
 | `src/gui/mission/UndockedMissionPanel.hpp` | Active MissionTree/GmatNotebook undock/restore caller audited. wx creates a separate mission tree and vertical MissionTreeToolBar, restoring the notebook on destruction. Qt MissionNavigation now moves the same tree and its toolbar into a mission-only floating dock, retaining Resources/Output tabs, selection and editing callbacks. Dock/Close restores the Mission tab; saved detached placement restores. MissionNavigationTests and native Wayland captures cover repeated lifecycle, filters, real command editing, exact source/Undo and independent reopened reports. Broader compositor minimize/input and mixed desktop layouts remain under shared window qualification. |
 | `src/gui/mission/TreeViewOptionDialog.hpp` | Active MissionTreeToolBar caller audited. Sorted command checklist, Check/Uncheck All and Include/Exclude Apply update the visible MissionTree without editing the mission; Equation and ScriptEvent map to GMAT and BeginScript. Qt MissionNavigation provides sorted engine/current-command checklists, Check/Uncheck All, Include/Exclude Apply, Show all and collapsed/level 1–3/all expansion. Equation/ScriptEvent aliases and branch context/boundaries are retained without editing source. MissionNavigationTests covers actual dialog operations, unapplied Close, nested branches, exact snapshot/source/Undo and native Wayland layout; see the mission-navigation appendix. |
 | `src/gui/view/ViewTextDialog.hpp` | Read-only multiline/Close and optional single-line OK/Cancel modes audited. Active callers are About license text, folder-run diagnostics and comparison results; editable rename caller is commented. Qt comparison/read-only report text is covered by ComparisonTests; About/license and folder-run delivery remain required under their separate unaudited rows. Shared keyboard/font/menu cases remain pending. |
@@ -6632,3 +6632,81 @@ portal choosers. No compositor policy was bypassed or repeated. Code-500 interna
 gaps, SPK numerical gap traversal and broader reader regimes retain their prior
 limits. The full Linux replacement goal remains active; Windows/macOS remain
 deferred and MATLAB remains outside the selected runtime.
+
+
+## Complete-file report case and whole-word search — 2026-10-01
+
+The shared report gate still lacked complete-file case/whole-word options;
+page-local Find offered those options only within the displayed page. ReportViewer
+now adds Match case (enabled by default) and Whole words to its complete-file
+literal search. Changing an option cancels the scan and clears stale Next match;
+Search file starts again at the beginning. Page-local Find remains independent.
+The same ReportViewer component serves numerical reports and comparison output.
+The active wx ReportFilePanel read-only/unwrapped Copy/Select All/Close contract
+is retained; wx's Help button is disabled.
+
+The scanner still reads one MiB per zero-interval Qt timer callback. It decodes
+UTF-8-aligned bounded windows and compares Unicode text with Qt case semantics.
+The original matched substring supplies the actual byte length and visible
+selection, so a query such as k selecting the Kelvin sign does not lose byte
+positions. Word context recognizes Unicode letters/numbers, connector
+punctuation and combining marks, including supplementary characters. Tail
+candidates wait for complete right context; Next starts with preceding context
+and skips earlier byte offsets. Carry is bounded by four bytes per query UTF-16
+unit plus 20 context bytes and up to three UTF-8 alignment bytes (the existing
+query limit is 32768 units). There is no
+whole-file buffer or numerical-engine change.
+
+GmatQtReportSearchOptionTests / QtGui.ReportSearchOptions opens the actual Output
+ReportViewer after a known two-row 2/5 engine calculation and Unicode mission
+Save/reopen. check-report-search-options-initial.txt fails the missing controls.
+The focused fixture then covers:
+
+- Existing exact-case literal defaults; case-insensitive accented Unicode across
+  a page/chunk boundary, original visible selection and the next match beyond
+  18 MiB; distinct UTF-8 byte lengths (k/Kelvin sign), supplementary case pairs
+  and CRLF-spanning literal selection.
+- Whole-word exclusion of Orbiting at a chunk edge, underscores, adjacent Greek/
+  supplementary letters and combining marks, with exact first/next valid word
+  offsets and exhaustion feedback.
+- Options/Stop/navigation cancellation, failed search when the file disappears,
+  restoration/recovery and closing the viewer during an active scan. All complete
+  large-file, engine report, editor source and saved-script bytes stay unchanged.
+
+After the first implementation passed, a stronger overlap case reproduced a
+false whole-word match: xedge's retained tail began with edge after the preceding
+x had been discarded. check-report-search-options-overlap.txt preserves that
+failure. The corrected window rejects a contextless first retained character
+already evaluated in the preceding window and retains enough context for short
+Unicode queries. Final checks also include embedded names at the old and final
+overlap boundaries; this is an actual behavioral correction, not a relaxed
+assertion.
+
+check-report-search-options-fixed.txt passes Files (2.51 s) and the initial
+ReportSearchOptions (1.87 s), total 4.39 s. Files covers existing UTF-8/CRLF page
+partitioning, literal cross-page search/Next, paging beyond 16 MiB, Stop and
+replacement/missing-file reload. After the final whole-word overlap correction,
+only ReportSearchOptions is rerun and passes in
+check-report-search-options-final.txt, 2.00 s. The broader Files check predates
+that last small correction; its case-sensitive literal defaults remain outside
+the added whole-word condition. No complete Qt/viewer/plugin/numerical matrix
+was repeated. build-report-search-options-final.txt records actual
+GmatQt-R2026a relink and GmatQt launcher recreation.
+
+report-search-options-wayland-20261001.txt passes the final focused case once on
+native Wayland. Both .report.png and workspace .png captures were inspected:
+Match case/Whole words, complete-file controls, selected original Unicode result
+on page 19, navigation and Completed status fit and remain visible. The full
+.calculation.txt report is exactly two rows (2 and 5), byte identical before and
+after all search operations; SHA-256 is b4c2d9b5e354b00d5f5840deec4dd744f79b8851f8ea1d97c3be47e932953ac5.
+The harness also compares every byte of the large generated input and saved
+source. audit-report-search-options.txt records the implementation/source
+contracts and regression selection.
+
+This closes the documented complete-file case/whole-word control gap. Regular
+expressions, normalized/expanded case folds, arbitrary encodings, file replacement
+during a scan and extreme record-count regimes are not claimed by these cases.
+Native widget/rendering evidence does not qualify fresh compositor input,
+top-level Wayland minimize/restore or portal choosers; those blocked experiments
+were not repeated. The original full Linux replacement goal and other active
+workflow/plugin gates remain open. Windows/macOS are deferred and MATLAB is off.

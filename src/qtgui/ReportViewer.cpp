@@ -11,6 +11,7 @@
 #include <QSignalBlocker>
 #include <QShortcut>
 #include <QLineEdit>
+#include <QCheckBox>
 #include <QTimer>
 #include <QTextCursor>
 #include <algorithm>
@@ -29,33 +30,73 @@ ReportViewer::ReportViewer(const QString &path,const QString &name,QWidget *pare
    if (compare) connect(button("Compare…","reportCompare"),&QPushButton::clicked,this,compare);
    auto *fileSearch=new QHBoxLayout; layout->addLayout(fileSearch);
    searchText=new QLineEdit(this); searchText->setObjectName("reportFileSearchText"); searchText->setMaxLength(32768);
-   searchText->setPlaceholderText("Find in complete file (case-sensitive)…"); fileSearch->addWidget(searchText,1);
+   searchText->setPlaceholderText("Find in complete file…"); fileSearch->addWidget(searchText,1);
    auto *searchAll=new QPushButton("Search file",this); searchAll->setObjectName("reportSearchFile"); fileSearch->addWidget(searchAll);
    nextMatch=new QPushButton("Next match",this); nextMatch->setObjectName("reportNextMatch"); nextMatch->setEnabled(false); fileSearch->addWidget(nextMatch);
    stop=new QPushButton("Stop",this); stop->setObjectName("reportStopSearch"); stop->setEnabled(false); fileSearch->addWidget(stop);
+   auto *options=new QHBoxLayout; layout->addLayout(options);
+   matchCase=new QCheckBox("Match case",this); matchCase->setObjectName("reportFileMatchCase"); matchCase->setChecked(true); options->addWidget(matchCase);
+   wholeWords=new QCheckBox("Whole words",this); wholeWords->setObjectName("reportFileWholeWords"); options->addWidget(wholeWords); options->addStretch();
    searchInput=new QFile(path,this); searchTimer=new QTimer(this); searchTimer->setInterval(0);
    connect(searchAll,&QPushButton::clicked,this,[this] { searchFile(0); });
    connect(searchText,&QLineEdit::returnPressed,this,[this] { searchFile(0); });
    connect(nextMatch,&QPushButton::clicked,this,[this] { searchFile(nextOffset); });
    connect(stop,&QPushButton::clicked,this,[this] { stopSearch(); status->setText("File search stopped. Displayed content is unchanged."); });
    connect(searchText,&QLineEdit::textChanged,this,[this] { stopSearch(); nextMatch->setEnabled(false); });
+   for (auto *option:{matchCase,wholeWords}) connect(option,&QCheckBox::toggled,this,[this] {
+      stopSearch(); nextMatch->setEnabled(false);
+      status->setText("Search options changed. Search file starts from the beginning.");
+   });
    connect(searchTimer,&QTimer::timeout,this,[this] {
-      const auto start=searchInput->pos()-overlap.size();
+      qint64 start=searchInput->pos()-overlap.size();
       const auto block=searchInput->read(1024*1024);
       if (searchInput->error()!=QFileDevice::NoError) { stopSearch(); status->setText("File search failed: "+searchInput->errorString()); return; }
-      const auto buffer=overlap+block; const auto match=buffer.indexOf(needle);
-      if (match>=0) {
-         const qint64 offset=start+match; nextOffset=offset+needle.size(); stopSearch();
+      auto buffer=overlap+block;
+      // Next match starts with up to four preceding bytes for word context.
+      // Drop an initial partial UTF-8 character before decoding the window.
+      qsizetype leading=0;
+      while (leading<buffer.size() && (static_cast<unsigned char>(buffer[leading]) & 0xc0)==0x80) ++leading;
+      buffer.remove(0,leading); start+=leading;
+      const auto decoded=QString::fromUtf8(buffer); const bool atEnd=searchInput->atEnd();
+      auto wordAt=[&](qsizetype index) {
+         if (index<0 || index>=decoded.size()) return false;
+         char32_t character=decoded[index].unicode();
+         if (decoded[index].isLowSurrogate() && index>0 && decoded[index-1].isHighSurrogate())
+            character=QChar::surrogateToUcs4(decoded[index-1],decoded[index]);
+         else if (decoded[index].isHighSurrogate() && index+1<decoded.size() && decoded[index+1].isLowSurrogate())
+            character=QChar::surrogateToUcs4(decoded[index],decoded[index+1]);
+         const auto category=QChar::category(character);
+         return QChar::isLetterOrNumber(character) || category==QChar::Punctuation_Connector ||
+               category==QChar::Mark_NonSpacing || category==QChar::Mark_SpacingCombining || category==QChar::Mark_Enclosing;
+      };
+      qsizetype from=0;
+      while (true) {
+         const auto match=decoded.indexOf(needle,from,searchCase);
+         if (match<0) break;
+         // Defer tail candidates until their complete text and right word
+         // context are available. Four bytes per UTF-16 unit bound overlap.
+         if (!atEnd && match>decoded.size()-needle.size()-4) break;
+         from=match+1;
+         // The first retained character has no left context. It was already
+         // evaluated in the preceding window, so cannot start a new word here.
+         if (searchWholeWords && ((start>0 && match==0) || wordAt(match-1) || wordAt(match+needle.size()))) continue;
+         const qint64 offset=start+decoded.left(match).toUtf8().size();
+         if (offset<searchFrom) continue;
+         const auto matched=decoded.mid(match,needle.size());
+         nextOffset=offset+matched.toUtf8().size(); stopSearch();
          if (!loadPage(offset/(1024*1024))) return;
          if (offset>=visibleStart+visibleBytes.size() && !loadPage(currentPage+1)) return;
          const auto prefix=QString::fromUtf8(visibleBytes.left(offset-visibleStart)).replace("\r\n","\n");
          auto cursor=text->textCursor(); cursor.setPosition(prefix.size());
-         cursor.setPosition(std::min<qsizetype>(text->toPlainText().size(),prefix.size()+QString::fromUtf8(needle).size()),QTextCursor::KeepAnchor);
+         const auto selected=QString(matched).replace("\r\n","\n");
+         cursor.setPosition(std::min<qsizetype>(text->toPlainText().size(),prefix.size()+selected.size()),QTextCursor::KeepAnchor);
          text->setTextCursor(cursor); text->ensureCursorVisible(); nextMatch->setEnabled(true);
          status->setText(QString("Match at byte %1.%2").arg(offset+1).arg(nextOffset>visibleStart+visibleBytes.size() ? " Match continues on the next page." : "")); return;
       }
-      if (block.isEmpty() || searchInput->atEnd()) { stopSearch(); status->setText("No further matches. Search file starts again from the beginning."); return; }
-      overlap=buffer.right(needle.size()-1);
+      if (block.isEmpty() || atEnd) { stopSearch(); status->setText("No further matches. Search file starts again from the beginning."); return; }
+      qsizetype retain=std::max<qsizetype>(0,buffer.size()-(needle.size()*4+20));
+      while (retain>0 && (static_cast<unsigned char>(buffer[retain]) & 0xc0)==0x80) --retain;
+      overlap=buffer.mid(retain);
       status->setText(QString("Searching complete file… %1 of %2 bytes").arg(searchInput->pos()).arg(searchInput->size()));
    });
    status=new QLabel(this); status->setObjectName("reportPageStatus"); status->setWordWrap(true); layout->addWidget(status);
@@ -121,9 +162,10 @@ void ReportViewer::stopSearch()
 }
 void ReportViewer::searchFile(qint64 start)
 {
-   stopSearch(); nextMatch->setEnabled(false); needle=searchText->text().toUtf8();
+   stopSearch(); nextMatch->setEnabled(false); needle=searchText->text();
+   searchFrom=start; searchCase=matchCase->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive; searchWholeWords=wholeWords->isChecked();
    if (needle.isEmpty()) { status->setText("Enter text to search for."); return; }
-   if (!searchInput->open(QIODevice::ReadOnly) || !searchInput->seek(start)) {
+   if (!searchInput->open(QIODevice::ReadOnly) || !searchInput->seek(std::max<qint64>(0,start-4))) {
       status->setText("Cannot search report: "+searchInput->errorString()); searchInput->close(); return;
    }
    stop->setEnabled(true); status->setText("Searching complete file…"); searchTimer->start();
