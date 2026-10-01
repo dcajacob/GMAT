@@ -29,10 +29,36 @@ bool vectorValue(QString value,std::array<double,3> &result)
    for (int i=0;i<3;++i) { bool ok=false; result[i]=fields[i].toDouble(&ok); if (!ok || !std::isfinite(result[i])) return false; }
    return true;
 }
+QMap<QString,bool> objectFlags(const QJsonValue &value)
+{
+   if (!value.isObject()) throw std::runtime_error("Per-object display flags must be objects of named boolean values");
+   const auto values=value.toObject(); QMap<QString,bool> result;
+   const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+   for (auto it=values.begin();it!=values.end();++it) {
+      if (!identifier.match(it.key()).hasMatch() || !it.value().isBool()) throw std::runtime_error("Per-object display flags need valid names and booleans");
+      result.insert(it.key(),it.value().toBool());
+   }
+   return result;
+}
+QJsonObject objectFlagsJson(const QMap<QString,bool> &values)
+{
+   QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result;
+}
 QString formatVector(const std::array<double,3> &value)
 {
    return QString("[%1 %2 %3]").arg(QString::number(value[0],'g',17),QString::number(value[1],'g',17),QString::number(value[2],'g',17));
 }
+}
+
+QMap<QString,bool> qtObjectFlags(const QString &json)
+{
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(json.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isObject()) throw std::runtime_error("Invalid per-object display flags: expected named boolean values");
+   return objectFlags(document.object());
+}
+QString qtObjectFlagsJson(const QMap<QString,bool> &flags)
+{
+   return QString::fromUtf8(QJsonDocument(objectFlagsJson(flags)).toJson(QJsonDocument::Compact));
 }
 
 QtScriptConversion convertOpenFramesViews(const QString &source)
@@ -296,9 +322,8 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.automaticTrajectory.isEmpty()) object.insert("automaticTrajectory",setting.automaticTrajectory);
    if (!setting.automaticBody.isEmpty()) object.insert("automaticBody",setting.automaticBody);
    if (!setting.segmentFrame.isEmpty()) object.insert("segmentFrame",setting.segmentFrame);
-   auto flags=[](const QMap<QString,bool> &values) { QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result; };
-   if (!setting.objectLabels.isEmpty()) object.insert("objectLabels",flags(setting.objectLabels));
-   if (!setting.objectTrajectories.isEmpty()) object.insert("objectTrajectories",flags(setting.objectTrajectories));
+   if (!setting.objectLabels.isEmpty()) object.insert("objectLabels",objectFlagsJson(setting.objectLabels));
+   if (!setting.objectTrajectories.isEmpty()) object.insert("objectTrajectories",objectFlagsJson(setting.objectTrajectories));
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -354,16 +379,8 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          setting.centerOffset=center;
       }
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
-      auto flags=[&](const char *key,QMap<QString,bool> &destination) {
-         if (!object.contains(key)) return;
-         if (!object.value(key).isObject()) throw std::runtime_error("Per-object display flags must be objects of named boolean values");
-         const auto values=object.value(key).toObject();
-         for (auto it=values.begin();it!=values.end();++it) {
-            if (!identifier.match(it.key()).hasMatch() || !it.value().isBool()) throw std::runtime_error("Per-object display flags need valid names and booleans");
-            destination.insert(it.key(),it.value().toBool());
-         }
-      };
-      flags("objectLabels",setting.objectLabels); flags("objectTrajectories",setting.objectTrajectories);
+      if (object.contains("objectLabels")) setting.objectLabels=objectFlags(object.value("objectLabels"));
+      if (object.contains("objectTrajectories")) setting.objectTrajectories=objectFlags(object.value("objectTrajectories"));
       if (object.contains("segmentFrame")) {
          setting.segmentFrame=object.value("segmentFrame").toString();
          if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$").match(setting.segmentFrame).hasMatch() || object.contains("automaticTrajectory"))

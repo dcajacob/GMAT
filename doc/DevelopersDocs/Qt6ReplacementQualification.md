@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. Other OF object decorations remain pending. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. ObjectDrawing adds persistent per-object Default/On/Off controls, Cancel/pending/retained Apply, mixed invalid rollback, paired removal, exact Undo/Redo/Unicode recovery, ordinary implicit-default retention and byte-identical reused complete reports. Native controls/scene and corrected adjustable initial columns were inspected; the final isolated layout probe repeats no mission. Other OF object decorations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
@@ -6921,3 +6921,82 @@ is Qt widget/rendering evidence; fresh desktop input, top-level Wayland minimize
 restore and portals retain their prior limits. Blocked experiments were not
 repeated. The full Linux replacement goal remains active, Windows/macOS deferred,
 and MATLAB off.
+
+
+## Persistent per-object drawing controls — 2026-10-01
+
+The previous appendix retained independent imported flags but left persistent
+editing to script metadata. OrbitView resources now expose Object drawing… with
+separate Trajectory and Label dropdowns for every pending Add object. Default
+omits the named override: trajectories inherit the callback, labels inherit
+shown-object behavior. On/Off retain an explicit choice. Imported choices load
+by name; ordinary viewers keep implicit defaults on untouched OK. Standard
+Orbit-view setup still controls body/model visibility, and the viewer's Object
+labels control remains the master switch. The shared dialog Help route applies.
+
+Dialog OK keeps edits pending; Cancel leaves prior pending choices intact. Apply
+refreshes the existing MDI panel, retains camera metadata and changes only the
+Qt directive for drawing-only edits. Drawing edits accepted before a later
+pending object removal are pruned against the final Add list in the same Apply.
+Typed API maps require named boolean values, actual Add membership and an
+OrbitView target. Malformed maps, unknown objects and mixed invalid camera edits
+roll back without losing source/pending choices. No numerical engine code changed.
+audit-object-drawing-controls.txt records implementation and test scope.
+
+The new --controls mode reuses GmatQtConvertedVisibilityTests without executing
+the old conversion/viewer matrix. It reuses the complete committed independent
+19-column reference from the previous appendix; no independent mission is rerun.
+check-object-drawing-initial.txt reproduces the missing control before mission
+execution in 0.17 s (0.18 s total). An intermediate harness passed shared_ptr
+directly to require(bool), causing a compile failure retained in
+build-object-drawing-fixed.txt; its guard prevented stale test execution. Explicit
+bool conversion fixes the harness. check-object-drawing-controls.txt passes the
+new ObjectDrawing case in 0.49 s and affected OrbitSetup in 1.55 s, 2.04 s total,
+using offscreen CPU rendering. These checks predate the later ordinary-viewer
+Build-only assertions and the final dialog column-width correction.
+
+object-drawing-wayland-20261001.txt passes the complete controls case once on
+native Wayland, including the later non-OrbitView rejection and ordinary-viewer
+Build-only assertions. Actual MDI controls cover Cancel, unchanged OK, pending
+OK/reopen, Default removal, mixed invalid Apply/correction, retained clean Apply,
+paired object removal, exact Undo/Redo/rebuild, invalid typed map recovery and
+Unicode Save/reopen/rerun. The ordinary viewer initializes Default choices,
+untouched OK leaves source implicit, one label override adds only that named
+map and Undo restores the exact source; this branch runs no mission.
+
+The edited imported fixture displays A with its model/trajectory hidden and
+label On; B with its model shown, trajectory Off and label Default; C with its
+model/label hidden and trajectory On; Earth retains its shown body with labels
+and trajectory Off. The native .scene.png and workspace .png were inspected:
+textured Earth, B's model, A/B labels and C's path render, with accessible viewer
+controls and Completed status. .controls.png preserves the initial native dialog
+capture, which revealed the right column clipped after manual resizing. That
+image is initial layout evidence, not proof of the final column layout.
+
+Initial minimum widths were reduced to sensible content-sized defaults; header
+handles remain adjustable. QtGui.ObjectDrawingLayout / --drawing-layout now
+checks all three initial/restored columns fit, compact OK remains visible and a
+manual width survives resize. check-object-drawing-layout.txt passes in 0.17 s.
+object-drawing-layout-wayland-20261001.txt passes the same isolated native probe;
+its .png was inspected with all headers, choices and dropdown arrows visible.
+This final layout check initializes no engine and repeats no numerical mission.
+The earlier full native workflow/captures predate only this column-width change;
+source transactions and rendering are unchanged. The isolated dialog capture has
+no parent Help manager; the actual earlier MDI dialog capture includes Help.
+
+Both complete 19-column rows from the edited viewer and Unicode reopened run
+match the reused independent reference byte for byte. The captured .report.txt
+is 990 bytes, SHA-256
+1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab.
+object-drawing-report-preservation.txt records the static comparison; it repeats
+no mission. build-object-drawing-layout.txt records the final GmatQt-R2026a
+relink and GmatQt launcher recreation. No broad old suite/plugin/numerical matrix
+was repeated.
+
+This closes persistent label/trajectory resource editing for imported and
+ordinary OrbitViews. Other OF object decorations and broader solver/segment
+regimes remain under the existing capability gates. Native evidence is Qt
+widget/rendering evidence, not fresh desktop input. Top-level Wayland minimize/
+restore and portal chooser gates retain their prior limits; blocked experiments
+were not repeated. The full Linux replacement goal remains active. Windows/macOS
+remain deferred and MATLAB off.

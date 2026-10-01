@@ -5,6 +5,7 @@
 #include "TestSettings.hpp"
 #include "BaseException.hpp"
 #include "ResourceEditor.hpp"
+#include "OrbitObjectDrawingDialog.hpp"
 #include "Moderator.hpp"
 #include <QApplication>
 #include <QDir>
@@ -20,6 +21,11 @@
 #include <QListWidget>
 #include <QPushButton>
 #include <QDialogButtonBox>
+#include <QTreeWidget>
+#include <QComboBox>
+#include <QTableWidget>
+#include <QHeaderView>
+#include <QLabel>
 #include <iostream>
 #include <stdexcept>
 static void require(bool ok,const char *message) { if (!ok) throw std::runtime_error(message); }
@@ -47,12 +53,94 @@ static void renderLabels(const QString &capture)
    require(canvas.captureImage()==unlabeled,"Latest hidden-object label behind camera reused an earlier visible pose");
    if (!capture.isEmpty()) require(labeled.save(capture+".label-only.png"),"Independent label capture failed");
 }
+static void objectDrawingControls(const QString &startup,const QString &source,const QString &report,const QString &reference,const QString &saved,const QString &capture)
+{
+   // Reuse the complete committed no-viewer reference; no independent mission rerun.
+   const auto expected=read(reference); require(expected.split('\n').size()==3,"Committed object-drawing reference missing complete rows");
+   MainWindow window; window.show(); require(window.initialize(startup),"Object drawing initialization failed");
+   auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor"); editor->setPlainText(source); require(window.buildScript(),"Object drawing fixture build failed");
+   auto *area=window.findChild<QMdiArea *>("workspace"); auto *tree=window.findChild<QTreeWidget *>("Resources");
+   auto open=[&] {
+      const auto matches=tree->findItems("Display",Qt::MatchExactly|Qt::MatchRecursive); require(matches.size()==1,"Object drawing resource unavailable");
+      tree->itemDoubleClicked(matches.first(),0); auto *child=area->activeSubWindow(); require(child && dynamic_cast<ResourceEditor *>(child->widget()),"Object drawing MDI panel unavailable"); return child;
+   };
+   auto *child=open(); auto *panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel->findChild<QPushButton *>("editOrbitDrawing"),"Persistent per-object drawing controls missing");
+   auto dialog=[&](const std::function<void(QDialog *)> &action,bool accept) {
+      std::exception_ptr failure;
+      QTimer::singleShot(0,panel,[&] {
+         auto *view=panel->findChild<QDialog *>("orbitObjectDrawingDialog");
+         try { require(view,"Object drawing dialog unavailable"); action(view); view->findChild<QDialogButtonBox *>()->button(accept ? QDialogButtonBox::Ok : QDialogButtonBox::Cancel)->click(); }
+         catch (...) { failure=std::current_exception(); if (view) view->reject(); }
+      }); panel->findChild<QPushButton *>("editOrbitDrawing")->click(); if (failure) std::rethrow_exception(failure);
+   };
+   auto choice=[](QDialog *view,const QString &kind,const QString &name) { auto *value=view->findChild<QComboBox *>("orbitDrawing_"+kind+"_"+name); require(value,"Object drawing choice missing"); return value; };
+   auto edits=[&](QDialog *view) {
+      choice(view,"trajectory","A")->setCurrentText("Off"); choice(view,"label","A")->setCurrentText("On");
+      choice(view,"label","B")->setCurrentText("Default"); choice(view,"trajectory","C")->setCurrentText("On"); choice(view,"label","C")->setCurrentText("Off");
+   };
+   dialog(edits,false); require(!panel->hasChanges() && editor->toPlainText()==source,"Object drawing Cancel changed source/pending flags");
+   dialog([](QDialog *) {},true); require(!panel->hasChanges(),"Untouched object drawing generated explicit edits");
+   dialog(edits,true); require(panel->hasChanges() && editor->toPlainText()==source,"Object drawing OK changed source before Apply");
+   dialog([&](QDialog *view) { require(choice(view,"label","A")->currentText()=="On" && choice(view,"trajectory","A")->currentText()=="Off" && choice(view,"label","B")->currentText()=="Default" && choice(view,"label","C")->currentText()=="Off","Object drawing pending choices lost on reopen"); },false);
+   auto *table=panel->findChild<QTableWidget *>("resourceProperties"); int scale=-1; for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="ViewScaleFactor") scale=row;
+   require(scale>=0,"Object drawing paired camera field absent"); const auto originalScale=table->item(scale,1)->text(); table->item(scale,1)->setText("-1"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+   require(panel->hasChanges() && editor->toPlainText()==source && panel->findChild<QLabel *>("resourceStatus")->text().contains("greater than zero"),"Mixed invalid object drawing Apply lost source/pending edits");
+   table->item(scale,1)->setText(originalScale); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+   require(child->isVisible() && area->subWindowList().contains(child),"Object drawing Apply closed its MDI window"); panel=dynamic_cast<ResourceEditor *>(child->widget()); require(panel && !panel->hasChanges(),"Object drawing Apply did not refresh clean controls"); const auto edited=editor->toPlainText();
+   const auto flags=qtCameraSettings(edited).value("Display"),before=qtCameraSettings(source).value("Display"); require(flags.objectLabels.value("A") && !flags.objectLabels.contains("B") && !flags.objectLabels.value("C") && !flags.objectTrajectories.value("A") && flags.objectTrajectories.value("C") && flags.up==before.up && flags.primaryName==before.primaryName,"Typed object drawing lost flags/Default/camera metadata");
+   require(removeQtCameraSetting(edited,"Display")==removeQtCameraSetting(source,"Display"),"Object drawing rewrote unrelated source/calculations/implicit settings");
+   dialog([&](QDialog *view) {
+      require(choice(view,"label","B")->currentText()=="Default" && choice(view,"label","A")->currentText()=="On","Applied object drawing not reconstructed");
+      auto *objects=view->findChild<QTableWidget *>("orbitObjectDrawing"); require(objects->horizontalHeader()->sectionResizeMode(0)==QHeaderView::Interactive,"Object drawing columns not user adjustable");
+      objects->setColumnWidth(0,objects->columnWidth(0)+30); const auto width=objects->columnWidth(0); view->resize(400,320); QApplication::processEvents(); require(objects->columnWidth(0)==width,"Object drawing resize discarded manual column width");
+      auto *ok=view->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok); require(view->rect().contains(ok->mapTo(view,ok->rect().bottomRight())),"Compact object drawing hides OK");
+      if (!capture.isEmpty()) { view->resize(560,380); QEventLoop exposed; QTimer::singleShot(100,&exposed,&QEventLoop::quit); exposed.exec(); require(view->grab().save(capture+".controls.png"),"Object drawing controls capture failed"); }
+   },false);
+   require(window.runMission()==MainWindow::RunResult::Completed && read(report)==expected,"Typed object drawing changed complete committed independent states");
+   auto model=window.plotReceiver()->model("Display"); require(bool(model),"Typed object drawing viewer absent"); bool a=false,b=false,c=false;
+   for (const auto &curve:model->curves) { if (curve.name=="A") a=!curve.lines && !curve.showObject && curve.drawsLabel(); if (curve.name=="B") b=!curve.lines && curve.showObject && curve.drawsLabel() && !curve.importedLabel; if (curve.name=="C") c=curve.lines && !curve.showObject && !curve.drawsLabel(); } require(a && b && c,"Typed drawing choices did not reach trajectory/model/label callbacks");
+   require(window.plotReceiver()->show("Display"),"Typed object drawing viewer cannot activate"); auto *plot=dynamic_cast<PlotWidget *>(area->activeSubWindow()->widget()); require(plot && !plot->canvas()->captureImage().isNull(),"Typed object drawing scene not rendered");
+   if (!capture.isEmpty()) { require(plot->canvas()->captureImage().save(capture+".scene.png") && window.grab().save(capture+".png"),"Typed object drawing scene/workspace capture failed"); write(capture+".report.txt",read(report)); }
+   // Drawing changes accepted before object removal must not retain stale names.
+   child=open(); panel=dynamic_cast<ResourceEditor *>(child->widget()); dialog([&](QDialog *view) { choice(view,"label","A")->setCurrentText("Off"); },true);
+   std::exception_ptr removeFailure; QTimer::singleShot(0,panel,[&] { auto *view=panel->findChild<QDialog *>("orbitViewDialog"); try { require(view,"Paired object setup unavailable"); auto *objects=view->findChild<QListWidget *>("orbitObjects"); const auto c=objects->findItems("C",Qt::MatchExactly); require(c.size()==1,"Paired removal object missing"); objects->setCurrentItem(c.first()); view->findChild<QPushButton *>("orbitRemoveObject")->click(); view->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click(); } catch (...) { removeFailure=std::current_exception(); if (view) view->reject(); } }); panel->findChild<QPushButton *>("editOrbitView")->click(); if (removeFailure) std::rethrow_exception(removeFailure);
+   require(panel->hasChanges() && editor->toPlainText()==edited,"Paired drawing/removal did not stay pending"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete); const auto removed=qtCameraSettings(editor->toPlainText()).value("Display"); require(!removed.objectLabels.contains("C") && !removed.objectTrajectories.contains("C") && !removed.objectLabels.value("A"),"Paired object removal left stale pending drawing names"); editor->undo(); require(editor->toPlainText()==edited,"Paired drawing/removal Undo not exact");
+   editor->undo(); require(editor->toPlainText()==source,"Typed drawing Undo lost imported flags/source"); editor->redo(); require(editor->toPlainText()==edited && window.buildScript(),"Typed drawing Redo/rebuild not exact");
+   // Closed clean panels can reopen after source undo; invalid typed API maps fail atomically.
+   for (const auto &invalid:QList<QMap<QString,QString>>{{{"@QtObjectLabels","{\"Missing\":true}"}},{{"@QtObjectTrajectories","{\"A\":\"false\"}"}},{{"@QtObjectLabels","[]"}},{{"@QtObjectLabels","{\"A\":false}"},{"ViewScaleFactor","-1"}}}) require(!window.applyResourceChanges("Display",invalid,edited).isEmpty() && editor->toPlainText()==edited,"Invalid typed drawing map/paired camera did not roll back");
+   require(window.saveScriptTo(saved) && window.loadScript(saved) && window.runMission()==MainWindow::RunResult::Completed && editor->toPlainText()==edited && read(report)==expected,"Typed object drawing Unicode save/reopen/recovery changed source/states");
+   require(!window.applyResourceChanges("Values",{{"@QtObjectLabels","{\"A\":true}"}},edited).isEmpty() && editor->toPlainText()==edited,"Object drawing accepted a non-OrbitView resource");
+   const auto ordinary=removeQtCameraSetting(edited,"Display"); editor->setPlainText(ordinary); require(window.buildScript(),"Ordinary OrbitView object-drawing build failed"); child=open(); panel=dynamic_cast<ResourceEditor *>(child->widget());
+   dialog([&](QDialog *view) { require(choice(view,"trajectory","A")->currentText()=="Default" && choice(view,"label","C")->currentText()=="Default","Ordinary viewer did not initialize inherited defaults"); },true);
+   require(!panel->hasChanges() && editor->toPlainText()==ordinary,"Untouched ordinary drawing made implicit defaults explicit");
+   dialog([&](QDialog *view) { choice(view,"label","A")->setCurrentText("On"); },true); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
+   require(qtCameraSettings(editor->toPlainText()).value("Display").objectLabels==QMap<QString,bool>{{"A",true}} && qtCameraSettings(editor->toPlainText()).value("Display").objectTrajectories.isEmpty() && removeQtCameraSetting(editor->toPlainText(),"Display")==ordinary,"Ordinary drawing override changed unrelated/implicit source"); editor->undo(); require(editor->toPlainText()==ordinary,"Ordinary drawing override Undo not exact");
+   std::cout<<"PASS actual persistent object-drawing MDI controls, Default/On/Off, Cancel/unchanged/pending/reopen, mixed invalid Apply rollback, retained clean Apply, compact adjustable columns, named pending removal, exact Undo/Redo/Unicode file recovery and complete reused independent 19-column state reports; no old conversion/viewer matrix repeated.\n";
+}
+static void objectDrawingLayout(const QString &capture)
+{
+   OrbitObjectDrawingDialog dialog({"A","B","C","Earth"},{{"A",true},{"C",false},{"Earth",false}},{{"A",false},{"B",false},{"C",true},{"Earth",false}});
+   dialog.show(); QEventLoop exposed; QTimer::singleShot(100,&exposed,&QEventLoop::quit); exposed.exec();
+   auto *table=dialog.findChild<QTableWidget *>("orbitObjectDrawing");
+   auto fits=[&] { return table->columnViewportPosition(2)+table->columnWidth(2)<=table->viewport()->width(); };
+   require(fits(),"Initial object drawing clips its Label column");
+   table->setColumnWidth(0,table->columnWidth(0)+30); const int width=table->columnWidth(0);
+   dialog.resize(400,320); QApplication::processEvents();
+   require(table->columnWidth(0)==width,"Compact drawing layout loses manual widths");
+   auto *ok=dialog.findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok);
+   require(dialog.rect().contains(ok->mapTo(&dialog,ok->rect().bottomRight())),"Compact drawing layout hides OK");
+   dialog.resize(560,380); QApplication::processEvents(); require(fits(),"Restored drawing layout clips its Label column");
+   if (!capture.isEmpty()) require(dialog.grab().save(capture),"Object drawing layout capture failed");
+   std::cout<<"PASS isolated native/widget object-drawing layout: all three initial/restored columns fit, compact OK visible and manual widths preserved; no engine initialization or mission repeated.\n";
+}
 int main(int argc,char **argv)
 {
    QApplication app(argc,argv); app.setOrganizationName("GMATTests"); app.setApplicationName("QtConvertedVisibility");
    try {
+      if ((argc==2 || argc==3) && QString(argv[1])=="--drawing-layout") { objectDrawingLayout(argc==3 ? QFileInfo(argv[2]).absoluteFilePath() : QString()); return 0; }
       if (argc==2 && (QString(argv[1])=="--fallback-render" || QString(argv[1])=="--render-only")) { if (QString(argv[1])=="--fallback-render") require(QGuiApplication::platformName()=="offscreen","Fallback probe needs offscreen platform"); renderLabels({}); std::cout<<"PASS isolated "<<QGuiApplication::platformName().toStdString()<<" independent label rendering, label Off, master Off, ordinary hidden-object defaults and latest-pose clipping; no engine mission repeated.\n"; return 0; }
-      require(argc==2 || argc==3,"Visibility startup/capture arguments missing"); TestSettings settings; QTemporaryDir files; require(files.isValid(),"Visibility files unavailable"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==3 ? QFileInfo(argv[2]).absoluteFilePath() : QString(); QDir::setCurrent(QFileInfo(startup).absolutePath());
+      const bool controlsOnly=argc>1 && QString(argv[1])=="--controls";
+      require(controlsOnly ? (argc==4 || argc==5) : (argc==2 || argc==3),"Visibility startup/capture arguments missing"); TestSettings settings; QTemporaryDir files; require(files.isValid(),"Visibility files unavailable"); const auto startup=QFileInfo(argv[controlsOnly ? 2 : 1]).absoluteFilePath(),capture=(controlsOnly ? argc==5 : argc==3) ? QFileInfo(argv[controlsOnly ? 4 : 2]).absoluteFilePath() : QString(); QDir::setCurrent(QFileInfo(startup).absolutePath());
       const auto report=files.filePath("complete states Δ.txt"),saved=files.filePath("visibility Δ.script");
       QString resources="% preserve independent calculations α\nCreate Spacecraft A B C;\n";
       for (int i=0;i<3;++i) { const QString name=QString(QChar('A'+i)); resources+=name+".CoordinateSystem = EarthMJ2000Eq;\n"+name+".DisplayStateType = Cartesian;\n"+name+".X = "+QString::number(7000+i*2000)+";\n"+name+".Y = 0;\n"+name+".Z = 0;\n"+name+".VX = 0;\n"+name+".VY = 7.54605329010754;\n"+name+".VZ = 0;\n"; }
@@ -61,6 +149,7 @@ int main(int argc,char **argv)
       const auto mission="BeginMissionSequence;\n"+state+"Propagate 'KeepCalculation' Prop(A, B, C) {A.ElapsedSecs = 120}; % calculation stays exact\n"+state;
       const QString views="Create OpenFramesView Camera;\nCamera.ViewFrame = CoordinateSystem;\nCamera.SetDefaultLocation = On;\nCamera.DefaultEye = [0 -24000 14000];\nCreate OpenFramesInterface Display;\nDisplay.Add = {A, B, C, Earth};\nDisplay.View = {Camera};\nDisplay.DrawObject = [false true false true];\nDisplay.DrawLabel = [false true true false];\nDisplay.DrawTrajectory = [true false false false];\n";
       const auto legacy=resources+views+mission; const auto converted=convertOpenFramesViews(legacy);
+      if (controlsOnly) { require(converted.error.isEmpty(),"Object drawing fixture conversion failed"); objectDrawingControls(startup,converted.script,report,QFileInfo(argv[3]).absoluteFilePath(),saved,capture); return 0; }
       require(converted.error.isEmpty() && converted.script.contains("objectLabels") && converted.script.contains("objectTrajectories"),"Independent OF labels/trajectories lost in conversion");
       const auto flags=qtCameraSettings(converted.script).value("Display"); require(flags.objectLabels.value("C") && !flags.objectLabels.value("A") && !flags.objectTrajectories.value("B") && flags.objectTrajectories.value("A"),"Visibility flag/object order changed"); require(converted.script.endsWith(mission),"Visibility conversion changed calculations/comments");
       const auto prefix=convertOpenFramesViews(QString(legacy).replace("[false true true false]","[false]").replace("[true false false false]","[]")); require(prefix.error.isEmpty() && !qtCameraSettings(prefix.script).value("Display").objectLabels.value("A") && qtCameraSettings(prefix.script).value("Display").objectLabels.value("B") && qtCameraSettings(prefix.script).value("Display").objectTrajectories.value("C"),"OF prefix/empty flags did not retain omitted true defaults");

@@ -1,0 +1,120 @@
+[0/1] Re-running CMake...
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64
+-- Found F2C: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:301 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR) 
+==============================
+Setting up install directory structure for GMAT 
+-- Will install GMAT to /home/dan/GIT/GMAT/GMAT/GMAT-R2026a-Linux-x64
+==============================
+GMAT util setup 
+==============================
+GMAT base setup 
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup 
+==============================
+GMAT GUI setup 
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+==============================
+GMAT DataInterface Plugin setup 
+==============================
+GMAT EphemPropagator Plugin setup 
+==============================
+GMAT EKF Plugin setup 
+==============================
+GMAT Estimation Plugin setup 
+==============================
+GMAT EventLocator Plugin setup 
+==============================
+GMAT External Force Model Plugin setup (for Python 3.14)
+-- Found Python3: /usr/include/python3.14 (found suitable exact version "3.14.4") found components: Development Development.Module Development.Embed
+==============================
+GMAT ExtraPropagators Plugin setup 
+==============================
+GMAT Formation Plugin setup 
+==============================
+GMAT GmatFunction Plugin setup 
+==============================
+GMAT Msise00 Plugin setup 
+==============================
+GMAT NewParameter Plugin setup 
+==============================
+GMAT PolyhedronGravity Plugin setup 
+==============================
+GMAT ProductionPropagators Plugin setup 
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.14)
+==============================
+GMAT SaveCommand Plugin setup 
+==============================
+GMAT ScriptTools Plugin setup 
+==============================
+GMAT Station Plugin setup 
+==============================
+GMAT ThrustFile Plugin setup 
+==============================
+GMAT TLE Propagator Plugin setup 
+==============================
+GMAT Yukon Optimizer Plugin setup 
+==============================
+GMAT OpenFramesInterface Plugin setup 
+-- Enabling wxWidgets support
+-- Setting up OpenSceneGraph [a827840ba], this could take a while...
+-- Local validation: retaining prebuilt openscenegraph
+-- Setting up osgEarth [f7a922ba], this could take a while...
+-- Local validation: retaining prebuilt osgearth
+-- Setting up OpenFrames [67e90d8]...
+-- Local validation: retaining prebuilt openframes
+==============================
+GMAT OVtoOFI Plugin setup 
+==============================
+Setting up wxWidgets install instructions for GMAT 
+-- Configuring done (1.1s)
+-- Generating done (0.3s)
+-- Build files have been written to: /home/dan/GIT/GMAT/GMAT/build/linux-gui
+[1/16] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[3/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[4/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitObjectDrawingDialog.cpp.o
+[5/16] Building CXX object src/qtgui/CMakeFiles/GmatQtOrbitSetupTests.dir/tests/OrbitSetupTests.cpp.o
+[6/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[7/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[8/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[9/16] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[10/16] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[11/16] Linking CXX executable src/qtgui/GmatQtOrbitSetupTests
+[12/16] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[13/16] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[14/16] Building CXX object src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o
+FAILED: [code=1] src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o 
+/usr/bin/c++ -DLINUX_MAC -DNO_GCC_PRAGMA -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DUSE_64_BIT_LONGS -D_UNICODE -D__USE_SPICE__ -I/home/dan/GIT/GMAT/GMAT/src/qtgui -I/home/dan/GIT/GMAT/GMAT/src/base/api -I/home/dan/GIT/GMAT/GMAT/src/base/asset -I/home/dan/GIT/GMAT/GMAT/src/base/attitude -I/home/dan/GIT/GMAT/GMAT/src/base/burn -I/home/dan/GIT/GMAT/GMAT/src/base/command -I/home/dan/GIT/GMAT/GMAT/src/base/configs -I/home/dan/GIT/GMAT/GMAT/src/base/coordsystem -I/home/dan/GIT/GMAT/GMAT/src/base/event -I/home/dan/GIT/GMAT/GMAT/src/base/executive -I/home/dan/GIT/GMAT/GMAT/src/base/factory -I/home/dan/GIT/GMAT/GMAT/src/base/factory/guicomponents -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel/harmonic -I/home/dan/GIT/GMAT/GMAT/src/base/foundation -I/home/dan/GIT/GMAT/GMAT/src/base/function -I/home/dan/GIT/GMAT/GMAT/src/base/hardware -I/home/dan/GIT/GMAT/GMAT/src/base/include -I/home/dan/GIT/GMAT/GMAT/src/base/interface -I/home/dan/GIT/GMAT/GMAT/src/base/interpreter -I/home/dan/GIT/GMAT/GMAT/src/base/math -I/home/dan/GIT/GMAT/GMAT/src/base/parameter -I/home/dan/GIT/GMAT/GMAT/src/base/plugin -I/home/dan/GIT/GMAT/GMAT/src/base/propagator -I/home/dan/GIT/GMAT/GMAT/src/base/solarsys -I/home/dan/GIT/GMAT/GMAT/src/base/solver -I/home/dan/GIT/GMAT/GMAT/src/base/spice -I/home/dan/GIT/GMAT/GMAT/src/base/spacecraft -I/home/dan/GIT/GMAT/GMAT/src/base/stopcond -I/home/dan/GIT/GMAT/GMAT/src/base/subscriber -I/home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/datawriter -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/interpolator -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/matrixoperations -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGLWidgets -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGL -fno-strict-aliasing -fPIC -O3 -std=c++17 -MD -MT src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o -MF src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o.d -o src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o -c /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp: In function ‘void objectDrawingControls(const QString&, const QString&, const QString&, const QString&, const QString&, const QString&)’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp:99:64: error: cannot convert ‘std::shared_ptr<const PlotModel>’ to ‘bool’
+   99 |    auto model=window.plotReceiver()->model("Display"); require(model,"Typed object drawing viewer absent"); bool a=false,b=false,c=false;
+      |                                                                ^~~~~
+      |                                                                |
+      |                                                                std::shared_ptr<const PlotModel>
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp:30:26: note: initializing argument 1 of ‘void require(bool, const char*)’
+   30 | static void require(bool ok,const char *message) { if (!ok) throw std::runtime_error(message); }
+      |                     ~~~~~^~
+In file included from /usr/include/c++/15/bits/shared_ptr.h:53,
+                 from /usr/include/c++/15/memory:82,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtCore/qobjectdefs_impl.h:17,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtCore/qobjectdefs.h:13,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtGui/qwindowdefs.h:8,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qwidget.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/qmainwindow.h:9,
+                 from /usr/include/x86_64-linux-gnu/qt6/QtWidgets/QMainWindow:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/MainWindow.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp:1:
+/usr/include/c++/15/bits/shared_ptr_base.h:1676:16: note: explicit conversion function was not considered
+ 1676 |       explicit operator bool() const noexcept
+      |                ^~~~~~~~
+ninja: build stopped: subcommand failed.

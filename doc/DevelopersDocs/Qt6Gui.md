@@ -2081,9 +2081,17 @@ The viewer's Object labels option
 is a live master switch. Imported label-only objects participate in Fit/legend;
 ordinary OrbitView objects retain their existing hidden-object label behavior.
 Native and fallback renderers use the latest recorded label position and suppress
-labels behind the camera rather than reusing an older visible pose. Raw metadata
-can be edited in the script; separate persistent per-object label/trajectory
-controls are not added to the resource editor in this increment.
+labels behind the camera rather than reusing an older visible pose.
+
+The OrbitView resource editor now provides Object drawing… with separate
+Trajectory and Label choices for each selected object. Default inherits the
+viewer callback (trajectory) or shown-object behavior (label); On and Off store
+an explicit choice. Ordinary viewers keep implicit defaults until edited.
+Body/model visibility remains in Orbit-view setup, and Object labels remains the
+live master switch. OK keeps choices pending until Apply; Cancel discards the
+dialog changes. Apply retains the panel and camera metadata. Reopening restores
+choices, and removing an object prunes its flags in the same undoable Apply.
+Columns fit the normal initial dialog and remain user adjustable.
 
 The bounded qualification covers automatic Build conversion, Orbit setup
 Cancel/pending/Apply, reorder/removal/Undo, Unicode Save/reopen, invalid metadata

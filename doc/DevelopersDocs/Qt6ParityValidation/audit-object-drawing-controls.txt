@@ -1,0 +1,36 @@
+Persistent Object drawing controls audit — 2026-10-01
+
+Scope: existing codex/qt6-gui; Linux; MATLAB off; numerical engine unchanged.
+Missing control reproduced before mission in check-object-drawing-initial.txt.
+
+OrbitObjectDrawingDialog.cpp/.hpp: typed Default/On/Off for selected names;
+Default omits explicit flags; adjustable content-sized table; OK/Cancel.
+ResourceEditor.cpp/.hpp: imported initialization; ordinary implicit defaults;
+pending Add names; Cancel/pending/reopen; parent Apply pruning; hasChanges;
+existing shared Help and retained Apply infrastructure.
+MainWindow.cpp: reject non-OrbitView; do not set synthetic engine properties;
+source-preserving candidate keeps camera settings; strict maps applied after
+normal Add pruning, so direct unknown names reject through runtime validation.
+ScriptCompatibility.cpp/.hpp: shared strict named-boolean parser/serializer.
+QtPlotReceiver.cpp: existing named labels/trajectory callbacks/rendering unchanged.
+
+New controls-only ConvertedVisibilityTests mode avoids the old conversion matrix.
+Reuses previously committed complete independent report, no reference mission.
+Actual MDI: Cancel/untouched/pending/reopen/Default; failed mixed Apply retains
+source; correction refreshes same window; camera retained; source excluding
+Qt directive identical; removal after pending drawing prunes names; exact
+Undo/Redo with rebuild; invalid maps/non-OrbitView reject; Unicode save/reopen
+and complete report unchanged. Ordinary Default and one override are Build-only.
+
+Affected checks: ObjectDrawing 0.49 s, OrbitSetup 1.55 s, total 2.04 s.
+Native controls case once includes later ordinary assertions; three captures
+inspected. Initial controls capture clipped Label column after manual resizing.
+Final narrower initial minimums: isolated ObjectDrawingLayout 0.17 s and native
+layout probe pass with all columns/arrow controls visible. Resize preserves
+manual width and compact OK. No engine initialization/mission in layout probes.
+Native full case predates only final width correction, rendering unchanged.
+Application rebuilt: build-object-drawing-layout.txt actual relink/symlink.
+
+No fresh desktop input, portal or top-level Wayland minimize/restore evidence.
+No broader conversion/viewer/plugin/numerical matrix repeated. Other OF drawing
+decorations and broader segment/solver regimes remain under existing gates.

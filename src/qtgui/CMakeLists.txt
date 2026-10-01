@@ -34,6 +34,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    XYPlotDialog.cpp XYPlotDialog.hpp
    GroundTrackDialog.cpp GroundTrackDialog.hpp
    OrbitViewDialog.cpp OrbitViewDialog.hpp
+   OrbitObjectDrawingDialog.cpp OrbitObjectDrawingDialog.hpp
    ThrusterDialog.cpp ThrusterDialog.hpp
    BurnDialog.cpp BurnDialog.hpp
    EphemerisDialog.cpp EphemerisDialog.hpp
@@ -320,6 +321,8 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.Files GmatQtFileTests)
    add_qt_test(QtGui.ReportSearchOptions GmatQtReportSearchOptionTests "${qt_test_startup}")
    add_qt_test(QtGui.ConvertedVisibility GmatQtConvertedVisibilityTests "${qt_test_startup}")
+   add_qt_test(QtGui.ObjectDrawing GmatQtConvertedVisibilityTests "--controls" "${qt_test_startup}" "${PROJECT_SOURCE_DIR}/doc/DevelopersDocs/Qt6ParityValidation/converted-visibility-wayland-20261001.reference.txt")
+   add_qt_test(QtGui.ObjectDrawingLayout GmatQtConvertedVisibilityTests "--drawing-layout")
    add_qt_test(QtGui.SegmentCameras GmatQtSegmentCameraTests "${qt_test_startup}")
    add_qt_test(QtGui.Workflow GmatQtWorkflowTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/propagate.script")
    add_qt_test(QtGui.Mission GmatQtMissionTests "${qt_test_startup}" "${CMAKE_CURRENT_SOURCE_DIR}/tests/mission.script")

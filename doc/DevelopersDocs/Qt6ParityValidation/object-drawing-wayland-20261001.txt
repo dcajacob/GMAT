@@ -1,0 +1,1 @@
+PASS actual persistent object-drawing MDI controls, Default/On/Off, Cancel/unchanged/pending/reopen, mixed invalid Apply rollback, retained clean Apply, compact adjustable columns, named pending removal, exact Undo/Redo/Unicode file recovery and complete reused independent 19-column state reports; no old conversion/viewer matrix repeated.

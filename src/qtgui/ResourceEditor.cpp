@@ -24,6 +24,7 @@
 #include "XYPlotDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "OrbitViewDialog.hpp"
+#include "OrbitObjectDrawingDialog.hpp"
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
 #include "EphemerisDialog.hpp"
@@ -415,6 +416,32 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       const bool orbit=object.GetTypeName()=="OrbitView";
       const bool ground=!orbit && object.GetTypeName()!="XYPlot";
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      if (orbit) {
+         const auto setting=qtCameraSettings(script).value(QString::fromStdString(object.GetName()));
+         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)}};
+         auto *drawing=new QPushButton("Object drawing…",this); drawing->setObjectName("editOrbitDrawing"); layout->addWidget(drawing);
+         connect(drawing,&QPushButton::clicked,this,[this,originalDrawing,drawing] {
+            try {
+               QStringList names;
+               for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Add") {
+                  const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1)); names=splitResourceReferences(choice ? comboValue(choice) : table->item(row,1)->text());
+               }
+               QSet<QString> unique;
+               for (const auto &name:names) {
+                  auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+                  if (!object || !object->IsOfType(Gmat::SPACE_POINT) || unique.contains(name)) throw std::runtime_error("Select each available space point at most once in Orbit-view setup.");
+                  unique.insert(name);
+               }
+               const auto labels=qtObjectFlags(objectDrawingEdits.value("@QtObjectLabels",originalDrawing.value("@QtObjectLabels"))),trajectories=qtObjectFlags(objectDrawingEdits.value("@QtObjectTrajectories",originalDrawing.value("@QtObjectTrajectories")));
+               OrbitObjectDrawingDialog dialog(names,labels,trajectories,this); if (dialog.exec()!=QDialog::Accepted) return;
+               const auto values=dialog.settings();
+               for (auto it=values.cbegin();it!=values.cend();++it) { if (it.value()==originalDrawing.value(it.key())) objectDrawingEdits.remove(it.key()); else objectDrawingEdits.insert(it.key(),it.value()); }
+               drawing->setText(objectDrawingEdits.isEmpty() ? "Object drawing…" : "Object drawing… (pending)");
+               status->setText(objectDrawingEdits.isEmpty() ? "Object drawing is unchanged." : "Object drawing is pending. Apply keeps the trajectory and label choices.");
+            } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
+            catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+         });
+      }
       auto *button=new QPushButton(orbit ? "Orbit-view setup…" : ground ? "Ground-track setup…" : "XY plot setup…",this); button->setObjectName(orbit ? "editOrbitView" : ground ? "editGroundTrack" : "editXYPlot"); layout->addWidget(button);
       connect(button,&QPushButton::clicked,this,[this,initial,ground,orbit] {
          QMap<QString,QString> pending;
@@ -1338,6 +1365,18 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
       QMap<QString, QString> changes=attitudeEdits;
+      if (!objectDrawingEdits.isEmpty()) {
+         QStringList selected;
+         for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Add") {
+            const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1)); selected=splitResourceReferences(choice ? comboValue(choice) : table->item(row,1)->text());
+         }
+         // Drawing edits may predate a pending object removal in Orbit setup.
+         for (auto it=objectDrawingEdits.cbegin();it!=objectDrawingEdits.cend();++it) {
+            auto values=qtObjectFlags(it.value());
+            for (auto item=values.begin();item!=values.end();) { if (!selected.contains(item.key())) item=values.erase(item); else ++item; }
+            changes.insert(it.key(),qtObjectFlagsJson(values));
+         }
+      }
       if (!pendingPolyhedron.isEmpty()) changes.insert("@PolyhedronForces",pendingPolyhedron);
       if (!pendingDynamicData.isEmpty()) changes.insert("@DynamicData",pendingDynamicData);
       if (!pendingTrackingConfigs.isEmpty()) changes.insert("@TrackingConfigs",pendingTrackingConfigs);
@@ -1395,7 +1434,7 @@ bool ResourceEditor::hasChanges() const
    if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (!externalEdits.isEmpty() && externalEdits!=originalExternal) return true;
    if (!pendingPolyhedron.isEmpty()) return true;
-   if (expressions!=originalExpressions) return true;
+   if (expressions!=originalExpressions || !objectDrawingEdits.isEmpty()) return true;
    for (int row = 0; row < table->rowCount(); ++row) {
       const auto *combo = qobject_cast<QComboBox *>(table->cellWidget(row, 1));
       if (!externalEdits.isEmpty() && table->item(row,0)->text().startsWith("External.")) continue;

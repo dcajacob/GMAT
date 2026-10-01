@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 13: QtGui.ObjectDrawing
+1/2 Test #13: QtGui.ObjectDrawing ..............   Passed    0.49 sec
+    Start 78: QtGui.OrbitSetup
+2/2 Test #78: QtGui.OrbitSetup .................   Passed    1.55 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   2.03 sec*proc (2 tests)
+
+Total Test time (real) =   2.04 sec

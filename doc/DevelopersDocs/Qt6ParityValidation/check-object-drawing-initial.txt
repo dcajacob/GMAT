@@ -1,0 +1,17 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 13: QtGui.ObjectDrawing
+1/1 Test #13: QtGui.ObjectDrawing ..............***Failed    0.17 sec
+This plugin does not support propagateSizeHints()
+FAIL: Persistent per-object drawing controls missing
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.17 sec*proc (1 test)
+
+Total Test time (real) =   0.18 sec
+
+The following tests FAILED:
+	 13 - QtGui.ObjectDrawing (Failed)                      qt-gui
+Errors while running CTest

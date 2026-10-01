@@ -1272,6 +1272,8 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   const bool objectDrawing=changes.contains("@QtObjectLabels") || changes.contains("@QtObjectTrajectories");
+   if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
    for (auto it=changes.cbegin();it!=changes.cend();++it) if (it.key().startsWith("@ExternalForce.")) external[it.key()]=it.value();
    bool structuralExternal=false;
@@ -1422,7 +1424,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@QtObjectLabels" || it.key()=="@QtObjectTrajectories" || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1472,7 +1474,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
       auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (it.key()!="@QtObjectLabels" && it.key()!="@QtObjectTrajectories" && it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
       if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
          // Imager's getter can still read the clone's old FOV pointer after
@@ -1532,6 +1534,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
             prune(setting.objectLabels); prune(setting.objectTrajectories);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
+      }
+      if (objectDrawing) {
+         auto setting=qtCameraSettings(candidate).value(name);
+         if (changes.contains("@QtObjectLabels")) setting.objectLabels=qtObjectFlags(changes.value("@QtObjectLabels"));
+         if (changes.contains("@QtObjectTrajectories")) setting.objectTrajectories=qtObjectFlags(changes.value("@QtObjectTrajectories"));
+         candidate=setQtCameraSetting(candidate,name,setting);
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }

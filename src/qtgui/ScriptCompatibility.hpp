@@ -36,6 +36,8 @@ struct QtCameraSetting {
    QString segmentFrame;
    QMap<QString,bool> objectLabels,objectTrajectories;
 };
+QMap<QString,bool> qtObjectFlags(const QString &json);
+QString qtObjectFlagsJson(const QMap<QString,bool> &flags);
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);
 QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting);
 QString retainQtCameraSettings(const QString &original,const QString &candidate,const QString &removedPlot={});
