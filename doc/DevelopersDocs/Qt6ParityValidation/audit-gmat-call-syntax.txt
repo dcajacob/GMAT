@@ -1,0 +1,21 @@
+GMAT call syntax source audit, 2026-10-01
+
+src/base/command/CallFunction.cpp GetGeneratingString: outputs serialize in
+brackets; zero GMAT inputs omit parentheses. Python retains empty parentheses.
+src/base/command/GmatCommand.cpp InsertCommandName: CallGmatFunction substitutes
+an empty command keyword when WRITE_GMAT_KEYWORD is off, then find_first_of("")
+finds no insertion point. Accepted leading labels disappear in canonical source.
+plugins/GmatFunctionPlugin/src/base/command/CallGmatFunction: previously inherited
+that insertion; the scoped override now inserts the label before outputs/callee.
+src/gui/command/CallFunctionPanel.cpp LoadData: zero input/output counts are valid;
+FunctionName plus ordered AddInput/AddOutput serve the active workflow.
+src/qtgui/MissionModel.cpp: alternate empty/bare/scalar call serialization needed
+alignment normalization constrained to configured GmatFunction resources.
+src/qtgui/CommandForm.cpp: existing parenthesized patterns supported empty fields,
+but no generic bare-call form existed. Added configured-Function-only variants.
+src/qtgui/CommandEditor.cpp: generic scalar assignment detection preceded function
+recognition, giving accepted single-output calls the wrong context Help.
+
+Execution evidence: check-gmat-call-syntax-initial.txt, the reproduced label
+failure check-gmat-call-labels-initial.txt, and check-gmat-call-syntax-final.txt.
+No broad parser change or numerical algorithm qualification was introduced.

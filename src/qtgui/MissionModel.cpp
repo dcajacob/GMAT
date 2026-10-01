@@ -1,5 +1,6 @@
 #include "MissionModel.hpp"
 #include "GmatCommand.hpp"
+#include "Moderator.hpp"
 #include "ScriptStatements.hpp"
 #include <QSet>
 #include <QMap>
@@ -151,10 +152,25 @@ QString pythonCallKey(const QString &code)
    const auto outputs=match.captured(2).isEmpty() ? match.captured(3) : match.captured(2);
    return match.captured(1)+(outputs.isEmpty() ? QString() : "["+outputs+"]=")+match.captured(4)+(match.captured(5).isEmpty() ? "()" : match.captured(5));
 }
+QString gmatCallKey(const QString &code)
+{
+   // Normalize only a configured GMAT function's accepted call spelling.
+   // Bare zero-input calls and scalar output syntax serialize differently;
+   // labels, function identity and ordered arguments must still match.
+   static const QRegularExpression call(R"(^((?:'[^'\n]*')?)(?:(?:\[([A-Za-z][A-Za-z0-9_]*(?:,[A-Za-z][A-Za-z0-9_]*)*)\]|([A-Za-z][A-Za-z0-9_]*))=)?([A-Za-z][A-Za-z0-9_]*)(\([\s\S]*\))?$)");
+   const auto text=key(code); const auto match=call.match(text);
+   if (!match.hasMatch()) return text;
+   auto *moderator=Moderator::Instance();
+   auto *function=moderator->IsInitialized() ? moderator->GetConfiguredObject(match.captured(4).toStdString()) : nullptr;
+   if (!function || !function->IsOfType("GmatFunction")) return text;
+   const auto outputs=match.captured(2).isEmpty() ? match.captured(3) : match.captured(2);
+   return match.captured(1)+(outputs.isEmpty() ? QString() : "["+outputs+"]=")+match.captured(4)+(match.captured(5).isEmpty() ? "()" : match.captured(5));
+}
 bool sameStatement(const QString &generated,const QString &original)
 {
    auto a=key(generated),b=key(original);
    if (a==b) return true;
+   if (gmatCallKey(generated)==gmatCallKey(original)) return true;
    if (a.contains("Python.") && pythonCallKey(generated)==pythonCallKey(original)) return true;
    if (generated.trimmed().startsWith("Propagate ") && propagationKey(generated)==propagationKey(original)) return true;
    // For writes its implicit unit step even when the source uses start:end.

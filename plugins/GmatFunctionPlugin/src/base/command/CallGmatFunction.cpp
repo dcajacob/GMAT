@@ -117,6 +117,19 @@ GmatBase* CallGmatFunction::Clone() const
 
 
 //------------------------------------------------------------------------------
+// void InsertCommandName(std::string &genString)
+//------------------------------------------------------------------------------
+/** Preserve the leading label of a keyword-free GMAT function call. */
+void CallGmatFunction::InsertCommandName(std::string &genString)
+{
+   if (instanceName.empty()) return;
+   auto position = genString.find_first_not_of(" \t\r\n");
+   if (position == std::string::npos) return;
+   if (genString.compare(position, 5, "GMAT ") == 0) position += 5;
+   genString.insert(position, "'" + instanceName + "' ");
+}
+
+//------------------------------------------------------------------------------
 // bool Initialize()
 //------------------------------------------------------------------------------
 bool CallGmatFunction::Initialize()

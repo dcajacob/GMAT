@@ -52,6 +52,7 @@ public:
    virtual GmatBase*    Clone() const;
    
 protected:
+   virtual void         InsertCommandName(std::string &genString);
 
    
 };

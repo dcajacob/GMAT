@@ -53,7 +53,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested. Actual MDI spacecraft runtime OrbitColor/TargetColor string/RGB expression edits, rejected-syntax correction, retained Apply, exact Undo/Redo/Unicode save/reopen, independent reports and Orbit/Ground color histories are now covered; see the runtime-color appendix. Other destination-specific execution and complex syntax audit remain pending. |
-| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Python module/function and ordered arguments, labeled calls, empty/bare inputs and unbracketed scalar outputs are covered in the Python appendices. Broader GMAT object/string/array signatures remain pending. |
+| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Python module/function and ordered arguments, labeled calls, empty/bare inputs and unbracketed scalar outputs are covered in the Python appendices. GmatCallSyntax adds GMAT empty/bare calls, scalar output spelling, labeled serialization/source mapping, retained MDI Apply/Undo/reopen and independent zero-input/no-output execution. Broader GMAT object/string/array signatures remain pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
@@ -156,7 +156,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. First contributor creation/removal is now covered through the actual retained force-model panel, atomic mixed Apply, invalid input and Cancel, exact source Undo/Redo/Unicode save/reopen and independent script-configured reports; see the external-force creation appendix. Full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. PluginCreation adds actual Formation New/Delete menu operations, Cancel, exact unrelated source/Undo/Redo and Unicode save/reopen. Remaining settings/output coverage pending. |
-| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. FunctionFileNames adds creator/existing-resource templates for differing file basenames, invalid filename recovery, retained aliases/Apply/Undo/reopen and independently expected pass-through execution. Broader function and report audit pending. |
+| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. FunctionFileNames adds creator/existing-resource templates for differing file basenames, invalid filename recovery, retained aliases/Apply/Undo/reopen and independently expected pass-through execution. GmatCallSyntax adds configured-function-only empty/bare/scalar source alignment, leading-label retention and independent zero-input/no-output result checks. Broader function and report audit pending. |
 | `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
@@ -5636,3 +5636,45 @@ launcher recreation. Existing creator/file-editor native layout and broader
 creation/import/compatibility/numerical evidence is reused; no native preview
 or previous suite was repeated. Remaining workflow/plugin and compositor/portal
 requirements remain open. Windows/macOS are deferred.
+
+
+## GMAT empty/bare call editing and leading labels (2026-10-01)
+
+CallFunction serializes zero inputs without parentheses and single outputs with
+brackets. Qt source alignment previously treated those accepted alternate
+spellings as different commands, disabling safe mission edits. CommandForm also
+omitted input/function controls for bare calls, and scalar-output calls routed
+context Help to Assignment. audit-gmat-call-syntax.txt records the scoped source
+findings. Qt now normalizes only configured GmatFunction call spellings during
+alignment, preserving labels, function identity and ordered outputs/arguments.
+Bare function forms require a configured Function, so Stop and variable
+assignments retain their original controls. Adding inputs to a bare call inserts
+parentheses; clearing that field restores the original bare spelling.
+
+The initial unlabeled cases passed in check-gmat-call-syntax-initial.txt (0.76
+seconds). Adding an accepted leading label reproduced a separate serializer
+bug: GmatCommand's keyword-based InsertCommandName omitted labels when the
+GMAT keyword was disabled. check-gmat-call-labels-initial.txt retains that failure
+and the canonical source missing the label. CallGmatFunction now overrides only
+label insertion, placing it before the optional output list, after an optional
+GMAT prefix. No parser or numerical algorithm changed; MATLAB is still deferred.
+
+check-gmat-call-syntax-final.txt passes in 0.98 seconds. QtGui.GmatCallSyntax
+executes actual MDI edits for bracketed empty inputs, bracketed bare calls,
+unbracketed scalar output and labeled empty/bare calls. Each function change
+stays pending until Apply, retains the clean open panel, exact unrelated source,
+comments and original call spelling, then survives exact Undo/Redo and Unicode
+save/reopen. Separately source-configured execution must produce output 13 and
+global side-effect count 2. The latter requires both labeled Touch() and bare
+Touch to execute; merely registering/building the function is insufficient.
+Changed function/output/arguments/labels cannot align as equivalent. Both
+no-output forms expose empty input controls. Bare-input insertion/restoration
+and non-function exclusions are checked directly. A small Python span check
+covers the shared input wrapper without repeating prior Python execution suites.
+
+build-gmat-call-syntax.txt records the actual GmatQt-R2026a relink, GmatQt launcher
+recreation and selected GmatFunction plugin rebuild. Existing ordered-argument,
+creation/import and native editor/layout evidence is reused. No native preview,
+viewer suite or full regression was repeated. Broader function signatures and
+remaining desktop/plugin requirements stay open; this bounded case does not
+establish full Linux replacement completion. Windows/macOS remain deferred.

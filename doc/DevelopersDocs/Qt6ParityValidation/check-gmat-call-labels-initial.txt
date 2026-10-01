@@ -1,0 +1,81 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.GmatCallSyntax
+1/1 Test #45: QtGui.GmatCallSyntax .............***Failed    2.42 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Covered: [Result] = First()
+Covered: [Result] = First
+Covered: Result = First()
+% retain call syntax α
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create ReportFile Values;
+Values.SolverIterations = Current;
+Values.UpperLeft = [ 0 0 ];
+Values.Size = [ 0 0 ];
+Values.RelativeZOrder = 0;
+Values.Maximized = false;
+Values.Filename = '/tmp/QtGmatCallSyntax-FXxNof/values.txt';
+Values.Precision = 16;
+Values.WriteHeaders = false;
+Values.LeftJustify = On;
+Values.ZeroFill = Off;
+Values.FixedWidth = true;
+Values.Delimiter = ' ';
+Values.ColumnWidth = 23;
+Values.WriteReport = true;
+Values.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Functions
+%----------------------------------------
+
+Create GmatFunction First;
+First.FunctionPath = '/tmp/QtGmatCallSyntax-FXxNof/First.gmf';
+
+Create GmatFunction Second;
+Second.FunctionPath = '/tmp/QtGmatCallSyntax-FXxNof/Second.gmf';
+
+Create GmatFunction Touch;
+Touch.FunctionPath = '/tmp/QtGmatCallSyntax-FXxNof/Touch.gmf';
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable Result Keep;
+Keep = 0;
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Global Keep;
+[Result] = First; % retain edited call
+Touch; % zero inputs and outputs
+Touch; % bare no outputs
+Report Values Result Keep;
+FAIL: GMAT call source mapping unavailable
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   2.42 sec*proc (1 test)
+
+Total Test time (real) =   2.43 sec
+
+The following tests FAILED:
+	 45 - QtGui.GmatCallSyntax (Failed)                     qt-gui
+Errors while running CTest

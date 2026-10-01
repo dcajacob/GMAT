@@ -1237,7 +1237,8 @@ Apply that change to make the mission use the copy. Existing-file replacement
 requires confirmation; failed saves leave the current path unchanged.
 
 **New function file…** creates a file from a basic input/output template using the
-resource's name. Choose an unused destination, edit the template, and Save. The
+chosen `.gmf` filename's basename. Choose an unused destination with a valid
+GMAT identifier basename, edit the template, and Save. The
 file is created only on Save; Cancel creates nothing. Apply the pending
 FunctionPath to connect it to the mission. Existing files use Edit function file.
 
@@ -1250,6 +1251,12 @@ elements are available alongside the property browser. Output choices filter
 writable parameters. The text fields remain editable, and Apply validates the
 function signature. Quoted commas and array-index commas remain within one
 argument when loading the selector. Cancel leaves the command unchanged.
+
+Configured GMAT functions expose these controls for empty-input and bare calls
+as well as calls with arguments. Changing a function retains the original call
+spelling and comments. Adding inputs to a bare call inserts parentheses; clearing
+those inputs restores the bare spelling. Single-output calls use the function's
+context Help, and leading labels survive serialization and source-mapped edits.
 
 ### Omitted Vary and Achieve options
 

@@ -32,7 +32,11 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       text.remove(QRegularExpression("(?m)^\\s*%[^\\n]*\\n?"));
       const auto match=QRegularExpression("^\\s*([A-Za-z][A-Za-z0-9_]*)").match(text);
       auto type=match.hasMatch() ? match.captured(1) : QString("CallGmatFunction");
+      const auto call=QRegularExpression(R"(^\s*(?:GMAT\s+)?(?:'[^'\n]*'\s+)?(?:(?:\[[^\];\n]*\]|[A-Za-z][A-Za-z0-9_]*)\s*=\s*)?([A-Za-z][A-Za-z0-9_]*)\s*(?=\(|;|%|$))").match(text);
+      auto *moderator=Moderator::Instance();
+      auto *function=call.hasMatch() && moderator->IsInitialized() ? moderator->GetConfiguredObject(call.captured(1).toStdString()) : nullptr;
       if (QRegularExpression(R"(^\s*(?:GMAT\s+)?(?:'[^'\n]*'\s+)?(?:(?:\[[^\];\n]*\]|[A-Za-z][A-Za-z0-9_]*)\s*=\s*)?Python\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\s*(?=\(|;|%|$))").match(text).hasMatch()) type="CallPythonFunction";
+      else if (function && function->IsOfType("Function")) type="CallGmatFunction";
       else if (type=="GMAT" || type=="Equation" || QRegularExpression("^\\s*[A-Za-z][A-Za-z0-9_.]*(?:\\([^)]*\\))?\\s*=").match(text).hasMatch()) type="Assignment";
       else if (auto *object=Moderator::Instance()->GetConfiguredObject(type.toStdString());object && object->IsOfType("Function")) type="CallGmatFunction";
       if (text.trimmed().isEmpty()) type="index";

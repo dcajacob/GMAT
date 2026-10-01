@@ -42,7 +42,7 @@ QString CommandForm::currentStatement() const
    std::sort(ordered.begin(),ordered.end(),[](const Field &a,const Field &b) { return a.start==b.start ? a.length>b.length : a.start>b.start; });
    for (const auto &field:ordered) {
       auto value=field.input->text();
-      if (field.input->property("pythonBareArguments").toBool() && !value.isEmpty()) value="("+value+")";
+      if (field.input->property("bareCallArguments").toBool() && !value.isEmpty()) value="("+value+")";
       if (((title()=="Dynamic update" && field.input->objectName()=="commandField_Parameters") || (title()=="File import" && field.input->objectName()=="commandField_Data")) && !value.isEmpty() && !value.front().isSpace()) value.prepend(' ');
       result.replace(field.start,field.length,value);
    }
@@ -89,6 +89,8 @@ void CommandForm::setStatement(const QString &statement)
       {"Python call",label+"Python\\."+pythonName+"\\."+pythonName+"()"+end,{"Module","Function","Inputs"}},
       {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Outputs","Function","Inputs"}},
       {"Function call",label+name+"\\s*\\(([^;\\n]*?)\\)"+end,{"Function","Inputs"}},
+      {"Function call",label+"(\\[[^\\];\\n]*\\]|[A-Za-z][A-Za-z0-9_]*)\\s*=\\s*"+name+"()"+end,{"Outputs","Function","Inputs"}},
+      {"Function call",label+name+"()"+end,{"Function","Inputs"}},
       {"Toggle","Toggle\\s+"+label+"([A-Za-z][A-Za-z0-9_]*(?:\\s+[A-Za-z][A-Za-z0-9_]*)*)\\s+(On|Off)"+end,{"Subscribers","State"}},
       {"Command echo","CommandEcho\\s+"+label+"(On|Off)"+end,{"State"}},
       {"Objects","(?:Global|Clear|Save)\\s+"+label+"([^;%\\n]+?)"+end,{"Objects"}},
@@ -104,7 +106,7 @@ void CommandForm::setStatement(const QString &statement)
       if (start<0) return;
       auto *input=new QLineEdit(statement.mid(start,length),this);
       input->setObjectName("commandField_"+name);
-      input->setProperty("pythonBareArguments",title()=="Python call" && name=="Inputs" && length==0 && (start>=statement.size() || statement[start]!=')'));
+      input->setProperty("bareCallArguments",(title()=="Python call" || title()=="Function call") && name=="Inputs" && length==0 && (start>=statement.size() || statement[start]!=')'));
       QString resourceType;
       if (title()=="For loop" && name=="Index") resourceType="Variable";
       else if (name=="Report file") resourceType="ReportFile";
@@ -327,6 +329,12 @@ void CommandForm::setStatement(const QString &statement)
    for (const auto &spec:specs) {
       const auto match=QRegularExpression(prefix+spec.pattern).match(statement);
       if (!match.hasMatch()) continue;
+      if (spec.type=="Function call" && match.captured(spec.labels.indexOf("Inputs")+1).isEmpty() &&
+          match.capturedStart(spec.labels.indexOf("Inputs")+1)==match.capturedEnd(spec.labels.indexOf("Function")+1)) {
+         auto *moderator=Moderator::Instance();
+         auto *function=moderator->IsInitialized() ? moderator->GetConfiguredObject(match.captured(spec.labels.indexOf("Function")+1).toStdString()) : nullptr;
+         if (!function || !function->IsOfType("Function")) continue;
+      }
       setTitle(spec.type);
       if (spec.type=="Maneuver") {
          const auto header=QRegularExpression(prefix+"Maneuver\\s+"+label).match(statement);
