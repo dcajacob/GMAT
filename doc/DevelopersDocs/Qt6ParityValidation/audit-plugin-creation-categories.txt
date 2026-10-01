@@ -1,0 +1,9 @@
+Source audit before the creation-category fix:
+MainWindow::creatableResourceTypes includes SPACECRAFT/HARDWARE/etc but omits FORMATION and SPACE_POINT.
+FormationFactory registers Formation under Gmat::FORMATION; StationFactory registers GroundStation under Gmat::SPACE_POINT.
+wx ResourceTree builds/adds these active resource folders using these exact factory categories.
+EKF SmootherFactory, ProcessNoiseModelFactory and EstimatedParameterFactory register dynamic type IDs.
+The Qt creator does not consult these IDs; existing process-noise/estimated-parameter resource folders do.
+Smoother derives Estimator/Solver, so the existing Solvers resource tree already displays it; no duplicate folder is required.
+DataFileFactory registers its type only in TESTING mode. It is outside the current normal Linux creation menu.
+Force-model contributors and propagator/atmosphere subtypes use their owning-resource controls; adding standalone factories would change their ownership semantics.

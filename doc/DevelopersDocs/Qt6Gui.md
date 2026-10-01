@@ -316,9 +316,9 @@ resolve from the executable location even when that file is saved elsewhere.
 MATLAB path editing remains outside this Linux/no-MATLAB qualification.
 
 Use **Edit > New resource** or the Resources context menu to add a resource.
-The dialog lists the engine's viewable spacecraft, hardware, burn, propagator,
-force-model, coordinate-system, solver and subscriber types, plus Variable and
-String and Array. Variable and String creation includes an initial-value field;
+The dialog lists the engine's viewable resource types, including plugin formations,
+ground stations, functions, estimators, smoothers, process-noise models and
+estimated parameters, plus Variable, String and Array. Variable and String creation includes an initial-value field;
 values remain pending when switching between these types. Arrays have row/column
 controls (1–1000 each). Creation validates a complete candidate mission and is one undoable
 script edit. Duplicate names, invalid identifiers, stale script snapshots and
@@ -1853,3 +1853,11 @@ Plot Save image writes PNG atomically and refuses current open missions, startup
 files and configured mission outputs, including symlink aliases. A failed write
 preserves the previous destination and reports the problem. XY Export data uses
 the same protection; these display/export operations do not edit the mission.
+
+
+For a new GmatFunction, choose its existing function file with Browse or use
+New file to edit and save a template first. Create then adds the function and its
+file path to the mission as one undoable edit. Missing files keep the creator
+open for correction. Canceling the file chooser/editor writes nothing; files
+you explicitly save remain after creator Cancel or mission Undo. An imported
+function may have a resource name different from its file name.

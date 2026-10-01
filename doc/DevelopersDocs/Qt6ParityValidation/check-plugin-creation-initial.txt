@@ -1,0 +1,60 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.PluginCreation
+1/1 Test #45: QtGui.PluginCreation .............***Failed    0.49 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Created/canceled/Undo/Redo: Formation
+Created/canceled/Undo/Redo: GroundStation
+Created/canceled/Undo/Redo: Smoother
+Created/canceled/Undo/Redo: ProcessNoiseModel
+Created/canceled/Undo/Redo: EstimatedParameter
+Created/canceled/Undo/Redo: ExtendedKalmanFilter
+Created/canceled/Undo/Redo: Simulator
+Created/canceled/Undo/Redo: BatchEstimator
+Created/canceled/Undo/Redo: TrackingFileSet
+Created/canceled/Undo/Redo: ErrorModel
+Created/canceled/Undo/Redo: AcceptFilter
+Created/canceled/Undo/Redo: RejectFilter
+Created/canceled/Undo/Redo: FileInterface
+Creation diagnostic GmatFunction: The mission rejected these changes. See Message Window. Type Name Rows Columns Initial value 
+FAIL: Plugin resource creation did not commit
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.49 sec*proc (1 test)
+
+Total Test time (real) =   0.49 sec
+
+The following tests FAILED:
+	 45 - QtGui.PluginCreation (Failed)                     qt-gui
+Errors while running CTest

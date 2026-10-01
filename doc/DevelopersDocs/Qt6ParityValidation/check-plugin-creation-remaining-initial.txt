@@ -1,0 +1,22 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Creation diagnostic GmatFunction: The mission rejected these changes. See Message Window. Type Name Rows Columns Initial value 
+Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.39.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-09-30 23:49:56 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+FAIL: Plugin resource creation did not commit

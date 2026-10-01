@@ -1,0 +1,1 @@
+PASS: native exposed New resource with five recovered plugin types and function file controls; Cancel preserves source; no mission execution or portal qualification.
