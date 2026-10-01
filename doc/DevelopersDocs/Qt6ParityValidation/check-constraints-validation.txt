@@ -1,0 +1,52 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 51: QtGui.Constraints
+1/1 Test #51: QtGui.Constraints ................***Failed    1.12 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Invalid constraint accepted or pending input lost: Grid(2,1); status=Apply validates the complete mission and updates the script. Branches include their enclosed commands.; source=% constraint qualification α, preserve implicit settings
+Create Variable Value Cost Limit;
+Limit = 1;
+Create Array Grid[1,2];
+Grid(1,2) = 3;
+Create String Label;
+Label = 'text';
+Create Spacecraft Sat;
+Create Yukon Opt;
+Opt.ShowProgress = false;
+Opt.ReportFile = '/tmp/QtConstraints-MUfUzR/solver.txt';
+Opt.FeasibilityTolerance = 0.00000001;
+Opt.OptimalityTolerance = 0.00000001;
+Opt.FunctionTolerance = 0.00000001;
+Create DifferentialCorrector DC;
+Create ReportFile Results;
+Results.Filename = '/tmp/QtConstraints-MUfUzR/values.txt';
+Results.WriteHeaders = false;
+Results.Precision = 17;
+Results.SolverIterations = All;
+BeginMissionSequence;
+Optimize 'retain optimizer' Opt {ShowProgressWindow = false}; % retain header
+Vary Opt(Value = 0, {Perturbation = 0.000001, Lower = -10, Upper = 10});
+Cost = (Value - 2)^2;
+Grid(1,1) = Value;
+Sat.X = Value;
+Minimize Opt(Cost);
+NonlinearConstraint 'retain constraint' Opt( Grid(1,1) >= Grid(2,1) ); % keep constraint
+Report Results Value Cost Grid(1,1) Sat.EarthMJ2000Eq.X; % retain trials
+EndOptimize; % retain branch
+Report Results Value Cost Grid(1,1) Sat.EarthMJ2000Eq.X; % retain accepted
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.12 sec*proc (1 test)
+
+Total Test time (real) =   1.12 sec
+
+The following tests FAILED:
+	 51 - QtGui.Constraints (Failed)                        qt-gui
+Errors while running CTest

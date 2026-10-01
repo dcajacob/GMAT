@@ -43,7 +43,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
-| `src/gui/command/NonlinearConstraintPanel.hpp` | Optimizer selector and single-parameter left/right operand browser provided. Solver selector tested; constraint operand execution combinations pending. |
+| `src/gui/command/NonlinearConstraintPanel.hpp` | Active optimizer/left/right/relation controls audited; inactive wx tolerance control excluded. Constraints adds array-element source mapping, read-only <=/>=/= choices, numeric single operand browser and literal-index pre-Apply bounds checks. Actual MDI Cancel/pending/retained Apply, exact labels/comments/source/Undo/Redo/Unicode Save/Save As/reopen, invalid type/reference/index rollback and correction/rerun are covered. Five fixed-bound Yukon cases match analytic optima and independent complete iteration reports; native Wayland controls inspected. A separate literal-left/varying-right script produces NaN before any GUI edit; this numerical regime remains unqualified with raw evidence, without an engine rewrite. Dynamic-index and broader operand/property combinations remain pending. |
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
@@ -167,7 +167,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. PluginCreation adds GroundStation New/Delete menu operations, Cancel, exact unrelated source/Undo/Redo and Unicode save/reopen. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
 | `../plugins/libThrustFile` | ThrustFileTests: history creation and input selection, typed segment/tank/solve-for lists and clear/restore, pending/Cancel angle and sigma vector resizing, Begin/EndFileThrust selectors, independent state reports, analytic scaled fuel depletion and post-End coast, exact Undo/Redo/Unicode Save/Save As/reopen, wrong-reference rollback, missing/malformed-file recovery and Output access covered. All four data formats with None/Linear interpolation, relative-file Build/Apply/reopen and the full-day bundled example covered. Multiple spacecraft/segments, cubic interpolation, time-varying angles, estimator solve-fors and file-boundary regimes remain pending. |
 | `../plugins/thinksys/libTLEPropagator` | Shipped example: step edit, exact save/Save As/reopen, report epoch/state, sampling invariance, invalid-build and missing-file recovery. Broader settings/reference ephemeris comparison pending. |
-| `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. OptimizerPlots adds All/Current/None Orbit/Ground/XY modes, pending Apply/Undo/reopen, independently known quadratic optimum, exact display-independent state/geodetic reports, accepted camera/replay and native viewer close/reopen. Additional settings/error modes pending. |
+| `../plugins/libYukonOptimizer` | CompatibilityTests: shipped algebraic optimization, exact save/Save As/reopen, invalid-type build recovery, analytic optimum and report. OptimizerPlots adds All/Current/None Orbit/Ground/XY modes, pending Apply/Undo/reopen, independently known quadratic optimum, exact display-independent state/geodetic reports, accepted camera/replay and native viewer close/reopen. Constraints adds the actual command controls, five fixed-bound scalar/array/property cases with analytic optima and byte-identical script-reference iteration reports, source/Undo/Redo/Unicode Save/Save As/reopen, operand rollback/recovery and native Wayland captures. A varying-right bound with literal left produces NaN in the independent script before any GUI edit; that regime and additional settings/error modes remain unqualified. |
 
 ## Implementation checkpoint 1
 
@@ -6040,3 +6040,84 @@ The two bounded missing toggle cases now have affirmative evidence. Ephemeris
 subscriber toggles, other mixed/deeper solver cases, unrelated plugin/workflow
 requirements and original compositor/portal gates remain open. Windows/macOS
 are deferred; full replacement qualification remains in progress.
+
+
+## NonlinearConstraint controls and fixed-bound execution — 2026-10-01
+
+The active wx NonlinearConstraintPanel has optimizer selection, left/right
+operand text and single-parameter browsers, and read-only <=, >= and = choices.
+Its SaveData accepts Real Number, Variable, Array Element and plottable
+Parameter, then validates the command. The displayed tolerance control is
+commented out; no active tolerance workflow was invented. Existing MissionTests
+already checks the optimizer-only solver selector, so that test was not
+reimplemented. audit-constraints.txt records these source contracts.
+
+The initial QtGui.Constraints check executes an independent array-element
+reference successfully but fails opening its actual MDI controls: the Qt form
+regex excluded commas, including valid array index separators. The constraint
+pattern now accepts array commas on either side and preserves source spans.
+The previously free-text relation now has the three wx choices. Constraint
+operand browsing uses NumericSingle: numeric properties/Variables, array
+indices and finite real literals; String/UTCGregorian, whole arrays, out-of-range
+literal elements and nan are rejected in the picker. Other callers retain their
+existing modes. Free text still reaches ordinary transactional engine validation.
+
+check-constraints-controls.txt finds a failed invalid-input assertion, refined
+in check-constraints-validation.txt: engine interpretation accepts Grid(2,1)
+for the declared Grid[1,2] and defers bounds to runtime. CommandForm now checks
+both operands' literal indices before command Apply, matching wx. It returns an
+inline range explanation and retains the pending panel and applied source.
+Dynamic indices are left to the existing engine; no source regeneration or
+numerical algorithm change was made. String/whole-array/missing-reference
+rejections retain the complete previous script and model through the existing
+rollback path. Correcting the first fixture then rerunning reproduces its
+independent full report exactly. Invalid-input combinations run once in this
+fixture, rather than for every relation case.
+
+check-constraints-final.txt passes the first three numerical cases, then finds
+that the independent 3 <= Value reference fails its known optimum, before any
+GUI edit. The separate --dynamic-bound diagnostic in
+check-constraints-dynamic-bound.txt confirms expected Value=3, actual=nan.
+This is an unqualified engine regime, not a passing GUI round trip. The harness
+retains that reproducible diagnostic; no regression gate accepts NaN and no
+solver implementation was rewritten to make the fixture pass. Literal-left
+GUI execution is instead qualified for a fixed array bound, 2 <= Grid(1,2).
+Broader varying-right bounds and dynamic-index numerical semantics remain open.
+
+The accepted five cases use Cost=(Value-2)^2 with one Yukon decision variable:
+Grid(1,1) >= Grid(1,2) (bound 3, optimum 3); Value <= Limit (bound 1, optimum 1);
+Sat.EarthMJ2000Eq.X = +1.5 (optimum 1.5); 2 <= Grid(1,2) (fixed bound 3,
+optimum 2); and Value >= -1e0 (inactive bound, optimum 2). Mission assignments
+keep Grid(1,1) and Sat.X equal to Value. Reports include Value, Cost, array and
+frame-dependent property values at every trial and the accepted endpoint.
+The independently known optimum/cost and four-column consistency are checked;
+the complete GUI-edited report is byte identical to its separate script
+reference. No numerical-engine equivalence is inferred for other regimes.
+
+Actual retained MDI browsers exercise array indices and object/property/frame
+selection, typed literals, Cancel, pending values, relation changes and Apply.
+Only the three operand/relation spans may differ from the source; labels,
+comments, resource settings, branch contents, reporting and implicit defaults
+stay exact. Each case has one exact Undo/Redo and Unicode Save/Save As/reopen,
+then executes the independently checked result. No full-suite repeat was made.
+check-constraints-accepted.txt passes Constraints (3.26 s), Mission (5.43 s) and
+ParameterSelection (5.18 s), 13.88 s total, after rebuilding those affected
+shared-control targets. Earlier viewers, solver-mode matrices and plugin suites
+were not repeated.
+
+constraints-wayland-20261001.txt passes the same five cases and rollback/recovery
+on native Wayland. Its .png and .picker.png were inspected: both operand controls,
+relation dropdown, exact labeled command, retained Apply panel, numeric browser,
+array selection, Help and completed status are visible. The captured first
+case full report .state.txt has SHA-256
+becae8cee1e6c225df0310340648709273bafc9eb46082898abcfc2ee54fd849.
+These actual-widget checks do not qualify fresh desktop input, top-level
+compositor minimize/restore or portal choosers.
+
+build-constraints.txt and build-constraints-bounds.txt record actual
+GmatQt-R2026a relinks and GmatQt launcher recreation after the two implementation
+steps. build-constraints-accepted.txt rebuilds the final focused targets and
+requests the already current actual application. Initial build/failure records
+are preserved as diagnostic evidence, not final passes. All changes remain on
+codex/qt6-gui. Windows/macOS are deferred and the full replacement goal remains
+in progress against the original gates.

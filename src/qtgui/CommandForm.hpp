@@ -11,6 +11,7 @@ class CommandForm final : public QGroupBox
 public:
    CommandForm(std::function<void(const QString &)> changed,QWidget *parent=nullptr);
    void setStatement(const QString &statement);
+   QString validationError() const;
 private:
    struct Field { QLineEdit *input; qsizetype start,length; };
    QFormLayout *layout;

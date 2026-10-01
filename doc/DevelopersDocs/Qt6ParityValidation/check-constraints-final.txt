@@ -1,0 +1,32 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 51: QtGui.Constraints
+1/1 Test #51: QtGui.Constraints ................***Failed    0.96 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS: Grid(1,1) >= Grid(1,2); analytic Value=3; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen and invalid operand recovery.
+PASS: Value <= Limit; analytic Value=1; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen and invalid operand recovery.
+PASS: Sat.EarthMJ2000Eq.X = +1.5; analytic Value=1.5; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen and invalid operand recovery.
+FAIL: Constrained optimum differs from analytic solution
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.96 sec*proc (1 test)
+
+Total Test time (real) =   0.96 sec
+
+The following tests FAILED:
+	 51 - QtGui.Constraints (Failed)                        qt-gui
+Errors while running CTest

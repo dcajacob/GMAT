@@ -1,0 +1,29 @@
+Scope: active wx NonlinearConstraintPanel and selected Linux Yukon runtime.
+wx source: src/gui/command/NonlinearConstraintPanel.cpp
+Create: optimizer combo; left text/Edit; read-only <=/>=/= combo; right text/Edit.
+Tolerance control creation/loading is commented out (inactive).
+SaveData: CheckVariable both operands, allow real numbers, Variables, Array
+Elements and plottable Parameters; then SetStringParameter/ValidateCommand.
+UserInputValidator::CheckVariable explicitly reports invalid array index.
+Both Edit callers use single ParameterSelectDialog for Spacecraft/SpacePoint/
+ImpulsiveBurn properties; related optimizer selector already tested in Mission.
+Qt CommandForm constraint regex excluded array commas and relation was plain text.
+ConstraintTests first direct array reference runs, actual MDI form unavailable.
+Fix: independent left/right source captures allow array commas; relation combo.
+NumericSingle uses plottable numeric property/Variable/array filtering plus finite
+real literals, with whole arrays/invalid literal indices rejected in picker.
+CommandForm validationError checks literal index bounds on both operand fields
+before CommandEditor Apply; invalid pending input/applied source retained.
+Core NonlinearConstraint and selected Yukon algorithms remain unchanged.
+Five fixed-bound cases cover <=/>=/= and scalar/array/frame-property operands;
+analytic optima and complete script-reference trial/accepted reports asserted.
+Invalid operand rollback and corrected reference-result rerun exercised once.
+Raw diagnostic --dynamic-bound is deliberately not a passing CTest gate:
+independent 3 <= Value script has actual Value=nan, expected optimum=3 before any
+GUI edit; varying-right numerical regime remains unqualified. The Yukon problem
+interface registers RHS desired values as constraint bounds and LHS achieved
+values separately; no numerical change or silent source rewrite is justified by
+this GUI task. Literal-left coverage uses the fixed bound 2 <= Grid(1,2).
+Relevant regression: QtGui.Constraints, QtGui.Mission, QtGui.ParameterSelection.
+No previous renderer/solver matrices/full regression repeated.
+Native Wayland actual-widget captures inspected; compositor/portal gates remain.

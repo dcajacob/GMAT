@@ -124,8 +124,9 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
          });
       }
    }
-   connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status] {
-      const auto error=apply(source->toPlainText());
+   connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply,status,command] {
+      auto error=command->validationError();
+      if (error.isEmpty()) error=apply(source->toPlainText());
       if (error.isEmpty()) { applied=true; appliedSuccessfully(); }
       else status->setText(error);
    });

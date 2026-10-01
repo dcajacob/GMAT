@@ -55,6 +55,29 @@ void CommandForm::updateSource()
    synchronizing=true; changed(result); synchronizing=false;
 }
 
+QString CommandForm::validationError() const
+{
+   if (title()!="Constraint" || fields.isEmpty()) return {};
+   // Interpretation checks operand types but defers array bounds until run.
+   // Match wx's pre-Apply check for literal indices; dynamic indices remain
+   // the engine's responsibility and their source is retained.
+   static const QRegularExpression element(R"(^([A-Za-z][A-Za-z0-9_]*)\(\s*([+-]?[0-9]+)\s*,\s*([+-]?[0-9]+)\s*\)$)");
+   for (const auto &side:{QString("Left side"),QString("Right side")}) {
+      const auto *input=findChild<QLineEdit *>("commandField_"+side);
+      if (!input) continue;
+      const auto match=element.match(input->text().trimmed());
+      if (!match.hasMatch()) continue;
+      auto *array=Moderator::Instance()->GetConfiguredObject(match.captured(1).toStdString());
+      if (!array || !array->IsOfType("Array")) continue;
+      bool rowValid=false,columnValid=false;
+      const auto row=match.captured(2).toLongLong(&rowValid),column=match.captured(3).toLongLong(&columnValid);
+      const auto rows=array->GetIntegerParameter("NumRows"),columns=array->GetIntegerParameter("NumCols");
+      if (!rowValid || !columnValid || row<1 || column<1 || row>rows || column>columns)
+         return side+QString(" array indices must be within rows 1–%1 and columns 1–%2.").arg(rows).arg(columns);
+   }
+   return {};
+}
+
 void CommandForm::setStatement(const QString &statement)
 {
    if (synchronizing) return;
@@ -75,7 +98,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Vary","Vary\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Variable","Initial value"}},
       {"Achieve","Achieve\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*=\\s*"+expression+"\\s*(?:,\\s*\\{([^{};]*)\\})?\\s*\\)"+end,{"Solver","Goal","Value"}},
       {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+expression+"\\s*\\)"+end,{"Solver","Objective"}},
-      {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^,;{}\\n]+?)\\s*(<=|>=|=)\\s*"+expression+"\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
+      {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^;{}<>=\\n]+?)\\s*(<=|>=|=)\\s*([^;{}<>=\\n]+?)\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
       {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
       {"File import","Set\\s+"+label+name+"\\s+"+name+"([ \\t]*(?:\\(\\s*Data\\s*=\\s*\\{[^{}();%\\n]*\\}\\s*\\))?)"+end,{"Target","Data source","Data"}},
@@ -235,6 +258,11 @@ void CommandForm::setStatement(const QString &statement)
             ConditionDialog dialog(input->text(),this);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.condition());
          });
+      } else if (title()=="Constraint" && name=="Relation") {
+         auto *choice=new QComboBox(this); choice->setObjectName("commandChoice_Relation"); choice->addItems({"<=",">=","="});
+         choice->setCurrentText(input->text()); input->setParent(choice); input->hide(); layout->addRow(name,choice);
+         connect(choice,&QComboBox::currentTextChanged,input,&QLineEdit::setText);
+         connect(input,&QLineEdit::textChanged,choice,&QComboBox::setCurrentText);
       } else if ((title()=="Toggle" || title()=="Command echo") && name=="State") {
          auto *state=new QComboBox(this); state->setObjectName(title()=="Toggle" ? "commandToggleState" : "commandEchoState"); state->addItems({"On","Off"});
          state->setCurrentText(input->text()); input->setParent(state); input->hide(); layout->addRow(name,state);
@@ -294,7 +322,8 @@ void CommandForm::setStatement(const QString &statement)
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);
          auto *choose=new QPushButton("Select parameter…",container); choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);
          const auto mode=title()=="Vary" ? ReportParameterDialog::Mode::WritableReal :
-            title()=="Assignment" ? ReportParameterDialog::Mode::Writable : ReportParameterDialog::Mode::Single;
+            title()=="Assignment" ? ReportParameterDialog::Mode::Writable :
+            title()=="Constraint" ? ReportParameterDialog::Mode::NumericSingle : ReportParameterDialog::Mode::Single;
          connect(choose,&QPushButton::clicked,this,[this,input,mode] {
             ReportParameterDialog dialog({input->text()},this,mode);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.selection().first());

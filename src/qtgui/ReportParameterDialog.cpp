@@ -9,6 +9,7 @@
 #include <QFormLayout>
 #include <QRegularExpression>
 #include <algorithm>
+#include <cmath>
 #include <QGroupBox>
 #include <QMap>
 #include "Array.hpp"
@@ -24,7 +25,8 @@
 ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget *parent,Mode mode) : QDialog(parent)
 {
    const bool arguments=mode==Mode::FunctionInputs || mode==Mode::FunctionOutputs;
-   const bool plottable=mode==Mode::PlottableSingle || mode==Mode::PlottableMultiple;
+   const bool numeric=mode==Mode::NumericSingle;
+   const bool plottable=mode==Mode::PlottableSingle || mode==Mode::PlottableMultiple || numeric;
    const bool single=mode!=Mode::Multiple && mode!=Mode::PlottableMultiple && !arguments;
    const bool writable=mode==Mode::Writable || mode==Mode::WritableReal || mode==Mode::FunctionOutputs;
    const bool realOnly=mode==Mode::WritableReal;
@@ -33,11 +35,12 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       const bool user=parameter->IsOfType("Variable") || parameter->IsOfType("Array") || parameter->IsOfType("String");
       return (user || parameter->IsSettable()) && (!realOnly || parameter->GetReturnType()==Gmat::REAL_TYPE || parameter->IsOfType("Array"));
    };
-   setObjectName("reportParameterDialog"); setWindowTitle(plottable ? "Plot parameters" : arguments ? (writable ? "Function outputs" : "Function inputs") : single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
+   setObjectName("reportParameterDialog"); setWindowTitle(numeric ? "Select numeric value" : plottable ? "Plot parameters" : arguments ? (writable ? "Function outputs" : "Function inputs") : single ? "Select parameter" : "Report parameters"); resize(600,single ? 350 : 450);
    auto *layout=new QVBoxLayout(this);
    auto *help=new QLabel("Choose a configured parameter, or enter a reference such as Sat.EarthMJ2000Eq.X. Apply validates references.",this);
    help->setWordWrap(true); layout->addWidget(help);
    if (plottable) help->setText("Choose a numeric plot parameter or an array element. Browse object properties and their reference frames below. Apply validates the complete plot.");
+   if (numeric) help->setText("Choose a Variable, array element or numeric object property, or enter a finite real number. Apply validates the complete command.");
    auto *entry=new QComboBox(this); entry->setObjectName("reportParameterEntry");
    if (single) singleEntry=entry;
    entry->setEditable(true); entry->setInsertPolicy(QComboBox::NoInsert);
@@ -191,11 +194,15 @@ ReportParameterDialog::ReportParameterDialog(const QStringList &selected,QWidget
       connect(list->model(),&QAbstractItemModel::rowsRemoved,this,[=] { validate(); }); validate();
    }
    if (plottable) {
-      auto validate=[this,buttons,entry,add] {
+      auto validate=[this,buttons,entry,add,numeric] {
+         auto allowed=[numeric](const QString &value) {
+            bool number=false; const auto real=value.toDouble(&number);
+            return (numeric && number && std::isfinite(real)) || isPlottableReference(value);
+         };
          const auto values=selection(); bool valid=singleEntry ? !values.isEmpty() : true;
-         for (const auto &value:values) valid=valid && isPlottableReference(value);
+         for (const auto &value:values) valid=valid && allowed(value);
          buttons->button(QDialogButtonBox::Ok)->setEnabled(valid);
-         add->setEnabled(isPlottableReference(entry->currentText()));
+         add->setEnabled(allowed(entry->currentText()));
       };
       connect(entry,&QComboBox::currentTextChanged,this,[validate] { validate(); });
       connect(list->model(),&QAbstractItemModel::rowsInserted,this,[validate] { validate(); });

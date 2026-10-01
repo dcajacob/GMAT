@@ -1,0 +1,8 @@
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::zwp_text_input_v3_leave(wl_surface*) Got leave event for surface 0x0 with focusing surface 0x59421a06e000
+qt.qpa.wayland.textinput: virtual void QtWaylandClient::QWaylandTextInputv3::disableSurface(wl_surface*) Try to disable surface 0x0 with focusing surface 0x59421a06e000
+PASS: Grid(1,1) >= Grid(1,2); analytic Value=3; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen .
+PASS: Value <= Limit; analytic Value=1; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen .
+PASS: Sat.EarthMJ2000Eq.X = +1.5; analytic Value=1.5; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen .
+PASS: 2 <= Grid(1,2); analytic Value=2; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen .
+PASS: Value >= -1e0; analytic Value=2; complete GUI/script report identical; exact source/Undo/Redo/Unicode reopen .
+PASS: actual constraint MDI relation controls, numeric filtered single picker, array element indices and frame-dependent property browser; pending/Cancel/retained Apply; all three relations, active/inactive inequality, literal on either side with fixed bounds, variable/array/property execution; invalid operand rollback/correction and reference-result rerun.

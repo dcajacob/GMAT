@@ -1949,3 +1949,14 @@ entire inner Target while those plots are disabled. Both cases have native
 Wayland captures, camera/replay and immediate close/reopen evidence in
 Qt6ReplacementQualification.md. Other mixed/deeper and ephemeris subscriber
 combinations remain under qualification.
+
+
+NonlinearConstraint now retains typed controls for array-element operands,
+provides <=/>=/= relation choices and a numeric operand browser, and rejects
+out-of-range literal array indices before Apply. Five fixed-bound Yukon cases
+have analytic optima and independent complete iteration reports after actual
+MDI edits/Undo/Redo/Unicode Save/Save As/reopen, plus native Wayland inspection;
+see the NonlinearConstraint qualification appendix. A separate varying-right
+bound produces NaN in the script reference before any GUI edit and remains
+unqualified; no numerical-engine rewrite was made. Other original qualification
+gates remain open and Windows/macOS remain deferred.

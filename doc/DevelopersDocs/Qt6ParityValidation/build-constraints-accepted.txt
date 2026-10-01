@@ -1,0 +1,7 @@
+[1/7] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/7] Building CXX object src/qtgui/CMakeFiles/GmatQtParameterSelectionTests.dir/tests/ParameterSelectionTests.cpp.o
+[3/7] Building CXX object src/qtgui/CMakeFiles/GmatQtConstraintTests.dir/tests/ConstraintTests.cpp.o
+[4/7] Linking CXX executable src/qtgui/GmatQtParameterSelectionTests
+[5/7] Linking CXX executable src/qtgui/GmatQtConstraintTests
+[6/7] Building CXX object src/qtgui/CMakeFiles/GmatQtMissionTests.dir/tests/MissionTests.cpp.o
+[7/7] Linking CXX executable src/qtgui/GmatQtMissionTests
