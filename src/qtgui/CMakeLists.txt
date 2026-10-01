@@ -1,6 +1,6 @@
 find_package(Qt6 6.4 REQUIRED COMPONENTS Widgets OpenGLWidgets)
 find_package(OpenSceneGraph 3.6 REQUIRED COMPONENTS osg osgDB osgViewer osgGA osgUtil osgText)
-add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
+add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocuments.cpp
    QtMessageReceiver.cpp QtMessageReceiver.hpp QtInterpreter.cpp QtInterpreter.hpp
    UserParameter.cpp UserParameter.hpp ScriptStatements.hpp
    AboutDialog.cpp AboutDialog.hpp
@@ -41,7 +41,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp
    TrackingConfigDialog.cpp TrackingConfigDialog.hpp
    EpochIntervalDialog.cpp EpochIntervalDialog.hpp
    ScriptEventDialog.cpp ScriptEventDialog.hpp
-   ScriptEditor.cpp ScriptEditor.hpp
+   ScriptEditor.cpp ScriptEditor.hpp ScriptDocument.cpp ScriptDocument.hpp
    FunctionFileDialog.cpp FunctionFileDialog.hpp
    InspectionDialog.cpp InspectionDialog.hpp
    FindReplaceDialog.cpp FindReplaceDialog.hpp
@@ -191,6 +191,9 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtComparisonTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtThrustFileTests tests/ThrustFileTests.cpp)
    target_link_libraries(GmatQtThrustFileTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtScriptDocumentTests tests/ScriptDocumentTests.cpp)
+   target_link_libraries(GmatQtScriptDocumentTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtScriptDocumentTests GmatQt)
    add_executable(GmatQtScriptEditingTests tests/ScriptEditingTests.cpp)
    target_link_libraries(GmatQtScriptEditingTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtPolyhedronTests tests/PolyhedronTests.cpp)
@@ -221,6 +224,10 @@ if(GMAT_QT_BUILD_TESTS)
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
          $<TARGET_FILE:GmatQtFolderRunTests> "${qt_test_startup}")
       set_tests_properties(QtGui.NativeFolderRun PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
+      add_test(NAME QtGui.NativeDocuments COMMAND ${QT_XVFB_RUN} -a
+         ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
+         $<TARGET_FILE:GmatQtScriptDocumentTests> "${qt_test_startup}")
+      set_tests_properties(QtGui.NativeDocuments PROPERTIES LABELS qt-gui TIMEOUT 60 RESOURCE_LOCK gmat_qt_engine)
       add_test(NAME QtGui.NativeDebugger COMMAND ${QT_XVFB_RUN} -a
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
          $<TARGET_FILE:GmatQtDebuggerTests> "${qt_test_startup}")
@@ -253,6 +260,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.KalmanFilter GmatQtKalmanTests "${qt_test_startup}")
    add_qt_test(QtGui.Comparison GmatQtComparisonTests "${qt_test_startup}")
    add_qt_test(QtGui.ThrustFiles GmatQtThrustFileTests "${qt_test_startup}")
+   add_qt_test(QtGui.ScriptDocuments GmatQtScriptDocumentTests "${qt_test_startup}")
    add_qt_test(QtGui.ScriptEditing GmatQtScriptEditingTests "${qt_test_startup}")
    add_qt_test(QtGui.ExternalForces GmatQtExternalForceTests "${qt_test_startup}")
    add_qt_test(QtGui.Polyhedron GmatQtPolyhedronTests "${qt_test_startup}")
@@ -281,7 +289,7 @@ if(GMAT_QT_BUILD_TESTS)
       DEPENDS GmatQt GmatQtWindowTests GmatQtFileTests GmatQtWorkflowTests GmatQtMissionTests GmatQtPlotTests GmatQtOrbitRendererTests GmatQtCompatibilityTests GmatQtAtmosphereTests GmatQtStationTests GmatQtEventLocatorTests GmatQtPlotSetupTests GmatQtOrbitSetupTests GmatQtThrusterTests GmatQtBurnTests GmatQtEphemerisTests GmatQtDynamicDataTests GmatQtCalculatedPointTests GmatQtDataInterfaceTests GmatQtEstimationTests GmatQtComparisonTests GmatQtThrustFileTests GmatQtScriptEditingTests GmatQtExternalForceTests GmatQtPolyhedronTests
       USES_TERMINAL VERBATIM)
    add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests GmatQtSolarSystemTests GmatQtCelestialBodyTests)
-   add_dependencies(check-qt GmatQtResourceRoundTripTests)
+   add_dependencies(check-qt GmatQtResourceRoundTripTests GmatQtScriptDocumentTests)
    add_dependencies(check-qt GmatQtSolverPlotTests)
    add_dependencies(check-qt GmatQtDesktopTests)
    add_dependencies(check-qt GmatQtHelpTests)

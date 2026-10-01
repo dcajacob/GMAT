@@ -145,6 +145,32 @@ remove their contributors. OK keeps changes pending until the parent Apply,
 which validates the mesh and refreshes the retained panel. Invalid settings
 leave the previous mission intact so the pending values can be corrected.
 
+File / **Open another script window…** and **New script window** keep additional
+scripts in the MDI workspace. Window titles identify the active mission, inactive
+scripts and unsaved changes; equal filenames show their full paths. Opening an
+already open file focuses its existing editor, preserving its edits and Undo.
+Resources, Mission, Output and ordinary Build/Run belong to the active mission.
+Reading, editing, saving or searching an inactive script leaves that mission
+loaded. Save, Save As, Find/Replace and Go to line use the selected script window.
+
+Mission / **Make selected script active** validates and builds its editor buffer
+before switching the active mission. Pending configuration panels offer Apply,
+Discard or Cancel; rejected Apply keeps their values and the existing mission.
+An invalid target script retains both buffers and restores the previous built
+mission. **Save and build script** and **Save, build and run mission** first save
+the selected script and then make it active. Each document keeps its own Undo,
+modified state, filename and relative include/asset directory. Saving over a file
+open in another script window is rejected to protect that independent buffer.
+
+**Reload selected script…** asks before replacing the buffer and clearing its
+Undo history. Read/encoding failures leave the buffer intact. Reloading the active
+script invalidates the previous model until Build or Run; reloading an inactive
+script does not change the active model. **Close selected script** offers
+Save/Discard/Cancel for unsaved changes. Closing the active editor keeps its mission
+loaded; View / **Active script** or reopening its path restores the editor. Run
+protects every document from editing, closing or switching. Application close
+also checks unsaved inactive scripts.
+
 The initial shell compiles with Qt 6.10.2 on Linux, initializes the engine,
 loads the default mission and renders the familiar layout. File loading
 checks reads before replacing the editor; saving uses QSaveFile and only

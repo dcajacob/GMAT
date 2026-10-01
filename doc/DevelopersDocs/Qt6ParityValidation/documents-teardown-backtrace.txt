@@ -1,0 +1,222 @@
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) [answered N; input not from terminal]
+Debuginfod has been disabled.
+To make this setting permanent, add 'set debuginfod enabled off' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/x86_64-linux-gnu/libthread_db.so.1".
+[New Thread 0x7fffe63d66c0 (LWP 3796173)]
+This plugin does not support propagateSizeHints()
+warning: Could not load shared library symbols for ../plugins/libDataInterface.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libEphemPropagator.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libEKF.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libEventLocator.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libExternalForceModel_py314.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libExtraPropagators.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libFormation.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libGmatFunction.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libMsise00.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libNewParameters.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libPolyhedronGravity.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libProductionPropagators.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libSaveCommand.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libScriptTools.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libStation.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libThrustFile.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/thinksys/libTLEPropagator.so.
+Do you need "set solib-search-path" or "set sysroot"?
+warning: Could not load shared library symbols for ../plugins/libYukonOptimizer.so.
+Do you need "set solib-search-path" or "set sysroot"?
+[New Thread 0x7fffdffff6c0 (LWP 3796189)]
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+[New Thread 0x7fffdf3d76c0 (LWP 3796202)]
+[New Thread 0x7fffdebd66c0 (LWP 3796203)]
+[New Thread 0x7fffde3d56c0 (LWP 3796204)]
+[New Thread 0x7fffddbd46c0 (LWP 3796205)]
+[New Thread 0x7fffdd3d36c0 (LWP 3796206)]
+[New Thread 0x7fffdcbd26c0 (LWP 3796207)]
+[New Thread 0x7fffc7fff6c0 (LWP 3796208)]
+[New Thread 0x7fffc77fe6c0 (LWP 3796209)]
+[Thread 0x7fffdffff6c0 (LWP 3796189) exited]
+[New Thread 0x7fffdffff6c0 (LWP 3796210)]
+This plugin does not support propagateSizeHints()
+[Thread 0x7fffdffff6c0 (LWP 3796210) exited]
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+Thread 1 "GmatQtScriptEdi" received signal SIGSEGV, Segmentation fault.
+0x000055555567bedc in QArrayDataPointer<std::shared_ptr<ScriptDocument> >::reallocateAndGrow(QArrayData::GrowthPosition, long long, QArrayDataPointer<std::shared_ptr<ScriptDocument> >*) ()
+
+Thread 11 (Thread 0x7fffc77fe6c0 (LWP 3796209) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004212088, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736540432240, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x5555560c0f78, expected=3944135435, op=8388233, abstime=0x7fffc77fd770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560c0f78, expected=3944135435, clockid=32767, abstime=0x7fffc77fd770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560c0f78, expected=expected@entry=70, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffc77fd880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560c0f58, mutex=0x5555560c0f30, clockid=<optimized out>, abstime=0x7fffc77fd880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560c0f58, mutex=0x5555560c0f30, abstime=0x7fffc77fd880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 10 (Thread 0x7fffc7fff6c0 (LWP 3796208) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004211080, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736548824944, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x5555560c0b88, expected=3944135435, op=8388233, abstime=0x7fffc7ffe770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560c0b88, expected=3944135435, clockid=32767, abstime=0x7fffc7ffe770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560c0b88, expected=expected@entry=68, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffc7ffe880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560c0b68, mutex=0x5555560c0b40, clockid=<optimized out>, abstime=0x7fffc7ffe880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560c0b68, mutex=0x5555560c0b40, abstime=0x7fffc7ffe880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 9 (Thread 0x7fffdcbd26c0 (LWP 3796207) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004157900, a2=<optimized out>, a3=a3@entry=1443362736, a4=a4@entry=140737140304576, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=21845, futex_word=0x5555560b3bcc, expected=1443362736, op=21724, abstime=0x7fffeb412ac0 <main_arena>, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560b3bcc, expected=1443362736, clockid=0, abstime=0x7fffeb412ac0 <main_arena>, private=21845, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560b3bcc, expected=expected@entry=81, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffdcbd1880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560b3ba8, mutex=0x5555560b3b80, clockid=<optimized out>, abstime=0x7fffdcbd1880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560b3ba8, mutex=0x5555560b3b80, abstime=0x7fffdcbd1880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 8 (Thread 0x7fffdd3d36c0 (LWP 3796206) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004169548, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736905160560, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x5555560b694c, expected=3944135435, op=8388233, abstime=0x7fffdd3d2770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560b694c, expected=3944135435, clockid=32767, abstime=0x7fffdd3d2770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560b694c, expected=expected@entry=75, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffdd3d2880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560b6928, mutex=0x5555560b6900, clockid=<optimized out>, abstime=0x7fffdd3d2880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560b6928, mutex=0x5555560b6900, abstime=0x7fffdd3d2880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 7 (Thread 0x7fffddbd46c0 (LWP 3796205) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004168264, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736913553264, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x5555560b6448, expected=3944135435, op=8388233, abstime=0x7fffddbd3770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560b6448, expected=3944135435, clockid=32767, abstime=0x7fffddbd3770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560b6448, expected=expected@entry=88, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffddbd3880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560b6428, mutex=0x5555560b6400, clockid=<optimized out>, abstime=0x7fffddbd3880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560b6428, mutex=0x5555560b6400, abstime=0x7fffddbd3880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 6 (Thread 0x7fffde3d56c0 (LWP 3796204) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004167308, a2=<optimized out>, a3=a3@entry=1442817600, a4=a4@entry=140737140304576, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=21845, futex_word=0x5555560b608c, expected=1442817600, op=21724, abstime=0x7fffeb412ac0 <main_arena>, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560b608c, expected=1442817600, clockid=0, abstime=0x7fffeb412ac0 <main_arena>, private=21845, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560b608c, expected=expected@entry=71, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffde3d4880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560b6068, mutex=0x5555560b6040, clockid=<optimized out>, abstime=0x7fffde3d4880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560b6068, mutex=0x5555560b6040, abstime=0x7fffde3d4880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 5 (Thread 0x7fffdebd66c0 (LWP 3796203) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825004166396, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736930338672, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x5555560b5cfc, expected=3944135435, op=8388233, abstime=0x7fffdebd5770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x5555560b5cfc, expected=3944135435, clockid=32767, abstime=0x7fffdebd5770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x5555560b5cfc, expected=expected@entry=67, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffdebd5880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x5555560b5cd8, mutex=0x5555560b5cb0, clockid=<optimized out>, abstime=0x7fffdebd5880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x5555560b5cd8, mutex=0x5555560b5cb0, abstime=0x7fffdebd5880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 4 (Thread 0x7fffdf3d76c0 (LWP 3796202) "Thread (pooled)"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a030c in __internal_syscall_cancel (a1=a1@entry=93825003385752, a2=<optimized out>, a3=a3@entry=3944135435, a4=a4@entry=140736938731376, a5=a5@entry=0, a6=a6@entry=4294967295, nr=202) at ./nptl/cancellation.c:49
+#2  0x00007fffeb2a06e7 in __futex_abstimed_wait_common64 (private=0, futex_word=0x555555ff7398, expected=3944135435, op=8388233, abstime=0x7fffdf3d6770, cancel=true) at ./nptl/futex-internal.c:57
+#3  __futex_abstimed_wait_common (futex_word=0x555555ff7398, expected=3944135435, clockid=32767, abstime=0x7fffdf3d6770, private=0, cancel=true) at ./nptl/futex-internal.c:87
+#4  __GI___futex_abstimed_wait_cancelable64 (futex_word=futex_word@entry=0x555555ff7398, expected=expected@entry=90, clockid=clockid@entry=1, abstime=abstime@entry=0x7fffdf3d6880, private=private@entry=0) at ./nptl/futex-internal.c:139
+#5  0x00007fffeb2a3382 in __pthread_cond_wait_common (cond=0x555555ff7378, mutex=0x555555ff7350, clockid=<optimized out>, abstime=0x7fffdf3d6880) at ./nptl/pthread_cond_wait.c:421
+#6  ___pthread_cond_timedwait64 (cond=0x555555ff7378, mutex=0x555555ff7350, abstime=0x7fffdf3d6880) at ./nptl/pthread_cond_wait.c:478
+#7  0x00007ffff6912533 in QWaitCondition::wait(QMutex*, QDeadlineTimer) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff687ffae in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#10 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#11 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 2 (Thread 0x7fffe63d66c0 (LWP 3796173) "QDBusConnection"):
+#0  __syscall_cancel_arch () at ../sysdeps/unix/sysv/linux/x86_64/syscall_cancel.S:56
+#1  0x00007fffeb2a039c in __internal_syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=8, a6=0, nr=271) at ./nptl/cancellation.c:49
+#2  __syscall_cancel (a1=<optimized out>, a2=<optimized out>, a3=<optimized out>, a4=<optimized out>, a5=a5@entry=8, a6=a6@entry=0, nr=271) at ./nptl/cancellation.c:75
+#3  0x00007fffeb328136 in __GI_ppoll (fds=<optimized out>, nfds=<optimized out>, timeout=<optimized out>, sigmask=<optimized out>) at ../sysdeps/unix/sysv/linux/ppoll.c:42
+#4  0x00007fffeb10a371 in ?? () from /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+#5  0x00007fffeb10a443 in g_main_context_iteration () from /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+#6  0x00007ffff6a0513d in QEventDispatcherGlib::processEvents(QFlags<QEventLoop::ProcessEventsFlag>) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#7  0x00007ffff6798f5b in QEventLoop::exec(QFlags<QEventLoop::ProcessEventsFlag>) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#8  0x00007ffff6882aae in QThread::exec() () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#9  0x00007fffeb02104d in ?? () from /usr/lib/x86_64-linux-gnu/libQt6DBus.so.6
+#10 0x00007ffff69185a6 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#11 0x00007fffeb2a3dfa in start_thread (arg=<optimized out>) at ./nptl/pthread_create.c:454
+#12 0x00007fffeb3375cc in __GI___clone3 () at ../sysdeps/unix/sysv/linux/x86_64/clone3.S:78
+
+Thread 1 (Thread 0x7fffea82d200 (LWP 3796167) "GmatQtScriptEdi"):
+#0  0x000055555567bedc in QArrayDataPointer<std::shared_ptr<ScriptDocument> >::reallocateAndGrow(QArrayData::GrowthPosition, long long, QArrayDataPointer<std::shared_ptr<ScriptDocument> >*) ()
+#1  0x00005555556803f2 in MainWindow::updateScriptDocuments() ()
+#2  0x00007ffff67ea525 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#3  0x00007ffff797f4d7 in QMdiArea::subWindowActivated(QMdiSubWindow*) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#4  0x00007ffff79871e3 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#5  0x00007ffff67ea45f in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#6  0x00007ffff79902d1 in QMdiSubWindow::windowStateChanged(QFlags<Qt::WindowState>, QFlags<Qt::WindowState>) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#7  0x00007ffff798e340 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#8  0x00007ffff7984ad5 in QMdiArea::event(QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#9  0x00007ffff77a0b7f in QApplicationPrivate::notify_helper(QObject*, QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#10 0x00007ffff6790098 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#11 0x00007ffff77f5b5b in QWidgetPrivate::hideChildren(bool) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#12 0x00007ffff77f6174 in QWidgetPrivate::hide_helper() () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#13 0x00007ffff77f662a in QWidgetPrivate::setVisible(bool) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#14 0x00007ffff77f1fd6 in QWidgetPrivate::handleClose(QWidgetPrivate::CloseMode) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#15 0x00007ffff7816c32 in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#16 0x00007ffff6e35e40 in QWindow::event(QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6
+#17 0x00007ffff77a0b7f in QApplicationPrivate::notify_helper(QObject*, QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#18 0x00007ffff6790098 in QCoreApplication::notifyInternal2(QObject*, QEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Core.so.6
+#19 0x00007ffff6dd7fb8 in QGuiApplicationPrivate::processCloseEvent(QWindowSystemInterfacePrivate::CloseEvent*) () from /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6
+#20 0x00007ffff6e3ca6b in ?? () from /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6
+#21 0x00007ffff6e2efc0 in QWindow::close() () from /usr/lib/x86_64-linux-gnu/libQt6Gui.so.6
+#22 0x00007ffff77e2826 in QWidget::~QWidget() () from /usr/lib/x86_64-linux-gnu/libQt6Widgets.so.6
+#23 0x000055555560c415 in main ()

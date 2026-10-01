@@ -90,7 +90,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
-| `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. FileTests, WorkflowTests and ScriptEditingTests cover the single Qt mission document, failure/cancel identity protection, encoding, save-before-run and pending/close protection. Multiple inactive documents, panel-specific reload/status and remaining shared editor cases remain pending. |
+| `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. ScriptDocumentTests qualifies independent active/inactive MDI scripts, per-document Save/search/Undo, explicit activation, pending Apply/Discard/Cancel and rejected-Apply recovery, selected save-build-run, active/inactive reload, encoding/write/collision failure protection and all-document runtime/close guards with independent relative-include reports. FileTests, WorkflowTests and ScriptEditingTests retain existing mission/file evidence. Widget choosers and synthetic shortcuts are covered; native portal input remains unqualified. |
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Resource windows now stay open and refresh after Apply, with repeated Variable Apply/source/report evidence in DesktopTests. Shared Help and wider resource/keyboard cases remain pending. |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
@@ -110,9 +110,9 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/view/ViewTextDialog.hpp` | Read-only multiline/Close and optional single-line OK/Cancel modes audited. Active callers are About license text, folder-run diagnostics and comparison results; editable rename caller is commented. Qt comparison/read-only report text is covered by ComparisonTests; About/license and folder-run delivery remain required under their separate unaudited rows. Shared keyboard/font/menu cases remain pending. |
 | `src/gui/view/FindReplaceDialog.hpp` | Nonmodal Find/Replace with next/previous, wrap, session histories, selected replacement and Replace All. Case/whole-word controls, no-match feedback, read-only protection and single-operation Undo tested. |
 | `src/gui/solarsys/LibrationPointPanel.hpp` | Active primary/secondary, L1–L5 and orbit/target color controls audited. Typed celestial-body/barycenter choices exclude spacecraft, libration points and SSB; paired Apply rejects equal bodies. Pending choices/colors, invalid edit rollback, exact Undo/Redo, Unicode save/reopen, coordinate reports and orbit publications covered. Earth/Luna all-five geometry and Sun/custom-barycenter execution covered; broader body/epoch regimes pending. |
-| `src/gui/view/EditorPanel.hpp` | Active save/sync/run, empty-input protection and shared SavePanel actions audited. Qt Mission menu adds Save/build and Save/build/run; ScriptEditingTests covers chooser Cancel, successful save before Build/Run, Unicode paths, independently checked outputs, failed-save/source/identity protection, invalid-script recovery and empty-script protection. Existing FileTests/WorkflowTests cover encoding, Undo/Redo, syntax, Find/Replace, running/close and pending-panel protection. Multiple inactive documents and broader shared editor/menu behavior remain pending. |
+| `src/gui/view/EditorPanel.hpp` | Active save/sync/run, empty-input protection and shared SavePanel actions audited. Qt Mission menu provides Save/build and Save/build/run for the selected document, with explicit activation. ScriptEditingTests covers save-before-Build/Run, Unicode paths, independent outputs, failures and empty-script protection. ScriptDocumentTests covers multiple inactive scripts, independent source/history/Save/search, failed activation restoration, pending-panel decisions, reload and close. FileTests/WorkflowTests retain encoding and editing evidence; native portal and wider desktop-input gates remain outstanding. |
 | `src/gui/app/CompareFilesDialog.hpp` | Active wx modes, absolute tolerance, skip blanks, baseline/candidate prefixes, up to three directories, file limit and result export audited. Qt File > Compare files workspace and report Compare action provide these controls plus two-file comparison. ComparisonTests covers UTF-8/BOM/CRLF, tolerance boundaries, UTC columns, maxima, trailing rows, invalid input, three-directory matching/.truth fallback/exact limits, editable widths, picker Cancel/row removal, full export/input protection, Stop/close and real-engine report/save/reopen invariance. Native Wayland inspected. Non-UTF-8 files, arbitrary initial header/data ambiguity, mid-read replacement and extreme directory/record regimes remain unqualified. |
-| `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt script editor provides line numbers, syntax coloring and bounded Edit > Go to line with Cancel; Save/build and Save/build/run are qualified by ScriptEditingTests. Single-document workflows are covered; multiple inactive documents, line-navigation edge cases and broader shared SavePanel behavior remain pending. |
+| `src/gui/app/ScriptPanel.hpp` | Legacy plain editor save/sync/run, line-number navigation and failed-save identity behavior audited. Qt numbered/highlighted script windows provide per-document Find/Replace and bounded Go to line; ScriptEditingTests and ScriptDocumentTests qualify selected save-build-run, independent active/inactive document editing/history/status, duplicate identity, reload, close, Unicode/relative includes and recovery with independent reports. Synthetic Save/Undo/Redo shortcuts are covered on offscreen/native X11; native Wayland capture uses widget actions and does not qualify fresh desktop input. |
 | `src/gui/solarsys/CelestialBodyOrientationPanel.hpp` | wx read-only rotation-source/built-in pole rules, Earth nutation interval, custom pole values, frame ID and ordered FK files audited. Ceres pole edits and imported SPICE rotation change body-fixed reports and match separate scripts; FK ordering selects the final frame definition. Startup Luna FK removal survives save/reopen. Wider epochs, bodies, frame/pole conventions and source switching remain unqualified. |
 | `src/gui/solarsys/UniversePanel.hpp` | Source/file/timing controls audited. SolarSystem resource and grouped Qt panel expose runtime sources, paired DE file, SPK/PCK browsing, UseTT and interval. DE405/421/424 and SPICE missions, copied Unicode files, retained SPICE DE fallback, independent script reports and body/frame checks, pending/Discard/Cancel, invalid/truncated-file rollback, correction, exact Undo/Redo, save/reopen, comment/implicit boundary preservation and later resource/mission edits covered. Native Wayland panel workflow passed. Wider epochs, caching regimes, malformed full DE contents, keyboard/portal chooser and shared Help remain unqualified. |
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Both active wx callers audited: solar-shadow lists hide Sun; primary/point-mass selection excludes the opposite pending gravity list. Qt checked lists provide add/remove, Select all/Clear, reorder, Cancel and Apply. Existing and user Asteroid choices, typed invalid/overlap rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact power/propagation agreement with separately written scripts covered. Body-only edits preserve surrounding raw configuration; Wayland dialogs inspected. Optional calculated-point mode, broader pending transitions, keyboard/focus/portal and shared Help remain unqualified. |
@@ -4536,3 +4536,79 @@ the actual application/bin/GmatQt launcher points to the rebuilt executable.
 This closes representative first/multiple polyhedron contributor creation and
 removal. The full acceptance checklist remains in progress, including broader
 document/plugin/viewer operations and native desktop-input gates.
+
+
+## Independent active/inactive script documents
+
+The Qt workspace now supports additional script windows while keeping Resources,
+Mission and Output tied to an explicitly active mission. File actions open/new
+inactive scripts; ordinary Save/Save As and search/line navigation use the selected
+script. Duplicate opens focus the same buffer; duplicate filenames display full
+paths. Mission / Make selected script active builds its current buffer; selected
+Save/build and Save/build/run save before promotion. Separate buffers retain their
+source, Undo/Redo, filenames, saved snapshots and modified states. Relative
+includes/assets follow the promoted script's folder.
+
+Pending active-mission panels offer Apply/Discard/Cancel before promotion. Failed
+Apply preserves pending settings and aborts switching; failed target builds retain
+the target buffer and restore the previous built mission. Successful promotion
+closes obsolete configuration panels and clears old mission viewer histories and
+breakpoints. It does not carry a previous mission's output forward as current.
+Active-editor close retains its loaded mission and hidden buffer; View/Active
+script or duplicate open restores it. Inactive close and application close check
+unsaved scripts. Reload asks before replacing source, checks encoding/reads first,
+and invalidates the old model when applied to the active script. Runtime protects
+all editors and document switching/close operations.
+
+The first regression exposed an MDI activation signal during QWidget teardown,
+after the C++ document list had been destroyed. check-documents-teardown-failed.txt
+and documents-teardown-backtrace.txt retain the failure and trace. MainWindow now
+disconnects document/workspace/application callbacks and clears close callbacks
+before destroying its model/document state; the existing Files/ScriptEditing
+checks passed after that correction.
+
+Configuration includes exposed two serializer effects: repeating a directive in
+the mission tail prevented safe command alignment, and attaching one before a
+resource declaration prevented assignment comparison. The initial failures are
+retained in check-documents-include-mapping-failed.txt and
+check-documents-resource-include-failed.txt. Canonical comparison now ignores
+nonexecuting serialized include directives while retaining the original source's
+directives. Cross-file mission commands remain protected when their expanded
+statements cannot be aligned to the actual editor source. No canonical fallback
+or rewrite of included files is introduced.
+
+ScriptDocumentTests uses the actual File/Mission actions and Resources MDI panel.
+Separate Unicode directories with equal filenames and relative configuration
+includes produce independently specified 7/10/15/16 reports after editing,
+promotion and GUI command changes. It checks duplicate identity and dirty siblings,
+per-document Save/Save As/Find/Replace/line navigation and exact Undo/Redo,
+Save As Cancel, independently open-file collision and missing-directory write
+failure, Apply/Discard/Cancel and rejected pending Apply, invalid target builds
+and correction, active/inactive Reload and malformed UTF-8 protection, selected
+Save/build/run, Stop with every editor protected, hidden active reopen and dirty
+inactive/main-window close choices. An actual mission include also produces the
+independent 18 result while its cross-file commands reject GUI source patching.
+The shortcut cases inject Qt events for Save/Undo/Redo on offscreen/native X11;
+the separate Wayland capture uses actions and adds no fresh keyboard or portal
+input qualification. Scientific engine algorithms are unchanged.
+
+
+The final native Wayland run passed in documents-wayland-20260930.txt. The
+.png capture asserts window exposure and was visually inspected: the familiar
+navigation/MDI/messages layout, both script editors, line numbers, syntax colors,
+Unicode text and active/inactive/dirty titles are readable. Equal-filename full
+path titles are asserted earlier in the same test before Save As changes one
+filename. Widget choosers were used; fresh compositor keyboard input, native
+portal chooser operation and top-level GNOME minimize/restore remain outside
+this evidence and retain their separate outstanding gates.
+
+The initial complete regression passed 50 suites in 217.93 seconds
+(check-documents-initial.txt). After the final write-failure, pending-rejection,
+active Reload, cross-file command and shortcut assertions and full-path title
+change, check-documents.txt records all 50 suites passing in 200.65 seconds.
+This includes NativeDocuments on X11 plus the existing native orbit/window,
+solver-display, folder-run, DPI and fallback suites. The actual GmatQt target
+was rebuilt; the final launcher verification is retained in
+build-documents-application.txt. Full Linux replacement qualification remains
+in progress under the acceptance gates above, including wider source/plugin
+operations and the outstanding native desktop-input gates.

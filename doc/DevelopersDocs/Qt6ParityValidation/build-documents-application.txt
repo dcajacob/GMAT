@@ -1,0 +1,1 @@
+[1/1] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt

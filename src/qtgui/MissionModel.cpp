@@ -142,7 +142,13 @@ qsizetype codeEnd(const ScriptStatement &statement)
 }
 void retainSource(MissionSnapshot &snapshot)
 {
-   const auto original=scriptStatements(snapshot.sourceScript),generated=scriptStatements(snapshot.canonicalScript);
+   const auto original=scriptStatements(snapshot.sourceScript);
+   auto generated=scriptStatements(snapshot.canonicalScript);
+   // The serializer may repeat configuration include directives in its mission
+   // tail. These are not executable commands. Leave original source directives
+   // in the alignment: commands expanded from a mission include still cannot
+   // be mistaken for text owned by this editor.
+   for (qsizetype i=generated.size();i-->0;) if (generated[i].code.trimmed().startsWith("#Include")) generated.removeAt(i);
    qsizetype canonicalBegin=-1,sourceBegin=-1;
    for (qsizetype i=0;i<generated.size();++i) if (key(generated[i].code)=="BeginMissionSequence") { canonicalBegin=i; break; }
    const bool canonicalBoundary=canonicalBegin>=0;

@@ -48,6 +48,7 @@
 #include "StartupCompatibility.hpp"
 #include "ScriptCompatibility.hpp"
 #include "ScriptEditor.hpp"
+#include "ScriptDocument.hpp"
 #include "FindReplaceDialog.hpp"
 #include <QDialog>
 #include <QDir>
@@ -330,19 +331,14 @@ MainWindow::MainWindow()
    addDockWidget(Qt::BottomDockWidgetArea, console);
    resizeDocks({navigation}, {270}, Qt::Horizontal);
    resizeDocks({console}, {160}, Qt::Vertical);
-   editor = new ScriptEditor;
-   editor->setObjectName("scriptEditor");
-   editor->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-   editor->setLineWrapMode(QPlainTextEdit::NoWrap);
-   auto *document = workspace->addSubWindow(editor);
-   document->setWindowTitle("Script");
-   document->setWindowFlags(document->windowFlags() & ~Qt::WindowCloseButtonHint);
-   document->resize(850, 540);
-   document->showMaximized();
-   connect(editor->document(), &QTextDocument::modificationChanged, this, [this] { updateTitle(); });
+   activeDocument=createScriptDocument({},{}); editor=activeDocument->editor;
+   editor->setObjectName("scriptEditor"); activeDocument->window->showMaximized();
+   connect(workspace,&QMdiArea::subWindowActivated,this,[this](QMdiSubWindow *) { updateScriptDocuments(); });
    auto *file = menuBar()->addMenu("&File");
    auto *edit = menuBar()->addMenu("&Edit");
    auto *view = menuBar()->addMenu("&View");
+   auto *showScript=view->addAction("Active script"); showScript->setObjectName("showActiveScript");
+   connect(showScript,&QAction::triggered,this,[this] { if (activeDocument->window->isMinimized() || !activeDocument->window->isVisible()) activeDocument->window->showNormal(); workspace->setActiveSubWindow(activeDocument->window); editor->setFocus(); });
    auto *run = menuBar()->addMenu("&Mission");
    auto *windows = menuBar()->addMenu("&Window");
    auto *help = menuBar()->addMenu("&Help");
@@ -369,9 +365,15 @@ MainWindow::MainWindow()
       const auto path = QFileDialog::getOpenFileName(this, "Open GMAT script", scriptPath, "GMAT scripts (*.script);;All files (*)");
       if (!path.isEmpty()) openMissionFile(path);
    });
+   auto *openAnother=file->addAction("Open another script window…"); openAnother->setObjectName("openScriptDocument"); openAnother->setShortcut(QKeySequence("Ctrl+Shift+O")); editingActions.append(openAnother);
+   connect(openAnother,&QAction::triggered,this,[this] { const auto path=QFileDialog::getOpenFileName(this,"Open another GMAT script",scriptPath,"GMAT scripts (*.script);;All files (*)"); if (!path.isEmpty()) openScriptDocument(path); });
+   auto *newScript=file->addAction("New script window"); newScript->setObjectName("newScriptDocument"); newScript->setShortcut(QKeySequence("Ctrl+Shift+N")); editingActions.append(newScript);
+   connect(newScript,&QAction::triggered,this,[this] { if (!running) { auto document=createScriptDocument({},{}); document->window->show(); workspace->setActiveSubWindow(document->window); document->editor->setFocus(); updateScriptDocuments(); } });
+   auto *reload=file->addAction("Reload selected script…"); reload->setObjectName("reloadScriptDocument"); editingActions.append(reload); connect(reload,&QAction::triggered,this,&MainWindow::reloadScriptDocument);
+   auto *closeScript=file->addAction("Close selected script"); closeScript->setObjectName("closeScriptDocument"); closeScript->setShortcut(QKeySequence("Ctrl+W")); editingActions.append(closeScript); connect(closeScript,&QAction::triggered,this,[this] { const auto document=selectedScriptDocument(); if (document && document->window) document->window->close(); });
    recentMenu=file->addMenu("Recent missions"); recentMenu->setObjectName("recentMissionsMenu"); connect(recentMenu,&QMenu::aboutToShow,this,&MainWindow::refreshRecentMenu); refreshRecentMenu();
-   add(file, "&Save", QStyle::SP_DialogSaveButton, QKeySequence::Save, [this] { saveScript(); });
-   auto *saveAs = file->addAction("Save &As…");
+   add(file, "&Save", QStyle::SP_DialogSaveButton, QKeySequence::Save, [this] { saveScript(); })->setObjectName("saveScript");
+   auto *saveAs = file->addAction("Save &As…"); saveAs->setObjectName("saveScriptAs");
    saveAs->setShortcut(QKeySequence::SaveAs);
    editingActions.append(saveAs);
    connect(saveAs, &QAction::triggered, this, [this] { saveScript(true); });
@@ -403,20 +405,20 @@ MainWindow::MainWindow()
    editAction("&Copy", QKeySequence::Copy, "copy");
    editAction("&Paste", QKeySequence::Paste, "paste");
    edit->addSeparator();
-   auto *searchDialog=new FindReplaceDialog(editor,this);
    auto searchAction=[&](const QString &label,const QString &name,QKeySequence key,auto callback) {
       auto *action=edit->addAction(label); action->setObjectName(name); action->setShortcut(key);
-      connect(action,&QAction::triggered,this,[this,document,callback] {
-         if (document->isMinimized()) document->showNormal();
-         workspace->setActiveSubWindow(document); callback();
+      connect(action,&QAction::triggered,this,[this,callback] {
+         const auto document=selectedScriptDocument(); if (!document || !document->window) return;
+         if (document->window->isMinimized() || !document->window->isVisible()) document->window->showNormal();
+         workspace->setActiveSubWindow(document->window); callback(document);
       });
    };
-   searchAction("&Find…","scriptFind",QKeySequence::Find,[searchDialog] { searchDialog->openSearch(); });
-   searchAction("&Replace…","scriptReplace",QKeySequence::Replace,[searchDialog] { searchDialog->openSearch(); });
-   searchAction("Find next","scriptFindNext",QKeySequence::FindNext,[searchDialog] { searchDialog->findNext(); });
-   searchAction("Find previous","scriptFindPrevious",QKeySequence::FindPrevious,[searchDialog] { searchDialog->findNext(true); });
-   searchAction("Go to line…","scriptGoToLine",QKeySequence("Ctrl+L"),[this] {
-      bool accepted=false;
+   searchAction("&Find…","scriptFind",QKeySequence::Find,[](const auto &document) { document->search->openSearch(); });
+   searchAction("&Replace…","scriptReplace",QKeySequence::Replace,[](const auto &document) { document->search->openSearch(); });
+   searchAction("Find next","scriptFindNext",QKeySequence::FindNext,[](const auto &document) { document->search->findNext(); });
+   searchAction("Find previous","scriptFindPrevious",QKeySequence::FindPrevious,[](const auto &document) { document->search->findNext(true); });
+   searchAction("Go to line…","scriptGoToLine",QKeySequence("Ctrl+L"),[this](const auto &document) {
+      auto *editor=document->editor.data(); bool accepted=false;
       const int line=QInputDialog::getInt(this,"Go to line","Line number",editor->textCursor().blockNumber()+1,
          1,editor->document()->blockCount(),1,&accepted);
       if (accepted) {
@@ -478,6 +480,8 @@ MainWindow::MainWindow()
          [this](const FolderRunOptions &options,QtPlotReceiver &views,const std::atomic_bool &cancel,const auto &progress) { return runFolderScripts(options,views,cancel,progress); },
          [this] { stopMission(); },this); dialog.exec();
    });
+   auto *activate=run->addAction("Make selected script active"); activate->setObjectName("activateScriptDocument"); activate->setShortcut(QKeySequence("Ctrl+Alt+F7")); editingActions.append(activate);
+   connect(activate,&QAction::triggered,this,[this] { activateScriptDocument(selectedScriptDocument()); });
    auto *saveBuild=run->addAction("Save and build script"); saveBuild->setObjectName("saveBuildScript");
    saveBuild->setShortcut(QKeySequence("Ctrl+Shift+F7")); editingActions.append(saveBuild);
    connect(saveBuild,&QAction::triggered,this,[this] { saveAndBuildScript(false); });
@@ -638,6 +642,10 @@ void MainWindow::showFileComparison(const QString &baseline)
 }
 MainWindow::~MainWindow()
 {
+   disconnect(workspace,nullptr,this,nullptr);
+   disconnect(qApp,nullptr,this,nullptr);
+   for (const auto &document:scriptDocuments) if (document->editor) disconnect(document->editor->document(),nullptr,this,nullptr);
+   for (const auto &document:scriptDocuments) if (auto *window=dynamic_cast<ScriptSubWindow *>(document->window.data())) window->mayClose={};
    plots->changed = {};
    Moderator::SetUiInterpreter(nullptr);
    if (ready) Moderator::Instance()->Finalize();
@@ -694,7 +702,8 @@ void MainWindow::newMission()
    Moderator::Instance()->LoadDefaultMission();
    editor->setPlainText(qtConfiguredScript());
    builtScript = editor->toPlainText(); modelValid = true;
-   scriptPath.clear(); editor->document()->setModified(false); refreshTrees(); updateTitle();
+   scriptPath.clear(); activeDocument->path.clear(); activeDocument->savedText=editor->toPlainText(); editor->document()->setModified(false); refreshTrees(); updateTitle();
+   activeDocument->window->show(); workspace->setActiveSubWindow(activeDocument->window); editor->setFocus();
 }
 bool MainWindow::loadScript(const QString &path)
 {
@@ -703,48 +712,33 @@ bool MainWindow::loadScript(const QString &path)
       auto *panel = dynamic_cast<EditablePanel *>(child->widget());
       if (panel && panel->hasChanges()) return false;
    }
-   QFile file(path);
-   if (!file.open(QIODevice::ReadOnly)) { QMessageBox::warning(this, "Open failed", file.errorString()); return false; }
-   const QByteArray bytes = file.readAll();
-   if (file.error() != QFileDevice::NoError) { QMessageBox::warning(this, "Read failed", file.errorString()); return false; }
-   QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless);
-   const QString text=decoder(bytes);
-   if (decoder.hasError()) {
-      QMessageBox::warning(this,"Open failed","This script is not valid UTF-8. Convert its encoding before opening it.");
-      return false;
-   }
+   const auto identity=scriptDocumentIdentity(path);
+   for (const auto &document:scriptDocuments) if (document!=activeDocument && !document->path.isEmpty() && scriptDocumentIdentity(document->path)==identity) return activateScriptDocument(document);
+   QString text; if (!readScriptDocumentFile(this,path,text)) return false;
    ++modelGeneration; summaryAvailable=false;
    plots->clear(true);
    editor->setPlainText(text);
-   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); rememberMissionFile(scriptPath); refreshRecentMenu(); return true;
+   scriptPath = QFileInfo(path).absoluteFilePath(); activeDocument->path=scriptPath; activeDocument->savedText=text; editor->document()->setModified(false); updateTitle(); rememberMissionFile(scriptPath); refreshRecentMenu(); activeDocument->window->show(); workspace->setActiveSubWindow(activeDocument->window); editor->setFocus(); return true;
 }
 bool MainWindow::saveScript(bool saveAs)
 {
-   if (running) return false;
-   QString path = scriptPath;
-   if (saveAs || path.isEmpty()) path = QFileDialog::getSaveFileName(this, "Save GMAT script", path, "GMAT scripts (*.script)");
-   return saveScriptTo(path);
+   return saveScriptDocument(selectedScriptDocument(),saveAs);
 }
 void MainWindow::saveAndBuildScript(bool run)
 {
    if (!ready || running) return;
-   if (editor->toPlainText().trimmed().isEmpty()) {
-      statusBar()->showMessage("Enter a mission script before saving and building");
-      return;
+   const auto document=selectedScriptDocument(); if (!document) return;
+   if (document->editor->toPlainText().trimmed().isEmpty()) {
+      statusBar()->showMessage("Enter a mission script before saving and building"); return;
    }
-   if (!saveScript()) return;
-   if (run) runMission(); else buildScript();
+   if (!saveScriptDocument(document)) return;
+   const bool switching=document!=activeDocument;
+   if (switching && !activateScriptDocument(document)) return;
+   if (run) runMission(); else if (!switching) buildScript();
 }
 bool MainWindow::saveScriptTo(const QString &path)
 {
-   if (running) return false;
-   if (path.isEmpty()) return false;
-   QSaveFile file(path);
-   const QByteArray bytes = editor->toPlainText().toUtf8();
-   if (!file.open(QIODevice::WriteOnly) || file.write(bytes) != bytes.size() || !file.commit()) {
-      QMessageBox::warning(this, "Save failed", file.errorString()); return false;
-   }
-   scriptPath = QFileInfo(path).absoluteFilePath(); editor->document()->setModified(false); updateTitle(); rememberMissionFile(scriptPath); refreshRecentMenu(); return true;
+   return saveScriptDocumentTo(activeDocument,path);
 }
 bool MainWindow::confirmDiscard()
 {
@@ -760,7 +754,7 @@ bool MainWindow::confirmDiscard()
    }
    if (editor->document()->isModified()) {
       const auto answer = QMessageBox::question(this, "Unsaved script", "Save your changes before continuing?", QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-      if (answer != QMessageBox::Discard && !(answer == QMessageBox::Save && saveScript())) return false;
+      if (answer != QMessageBox::Discard && !(answer == QMessageBox::Save && saveScriptDocument(activeDocument))) return false;
    }
    for (auto *child : workspace->subWindowList()) {
       if (auto *panel = dynamic_cast<EditablePanel *>(child->widget())) {
@@ -983,6 +977,7 @@ void MainWindow::refreshOutput()
 void MainWindow::updateTitle()
 {
    setWindowTitle(QString("%1%2 — GMAT Qt 6").arg(scriptPath.isEmpty() ? "Untitled" : QFileInfo(scriptPath).fileName(), editor->document()->isModified() ? " *" : ""));
+   updateScriptDocuments();
 }
 void MainWindow::closeEvent(QCloseEvent *event)
 {
@@ -993,6 +988,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
       return;
    }
    if (!confirmDiscard()) { event->ignore(); return; }
+   for (const auto &document:scriptDocuments) if (document!=activeDocument && !confirmScriptClose(document,false)) { event->ignore(); return; }
    QSettings settings; settings.setValue("geometry", saveGeometry()); settings.setValue("windowState", saveState());
    event->accept();
 }
@@ -1003,7 +999,7 @@ void MainWindow::setRunning(bool value)
    if (welcome) welcome->setEnabled(!value);
    recentMenu->setEnabled(!value);
    for (auto *action : editingActions) action->setEnabled(!value);
-   editor->setReadOnly(value);
+   for (const auto &document:scriptDocuments) { document->editor->setReadOnly(value); if (document->search) document->search->setEnabled(!value); }
    for (auto *child : workspace->subWindowList())
       if (child->property("configurationPanel").toBool()) child->widget()->setEnabled(!value);
    resources->setEnabled(!value);

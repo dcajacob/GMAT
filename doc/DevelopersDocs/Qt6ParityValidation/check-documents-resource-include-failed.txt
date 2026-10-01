@@ -1,0 +1,39 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 33: QtGui.ScriptDocuments
+1/1 Test #33: QtGui.ScriptDocuments ............***Failed    0.41 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Pending Apply failed: Panel changes were rejected; correct them before changing the active mission
+Cannot safely patch a generated resource statement.
+% document comments α
+#Include 'value.inc'
+Create ReportFile R;
+R.Filename = '/tmp/QtScriptDocuments-vULrIX/first result.txt';
+R.WriteHeaders = false;
+BeginMissionSequence;
+V = V + 7; % preserve arithmetic label/comment
+Report R V;
+% unsaved first document
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.41 sec*proc (1 test)
+
+Total Test time (real) =   0.41 sec
+
+The following tests FAILED:
+	 33 - QtGui.ScriptDocuments (Failed)                    qt-gui
+Errors while running CTest

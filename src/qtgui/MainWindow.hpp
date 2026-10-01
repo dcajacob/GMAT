@@ -27,6 +27,7 @@ class QMenu;
 class QMdiSubWindow;
 class GmatBase;
 class QAction;
+struct ScriptDocument;
 class MainWindow : public QMainWindow
 {
 public:
@@ -34,6 +35,7 @@ public:
    ~MainWindow() override;
    bool initialize(const QString &startup);
    bool loadScript(const QString &path);
+   bool openScriptDocument(const QString &path);
    void showWelcome(bool startup=false);
    bool saveScriptTo(const QString &path);
    bool buildScript();
@@ -84,6 +86,18 @@ private:
    bool saveScript(bool saveAs = false);
    void saveAndBuildScript(bool run);
    bool confirmDiscard();
+   std::shared_ptr<ScriptDocument> createScriptDocument(const QString &path,const QString &text);
+   std::shared_ptr<ScriptDocument> selectedScriptDocument() const;
+   bool activateScriptDocument(const std::shared_ptr<ScriptDocument> &document);
+   bool saveScriptDocument(const std::shared_ptr<ScriptDocument> &document,bool saveAs=false);
+   bool saveScriptDocumentTo(const std::shared_ptr<ScriptDocument> &document,const QString &path);
+   bool confirmScriptClose(const std::shared_ptr<ScriptDocument> &document,bool discard);
+   bool closeScriptDocument(const std::shared_ptr<ScriptDocument> &document);
+   bool resolveDocumentPanels();
+   void reloadScriptDocument();
+   void updateScriptDocuments();
+   QList<std::shared_ptr<ScriptDocument>> scriptDocuments;
+   std::shared_ptr<ScriptDocument> activeDocument;
    void updateTitle();
    void setRunning(bool value);
    RunResult executeMission(bool debug);

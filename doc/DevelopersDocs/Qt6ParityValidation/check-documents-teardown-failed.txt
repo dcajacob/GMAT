@@ -1,0 +1,27 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start  9: QtGui.Files
+1/2 Test  #9: QtGui.Files ......................   Passed    2.55 sec
+    Start 32: QtGui.ScriptEditing
+2/2 Test #32: QtGui.ScriptEditing ..............***Failed    1.27 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+corrupted double-linked list
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   3.82 sec*proc (2 tests)
+
+Total Test time (real) =   3.82 sec
+
+The following tests FAILED:
+	 32 - QtGui.ScriptEditing (Failed)                      qt-gui
+Errors while running CTest

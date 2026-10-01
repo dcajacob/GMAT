@@ -185,6 +185,10 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
    const auto snapshot=[&](const QString &text) {
       Snapshot result;
       for (const auto &statement:statements(text)) {
+         // Include directives can be attached to the resource's serialized
+         // leading comments. Compare only its declaration/assignments; the
+         // original source retains the directive at its existing location.
+         if (statement.code.trimmed().startsWith("#Include")) continue;
          const auto create=declaration.match(statement.code);
          if (create.hasMatch()) {
             const auto match=definition.match(create.captured(2));

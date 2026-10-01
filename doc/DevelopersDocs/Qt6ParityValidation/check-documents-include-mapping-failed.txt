@@ -1,0 +1,80 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 33: QtGui.ScriptDocuments
+1/1 Test #33: QtGui.ScriptDocuments ............***Failed    0.78 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-09-30 19:51:25
+
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+#Include 'value.inc'
+Create ReportFile R;
+R.SolverIterations = Current;
+R.UpperLeft = [ 0 0 ];
+R.Size = [ 0 0 ];
+R.RelativeZOrder = 0;
+R.Maximized = false;
+R.Filename = '/tmp/QtScriptDocuments-oldNVY/first result.txt';
+R.Precision = 16;
+R.WriteHeaders = false;
+R.LeftJustify = On;
+R.ZeroFill = Off;
+R.FixedWidth = true;
+R.Delimiter = ' ';
+R.ColumnWidth = 23;
+R.WriteReport = true;
+R.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable V;
+V = 3;
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+V = V + 4; % preserve arithmetic label/comment
+Report R V;
+#Include 'value.inc'
+% unsaved first document
+
+
+SOURCE
+% document comments α
+#Include 'value.inc'
+Create ReportFile R;
+R.Filename = '/tmp/QtScriptDocuments-oldNVY/first result.txt';
+R.WriteHeaders = false;
+BeginMissionSequence;
+V = V + 4; % preserve arithmetic label/comment
+Report R V;
+% unsaved first document
+FAIL: This command cannot be located safely; use the script editor
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.78 sec*proc (1 test)
+
+Total Test time (real) =   0.79 sec
+
+The following tests FAILED:
+	 33 - QtGui.ScriptDocuments (Failed)                    qt-gui
+Errors while running CTest
