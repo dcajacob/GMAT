@@ -145,6 +145,13 @@ remove their contributors. OK keeps changes pending until the parent Apply,
 which validates the mesh and refreshes the retained panel. Invalid settings
 leave the previous mission intact so the pending values can be corrected.
 
+The force-model **SRP** and **RelativisticCorrection** On/Off choices add or remove
+their physical forces on Apply. Enabling SRP refreshes the retained panel with
+its radiation-pressure settings. Changes remain pending together with other
+force-model fields; invalid mixed settings keep the previous mission and the
+pending panel for correction. Disabling removes that force's configuration while
+retaining unrelated gravity, drag and other source settings.
+
 File / **Open another script window…** and **New script window** keep additional
 scripts in the MDI workspace. Window titles identify the active mission, inactive
 scripts and unsaved changes; equal filenames show their full paths. Opening an

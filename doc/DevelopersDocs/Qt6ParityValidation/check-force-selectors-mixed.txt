@@ -1,0 +1,10 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 16: QtGui.ForceSelectors
+1/1 Test #16: QtGui.ForceSelectors .............   Passed    0.88 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.88 sec*proc (1 test)
+
+Total Test time (real) =   0.88 sec

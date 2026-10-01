@@ -9,9 +9,9 @@ QString setConfigurationBlock(const QString &source,const QString &name,const QS
 // Apply the changed assignments in two engine-generated resource snapshots to
 // the original source. Unchanged properties and other resources stay implicit
 // or retain their original syntax. Array declarations may change dimensions.
-// Drag creator changes retain the original creator position/spelling; removal
-// edits only that force family. Other force selectors currently reconstruct the
-// edited model in serializer order to keep creation before owned fields.
+// Drag, SRP and relativistic creator changes retain the original selector
+// position/spelling; removal edits only that force family. Other force selectors
+// currently reconstruct the model in serializer order to keep creation first.
 QString patchResourceConfiguration(const QString &source,const QString &name,const QString &before,const QString &after,const QString &firstMissionStatement={},bool replaceOwnedConfiguration=false);
 // Delete only this resource's declaration and configuration assignments. A
 // grouped Create keeps its other resources; comments and mission source remain.

@@ -19,6 +19,7 @@
 #include "Array.hpp"
 #include "PropSetup.hpp"
 #include "Propagator.hpp"
+#include "ODEModel.hpp"
 #include "AxisSystem.hpp"
 #include "CoordinateSystem.hpp"
 #include "CalculatedPoint.hpp"
@@ -865,6 +866,22 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QS
 
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
+   if (auto *model=dynamic_cast<ODEModel *>(&object);model && (name=="SRP" || name=="RelativisticCorrection")) {
+      if (value!="On" && value!="Off") throw std::runtime_error("Select On or Off.");
+      const auto type=name=="SRP" ? "SolarRadiationPressure" : "RelativisticCorrection";
+      PhysicalModel *current=nullptr;
+      for (int i=0;i<model->GetNumForces();++i) if (model->GetForce(i)->IsOfType(type)) { current=model->GetForce(i); break; }
+      // ODEModel's generic On/Off setter is intentionally a no-op; the script
+      // interpreter creates the owned physical model. Match that ownership on
+      // the pending clone instead of reporting a successful unchanged edit.
+      if (value=="Off") { if (current) model->DeleteForce(current); return; }
+      if (current) return;
+      const auto body=model->GetStringParameter("CentralBody");
+      std::unique_ptr<PhysicalModel> force(FactoryManager::Instance()->CreatePhysicalModel(type,name.toStdString()+"."+body));
+      if (!force) throw std::runtime_error("The selected force could not be created.");
+      force->SetAllowODEDelete(true); force->SetStringParameter("BodyName",body);
+      model->AddForce(force.get()); force.release(); return;
+   }
    if (object.IsOfType("Smoother") && name=="Filter") {
       auto *filter=Moderator::Instance()->GetConfiguredObject(value.trimmed().toStdString());
       if (!filter || !filter->IsOfType("SeqEstimator")) throw std::runtime_error("Select an existing sequential estimator for this smoother.");

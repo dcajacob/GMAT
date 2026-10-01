@@ -50,6 +50,40 @@ QVector<Statement> statements(const QString &source)
       throw std::runtime_error("The script contains an incomplete statement. Build it before editing a parameter.");
    return result;
 }
+
+QString forceToggleSource(const QString &source,const QString &name,const QString &field,const QString &value,const QStringList &aliases,const QString &firstMissionStatement)
+{
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z0-9_.]+)\\s*=\\s*(.*?)\\s*;?\\s*$",QRegularExpression::DotMatchesEverythingOption);
+   auto normalize=[](QString code) { code=code.trimmed(); code.remove(QRegularExpression("^GMAT\\s+")); if (!code.endsWith(';')) code+=';'; return code; };
+   QString firstCommand;
+   if (!firstMissionStatement.isEmpty()) { const auto commands=statements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
+   struct Edit { qsizetype position,length; QString text; };
+   QVector<Edit> edits; QStringList remove;
+   qsizetype firstDependent=source.size(); bool located=firstCommand.isEmpty(),found=false;
+   for (const auto &statement:statements(source)) {
+      int first=0; while (first<statement.code.size() && statement.code[first].isSpace()) ++first;
+      if (QRegularExpression("^\\s*BeginMissionSequence\\b").match(statement.code).hasMatch() || (!firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) {
+         firstDependent=std::min(firstDependent,statement.positions[first]); located=true; break;
+      }
+      const auto match=assignment.match(statement.code); if (!match.hasMatch()) continue;
+      const auto key=match.captured(1);
+      if (key!=field && !key.startsWith(field+'.') && !aliases.contains(key)) continue;
+      firstDependent=std::min(firstDependent,statement.positions[first]); remove.append(key);
+      if (key!=field || value=="Off") continue;
+      found=true; const auto positions=statement.positions.mid(match.capturedStart(2),match.capturedLength(2));
+      if (positions.isEmpty()) throw std::runtime_error("Cannot locate the force selector value safely.");
+      for (auto position:positions) edits.append({position,1,{}});
+      for (auto position:statement.continuations) if (position>=positions.first() && position<=positions.last()) edits.append({position,1,{}});
+      edits.append({positions.first(),0,value});
+   }
+   if (!located) throw std::runtime_error("Cannot locate the mission boundary safely. Add BeginMissionSequence before changing this force selector.");
+   const auto block="GMAT "+name+"."+field+" = "+value+";\n";
+   if (value=="Off") return setConfigurationBlock(source,name,remove,block,firstMissionStatement);
+   if (!found) edits.append({firstDependent,0,(firstDependent>0 && source[firstDependent-1]!='\n' ? "\n" : "")+block});
+   std::stable_sort(edits.begin(),edits.end(),[](const Edit &a,const Edit &b) { return a.position!=b.position ? a.position>b.position : a.length>b.length; });
+   QString candidate=source; for (const auto &edit:edits) candidate.replace(edit.position,edit.length,edit.text);
+   return candidate;
+}
 }
 QVector<ScriptStatement> scriptStatements(const QString &source) { return statements(source); }
 QString userParameterLiteral(const QString &type,const QString &value)
@@ -207,6 +241,23 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
    QStringList changed;
    for (auto it=old.values.cbegin();it!=old.values.cend();++it) if (it.value()!=pending.values.value(it.key())) changed.append(it.key());
    for (auto it=pending.values.cbegin();it!=pending.values.cend();++it) if (!old.values.contains(it.key())) changed.append(it.key());
+   QString forceSource=source;
+   if (replaceOwnedConfiguration) for (const auto &field:QStringList{"SRP","RelativisticCorrection"}) if (changed.contains(field)) {
+      const auto codes=pending.values.value(field);
+      const QRegularExpression value("=\\s*'?((?:On|Off))'?\\s*;\\s*$");
+      const auto setting=codes.isEmpty() ? QString() : value.match(codes.last()).captured(1);
+      if (setting.isEmpty()) throw std::runtime_error("Cannot safely patch this force selector.");
+      QStringList aliases;
+      for (const auto *configuration:{&old,&pending}) for (auto it=configuration->values.cbegin();it!=configuration->values.cend();++it) if (it.key().startsWith(field+'.')) {
+         const auto alias=it.key().mid(field.size()+1);
+         if (!old.values.contains(alias) && !pending.values.contains(alias)) aliases.append(alias);
+      }
+      forceSource=forceToggleSource(forceSource,name,field,setting,aliases,firstMissionStatement);
+      changed.removeAll(field);
+      for (const auto &key:QStringList(changed)) if (key.startsWith(field+'.')) {
+         const auto alias=key.mid(field.size()+1); if (aliases.contains(alias)) changed.append(alias);
+      }
+   }
    const QStringList forceSelectors={"PrimaryBodies","PointMasses","PolyhedralBodies","Drag","SRP","RelativisticCorrection","UserDefined","External"};
    const bool changedForceSelector=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) {
       return forceSelectors.contains(field) || field=="Drag.AtmosphereModel" || field=="Drag.AtmosphereBody";
@@ -224,8 +275,8 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       const auto dragField=[&](const QString &field) { return field=="Drag" || field.startsWith("Drag.") || (aliases.contains(field) && !old.values.contains(field) && !pending.values.contains(field)); };
       QString firstCommand;
       if (!firstMissionStatement.isEmpty()) { const auto commands=statements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
-      const auto parsed=statements(source); QVector<Statement> configuration;
-      auto boundary=source.size(); bool located=firstCommand.isEmpty();
+      const auto parsed=statements(forceSource); QVector<Statement> configuration;
+      auto boundary=forceSource.size(); bool located=firstCommand.isEmpty();
       for (const auto &statement:parsed) {
          if (QRegularExpression("^\\s*BeginMissionSequence\\b").match(statement.code).hasMatch() || (!firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) {
             int first=0; while (first<statement.code.size() && statement.code[first].isSpace()) ++first;
@@ -242,7 +293,7 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
          QString block="GMAT "+name+".Drag = None;\n";
          for (const auto &field:changed) if (!dragField(field)) remove.append(field);
          for (const auto &entry:pending.ordered) if (changed.contains(entry.first) && !dragField(entry.first)) block+=entry.second+'\n';
-         return setConfigurationBlock(source,name,remove,block,firstMissionStatement);
+         return setConfigurationBlock(forceSource,name,remove,block,firstMissionStatement);
       }
       struct Edit { qsizetype position,length; QString text; };
       QVector<Edit> edits; bool creatorFound=false,bodyFound=false; qsizetype afterCreator=-1,firstDependent=boundary;
@@ -262,8 +313,8 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
          if (field=="Drag" || field=="Drag.AtmosphereModel" || field=="AtmosphereModel") {
             creatorFound=true; if (creatorChanged) replace(statement,match,creator);
             auto end=statement.positions.last()+1,cursor=end;
-            while (cursor<source.size() && (source[cursor]==' ' || source[cursor]=='\t')) ++cursor;
-            if (cursor<source.size() && source[cursor]=='%') { const auto newline=source.indexOf('\n',cursor); end=newline<0 ? source.size() : newline+1; }
+            while (cursor<forceSource.size() && (forceSource[cursor]==' ' || forceSource[cursor]=='\t')) ++cursor;
+            if (cursor<forceSource.size() && forceSource[cursor]=='%') { const auto newline=forceSource.indexOf('\n',cursor); end=newline<0 ? forceSource.size() : newline+1; }
             afterCreator=std::max(afterCreator,end);
          }
          if (field=="Drag.AtmosphereBody" || field=="AtmosphereBody") { bodyFound=true; if (bodyChanged && !body.isEmpty()) replace(statement,match,body); }
@@ -273,12 +324,12 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       if (bodyChanged && !bodyFound && !body.isEmpty()) insert+="GMAT "+name+".Drag.AtmosphereBody = "+body+";\n";
       if (!insert.isEmpty()) {
          const auto position=creatorFound ? afterCreator : firstDependent;
-         edits.append({position,0,(position>0 && source[position-1]!='\n' ? "\n" : "")+insert});
+         edits.append({position,0,(position>0 && forceSource[position-1]!='\n' ? "\n" : "")+insert});
       }
       // Delete mapped RHS characters before inserting at the same offset.
       // Comments inside continued statements remain at their source positions.
       std::stable_sort(edits.begin(),edits.end(),[](const Edit &a,const Edit &b) { return a.position!=b.position ? a.position>b.position : a.length>b.length; });
-      QString candidate=source; for (const auto &edit:edits) candidate.replace(edit.position,edit.length,edit.text);
+      QString candidate=forceSource; for (const auto &edit:edits) candidate.replace(edit.position,edit.length,edit.text);
       changed.removeAll("Drag"); changed.removeAll("Drag.AtmosphereModel"); changed.removeAll("Drag.AtmosphereBody");
       QString block; for (const auto &entry:pending.ordered) if (changed.contains(entry.first)) block+=entry.second+'\n';
       // Remove an explicitly changed legacy leaf alias too, so its old value
@@ -296,7 +347,7 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       // ordered force configuration, preserving comments and mission code.
       changed=old.values.keys();
       for (const auto &key:pending.values.keys()) if (!changed.contains(key)) changed.append(key);
-      for (const auto &statement:statements(source)) {
+      for (const auto &statement:statements(forceSource)) {
          const auto match=assignment.match(statement.code);
          if (match.hasMatch()) {
             const auto key=(match.captured(1).isEmpty() ? match.captured(2) : match.captured(1)).remove(QRegularExpression("\\s+"));
@@ -305,7 +356,7 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
       }
    }
    QString block; for (const auto &entry:pending.ordered) if (changed.contains(entry.first)) block+=entry.second+'\n';
-   QString candidate=changed.isEmpty() ? source : setConfigurationBlock(source,name,changed,block,firstMissionStatement);
+   QString candidate=changed.isEmpty() ? forceSource : setConfigurationBlock(forceSource,name,changed,block,firstMissionStatement);
    if (old.definition!=pending.definition) {
       if (old.type!="Array") throw std::runtime_error("Changing this resource declaration needs its script settings.");
       QVector<qsizetype> positions;

@@ -94,7 +94,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Resource windows now stay open and refresh after Apply, with repeated Variable Apply/source/report evidence in DesktopTests. Shared Help and wider resource/keyboard cases remain pending. |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
-| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered; other specialized layout and remaining settings pending. |
+| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered. ForceSelectorTests qualifies actual SRP/relativistic creation/removal, mixed-field failure/correction and source-preserving independent Earth state reports; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
 | `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Qt now supplies mission-tree breakpoint markers, Run/Debug, read-only live DEBUG_INSPECT/current Parameter values, spacecraft/all filters, command stepping, resume on Close/Escape and End/Stop. DebuggerTests exercises real context menus, For/If/propagation, Target/Optimize iteration values/reports, script events and function step-over, independent byte-exact reports, source/pending protection, Undo/Redo/save/reopen, Pause, safe main-window close and build/initialization/execution recovery. Offscreen/native X11 keyboard routing, Help and exposed native Wayland inspection were verified. Fresh desktop input and larger nested combinations remain under shared qualification; function-local stepping is outside this main-mission inspector. |
@@ -4705,3 +4705,53 @@ needed for this source-only change. The prior complete document regression and
 focused covariance evidence remain the baseline; the new suite is available in
 check-qt for later broader verification. Full replacement qualification and its
 outstanding source/plugin and native desktop-input gates remain in progress.
+
+
+## SRP and relativistic On/Off controls change the physical model
+
+The generic ODEModel SetOnOffParameter implementation returns success for SRP
+and RelativisticCorrection without changing its owned forces. The script
+interpreter creates those forces separately. The Qt resource setter now does
+that creation/removal on the pending clone through the existing physical-model
+factory, using the force model's central body and ownership convention. Existing
+On selections retain their owned settings; Off removes the matching force. No
+force calculation or interpreter algorithm is changed. Apply rebuilds the source
+and refreshes the retained panel, exposing new SRP settings when enabled.
+
+Source patching now treats these two selectors independently of the whole-force
+fallback. Existing selector RHS values change in place, preserving spelling,
+continuations and comments. A missing creator precedes its owned dependent
+settings; disabling removes only that family and legacy leaf aliases. Remaining
+changed fields use the usual source delta. The operation composes with drag
+creator transitions in one Apply. Primary/point-mass and other root-selector
+mixed transactions retain the existing fallback and its source-fidelity limit;
+this checkpoint does not claim that remaining gap closed.
+
+ForceSelectorTests compares six-state reports against independent 1800-second
+Earth scripts for SRP alone, SRP plus relativistic correction and changed flux,
+relativistic correction alone, and both disabled. The references produce distinct
+results, so a silently ignored selector cannot pass. Actual Resources/MDI
+controls exercise pending On/Off, mixed ErrorControl and flux changes, rejected
+flux correction with old configuration/pending panel retained, removal,
+re-enabling and refreshed owned fields. Original primary/gravity/point-mass text,
+comments and mission code stay exact; unrelated drag/polyhedron/user-force
+defaults remain unprinted. Exact Undo/Redo and Unicode save/reopen precede the
+state comparisons. Direct invalid On/Off is rejected. A further transaction
+removes drag while enabling both other families and setting flux/ErrorControl;
+its exact Undo/Redo and reopened states match the independent combined reference.
+Parser cases cover continued selectors, legacy leaf removal and an implicit
+mission boundary. These are bounded GUI/engine wiring checks, not new numerical
+algorithm qualification or full SRP shape/shadow regime coverage.
+
+The initial check crashed in the new test helper because dropdown-backed cells
+do not contain a text item in their value column. force-selectors-backtrace.txt
+identifies the helper; it was corrected without a product-lifetime change.
+The sandbox-denied first tracing attempt remains in
+force-selectors-initial-backtrace.txt. The build log also retains correction of
+an incomplete test include. check-force-selectors.txt records the initial
+successful focused run (0.83 seconds); check-force-selectors-mixed.txt records
+the final focused run with the combined-family assertion (0.88 seconds).
+build-force-selectors.txt and build-force-selectors-final.txt record the actual
+application dependency rebuilds. Existing drag/weather/native panel and complete
+regression evidence is reused; no full-suite or native-layout rerun was needed.
+Full qualification remains active under all acceptance gates above.
