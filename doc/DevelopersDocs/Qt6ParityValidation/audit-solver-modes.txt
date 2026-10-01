@@ -1,0 +1,35 @@
+Solver modes and terminal viewer source audit, 2026-10-01
+
+Local user-guide Command_Target.xml and Command_Optimize.xml: both advertised
+SolveMode values and all three ExitMode values are active GUI options. Saving
+or discarding controls the next invocation's solver guess in control flow;
+Stop prevents subsequent commands. Solver::CompleteInitialization resets the
+variable vector to variableInitialValues only for DiscardAndContinue.
+
+Moderator::RunMission catches intentional interruption (including Stop and
+SolverBranchCommand::GetNext's ExitMode Stop interruption) as engine status -4.
+Qt MainWindow additionally required stopRequested, so script/solver Stop was
+shown as Failed. The initial executable mode check reproduces this; one Qt
+status condition now maps -4 to Stopped consistently with folder-run handling.
+Core Stop/Target/Optimize/solver and numerical/report behavior are unchanged.
+
+QtPlotReceiver's completed-mission fallback already covered disabled subscriber
+end callbacks on success. MainWindow called it only for Completed. A completed
+solver followed by Toggle Off and Stop reproduces incomplete Latest display in
+Orbit and Ground, despite retained data. The renamed missionFinished helper now
+runs on every terminal main mission and started folder item; retained partial
+history is marked ended and refreshed without altering numerical/report data.
+
+SolverModeTests uses actual MDI dropdowns, repeated spacecraft propagation and
+independent plotting-disabled state/geodetic reports. It checks documented
+Save/Discard recurrence, known goals/epochs, exact source and round trips,
+partial summaries, viewer endpoints/full Latest/replay/close-reopen and locks.
+The Stop and Save-output-failure variants cover disabled partial histories;
+restoring the output path permits unchanged-source successful save/rerun.
+The 12-case mode matrix and native four terminal cases have separate evidence.
+
+No proposed summary traversal rewrite was made: existing summaries passed.
+No broad/full-suite or earlier default viewer matrix was repeated. Exact
+checkpoints, initial harness mistakes and native coverage limits are in the
+latest Qt6ReplacementQualification.md appendix. Compositor and portal gates
+and unrelated active plugin/workflow requirements remain open.

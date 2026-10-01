@@ -1908,3 +1908,27 @@ recovery, known variable goals, exact source/Undo/Redo and Unicode reopen. The
 native Wayland panel capture and its precise coverage limits are recorded in
 Qt6ReplacementQualification.md. Broader solver mode and desktop acceptance
 requirements remain under qualification.
+
+
+### Intentional Stop and retained partial viewer history
+
+The Stop command, a Target/Optimize ExitMode of Stop, and the Stop toolbar action
+all report Mission stopped. Runtime failures continue to report Mission failed.
+Partial command/mission summaries remain available for the stopped or failed
+run; unexecuted commands do not acquire new result states.
+
+When a mission stops or fails, Orbit and Ground Latest show the complete retained
+history even if a preceding Toggle Off suppressed the subscriber's usual end
+callback. Replay still uses the retained samples and preserves the configured
+recent-segment behavior before Latest. This marks the end of incoming display
+data; it does not make a partial run successful or invent disabled samples.
+The same finalization applies to started folder-run items.
+
+SaveAndContinue retains a solver solution as the initial guess when that same
+block executes again in control flow. DiscardAndContinue uses the original Vary
+guess for each invocation. RunInitialGuess propagates the configured guess
+without solving. SolverModes covers all six combinations for both selected DC
+and Yukon in a repeated spacecraft propagation fixture; the disabled Stop and
+write-failure variants also have native Wayland viewer/recovery evidence. Exact
+coverage and remaining qualification limits are recorded in
+Qt6ReplacementQualification.md.

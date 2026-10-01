@@ -47,8 +47,8 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/AchievePanel.hpp` | Boundary-value solver selector plus single-parameter goal/value browser. Selected target variable, Cancel, save/reopen and solved result tested; Omitted tolerance can be added from the engine default and edited; reopened solve covered. Broader tolerance/property combinations pending. |
 | `src/gui/command/ManageObjectPanel.hpp` | Global/Clear/Save object checklists added. Global automatic-resource filtering, Clear Cancel and Save export/reopen/recovery tested. Global/Clear runtime scope semantics pending. |
 | `src/gui/command/BeginFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; selected ten-second constant-thrust burn, analytic fuel consumption and save/reopen tested. Other thruster/tank models pending. |
-| `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options. Active Apply Corrections was missing from the earlier inventory; it now updates numeric initial guesses with source retention, pending/stale guards and Undo/Redo. Actual Yukon controls, known optimum and Unicode reopen tested; native Wayland panel captured and inspected. Full optimizer mode combinations remain pending. |
-| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified. Apply Corrections now covers scaled numeric guesses, retained references, nested ownership, script-event Vary commands, unexecuted guards and corrections/recovery after ExitMode Stop or nonconvergence. Known goals and Unicode reopen pass. Default DiscardAndContinue is used in this bounded variable fixture; broader spacecraft Stop/Discard and other combinations remain pending. |
+| `src/gui/command/OptimizePanel.hpp` | Optimizer selector, SolveMode/ExitMode dropdowns and progress checkbox provided. Partial-option insertion preserves pending solver/name/options. Active Apply Corrections was missing from the earlier inventory; it now updates numeric initial guesses with source retention, pending/stale guards and Undo/Redo. Actual Yukon controls, known optimum and Unicode reopen tested; native Wayland panel captured and inspected. SolverModes covers all Solve/RunInitialGuess × SaveAndContinue/DiscardAndContinue/Stop combinations in a repeated spacecraft propagation loop, documented next-invocation guesses, exact independent reports and retained source. Disabled stopped/failed viewer histories and output-path recovery now pass offscreen and native Wayland. Other optimizer/constraint and nested combinations remain pending. |
+| `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified. Apply Corrections now covers scaled numeric guesses, retained references, nested ownership, script-event Vary commands, unexecuted guards and corrections/recovery after ExitMode Stop or nonconvergence. Known goals and Unicode reopen pass. SolverModes now covers every Solve/RunInitialGuess × ExitMode combination in a repeated spacecraft propagation loop, the documented saved/discarded next-invocation guess, known goals/epochs, exact independent state/geodetic reports and source round trips. Intentional Stop classification and disabled partial viewer completion/recovery pass. More complex nested/mixed solver and plot-mode combinations remain pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
@@ -5877,3 +5877,95 @@ This closes the missing active solver correction action for these mapped source
 cases. Full replacement qualification remains open: other plugin/workflow
 requirements, broader solver combinations, and the compositor/portal acceptance
 gates still need affirmative evidence. Windows/macOS remain deferred.
+
+
+## Solver modes and terminated viewer history — 2026-10-01
+
+The documented ExitMode distinction concerns the next execution of the same
+solver block in control flow: SaveAndContinue uses the previous solution as its
+next guess; DiscardAndContinue uses the original Vary guess. It does not mean
+that the completed spacecraft propagation is discarded. The authoritative local
+references are doc/help/src/Command_Target.xml and Command_Optimize.xml, and
+Solver::CompleteInitialization/ResetVariables. SolverModeTests exercises both
+blocks twice inside a labeled For with real spacecraft propagation, state and
+geodetic reports, and Orbit/Ground/XY All histories. Known solved Alpha is 2;
+RunInitialGuess keeps 1. Continuing modes reach elapsed 80 seconds; stopping
+modes reach 40 seconds and do not execute the second invocation. The first
+second-invocation report must start at the documented saved/discarded guess.
+
+The first executable check, check-solver-modes-initial.txt, passes Target Solve
+Save/Discard but finds intentional ExitMode=Stop classified as Failed. Existing
+partial summaries and enabled viewer histories pass that check; no speculative
+summary or engine traversal rewrite was made. Moderator::RunMission returns -4
+for intentional Stop, ExitMode=Stop and user interruptions. Qt previously
+required its own stopRequested flag as well. It now trusts the engine status and
+shows Mission stopped with stopped-run summary context. Actual runtime errors
+still report Failed. SolverCorrectionTests was updated to the correct stopped
+result after its ExitMode=Stop case; its correction/recovery still passes.
+
+check-solver-modes-stopped-status.txt passes all 12 advertised Target/Yukon
+SolveMode/ExitMode combinations in 9.40 seconds. Actual retained MDI dropdowns
+apply both choices; unrelated labels/comments/options and the complete script
+remain exact. Nontrivial changes have exact single Undo/Redo, then Unicode
+save/reopen execution. Each displayed GUI run matches a separately constructed
+script with plotting disabled byte for byte in its complete explicit
+state/geodetic report, and meets the independently known objective/epoch.
+Partial mission summaries include the named solver and spacecraft. Retained
+viewer endpoints match reports; replay/Latest and close/reopen preserve history.
+This matrix predates only the disabled-terminal display fallback and subsequent
+fixture-only explicit solver report destinations/recovery assertions; it was
+not unnecessarily repeated after those changes.
+
+That same checkpoint fails DisabledSolverStop: a completed solver followed by
+Toggle Off and an explicit Stop leaves disabled Orbit/Ground Latest limited to
+one live segment. The previous missionCompleted fallback ran only on success.
+QtPlotReceiver::missionFinished now finalizes retained (possibly partial) Orbit
+and Ground histories after every terminal outcome. The main mission and each
+started folder-run item call it. It sets endOfRun and forces a viewer refresh;
+it neither claims success nor creates missing samples. Historical replay before
+Latest retains the configured live segment behavior. Core numerical execution,
+Publisher state and subscriber report filtering were not changed.
+
+check-solver-modes-termination.txt passes SolverCorrections, DisabledSolverStop
+and DisabledSolverFailure in 2.75 seconds. The two new variants complete a DC or
+Yukon solution, disable all three plots, then execute Stop or Save Alpha with a
+missing output directory. Source and independent partial reports remain exact;
+known final goal/epoch, viewer endpoints, complete retained Latest, partial
+summary, released mission/editor locks, replay and close/reopen are asserted.
+The Save failure stays Failed, distinct from intentional Stop. Report paths are
+explicit valid fixture paths, so the missing output directory fails at Save
+after data have been collected, not during solver initialization.
+
+check-solver-modes-recovery-regression.txt passes the five affected existing
+Inspection, CompletedDisabledPlots, LivePlotFlush, FolderRun and Debugger suites.
+Its new recovery assertion fails only because the harness expected Alpha.gmat;
+the selected Save plugin writes Alpha.Variable.data. That raw failed assertion
+is retained. The corrected DisabledSolverFailure with no application change
+passes in check-solver-modes-recovery-final.txt (1.15 seconds). Restoring output
+to an isolated writable fixture directory, without changing mission source,
+allows a successful repeat/save and the known Alpha=2/final elapsed=80 report;
+disabled viewer histories still finalize. The source was not silently changed
+to remove the failing operation. No full-suite repeat was made.
+
+solver-disabled-stop-wayland-20261001.txt and
+solver-disabled-failure-wayland-20261001.txt pass the two new variants on native
+Wayland, for both DC and Yukon. Each has .Target.png/.Optimize.png captures.
+The stopped Target and failed Optimize captures were inspected: full textured
+Earth/starfield/constellations, Ground map, retained XY trial/accepted histories,
+Latest controls and correct stopped/failed status are visible. Native replay,
+close/reopen and output recovery pass. These are programmatic actual-widget
+checks; fresh desktop input, top-level compositor minimize/restore and portal
+choosers remain unqualified. They do not repeat or replace the earlier ordinary
+All/Current/None or default-example renderer evidence.
+
+build-solver-modes.txt records the real GmatQt-R2026a relink and GmatQt launcher
+recreation. build-solver-modes-initial.txt retains the initial harness compile
+error from an unavailable PlotCanvas::frame getter; no stale-binary test ran
+after it. The harness now verifies replay by capturing and restoring Latest
+pixels. audit-solver-modes.txt identifies source contracts and the two verified
+application gaps. Every change is on codex/qt6-gui; Windows/macOS remain deferred.
+
+The selected DC/Yukon mode controls and these disabled terminal histories have
+bounded affirmative evidence. Full replacement still requires the remaining
+plugin/workflow and desktop gates; more complex nested/mixed mode cases and
+other plotting combinations remain under qualification.

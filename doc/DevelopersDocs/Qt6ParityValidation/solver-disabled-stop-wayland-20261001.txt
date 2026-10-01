@@ -1,0 +1,3 @@
+Target Solve DiscardAndContinue report rows=4 epoch=40 alpha=2
+Optimize Solve DiscardAndContinue report rows=10 epoch=40 alpha=2
+PASS: Target/Yukon completed solver followed by disabled Orbit/Ground/XY and intentional Stop or Save write failure; correct terminal status, independent exact partial reports, source/Undo/Redo/Unicode reopen, full retained Latest histories, partial summaries, replay and close/reopen. Write-failure variant restores output and verifies successful rerun/save and known final goal/epoch.

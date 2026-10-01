@@ -1,0 +1,14 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 48: QtGui.SolverCorrections
+1/3 Test #48: QtGui.SolverCorrections ..........   Passed    1.06 sec
+    Start 50: QtGui.DisabledSolverStop
+2/3 Test #50: QtGui.DisabledSolverStop .........   Passed    0.85 sec
+    Start 51: QtGui.DisabledSolverFailure
+3/3 Test #51: QtGui.DisabledSolverFailure ......   Passed    0.85 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =   2.75 sec*proc (3 tests)
+
+Total Test time (real) =   2.75 sec

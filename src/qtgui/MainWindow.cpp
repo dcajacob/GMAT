@@ -1083,7 +1083,7 @@ MainWindow::RunResult MainWindow::executeMission(bool debug)
       }
       const auto status = Moderator::Instance()->RunMission();
       if (status == 1) result = RunResult::Completed;
-      else if (status == -4 && stopRequested) result = RunResult::Stopped;
+      else if (status == -4) result = RunResult::Stopped;
    } catch (BaseException &error) {
       messages->appendPlainText(QString::fromStdString(error.GetFullMessage()));
    } catch (const std::exception &error) {
@@ -1091,7 +1091,7 @@ MainWindow::RunResult MainWindow::executeMission(bool debug)
    } catch (...) {
       messages->appendPlainText("Unexpected error during mission execution.");
    }
-   if (result==RunResult::Completed) plots->missionCompleted();
+   plots->missionFinished();
    debugger->finish(); paused = false;
    summaryAvailable=true; lastRunResult=result;
    setRunning(false);
@@ -1163,7 +1163,7 @@ FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtP
                batchListeners.missionStarted(); solverRun=true;
                item.engineStatus=Moderator::Instance()->RunMission();
                switch(item.engineStatus) {
-               case 1: item.category="Completed"; batchPlots.missionCompleted(); break;
+               case 1: item.category="Completed"; break;
                case -2: item.category="Initialization error"; break;
                case -3: item.category="Unknown initialization error"; break;
                case -4: item.category="Interrupted"; break;
@@ -1179,7 +1179,10 @@ FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtP
          } catch (BaseException &error) { item.category=built ? "Runtime error" : "Build error"; item.details=QString::fromStdString(error.GetFullMessage()); }
          catch (const std::exception &error) { item.category="Unknown error"; item.details=QString::fromUtf8(error.what()); }
          catch (...) { item.category="Unknown error"; item.details="An unexpected exception interrupted this script."; }
-         if (solverRun) batchListeners.missionFinished(item.category=="Interrupted",item.category!="Completed");
+         if (solverRun) {
+            batchPlots.missionFinished();
+            batchListeners.missionFinished(item.category=="Interrupted",item.category!="Completed");
+         }
          QApplication::processEvents(); item.details+=diagnostics;
          if (!built) { buildFailureCategory=item.category; buildFailureDetails=item.details; }
          return item;

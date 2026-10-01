@@ -1,0 +1,29 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 32: QtGui.Inspection
+1/6 Test #32: QtGui.Inspection .................   Passed    0.91 sec
+    Start 51: QtGui.DisabledSolverFailure
+2/6 Test #51: QtGui.DisabledSolverFailure ......***Failed    0.71 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Target Solve DiscardAndContinue report rows=4 epoch=40 alpha=2
+FAIL: Failed output path could not recover without source changes
+
+    Start 62: QtGui.CompletedDisabledPlots
+3/6 Test #62: QtGui.CompletedDisabledPlots .....   Passed    0.58 sec
+    Start 63: QtGui.LivePlotFlush
+4/6 Test #63: QtGui.LivePlotFlush ..............   Passed    0.59 sec
+    Start 72: QtGui.FolderRun
+5/6 Test #72: QtGui.FolderRun ..................   Passed    2.73 sec
+    Start 76: QtGui.Debugger
+6/6 Test #76: QtGui.Debugger ...................   Passed    1.88 sec
+
+83% tests passed, 1 tests failed out of 6
+
+Label Time Summary:
+qt-gui    =   7.39 sec*proc (6 tests)
+
+Total Test time (real) =   7.40 sec
+
+The following tests FAILED:
+	 51 - QtGui.DisabledSolverFailure (Failed)              qt-gui
+Errors while running CTest

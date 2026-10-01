@@ -19,7 +19,7 @@ public:
    explicit QtPlotReceiver(QMdiArea *workspace);
    ~QtPlotReceiver() override;
    void clear(bool resetViews=false);
-   void missionCompleted();
+   void missionFinished();
    static void validateCameraReferences(const QMap<QString,QtCameraSetting> &settings);
    QStringList names() const;
    bool show(const QString &name);

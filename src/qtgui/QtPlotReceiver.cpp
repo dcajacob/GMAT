@@ -76,10 +76,11 @@ void QtPlotReceiver::clear(bool resetViews)
    for (auto &entry : entries) if (entry.window) delete entry.window.data();
    entries.clear(); warnings.clear(); if (changed) changed();
 }
-void QtPlotReceiver::missionCompleted()
+void QtPlotReceiver::missionFinished()
 {
-   // A disabled subscriber may omit its end-of-run callback. Completion still
-   // finalizes retained display history, including a viewer currently closed.
+   // A disabled subscriber may omit its end-of-run callback. Every terminal
+   // outcome finalizes the retained (possibly partial) display history, including
+   // a viewer currently closed. This does not imply a successful mission.
    for (auto &entry:entries) {
       if (entry.data->kind!=PlotModel::Kind::Orbit && entry.data->kind!=PlotModel::Kind::GroundTrack) continue;
       entry.data->endOfRun=true;

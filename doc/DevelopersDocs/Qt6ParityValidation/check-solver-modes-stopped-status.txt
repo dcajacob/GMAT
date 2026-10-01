@@ -1,0 +1,22 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 49: QtGui.SolverModes
+1/2 Test #49: QtGui.SolverModes ................   Passed    9.40 sec
+    Start 50: QtGui.DisabledSolverStop
+2/2 Test #50: QtGui.DisabledSolverStop .........***Failed    1.25 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Target Solve DiscardAndContinue report rows=4 epoch=40 alpha=2
+FAIL: Orb: terminated Latest view still shows only live recent segments
+Ground: terminated Latest view still shows only live recent segments
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =  10.66 sec*proc (2 tests)
+
+Total Test time (real) =  10.66 sec
+
+The following tests FAILED:
+	 50 - QtGui.DisabledSolverStop (Failed)                 qt-gui
+Errors while running CTest

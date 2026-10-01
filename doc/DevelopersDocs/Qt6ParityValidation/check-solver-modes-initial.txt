@@ -1,0 +1,22 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 49: QtGui.SolverModes
+1/1 Test #49: QtGui.SolverModes ................***Failed    1.11 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Target Solve SaveAndContinue report rows=9 epoch=80 alpha=2
+Target Solve DiscardAndContinue report rows=11 epoch=80 alpha=2
+Target Solve Stop report rows=4 epoch=40 alpha=2
+FAIL: Incorrect terminal run result
+Intentional Stop shown as failure
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.11 sec*proc (1 test)
+
+Total Test time (real) =   1.11 sec
+
+The following tests FAILED:
+	 49 - QtGui.SolverModes (Failed)                        qt-gui
+Errors while running CTest
