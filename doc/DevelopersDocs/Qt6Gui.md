@@ -1682,6 +1682,10 @@ both default Orbit View and Ground Track are visible. Scripted geometry is
 retained, and manually moved/resized views leave automatic placement. Output
 activation continues to restore and raise a selected minimized viewer.
 
+Ground Track distinguishes a propagation-block refresh from mission completion.
+Its recent-segment setting remains active while the mission is running or paused;
+actual completion shows all retained history at Latest.
+
 Ground Track now honors solver None filtering and Current iteration removal;
 All retains trial samples with target colors. SolverPlotTests compares real GUI
 mode edits and display histories against independent accepted data and unchanged

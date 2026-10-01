@@ -1,5 +1,6 @@
 #include "MainWindow.hpp"
 #include "CommandEditor.hpp"
+#include "Debugger.hpp"
 #include "QtPlotReceiver.hpp"
 #include "TestSettings.hpp"
 #include "BaseException.hpp"
@@ -56,12 +57,33 @@ int main(int argc,char **argv)
 {
    QApplication app(argc,argv); app.setOrganizationName("GMATTests"); app.setApplicationName("QtTogglePlots");
    try {
-      TestSettings settings; QTemporaryDir files; const bool completion=argc==3 && QString::fromLocal8Bit(argv[2])=="--finish-disabled"; require((argc==2 || completion) && files.isValid(),"Toggle plot setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
+      TestSettings settings; QTemporaryDir files; const bool completion=argc==3 && QString::fromLocal8Bit(argv[2])=="--finish-disabled",live=argc==3 && QString::fromLocal8Bit(argv[2])=="--live-flush"; require((argc==2 || completion || live) && files.isValid(),"Toggle plot setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
       MainWindow window; window.show(); require(window.initialize(startup),"Toggle plot runtime failed"); auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const auto report=files.filePath("toggle state.txt"),saved=files.filePath("toggle plots Δ.script");
       const QString prefix="% retain source α\nCreate Spacecraft Sat Peer;\nSat.OrbitColor = Red;\nPeer.OrbitColor = Yellow;\nCreate ForceModel FM;\nFM.PrimaryBodies = {};\nFM.PointMasses = {Earth};\nCreate Propagator P;\nP.FM = FM;\nP.InitialStepSize = 10;\nP.MinStep = 10;\nP.MaxStep = 10;\nCreate OrbitView Orb;\nOrb.Add = {Sat, Peer, Earth};\nOrb.ViewPointReference = Earth;\nOrb.ViewPointVector = [0 0 20000];\nOrb.ViewDirection = Sat;\nCreate GroundTrack Ground;\nGround.Add = {Sat, Peer};\nCreate XYPlot XY;\nXY.XVariable = Sat.ElapsedSecs;\nXY.YVariables = {Sat.EarthMJ2000Eq.X};\nCreate ReportFile Idle Values;\nIdle.Filename = '"+files.filePath("idle.txt")+"';\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nValues.Precision = 16;\nBeginMissionSequence;\n";
       const QString mission="Propagate P(Sat, Peer) {Sat.ElapsedSecs = 30};\nToggle 'Pause plots' Idle Off; % retain off comment\nPropagate P(Sat, Peer) {Sat.ElapsedSecs = 30};\nSat.OrbitColor = 'Green'; % changed during disabled interval\nToggle 'Resume plots' Idle On; % retain on comment\nPropagate P(Sat, Peer) {Sat.ElapsedSecs = 30};\n";
       const QString suffix="Report Values Sat.EarthMJ2000Eq.X Sat.EarthMJ2000Eq.Y Sat.EarthMJ2000Eq.Z Sat.EarthMJ2000Eq.VX Sat.EarthMJ2000Eq.VY Sat.EarthMJ2000Eq.VZ Peer.EarthMJ2000Eq.X Peer.EarthMJ2000Eq.Y Peer.EarthMJ2000Eq.Z Peer.EarthMJ2000Eq.VX Peer.EarthMJ2000Eq.VY Peer.EarthMJ2000Eq.VZ;\n";
+      if (live) {
+         auto livePrefix=prefix; livePrefix.replace("Orb.Add = {Sat, Peer, Earth};","Orb.Add = {Sat, Peer, Earth};\nOrb.NumPointsToRedraw = 1;"); livePrefix.replace("Ground.Add = {Sat, Peer};","Ground.Add = {Sat, Peer};\nGround.NumPointsToRedraw = 1;");
+         const auto source=livePrefix+mission+suffix; editor->setPlainText(source); run(window); const auto expected=read(report);
+         require(window.buildScript(),"Live-flush debugger fixture failed"); const auto snapshot=window.missionSnapshot();
+         QSet<int> pauses; for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].type=="Toggle" || snapshot.nodes[i].type=="Report") { pauses.insert(i); require(window.setBreakpoint(i,true),"Live-flush breakpoint unavailable"); }
+         require(pauses.size()==3,"Live-flush command boundaries missing"); Debugger *controller=nullptr; for (auto *child:window.children()) if (auto *candidate=dynamic_cast<Debugger *>(child)) controller=candidate; require(controller,"Live-flush debugger unavailable");
+         std::exception_ptr failure; int calls=0; QTimer timer,timeout; timer.setInterval(10); timeout.setSingleShot(true); timeout.setInterval(12000);
+         QObject::connect(&timer,&QTimer::timeout,&window,[&] {
+            if (!controller->isWaiting()) return;
+            try {
+               for (const auto &name:QStringList{"Orb","Ground"}) { const auto model=window.plotReceiver()->model(name); require(model && curve(*model,"Sat").points.size()>2,"Live-flush plot history unavailable"); if (model->endOfRun || model->firstVisibleFrame(curve(*model,"Sat"),model->frame)==0) throw std::runtime_error((name+": intermediate propagation flush marked live mission complete at pause "+QString::number(calls)).toStdString()); }
+               require(editor->toPlainText()==source,"Live display flush modified script");
+               if (calls==1) { const auto model=window.plotReceiver()->model("Ground"); const auto count=curve(*model,"Sat").points.size(); for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (child->property("plotName")=="Ground") child->close(); QApplication::processEvents(); require(window.plotReceiver()->show("Ground") && window.plotReceiver()->model("Ground")==model && !model->endOfRun && curve(*model,"Sat").points.size()==count,"Reopened live plot changed history or completion"); }
+               ++calls; controller->resume();
+            } catch (...) { failure=std::current_exception(); window.stopMission(); }
+         });
+         QObject::connect(&timeout,&QTimer::timeout,&window,[&] { failure=std::make_exception_ptr(std::runtime_error("Live-flush debugger did not release")); window.stopMission(); }); timer.start(); timeout.start(); const auto result=window.runMission(); timer.stop(); timeout.stop(); if (failure) std::rethrow_exception(failure);
+         require(result==MainWindow::RunResult::Completed && calls==3 && read(report)==expected,"Live-flush debug run changed independent calculation");
+         for (const auto &name:QStringList{"Orb","Ground"}) { const auto model=window.plotReceiver()->model(name); require(model->endOfRun && model->firstVisibleFrame(curve(*model,"Sat"),model->frame)==0,"True completion did not restore all retained display segments"); }
+         std::cout<<"PASS: actual command-boundary pauses after three propagation blocks keep Orbit/Ground live with recent-segment limits, live Ground close/reopen retains state, and real completion shows full retained history; independent twelve-state report and exact script preserved.\n"; return 0;
+      }
       if (completion) {
          const QString terminal="Toggle 'Freeze completed plots' Idle Off; % keep final state";
          auto completedPrefix=prefix; completedPrefix.replace("Orb.Add = {Sat, Peer, Earth};","Orb.Add = {Sat, Peer, Earth};\nOrb.NumPointsToRedraw = 1;"); completedPrefix.replace("Ground.Add = {Sat, Peer};","Ground.Add = {Sat, Peer};\nGround.NumPointsToRedraw = 1;");

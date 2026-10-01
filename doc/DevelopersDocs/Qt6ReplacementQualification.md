@@ -118,7 +118,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/CelesBodySelectDialog.hpp` | Both active wx callers audited: solar-shadow lists hide Sun; primary/point-mass selection excludes the opposite pending gravity list. Qt checked lists provide add/remove, Select all/Clear, reorder, Cancel and Apply. Existing and user Asteroid choices, typed invalid/overlap rejection, exact Undo/Redo, explicit empty shadows, Unicode save/reopen and exact power/propagation agreement with separately written scripts covered. Body-only edits preserve surrounding raw configuration; Wayland dialogs inspected. Optional calculated-point mode, broader pending transitions, keyboard/focus/portal and shared Help remain unqualified. |
 | `src/gui/solarsys/CelestialBodyPanel.hpp` | Four wx pages audited and exposed through a dedicated Qt MDI editor. Pending controls, applied-only preview, Close Cancel/Discard, invalid correction/rollback, exact Undo/Redo, Run/Stop guards, body creation and Unicode save/reopen covered. Native Wayland pages inspected. Shared Help, wider keyboard/focus, portal choosers and multi-panel lifecycle cases remain unqualified. |
 | `src/gui/solarsys/CelestialBodyVisualizationPanel.hpp` | Texture chooser/preview, supported 3DS/OBJ model chooser, offset/rotation/scale bounds and orbit/target colors audited. Applied assets reach PlotCurve; native Wayland rendered checker texture and posed body model were inspected and exceed pixel-change gates while calculation reports stay identical. Invalid image/model/path rollback, default texture/model clearing and Unicode save/reopen covered. Wider formats, materials and relative paths remain unqualified. |
-| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
+| `src/gui/subscriber/GroundTrackPlotPanel.hpp` | Active body/object, sampling/update/retention/redraw, visibility, solver and texture controls audited against current GroundTrack runtime and legacy GL behavior. Grouped Qt setup, typed selections, per-body maps, decoded-image validation and engine texture-path resolution implemented. Cancel/pending Apply, compact scrolling, Undo/Redo/save/reopen, rendered custom-map pixels, station-only plots, Mars frame/report agreement and one-point retention covered. LivePlotFlush additionally checks intermediate propagation-block refreshes, recent-segment limits during actual command pauses, live close/reopen and true completion with unchanged state reports. Broader solver, body/station and runtime asset-loss combinations remain to qualify. |
 | `src/gui/subscriber/XyPlotSetupPanel.hpp` | Active wx ShowPlot/ShowGrid/SolverIterations, single X and ordered Y selection audited. Focused Qt setup and numeric property/frame/array browsers implemented. Cancel, pending Apply/reopen, invalid-reference rollback, exact Undo/Redo/save/reopen, grid/visibility and curve/report agreement covered. Full solver-iteration modes and broader burn/hardware parameter execution remain to qualify. |
 | `src/gui/solarsys/CelestialBodyPropertiesPanel.hpp` | Mu/radius/flattening validation and ordered PCK lists audited. Earth physical edits and Ceres configuration match separate raw-script reports. PCK Add/Replace/Remove/reorder/Cancel and wrong-type rollback covered; Luna startup PCK replacement/removal survives save/reopen with explicit kernel-list clear. Wider bodies/epochs/physical extremes and SPICE error-file diagnostics remain unqualified. |
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
@@ -5182,3 +5182,48 @@ previous TogglePlots numerical workflow or native-layout rerun was needed.
 The full Linux qualification goal remains active, including Wayland main-window
 restore/input, portals and remaining selected workflow/plugin gates. Windows/macOS
 remain deferred; check-documents.txt remains the latest complete regression.
+
+
+## Live Ground Track propagation-block refresh
+
+The preceding completed-disabled checkpoint covers terminal display state. A
+separate live-state review found GroundTrack sent RunComplete for every
+isEndOfReceive flush. Subscriber::FlushData sets that flag after individual
+propagation blocks as well as solver blocks; Subscriber::SetEndOfRun separately
+sets isEndOfRun. After the first Propagate, Qt therefore marked Ground Track
+complete and ignored NumPointsToRedraw at the live latest frame, even though
+additional mission commands were still waiting. Orbit View uses isEndOfRun and
+remained live at that boundary. check-live-flush-initial.txt records the actual
+first-boundary Ground failure while paused in the Qt command debugger.
+
+GroundTrack now sends Refresh for an intermediate flush and RunComplete only
+when isEndOfRun is set. Existing publication, collection-frequency countdown,
+coordinate conversion, solver filtering, sample/history storage and numerical
+algorithms are unchanged. The receiver already supports both actions; the fix
+changes no rendering algorithm or widget layout. The mission coordinator's final
+completed-history update from the preceding checkpoint still covers disabled
+subscribers whose engine callback is skipped. Intermediate refreshes no longer
+claim terminal completion.
+
+QtGui.LivePlotFlush runs TogglePlotTests' separate --live-flush mode. It does not
+repeat either previous Toggle mode or the broad debugger suite. The two-spacecraft,
+three-block fixture sets recent redraw to one segment. An independent ordinary
+execution supplies twelve-state report bytes. The actual Qt debugger then pauses
+before two Toggle commands and the final Report, after each block. Orbit/Ground
+must still be live with a nonzero recent-segment start at every pause. Ground
+close/reopen at the second boundary must retain the same model, samples and live
+state. Resuming produces the same report bytes and exact original script; true
+completion must finally show the entire retained trajectory at Latest. This is
+application-driven offscreen execution/lifecycle evidence; no new compositor input,
+portal, native-layout, broader solver or scientific qualification is claimed.
+
+build-live-flush-initial.txt retains a test-only Debugger lookup that incorrectly
+used QObject::findChild for a class without Q_OBJECT; it was corrected to the
+existing dynamic child lookup before the first executable check. The final focused
+check passes in check-live-flush-final.txt (0.61 seconds).
+build-live-flush-final.txt records the shared GroundTrack runtime/native plugin
+relink and actual GmatQt-R2026a rebuild with GmatQt launcher recreation. No complete
+suite, old Toggle modes or native-rendering repeat was needed. Previous native
+rendering/window/replay and complete check-documents.txt evidence is reused.
+The full Linux qualification remains active with the original outstanding desktop
+and workflow/plugin gates. Windows/macOS remain deferred.

@@ -1634,7 +1634,10 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
 
    if (isEndOfReceive)
    {
-      PlotInterface::TakeGroundTrackAction(instanceName, "RunComplete");
+      // FlushData also ends individual propagation/solver blocks. Only the
+      // engine's SetEndOfRun notification completes the retained display.
+      PlotInterface::TakeGroundTrackAction(instanceName,
+            isEndOfRun ? "RunComplete" : "Refresh");
 
       // if targetting and draw target is None, just return
       if (mSolverIterations == "None" &&
