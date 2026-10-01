@@ -29,15 +29,17 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
 {
    auto *moderator=Moderator::Instance();
    for (auto it=settings.cbegin();it!=settings.cend();++it) {
-      auto validateTrajectory=[&](const QString &name) {
+      auto validateTrajectory=[&](const QString &name,bool allowRoot=true) {
          if (name.isEmpty()) return;
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
-         if (!plot || !plot->IsOfType("OrbitView")) throw std::runtime_error("Automatic trajectory camera requires an OrbitView");
-         if (name=="CoordinateSystem") return;
+         if (!plot || !plot->IsOfType("OrbitView")) throw std::runtime_error("Plot display/camera metadata requires an OrbitView");
+         if (allowRoot && name=="CoordinateSystem") return;
          const auto &objects=plot->GetStringArrayParameter("Add");
          if (std::find(objects.begin(),objects.end(),name.toStdString())==objects.end())
-            throw std::runtime_error((it.key()+": automatic trajectory object must be in Add: "+name).toStdString());
+            throw std::runtime_error((it.key()+": plot display/camera object must be in Add: "+name).toStdString());
       };
+      for (const auto &name:it->objectLabels.keys()) validateTrajectory(name,false);
+      for (const auto &name:it->objectTrajectories.keys()) validateTrajectory(name,false);
       auto validateSegment=[&](const QString &frame) {
          if (frame.isEmpty()) return;
          const auto objectName=frame.section('.',0,0),provider=frame.section('.',1,1);
@@ -281,6 +283,8 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
    entry->objects=names; entry->points=points;
    for (size_t i=0;i<names.size();++i) {
       auto &curve=entry->data->curves[static_cast<int>(i)]; curve.name=text(names[i]);
+      const auto setting=cameraSettings.value(text(name));
+      if (setting.objectLabels.contains(curve.name)) curve.importedLabel=setting.objectLabels.value(curve.name);
       if (i<points.size() && points[i]) {
          curve.color=rgb(points[i]->GetCurrentOrbitColor());
          if (auto *body=dynamic_cast<CelestialBody *>(points[i])) {
@@ -369,7 +373,7 @@ void QtPlotReceiver::SetGl3dViewOption(const std::string &name,SpacePoint *refer
 }
 void QtPlotReceiver::SetGlDrawOrbitFlag(const std::string &name,const std::vector<bool> &flags)
 {
-   if (auto *entry=find(name)) for (size_t i=0;i<flags.size();++i) entry->data->curves[static_cast<int>(i)].lines=flags[i];
+   if (auto *entry=find(name)) for (size_t i=0;i<flags.size();++i) { auto &curve=entry->data->curves[static_cast<int>(i)]; const auto settings=cameraSettings.value(text(name)); curve.lines=settings.objectTrajectories.value(curve.name,flags[i]); }
 }
 void QtPlotReceiver::SetGlShowObjectFlag(const std::string &name,const std::vector<bool> &flags)
 {

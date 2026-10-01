@@ -95,6 +95,31 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             result.error=it.key()+"."+key+": expected On or Off."; return result;
          }
    }
+   QMap<QString,QtCameraSetting> displaySettings;
+   for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesInterface") {
+      QStringList names; auto &display=displaySettings[it.key()];
+      for (auto line=settings.cbegin();line!=settings.cend();++line) {
+         if (line->first!=it.key()) continue;
+         const auto property=line->second,value=assignment.match(codePart(lines[line.key()])).captured(3).trimmed();
+         if (property=="Add") {
+            const auto list=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*(?:[\\s,]+[A-Za-z][A-Za-z0-9_]*)*)?\\s*\\}$").match(value);
+            if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
+            names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
+            // OF Add resets the ordered object list and its display defaults.
+            display.objectLabels.clear(); display.objectTrajectories.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; }
+         } else if (property=="DrawLabel" || property=="DrawTrajectory") {
+            if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
+            const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+            auto &destination=property=="DrawLabel" ? display.objectLabels : display.objectTrajectories;
+            for (int i=0;i<flags.size();++i) {
+               if (flags[i]!="true" && flags[i]!="false") { result.error=it.key()+"."+property+": expected true or false."; return result; }
+               // OF applies the available prefix and leaves omitted objects at defaults.
+               if (i<names.size()) destination[names[i]]=flags[i]=="true";
+            }
+         }
+      }
+   }
    const QSet<QString> common={"Add","CoordinateSystem","DrawObject","SolverIterations","Maximized","ShowPlot","Size","UpperLeft",
       "RelativeZOrder","Axes","XYPlane","EclipticPlane","EnableStars","StarCount","EnableConstellations",
       "DataCollectFrequency","UpdatePlotFrequency","MaxPlotPoints"};
@@ -110,10 +135,13 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawGrid")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory")) {
+         output.append("% Qt conversion: "+lines[i]);
+         result.notes.append(name+"."+key+": independent per-object flags retained in Qt metadata.");
+      } else if (types[name]=="OpenFramesInterface" && key=="DrawGrid") {
          const auto value=properties[name][key];
          const bool anyTrue=QRegularExpression("\\btrue\\b",QRegularExpression::CaseInsensitiveOption).match(value).hasMatch();
-         output.append(QString("GMAT %1.%2 = %3; %% Qt conversion of %4").arg(name,key=="DrawLabel" ? "ShowLabels" : "Grid",anyTrue ? "On" : "Off",key));
+         output.append(QString("GMAT %1.Grid = %2; %% Qt conversion of DrawGrid").arg(name,anyTrue ? "On" : "Off"));
          result.notes.append(name+"."+key+": per-object flags combined into one plot setting.");
       } else {
          output.append("% Qt conversion: "+lines[i]);
@@ -127,7 +155,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       const auto match=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z][A-Za-z0-9_]*)*)\\s*\\}$").match(views);
       if (!match.hasMatch()) {
          if (!views.isEmpty()) { result.error=plot+": invalid camera view list."; return result; }
-         result.notes.append(plot+": no supported view selection; review the default OrbitView camera."); continue;
+         result.notes.append(plot+": no supported view selection; review the default OrbitView camera.");
+         cameras.append(qtCameraDirective(plot,displaySettings.value(plot)).trimmed()); continue;
       }
       const auto viewNames=match.captured(1).split(QRegularExpression("\\s*,\\s*"));
       QSet<QString> seen;
@@ -151,6 +180,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.error=plot+": field of view must be a finite number from 1 to 150 degrees for Qt conversion."; return result;
       }
       QtCameraSetting cameraSetting{true,fov};
+      cameraSetting.objectLabels=displaySettings.value(plot).objectLabels;
+      cameraSetting.objectTrajectories=displaySettings.value(plot).objectTrajectories;
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool trajectory=values.value("ViewTrajectory")=="On";
       const bool segment=frame.contains('.');
@@ -265,6 +296,9 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.automaticTrajectory.isEmpty()) object.insert("automaticTrajectory",setting.automaticTrajectory);
    if (!setting.automaticBody.isEmpty()) object.insert("automaticBody",setting.automaticBody);
    if (!setting.segmentFrame.isEmpty()) object.insert("segmentFrame",setting.segmentFrame);
+   auto flags=[](const QMap<QString,bool> &values) { QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result; };
+   if (!setting.objectLabels.isEmpty()) object.insert("objectLabels",flags(setting.objectLabels));
+   if (!setting.objectTrajectories.isEmpty()) object.insert("objectTrajectories",flags(setting.objectTrajectories));
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -320,6 +354,16 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          setting.centerOffset=center;
       }
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+      auto flags=[&](const char *key,QMap<QString,bool> &destination) {
+         if (!object.contains(key)) return;
+         if (!object.value(key).isObject()) throw std::runtime_error("Per-object display flags must be objects of named boolean values");
+         const auto values=object.value(key).toObject();
+         for (auto it=values.begin();it!=values.end();++it) {
+            if (!identifier.match(it.key()).hasMatch() || !it.value().isBool()) throw std::runtime_error("Per-object display flags need valid names and booleans");
+            destination.insert(it.key(),it.value().toBool());
+         }
+      };
+      flags("objectLabels",setting.objectLabels); flags("objectTrajectories",setting.objectTrajectories);
       if (object.contains("segmentFrame")) {
          setting.segmentFrame=object.value("segmentFrame").toString();
          if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$").match(setting.segmentFrame).hasMatch() || object.contains("automaticTrajectory"))
@@ -395,13 +439,27 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
    }
    return result;
 }
-QString retainQtCameraSettings(const QString &original,const QString &candidate)
+QString retainQtCameraSettings(const QString &original,const QString &candidate,const QString &removedPlot)
 {
    const auto before=qtCameraSettings(original),after=qtCameraSettings(candidate);
    QString result=candidate;
    for (auto it=before.cbegin();it!=before.cend();++it)
-      if (!after.contains(it.key())) result.prepend(qtCameraDirective(it.key(),it.value()));
+      if (it.key()!=removedPlot && !after.contains(it.key())) result.prepend(qtCameraDirective(it.key(),it.value()));
    return result;
+}
+
+QString removeQtCameraSetting(const QString &source,const QString &plot)
+{
+   qtCameraSettings(source); // Retain the existing ambiguity/format validation.
+   const QRegularExpression line("^[ \\t]*% GMAT-Qt-Camera [^\\n]*(?:\\n|$)",QRegularExpression::MultilineOption);
+   auto matches=line.globalMatch(source);
+   while (matches.hasNext()) {
+      const auto match=matches.next();
+      if (qtCameraSettings(match.captured()).contains(plot)) {
+         auto result=source; result.remove(match.capturedStart(),match.capturedLength()); return result;
+      }
+   }
+   return source;
 }
 
 QString setQtCameraSetting(const QString &source,const QString &plot,const QtCameraSetting &setting)

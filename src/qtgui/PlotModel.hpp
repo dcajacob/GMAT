@@ -45,7 +45,9 @@ struct PlotCurve
    QVector<quint64> breaks;
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
-   bool drawsContent() const { return visible && (lines || markers || showObject); }
+   std::optional<bool> importedLabel;
+   bool drawsLabel() const { return visible && importedLabel.value_or(showObject); }
+   bool drawsContent() const { return visible && (lines || markers || showObject || importedLabel.value_or(false)); }
    bool wireframeObject = false;
    double radius = 0;
    QString texturePath;

@@ -1,0 +1,6 @@
+Captured object: A object=0 trajectory=1 label=0
+Captured object: B object=1 trajectory=0 label=1
+Captured object: C object=0 trajectory=0 label=1
+Captured object: Earth object=1 trajectory=0 label=0
+Captured object: Sun object=0 trajectory=0 label=0
+PASS independent OF per-object labels/trajectory/object flags, prefix defaults, automatic Build conversion, exact Undo/Redo/Unicode file recovery, complete independent 19-column state reports, named reorder/removal and hidden-model label rendering; no engine calculations changed.

@@ -1,0 +1,24 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 12: QtGui.ConvertedVisibility
+1/1 Test #12: QtGui.ConvertedVisibility ........***Failed    0.94 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Captured object: A object=0 trajectory=1 label=0
+Captured object: B object=1 trajectory=0 label=1
+Captured object: C object=0 trajectory=0 label=1
+Captured object: Earth object=1 trajectory=0 label=0
+Captured object: Sun object=0 trajectory=0 label=0
+FAIL: Visibility reorder Apply failed
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.94 sec*proc (1 test)
+
+Total Test time (real) =   0.95 sec
+
+The following tests FAILED:
+	 12 - QtGui.ConvertedVisibility (Failed)                qt-gui
+Errors while running CTest

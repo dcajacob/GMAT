@@ -292,8 +292,11 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             painter.setPen(curve.color); painter.setBrush(data->wireframe || curve.wireframeObject ? QBrush(Qt::NoBrush) : QBrush(gradient)); painter.drawEllipse(pixel,radius,radius);
          } else { painter.setBrush(object.a->color); painter.drawEllipse(pixel,3.5,3.5); }
       }
-      if (data->labels) for (const auto &object:objects) if (!object.b) {
-         painter.setPen(foreground); painter.drawText(screen(project(*object.a))+QPointF(7,-7),object.curve->name);
+      if (data->labels) for (const auto &curve:data->curves) {
+         if (!curve.drawsLabel()) continue;
+         const PlotPoint *last=nullptr;
+         for (const auto &point:curve.points) if (point.frame<=visibleFrame) last=&point;
+         if (last && perspectiveScale(*last)>0) { painter.setPen(foreground); painter.drawText(screen(project(*last))+QPointF(7,-7),curve.name); }
       }
    }
    if (!orbit) for (const auto &curve : data->curves) {

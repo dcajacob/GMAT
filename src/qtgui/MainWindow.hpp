@@ -79,7 +79,7 @@ private:
    void showCreateResource();
    void showPathSettings();
    void showFileComparison(const QString &baseline={});
-   QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={});
+   QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={},const QString &removedCamera={});
    bool restoreBuiltModel();
    void setScriptDirectory();
    void newMission();

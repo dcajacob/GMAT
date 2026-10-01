@@ -488,7 +488,7 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
    if (scene->model->labels) {
       const auto projection=scene->viewer.getCamera()->getViewMatrix()*scene->viewer.getCamera()->getProjectionMatrix();
       for (const auto &curve:scene->model->curves) {
-         if (!curve.visible || !curve.showObject) continue;
+         if (!curve.drawsLabel()) continue;
          const PlotPoint *last=nullptr;
          for (const auto &point:curve.points) if (point.frame<=scene->frame) last=&point;
          if (!last) continue;

@@ -1,0 +1,13 @@
+[1/13] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/13] Building CXX object src/qtgui/CMakeFiles/GmatQt.dir/main.cpp.o
+[3/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[4/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[5/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[6/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[7/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[8/13] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[9/13] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[10/13] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[11/13] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[12/13] Building CXX object src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o
+[13/13] Linking CXX executable src/qtgui/GmatQtConvertedVisibilityTests

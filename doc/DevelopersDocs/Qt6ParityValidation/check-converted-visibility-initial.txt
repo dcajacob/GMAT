@@ -1,0 +1,16 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 12: QtGui.ConvertedVisibility
+1/1 Test #12: QtGui.ConvertedVisibility ........***Failed    0.04 sec
+FAIL independent OF labels/trajectories lost in conversion
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.04 sec*proc (1 test)
+
+Total Test time (real) =   0.04 sec
+
+The following tests FAILED:
+	 12 - QtGui.ConvertedVisibility (Failed)                qt-gui
+Errors while running CTest

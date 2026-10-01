@@ -2060,3 +2060,34 @@ Newly opened or reopened plot/table windows are sized and placed within the
 workspace so cascade positions do not hide their controls. Activating an
 existing viewer preserves its position. The normal desktop viewport is covered;
 viewports smaller than widget minimum sizes remain unqualified.
+
+
+### Converted per-object labels and trajectories
+
+OpenFrames DrawLabel and DrawTrajectory arrays now retain each plotted object's
+choice independently in Qt metadata, alongside camera settings. DrawObject still
+controls the model/body through standard OrbitView settings. A hidden model can
+retain a label or trajectory; a shown model can have neither. Empty or short OF
+arrays leave omitted objects at their true defaults, and a later Add assignment
+resets those defaults in source order, matching OF. Malformed arrays retain the
+original script with an explanation. This also works without an explicit View
+selection; that case retains the existing default-camera warning.
+
+Qt stores these choices by object name, so Orbit setup reordering retains them.
+Removing an object prunes its imported display metadata in the same undoable
+Apply; Undo restores both source and choices. Deleting the converted viewer also
+removes its own imported directive, and Undo restores the exact original source.
+The viewer's Object labels option
+is a live master switch. Imported label-only objects participate in Fit/legend;
+ordinary OrbitView objects retain their existing hidden-object label behavior.
+Native and fallback renderers use the latest recorded label position and suppress
+labels behind the camera rather than reusing an older visible pose. Raw metadata
+can be edited in the script; separate persistent per-object label/trajectory
+controls are not added to the resource editor in this increment.
+
+The bounded qualification covers automatic Build conversion, Orbit setup
+Cancel/pending/Apply, reorder/removal/Undo, Unicode Save/reopen, invalid metadata
+correction, retained hidden-object histories and complete independent numerical
+reports. Other OF-specific object axes/planes/grids, endpoint markers, velocity
+vectors, font/model overrides, VR and time synchronization remain under the
+broader OF capability gate.

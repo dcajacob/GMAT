@@ -1,0 +1,1 @@
+PASS isolated wayland independent label rendering, label Off, master Off, ordinary hidden-object defaults and latest-pose clipping; no engine mission repeated.

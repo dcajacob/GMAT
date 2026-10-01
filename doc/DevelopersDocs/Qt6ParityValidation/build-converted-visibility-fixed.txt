@@ -1,0 +1,35 @@
+[1/19] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[3/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[4/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CelestialBodyPanel.cpp.o
+[5/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotModel.cpp.o
+[6/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[7/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/VisualModelDialog.cpp.o
+[8/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitRenderer.cpp.o
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp: In function ‘osg::ref_ptr<osg::Image> {anonymous}::readTexture(const QString&)’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:36:86: warning: ‘QImage QImage::mirrored(bool, bool) &&’ is deprecated: Use flipped(Qt::Orientations) instead [-Wdeprecated-declarations]
+   36 |    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/QImage:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/PlotModel.hpp:3,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qimage.h:223:26: note: declared here
+  223 |     [[nodiscard]] QImage mirrored(bool horizontally = false, bool vertically = true) &&
+      |                          ^~~~~~~~
+[9/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotWidget.cpp.o
+[10/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[11/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[12/19] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[13/19] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[14/19] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[15/19] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[16/19] Building CXX object src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o
+FAILED: [code=1] src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o 
+/usr/bin/c++ -DLINUX_MAC -DNO_GCC_PRAGMA -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NO_DEBUG -DQT_OPENGLWIDGETS_LIB -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DUNICODE -DUSE_64_BIT_LONGS -D_UNICODE -D__USE_SPICE__ -I/home/dan/GIT/GMAT/GMAT/src/qtgui -I/home/dan/GIT/GMAT/GMAT/src/base/api -I/home/dan/GIT/GMAT/GMAT/src/base/asset -I/home/dan/GIT/GMAT/GMAT/src/base/attitude -I/home/dan/GIT/GMAT/GMAT/src/base/burn -I/home/dan/GIT/GMAT/GMAT/src/base/command -I/home/dan/GIT/GMAT/GMAT/src/base/configs -I/home/dan/GIT/GMAT/GMAT/src/base/coordsystem -I/home/dan/GIT/GMAT/GMAT/src/base/event -I/home/dan/GIT/GMAT/GMAT/src/base/executive -I/home/dan/GIT/GMAT/GMAT/src/base/factory -I/home/dan/GIT/GMAT/GMAT/src/base/factory/guicomponents -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel -I/home/dan/GIT/GMAT/GMAT/src/base/forcemodel/harmonic -I/home/dan/GIT/GMAT/GMAT/src/base/foundation -I/home/dan/GIT/GMAT/GMAT/src/base/function -I/home/dan/GIT/GMAT/GMAT/src/base/hardware -I/home/dan/GIT/GMAT/GMAT/src/base/include -I/home/dan/GIT/GMAT/GMAT/src/base/interface -I/home/dan/GIT/GMAT/GMAT/src/base/interpreter -I/home/dan/GIT/GMAT/GMAT/src/base/math -I/home/dan/GIT/GMAT/GMAT/src/base/parameter -I/home/dan/GIT/GMAT/GMAT/src/base/plugin -I/home/dan/GIT/GMAT/GMAT/src/base/propagator -I/home/dan/GIT/GMAT/GMAT/src/base/solarsys -I/home/dan/GIT/GMAT/GMAT/src/base/solver -I/home/dan/GIT/GMAT/GMAT/src/base/spice -I/home/dan/GIT/GMAT/GMAT/src/base/spacecraft -I/home/dan/GIT/GMAT/GMAT/src/base/stopcond -I/home/dan/GIT/GMAT/GMAT/src/base/subscriber -I/home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/include -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/datawriter -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/interpolator -I/home/dan/GIT/GMAT/GMAT/src/gmatutil/util/matrixoperations -isystem /usr/include/x86_64-linux-gnu/qt6/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt6 -isystem /usr/include/x86_64-linux-gnu/qt6/QtCore -isystem /usr/lib/x86_64-linux-gnu/qt6/mkspecs/linux-g++ -isystem /usr/include/x86_64-linux-gnu/qt6/QtGui -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGLWidgets -isystem /usr/include/x86_64-linux-gnu/qt6/QtOpenGL -fno-strict-aliasing -fPIC -O3 -std=c++17 -MD -MT src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o -MF src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o.d -o src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o -c /home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp: In function ‘int main(int, char**)’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/tests/ConvertedVisibilityTests.cpp:55:13: error: inconsistent deduction for ‘auto’: ‘const QString’ and then ‘const QtScriptConversion’
+   55 |       const auto legacy=resources+views+mission,converted=convertOpenFramesViews(legacy);
+      |             ^~~~
+[17/19] Building CXX object src/qtgui/CMakeFiles/GmatQtSegmentCameraTests.dir/tests/SegmentCameraTests.cpp.o
+ninja: build stopped: subcommand failed.

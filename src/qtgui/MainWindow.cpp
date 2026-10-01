@@ -1520,6 +1520,19 @@ QString MainWindow::applyResourceChanges(const QString &name,
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
+      if (object->IsOfType("OrbitView") && changes.contains("Add")) {
+         const auto settings=qtCameraSettings(candidate);
+         if (settings.contains(name)) {
+            auto setting=settings.value(name); const auto &objects=proposed->GetStringArrayParameter("Add");
+            auto prune=[&](QMap<QString,bool> &flags) {
+               for (auto it=flags.begin();it!=flags.end();) {
+                  if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
+               }
+            };
+            prune(setting.objectLabels); prune(setting.objectTrajectories);
+            candidate=setQtCameraSetting(candidate,name,setting);
+         }
+      }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    const auto gravityCheck=[name,changes] {
@@ -1697,7 +1710,7 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
          return "Built-in resources and generated parameters cannot be deleted here.";
       QString firstCommand;
       for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
-      candidate=removeResourceConfiguration(expectedScript,name,firstCommand);
+      candidate=removeQtCameraSetting(removeResourceConfiguration(expectedScript,name,firstCommand),name);
       if (!moderator->RemoveObject(object->GetType(),name.toStdString(),true))
          return "This resource is used by another resource or mission command. See Message Window for details.";
    } catch (BaseException &error) {
@@ -1707,7 +1720,7 @@ QString MainWindow::deleteResource(const QString &name,const QString &expectedSc
       const auto detail=QString::fromUtf8(error.what());
       return restoreBuiltModel() ? detail : detail+" Restoration failed; rebuild the script.";
    }
-   const auto error=applyModelScript(candidate);
+   const auto error=applyModelScript(candidate,{},name);
    if (error.isEmpty()) {
       for (auto *child:workspace->subWindowList()) if (child->property("resourceName").toString()==name) child->close();
       statusBar()->showMessage("Resource deleted — Undo restores it; save to keep changes");
@@ -1737,12 +1750,12 @@ bool MainWindow::restoreBuiltModel()
    refreshTrees(); return modelValid;
 }
 
-QString MainWindow::applyModelScript(const QString &requested,const std::function<QString()> &validate)
+QString MainWindow::applyModelScript(const QString &requested,const std::function<QString()> &validate,const QString &removedCamera)
 {
    QString candidate;
    QMap<QString,QtCameraSetting> cameras;
    try {
-      candidate=retainQtCameraSettings(editor->toPlainText(),requested);
+      candidate=retainQtCameraSettings(editor->toPlainText(),requested,removedCamera);
       cameras=qtCameraSettings(candidate);
    } catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    auto *moderator = Moderator::Instance();

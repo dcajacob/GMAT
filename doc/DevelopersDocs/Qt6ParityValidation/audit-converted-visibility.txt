@@ -1,0 +1,125 @@
+Independent converted OF drawing audit — 2026-10-01
+
+Scope: existing codex/qt6-gui, Linux Qt6/OSG, actual application/bin/GmatQt,
+selected native startup, no MATLAB, no numerical-engine source changes.
+Full Linux replacement goal remains active.
+
+Authoritative sources inspected:
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/SpacePointOptions.cpp:43–55
+  DrawObject, DrawTrajectory, DrawLabel each default true, independently.
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/OpenFramesInterface.cpp
+  PARAMETER_TEXT 63–80: separate DrawObject/DrawTrajectory/DrawLabel arrays.
+  SetStringParameter(Add) 1148–1162 and SetStringArrayParameter(Add) 1557:
+  ClearSpacePoints then AddSpacePoint, resetting each object's options.
+  AddSpacePoint 1647–1660 deduplicates names in insertion order.
+  SetBooleanArrayParameter 2040–2092 iterates min(object count, flag count),
+  changing only supplied flags; arrays can be short/empty and excess ignored.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSpaceObject.cpp:267
+  DrawObject controls body/model frame selection; it does not govern labels.
+  At 385, name label uses separate GetDrawLabel.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSegment.cpp:153
+  GetDrawTrajectory controls curve artist node mask independently.
+src/base/subscriber/OrbitPlot.cpp:1267–1298, src/base/subscriber/OrbitView.cpp:595–601
+  OrbitView DrawObject is body/model callback; trajectory uses separate callback.
+src/base/subscriber/OrbitView.cpp:146
+  Global ShowLabels defaults true. Imported per-object choices use this existing
+  live/master setting rather than an extra invented engine field.
+src/qtgui/tests/RunTest.py
+  CTest uses QT_QPA_PLATFORM=offscreen: CPU fallback, not native GL evidence.
+
+Implementation:
+- Converter iterates supported static settings in source order. Add resets
+  unique ordered names and label/trajectory true defaults. Prefix flags update
+  only existing names; short/empty suffix defaults remain, extra valid flags
+  ignored. Bracketed true/false input validated before modifying source.
+- objectLabels/objectTrajectories are named boolean maps in existing Qt metadata;
+  no engine shader/camera provider dependency introduced. Metadata can be stored
+  even without selected View; preexisting default-camera warning remains.
+- Strict JSON flag type/name parsing and OrbitView/Add membership validation.
+  Display metadata does not use camera's CoordinateSystem pseudo-root bypass.
+- Receiver SetGlObject sets imported labels by curve name. SetGlDrawOrbitFlag
+  honors only matching imported trajectory overrides. Body/model standard flags
+  remain independent. Engine-added hidden Sun has no imported explicit flag.
+- PlotCurve optional importedLabel defaults to standard showObject behavior.
+  Explicit imported labels can draw while body/model/trajectory are hidden.
+  Global label master and curve visible can hide them. Label-only positions
+  participate in Fit/legend; this increment does not qualify every Fit regime.
+- Both native and CPU overlay use last retained sample <= replay frame.
+  Native projection checks clip coordinates as before. CPU latest selection now
+  precedes perspective visibility test, preventing reuse of an older visible
+  label when latest is behind camera. Default ordinary label visibility retained.
+- MainWindow resource Add edit retains name-based maps on reorder and prunes
+  removed names atomically in candidate source. Undo restores maps and source.
+  Camera/projection edits copy remaining metadata fields, including these maps.
+- Resource Delete removes that resource's Qt directive and excludes its name
+  from automatic metadata retention for that transaction only. Otherwise orphan
+  display maps would block the rebuild. Other metadata/normal Apply untouched.
+  Exact Undo restores source/directive; no engine-calculation change.
+
+Verification selection, without a repeated broad matrix:
+check-converted-visibility-initial.txt: old converter loses independent flags,
+  fails pure conversion guard in .04 sec, before missions or render probes.
+build-converted-visibility-fixed.txt: harness-only auto-declaration compile
+  failure (QString and QtScriptConversion in same auto statement); build guard
+  prevented stale CTest. Corrected before continuing.
+check-converted-visibility-final.txt: initial full fixture reaches runtime but
+  strict four-curve count fails because engine adds Sun. SegmentCameras shared
+  converter/receiver case passes .49 sec. It was not repeated after harness/
+  diagnostic changes; log is not a later all-green suite.
+check-converted-visibility-object-names.txt: explicit names show correct flags,
+  then wrong bracketed edit-API input fails. Source script syntax differs from
+  resource control API syntax; final harness uses actual Orbit setup controls.
+check-converted-visibility-panel.txt: final full new case passes .70 sec offscreen.
+  Actual Build prompt; conversion Undo/Redo; Unicode Save/reopen; separate
+  A trajectory-only/B model+label/C label-only/Earth body-only flags; every
+  spacecraft's full hidden drawing history retained; Orbit setup Cancel,
+  pending reorder and Apply; object removal/map pruning; exact source Undo;
+  malformed source/JSON and unplotted name recovery; complete reports unchanged.
+  Empty/short arrays, Add reset and missing explicit View checked in converter.
+converted-visibility-wayland-20261001.txt: complete final new case passes once
+  native Wayland; all three captures inspected. Textured Earth, B model, A path,
+  B/C labels, absent Earth/A labels, isolated label-only position; complete
+  viewer toolbar/replay and Completed status visible within workspace.
+  This complete native case predates final tiny fallback-only clipping correction
+  and display-metadata root validation tightening; native drawing unchanged.
+converted-visibility-report-preservation.txt: entire two-row 19-column reports
+  (elapsed time and all six Cartesian state components of three spacecraft)
+  byte identical independent/converted. SHA-256:
+  1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab.
+  Native harness also compares recovery output bytes and exact script bytes.
+check-converted-visibility-clip-initial.txt: new isolated latest-behind-camera
+  fallback assertion exposes retained old label. No engine mission run.
+check-converted-visibility-clip-fixed.txt: isolated fallback passes after correct
+  latest-first selection. No whole new mission/old regression suite repeated.
+check-converted-visibility-native-clip.txt: final render-only Wayland probe passes
+  independent label On/Off, master/visibility, ordinary defaults and clipping.
+build-converted-visibility-final-render.txt: actual GmatQt-R2026a link and GmatQt
+  launcher recreation, plus final new harness. Numerical engine untouched.
+
+check-converted-visibility-deletion.txt: after the concrete deletion correction,
+  final full new case passes .76 sec (.77 total). Added viewer Delete/no-viewer
+  report invariance and exact Undo/Build. This also covers final fallback clipping
+  and membership guards. No old suite or native mission repeated after deletion.
+build-converted-visibility-deletion.txt: final actual application relink/launcher
+  recreation, plus compiled final deletion assertions. Earlier native rendering
+  remains unchanged; native cases/probes predate this transaction addition.
+
+Relevant invocations already executed:
+cmake --build build/linux-gui --target GmatQt GmatQtConvertedVisibilityTests GmatQtSegmentCameraTests --parallel 8
+ctest --test-dir build/linux-gui -R '^QtGui.(ConvertedVisibility|SegmentCameras)$' --output-on-failure
+# After actual setup-control harness correction, only new case rerun:
+ctest --test-dir build/linux-gui -R '^QtGui.ConvertedVisibility$' --output-on-failure
+# Final native complete case, application/bin workdir:
+QT_QPA_PLATFORM=wayland ../../build/linux-gui/src/qtgui/GmatQtConvertedVisibilityTests gmat_startup_qt.txt \
+ /home/dan/GIT/GMAT/GMAT/doc/DevelopersDocs/Qt6ParityValidation/converted-visibility-wayland-20261001
+# Isolated final fallback/native clipping, no engine initialization/mission:
+QT_QPA_PLATFORM=offscreen build/linux-gui/src/qtgui/GmatQtConvertedVisibilityTests --fallback-render
+QT_QPA_PLATFORM=wayland ../../build/linux-gui/src/qtgui/GmatQtConvertedVisibilityTests --render-only
+
+Limits: persistent per-object label/trajectory resource controls remain raw
+script metadata. Other OF object axes/planes/grids, endpoint/center markers,
+velocity vectors, font/model overrides, VR and time synchronization stay open.
+No broad Workflow/viewer/plugin/numerical regression or prior OF geometry matrix
+repeated. Fresh compositor input, top-level Wayland minimize/restore and portal
+choosers retain previous limits. No blocked compositor experiments/bypass.
+Windows/macOS deferred, MATLAB OFF, original full goal remains active.
