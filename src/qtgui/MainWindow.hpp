@@ -76,7 +76,7 @@ private:
    void refreshAppliedResourcePanels();
    void openCommandEditor(int index, MissionEdit operation);
    CommandEditor *makeCommandPanel(int index,MissionEdit operation);
-   void showCreateResource();
+   void showCreateResource(const QString &initialType={});
    void showPathSettings();
    void showFileComparison(const QString &baseline={});
    QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={},const QString &removedCamera={});

@@ -1,0 +1,43 @@
+Read-only host diagnostic evidence — 2026-10-01
+coredumpctl list: Thu 2026-10-01 11:34:45 MDT, PID15518 UID1000,
+SIGSEGV, core present, /usr/bin/gnome-shell, 92.4M.
+Journal: GNOME Shell process15518 dumped core; org.gnome.Shell@ubuntu.service
+main process exited code=dumped status=11/SEGV at11:34:45 MDT.
+Native category test log mtime: 2026-10-01 11:34:45.805054185 -0600.
+Exact popup trigger/root cause remains unproven. No native rerun performed.
+The following is the coredumpctl info main-thread trace (no core extraction):
+
+                Stack trace of thread 15518:
+                #0  0x0000723beb0a61ac __pthread_kill_implementation (libc.so.6 + 0xa61ac)
+                #1  0x0000723beb045b7e __GI_raise (libc.so.6 + 0x45b7e)
+                #2  0x000058c2b5e1fca7 n/a (/usr/bin/gnome-shell + 0x4ca7)
+                #3  0x0000723beb045cb0 __restore_rt (libc.so.6 + 0x45cb0)
+                #4  0x0000723bea5037dc wl_resource_post_event (libwayland-server.so.0 + 0xb7dc)
+                #5  0x0000723beb5a35c7 n/a (libmutter-18.so.0 + 0x1a35c7)
+                #6  0x0000723beb59ad84 n/a (libmutter-18.so.0 + 0x19ad84)
+                #7  0x0000723beb57a4ea n/a (libmutter-18.so.0 + 0x17a4ea)
+                #8  0x0000723beba9ec1b n/a (libglib-2.0.so.0 + 0x60c1b)
+                #9  0x0000723bebaa0257 n/a (libglib-2.0.so.0 + 0x62257)
+                #10 0x0000723bebaa05f7 g_main_loop_run (libglib-2.0.so.0 + 0x625f7)
+                #11 0x0000723beb50160a meta_context_run_main_loop (libmutter-18.so.0 + 0x10160a)
+                #12 0x0000723bea78b056 n/a (libffi.so.8 + 0xa056)
+                #13 0x0000723bea786d16 n/a (libffi.so.8 + 0x5d16)
+                #14 0x0000723bea7897ae ffi_call (libffi.so.8 + 0x87ae)
+                #15 0x0000723beb8c3477 n/a (libgjs.so.0 + 0x70477)
+                #16 0x0000723beb8c3c09 n/a (libgjs.so.0 + 0x70c09)
+                #17 0x0000723be838fc84 n/a (libmozjs-140.so.0 + 0x18fc84)
+                #18 0x0000723be83848bc n/a (libmozjs-140.so.0 + 0x1848bc)
+                #19 0x0000723be838f5d3 n/a (libmozjs-140.so.0 + 0x18f5d3)
+                #20 0x0000723be838fa51 n/a (libmozjs-140.so.0 + 0x18fa51)
+                #21 0x0000723be8390167 n/a (libmozjs-140.so.0 + 0x190167)
+                #22 0x0000723be843517c _ZN2JS4CallEP9JSContextNS_6HandleINS_5ValueEEES4_RKNS_16HandleValueArrayENS_13MutableHandleIS3_EE (libmozjs-140.so.0 + 0x23517c)
+                #23 0x0000723beb9172a2 n/a (libgjs.so.0 + 0xc42a2)
+                #24 0x0000723beb91ff0f gjs_context_eval_module (libgjs.so.0 + 0xccf0f)
+                #25 0x0000723beb920042 gjs_context_eval_module_file (libgjs.so.0 + 0xcd042)
+                #26 0x000058c2b5e1eff1 n/a (/usr/bin/gnome-shell + 0x3ff1)
+                #27 0x0000723beb02a601 __libc_start_call_main (libc.so.6 + 0x2a601)
+                #28 0x0000723beb02a718 __libc_start_main_impl (libc.so.6 + 0x2a718)
+                #29 0x000058c2b5e1f345 n/a (/usr/bin/gnome-shell + 0x4345)
+                
+                Stack trace of thread 15534:
+                #0  0x0000723beb0ac802 __syscall_cancel_arch (libc.so.6 + 0xac802)

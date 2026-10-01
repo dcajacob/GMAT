@@ -316,6 +316,12 @@ resolve from the executable location even when that file is saved elsewhere.
 MATLAB path editing remains outside this Linux/no-MATLAB qualification.
 
 Use **Edit > New resource** or the Resources context menu to add a resource.
+Right-clicking a category offers its available types directly, such as
+**Add GroundStation…** under Ground Stations or **Add Array…** under Variables,
+Arrays, Strings. Each action opens the creator for that type. Resource children
+inherit their category's creation options. Right-clicking the Resources root or
+empty space retains the general creator; **Edit > New resource** also lists all
+types. The popup closes before opening a creation dialog.
 The dialog lists the engine's viewable resource types, including plugin formations,
 ground stations, functions, estimators, smoothers, process-noise models and
 estimated parameters, plus Variable, String and Array. Variable and String creation includes an initial-value field;

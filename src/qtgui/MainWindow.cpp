@@ -462,7 +462,7 @@ MainWindow::MainWindow()
    connect(paths,&QAction::triggered,this,&MainWindow::showPathSettings);
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);
-   connect(create,&QAction::triggered,this,&MainWindow::showCreateResource);
+   connect(create,&QAction::triggered,this,[this] { showCreateResource(); });
    auto *convert=edit->addAction("Convert OpenFrames views for Qt");
    convert->setObjectName("convertOpenFramesViews"); editingActions.append(convert);
    connect(convert,&QAction::triggered,this,[this] { convertOpenFramesScript(); });
@@ -471,11 +471,37 @@ MainWindow::MainWindow()
       auto *item=resources->itemAt(position);
       const QString name=item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString();
       const QString snapshot=builtScript;
-      QMenu menu(this); menu.addAction(create);
+      QMenu menu(this); menu.setObjectName("resourceContextMenu");
+      auto *category=item;
+      while (category && !category->data(0,Qt::UserRole+1).isValid()) category=category->parent();
+      if (category) {
+         const auto group=category->data(0,Qt::UserRole+1).toUInt();
+         QStringList types;
+         if (group==Gmat::PARAMETER) types={"Variable","Array","String"};
+         else if (group==Gmat::GROUND_STATION) types={"GroundStation"};
+         else for (const auto &type:Moderator::Instance()->GetListOfViewableItems(group)) types.append(QString::fromStdString(type));
+         // Smoother is registered in its own factory but displayed with solvers.
+         if (group==Gmat::SOLVER) types.append("Smoother");
+         const auto available=creatableResourceTypes();
+         types.removeDuplicates(); types.sort();
+         for (const auto &type:types) if (available.contains(type)) {
+            auto *add=menu.addAction("Add "+type+"…"); add->setObjectName("addResource_"+type); add->setData(type);
+            add->setEnabled(create->isEnabled());
+         }
+         if (menu.actions().isEmpty()) { auto *unavailable=menu.addAction("No resource types available"); unavailable->setEnabled(false); }
+      } else {
+         auto *generic=menu.addAction(create->text()); generic->setObjectName("createResource"); generic->setEnabled(create->isEnabled());
+      }
+      menu.addSeparator();
       auto *remove=menu.addAction("Delete resource…");
       auto *selected=name.isEmpty() ? nullptr : Moderator::Instance()->GetConfiguredObject(name.toStdString());
       remove->setEnabled(ready && !running && modelValid && selected && !selected->IsOfType("CelestialBody") && !selected->IsOfType("SolarSystem"));
-      if (menu.exec(resources->viewport()->mapToGlobal(position))==remove &&
+      // Finish the popup event loop before opening a modal creator. In
+      // particular, do not keep a grabbing Wayland popup active around it.
+      const auto *chosen=menu.exec(resources->viewport()->mapToGlobal(position));
+      if (chosen && (chosen->objectName().startsWith("addResource_") || chosen->objectName()=="createResource")) {
+         showCreateResource(chosen->data().toString());
+      } else if (chosen==remove &&
           QMessageBox::question(this,"Delete resource","Delete "+name+" from this mission?",
              QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
          const auto error=deleteResource(name,snapshot);
@@ -930,6 +956,7 @@ void MainWindow::refreshTrees()
    }
    for (const auto &group : groups) {
       auto *category = new QTreeWidgetItem(root, {group.first});
+      category->setData(0,Qt::UserRole+1,group.second);
       for (const auto &name : Moderator::Instance()->GetListOfObjects(group.second)) {
          if (group.second == Gmat::SUBSCRIBER) {
             auto *object = Moderator::Instance()->GetConfiguredObject(name);
@@ -1630,16 +1657,19 @@ void MainWindow::showPathSettings()
    catch (const std::exception &error) { messages->appendPlainText(QString::fromUtf8(error.what())); }
 }
 
-void MainWindow::showCreateResource()
+void MainWindow::showCreateResource(const QString &initialType)
 {
    if (!ready || running || !modelValid || editor->toPlainText()!=builtScript) {
       statusBar()->showMessage("Build the current script before creating a resource"); return;
    }
    const QString snapshot=builtScript;
-   QDialog dialog(this); dialog.setWindowTitle("New resource"); dialog.setObjectName("newResourceDialog");
+   QDialog dialog(this); dialog.setWindowTitle(initialType.isEmpty() ? "New resource" : "New "+initialType); dialog.setObjectName("newResourceDialog");
    auto *layout=new QFormLayout(&dialog);
    auto *type=new QComboBox(&dialog); type->setObjectName("resourceType");
-   type->addItems(creatableResourceTypes()); type->setCurrentText("Spacecraft");
+   const auto available=creatableResourceTypes();
+   if (!initialType.isEmpty() && !available.contains(initialType)) { statusBar()->showMessage("This resource type is no longer available"); return; }
+   type->addItems(initialType.isEmpty() ? available : QStringList{initialType}); type->setCurrentText(initialType.isEmpty() ? "Spacecraft" : initialType);
+   type->setEnabled(initialType.isEmpty());
    auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
    auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setObjectName("resourceCreationStatus"); status->setWordWrap(true);
    layout->addRow("Type",type); layout->addRow("Name",name);

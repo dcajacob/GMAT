@@ -7281,3 +7281,63 @@ propagation labels, model overrides and wider camera/solver/Fit regimes retain
 their prior limits. Top-level Wayland minimize/restore and portal gates remain
 unchanged; blocked experiments were not repeated. Full Linux qualification
 remains active, Windows/macOS deferred and MATLAB off.
+
+
+## Category-aware resource menus and desktop crash — 2026-10-01
+
+The user requested a direct Add GroundStation operation when right-clicking the
+Ground Stations category. The previous context menu always offered the shared
+New resource action and opened the full creator with Spacecraft selected.
+
+Category items now store their actual engine group independently of labels and
+resource identifiers. Their menus expose Add <type> actions from the selected
+runtime's viewable/creatable intersection, with explicit GroundStation and user
+parameter mapping and Smoother's separately registered factory. Children inherit
+their category; unavailable types are not offered. Root/empty-space and Edit
+retain the generic creator. Category actions open a titled, single-type creator;
+name validation, pending-panel/stale guards, transaction, source preservation and
+editor activation use the existing creation path. The context popup event loop
+finishes before the modal creator opens. Delete availability is retained.
+
+The new QtGui.ResourceCategoryMenus / PluginCreationTests --context branch checks
+eight categories (Ground Stations, Spacecraft, Burns, Variables/Arrays/Strings,
+Solvers, Functions, Process Noise Models and Estimated Parameters), parameter
+child inheritance and root generic behavior, matching labels and Delete state,
+GroundStation/Array creators and Cancel, invalid/duplicate-name correction,
+actual GroundStation creation/opened editor, exact unrelated source, Undo/Redo,
+Unicode Save/reopen and unchanged global creator. No mission, old 18-type plugin
+matrix or numerical report suite is repeated. check-resource-category-menu.txt
+records the initial offscreen pass in 0.68 s.
+
+A native --context attempt at 11:34 MDT coincided with a desktop logout requiring
+the user to log in again. resource-category-menu-wayland-20261001.txt contains
+Qt failed-grabbing-popup warnings, attached EGL proxy destruction and EGL surface
+failure, followed by the harness's PASS text. That PASS is insufficient and is
+not native desktop qualification. The collected menu/creator images are retained
+as artifacts of the interrupted session; no successful native acceptance claim
+is made from them.
+
+Read-only host journal/coredump inspection confirms GNOME Shell PID15518 dumped
+core with SIGSEGV at 2026-10-01 11:34:45 MDT. The session service reports
+code=dumped/status=11/SEGV. The top main-thread trace reaches
+wl_resource_post_event in libwayland-server through libmutter-18. The test log
+mtime is 11:34:45.805. resource-category-menu-compositor-crash.txt retains the
+main-thread backtrace and verified event metadata. This establishes a compositor
+crash during the check, but does not prove the particular popup operation or
+exact root cause. No compositor/driver/package configuration was changed.
+
+All live-desktop testing stopped after the report. The --context harness now
+refuses Wayland before creating a MainWindow or popup, so future automatic runs
+cannot repeat this unsafe probe on that platform. The final application closes
+the context popup loop before opening its creator, avoiding nested popup/modal
+handling; this is not claimed as a verified compositor fix. The final focused
+check-resource-category-menu-final.txt passes offscreen in 0.28 s (0.29 s total).
+The earlier focused check was repeated only because the popup sequencing changed.
+build-resource-category-menu-final.txt records final GmatQt-R2026a relink and
+launcher recreation. The later harness comment clarification changes no behavior.
+
+The requested category menu behavior is implemented and has focused interaction/
+source evidence. Native popup safety/fresh desktop input and the compositor crash
+remain unresolved; no further native rerun was attempted. Existing top-level
+Wayland and portal gates remain open. Full Linux qualification remains active,
+Windows/macOS deferred and MATLAB off.

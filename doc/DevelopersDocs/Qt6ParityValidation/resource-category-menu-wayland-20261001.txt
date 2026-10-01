@@ -1,0 +1,8 @@
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x5b4a26a87bc0, name="resourceContextMenuWindow") has a transientParent set and that parent window has received input.
+qt.qpa.wayland: Failed to create grabbing popup. Ensure popup  QWidgetWindow(0x5b4a26abca20, name="resourceContextMenuWindow") has a transientParent set and that parent window has received input.
+warning: queue "mesa egl surface queue" 0x5b4a267acce0 destroyed while proxies still attached:
+  wp_presentation#40 still attached
+qt.qpa.wayland: Could not create EGL surface (EGL error 0x3000)
+
+Failed to write to the pipe: Bad file descriptor.
+PASS category-specific Add actions for eight categories, child inheritance/root generic, delete availability, GroundStation/Array constrained creators and Cancel, invalid/duplicate correction, actual GroundStation creation/opened editor, exact unrelated source/Undo/Redo/Unicode save/reopen and unchanged global creator; no mission or old plugin matrix.
