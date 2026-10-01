@@ -161,7 +161,8 @@ int main(int argc, char **argv)
          const auto automaticOrigin=convertOpenFramesViews(QString(input).replace("Camera.SetDefaultLocation = On","Camera.SetDefaultLocation = Off"));
          require(automaticOrigin.error.isEmpty() && qtCameraSettings(automaticOrigin.script).value("Display").automaticTrajectory=="CoordinateSystem" &&
             automaticOrigin.script.endsWith(dynamics),"Automatic CoordinateSystem conversion changed dynamics or lost framing");
-         require(convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop")).error.contains("segment-relative"),"Segment camera lacks specific diagnostic");
+         const auto segment=convertOpenFramesViews(QString(trajectoryInput).replace("Camera.ViewFrame = Sat","Camera.ViewFrame = Sat.Prop"));
+         require(segment.error.isEmpty() && qtCameraSettings(segment.script).value("Display").segmentFrame=="Sat.Prop","Segment camera metadata lost");
          const auto cameras=qtCameraSettings(converted.script);
          require(cameras.contains("Display") && cameras["Display"].perspective && cameras["Display"].fieldOfView==45,
             "Conversion lost default OF perspective/FOV");

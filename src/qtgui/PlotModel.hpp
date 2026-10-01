@@ -78,6 +78,7 @@ struct PlotCameraView
    QString automaticTrajectory;
    double automaticRadius=0;
    QString automaticBody;
+   QString segmentFrame;
 };
 struct PlotAxisOptions
 {
@@ -124,6 +125,7 @@ struct PlotModel
    QString automaticTrajectory;
    double automaticRadius=0;
    QString automaticBody;
+   QString segmentFrame;
    int maxPoints = 20000, updateFrequency = 1, pendingUpdates = 0;
    int redrawPoints = 0;
    bool endOfRun = false;

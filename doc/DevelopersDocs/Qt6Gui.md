@@ -812,7 +812,9 @@ Additional views preserve stored Current/Default eye, center and up vectors.
 Object references track positions, including center offsets. With InertialFrame
 Off, body-relative views also follow object orientation; InertialFrame On retains
 plot-frame axes. Named whole-trajectory views support stored and automatic
-framing; segment views remain pending. Body views without a stored location use the rendered body/model bounds. Duplicate/unknown view names, invalid poses
+framing. Named propagation-segment views preserve stored and automatic cameras
+as described below. Body views without a stored location use the rendered
+body/model bounds. Duplicate/unknown view names, invalid poses
 and missing reference objects are rejected before execution. The base viewer
 uses the first camera and ignores the additional Qt metadata.
 
@@ -1107,8 +1109,8 @@ camera location in the plot frame. They no longer track the spacecraft position.
 The named trajectory object must be in the plot's Add list (or use
 CoordinateSystem). Primary and additional named cameras are supported.
 Automatic named whole-trajectory framing is also supported as described below.
-Segment-relative views still require further implementation; conversion explains
-those cases and leaves the script unchanged.
+Named propagation-segment views are supported separately as moving endpoint
+frames, as described below.
 
 ### Large report navigation
 
@@ -1305,7 +1307,7 @@ views retain their own target paths. Replay keeps framing stable; Fit frames the
 whole scene, and Script view restores the selected trajectory view. Automatic LookAt targets retain both ShortestAngle modes, including roll and
 bounding-center orientation. Automatic CoordinateSystem views also retain the
 OpenFrames default radius and viewport-aware distance, with or without LookAt.
-Segment cameras remain unsupported.
+Named propagation-segment cameras use the moving segment frame described below.
 
 Editing the primary OrbitView camera's reference, position, scale, direction or
 up settings in the resource editor turns off imported automatic trajectory
@@ -2025,3 +2027,36 @@ completion status remain unchanged; this display repair does not qualify
 scientific propagation through an ephemeris hole. The actual application was
 rebuilt. See the unavailable SPK states qualification appendix for the reproduced
 failure, three affected checks, native rendering/recovery and unchanged reports.
+
+
+### Named propagation-segment cameras
+
+OpenFrames ViewFrame values such as `Sat.FirstArc` select the plotted spacecraft
+and a named Propagate command. Both ViewTrajectory On and Off use the moving
+segment frame, matching OpenFrames. The camera follows captured position and,
+with InertialFrame Off, captured attitude. InertialFrame On retains plot-frame
+axes. Once another propagation arc begins, the first retained matching arc's
+endpoint remains the camera reference. A later segment's camera waits until its
+samples arrive. Replay uses retained poses rather than the live spacecraft.
+
+Stored Current/Default eye, center, up and FOV are preserved; ordinary LookAtFrame
+targets retain alignment. Automatic segment cameras use OpenFrames' empty-frame
+one-unit radius fallback, independently of the displayed spacecraft model or
+whole trajectory. Fit remains available for viewing the actual scene. Segment
+LookAtFrame targets are rejected because OpenFrames' target lookup does not
+resolve dotted segment names.
+
+Build validates that the named command propagates the plotted spacecraft;
+formation members are recognized. Missing commands, wrong spacecraft and
+unplotted references leave the source intact and can be corrected. Explicit
+primary camera edits clear that camera's imported segment tracking; additional
+named views retain their settings, and Undo restores the original metadata.
+The bounded two-arc qualification covers nonzero attitude, source conversion,
+Unicode Save/reopen, replay and failure recovery. Repeated same-name arcs in
+loops, solver/backward segment regimes, history eviction and segment label
+options remain unqualified.
+
+Newly opened or reopened plot/table windows are sized and placed within the
+workspace so cascade positions do not hide their controls. Activating an
+existing viewer preserves its position. The normal desktop viewport is covered;
+viewports smaller than widget minimum sizes remain unqualified.

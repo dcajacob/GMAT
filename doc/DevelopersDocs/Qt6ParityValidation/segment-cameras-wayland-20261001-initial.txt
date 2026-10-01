@@ -1,0 +1,1 @@
+PASS actual OF named-segment conversion, stored/automatic body+inertial and LookAt cameras, nonzero-attitude endpoint clamp, late-data acquisition, four-view selector/replay/close-reopen, primary override/Undo, invalid reference recovery and exact complete independent reports/Unicode source; no propagation algorithm changes.

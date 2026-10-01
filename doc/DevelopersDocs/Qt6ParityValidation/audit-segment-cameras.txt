@@ -1,0 +1,103 @@
+Named OF propagation-segment camera and reopened viewer audit — 2026-10-01
+
+Scope: Linux, existing codex/qt6-gui, selected 20 native plugins, MATLAB OFF.
+Actual GmatQt rebuilt; no numerical-engine source change in this increment.
+The full replacement goal remains active. This is bounded new evidence.
+
+Authoritative local sources inspected:
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/wx/OFScene.cpp
+  ProcessOpenFramesView 1778–1843: dotted ViewFrame splits object/propagate;
+  both ViewTrajectory modes resolve a named segment. Initial OF setup defers
+  segment view creation; Qt acquires recorded camera poses as data arrives.
+  LookAtFrame passes the complete string to the ordinary object lookup.
+  GetFrameOnTrajectoryByName 2054 and GetTrajectoryFrameByName 2093:
+  nonempty propagation name returns spacecraft TrajectorySegment in either mode.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSpaceObject.cpp:611
+  TrajectorySegment chooses the first matching propagation-name segment.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSegment.cpp:57–142
+  Segment ReferenceFrame follows position and attitude; follower LIMIT clamps
+  endpoints. Axes/axis labels off; name label uses UsePropagateLabel.
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/SpacePointOptions.cpp:156
+  Default UsePropagateLabel false: no visible label geometry in this fixture.
+/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/src/View.cpp:261
+  resetView uses frame bound and <=0 radius falls back to one unit.
+src/base/subscriber/OrbitPlot.cpp:47 and provider publication
+  Existing PlotProviderName uses nonempty/non-Unnamed summary, else command name.
+  Existing SetDataProvider publication supplies retained PlotPoint.provider.
+  No engine changes needed for this GUI repair.
+
+Implementation contracts:
+- Converter and JSON parse/write preserve nonempty segmentFrame only. Base
+  spacecraft remains ViewPointReference/Direction; ordinary LookAt supported.
+  One-dot identifier syntax checked. Dotted LookAt explicitly rejected, with
+  original source unchanged. Existing camera directives do not gain empty keys.
+- Build checks actual named Propagate commands and their Spacecraft groups,
+  including configured Formation.Add membership. Invalid/missing/wrong-object
+  references fail before execution; source bytes stay available for correction.
+- Receiver executes ordinary camera updates before sample capture as previously.
+  Segment pass executes after position/attitude/provider capture. First
+  contiguous retained matching provider arc supplies last captured pose;
+  later propagation retains its endpoint. A late segment waits for its samples.
+  Relative frame uses the retained bodyToView matrix; inertial uses plot axes.
+  Ordinary LookAt target retains the existing live-target transformation.
+- Automatic segment cameras use zero-centered one-unit empty-frame bounds,
+  not currently rendered model/trajectory bounds. No automatic framing before
+  segment camera history exists. Fit continues to frame visible scene geometry.
+- Explicit primary resource camera changes clear primary segmentFrame; secondary
+  named camera metadata remains. Drawing-only changes retain camera metadata.
+- New viewer/table QMdiSubWindows are sized/clamped after show to normal workspace
+  bounds; existing window activation preserves its geometry. Widget minimum-size
+  constraints may exceed extremely tiny viewports; those are not qualified.
+
+Focused verification and evidence:
+- Initial harness compile error corrected before reproduction; logs retained.
+  check-segment-cameras-initial.txt fails converter's old segment rejection.
+- New SegmentCameraTests exercises actual Build conversion offer, exact single
+  Undo/Redo, Unicode Save/reopen, two distinct named arcs/nonzero Spinner attitude,
+  four stored/automatic body/inertial and ordinary LookAt views, retained endpoint
+  pose, late sample timing, native rendering differences/replay/close-reopen,
+  primary override/Undo, invalid reference source preservation and corrected rerun.
+  Formation membership is Build-only; no formation runtime claim.
+- Independent no-viewer numerical mission supplies both complete seven-column
+  state report rows, approximately 60 and 180 sec. Byte comparisons include the
+  viewer mission and corrected rerun. Static preservation artifact compares
+  initial/final native reference+viewer reports; SHA-256:
+  6a09ace393866b3db884d1cd05adb21e8de3d1924783a4ba2f9a00bc196b0f12.
+- Shared receiver checks selected: SegmentCameras, InvalidPlotData, OrbitSetup,
+  all pass in 2.65 sec after camera implementation. Stronger new case alone 1.24s
+  predates automatic-offer/placement assertions. WorkflowTests updated/compiled,
+  not broadly rerun. Placement change then passes SegmentCameras+Plots in 8.49s.
+- Initial native scene captures inspected/pass; workspace capture exposed reopen
+  cascade clipping despite harness pass. Preserve initial artifacts separately.
+  Final native case once after placement correction passes new geometry guards;
+  all three fixed captures inspected: distinct textured scenes, complete viewer
+  window bounds, visible toolbar/replay and Completed status. Camera selector
+  assertions are programmatic; no fresh compositor input claim.
+- Optional standalone SegmentCameraReference compares actual installed OF View
+  trackball with Qt for 24 NEW empty segment-frame cases (stored/automatic,
+  relative/inertial, ordinary/LookAt DIRECT, aspects .4/1/2.5). Three independent
+  world points, deliberate misleading model bounds. Max error 2.23115e-07;
+  threshold 1e-4 covers OF float home-eye storage. Application has no OF link.
+
+Exact standalone reference build/run (already done; no old matrix repeated):
+c++ -std=c++17 -fPIC src/qtgui/tests/SegmentCameraReference.cpp -Isrc/qtgui \
+  $(pkg-config --cflags --libs Qt6Widgets) \
+  -I/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/include \
+  -L/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib \
+  -Wl,-rpath,/home/dan/GIT/OpenFramesInterface/dep/OpenFrames-git/installed/lib \
+  -lOpenFrames -losg -losgGA -o /tmp/gmat-segment-camera-reference
+/tmp/gmat-segment-camera-reference
+
+Final product/affected build and focused check (already done):
+cmake --build build/linux-gui --target GmatQt GmatQtSegmentCameraTests GmatQtPlotTests -j2
+ctest --test-dir build/linux-gui --output-on-failure -R '^QtGui.(SegmentCameras|Plots)$'
+Native workdir application/bin, QT_QPA_PLATFORM=wayland:
+../../build/linux-gui/src/qtgui/GmatQtSegmentCameraTests gmat_startup_qt.txt \
+ /home/dan/GIT/GMAT/GMAT/doc/DevelopersDocs/Qt6ParityValidation/segment-cameras-wayland-20261001-fixed
+
+Limits: repeated same-provider loops, solver/backward segments, first arc evicted
+by retention, propagation label geometry, segment LookAt and viewport below
+minimum widget sizes unqualified. No repeated broad Qt/plugin/engine or previous
+whole-trajectory/origin reference matrix. Fresh compositor input, top-level
+Wayland minimize/restore and portal choosers retain previous blocked gates; no
+compositor/input bypass. Windows/macOS deferred, MATLAB OFF, full goal active.

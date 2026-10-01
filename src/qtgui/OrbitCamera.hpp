@@ -74,11 +74,14 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       ? model.cameraViews[model.selectedCamera].automaticRadius : model.automaticRadius;
    const auto body=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
       ? model.cameraViews[model.selectedCamera].automaticBody : model.automaticBody;
-   if (!model.fitCamera && (!trajectory.isEmpty() || !body.isEmpty())) {
+   const auto segment=model.selectedCamera>0 && model.selectedCamera<model.cameraViews.size()
+      ? model.cameraViews[model.selectedCamera].segmentFrame : model.segmentFrame;
+   if (!model.fitCamera && (segment.isEmpty() || camera) && (!trajectory.isEmpty() || !body.isEmpty())) {
       OrbitSceneBounds path;
       OrbitObjectBounds objectBound;
       if (!body.isEmpty()) {
-         if (objects && objects->contains(body)) objectBound=objects->value(body);
+         if (!segment.isEmpty()) objectBound={osg::Vec3d(),1};
+         else if (objects && objects->contains(body)) objectBound=objects->value(body);
          else for (const auto &curve:model.curves) if (curve.name==body) objectBound.radius=curve.radius>0 ? curve.radius : 1;
          path.include(objectBound.center.x(),objectBound.center.y(),objectBound.center.z(),0);
       }

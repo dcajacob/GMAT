@@ -1,0 +1,1 @@
+PASS 24 actual OpenFrames empty-segment-frame comparisons: stored/automatic, body/inertial, LookAt and three aspects; maximum point error=2.23115e-07 (1e-4 tolerance for OF float home-eye). No old whole-trajectory/origin matrices repeated.

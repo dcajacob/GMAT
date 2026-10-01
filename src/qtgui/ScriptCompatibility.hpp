@@ -16,6 +16,7 @@ struct QtCameraPreset {
    QString name,reference,target;
    QString automaticTrajectory;
    QString automaticBody;
+   QString segmentFrame;
    std::array<double,3> eye{0,-30000,0},center{},up{0,0,1};
    bool perspective=true;
    double fieldOfView=45;
@@ -32,6 +33,7 @@ struct QtCameraSetting {
    std::optional<std::array<double,3>> centerOffset;
    QString automaticTrajectory;
    QString automaticBody;
+   QString segmentFrame;
 };
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);
 QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting);

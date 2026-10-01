@@ -1,0 +1,9 @@
+[1/9] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/9] Building CXX object src/qtgui/CMakeFiles/GmatQtPlotTests.dir/tests/PlotTests.cpp.o
+[3/9] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[4/9] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[5/9] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[6/9] Linking CXX executable src/qtgui/GmatQtPlotTests
+[7/9] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[8/9] Building CXX object src/qtgui/CMakeFiles/GmatQtSegmentCameraTests.dir/tests/SegmentCameraTests.cpp.o
+[9/9] Linking CXX executable src/qtgui/GmatQtSegmentCameraTests

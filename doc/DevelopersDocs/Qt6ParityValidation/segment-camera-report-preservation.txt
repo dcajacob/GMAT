@@ -1,0 +1,10 @@
+PASS complete independent/viewer reports before and after viewer-placement repair are byte identical.
+Rows: 2
+SHA-256: 6a09ace393866b3db884d1cd05adb21e8de3d1924783a4ba2f9a00bc196b0f12
+segment-cameras-wayland-20261001-initial.reference.txt
+segment-cameras-wayland-20261001-initial.viewer.txt
+segment-cameras-wayland-20261001-fixed.reference.txt
+segment-cameras-wayland-20261001-fixed.viewer.txt
+Complete retained report:
+59.999999881256372        6985.3626388946877        452.44756965699969        0                         -0.48774192414805084      7.5302741034036718        0                         
+179.99999995809048        6868.6307837716586        1349.7818926065697        0                         -1.4550751548316498       7.4044362749182948        0                         

@@ -11,6 +11,7 @@
 #include "Moderator.hpp"
 #include "MessageInterface.hpp"
 #include "GmatDefaults.hpp"
+#include "GmatCommand.hpp"
 #include <QMdiArea>
 #include <QMdiSubWindow>
 #include <QTableWidget>
@@ -37,6 +38,42 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
          if (std::find(objects.begin(),objects.end(),name.toStdString())==objects.end())
             throw std::runtime_error((it.key()+": automatic trajectory object must be in Add: "+name).toStdString());
       };
+      auto validateSegment=[&](const QString &frame) {
+         if (frame.isEmpty()) return;
+         const auto objectName=frame.section('.',0,0),provider=frame.section('.',1,1);
+         validateTrajectory(objectName);
+         auto *object=moderator->GetConfiguredObject(objectName.toStdString());
+         if (!object || !object->IsOfType(Gmat::SPACECRAFT)) throw std::runtime_error("Segment camera needs a plotted spacecraft");
+         bool found=false; QSet<GmatCommand *> visited; QVector<GmatCommand *> pending{moderator->GetFirstCommand()};
+         while (!pending.empty()) {
+            auto *command=pending.takeLast(); if (!command || visited.contains(command)) continue; visited.insert(command);
+            pending.append(command->GetNext());
+            for (int branch=0;auto *child=command->GetChildCommand(branch);++branch) pending.append(child);
+            if (command->GetTypeName()!="Propagate") continue;
+            const auto summary=command->GetSummaryName();
+            const auto identity=!summary.empty() && summary!="Unnamed" ? summary : command->GetName();
+            if (identity!=provider.toStdString()) continue;
+            const auto propagators=command->GetStringArrayParameter(command->GetParameterID("Propagator"));
+            for (int group=0;group<static_cast<int>(propagators.size());++group) {
+               const auto &names=command->GetStringArrayParameter(command->GetParameterID("Spacecraft"),group);
+               for (const auto &name:names) {
+                  if (name==objectName.toStdString()) { found=true; continue; }
+                  auto *group=moderator->GetConfiguredObject(name);
+                  if (group && group->IsOfType(Gmat::FORMATION)) {
+                     const auto &members=group->GetStringArrayParameter("Add");
+                     if (std::find(members.begin(),members.end(),objectName.toStdString())!=members.end()) found=true;
+                  }
+               }
+            }
+         }
+         if (!found) throw std::runtime_error((it.key()+": segment camera has no named Propagate for "+frame).toStdString());
+      };
+      validateSegment(it->segmentFrame);
+      if (!it->segmentFrame.isEmpty()) {
+         auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+         if (plot->GetStringParameter("ViewPointRefType")=="Vector" || plot->GetStringParameter("ViewPointReference")!=it->segmentFrame.section('.',0,0).toStdString())
+            throw std::runtime_error("Segment camera must match ViewPointReference");
+      }
       validateTrajectory(it->automaticTrajectory);
       validateTrajectory(it->automaticBody);
       if (!it->automaticBody.isEmpty()) {
@@ -51,6 +88,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
             throw std::runtime_error((it.key()+": relative camera needs a vector ViewPointVector; body-relative mode also needs an object ViewPointReference").toStdString());
       }
       for (const auto &view:it->views) {
+      validateSegment(view.segmentFrame);
       validateTrajectory(view.automaticTrajectory);
       validateTrajectory(view.automaticBody);
       for (const auto &name:{view.reference,view.target}) {
@@ -101,7 +139,8 @@ bool QtPlotReceiver::show(const QString &name)
    if (entry.window && !workspace->subWindowList().contains(entry.window.data())) {
       entry.window.clear(); entry.widget.clear(); entry.table.clear();
    }
-   if (!entry.window) {
+   const bool created=!entry.window;
+   if (created) {
       if (entry.data->kind==PlotModel::Kind::Table) {
          entry.table=new QTableWidget;
          configureTableColumns(entry.table);
@@ -133,6 +172,14 @@ bool QtPlotReceiver::show(const QString &name)
    // needs an explicit raise when another child covers this plot.
    if (entry.window->isMinimized()) entry.window->showNormal();
    else entry.window->show();
+   if (created) {
+      // QMdiArea's next cascade position can lie beyond the viewport after
+      // several closes/reopens. Keep newly created viewer controls reachable.
+      const auto bounds=workspace->viewport()->rect();
+      entry.window->resize(std::min(entry.window->width(),bounds.width()),std::min(entry.window->height(),bounds.height()));
+      entry.window->move(std::clamp(entry.window->x(),0,std::max(0,bounds.width()-entry.window->width())),
+                         std::clamp(entry.window->y(),0,std::max(0,bounds.height()-entry.window->height())));
+   }
    workspace->setActiveSubWindow(entry.window);
    entry.window->raise();
    entry.window->widget()->setFocus(); return true;
@@ -147,16 +194,18 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
       entry.data->automaticTrajectory=setting.automaticTrajectory;
       entry.data->automaticBody=setting.automaticBody;
+      entry.data->segmentFrame=setting.segmentFrame;
       // OF's root has no visible axes. Its override radius is stored in a
       // float bounding sphere; with LookAt it instead uses the unit fallback.
       const auto automaticRadius=[](const auto &camera) {
+         if (!camera.segmentFrame.isEmpty()) return 1.0;
          return camera.automaticTrajectory=="CoordinateSystem" ? (camera.lookAtRotation ? 1.0 :
             static_cast<double>(static_cast<float>(12*GmatSolarSystemDefaults::PLANET_EQUATORIAL_RADIUS[GmatSolarSystemDefaults::EARTH]))) : 0.0;
       };
       entry.data->automaticRadius=automaticRadius(setting);
       if (!setting.views.isEmpty()) {
-         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory,automaticRadius(setting),setting.automaticBody});
-         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory,automaticRadius(view),view.automaticBody});
+         entry.data->cameraViews.append({setting.primaryName.isEmpty() ? QString("Script camera") : setting.primaryName,setting.perspective,setting.fieldOfView,{},setting.automaticTrajectory,automaticRadius(setting),setting.automaticBody,setting.segmentFrame});
+         for (const auto &view:setting.views) entry.data->cameraViews.append({view.name,view.perspective,view.fieldOfView,{},view.automaticTrajectory,automaticRadius(view),view.automaticBody,view.segmentFrame});
       }
    }
    show(text(name));
@@ -339,7 +388,21 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
 {
    auto *entry=find(name); if (!entry) return false;
    auto &data=*entry->data; ++data.frame;
+   auto updateCameras=[&](bool segmentPass) {
    if (data.kind==PlotModel::Kind::Orbit && data.scriptedCamera) {
+      auto segmentPoint=[&](const QString &frame) -> const PlotPoint * {
+         if (frame.isEmpty()) return nullptr;
+         const auto object=frame.section('.',0,0),provider=frame.section('.',1,1);
+         for (const auto &curve:data.curves) if (curve.name==object) {
+            const PlotPoint *last=nullptr;
+            for (const auto &point:curve.points) {
+               if (point.provider==provider) last=&point;
+               else if (last) break; // OF selects the first arc with that name.
+            }
+            return last;
+         }
+         return nullptr;
+      };
       auto resolve=[&](bool vector,SpacePoint *object,const std::array<double,3> &value) {
          auto checked=[](const std::array<double,3> &position) {
             if (!PlotModel::usableOrbitPosition(position[0],position[1],position[2]))
@@ -361,9 +424,11 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          return checked({state[0],state[1],state[2]});
       };
       const auto settings=cameraSettings.value(text(name));
-      auto transform=[&](SpacePoint *object,const std::array<double,3> &origin,const std::array<double,3> &target,bool aligned,bool shortest) {
+      auto transform=[&](SpacePoint *object,const std::array<double,3> &origin,const std::array<double,3> &target,bool aligned,bool shortest,const PlotPoint *pose=nullptr) {
          Rmatrix33 frame;
-         if (object) {
+         if (pose) {
+            for (int row=0;row<3;++row) for (int col=0;col<3;++col) frame(row,col)=pose->bodyToView[row*3+col];
+         } else if (object) {
             Rmatrix33 viewToBase;
             if (entry->view) {
                entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true);
@@ -381,14 +446,15 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             return std::array<double,3>{world[0],world[1],world[2]};
          };
       };
-      try {
+      const auto *primaryPose=segmentPass ? segmentPoint(settings.segmentFrame) : nullptr;
+      if (settings.segmentFrame.isEmpty()!=segmentPass && (!segmentPass || primaryPose)) try {
          PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
-         const auto reference=resolve(entry->referenceIsVector,entry->cameraReference,entry->referenceVector);
-         const auto target=resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
+         const auto reference=primaryPose ? std::array<double,3>{primaryPose->x,primaryPose->y,primaryPose->z} : resolve(entry->referenceIsVector,entry->cameraReference,entry->referenceVector);
+         const auto target=primaryPose && !settings.lookAtRotation ? reference : resolve(entry->directionIsVector,entry->cameraDirection,entry->directionVector);
          if ((settings.bodyRelative || settings.lookAtRotation) && !entry->positionIsVector)
             throw std::runtime_error("Relative camera position must be a vector");
          if (settings.bodyRelative && !entry->cameraReference) throw std::runtime_error("Missing body-relative camera reference");
-         const auto orient=transform(settings.bodyRelative ? entry->cameraReference : nullptr,reference,target,settings.lookAtRotation,settings.shortestAngle);
+         const auto orient=transform(settings.bodyRelative ? entry->cameraReference : nullptr,reference,target,settings.lookAtRotation,settings.shortestAngle,settings.bodyRelative ? primaryPose : nullptr);
          const auto position=orient(resolve(entry->positionIsVector,entry->cameraPosition,entry->positionVector));
          camera.target=settings.lookAtRotation ? reference : target;
          const auto orientedUp=orient(entry->upVector);
@@ -419,6 +485,9 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
       catch (const std::exception &) { warn(name,"invalid scripted camera (using available camera or manual view)"); }
       for (int index=0;index<settings.views.size();++index) {
          const auto &view=settings.views[index];
+         if (view.segmentFrame.isEmpty()==segmentPass) continue;
+         const auto *pose=segmentPass ? segmentPoint(view.segmentFrame) : nullptr;
+         if (segmentPass && !pose) continue; // Named segment has not arrived yet.
          try {
             auto findObject=[&](const QString &objectName) -> SpacePoint * {
                if (objectName.isEmpty() || objectName=="CoordinateSystem") return nullptr;
@@ -432,11 +501,11 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
                if (objectName.isEmpty() || objectName=="CoordinateSystem") return std::array<double,3>{};
                return resolve(false,findObject(objectName),{});
             };
-            const auto origin=position(view.reference);
+            const auto origin=pose ? std::array<double,3>{pose->x,pose->y,pose->z} : position(view.reference);
             const auto target=view.target.isEmpty() ? origin : position(view.target);
             auto *reference=view.bodyRelative ? findObject(view.reference) : nullptr;
             if (view.bodyRelative && !reference) throw std::runtime_error("Missing body-relative camera reference");
-            const auto orient=transform(reference,origin,target,view.lookAtRotation,view.shortestAngle);
+            const auto orient=transform(reference,origin,target,view.lookAtRotation,view.shortestAngle,view.bodyRelative ? pose : nullptr);
             const auto eye=orient(view.eye),center=orient(view.center);
             PlotCamera camera; camera.frame=data.frame; camera.solver=solving;
             camera.up=orient(view.up);
@@ -456,6 +525,8 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          } catch (...) { warn(name,("unresolved camera "+view.name+" (using its available history or manual view)").toStdString()); }
       }
    }
+   };
+   updateCameras(false);
    Rvector6 sunState;
    const bool hasSun=data.kind==PlotModel::Kind::Orbit && entry->solarSystem && entry->internal && entry->view;
    if (hasSun) {
@@ -519,6 +590,8 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
    }
    for (auto &curve:data.curves) if (!curve.points.empty() && curve.points.back().frame==data.frame)
       curve.points.back().provider=entry->provider;
+   // Segment references use positions and attitude captured with this sample.
+   updateCameras(true);
    if (update) refresh(*entry,true); return true;
 }
 bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &action)

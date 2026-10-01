@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 12: QtGui.SegmentCameras
+1/2 Test #12: QtGui.SegmentCameras .............   Passed    1.80 sec
+    Start 90: QtGui.Plots
+2/2 Test #90: QtGui.Plots ......................   Passed    6.68 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   8.48 sec*proc (2 tests)
+
+Total Test time (real) =   8.49 sec

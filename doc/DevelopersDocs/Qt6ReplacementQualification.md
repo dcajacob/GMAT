@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
@@ -6710,3 +6710,100 @@ Native widget/rendering evidence does not qualify fresh compositor input,
 top-level Wayland minimize/restore or portal choosers; those blocked experiments
 were not repeated. The original full Linux replacement goal and other active
 workflow/plugin gates remain open. Windows/macOS are deferred and MATLAB is off.
+
+
+## Named OF segment cameras and reopened viewer placement — 2026-10-01
+
+The converter previously rejected every dotted ViewFrame. The new
+GmatQtSegmentCameraTests / QtGui.SegmentCameras first reproduced that failure in
+check-segment-cameras-initial.txt, before any mission or scene assertions. The
+initial harness compile failure (attempted mutation of a const shared model) is
+retained in build-segment-cameras-initial.txt; it was corrected with a local model
+copy before the reproduction build, without running a stale binary.
+
+The local OpenFrames implementation resolves Object.NamedPropagate to the same
+moving OFSegment reference frame for either ViewTrajectory mode. Its position
+and attitude followers clamp to the segment endpoints; named lookup selects the
+first matching arc. A default segment has no visible child geometry and therefore
+uses View's one-unit bounding-radius fallback, rather than the spacecraft model
+or whole trajectory bounds. Dotted LookAtFrame targets do not resolve through
+OF's ordinary object lookup and remain explicitly rejected. The audit artifact
+records the authoritative source paths and implementation contracts.
+
+Qt conversion now preserves segmentFrame metadata for primary and named cameras,
+using the base spacecraft in engine OrbitView fields. Build validates actual
+Propagate provider identity and spacecraft membership (including formation
+members). The receiver samples segment cameras after capturing provider,
+position and body-to-view attitude. Ordinary cameras retain their previous
+sampling order. The first contiguous retained matching arc supplies its latest
+pose and then retains that endpoint through later arcs; cameras for a later
+segment acquire no history before data arrives. Stored Current/Default pose,
+body/inertial orientation, FOV and ordinary LookAt targets are retained.
+Automatic segment framing uses the empty-frame unit bound; Fit still frames the
+actual scene. Explicit primary resource camera edits clear only its segment
+tracking and retain the named secondaries. No numerical-engine change is made.
+
+The new bounded mission has a spinning spacecraft and two separately named
+point-mass propagation arcs. Four converted views cover stored body-relative
+FirstArc, automatic body-relative FirstArc, stored inertial SecondArc with
+Earth LookAt, and automatic inertial SecondArc. The harness uses the actual
+Build conversion offer, exact conversion Undo/Redo, Unicode Save/reopen,
+selector/replay pixel changes, close/reopen history retention, primary override
+and exact Undo, missing/wrong/unplotted references, and corrected-file rerun.
+An independent mission without viewers supplies both complete seven-column
+state rows at approximately 60 and 180 elapsed seconds. Every report byte is
+identical before/after display and recovery. Nonzero attitude distinguishes the
+first arc's orientation from the live later attitude. Formation membership is
+Build-only evidence, not a formation runtime/numerical qualification.
+
+check-segment-cameras-fixed.txt passes SegmentCameras (0.48 s), InvalidPlotData
+(0.64 s) and OrbitSetup (1.53 s), total 2.65 s. These shared camera-reference and
+unavailable-data checks were selected for the receiver changes. After stronger
+primary-override and formation validation, check-segment-cameras-final.txt
+passes the new case alone (1.24 s); that log predates the actual automatic-offer
+and placement assertions. WorkflowTests' former unsupported-segment assertion
+was updated to expect preserved metadata and its target compiled; the large
+Workflow suite was not rerun.
+
+A separate probe links the locally installed OpenFrames library only for
+comparison; the application gains no OpenFrames dependency. It compares Qt's
+world-to-view transform to actual OF View/trackball behavior for 24 new empty
+segment-frame cases: stored/automatic, body/inertial, ordinary/LookAt and aspect
+ratios 0.4/1/2.5. It deliberately supplies a misleading large spacecraft model
+bound to check isolation. segment-camera-reference.txt passes with maximum point
+error 2.23115e-07, below 1e-4 (OF's home-eye uses float storage). No previous
+whole-trajectory/origin reference matrices were repeated.
+
+The initial native Wayland case passed its camera/source/report assertions and
+both scene captures rendered textured Earth, spacecraft, stars and
+constellations. Inspection of the workspace capture nevertheless reproduced a
+reopened viewer cascading off the right/bottom edge. Those initial artifacts
+are retained under segment-cameras-wayland-20261001-initial; they are not evidence
+that all workspace controls fit. QtPlotReceiver::show now constrains newly
+created plot/table windows to the viewport after show; activating an existing
+window does not move it. New harness geometry assertions cover reopened
+containment and repeated activation preserving geometry.
+
+build-segment-viewer-placement.txt records actual GmatQt-R2026a relink and GmatQt
+launcher recreation. After this shared placement change,
+check-segment-viewer-placement.txt passes SegmentCameras (1.80 s) and Plots
+(6.68 s), total 8.49 s. The final focused native case was run once after that
+change and passes in segment-cameras-wayland-20261001-fixed.txt. All three final
+captures (.Stored.png, .AlignedLate.png and workspace .png) were inspected:
+distinct textured scenes render and the reopened window, toolbar/replay controls
+and Completed status are visible inside the workspace. This is native Qt
+widget/rendering evidence; it does not imply fresh compositor input.
+
+segment-camera-report-preservation.txt compares all four complete initial/final
+independent/viewer reports. Both rows and every byte agree, SHA-256
+6a09ace393866b3db884d1cd05adb21e8de3d1924783a4ba2f9a00bc196b0f12.
+Raw numerical report spacing is preserved. The new source and evidence are
+limited to this segment-camera gap and the reproduced reopen placement defect;
+no complete Qt/plugin/numerical suite was repeated.
+
+Repeated same-provider arcs in loops, solver/backward segments, retained-history
+eviction replacing the first arc, propagation label decorations and tiny
+viewports below widget minimum sizes remain unqualified. Fresh desktop input,
+top-level Wayland minimize/restore and portal chooser gates retain their prior
+limits; blocked experiments were not repeated. The full Linux replacement goal
+remains active. Windows/macOS are deferred and MATLAB remains off.
