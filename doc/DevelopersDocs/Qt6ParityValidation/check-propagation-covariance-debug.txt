@@ -1,0 +1,112 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.PropagationCovariance
+1/1 Test #45: QtGui.PropagationCovariance ......***Failed    2.05 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Covariance Apply did not refresh retained panel (covariance): Propagate 'Covariance stage' Prop(Sat, 'Covariance') {Sat.ElapsedSecs = 600, StopTolerance = 1e-8, OrbitColor = Green}; % retain flags comment
+Edit mission command
+Propagator
+Spacecraft
+Stop type
+Stop parameter
+Stop value
+Stop tolerance
+Apply validates the complete mission and updates the script. Branches include their enclosed commands.
+Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.39.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-09-30 22:15:08 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Using default potential file "/home/dan/GIT/GMAT/GMAT/application/bin/../data/gravity/luna/LP165P.cof" for GravityField object "GravityField.Luna"
+**** WARNING **** For the line "Propagate 'Covariance stage' Prop(Sat) {Sat.ElapsedSecs = 600, StopTolerance = 1e-08, OrbitColor = Green};" the achieved stop is outside of the stopping tolerance (1.000000e-08) for time based stops; the difference from the desired value is 6.984919e-08
+
+Mission run completed.
+===> Total Run Time: 0.347 seconds
+
+========================================
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+**** WARNING **** For the line "Propagate 'Covariance stage' Prop(Sat, Covariance) {Sat.ElapsedSecs = 600, StopTolerance = 1e-08, OrbitColor = Green};" the achieved stop is outside of the stopping tolerance (1.000000e-08) for time based stops; the difference from the desired value is 6.984919e-08
+
+Mission run completed.
+===> Total Run Time: 0.271 seconds
+
+========================================
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+**** WARNING **** For the line "Propagate 'Covariance stage' Prop(Sat, STM, AMatrix, Covariance) {Sat.ElapsedSecs = 600, StopTolerance = 1e-08, OrbitColor = Green};" the achieved stop is outside of the stopping tolerance (1.000000e-08) for time based stops; the difference from the desired value is 6.984919e-08
+
+Mission run completed.
+===> Total Run Time: 0.245 seconds
+
+========================================
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   2.05 sec*proc (1 test)
+
+Total Test time (real) =   2.06 sec
+
+The following tests FAILED:
+	 45 - QtGui.PropagationCovariance (Failed)              qt-gui
+Errors while running CTest

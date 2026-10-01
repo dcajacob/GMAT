@@ -1,0 +1,20 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.PropagationCovariance
+1/1 Test #45: QtGui.PropagationCovariance ......***Failed    1.79 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Covariance Apply did not refresh retained panel
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.79 sec*proc (1 test)
+
+Total Test time (real) =   1.80 sec
+
+The following tests FAILED:
+	 45 - QtGui.PropagationCovariance (Failed)              qt-gui
+Errors while running CTest

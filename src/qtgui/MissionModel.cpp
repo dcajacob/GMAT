@@ -113,10 +113,38 @@ QString key(QString code)
    }
    return result;
 }
+QString propagationKey(const QString &code)
+{
+   // Propagate stores these flags without quotes, may repeat them in earlier
+   // groups, and includes STM automatically with Covariance. Compare the
+   // command-wide flags while retaining each ordered propagator/object group.
+   static const QRegularExpression prefix(R"(^\s*Propagate\s+(?:'[^'\n]*'\s+)?(?:BackProp\s+)?(?:Synchronized\s+)?)");
+   const auto begin=prefix.match(code); if (!begin.hasMatch()) return key(code);
+   static const QRegularExpression group(R"(^([A-Za-z][A-Za-z0-9_]*)\s*\(\s*((?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'|'Covariance')(?:\s*,\s*(?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'|'Covariance'))*)\s*\))");
+   QString rest=code.mid(begin.capturedEnd()).trimmed(),header=begin.captured();
+   QSet<QString> flags; int count=0;
+   while (!rest.isEmpty() && rest.front()!='{' && rest.front()!=';') {
+      const auto match=group.match(rest); if (!match.hasMatch()) return key(code);
+      QStringList objects;
+      for (auto token:match.captured(2).split(',')) {
+         token=token.trimmed(); if (token.startsWith('\'')) token=token.mid(1,token.size()-2);
+         if (token=="STM" || token=="AMatrix" || token=="Covariance") flags.insert(token);
+         else objects.append(token);
+      }
+      if (objects.isEmpty()) return key(code);
+      header+=match.captured(1)+"("+objects.join(",")+") "; ++count;
+      rest=rest.mid(match.capturedLength()).trimmed();
+   }
+   if (!count) return key(code);
+   if (flags.contains("Covariance")) flags.remove("STM");
+   auto ordered=flags.values(); ordered.sort();
+   return key(header+rest)+"|variational="+ordered.join(',');
+}
 bool sameStatement(const QString &generated,const QString &original)
 {
    auto a=key(generated),b=key(original);
    if (a==b) return true;
+   if (generated.trimmed().startsWith("Propagate ") && propagationKey(generated)==propagationKey(original)) return true;
    // For writes its implicit unit step even when the source uses start:end.
    static const QRegularExpression implicitStep(R"(^(For(?:'[^']*')?[A-Za-z][A-Za-z0-9_]*=[^:]+):([^:]+)$)");
    const auto loop=implicitStep.match(b);

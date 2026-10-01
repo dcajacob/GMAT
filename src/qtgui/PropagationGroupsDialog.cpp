@@ -14,7 +14,7 @@
 #include <QSet>
 
 namespace {
-struct Groups { bool valid=false,backward=false,synchronized=false,stm=false,aMatrix=false; int start=0,length=0; QList<QPair<QString,QString>> rows; };
+struct Groups { bool valid=false,backward=false,synchronized=false,stm=false,aMatrix=false,covariance=false; int start=0,length=0; QList<QPair<QString,QString>> rows; };
 QStringList names(const QString &text) { return text.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); }
 Groups parse(const QString &source)
 {
@@ -25,14 +25,14 @@ Groups parse(const QString &source)
    result.length=end.capturedStart()-result.start; QString header=source.mid(result.start,result.length).trimmed();
    if (header.startsWith("BackProp ")) { result.backward=true; header=header.mid(9).trimmed(); }
    if (header.startsWith("Synchronized ")) { result.synchronized=true; header=header.mid(13).trimmed(); }
-   const QRegularExpression group("^([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*((?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix')(?:\\s*,\\s*(?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'))*)\\s*\\)");
+   const QRegularExpression group("^([A-Za-z][A-Za-z0-9_]*)\\s*\\(\\s*((?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'|'Covariance')(?:\\s*,\\s*(?:[A-Za-z][A-Za-z0-9_]*|'STM'|'AMatrix'|'Covariance'))*)\\s*\\)");
    while (!header.isEmpty()) {
       const auto match=group.match(header); if (!match.hasMatch()) return result;
       QStringList objects;
       for (const auto &name:names(match.captured(2))) {
          if (name=="STM" || name=="'STM'") result.stm=true;
          else if (name=="AMatrix" || name=="'AMatrix'") result.aMatrix=true;
-         else if (name=="Covariance") return result;
+         else if (name=="Covariance" || name=="'Covariance'") result.covariance=true;
          else objects.append(name);
       }
       if (objects.isEmpty()) return result;
@@ -55,8 +55,19 @@ PropagationGroupsDialog::PropagationGroupsDialog(const QString &source,const QSt
    mode->setCurrentIndex(mode->findData(parsed.synchronized ? "Synchronized" : "")); settings->addWidget(mode);
    backward=new QCheckBox("Propagate backwards",this); backward->setObjectName("propagationGroupBackwards"); backward->setChecked(parsed.backward); settings->addWidget(backward); settings->addStretch();
    auto *variational=new QHBoxLayout; layout->addLayout(variational);
-   stm=new QCheckBox("Propagate STM",this); stm->setObjectName("propagationGroupSTM"); stm->setChecked(parsed.stm); variational->addWidget(stm);
+   explicitSTM=parsed.stm;
+   stm=new QCheckBox("Propagate STM",this); stm->setObjectName("propagationGroupSTM"); stm->setChecked(parsed.stm || parsed.covariance); variational->addWidget(stm);
    aMatrix=new QCheckBox("Compute A-matrix",this); aMatrix->setObjectName("propagationGroupAMatrix"); aMatrix->setChecked(parsed.aMatrix); variational->addWidget(aMatrix); variational->addStretch();
+   covariance=new QCheckBox("Propagate covariance",this); covariance->setObjectName("propagationGroupCovariance"); covariance->setChecked(parsed.covariance); variational->insertWidget(2,covariance);
+   covariance->setToolTip("Requires Cartesian spacecraft in MJ2000Eq frames and fixed-step integration (force-model ErrorControl = None). Covariance propagation includes the STM automatically.");
+   const auto updateSTM=[this](bool enabled) {
+      const QSignalBlocker block(stm);
+      if (enabled) { explicitSTM=stm->isChecked(); stm->setChecked(true); }
+      else stm->setChecked(explicitSTM);
+      stm->setEnabled(!enabled); stm->setToolTip(enabled ? "Included automatically by covariance propagation" : "Propagate the state transition matrix");
+   };
+   stm->setEnabled(!parsed.covariance); stm->setToolTip(parsed.covariance ? "Included automatically by covariance propagation" : "Propagate the state transition matrix");
+   connect(covariance,&QCheckBox::toggled,this,updateSTM);
    table=new QTableWidget(0,2,this); table->setObjectName("propagationGroupsTable"); table->setHorizontalHeaderLabels({"Propagator","Spacecraft / formations"}); table->verticalHeader()->hide();
    table->setSelectionBehavior(QAbstractItemView::SelectRows); table->setSelectionMode(QAbstractItemView::SingleSelection); configureTableColumns(table,{24,40}); layout->addWidget(table);
    auto addRow=[=](const QString &prop,const QString &sats) {
@@ -106,12 +117,16 @@ PropagationGroupsDialog::PropagationGroupsDialog(const QString &source,const QSt
 }
 QString PropagationGroupsDialog::statement() const
 {
+   const auto original=parse(source); bool unchanged=original.valid && backward->isChecked()==original.backward && (mode->currentData().toString()=="Synchronized")==original.synchronized && (covariance->isChecked() ? explicitSTM : stm->isChecked())==original.stm && aMatrix->isChecked()==original.aMatrix && covariance->isChecked()==original.covariance && table->rowCount()==original.rows.size();
+   for (int row=0;unchanged && row<table->rowCount();++row) unchanged=qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()==original.rows[row].first && table->item(row,1)->text()==original.rows[row].second;
+   if (unchanged) return source;
    QStringList groups; if (backward->isChecked()) groups.append("BackProp"); if (!mode->currentData().toString().isEmpty()) groups.append(mode->currentData().toString());
    for (int row=0;row<table->rowCount();++row) {
       auto objects=names(table->item(row,1)->text());
       // These flags apply to the whole command in GMAT, including all groups.
-      if (row==0 && stm->isChecked()) objects.append("'STM'");
+      if (row==0 && (covariance->isChecked() ? explicitSTM : stm->isChecked())) objects.append("'STM'");
       if (row==0 && aMatrix->isChecked()) objects.append("'AMatrix'");
+      if (row==0 && covariance->isChecked()) objects.append("'Covariance'");
       groups.append(qobject_cast<QComboBox *>(table->cellWidget(row,0))->currentText()+"("+objects.join(", ")+")");
    }
    QString result=source; result.replace(start,length,groups.join(" ")+" "); return result;

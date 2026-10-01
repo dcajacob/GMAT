@@ -95,7 +95,7 @@ int main(int argc, char **argv)
          require(variational.findChild<QCheckBox *>("propagationGroupSTM")->isChecked() && variational.findChild<QCheckBox *>("propagationGroupAMatrix")->isChecked(),"Variational flags not loaded");
          variational.findChild<QCheckBox *>("propagationGroupSTM")->setChecked(false);
          require(variational.statement()=="Propagate Prop(Sat, 'AMatrix') {Sat.ElapsedSecs = 60};","Variational flags not independently editable");
-         require(!PropagationGroupsDialog::supports("Propagate Prop(Sat, 'Covariance') {Sat.ElapsedSecs = 60};"),"Covariance flag offered lossy group edit");
+         require(PropagationGroupsDialog::supports("Propagate Prop(Sat, 'Covariance') {Sat.ElapsedSecs = 60};"),"Covariance flag does not support group editing");
          const QString stopSource="Propagate 'Keep' BackProp Prop(Sat) {Sat.ElapsedSecs = 60, StopTolerance = 1e-8, OrbitColor = Green}; % comment";
          PropagationStopsDialog stops(stopSource);
          stops.findChild<QTableWidget *>("propagationStopsTable")->item(0,1)->setText("120");

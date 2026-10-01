@@ -18,4 +18,6 @@ private:
    QCheckBox *backward;
    QCheckBox *stm;
    QCheckBox *aMatrix;
+   QCheckBox *covariance;
+   bool explicitSTM=false;
 };

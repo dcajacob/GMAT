@@ -1,0 +1,1 @@
+PASS: exposed native propagation covariance controls with automatic STM; numerical workflow was not repeated.

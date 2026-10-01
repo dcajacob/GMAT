@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls and broader formation/mode combinations remain pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested. Actual MDI spacecraft runtime OrbitColor/TargetColor string/RGB expression edits, rejected-syntax correction, retained Apply, exact Undo/Redo/Unicode save/reopen, independent reports and Orbit/Ground color histories are now covered; see the runtime-color appendix. Other destination-specific execution and complex syntax audit remain pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Broader object/string/array signature execution pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -5012,3 +5012,65 @@ viewer/rendering and complete regression evidence is reused. No full-suite or
 native-layout rerun was needed. Full Linux replacement qualification remains
 active, including the original outstanding Wayland restore/input, portal and
 plugin/workflow gates. Windows/macOS remain deferred.
+
+
+## Covariance propagation flags and retained command source
+
+The active wx PropagatePanel has covariance/STM/A-matrix controls, while Qt's
+assignment dialog previously rejected any command containing Covariance. It now
+loads quoted or bare Covariance flags, offers the same command-wide option and
+shows the STM that the engine includes automatically. Disabling covariance
+restores the explicitly selected STM state; it does not leave a newly implicit
+STM behind or discard an original explicit STM. A-matrix remains independent.
+Unchanged settings return the original source exactly, including flags on later
+propagator groups, whitespace, labels, stop options and comments. Unknown quoted
+flags remain a source-editor workflow rather than entering lossy controls.
+The tooltip and GUI guide state the existing Cartesian/MJ2000Eq/fixed-step
+requirements. This does not change engine validation or numerical algorithms.
+
+The first transaction test exposed another source-mapping defect: Apply accepted
+the change, but the engine generated bare flags where the original source used
+quotes. Every mission entry then lost safe source alignment, and the retained
+command panel could not refresh. Propagate also repeats command-wide flags in
+earlier groups and includes STM with Covariance. MissionModel now compares known
+variational flags by their command-wide meaning while retaining the ordered
+propagator/object groups, label and stopping/options text. This comparison is
+restricted to recognized Propagate syntax. It retains original source instead
+of regenerating it; different flags, propagators, labels and stop values still
+fail alignment. Build-only multi-group checks cover the engine's added earlier
+flags and a label containing (STM), plus those unsafe mismatches.
+
+PropagationCovarianceTests is a separate focused executable. It uses the shipped
+Ex_Propagate_Covariance Moon/SNC example shortened to 600 seconds, preserving the
+Moon gravity/point masses/SRP, fixed steps, VNB process noise and reporting. Three
+independently scripted runs supply six-state and covariance reports for disabled,
+Covariance-only and combined STM/A-matrix/Covariance commands. The covariance
+report changes when enabled. Actual Mission/MDI controls then reproduce each
+reference's report bytes after Cancel, pending and applied exact Undo/Redo,
+retained clean-panel refresh, Unicode save/reopen and run. The stop tolerance and
+segment-color option, command label, comments and unrelated configuration remain
+intact. Existing initial covariance-grid and broader solver/viewer evidence is
+reused; this is GUI equivalence for the selected fixture, not a new scientific
+qualification or full multi-group covariance execution claim.
+
+check-propagation-covariance.txt and check-propagation-covariance-debug.txt retain
+the original refresh failure. check-propagation-covariance-debug2.txt identifies
+the successful Apply with an unmapped source entry. The mapping correction passed
+in check-propagation-covariance-mapping.txt (1.04 seconds). The final focused check,
+including the extra build-only mapping cases, passed in
+check-propagation-covariance-final.txt (2.42 seconds). Raw failure logs also retain
+the engine's time-stop warning at tolerance 1e-8; its achieved difference is about
+7e-8 seconds. The independent reference and GUI runs agree; no tolerance or engine
+behavior was changed to suppress that warning.
+
+propagation-covariance-wayland-20260930.txt/.png records a preview-only native
+Wayland exposure and capture. The inspected image shows complete explanatory text,
+all three variational checkboxes, the automatic disabled STM, adjustable group
+table and action buttons. It repeats no numerical workflow and makes no fresh
+compositor-input or portal claim. build-propagation-covariance-mapping.txt records
+the final product-code rebuild, GmatQt-R2026a relink and GmatQt launcher recreation;
+build-propagation-covariance-final.txt rebuilds only the later test additions.
+No full-suite rerun was needed; check-documents.txt remains the latest complete
+regression checkpoint. The full Linux qualification goal remains active, including
+Wayland main-window restore/input, portal and remaining plugin/workflow gates.
+Windows/macOS remain deferred.

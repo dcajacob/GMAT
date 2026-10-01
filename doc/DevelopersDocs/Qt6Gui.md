@@ -1147,10 +1147,16 @@ Each object must appear only once, and empty assignments prevent acceptance.
 Select Independent or Synchronized mode and optionally propagate backwards.
 OK changes the command source as one undoable edit; Cancel leaves it unchanged.
 Apply validates the complete mission. Existing stop conditions, options, labels
-and comments remain intact. **Propagate STM** and **Compute A-matrix** apply to
-all spacecraft in the command, matching the wx controls. Existing quoted or
-unquoted STM/AMatrix flags load into these checkboxes. Covariance propagation
-currently requires the source editor.
+and comments remain intact. **Propagate STM**, **Compute A-matrix** and
+**Propagate covariance** apply to all spacecraft in the command. Existing quoted
+or unquoted flags load into these checkboxes. Covariance includes STM automatically,
+so the STM checkbox is checked and disabled while covariance is enabled. Turning
+covariance off restores the explicit STM selection. Opening and accepting unchanged
+settings retains the exact original command, including the flag spelling and groups.
+Covariance propagation requires Cartesian spacecraft in MJ2000Eq frames and
+fixed-step integration with force-model ErrorControl = None. The existing engine
+validates those requirements when initializing the run; use its reported error to
+correct the spacecraft or propagator configuration.
 
 ### For-loop selectors
 
