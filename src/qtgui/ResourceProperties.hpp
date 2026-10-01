@@ -30,6 +30,7 @@ void validateResourceProperties(GmatBase &object,bool replacingPolyhedron=false)
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value);
 QString orbitCovarianceError(const QString &value);
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);
+QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QString> &values);
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);

@@ -1260,24 +1260,17 @@ QString MainWindow::applyResourceChanges(const QString &name,
    }
    if (changes.isEmpty()) return external.isEmpty() ? QString() : externalForceSettingsError(*object,external);
    const bool shadows=object->IsOfType("SolarPowerSystem") && changes.size()==1 && changes.contains("ShadowBodies");
-   const bool forceBodyLists=object->IsOfType("ODEModel") && std::all_of(changes.keyBegin(),changes.keyEnd(),[](const QString &field) { return field=="PrimaryBodies" || field=="PointMasses"; });
-   if (shadows || forceBodyLists) {
+   if (shadows) {
       try {
          // Keep implicit defaults and unrelated configuration unchanged.
          // Whole-mission serialization can apply a previously implicit power
          // epoch and change its decay calculation during a body-list edit.
          QMap<QString,QStringList> expected;
          for (auto it=changes.cbegin();it!=changes.cend();++it) expected[it.key()]=splitResourceReferences(it.value());
-         if (forceBodyLists) {
-            const auto effective=[&](const QString &field) { if (expected.contains(field)) return expected.value(field); QStringList names; for (const auto &body:object->GetStringArrayParameter(field.toStdString())) names.append(QString::fromStdString(body)); return names; };
-            const auto primary=effective("PrimaryBodies"),points=effective("PointMasses");
-            for (const auto &body:primary) if (points.contains(body)) return "A body cannot be both primary gravity and point mass. Adjust both lists before Apply.";
-         }
          QString block;
-         const QStringList fields=forceBodyLists ? QStringList{"PrimaryBodies","PointMasses"} : QStringList{"ShadowBodies"};
+         const QStringList fields={"ShadowBodies"};
          for (const auto &field:fields) {
             if (!changes.contains(field)) continue;
-            if (forceBodyLists) for (const auto &body:expected.value(field)) { auto *selected=moderator->GetConfiguredObject(body.toStdString()); if (!selected || !selected->IsOfType("CelestialBody")) return "Select existing celestial bodies for gravity."; }
             block+=replaceResourceList(*object,"GMAT "+name+"."+field+" = {};\n",field,changes.value(field));
          }
          QString firstCommand;
@@ -1354,6 +1347,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString mixture=changes.value("MixRatio");
       const auto orbitChanges=applySpacecraftOrbitProperties(*proposed,changes);
       const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
+      const auto gravityChanges=applyGravityBodyProperties(*proposed,changes);
       const auto atmosphereChanges=applyAtmosphereProperties(*proposed,changes);
       const auto stationChanges=applyGroundStationLocation(*proposed,changes);
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
@@ -1365,7 +1359,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1464,6 +1458,16 @@ QString MainWindow::applyResourceChanges(const QString &name,
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   const auto gravityCheck=[name,changes] {
+      if (!changes.contains("PrimaryBodies") && !changes.contains("PointMasses")) return QString();
+      auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); if (!model) return QString("The force model was not retained.");
+      for (const auto &field:QStringList{"PrimaryBodies","PointMasses"}) if (changes.contains(field)) {
+         QStringList actual; for (const auto &body:model->GetStringArrayParameter(field.toStdString())) actual.append(QString::fromStdString(body));
+         auto wanted=splitResourceReferences(changes.value(field)); actual.sort(); wanted.sort();
+         if (actual!=wanted) return QString("The selected gravity bodies were not retained. The previous configuration was restored.");
+      }
+      return QString();
+   };
    if (!external.isEmpty() || replacePolyhedron) {
       try {
          QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
@@ -1471,13 +1475,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (replacePolyhedron) candidate=polyhedronScript(candidate,*object,polyhedron,firstCommand);
       } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
-      return applyModelScript(candidate,[name,external,replacePolyhedron,polyhedron] {
+      return applyModelScript(candidate,[name,external,replacePolyhedron,polyhedron,gravityCheck] {
+         const auto gravityError=gravityCheck(); if (!gravityError.isEmpty()) return gravityError;
          auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); if (!model) return QString("The force model was not retained.");
          if (!external.isEmpty()) { const auto error=externalForceSettingsError(*model,external); if (!error.isEmpty()) return error; }
          return replacePolyhedron ? polyhedronSettingsError(*model,polyhedron) : QString();
       });
    }
-   return applyModelScript(candidate);
+   return applyModelScript(candidate,gravityCheck);
 }
 
 QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue)

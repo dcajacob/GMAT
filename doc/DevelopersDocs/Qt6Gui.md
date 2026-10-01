@@ -152,6 +152,14 @@ force-model fields; invalid mixed settings keep the previous mission and the
 pending panel for correction. Disabling removes that force's configuration while
 retaining unrelated gravity, drag and other source settings.
 
+PrimaryBodies and PointMasses can change together with other force settings in
+one Apply. A body cannot appear in both lists. Retained primary bodies keep their
+gravity settings, and removing one removes its owned configuration. The
+atmosphere dialog previews pending body selections, so selecting a new primary
+and enabling its drag can be one transaction. Removing the primary for an
+existing drag force requires disabling that drag or selecting a valid body;
+rejected changes keep the previous mission and pending panel for correction.
+
 File / **Open another script window…** and **New script window** keep additional
 scripts in the MDI workspace. Window titles identify the active mission, inactive
 scripts and unsaved changes; equal filenames show their full paths. Opening an

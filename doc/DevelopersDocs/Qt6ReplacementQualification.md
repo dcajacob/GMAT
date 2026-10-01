@@ -94,7 +94,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/ParameterSetupPanel.hpp` | Active wx disabled Name and numeric Value/String Expression controls and Apply audited. Qt focused Initial value controls replace the ineffective generic fields; source edits preserve grouped declarations, comments, optional semicolons and subsequent mission assignments. Interpreted-value postconditions reject silent String truncation. Parameters tests cover pending values, applied script previews, invalid correction/rollback, exact Undo/Redo, Unicode save/reopen, native Wayland and independently scripted numeric/text reports. Resource windows now stay open and refresh after Apply, with repeated Variable Apply/source/report evidence in DesktopTests. Shared Help and wider resource/keyboard cases remain pending. |
 | `src/gui/foundation/ArraySetupPanel.hpp` | ResourceEditor resizeable numeric grid plus separate mission-start expression grid; retained/new cells, dependent formulas, Cancel, rollback, Undo/Redo and save/reopen tested. Combined numeric/expression Apply, pending resize dimensions, shrink cleanup, atomic Undo and rollback covered; arbitrary existing assignments remain outside the grid workflow. Numeric dimensions now cover wx 1–1000 per axis; direct cell controls and maximum-array Cancel/Apply/reopen are covered by Parameters tests. |
 | `src/gui/foundation/ShowSummaryDialog.hpp` | Captured command state, entire mission/all or physics selection, non-spacecraft-dependent coordinate systems, frame-change error rollback and text export audited. Qt inspection suite compares command states to separate reports in four frames, handles BeginScript via EndScript, skips unexecuted states, rejects stale results and covers Unicode export/source protection, native Wayland, failed/stopped recovery. Broader solver loops, spacecraft hardware fields and font zoom remain unqualified. |
-| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered. ForceSelectorTests qualifies actual SRP/relativistic creation/removal, mixed-field failure/correction and source-preserving independent Earth state reports; other specialized layout and remaining settings pending. |
+| `src/gui/propagator/PropagationConfigPanel.hpp` | Owned propagator settings exposed; numerical/TLE step edits and serialization tested. Atmosphere/drag controls and selected Earth execution cases covered. ForceSelectorTests qualifies actual SRP/relativistic creation/removal, mixed-field failure/correction and source-preserving independent Earth state reports. GravityBodyTests adds mixed primary/point-mass selection and dependent drag, list-only removal, source/legacy retention and independent Earth reports; other specialized layout and remaining settings pending. |
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
 | `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Qt now supplies mission-tree breakpoint markers, Run/Debug, read-only live DEBUG_INSPECT/current Parameter values, spacecraft/all filters, command stepping, resume on Close/Escape and End/Stop. DebuggerTests exercises real context menus, For/If/propagation, Target/Optimize iteration values/reports, script events and function step-over, independent byte-exact reports, source/pending protection, Undo/Redo/save/reopen, Pause, safe main-window close and build/initialization/execution recovery. Offscreen/native X11 keyboard routing, Help and exposed native Wayland inspection were verified. Fresh desktop input and larger nested combinations remain under shared qualification; function-local stepping is outside this main-mission inspector. |
@@ -4755,3 +4755,61 @@ build-force-selectors.txt and build-force-selectors-final.txt record the actual
 application dependency rebuilds. Existing drag/weather/native panel and complete
 regression evidence is reused; no full-suite or native-layout rerun was needed.
 Full qualification remains active under all acceptance gates above.
+
+
+## Mixed gravity body-list transactions retain source and dependent settings
+
+PrimaryBodies and PointMasses changes now update the pending clone's owned
+physical models before dependent settings, rather than only replacing a canonical
+list string on a clone whose force inventory still held the old bodies. Removed
+contributors disappear before replacements are added, retained bodies keep their
+settings, and new gravity contributors use the same Earth/Luna/Venus/Mars named
+file defaults as the existing interpreter. Unknown bodies and primary/point-mass
+overlap reject the edit. Body lists use the same path for isolated and mixed
+changes. Post-build checks confirm the selected body sets and restore the prior
+mission on mismatch, including transactions with the specialized external or
+polyhedron controls. No force calculation or scientific algorithm is changed.
+
+The original selector RHS changes in place, including the legacy Gravity alias.
+Missing primary selectors precede dependent gravity/drag source. Changed owned
+assignments are patched by delta; removed primary settings disappear while their
+comments survive. Unqualified gravity leaves have an unambiguous owner when the
+old model has one primary, and are removed with that primary. Unrelated SRP,
+relativistic, drag and other source remain unchanged, with unprinted defaults
+retained. Direct root PolyhedralBodies/UserDefined/External changes still retain
+the older whole-model fallback; their remaining active caller/setting scope must
+be reconciled separately. The dedicated polyhedron/external controls retain their
+existing narrow source writers. Multi-primary legacy alias ambiguity and wider
+body/force combinations are not established by this checkpoint.
+
+The atmosphere dialog initially rejected drag for a newly pending primary
+because it only validated against the old configured gravity list. The force
+panel now supplies a private preview with the pending body selections. The
+failed checks are retained in check-gravity-bodies-initial.txt and
+check-gravity-bodies-dialog.txt; the latter records the engine's explicit missing
+primary explanation. The preview fix passed in check-gravity-bodies-preview.txt.
+Cancel/acceptance still acts on the private preview, with changes pending until
+the parent force-model Apply.
+
+GravityBodyTests uses actual Resources/MDI panels to change a Luna point mass to
+Mars with ErrorControl, exchange an Earth primary for an Earth point mass,
+reject removal while its drag is still active and correct the pending dialog to
+None, recreate the initially implicit Earth primary and drag together, and remove
+the last point mass through a list-only Apply. It checks unchanged SRP/flux and
+relativistic source, owned/legacy gravity removal, unknown/overlapping body
+rejection, retained refreshed panels, one exact Undo/Redo, comments, mission
+suffix and Unicode save/reopen. Independent 600-second Earth scripts provide the
+six-state reports, including degree/order 4 defaults on the recreated primary.
+Source cases also cover legacy Gravity, continued point lists, removed leaves
+and an implicit mission boundary. Mars is a point-mass contributor here; no new
+Mars/Luna/Venus primary numerical regime is claimed.
+
+check-gravity-bodies.txt records the expanded focused check passing in 0.92
+seconds. check-gravity-bodies-list-only.txt records the explicit isolated-list
+case; the final check-gravity-bodies-legacy.txt passes in 1.01 seconds with the
+real legacy Degree source case. build-gravity-bodies.txt and
+build-gravity-bodies-final.txt record the actual application dependency rebuilds.
+The established window/viewer, body chooser and broader regression evidence is
+reused. No full-suite or native-layout rerun was needed for these transaction and
+source changes. Full replacement qualification remains in progress under the
+original acceptance gates and outstanding plugin/source/native-input limits.

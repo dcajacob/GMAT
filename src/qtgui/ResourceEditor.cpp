@@ -766,7 +766,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                const auto value=combo ? comboValue(combo) : table->item(row,1)->text();
                if (value!=original.value(field)) pending.insert(field,value);
             }
-            AtmosphereDialog dialog(*configured,pending,this);
+            QMap<QString,QString> bodyEdits;
+            for (int row=0;row<table->rowCount();++row) {
+               const auto field=table->item(row,0)->text(); if (field!="PrimaryBodies" && field!="PointMasses") continue;
+               const auto value=table->item(row,1)->text(); if (value!=original.value(field)) bodyEdits.insert(field,value);
+            }
+            // Preview pending gravity selections before validating drag, so
+            // a newly selected primary can acquire drag in the same Apply.
+            std::unique_ptr<GmatBase> preview(configured->Clone()); applyGravityBodyProperties(*preview,bodyEdits);
+            AtmosphereDialog dialog(*preview,pending,this);
             if (dialog.exec()!=QDialog::Accepted) return;
             atmosphereEdits=dialog.values();
             for (int row=0;row<table->rowCount();++row) {

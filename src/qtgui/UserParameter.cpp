@@ -51,7 +51,7 @@ QVector<Statement> statements(const QString &source)
    return result;
 }
 
-QString forceToggleSource(const QString &source,const QString &name,const QString &field,const QString &value,const QStringList &aliases,const QString &firstMissionStatement)
+QString forceSelectorSource(const QString &source,const QString &name,const QString &field,const QString &value,const QStringList &aliases,const QString &firstMissionStatement,const QStringList &dependencies={},const QStringList &creatorAliases={})
 {
    const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z0-9_.]+)\\s*=\\s*(.*?)\\s*;?\\s*$",QRegularExpression::DotMatchesEverythingOption);
    auto normalize=[](QString code) { code=code.trimmed(); code.remove(QRegularExpression("^GMAT\\s+")); if (!code.endsWith(';')) code+=';'; return code; };
@@ -67,9 +67,11 @@ QString forceToggleSource(const QString &source,const QString &name,const QStrin
       }
       const auto match=assignment.match(statement.code); if (!match.hasMatch()) continue;
       const auto key=match.captured(1);
-      if (key!=field && !key.startsWith(field+'.') && !aliases.contains(key)) continue;
+      const bool dependent=std::any_of(dependencies.cbegin(),dependencies.cend(),[&](const QString &prefix) { return key.startsWith(prefix); });
+      const bool creator=key==field || creatorAliases.contains(key);
+      if (!creator && !dependent && !key.startsWith(field+'.') && !aliases.contains(key)) continue;
       firstDependent=std::min(firstDependent,statement.positions[first]); remove.append(key);
-      if (key!=field || value=="Off") continue;
+      if (!creator || value=="Off") continue;
       found=true; const auto positions=statement.positions.mid(match.capturedStart(2),match.capturedLength(2));
       if (positions.isEmpty()) throw std::runtime_error("Cannot locate the force selector value safely.");
       for (auto position:positions) edits.append({position,1,{}});
@@ -252,11 +254,34 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
          const auto alias=it.key().mid(field.size()+1);
          if (!old.values.contains(alias) && !pending.values.contains(alias)) aliases.append(alias);
       }
-      forceSource=forceToggleSource(forceSource,name,field,setting,aliases,firstMissionStatement);
+      forceSource=forceSelectorSource(forceSource,name,field,setting,aliases,firstMissionStatement);
       changed.removeAll(field);
       for (const auto &key:QStringList(changed)) if (key.startsWith(field+'.')) {
          const auto alias=key.mid(field.size()+1); if (aliases.contains(alias)) changed.append(alias);
       }
+   }
+   if (replaceOwnedConfiguration) for (const auto &field:QStringList{"PrimaryBodies","PointMasses"}) if (changed.contains(field)) {
+      const auto codes=pending.values.value(field);
+      const QRegularExpression value("=\\s*(\\{[^;]*\\})\\s*;\\s*$");
+      const auto selected=codes.isEmpty() ? QString("{}") : value.match(codes.last()).captured(1);
+      if (selected.isEmpty()) throw std::runtime_error("Cannot safely patch this gravity body selector.");
+      const QStringList dependencies=field=="PrimaryBodies" ? QStringList{"GravityField.","Drag","AtmosphereModel","AtmosphereBody"} : QStringList{"PointMassForce."};
+      forceSource=forceSelectorSource(forceSource,name,field,selected,{},firstMissionStatement,dependencies,field=="PrimaryBodies" ? QStringList{"Gravity"} : QStringList{});
+      if (field=="PrimaryBodies") {
+         const auto oldCodes=old.values.value(field);
+         auto bodies=oldCodes.isEmpty() ? QString() : value.match(oldCodes.last()).captured(1); bodies.remove(QRegularExpression("[{}']"));
+         const auto oldBodies=bodies.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         auto newBodies=selected; newBodies.remove(QRegularExpression("[{}']"));
+         // With one old gravity owner, its unqualified legacy leaves have an
+         // unambiguous owner. Remove them when that primary is removed too.
+         if (oldBodies.size()==1 && !newBodies.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).contains(oldBodies.first())) {
+            const auto prefix="GravityField."+oldBodies.first()+'.';
+            for (auto it=old.values.cbegin();it!=old.values.cend();++it) if (it.key().startsWith(prefix)) {
+               const auto alias=it.key().mid(prefix.size()); if (!old.values.contains(alias) && !pending.values.contains(alias)) changed.append(alias);
+            }
+         }
+      }
+      changed.removeAll(field);
    }
    const QStringList forceSelectors={"PrimaryBodies","PointMasses","PolyhedralBodies","Drag","SRP","RelativisticCorrection","UserDefined","External"};
    const bool changedForceSelector=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) {

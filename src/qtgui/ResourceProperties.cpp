@@ -864,6 +864,43 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QS
    return consumed;
 }
 
+QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QString> &values)
+{
+   QSet<QString> consumed; auto *model=dynamic_cast<ODEModel *>(&object); if (!model) return consumed;
+   QMap<QString,QStringList> selected;
+   for (const auto &field:QStringList{"PrimaryBodies","PointMasses"}) {
+      if (values.contains(field)) { consumed.insert(field); selected[field]=splitResourceReferences(values.value(field)); }
+      else for (const auto &body:model->GetStringArrayParameter(field.toStdString())) selected[field].append(QString::fromStdString(body));
+   }
+   if (consumed.isEmpty()) return consumed;
+   for (const auto &body:selected.value("PrimaryBodies")) if (selected.value("PointMasses").contains(body)) throw std::runtime_error("A body cannot be both primary gravity and point mass. Adjust both lists before Apply.");
+   for (const auto &field:consumed) for (const auto &body:selected.value(field)) {
+      auto *configured=Moderator::Instance()->GetConfiguredObject(body.toStdString());
+      if (!configured || !configured->IsOfType("CelestialBody")) throw std::runtime_error("Select existing celestial bodies for gravity.");
+   }
+   if (!selected.value("PrimaryBodies").isEmpty() || !selected.value("PointMasses").isEmpty()) model->TakeAction("ClearDefaultForce");
+   // Remove obsolete contributors before adding replacements, including a
+   // primary/point-mass exchange. Retained bodies keep their owned settings.
+   for (int i=model->GetNumForces()-1;i>=0;--i) {
+      auto *force=model->GetForce(i); const QString field=force->IsOfType("GravityField") ? "PrimaryBodies" : force->IsOfType("PointMassForce") ? "PointMasses" : QString();
+      if (consumed.contains(field) && !selected.value(field).contains(QString::fromStdString(force->GetBodyName()))) model->DeleteForce(force);
+   }
+   const QMap<QString,QString> defaults={{"Earth","JGM2"},{"Luna","LP165P"},{"Venus","MGNP180U"},{"Mars","MARS50C"}};
+   for (const auto &field:QStringList{"PrimaryBodies","PointMasses"}) if (consumed.contains(field)) for (const auto &body:selected.value(field)) {
+      const auto type=field=="PrimaryBodies" ? "GravityField" : "PointMassForce";
+      bool exists=false; for (int i=0;i<model->GetNumForces();++i) if (model->GetForce(i)->IsOfType(type) && model->GetForce(i)->GetBodyName()==body.toStdString()) { exists=true; break; }
+      if (exists) continue;
+      std::unique_ptr<PhysicalModel> force(FactoryManager::Instance()->CreatePhysicalModel(type,std::string(type)+"."+body.toStdString()));
+      if (!force) throw std::runtime_error("The selected gravity force could not be created.");
+      force->SetAllowODEDelete(true); force->SetStringParameter("BodyName",body.toStdString());
+      // Use the same named defaults as the script interpreter, without
+      // initializing/replacing the numerical engine or unrelated forces.
+      if (field=="PrimaryBodies" && defaults.contains(body)) force->SetStringParameter("Model",defaults.value(body).toStdString());
+      model->AddForce(force.get()); force.release();
+   }
+   return consumed;
+}
+
 void setResourceProperty(GmatBase &object, const QString &name, const QString &value)
 {
    if (auto *model=dynamic_cast<ODEModel *>(&object);model && (name=="SRP" || name=="RelativisticCorrection")) {
