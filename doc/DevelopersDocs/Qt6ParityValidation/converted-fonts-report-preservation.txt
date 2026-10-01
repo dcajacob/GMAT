@@ -1,0 +1,6 @@
+Static byte comparison; no engine mission repeated.
+Reference: doc/DevelopersDocs/Qt6ParityValidation/converted-visibility-wayland-20261001.reference.txt
+Captured: doc/DevelopersDocs/Qt6ParityValidation/converted-fonts-wayland-20261001.report.txt
+MATCH: 990 bytes; 2 complete rows, 19 columns each.
+SHA-256: 1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab
+The new --fonts case also compares full bytes before edits and after Unicode Save/reopen/rerun.

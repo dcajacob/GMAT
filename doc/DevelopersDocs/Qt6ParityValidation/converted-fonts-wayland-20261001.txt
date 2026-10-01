@@ -1,0 +1,2 @@
+PASS isolated wayland label font pixels 12/32=557/3257, four placements, zero/visibility/master/replay/behind-camera and ordinary defaults; no engine mission.
+PASS automatic OF fonts, source-ordered prefix/Add/scalar defaults, actual MDI Cancel/pending/correction/retained Apply, other settings/source, exact Undo/Redo/Unicode reopen, named pruning and complete reused 19-column states; no old matrix/reference mission.

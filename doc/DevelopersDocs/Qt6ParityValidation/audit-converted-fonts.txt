@@ -1,0 +1,53 @@
+Stored OF label font intent / Qt implementation audit — 2026-10-01
+
+Authoritative sources inspected (outside checkout read-only):
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/SpacePointOptions.cpp:56-57
+  default font size14, positionTop-Right; copy/assignment retain both.
+OpenFramesInterface.cpp:132,157
+  unsigned-int array DrawFontSize; string array DrawFontPosition.
+OpenFramesInterface.cpp:1299-1333
+  brace position array applies min(objects,strings); scalar counter advances/wraps.
+OpenFramesInterface.cpp:2334-2345
+  indexed font-size setter validates object index; omitted sizes retain defaults.
+OpenFramesInterface.cpp:1631-1671
+  Add resets options and populates new size/position vectors; scalar counter unchanged.
+../src/gui/subscriber/wx/OFConfigurationPanel.cpp:567-578
+  size control1-100; four positions; pending save maps preserve editor intent.
+OFSpaceObject.cpp:385
+  consumes DrawLabel; inspected OFSpaceObject/OFSegment/qt/OFScene/wx/OFScene
+  contain no DrawFont/FontPosition/setNameLabelSize/setLabelSize references.
+  Getter references occur in storage/UI, not inspected runtime rendering.
+  This is no proof of identical OF rendered fonts; Qt applies stored intent.
+
+Implementation:
+ScriptCompatibility.hpp/.cpp: named strict size/position metadata; source-ordered
+  defaults/arrays/Add/scalars; primary/no-view retention; no silent clamping.
+  Supported Qt size range0-10000, four positions. Invalid/unresolved retain source.
+QtPlotReceiver.cpp: actualOrbitView/Add membership and explicit optional reset.
+MainWindow.cpp: synthetic GUI keys never passed to engine; atomic metadata apply;
+  Add prunes named maps; independent camera/drawing source retained.
+ResourceEditor.cpp: pending/dialog restore/prune/canonical compare; retained Apply.
+OrbitObjectDrawingDialog.cpp: separate Label style table, Default size/position,
+  correction/status, font-aware adjustable columns, controls remain accessible.
+PlotModel.hpp/OrbitLabels.hpp: optional override, shared QPainter measured bounds,
+  logicalpixel sizing and save/restore; zero suppresses glyph; ordinary baseline retained.
+OrbitRenderer.cpp/PlotWidget.cpp: latest retained overlay position; shared helper,
+  master/visibility/camera clipping and replay still apply.
+ConvertedVisibilityTests.cpp: separate new --fonts / --font-render and final
+  --font-metadata modes; reuses prior complete19column independent reference.
+
+Evidence:
+check-converted-fonts-initial.txt: 2 new checks0.95s, before finalprefix parser guard.
+converted-fonts-wayland-20261001.txt: complete once nativeworkflow passes,
+  isolated12/32 fonts557/3257 changedpixels, fourcornerplacements and boundedchecks.
+All8native captures inspected (scene/isolation vs workspace proof distinguished).
+converted-fonts-native-launch-path.txt: pre-execution127 path error, corrected.
+check-converted-fonts-metadata.txt: final newpuremetadata check0.07s; noengine/render.
+build-converted-fonts-final.txt: actual product relink/launcher and harness finalbuild.
+converted-fonts-report-preservation.txt: staticbytecomparison990bytes2x19,
+  SHA1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab.
+
+Limits: largefonts/fontsubstitution/viewportedge behavior and OFpixelidentity not
+  qualified. Remaining decorations/camera/solver/Desktopinput/portal/fullplugin
+  gates unchanged. No numerical source change, oldmatrix/reference mission rerun,
+  Windows/macOS work, MATLAB, broadtest or blockeddesktop experiment repeated.

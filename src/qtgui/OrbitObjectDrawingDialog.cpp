@@ -20,7 +20,7 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
 {
    setObjectName("orbitObjectDrawingDialog"); setWindowTitle("Object drawing");
    auto *layout=new QVBoxLayout(this);
-   auto *help=new QLabel("Choose each object's paths, labels and markers. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. OK keeps edits pending until Apply.",this);
+   auto *help=new QLabel("Choose each object's paths, labels and markers. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. Label style uses pixel sizes (0 hides the label); Default uses the viewer font and placement. OK keeps edits pending until Apply.",this);
    help->setWordWrap(true); layout->addWidget(help);
    objects=new QTableWidget(names.size(),4,this); objects->setObjectName("orbitObjectDrawing");
    objects->setHorizontalHeaderLabels({"Object","Trajectory","Label","Width (px)"}); objects->verticalHeader()->hide();
@@ -50,11 +50,22 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
       if (drawing && drawing->objectMarkerSizes.contains(names[row])) size->setText(QString::number(drawing->objectMarkerSizes.value(names[row])));
       markers->setCellWidget(row,3,size);
    }
-   auto *tabs=new QTabWidget(this); tabs->setObjectName("orbitDrawingTabs"); tabs->addTab(objects,"Paths and labels"); tabs->addTab(markers,"Markers"); layout->addWidget(tabs,1);
+   fonts=new QTableWidget(names.size(),3,this); fonts->setObjectName("orbitObjectFonts");
+   fonts->setHorizontalHeaderLabels({"Object","Font (px)","Position"}); fonts->verticalHeader()->hide(); configureTableColumns(fonts,{10,6,12});
+   for (int row=0;row<names.size();++row) {
+      auto *item=new QTableWidgetItem(names[row]); item->setFlags(item->flags()&~Qt::ItemIsEditable); fonts->setItem(row,0,item);
+      auto *size=new QLineEdit(fonts); size->setObjectName("orbitDrawing_fontSize_"+names[row]); size->setPlaceholderText("Default");
+      if (drawing && drawing->objectFontSizes.contains(names[row])) size->setText(QString::number(drawing->objectFontSizes.value(names[row])));
+      fonts->setCellWidget(row,1,size);
+      auto *position=new QComboBox(fonts); position->setObjectName("orbitDrawing_fontPosition_"+names[row]); position->addItems({"Default","Top-Right","Top-Left","Bottom-Right","Bottom-Left"});
+      if (drawing && drawing->objectFontPositions.contains(names[row])) position->setCurrentText(drawing->objectFontPositions.value(names[row]));
+      fonts->setCellWidget(row,2,position);
+   }
+   auto *tabs=new QTabWidget(this); tabs->setObjectName("orbitDrawingTabs"); tabs->addTab(objects,"Paths and labels"); tabs->addTab(markers,"Markers"); tabs->addTab(fonts,"Label style"); layout->addWidget(tabs,1);
    auto *status=new QLabel(this); status->setObjectName("orbitDrawingStatus"); status->setWordWrap(true); layout->addWidget(status);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,this); layout->addWidget(buttons);
    connect(buttons,&QDialogButtonBox::accepted,this,[this,status] { try { settings(); accept(); } catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); } }); connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
-   resize(560,std::min(380,QGuiApplication::primaryScreen()->availableGeometry().height()-80)); fitTableColumns(objects); fitTableColumns(markers);
+   resize(560,std::min(380,QGuiApplication::primaryScreen()->availableGeometry().height()-80)); fitTableColumns(objects); fitTableColumns(markers); fitTableColumns(fonts);
 }
 QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
 {
@@ -85,5 +96,15 @@ QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
          sizes[name]=static_cast<quint32>(size);
       }
    }
-   return {{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)}};
+   QMap<QString,quint32> fontSizes; QMap<QString,QString> fontPositions;
+   for (int row=0;row<fonts->rowCount();++row) {
+      const auto name=fonts->item(row,0)->text(),text=qobject_cast<QLineEdit *>(fonts->cellWidget(row,1))->text().trimmed();
+      if (!text.isEmpty()) {
+         bool ok=false; const auto size=text.toULongLong(&ok);
+         if (!ok || size>10000 || !QRegularExpression("^[0-9]+$").match(text).hasMatch()) throw std::runtime_error((name+": enter an integer label size from 0 to 10000 pixels, or leave it empty for Default.").toStdString());
+         fontSizes[name]=static_cast<quint32>(size);
+      }
+      const auto *position=qobject_cast<QComboBox *>(fonts->cellWidget(row,2)); if (position->currentIndex()) fontPositions[name]=position->currentText();
+   }
+   return {{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)},{"@QtObjectFontSizes",qtObjectSizesJson(fontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(fontPositions)}};
 }

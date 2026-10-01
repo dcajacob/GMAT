@@ -37,7 +37,12 @@ struct QtCameraSetting {
    QMap<QString,bool> objectLabels,objectTrajectories,objectCenters,objectEndpoints;
    QMap<QString,quint32> objectMarkerSizes;
    QMap<QString,double> objectLineWidths;
+   QMap<QString,quint32> objectFontSizes;
+   QMap<QString,QString> objectFontPositions;
 };
+QMap<QString,quint32> qtObjectFontSizes(const QString &json);
+QMap<QString,QString> qtObjectFontPositions(const QString &json);
+QString qtObjectFontPositionsJson(const QMap<QString,QString> &positions);
 QMap<QString,double> qtObjectWidths(const QString &json);
 QString qtObjectWidthsJson(const QMap<QString,double> &widths);
 QMap<QString,quint32> qtObjectSizes(const QString &json);

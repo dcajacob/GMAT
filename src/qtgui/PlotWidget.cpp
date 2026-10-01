@@ -16,6 +16,7 @@
 #include "PlotWidget.hpp"
 #include <QSignalBlocker>
 #include "OrbitRenderer.hpp"
+#include "OrbitLabels.hpp"
 #include "OrbitCamera.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
@@ -342,7 +343,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          if (!curve.drawsLabel()) continue;
          const PlotPoint *last=nullptr;
          for (const auto &point:curve.points) if (point.frame<=visibleFrame) last=&point;
-         if (last && perspectiveScale(*last)>0) { painter.setPen(foreground); painter.drawText(screen(project(*last))+QPointF(7,-7),curve.name); }
+         if (last && perspectiveScale(*last)>0) { painter.setPen(foreground); drawOrbitLabel(painter,screen(project(*last)),curve); }
       }
    }
    if (!orbit) for (const auto &curve : data->curves) {

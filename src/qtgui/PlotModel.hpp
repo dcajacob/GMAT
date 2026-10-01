@@ -49,6 +49,8 @@ struct PlotCurve
    bool centerMarker=false,endpointMarkers=false;
    quint32 orbitMarkerSize=10;
    std::optional<double> importedLineWidth;
+   std::optional<quint32> importedFontSize;
+   QString importedFontPosition;
    double orbitLineWidth() const { return importedLineWidth.value_or(width); }
    bool drawsLabel() const { return visible && importedLabel.value_or(showObject); }
    bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || importedLabel.value_or(false)); }

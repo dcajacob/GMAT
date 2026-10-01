@@ -79,6 +79,28 @@ QJsonObject objectWidthsJson(const QMap<QString,double> &values)
 {
    QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result;
 }
+QMap<QString,quint32> objectFontSizes(const QJsonValue &value)
+{
+   auto sizes=objectSizes(value);
+   for (auto size:sizes) if (size>10000) throw std::runtime_error("Label font sizes must be from 0 to 10000 pixels for Qt rendering");
+   return sizes;
+}
+QMap<QString,QString> objectFontPositions(const QJsonValue &value)
+{
+   if (!value.isObject()) throw std::runtime_error("Label positions must be named strings");
+   QMap<QString,QString> result; const auto values=value.toObject();
+   const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+   for (auto it=values.begin();it!=values.end();++it) {
+      if (!identifier.match(it.key()).hasMatch() || !it.value().isString() || !QStringList{"Top-Right","Top-Left","Bottom-Right","Bottom-Left"}.contains(it.value().toString()))
+         throw std::runtime_error("Label positions need valid names and Top-Right, Top-Left, Bottom-Right or Bottom-Left");
+      result[it.key()]=it.value().toString();
+   }
+   return result;
+}
+QJsonObject objectFontPositionsJson(const QMap<QString,QString> &values)
+{
+   QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result;
+}
 QString formatVector(const std::array<double,3> &value)
 {
    return QString("[%1 %2 %3]").arg(QString::number(value[0],'g',17),QString::number(value[1],'g',17),QString::number(value[2],'g',17));
@@ -116,6 +138,23 @@ QMap<QString,double> qtObjectWidths(const QString &json)
 QString qtObjectWidthsJson(const QMap<QString,double> &widths)
 {
    return QString::fromUtf8(QJsonDocument(objectWidthsJson(widths)).toJson(QJsonDocument::Compact));
+}
+
+QMap<QString,quint32> qtObjectFontSizes(const QString &json)
+{
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(json.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isObject()) throw std::runtime_error("Invalid label sizes: expected named integers");
+   return objectFontSizes(document.object());
+}
+QMap<QString,QString> qtObjectFontPositions(const QString &json)
+{
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(json.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isObject()) throw std::runtime_error("Invalid label positions: expected named strings");
+   return objectFontPositions(document.object());
+}
+QString qtObjectFontPositionsJson(const QMap<QString,QString> &positions)
+{
+   return QString::fromUtf8(QJsonDocument(objectFontPositionsJson(positions)).toJson(QJsonDocument::Compact));
 }
 
 QtScriptConversion convertOpenFramesViews(const QString &source)
@@ -180,7 +219,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
    }
    QMap<QString,QtCameraSetting> displaySettings;
    for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesInterface") {
-      QStringList names; auto &display=displaySettings[it.key()];
+      QStringList names; int fontPositionIndex=0; auto &display=displaySettings[it.key()];
       for (auto line=settings.cbegin();line!=settings.cend();++line) {
          if (line->first!=it.key()) continue;
          const auto property=line->second,value=assignment.match(codePart(lines[line.key()])).captured(3).trimmed();
@@ -189,8 +228,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
             // OF Add resets the ordered object list and its display defaults.
-            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear();
-            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; }
+            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear(); display.objectFontSizes.clear(); display.objectFontPositions.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; display.objectFontSizes[name]=14; display.objectFontPositions[name]="Top-Right"; }
          } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
             const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
@@ -209,15 +248,32 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
                // OF's bulk real setter validates/applies only the selected prefix.
                if (i<names.size()) display.objectLineWidths[names[i]]=width;
             }
-         } else if (property=="DrawMarkerSize") {
-            if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+".DrawMarkerSize: expected a bracketed unsigned integer array."; return result; }
+         } else if (property=="DrawMarkerSize" || property=="DrawFontSize") {
+            if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed unsigned integer array."; return result; }
             const auto sizes=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
-            if (sizes.size()>names.size()) { result.error=it.key()+".DrawMarkerSize: a size index is outside the selected objects."; return result; }
+            if (sizes.size()>names.size()) { result.error=it.key()+"."+property+": a size index is outside the selected objects."; return result; }
             for (int i=0;i<sizes.size();++i) {
                bool ok=false; const auto size=sizes[i].toULongLong(&ok);
-               if (!ok || size>4294967295ULL || !QRegularExpression("^[0-9]+$").match(sizes[i]).hasMatch()) { result.error=it.key()+".DrawMarkerSize: expected unsigned integer pixel sizes."; return result; }
-               if (i<names.size()) display.objectMarkerSizes[names[i]]=static_cast<quint32>(size);
+               if (!ok || size>4294967295ULL || !QRegularExpression("^[0-9]+$").match(sizes[i]).hasMatch()) { result.error=it.key()+"."+property+": expected unsigned integer pixel sizes."; return result; }
+               if (property=="DrawFontSize" && size>10000) { result.error=it.key()+".DrawFontSize: Qt supports label sizes from 0 to 10000 pixels; original source retained."; return result; }
+               if (i<names.size()) (property=="DrawFontSize" ? display.objectFontSizes : display.objectMarkerSizes)[names[i]]=static_cast<quint32>(size);
             }
+         } else if (property=="DrawFontPosition") {
+            const bool array=value.startsWith('{') && value.endsWith('}');
+            if (!array && (value.startsWith('{') || value.endsWith('}'))) { result.error=it.key()+".DrawFontPosition: malformed position array."; return result; }
+            const auto inner=array ? value.mid(1,value.size()-2).trimmed() : value;
+            const auto positions=inner.isEmpty() && array ? QStringList() : inner.split(',');
+            if (!array && (positions.size()!=1 || names.isEmpty() || fontPositionIndex>=names.size())) { result.error=it.key()+".DrawFontPosition: no selected object for the scalar position."; return result; }
+            for (int i=0;i<positions.size();++i) {
+               // OF's string-array setter applies only the selected prefix.
+               if (array && i>=names.size()) break;
+               auto position=positions[i].trimmed();
+               if (position.startsWith('\'') && position.endsWith('\'') && position.size()>=2) position=position.mid(1,position.size()-2);
+               if (!QStringList{"Top-Right","Top-Left","Bottom-Right","Bottom-Left"}.contains(position)) { result.error=it.key()+".DrawFontPosition: choose Top-Right, Top-Left, Bottom-Right or Bottom-Left; original source retained."; return result; }
+               const int index=array ? i : fontPositionIndex;
+               if (index<names.size()) display.objectFontPositions[names[index]]=position;
+            }
+            if (!array) fontPositionIndex=(fontPositionIndex+1)%names.size();
          }
       }
    }
@@ -236,7 +292,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth" || key=="DrawFontSize" || key=="DrawFontPosition")) {
          output.append("% Qt conversion: "+lines[i]);
          result.notes.append(name+"."+key+": independent per-object drawing retained in Qt metadata.");
       } else if (types[name]=="OpenFramesInterface" && key=="DrawGrid") {
@@ -287,6 +343,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       cameraSetting.objectEndpoints=displaySettings.value(plot).objectEndpoints;
       cameraSetting.objectMarkerSizes=displaySettings.value(plot).objectMarkerSizes;
       cameraSetting.objectLineWidths=displaySettings.value(plot).objectLineWidths;
+      cameraSetting.objectFontSizes=displaySettings.value(plot).objectFontSizes;
+      cameraSetting.objectFontPositions=displaySettings.value(plot).objectFontPositions;
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool trajectory=values.value("ViewTrajectory")=="On";
       const bool segment=frame.contains('.');
@@ -407,6 +465,8 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.objectEndpoints.isEmpty()) object.insert("objectEndpoints",objectFlagsJson(setting.objectEndpoints));
    if (!setting.objectMarkerSizes.isEmpty()) object.insert("objectMarkerSizes",objectSizesJson(setting.objectMarkerSizes));
    if (!setting.objectLineWidths.isEmpty()) object.insert("objectLineWidths",objectWidthsJson(setting.objectLineWidths));
+   if (!setting.objectFontSizes.isEmpty()) object.insert("objectFontSizes",objectSizesJson(setting.objectFontSizes));
+   if (!setting.objectFontPositions.isEmpty()) object.insert("objectFontPositions",objectFontPositionsJson(setting.objectFontPositions));
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -468,6 +528,8 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       if (object.contains("objectEndpoints")) setting.objectEndpoints=objectFlags(object.value("objectEndpoints"));
       if (object.contains("objectMarkerSizes")) setting.objectMarkerSizes=objectSizes(object.value("objectMarkerSizes"));
       if (object.contains("objectLineWidths")) setting.objectLineWidths=objectWidths(object.value("objectLineWidths"));
+      if (object.contains("objectFontSizes")) setting.objectFontSizes=objectFontSizes(object.value("objectFontSizes"));
+      if (object.contains("objectFontPositions")) setting.objectFontPositions=objectFontPositions(object.value("objectFontPositions"));
       if (object.contains("segmentFrame")) {
          setting.segmentFrame=object.value("segmentFrame").toString();
          if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$").match(setting.segmentFrame).hasMatch() || object.contains("automaticTrajectory"))

@@ -2131,3 +2131,25 @@ behind-camera paths remain hidden. Bounded native/fallback width, depth and
 clipping checks passed without repeating the calculation reference. Very large
 widths, extreme joins, zero-length projected paths and other GPU limits remain
 unqualified.
+
+
+### Per-object label font and placement
+
+Object drawing / **Label style** offers a pixel font size and Top-Right,
+Top-Left, Bottom-Right or Bottom-Left placement for each selected object.
+An empty size and Default placement retain the ordinary viewer font/placement.
+Size 0 suppresses that object's label. The viewer's Object labels master switch
+and each object's Label choice still control visibility. Values remain pending
+until Apply; Cancel, Undo and file reopening retain their normal behavior.
+
+OF conversion preserves DrawFontSize and DrawFontPosition, including the stored
+14-pixel/Top-Right defaults, short arrays, Add resets and scalar position ordering.
+The inspected OF editor stores these fields but its rendering path does not
+apply them; Qt renders the requested values. This is not a pixel-for-pixel OF
+font comparison. Both Qt rendering paths share placement and logical-pixel font
+sizing; the desktop scale is applied once. Supported metadata sizes are integers
+from 0 to 10000; larger sizes or other placements retain the original source with
+an explanation. The bounded rendered evidence covers 12/24/32 pixels and all
+four placements. Very large sizes, font substitution and edge clipping remain
+unqualified. See the font qualification appendix for controls, native captures
+and byte-identical complete state reports.

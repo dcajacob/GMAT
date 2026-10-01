@@ -21,6 +21,7 @@
 #include <osg/Program>
 #include <osg/Shader>
 #include <osg/Uniform>
+#include "OrbitLabels.hpp"
 #include <osg/ComputeBoundsVisitor>
 #include <osg/LightSource>
 #include <osg/Depth>
@@ -603,7 +604,7 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
          const auto clip=osg::Vec4d(last->x,last->y,last->z,1)*projection;
          if (clip.w()<=0 || std::abs(clip.x())>clip.w() || std::abs(clip.y())>clip.w() || std::abs(clip.z())>clip.w()) continue;
          const osg::Vec3d ndc(clip.x()/clip.w(),clip.y()/clip.w(),clip.z()/clip.w());
-         painter.drawText(QPointF((ndc.x()+1)*width()/2+7,(1-ndc.y())*height()/2-7),curve.name);
+         drawOrbitLabel(painter,QPointF((ndc.x()+1)*width()/2,(1-ndc.y())*height()/2),curve);
       }
    }
    if (scene->model->legend) {

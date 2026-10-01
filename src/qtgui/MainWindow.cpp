@@ -1272,7 +1272,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
-   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths"};
+   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions"};
    const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
@@ -1532,7 +1532,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
                   if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
                }
             };
-            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths);
+            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths); prune(setting.objectFontSizes); prune(setting.objectFontPositions);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
@@ -1544,6 +1544,8 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (changes.contains("@QtObjectEndpoints")) setting.objectEndpoints=qtObjectFlags(changes.value("@QtObjectEndpoints"));
          if (changes.contains("@QtObjectMarkerSizes")) setting.objectMarkerSizes=qtObjectSizes(changes.value("@QtObjectMarkerSizes"));
          if (changes.contains("@QtObjectLineWidths")) setting.objectLineWidths=qtObjectWidths(changes.value("@QtObjectLineWidths"));
+         if (changes.contains("@QtObjectFontSizes")) setting.objectFontSizes=qtObjectFontSizes(changes.value("@QtObjectFontSizes"));
+         if (changes.contains("@QtObjectFontPositions")) setting.objectFontPositions=qtObjectFontPositions(changes.value("@QtObjectFontPositions"));
          candidate=setQtCameraSetting(candidate,name,setting);
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }

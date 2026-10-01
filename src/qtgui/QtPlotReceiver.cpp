@@ -44,6 +44,8 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
       for (const auto &name:it->objectEndpoints.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectMarkerSizes.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectLineWidths.keys()) validateTrajectory(name,false);
+      for (const auto &name:it->objectFontSizes.keys()) validateTrajectory(name,false);
+      for (const auto &name:it->objectFontPositions.keys()) validateTrajectory(name,false);
       auto validateSegment=[&](const QString &frame) {
          if (frame.isEmpty()) return;
          const auto objectName=frame.section('.',0,0),provider=frame.section('.',1,1);
@@ -293,6 +295,8 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
       curve.endpointMarkers=setting.objectEndpoints.value(curve.name,false);
       curve.orbitMarkerSize=setting.objectMarkerSizes.value(curve.name,10);
       curve.importedLineWidth=setting.objectLineWidths.contains(curve.name) ? std::optional<double>(setting.objectLineWidths.value(curve.name)) : std::nullopt;
+      curve.importedFontSize=setting.objectFontSizes.contains(curve.name) ? std::optional<quint32>(setting.objectFontSizes.value(curve.name)) : std::nullopt;
+      curve.importedFontPosition=setting.objectFontPositions.value(curve.name);
       if (i<points.size() && points[i]) {
          curve.color=rgb(points[i]->GetCurrentOrbitColor());
          if (auto *body=dynamic_cast<CelestialBody *>(points[i])) {

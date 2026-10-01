@@ -418,7 +418,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
       if (orbit) {
          const auto setting=qtCameraSettings(script).value(QString::fromStdString(object.GetName()));
-         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)}};
+         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)},{"@QtObjectFontSizes",qtObjectSizesJson(setting.objectFontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(setting.objectFontPositions)}};
          auto *drawing=new QPushButton("Object drawing…",this); drawing->setObjectName("editOrbitDrawing"); layout->addWidget(drawing);
          connect(drawing,&QPushButton::clicked,this,[this,originalDrawing,drawing] {
             try {
@@ -438,6 +438,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                markers.objectEndpoints=qtObjectFlags(objectDrawingEdits.value("@QtObjectEndpoints",originalDrawing.value("@QtObjectEndpoints")));
                markers.objectMarkerSizes=qtObjectSizes(objectDrawingEdits.value("@QtObjectMarkerSizes",originalDrawing.value("@QtObjectMarkerSizes")));
                markers.objectLineWidths=qtObjectWidths(objectDrawingEdits.value("@QtObjectLineWidths",originalDrawing.value("@QtObjectLineWidths")));
+               markers.objectFontSizes=qtObjectFontSizes(objectDrawingEdits.value("@QtObjectFontSizes",originalDrawing.value("@QtObjectFontSizes")));
+               markers.objectFontPositions=qtObjectFontPositions(objectDrawingEdits.value("@QtObjectFontPositions",originalDrawing.value("@QtObjectFontPositions")));
                OrbitObjectDrawingDialog dialog(names,labels,trajectories,this,&markers); if (dialog.exec()!=QDialog::Accepted) return;
                const auto values=dialog.settings();
                for (auto it=values.cbegin();it!=values.cend();++it) { if (it.value()==originalDrawing.value(it.key())) objectDrawingEdits.remove(it.key()); else objectDrawingEdits.insert(it.key(),it.value()); }
@@ -1380,6 +1382,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             auto prune=[&](auto &values) { for (auto item=values.begin();item!=values.end();) { if (!selected.contains(item.key())) item=values.erase(item); else ++item; } };
             if (it.key()=="@QtObjectMarkerSizes") { auto values=qtObjectSizes(it.value()); prune(values); changes.insert(it.key(),qtObjectSizesJson(values)); }
             else if (it.key()=="@QtObjectLineWidths") { auto values=qtObjectWidths(it.value()); prune(values); changes.insert(it.key(),qtObjectWidthsJson(values)); }
+            else if (it.key()=="@QtObjectFontSizes") { auto values=qtObjectFontSizes(it.value()); prune(values); changes.insert(it.key(),qtObjectSizesJson(values)); }
+            else if (it.key()=="@QtObjectFontPositions") { auto values=qtObjectFontPositions(it.value()); prune(values); changes.insert(it.key(),qtObjectFontPositionsJson(values)); }
             else { auto values=qtObjectFlags(it.value()); prune(values); changes.insert(it.key(),qtObjectFlagsJson(values)); }
          }
       }

@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. ObjectDrawing adds persistent per-object Default/On/Off controls, Cancel/pending/retained Apply, mixed invalid rollback, paired removal, exact Undo/Redo/Unicode recovery, ordinary implicit-default retention and byte-identical reused complete reports. Native controls/scene and corrected adjustable initial columns were inspected; the final isolated layout probe repeats no mission. ConvertedMarkers adds independent center/end markers and pixel sizes, source-ordered conversion defaults, persistent Markers controls, runtime/report/file recovery and native/fallback ring/rose replay/depth checks; final cached shader/lifetime and indexed-size guards have isolated evidence. ConvertedWidths adds fractional named line widths, OF defaults/prefixes, persistent width controls and source/report recovery; native stroke clamping was reproduced and fixed with depth-tested screen-space geometry, with isolated native/fallback near-plane checks. Other OF object decorations remain pending. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. ObjectDrawing adds persistent per-object Default/On/Off controls, Cancel/pending/retained Apply, mixed invalid rollback, paired removal, exact Undo/Redo/Unicode recovery, ordinary implicit-default retention and byte-identical reused complete reports. Native controls/scene and corrected adjustable initial columns were inspected; the final isolated layout probe repeats no mission. ConvertedMarkers adds independent center/end markers and pixel sizes, source-ordered conversion defaults, persistent Markers controls, runtime/report/file recovery and native/fallback ring/rose replay/depth checks; final cached shader/lifetime and indexed-size guards have isolated evidence. ConvertedWidths adds fractional named line widths, OF defaults/prefixes, persistent width controls and source/report recovery; native stroke clamping was reproduced and fixed with depth-tested screen-space geometry, with isolated native/fallback near-plane checks. ConvertedFonts adds stored per-object font sizes/placements and persistent Label style controls, source/report/file recovery and native/fallback pixel sizing/four placements. The inspected OF renderer does not consume its stored font fields, so this qualifies Qt behavior rather than identical OF font pixels. Final ignored-extra-prefix metadata guards have isolated evidence. Other OF object decorations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
@@ -7189,5 +7189,95 @@ extreme joins, zero-length projected segments and other GPUs remain unqualified.
 Other OF object decorations, broader camera/solver regimes and Fit cases retain
 their prior limits. Native evidence remains Qt widget/rendering evidence, not
 fresh desktop input. Top-level Wayland minimize/restore and portal gates are
+unchanged; blocked experiments were not repeated. Full Linux qualification
+remains active, Windows/macOS deferred and MATLAB off.
+
+
+## Stored OF label fonts and persistent Qt placement — 2026-10-01
+
+DrawFontSize and DrawFontPosition were retained only as comments during Qt
+conversion. The OF SpacePointOptions constructor stores defaults 14 and
+Top-Right. The unsigned indexed setter validates the selected size index; empty
+or short arrays leave omitted defaults. The string-array setter applies the
+selected prefix and ignores excess entries. Scalar position assignments advance
+a wrapping object counter; Add resets the stored per-object defaults, while the
+counter's source order is retained. The wx editor offers sizes 1–100 and four
+positions. audit-converted-fonts.txt records the authoritative sources.
+
+The inspected OFSpaceObject/OFSegment and wx/Qt OFScene paths consume DrawLabel,
+but do not consume DrawFontSize/DrawFontPosition or call label-size/placement
+setters. These fields are stored editor intent, not demonstrated OF rendered
+behavior. Qt now preserves and renders that intent; this work does not claim
+pixel-for-pixel OF font equivalence.
+
+Conversion retains named objectFontSizes/objectFontPositions alongside existing
+camera/drawing metadata, including defaults, empty/prefix arrays, source-ordered
+Add and scalar assignments. Unsupported positions, malformed arrays, indexed
+size overflow and Qt-unrenderable sizes retain the exact original source with an
+explanation. Strict typed JSON requires actual named integer/string values and
+actual OrbitView Add membership. The current Qt size range is 0–10000 logical
+pixels; 0 suppresses the label. Larger engine unsigned values remain unresolved,
+not silently clamped. Primary camera copies, no-explicit-view conversion and
+named pruning retain the settings. Receiver callbacks explicitly clear removed
+imports, preventing reuse of an old size/placement.
+
+Object drawing gains a separate Label style table, with size Default and four
+position choices. Blank/Default keeps ordinary viewer behavior implicit. Edits
+remain pending until parent Apply; invalid fractional sizes stay correctable in
+the dialog. Cancel, untouched OK, pending reopening, retained clean Apply,
+other camera/marker/path settings, exact Undo/Redo/build, paired invalid camera
+rollback, unknown/typed-map rejection, named reorder/removal and Unicode
+Save/reopen/rerun are checked through actual MDI controls. An ordinary Build-only
+branch verifies untouched controls keep exact source and one explicit font
+choice adds only the directive; Undo restores the original text.
+
+Native and fallback overlays share OrbitLabels.hpp. Imported sizes use logical
+pixel fonts, with QPainter applying DPR once. Four corner placements use measured
+text bounds around the recorded object position. Painter save/restore keeps
+caption/legend and other curves' fonts unchanged. Labels retain latest/replay
+position, visibility and the live master switch; behind-camera labels do not
+reuse an older pose. Ordinary fonts and their existing baseline placement remain
+unchanged when imports are absent. No numerical engine code changed.
+
+check-converted-fonts-initial.txt passes the new FontRendering in 0.19 s and
+ConvertedFonts in 0.76 s (0.95 s total) offscreen. The new workflow reuses the
+previous independent complete three-spacecraft report; no reference mission or
+old conversion/marker/width matrix is repeated. ConvertedFonts executes the
+initial translated mission and its edited Unicode recovery run, comparing both
+full 19-column rows with the reused reference each time.
+
+converted-fonts-wayland-20261001.txt passes the native --fonts case using the
+actual application/bin/gmat_startup_qt.txt from application/bin. An initial
+incorrect relative launcher path exited 127 before the executable ran; its raw
+message is preserved in converted-fonts-native-launch-path.txt. The corrected
+native workflow was executed once, including its isolated font probe. Native
+12/32-pixel label-only glyph differences cover 557/3257 pixels; all four
+placements, size-zero suppression, visibility/master, retained replay and
+behind-camera rejection pass. The eight .controls/.scene/.png/.font12/.font32/
+.top-left/.bottom-right/.bottom-left captures were inspected: all table columns
+and Help/Cancel/OK fit, pending A=32/Top-Left and B=Default are visible, textured
+Earth/paths and independently sized A/B labels render, and isolated glyphs move
+to the requested corners. The workspace capture establishes viewer placement
+and accessible controls; the scene/isolation captures establish label rendering.
+These are programmatic Qt widget/rendering checks, not fresh desktop input.
+
+A final audit corrected ignored excess position strings to match the OF prefix
+setter. FontMetadata passes in 0.07 s in check-converted-fonts-metadata.txt,
+without initializing an engine or renderer: zero/10000 metadata, no-view
+conversion, typed JSON, ignored excess prefix, scalar counter wrap, Add default
+reset and unsupported/no-Add rejection. Earlier control/native evidence predates
+only this prefix parser correction; source/control/rendering behavior exercised
+there is unchanged. No mission/control/native case was repeated afterward.
+build-converted-fonts-final.txt records the final actual GmatQt-R2026a relink,
+launcher recreation and rebuilt targeted harness.
+
+converted-fonts-report-preservation.txt records a static full-byte comparison:
+990 bytes, two 19-column rows, SHA-256
+1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab.
+No broad old suite/plugin/numerical matrix was repeated. Metadata supports the
+stated range; very large fonts, substitution/other platforms, edge clipping and
+exact OF rendered pixels are unqualified. OF axes/planes/grids, velocity vectors,
+propagation labels, model overrides and wider camera/solver/Fit regimes retain
+their prior limits. Top-level Wayland minimize/restore and portal gates remain
 unchanged; blocked experiments were not repeated. Full Linux qualification
 remains active, Windows/macOS deferred and MATLAB off.

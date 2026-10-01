@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 14: QtGui.FontRendering
+1/2 Test #14: QtGui.FontRendering ..............   Passed    0.19 sec
+    Start 15: QtGui.ConvertedFonts
+2/2 Test #15: QtGui.ConvertedFonts .............   Passed    0.76 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   0.94 sec*proc (2 tests)
+
+Total Test time (real) =   0.95 sec
