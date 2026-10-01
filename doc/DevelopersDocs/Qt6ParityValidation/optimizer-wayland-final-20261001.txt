@@ -1,0 +1,10 @@
+Orb Current points=20 all=76
+Ground Current points=13 all=76
+XY Current points=13 all=76
+Orb None points=13 all=76
+Ground None points=13 all=76
+XY None points=13 all=76
+Orb All points=76 all=76
+Ground All points=76 all=76
+XY All points=76 all=76
+Yukon optimization: PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen

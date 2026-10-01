@@ -37,15 +37,16 @@ static PlotWidget *viewer(MainWindow &window,const QString &name) {
 int main(int argc,char **argv)
 {
    QApplication app(argc,argv); QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("QtSolverPlots");
-   if (argc!=2 && argc!=3) return 2;
-   const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==3 ? QFileInfo(argv[2]).absoluteFilePath() : QString();
+   const bool optimizer=argc>=3 && QString::fromLocal8Bit(argv[2])=="--optimizer";
+   if (argc!=2 && argc!=3 && !(optimizer && argc==4)) return 2;
+   const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : argc==3 && !optimizer ? QFileInfo(argv[2]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings settings; QTemporaryDir files; require(files.isValid(),"Solver fixture directory unavailable");
       MainWindow window; window.show(); require(window.initialize(startup),"Solver plot runtime unavailable");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const auto report=files.filePath("solver-state.txt"),saved=files.filePath("Solver ü.script");
-      const QString source="Create Spacecraft Sat;\nSat.DisplayStateType = Cartesian;\nSat.X = 7000;\nSat.Y = 0;\nSat.Z = 0;\nSat.VX = 0;\nSat.VY = 7.54605329;\nSat.VZ = 0;\n"
+      QString source="Create Spacecraft Sat;\nSat.DisplayStateType = Cartesian;\nSat.X = 7000;\nSat.Y = 0;\nSat.Z = 0;\nSat.VX = 0;\nSat.VY = 7.54605329;\nSat.VZ = 0;\n"
          "Create ForceModel FM;\nFM.PrimaryBodies = {};\nFM.PointMasses = {Earth};\nFM.Drag = None;\nFM.SRP = Off;\n"
          "Create Propagator Prop;\nProp.FM = FM;\nProp.InitialStepSize = 10;\nProp.MinStep = 10;\nProp.MaxStep = 10;\n"
          "Create DifferentialCorrector DC;\nDC.ReportStyle = Normal;\nDC.ReportFile = '"+files.filePath("dc.txt")+"';\n"
@@ -61,6 +62,18 @@ int main(int argc,char **argv)
          "Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.Earth.Longitude Sat.Earth.Latitude;\n"
          "EndTarget; % retain solver comment\nPropagate Prop(Sat) {Sat.ElapsedSecs = 160};\n"
          "Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.Earth.Longitude Sat.Earth.Latitude;\n";
+      if (optimizer) {
+         // Keep the Earth and spacecraft visible in the short tiled native view.
+         source.replace("Orb.ViewPointVector = [0 0 20000];", "Orb.ViewPointVector = [0 0 40000];");
+         source.replace("Create DifferentialCorrector DC;\nDC.ReportStyle = Normal;\nDC.ReportFile = '"+files.filePath("dc.txt")+"';\n",
+            "Create Yukon Opt;\nOpt.ReportStyle = Normal;\nOpt.ReportFile = '"+files.filePath("yukon.txt")+"';\nOpt.ShowProgress = false;\nOpt.OptimalityTolerance = 0.00000001;\nOpt.FunctionTolerance = 0.00000001;\nCreate Variable Alpha Cost;\n");
+         source.replace("Target 'retain solver label' DC", "Optimize 'retain solver label' Opt");
+         source.replace("Vary DC(Sat.X = 7000, {Perturbation = 1, Lower = 6000, Upper = 8000, MaxStep = 100});",
+            "Vary Opt(Alpha = 1, {Perturbation = 0.000001, Lower = 0, Upper = 3, MaxStep = 1});\nSat.X = 7000 + 100 * Alpha;");
+         source.replace("Propagate Prop(Sat) {Sat.ElapsedSecs = 140};", "Propagate Prop(Sat) {Sat.ElapsedSecs = 60};");
+         source.replace("Achieve DC(Sat.X = 7100, {Tolerance = 0.000001});", "Cost = (Alpha - 2)^2;\nMinimize Opt(Cost);");
+         source.replace("EndTarget;", "EndOptimize;").replace("Propagate Prop(Sat) {Sat.ElapsedSecs = 160};", "Propagate Prop(Sat) {Sat.ElapsedSecs = 20};");
+      }
       const auto reference=QString(source).replace("Orb.SolverIterations = All;","Orb.SolverIterations = All;\nOrb.ShowPlot = false;")
          .replace("Ground.SolverIterations = All;","Ground.SolverIterations = All;\nGround.ShowPlot = false;")
          .replace("XY.SolverIterations = All;","XY.SolverIterations = All;\nXY.ShowPlot = false;");
@@ -68,7 +81,14 @@ int main(int argc,char **argv)
       const auto expected=read(report); require(!expected.isEmpty(),"Solver produced no report");
       std::istringstream input(expected.toStdString()); std::vector<std::array<double,4>> rows; std::array<double,4> row;
       while (input>>row[0]>>row[1]>>row[2]>>row[3]) rows.push_back(row);
-      require(rows.size()>3 && std::abs(rows[rows.size()-2][1]-7100)<1e-6 && std::abs(rows.back()[0]-320)<1e-5,"Independent solve did not reach the requested objective and epoch");
+      require(rows.size()>3 && std::abs(rows.back()[0]-(optimizer ? 100 : 320))<1e-5,"Independent solve did not produce multiple iterations and the expected epoch");
+      auto checkObjective=[&] {
+         if (optimizer) {
+            auto *alpha=Moderator::Instance()->GetInternalObject("Alpha"),*cost=Moderator::Instance()->GetInternalObject("Cost");
+            require(alpha && cost && std::abs(alpha->GetRealParameter("Value")-2)<1e-5 && std::abs(cost->GetRealParameter("Value"))<1e-10,"Yukon did not retain the independently known quadratic optimum");
+         } else require(std::abs(rows[rows.size()-2][1]-7100)<1e-6,"Differential corrector did not reach the requested objective");
+      };
+      checkObjective();
       const auto final=rows.back();
       editor->setPlainText(source); require(window.buildScript() && window.runMission()==MainWindow::RunResult::Completed && read(report)==expected,"Displayed solver baseline differs from independent report");
       QMap<QString,size_t> allCounts;
@@ -89,6 +109,7 @@ int main(int argc,char **argv)
          }
          require(window.saveScriptTo(saved) && window.loadScript(saved) && window.buildScript() && window.runMission()==MainWindow::RunResult::Completed,"Solver mode save/reopen run failed");
          require(read(report)==expected,"Plot solver mode changed calculations or reports");
+         checkObjective();
          for (const auto &name:QStringList{"Orb","Ground","XY"}) {
             const auto model=window.plotReceiver()->model(name); require(bool(model),"Solver plot missing");
             const auto &points=curve(*model).points;
@@ -141,7 +162,7 @@ int main(int argc,char **argv)
             require(window.grab().save(capture+"."+mode+".png"),"Solver viewer capture failed");
          }
       }
-      std::cout<<"PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen\n";
+      std::cout<<(optimizer ? "Yukon optimization: " : "Differential corrector: ")<<"PASS: GUI All/Current/None/All solver plot modes, exact Undo/Redo and Unicode save/reopen, independent solver/geodetic reports and objective, accepted histories/target colors/camera tracking, native/fallback rendering, replay and immediate close/reopen\n";
    } catch (BaseException &error) { std::cerr<<"FAIL: "<<error.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &error) { std::cerr<<"FAIL: "<<error.what()<<'\n'; return 1; }
    return 0;
 }
