@@ -1,0 +1,52 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 47: QtGui.PythonScalarOutput
+1/1 Test #47: QtGui.PythonScalarOutput .........***Failed    0.22 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.39.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-09-30 23:07:18 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Command Exception: The CallPythonFunction command cannot find the parameter 'Compute in script line
+   "['Compute, norm', Result] = Python.builtins.float(Result);"
+**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
+
+ *** Mission run failed.
+===> Total Run Time: 0.031 seconds
+
+========================================
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.22 sec*proc (1 test)
+
+Total Test time (real) =   0.23 sec
+
+The following tests FAILED:
+	 47 - QtGui.PythonScalarOutput (Failed)                 qt-gui
+Errors while running CTest

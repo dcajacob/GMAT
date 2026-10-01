@@ -1,0 +1,57 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 47: QtGui.PythonScalarOutput
+1/1 Test #47: QtGui.PythonScalarOutput .........***Failed    0.23 sec
+This plugin does not support propagateSizeHints()
+Canonical mission:
+% zero-input calls α
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create ReportFile Values;
+Values.SolverIterations = Current;
+Values.UpperLeft = [ 0 0 ];
+Values.Size = [ 0 0 ];
+Values.RelativeZOrder = 0;
+Values.Maximized = false;
+Values.Filename = '/tmp/QtPythonCalls-NAutQL/python scalar.txt';
+Values.Precision = 16;
+Values.WriteHeaders = false;
+Values.LeftJustify = On;
+Values.ZeroFill = Off;
+Values.FixedWidth = true;
+Values.Delimiter = ' ';
+Values.ColumnWidth = 23;
+Values.WriteReport = true;
+Values.AppendToExistingFile = false;
+
+%----------------------------------------
+%---------- Arrays, Variables, Strings
+%----------------------------------------
+Create Variable Result;
+Result = 7;
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+[Result] = Python.builtins.abs(Result); % unbracketed output
+Report Values Result;
+
+FAIL: Python call is not safely mapped to original source
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.23 sec*proc (1 test)
+
+Total Test time (real) =   0.23 sec
+
+The following tests FAILED:
+	 47 - QtGui.PythonScalarOutput (Failed)                 qt-gui
+Errors while running CTest

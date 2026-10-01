@@ -53,7 +53,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls now include automatic STM, retained panel/source mapping, Cancel, exact Undo/Redo/Unicode save/reopen and independent shortened shipped Moon/SNC covariance and state reports; see the covariance-propagation appendix. Broader formation/mode and covariance configurations remain pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested. Actual MDI spacecraft runtime OrbitColor/TargetColor string/RGB expression edits, rejected-syntax correction, retained Apply, exact Undo/Redo/Unicode save/reopen, independent reports and Orbit/Ground color histories are now covered; see the runtime-color appendix. Other destination-specific execution and complex syntax audit remain pending. |
-| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Broader object/string/array signature execution pending. |
+| `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Python module/function and ordered arguments, labeled calls, empty/bare inputs and unbracketed scalar outputs are covered in the Python appendices. Broader GMAT object/string/array signatures remain pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
 | `src/gui/command/ReportPanel.hpp` | Configured report-file picker and shared ordered parameter dialog: add/remove/reorder, numeric array indices, Cancel, labels/comments and numerical output tested. Object/property and coordinate/central-body browsing implemented; owned attitude and attached tank/thruster browsing tested; broader hardware/plugin types pending. |
@@ -161,7 +161,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
 | `../plugins/libProductionPropagators` | PrinceDormand853: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
-| `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. PythonCalls adds actual MDI module/function and ordered arguments, labeled scalar-from-array and no-output string execution, lookup failure/correction/reopen, and context Help; native Wayland controls inspected. Zero-input, package syntax, other return/error types and changed-module cache recovery remain unqualified. |
+| `../plugins/libPythonInterface_py314` | Shipped Python example: exact save/Save As/reopen and failed-build recovery, independently computed cross-product result and report. PythonCalls adds actual MDI module/function and ordered arguments, labeled scalar-from-array and no-output string execution, lookup failure/correction/reopen, and context Help; native Wayland controls inspected. Empty/bare-input and unbracketed single-output calls now retain their source and runtime results; see the Python syntax appendix. Package syntax, other return/error types and changed-module cache recovery remain unqualified. |
 | `../plugins/libSaveCommand` | CompatibilityTests: edited object list, exact save/Save As/reopen, runtime spacecraft/variable export and reload, repeat-run replacement, loop snapshots, bad-path and disk-write recovery. Remaining resource types and multi-snapshot reimport pending. |
 | `../plugins/libScriptTools` | ScriptEditingTests: the sole registered CommandEcho command has typed On/Off editing, pending Apply, label/comment preservation, exact Undo/Redo/Unicode save/reopen, bounded execution tracing, independently checked 2/5 reports, invalid-edit rollback and initially disabled/enabled RunComplete state restoration. Its generator now retains the terminating semicolon so the GUI can locate/edit it. One stopped While/If case, post-echo file-write failure, initially on/off settings, unexecuted/repeated cleanup and configuration-preserving clones are covered; cleanup/copy defects corrected. Broader completed nested/loop and argument-validation cases remain pending. |
 | `../plugins/libStation` | StationTests: GUI location/elevation/ID/colors/mask configuration, physical position and source-preserving Undo/Redo/save/reopen; script-reference contact intervals for baseline, elevation 25 degrees and bundled mask, mask clear and missing-file restore/reopen recovery covered. Hardware, measurement/media/error-model settings and broader bodies remain pending. |
@@ -5281,3 +5281,62 @@ other return/error types and modified-module cache recovery remain unqualified;
 unsupported syntax stays available in the source editor. Shared Wayland desktop
 and other selected workflow/plugin acceptance gates remain active. Windows/macOS
 remain deferred, MATLAB remains off, and full Linux replacement is not yet claimed.
+
+
+## Python empty/bare-input and single-output source mapping (2026-09-30)
+
+The previous checkpoint implemented call controls but left zero-input calls
+unqualified. A new focused mode confirmed a concrete problem: Python builtins.float
+and print run with empty inputs, while CallFunction serialized them without `()`.
+The controls required parentheses and mission alignment compared their presence
+literally, leaving the actual command read-only. check-python-zero-initial.txt
+retains that failure. CallFunction now writes an empty argument list specifically
+for CallPythonFunction; other function types retain their prior serialization.
+The existing Python label override is reused. No argument conversion or numerical
+algorithm changes were made.
+
+The shipped CallPythonFunction reference also permits empty calls without
+parentheses. Qt MissionModel now normalizes only the documented empty/bare-input
+alternatives and brackets around a single simple output name. Exact labels,
+ordered output names, module/function identifiers and argument text are retained.
+The mapper still rejects different module, function, output, argument or label
+source against the built command. Those negative alignment cases are exercised
+without executing more missions. Bare calls receive the same controls and Help.
+Adding arguments inserts parentheses at the original function end; clearing them
+restores the original bare spelling. Function-only edits keep bare calls bare.
+
+QtGui.PythonZeroInputs is a separate --zero-inputs mode. Its independent int()
+report is zero; the actual MDI editor changes float() to int(), retains Apply,
+performs exact Undo/Redo/Unicode save/reopen and reproduces that report. A labeled
+print() with no inputs or outputs runs in the same mission and retains its source
+mapping/form shape. check-python-zero-final.txt passes in 0.37 seconds after the
+serializer fix. Later source-normalization changes leave the already equal
+parenthetical case on the existing exact-comparison path; that numerical case
+was not repeated.
+
+QtGui.PythonScalarOutput and QtGui.PythonBareCalls use separate fixture modes.
+The first executes an unbracketed single-output abs(Result) call, edits it to
+float(Result) in the actual MDI editor and retains its unbracketed source spelling
+through exact Undo/Redo/Unicode save/reopen and independent report agreement.
+The second covers labeled float/int and print calls with no parentheses, the
+same retained MDI/source/result workflow, adding/clearing arguments in a bare
+source-span form, and the bare-call Help topic. Their final checks pass in
+check-python-syntax-final.txt (0.31 and 0.34 seconds, total 0.65).
+
+The initial scalar fixture included a label before an unbracketed output. The
+engine treated that label as extra output names, producing a runtime failure;
+check-python-scalar-initial.txt records this unsupported fixture shape. It was
+changed to an unlabeled scalar output, which built/ran but exposed the bracket
+normalization gap in check-python-scalar-unlabeled.txt. This checkpoint does not
+claim engine support for labels before unbracketed outputs. Labeled bracketed
+outputs remain covered by the other modes. This syntax work is limited to the
+selected Python GUI workflow and does not broaden engine parsing semantics.
+
+build-python-syntax-final.txt records the final shared engine/native plugin and
+actual GmatQt-R2026a rebuild, with GmatQt launcher recreation. The earlier Python
+runtime recovery, argument browser, vector result and native Wayland layout
+checks are reused. No layout changed, so no native preview or broad suite was
+repeated. Other Python return/error types, packages and changed-code cache
+recovery remain under the inventory limits. Native Wayland main-window input,
+portal and other selected workflow/plugin gates remain open; full Linux
+replacement is still in progress and Windows/macOS remain deferred.

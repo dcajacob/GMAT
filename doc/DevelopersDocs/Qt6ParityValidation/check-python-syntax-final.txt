@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 47: QtGui.PythonScalarOutput
+1/2 Test #47: QtGui.PythonScalarOutput .........   Passed    0.31 sec
+    Start 48: QtGui.PythonBareCalls
+2/2 Test #48: QtGui.PythonBareCalls ............   Passed    0.34 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   0.65 sec*proc (2 tests)
+
+Total Test time (real) =   0.65 sec

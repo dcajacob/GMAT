@@ -142,7 +142,9 @@ Mission Python calls provide a module selector, function name and ordered input
 and output argument browsers. The module selector lists configured Python paths
 and also accepts a runtime module name. These controls use the simple
 `Python.Module.Function(inputs)` syntax, with optional outputs and a leading
-command label. Apply validates the script; missing modules or functions are
+command label with bracketed outputs. Empty-input calls may retain their original
+parentheses or bare spelling, and a single unlabeled output may remain
+unbracketed. Apply validates the script; missing modules or functions are
 reported at execution and can be corrected in the retained mission editor.
 Help opens the CallPythonFunction reference. Restart GMAT after changing imported
 module code. More complex Python syntax remains a script editing workflow.

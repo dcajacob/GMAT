@@ -140,10 +140,22 @@ QString propagationKey(const QString &code)
    auto ordered=flags.values(); ordered.sort();
    return key(header+rest)+"|variational="+ordered.join(',');
 }
+QString pythonCallKey(const QString &code)
+{
+   // Python serializes a single output with brackets, and an empty input
+   // list with parentheses. Both alternatives are accepted script syntax.
+   // Retain exact labels, ordered outputs, module/function and argument text.
+   static const QRegularExpression call(R"(^((?:'[^'\n]*')?)(?:(?:\[([A-Za-z][A-Za-z0-9_]*(?:,[A-Za-z][A-Za-z0-9_]*)*)\]|([A-Za-z][A-Za-z0-9_]*))=)?(Python\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*)(\([\s\S]*\))?$)");
+   const auto text=key(code); const auto match=call.match(text);
+   if (!match.hasMatch()) return text;
+   const auto outputs=match.captured(2).isEmpty() ? match.captured(3) : match.captured(2);
+   return match.captured(1)+(outputs.isEmpty() ? QString() : "["+outputs+"]=")+match.captured(4)+(match.captured(5).isEmpty() ? "()" : match.captured(5));
+}
 bool sameStatement(const QString &generated,const QString &original)
 {
    auto a=key(generated),b=key(original);
    if (a==b) return true;
+   if (a.contains("Python.") && pythonCallKey(generated)==pythonCallKey(original)) return true;
    if (generated.trimmed().startsWith("Propagate ") && propagationKey(generated)==propagationKey(original)) return true;
    // For writes its implicit unit step even when the source uses start:end.
    static const QRegularExpression implicitStep(R"(^(For(?:'[^']*')?[A-Za-z][A-Za-z0-9_]*=[^:]+):([^:]+)$)");

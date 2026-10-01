@@ -530,7 +530,9 @@ const std::string& CallFunction::GetGeneratingString(Gmat::WriteMode mode,
    
    gen += mFunctionName;
    
-   if (mInputNames.size() > 0)
+   // Python's empty argument list is still a call. Retain its parentheses so
+   // serialized scripts and source-mapped GUI editors preserve that syntax.
+   if (mInputNames.size() > 0 || IsOfType("CallPythonFunction"))
    {
       gen += "(";
       for (StringArray::iterator i = mInputNames.begin();

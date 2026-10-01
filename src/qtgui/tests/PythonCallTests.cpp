@@ -5,6 +5,7 @@
 #include "HelpDialog.hpp"
 #include "TestSettings.hpp"
 #include "BaseException.hpp"
+#include "Moderator.hpp"
 #include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
@@ -34,7 +35,7 @@ int main(int argc,char **argv)
 {
    QApplication app(argc,argv); app.setOrganizationName("GMATTests"); app.setApplicationName("QtPythonCalls");
    try {
-      TestSettings settings; QTemporaryDir files; const bool preview=argc==4 && QString::fromLocal8Bit(argv[2])=="--preview"; require((argc==2 || preview) && files.isValid(),"Python-call setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
+      TestSettings settings; QTemporaryDir files; const bool preview=argc==4 && QString::fromLocal8Bit(argv[2])=="--preview",zero=argc==3 && QString::fromLocal8Bit(argv[2])=="--zero-inputs",scalar=argc==3 && QString::fromLocal8Bit(argv[2])=="--scalar-output",bare=argc==3 && QString::fromLocal8Bit(argv[2])=="--bare-inputs"; require((argc==2 || preview || zero || scalar || bare) && files.isValid(),"Python-call setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
       MainWindow window; window.show(); require(window.initialize(startup),"Python-call runtime unavailable"); auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const auto report=files.filePath("python scalar.txt"),saved=files.filePath("python call Δ.script");
       const QString command="'Compute norm' [Magnitude] = Python.ArrayFunctions.mag(A, Count); % retain Python call";
@@ -42,9 +43,29 @@ int main(int argc,char **argv)
       const QString suffix="\nPython.builtins.print(Message); % no outputs, string input\nReport Values Magnitude;\n";
       const auto source=prefix+command+suffix;
       auto open=[&] {
-         const auto snapshot=window.missionSnapshot(); int index=-1; for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.contains("'Compute norm'")) index=i; if (index<0 || !snapshot.nodes[index].editable) std::cerr<<"Canonical mission:\n"<<snapshot.canonicalScript.toStdString()<<"\n"; require(index>=0 && snapshot.nodes[index].editable,"Python call is not safely mapped to original source");
+         const auto snapshot=window.missionSnapshot(); int index=-1; for (int i=0;i<snapshot.nodes.size();++i) if (scalar ? snapshot.nodes[i].statement.contains("Python.builtins.") : snapshot.nodes[i].statement.contains("'Compute norm'")) index=i; if (index<0 || !snapshot.nodes[index].editable) std::cerr<<"Canonical mission:\n"<<snapshot.canonicalScript.toStdString()<<"\n"; require(index>=0 && snapshot.nodes[index].editable,"Python call is not safely mapped to original source");
          auto *tree=window.findChild<QTreeWidget *>("Mission"); QTreeWidgetItemIterator item(tree); while (*item && (!(*item)->data(0,Qt::UserRole).isValid() || (*item)->data(0,Qt::UserRole).toInt()!=index)) ++item; require(*item,"Python command tree item missing"); tree->itemDoubleClicked(*item,0); auto *child=window.findChild<QMdiArea *>("workspace")->activeSubWindow(); require(child && dynamic_cast<CommandEditor *>(child->widget()),"Python actual MDI editor missing"); return child;
       };
+      if (zero || scalar || bare) {
+         const QString before="% zero-input calls α\nCreate Variable Result;\nResult = 7;\nCreate ReportFile Values;\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nBeginMissionSequence;\n";
+         QString original=before+((zero || bare) ? "'Compute norm' [Result] = Python.builtins.float(); % scalar, no inputs\n'Print empty' Python.builtins.print(); % no outputs or inputs\n" : "Result = Python.builtins.abs(Result); % unbracketed output\n")+"Report Values Result;\n";
+         if (bare) original.replace("float()","float").replace("print()","print");
+         const auto reference=(zero || bare) ? QString(original).replace(".float", ".int") : QString(original).replace(".abs(",".float("); editor->setPlainText(reference); run(window); const auto expected=read(report); require(QString::fromUtf8(expected).trimmed().toDouble()==((zero || bare) ? 0 : 7),"Independent Python result incorrect");
+         editor->setPlainText(original); require(window.buildScript(),"Python source build failed");
+         const auto mapped=window.missionSnapshot();
+         for (const auto &unsafe:QStringList{QString(original).replace("Python.builtins.","Python.other."),QString(original).replace(".float",".int").replace(".abs",".float"),QString(original).replace("[Result] = Python","[Other] = Python").replace("Result = Python","Other = Python"),QString(original).replace("(Result)","(Other)").replace("'Compute norm'","'Changed label'")}) {
+            if (unsafe==original) continue;
+            const auto mismatched=snapshotMission(Moderator::Instance()->GetFirstCommand(),mapped.canonicalScript,unsafe); for (const auto &node:mismatched.nodes) if (node.type=="CallPythonFunction") require(!node.editable,"Different Python module/function/output/argument/label source mapped as equivalent");
+         }
+         if (bare) {
+            QString changed; CommandForm form([&](const QString &text) { changed=text; }); const auto statement=QString("  'Keep label' [Result] = Python.builtins.float; % retain bare tail\n"); form.setStatement(statement); require(form.title()=="Python call","Bare Python controls missing"); form.findChild<QLineEdit *>("commandField_Inputs")->setText("Result"); require(changed==QString(statement).replace(".float;",".float(Result);"),"Adding bare Python inputs failed to insert parentheses safely"); form.findChild<QLineEdit *>("commandField_Inputs")->clear(); require(changed==statement,"Clearing bare Python inputs lost original spelling"); CommandEditor help(statement,false,{},[](const QString &) { return QString(); }); require(help.property("helpTopic")=="CallPythonFunction","Bare Python Help topic incorrect");
+         }
+         auto *child=open(); auto *panel=dynamic_cast<CommandEditor *>(child->widget()); auto *inputs=panel->findChild<QLineEdit *>("commandField_Inputs"); require(inputs && inputs->text()==((zero || bare) ? "" : "Result"),"Python input control missing"); panel->findChild<QLineEdit *>("commandField_Function")->setText((zero || bare) ? "int" : "float"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(child->isVisible() && child->widget()!=panel && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges(),"Python Apply lost clean retained panel"); require(editor->toPlainText()==reference,"Python edit changed labels/comments/source"); editor->undo(); require(editor->toPlainText()==original,"Python exact Undo failed"); editor->redo(); require(editor->toPlainText()==reference && window.saveScriptTo(saved) && window.loadScript(saved),"Python Redo/Unicode reopen failed"); run(window); require(read(report)==expected,"GUI Python result changed");
+         if (zero || bare) {
+            const auto snapshot=window.missionSnapshot(); int print=-1; for (int i=0;i<snapshot.nodes.size();++i) if (snapshot.nodes[i].statement.contains("'Print empty'")) print=i; require(print>=0 && snapshot.nodes[print].editable,"No-input/no-output Python call not source mapped"); CommandForm printForm([](const QString &) {}); printForm.setStatement(snapshot.nodes[print].statement); require(printForm.title()=="Python call" && printForm.findChild<QLineEdit *>("commandField_Inputs")->text().isEmpty() && !printForm.findChild<QLineEdit *>("commandField_Outputs"),"Empty print call form lost shape");
+         }
+         std::cout<<(bare ? "PASS: bare zero-input Python source mapping/controls and retained spelling" : zero ? "PASS: zero-input scalar and no-output Python calls, leading labels/canonical parentheses" : "PASS: unbracketed single-output Python call source mapping and source retention")<<", actual MDI function edit/retained Apply/exact Undo/Redo/Unicode save/reopen and independent result; other Python modes not repeated.\n"; return 0;
+      }
       if (preview) {
          editor->setPlainText(source); require(window.buildScript(),"Python native preview fixture failed"); auto *child=open(); auto *panel=child->widget(); require(panel->findChild<QComboBox *>("commandPythonModule") && panel->findChild<QPushButton *>("commandChoose_Inputs"),"Python preview controls missing"); QEventLoop wait; QTimer::singleShot(250,&wait,&QEventLoop::quit); wait.exec(); require(window.windowHandle() && window.windowHandle()->isExposed() && panel->grab().save(QString::fromLocal8Bit(argv[3])),"Python native preview capture unavailable"); std::cout<<"PASS: native actual MDI Python module/function and ordered argument controls preview; no numerical calls repeated.\n"; return 0;
       }
