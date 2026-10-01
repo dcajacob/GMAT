@@ -1,0 +1,6 @@
+Pre-fix source audit:
+MainWindow::showCreateResource and ResourceEditor newFunctionFile both generated a function header from the resource name, regardless of the user-chosen file basename.
+Interpreter::ValidateFunctionDefinition checks fileFuncName against the function's FunctionName and rejects a mismatch.
+The previously passing FunctionImport fixture proves an Imported resource can alias Existing.gmf when its declaration is Existing.
+The same association must hold for newly generated templates: resource Alias backed by FirstFile.gmf requires a FirstFile declaration.
+No function parser or numerical engine change is required.

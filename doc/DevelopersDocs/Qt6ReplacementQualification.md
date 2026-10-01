@@ -156,7 +156,7 @@ Every row requires real-engine evidence, not just registration.
 | `../plugins/libExternalForceModel_py314` | ExternalForceTests: existing force-model module selection from configured Python search paths, Cancel and pending function/exclusion Apply, shortened shipped no-API example with independent internal two-body state agreement, exact Undo/Redo/Unicode save/reopen, missing module/function run failure and recovery, invalid-setting rollback, independently script-configured combined forces and unrelated report edits covered. Owned force serialization now retains module/function/exclusion settings so GUI reconstruction does not drop the contributor. First contributor creation/removal is now covered through the actual retained force-model panel, atomic mixed Apply, invalid input and Cancel, exact source Undo/Redo/Unicode save/reopen and independent script-configured reports; see the external-force creation appendix. Full-day/API-dependent examples, packages/custom search-path persistence, modified-module caching, multiple-spacecraft/variational and malformed-callback cases remain pending. |
 | `../plugins/libExtraPropagators` | BulirschStoer: step edit, exact save/Save As/reopen, invalid-build recovery, report creation and analytic circular-orbit endpoint. Remaining cases pending. |
 | `../plugins/libFormation` | CompatibilityTests: Add editing/reordering, non-spacecraft rejection, exact save/Save As/reopen and failed-build recovery, both members propagate 60 seconds. PluginCreation adds actual Formation New/Delete menu operations, Cancel, exact unrelated source/Undo/Redo and Unicode save/reopen. Remaining settings/output coverage pending. |
-| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. Broader function and report audit pending. |
+| `../plugins/libGmatFunction` | CompatibilityTests: edited cross-product arguments, exact save/Save As/reopen, invalid-type build recovery, expected numerical cross product. PluginCreation now adds file-backed New resource, new function file chooser/editor Cancel and Save, deletion/Undo/Redo/Unicode reopen and independently expected result 19. FunctionImport covers existing file Browse, missing-path correction, resource/file name aliases and expected result 25 without modifying the imported file. FunctionFileNames adds creator/existing-resource templates for differing file basenames, invalid filename recovery, retained aliases/Apply/Undo/reopen and independently expected pass-through execution. Broader function and report audit pending. |
 | `../plugins/libMsise00` | AtmosphereTests: GUI selection/configuration, constant-flux density response, CSSI observed/predicted and selected Schatten prediction, source-preserving Undo/Redo/save/reopen, 600-second density/trajectory reports and missing-weather-file recovery covered. Broader operating regimes, file contents/coverage boundaries and remaining Schatten modes pending. |
 | `../plugins/libNewParameters` | AtmosphereTests: AtmosDensity output from GUI-configured atmosphere models and SPAD drag, density/trajectory agreement with independently script-configured missions and save/reopen covered. Density unit metadata corrected to kg/km^3 without changing values. Other parameters and contexts pending qualification. |
 | `../plugins/libPolyhedronGravity` | PolyhedronTests: existing contributor body/input-shape selection, density units, chooser Cancel and pending Apply, independent closed-cube far-field mass check and script state agreement, paired body/path configuration, exact Undo/Redo/Unicode save/reopen, SurfaceHeight parameter browser and report access, invalid density/body/missing/malformed shape rollback and recovery, CRLF/tabs/no final newline/decorative labels, relative paths and unrelated resource editing covered. Duplicate force serialization fixed; checked loader preserves valid record ordering and rejects malformed connectivity/geometry. First and multiple contributor creation/removal through the actual retained force panel, pending/Cancel/Help, typed body/shape/density validation, malformed-shape rollback/correction, legacy creator/alias conversion with implicit density retained, exact Undo/Redo/Unicode save/reopen and independent script-reference Earth/Mars reports are now covered; see the creation appendix. Real asteroid meshes, custom bodies, multiple spacecraft, variational/precision propagation, geometric self-intersections and broader SurfaceHeight numerical semantics remain pending. |
@@ -5591,3 +5591,48 @@ The product binary did not change after the prior actual rebuild. Optimizer/
 nested/ephemeris toggle combinations and original compositor/portal gates remain
 open; this bounded check does not establish full Linux replacement completion.
 Windows/macOS remain deferred.
+
+
+## Newly generated function templates follow chosen filenames (2026-10-01)
+
+The recent file-backed creator/import checks established that a configured
+resource may alias a differently named `.gmf`. Source inspection then identified
+a gap in both New resource and the existing resource's New function file action:
+the template declaration always used the resource name, regardless of the
+chosen filename. Interpreter function validation requires the declaration to
+match the file basename. audit-function-template-names.txt records those source
+locations and the already qualified alias association.
+
+Both actions now share a small template helper that uses the chosen `.gmf`
+basename for its function declaration. The resource alias remains unchanged.
+An invalid new filename (non-identifier basename or non-`.gmf` extension) produces
+a correctable diagnosis before opening/writing a new template. Existing-file
+Browse/import is unchanged. The action callbacks catch template validation
+errors; no parser or numerical algorithm was modified.
+
+QtGui.FunctionFileNames exercises the actual creator and the resulting MDI
+resource editor. Resource Alias is created with FirstFile.gmf, then its New
+function file action saves SecondFile.gmf into a Unicode directory. Each template
+header is checked against the independently chosen filename. Invalid `bad name.gmf`
+choices in both actions create no file or pending/source edit. The second valid
+path stays pending until Apply. Unrelated source remains exact, the configured
+path changes, exact Undo/Redo restore the source snapshots, and both explicitly
+saved external files remain byte exact. Unicode mission save/reopen retains the
+Alias call, whose generated pass-through template returns independently expected
+9 without modifying mission/file bytes.
+
+The first assertion expected the changed path assignment to retain its original
+location/prefix. check-function-file-names.txt and
+check-function-file-names-diagnostic.txt preserve that failure and its source
+comparison. The established resource patcher intentionally moves changed
+assignments before the mission boundary while retaining unrelated source.
+The check now excludes only that changed assignment when comparing unrelated
+source, verifies its effective configured path, and retains exact complete
+Undo/Redo and saved-source checks. No broad source-patcher change was needed.
+check-function-file-names-final.txt passes in 0.30 seconds.
+
+build-function-file-names.txt records the real GmatQt-R2026a relink and GmatQt
+launcher recreation. Existing creator/file-editor native layout and broader
+creation/import/compatibility/numerical evidence is reused; no native preview
+or previous suite was repeated. Remaining workflow/plugin and compositor/portal
+requirements remain open. Windows/macOS are deferred.

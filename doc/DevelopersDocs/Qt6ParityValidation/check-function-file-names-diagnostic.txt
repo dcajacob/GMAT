@@ -1,0 +1,52 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 45: QtGui.FunctionFileNames
+1/1 Test #45: QtGui.FunctionFileNames ..........***Failed    0.23 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Source diagnostic: actual=
+Create GmatFunction Alias;
+% retain source around function alias α
+Create Variable Keep;
+Keep = 9;
+Create ReportFile Values;
+Values.Filename = '/tmp/QtFunctionFileNames-GzwfJM/function value.txt';
+Values.WriteHeaders = false;
+Alias.FunctionPath = '/tmp/QtFunctionFileNames-GzwfJM/named functions Δ/SecondFile.gmf';
+BeginMissionSequence;
+Report Values Keep;
+expected=
+Create GmatFunction Alias;
+GMAT Alias.FunctionPath = '/tmp/QtFunctionFileNames-GzwfJM/named functions Δ/SecondFile.gmf';
+% retain source around function alias α
+Create Variable Keep;
+Keep = 9;
+Create ReportFile Values;
+Values.Filename = '/tmp/QtFunctionFileNames-GzwfJM/function value.txt';
+Values.WriteHeaders = false;
+BeginMissionSequence;
+Report Values Keep;
+
+status=Apply validates changes and updates the mission script.
+FAIL: Aliased new function path Apply failed or changed unrelated source
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.23 sec*proc (1 test)
+
+Total Test time (real) =   0.24 sec
+
+The following tests FAILED:
+	 45 - QtGui.FunctionFileNames (Failed)                  qt-gui
+Errors while running CTest

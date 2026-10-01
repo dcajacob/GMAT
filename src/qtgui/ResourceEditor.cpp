@@ -338,7 +338,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          if (chooser.exec()!=QDialog::Accepted || chooser.selectedFiles().isEmpty()) return;
          const auto path=chooser.selectedFiles().first();
          if (QFileInfo::exists(path)) { status->setText("That file already exists. Use Edit function file or choose a new name."); return; }
-         const auto source="function [output] = "+functionName+"(input)\nCreate Variable output;\nBeginMissionSequence;\noutput = input;\n";
+         QString source;
+         try { source=functionFileTemplate(path); } catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
          FunctionFileDialog dialog(path,this,source);
          if (dialog.exec()!=QDialog::Accepted) return;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") table->item(row,1)->setText(dialog.savedPath());

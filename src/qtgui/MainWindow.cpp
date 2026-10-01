@@ -1613,7 +1613,9 @@ void MainWindow::showCreateResource()
       if (chooser.exec()!=QDialog::Accepted || chooser.selectedFiles().isEmpty()) return;
       const auto path=chooser.selectedFiles().first();
       if (QFileInfo::exists(path)) { status->setText("That file already exists. Use Browse or choose a new name."); return; }
-      FunctionFileDialog function(path,&dialog,"function [output] = "+functionName+"(input)\nCreate Variable output;\nBeginMissionSequence;\noutput = input;\n");
+      QString source;
+      try { source=functionFileTemplate(path); } catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
+      FunctionFileDialog function(path,&dialog,source);
       if (function.exec()==QDialog::Accepted) functionPath->setText(function.savedPath());
    });
    auto initialValues=std::make_shared<QMap<QString,QString>>(QMap<QString,QString>{{"Variable","0"},{"String",""}});

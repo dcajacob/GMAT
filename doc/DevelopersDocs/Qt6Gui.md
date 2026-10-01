@@ -1861,3 +1861,10 @@ file path to the mission as one undoable edit. Missing files keep the creator
 open for correction. Canceling the file chooser/editor writes nothing; files
 you explicitly save remain after creator Cancel or mission Undo. An imported
 function may have a resource name different from its file name.
+
+
+New function templates use the chosen `.gmf` file's basename in their declaration,
+even when the mission resource has a different name. Choose a filename beginning
+with a letter and containing letters, digits or underscores; invalid new template
+names produce feedback before any file is written. Directory names may contain
+spaces or Unicode. Existing-file imports retain their original contents.

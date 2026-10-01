@@ -1,6 +1,8 @@
 #pragma once
 #include <QDialog>
 #include <QByteArray>
+// Function declarations use the file basename; a resource may be an alias.
+QString functionFileTemplate(const QString &path);
 class ScriptEditor;
 class QLabel;
 class FunctionFileDialog final : public QDialog

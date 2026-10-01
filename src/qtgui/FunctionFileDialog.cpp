@@ -10,6 +10,16 @@
 #include <QFileDialog>
 #include <QSaveFile>
 #include <QStringConverter>
+#include <QRegularExpression>
+#include <stdexcept>
+
+QString functionFileTemplate(const QString &path)
+{
+   const QFileInfo file(path); const auto name=file.completeBaseName();
+   if (file.suffix()!="gmf" || !QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch())
+      throw std::runtime_error("Choose a .gmf filename starting with a letter and containing only letters, digits or underscores.");
+   return "function [output] = "+name+"(input)\nCreate Variable output;\nBeginMissionSequence;\noutput = input;\n";
+}
 
 FunctionFileDialog::FunctionFileDialog(const QString &filename,QWidget *parent,const QString &initialText)
    : QDialog(parent),path(QFileInfo(filename).absoluteFilePath())
