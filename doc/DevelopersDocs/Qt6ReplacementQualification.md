@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
-| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. Ephemeris and solver-loop Toggle combinations remain pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. SolverToggle now adds actual Current-mode differential-corrector loop toggles, suppressed intervals/separated resumed histories, exact source/Undo/Redo/Unicode reopen, independent full iteration reports, accepted endpoint/camera agreement and viewer close/reopen. Ephemeris, optimizer and nested-loop Toggle combinations remain pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
@@ -5554,3 +5554,40 @@ build-plugin-creation.txt records the actual GmatQt-R2026a relinks and GmatQt
 launcher recreation, including the final note. Full replacement qualification
 remains active; compositor input/minimize, portal and other selected workflow
 requirements retain their documented limits. Windows/macOS remain deferred.
+
+
+## Current-mode solver-loop plot toggles (2026-10-01)
+
+The prior TogglePlot and SolverPlot suites separately covered ordinary mission
+toggles and solver display modes. QtGui.SolverToggle adds their interaction in
+an actual differential-corrector branch with Current-mode Orbit/Ground/XY plots.
+A separate source-configured baseline toggles only an idle report subscriber;
+actual Mission/MDI controls then select the three plots for Off/On inside the
+branch, retaining labels/comments, pending Apply, exact Undo/Redo and Unicode
+save/reopen. All trial/accepted state and geodetic report bytes must agree with
+the baseline. Multiple iteration reports are required, not merely a completed
+run. The accepted objective is independently checked at X=7100 within 1e-6,
+with branch/post-branch epochs at elapsed 140/160 seconds.
+
+The first fixture incorrectly treated elapsed-time stop conditions as absolute
+endpoints; they are durations. Its intended 50–80 second boundary was absent,
+and check-solver-toggle-initial.txt preserves the failed assertion. Durations
+were corrected to pre-branch 20, branch 30/30/60 and post-branch 20 seconds.
+check-solver-toggle-timed.txt then passed in 1.22 seconds. Final assertions also
+require multiple trial/accepted reports, the independently expected objective/
+epochs, accepted final Orbit/Ground/XY coordinates, and the camera's final frame
+and target agreeing with the collected spacecraft. check-solver-toggle-final.txt
+passes in 0.59 seconds.
+
+Every plot rejects samples strictly inside the disabled 50–80 interval and
+retains at least one resumed point with an unconnected arc. The Current-mode
+Orbit/Ground buffered publication did not bridge that interval. Actual MDI
+activation/capture and close/reopen preserve the retained model and point count.
+No product display fix was needed for this covered case. Existing native
+rendering, ordinary Toggle and other solver-mode evidence is reused; none of
+those suites or the full regression was repeated. build-solver-toggle.txt
+records the new focused target build against the current real application.
+The product binary did not change after the prior actual rebuild. Optimizer/
+nested/ephemeris toggle combinations and original compositor/portal gates remain
+open; this bounded check does not establish full Linux replacement completion.
+Windows/macOS remain deferred.
