@@ -1,0 +1,7 @@
+PASS static full-report comparison; no mission repeated.
+Marker viewer: converted-markers-wayland-20261001.report.txt
+Reused independent reference: converted-visibility-wayland-20261001.reference.txt
+Bytes: 990
+Rows: 2; columns per row: 19 (elapsed time and three complete Cartesian states).
+SHA-256: 1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab
+Native controls also compare every byte after edited Unicode Save/reopen/rerun.

@@ -34,8 +34,11 @@ struct QtCameraSetting {
    QString automaticTrajectory;
    QString automaticBody;
    QString segmentFrame;
-   QMap<QString,bool> objectLabels,objectTrajectories;
+   QMap<QString,bool> objectLabels,objectTrajectories,objectCenters,objectEndpoints;
+   QMap<QString,quint32> objectMarkerSizes;
 };
+QMap<QString,quint32> qtObjectSizes(const QString &json);
+QString qtObjectSizesJson(const QMap<QString,quint32> &sizes);
 QMap<QString,bool> qtObjectFlags(const QString &json);
 QString qtObjectFlagsJson(const QMap<QString,bool> &flags);
 QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source);

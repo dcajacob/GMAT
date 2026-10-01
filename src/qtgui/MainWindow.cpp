@@ -1272,7 +1272,8 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
-   const bool objectDrawing=changes.contains("@QtObjectLabels") || changes.contains("@QtObjectTrajectories");
+   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes"};
+   const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
    for (auto it=changes.cbegin();it!=changes.cend();++it) if (it.key().startsWith("@ExternalForce.")) external[it.key()]=it.value();
@@ -1424,7 +1425,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || it.key()=="@QtObjectLabels" || it.key()=="@QtObjectTrajectories" || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || objectDrawingKeys.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1474,7 +1475,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
       const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
       auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (it.key()!="@QtObjectLabels" && it.key()!="@QtObjectTrajectories" && it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (!objectDrawingKeys.contains(it.key()) && it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
       if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
          // Imager's getter can still read the clone's old FOV pointer after
@@ -1526,12 +1527,12 @@ QString MainWindow::applyResourceChanges(const QString &name,
          const auto settings=qtCameraSettings(candidate);
          if (settings.contains(name)) {
             auto setting=settings.value(name); const auto &objects=proposed->GetStringArrayParameter("Add");
-            auto prune=[&](QMap<QString,bool> &flags) {
+            auto prune=[&](auto &flags) {
                for (auto it=flags.begin();it!=flags.end();) {
                   if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
                }
             };
-            prune(setting.objectLabels); prune(setting.objectTrajectories);
+            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
@@ -1539,6 +1540,9 @@ QString MainWindow::applyResourceChanges(const QString &name,
          auto setting=qtCameraSettings(candidate).value(name);
          if (changes.contains("@QtObjectLabels")) setting.objectLabels=qtObjectFlags(changes.value("@QtObjectLabels"));
          if (changes.contains("@QtObjectTrajectories")) setting.objectTrajectories=qtObjectFlags(changes.value("@QtObjectTrajectories"));
+         if (changes.contains("@QtObjectCenters")) setting.objectCenters=qtObjectFlags(changes.value("@QtObjectCenters"));
+         if (changes.contains("@QtObjectEndpoints")) setting.objectEndpoints=qtObjectFlags(changes.value("@QtObjectEndpoints"));
+         if (changes.contains("@QtObjectMarkerSizes")) setting.objectMarkerSizes=qtObjectSizes(changes.value("@QtObjectMarkerSizes"));
          candidate=setQtCameraSetting(candidate,name,setting);
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }

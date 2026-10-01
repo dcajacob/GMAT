@@ -46,8 +46,10 @@ struct PlotCurve
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
    std::optional<bool> importedLabel;
+   bool centerMarker=false,endpointMarkers=false;
+   quint32 orbitMarkerSize=10;
    bool drawsLabel() const { return visible && importedLabel.value_or(showObject); }
-   bool drawsContent() const { return visible && (lines || markers || showObject || importedLabel.value_or(false)); }
+   bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || importedLabel.value_or(false)); }
    bool wireframeObject = false;
    double radius = 0;
    QString texturePath;
@@ -59,6 +61,8 @@ struct PlotCurve
    bool errorBars=true;
    Qt::PenStyle style = Qt::SolidLine;
 };
+struct PlotOrbitMarker { const PlotPoint *point; bool endpoint; };
+
 struct PlotStation
 {
    QString name;
@@ -140,6 +144,7 @@ struct PlotModel
    void clear();
    void breakLines();
    void trim();
+   QVector<PlotOrbitMarker> orbitMarkers(const PlotCurve &curve,quint64 through) const;
    quint64 firstVisibleFrame(const PlotCurve &curve,quint64 through) const;
    static QVector<QPair<QPointF, QPointF>> groundSegments(const QPointF &a, const QPointF &b);
    static QVector<QPointF> groundFootprint(QPointF center,double radiusDegrees=5);

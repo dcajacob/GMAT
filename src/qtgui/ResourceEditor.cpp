@@ -418,7 +418,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
       if (orbit) {
          const auto setting=qtCameraSettings(script).value(QString::fromStdString(object.GetName()));
-         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)}};
+         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)}};
          auto *drawing=new QPushButton("Object drawing…",this); drawing->setObjectName("editOrbitDrawing"); layout->addWidget(drawing);
          connect(drawing,&QPushButton::clicked,this,[this,originalDrawing,drawing] {
             try {
@@ -433,11 +433,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   unique.insert(name);
                }
                const auto labels=qtObjectFlags(objectDrawingEdits.value("@QtObjectLabels",originalDrawing.value("@QtObjectLabels"))),trajectories=qtObjectFlags(objectDrawingEdits.value("@QtObjectTrajectories",originalDrawing.value("@QtObjectTrajectories")));
-               OrbitObjectDrawingDialog dialog(names,labels,trajectories,this); if (dialog.exec()!=QDialog::Accepted) return;
+               QtCameraSetting markers;
+               markers.objectCenters=qtObjectFlags(objectDrawingEdits.value("@QtObjectCenters",originalDrawing.value("@QtObjectCenters")));
+               markers.objectEndpoints=qtObjectFlags(objectDrawingEdits.value("@QtObjectEndpoints",originalDrawing.value("@QtObjectEndpoints")));
+               markers.objectMarkerSizes=qtObjectSizes(objectDrawingEdits.value("@QtObjectMarkerSizes",originalDrawing.value("@QtObjectMarkerSizes")));
+               OrbitObjectDrawingDialog dialog(names,labels,trajectories,this,&markers); if (dialog.exec()!=QDialog::Accepted) return;
                const auto values=dialog.settings();
                for (auto it=values.cbegin();it!=values.cend();++it) { if (it.value()==originalDrawing.value(it.key())) objectDrawingEdits.remove(it.key()); else objectDrawingEdits.insert(it.key(),it.value()); }
                drawing->setText(objectDrawingEdits.isEmpty() ? "Object drawing…" : "Object drawing… (pending)");
-               status->setText(objectDrawingEdits.isEmpty() ? "Object drawing is unchanged." : "Object drawing is pending. Apply keeps the trajectory and label choices.");
+               status->setText(objectDrawingEdits.isEmpty() ? "Object drawing is unchanged." : "Object drawing is pending. Apply keeps the drawing choices.");
             } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
             catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
          });
@@ -1372,9 +1376,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          }
          // Drawing edits may predate a pending object removal in Orbit setup.
          for (auto it=objectDrawingEdits.cbegin();it!=objectDrawingEdits.cend();++it) {
-            auto values=qtObjectFlags(it.value());
-            for (auto item=values.begin();item!=values.end();) { if (!selected.contains(item.key())) item=values.erase(item); else ++item; }
-            changes.insert(it.key(),qtObjectFlagsJson(values));
+            auto prune=[&](auto &values) { for (auto item=values.begin();item!=values.end();) { if (!selected.contains(item.key())) item=values.erase(item); else ++item; } };
+            if (it.key()=="@QtObjectMarkerSizes") { auto values=qtObjectSizes(it.value()); prune(values); changes.insert(it.key(),qtObjectSizesJson(values)); }
+            else { auto values=qtObjectFlags(it.value()); prune(values); changes.insert(it.key(),qtObjectFlagsJson(values)); }
          }
       }
       if (!pendingPolyhedron.isEmpty()) changes.insert("@PolyhedronForces",pendingPolyhedron);

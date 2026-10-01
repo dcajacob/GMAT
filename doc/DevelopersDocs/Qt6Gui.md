@@ -2093,6 +2093,19 @@ dialog changes. Apply retains the panel and camera metadata. Reopening restores
 choices, and removing an object prunes its flags in the same undoable Apply.
 Columns fit the normal initial dialog and remain user adjustable.
 
+The same Object drawing dialog now includes a Markers tab with independent
+Center and Endpoints choices and a pixel size for each object. Blank size means
+10 pixels; marker Default inherits ordinary Qt behavior (Off). Imported OF true
+center/end defaults and 10-pixel sizes are retained explicitly, including short
+arrays and Add resets. Unsigned size arrays reject out-of-range object indices.
+Markers can render with models, paths and labels hidden. A ring marks the latest
+position and four-petal glyphs mark retained arc endpoints. Replay uses only the
+recorded points through its selected frame; disconnected or different-provider
+arcs retain separate endpoints. Live curve visibility hides all its glyphs.
+Native markers obey scene depth; fallback sphere occlusion and behind-camera
+checks prevent stale or hidden center glyphs. Zero size disables Qt glyphs;
+OF zero/very large/device-limit behavior remains unqualified.
+
 The bounded qualification covers automatic Build conversion, Orbit setup
 Cancel/pending/Apply, reorder/removal/Undo, Unicode Save/reopen, invalid metadata
 correction, retained hidden-object histories and complete independent numerical

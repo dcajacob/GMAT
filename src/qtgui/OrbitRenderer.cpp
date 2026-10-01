@@ -17,6 +17,9 @@
 #include <osg/Texture2D>
 #include <osg/LineWidth>
 #include <osg/Point>
+#include <osg/PointSprite>
+#include <osg/Program>
+#include <osg/Shader>
 #include <osg/ComputeBoundsVisitor>
 #include <osg/LightSource>
 #include <osg/Depth>
@@ -30,6 +33,14 @@
 
 namespace {
 osg::Vec4 color(const QColor &c) { return {float(c.redF()),float(c.greenF()),float(c.blueF()),1}; }
+osg::ref_ptr<osg::Program> markerProgram(bool endpoint)
+{
+   auto program=new osg::Program;
+   program->addShader(new osg::Shader(osg::Shader::VERTEX,"#version 120\nvoid main() { gl_Position=gl_ModelViewProjectionMatrix*gl_Vertex; gl_FrontColor=gl_Color; }"));
+   const std::string shape=endpoint ? "float r=length(v); if (r>0.001 && r>abs(v.x*v.y/(r*r))) discard;" : "float r=dot(v,v); if (r>0.25 || r<0.16) discard;";
+   program->addShader(new osg::Shader(osg::Shader::FRAGMENT,"#version 120\nvoid main() { vec2 v=gl_PointCoord-vec2(0.5); "+shape+" gl_FragColor=gl_Color; }"));
+   return program;
+}
 osg::ref_ptr<osg::Image> readTexture(const QString &path)
 {
    if (path.isEmpty()) return {};
@@ -131,12 +142,13 @@ struct OrbitRenderer::Scene
    struct Curve {
       osg::ref_ptr<osg::Group> root=new osg::Group;
       osg::ref_ptr<osg::Geode> track=new osg::Geode;
+      osg::ref_ptr<osg::Geode> markers=new osg::Geode;
       osg::ref_ptr<osg::MatrixTransform> body=new osg::MatrixTransform;
       QString texture,modelPath;
       osg::ref_ptr<osg::MatrixTransform> modelPose=new osg::MatrixTransform;
       bool modelLoaded=false;
       double radius=-1,assetExtent=1;
-      Curve() { root->addChild(track); root->addChild(body); }
+      Curve() { root->addChild(track); root->addChild(body); root->addChild(markers); }
    };
    static osg::Matrixd modelTransform(const PlotCurve &source) {
       const auto &r=source.modelRotation,&offset=source.modelOffset;
@@ -154,6 +166,7 @@ struct OrbitRenderer::Scene
    osg::ref_ptr<osg::Geode> sky=new osg::Geode;
    osg::ref_ptr<osg::LightSource> illumination=new osg::LightSource;
    std::map<int,Curve> curves;
+   osg::ref_ptr<osg::Program> markerShaders[2]={markerProgram(false),markerProgram(true)};
    double zoom=1,yaw=.55,pitch=.45;
    QPointF pan;
    quint64 frame=std::numeric_limits<quint64>::max();
@@ -385,6 +398,25 @@ struct OrbitRenderer::Scene
             geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::Point(7*pixelRatio));
          }
          curve.track->removeDrawables(0,curve.track->getNumDrawables()); curve.track->addDrawable(geometry);
+         curve.markers->removeDrawables(0,curve.markers->getNumDrawables());
+         const auto markers=model->orbitMarkers(source,frame);
+         for (const bool endpoint:{false,true}) {
+            osg::ref_ptr<osg::Vec3Array> vertices=new osg::Vec3Array;
+            osg::ref_ptr<osg::Vec4Array> tints=new osg::Vec4Array;
+            for (const auto &marker:markers) if (marker.endpoint==endpoint) {
+               const auto &p=*marker.point; vertices->push_back(osg::Vec3(p.x,p.y,p.z)); tints->push_back(color(p.color));
+            }
+            if (vertices->empty()) continue;
+            auto glyphs=new osg::Geometry; isolateArrays(glyphs);
+            glyphs->setVertexArray(vertices.get()); glyphs->setColorArray(tints.get(),osg::Array::BIND_PER_VERTEX);
+            glyphs->addPrimitiveSet(new osg::DrawArrays(GL_POINTS,0,vertices->size()));
+            auto *state=glyphs->getOrCreateStateSet(); state->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+            state->setTextureAttributeAndModes(0,new osg::PointSprite,osg::StateAttribute::ON);
+            state->setMode(GL_POINT_SPRITE,osg::StateAttribute::ON);
+            state->setAttributeAndModes(new osg::Point(std::max(1.0,double(source.orbitMarkerSize)*pixelRatio)));
+            state->setAttributeAndModes(markerShaders[endpoint ? 1 : 0],osg::StateAttribute::ON);
+            curve.markers->addDrawable(glyphs);
+         }
          curve.body->setNodeMask(last && source.showObject ? ~0u : 0);
          if (last) {
             osg::Matrixd transform;

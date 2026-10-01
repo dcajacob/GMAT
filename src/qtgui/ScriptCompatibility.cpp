@@ -44,6 +44,23 @@ QJsonObject objectFlagsJson(const QMap<QString,bool> &values)
 {
    QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result;
 }
+QMap<QString,quint32> objectSizes(const QJsonValue &value)
+{
+   if (!value.isObject()) throw std::runtime_error("Marker sizes must be objects of named nonnegative integers");
+   QMap<QString,quint32> result; const auto values=value.toObject();
+   const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+   for (auto it=values.begin();it!=values.end();++it) {
+      const double size=it.value().toDouble(-1);
+      if (!identifier.match(it.key()).hasMatch() || !it.value().isDouble() || size<0 || size>4294967295.0 || std::floor(size)!=size)
+         throw std::runtime_error("Marker sizes need valid names and unsigned integer pixel sizes");
+      result.insert(it.key(),static_cast<quint32>(size));
+   }
+   return result;
+}
+QJsonObject objectSizesJson(const QMap<QString,quint32> &values)
+{
+   QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),double(it.value())); return result;
+}
 QString formatVector(const std::array<double,3> &value)
 {
    return QString("[%1 %2 %3]").arg(QString::number(value[0],'g',17),QString::number(value[1],'g',17),QString::number(value[2],'g',17));
@@ -59,6 +76,17 @@ QMap<QString,bool> qtObjectFlags(const QString &json)
 QString qtObjectFlagsJson(const QMap<QString,bool> &flags)
 {
    return QString::fromUtf8(QJsonDocument(objectFlagsJson(flags)).toJson(QJsonDocument::Compact));
+}
+
+QMap<QString,quint32> qtObjectSizes(const QString &json)
+{
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(json.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isObject()) throw std::runtime_error("Invalid marker sizes: expected named unsigned integers");
+   return objectSizes(document.object());
+}
+QString qtObjectSizesJson(const QMap<QString,quint32> &sizes)
+{
+   return QString::fromUtf8(QJsonDocument(objectSizesJson(sizes)).toJson(QJsonDocument::Compact));
 }
 
 QtScriptConversion convertOpenFramesViews(const QString &source)
@@ -132,16 +160,25 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
             // OF Add resets the ordered object list and its display defaults.
-            display.objectLabels.clear(); display.objectTrajectories.clear();
-            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; }
-         } else if (property=="DrawLabel" || property=="DrawTrajectory") {
+            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; }
+         } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
             const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
-            auto &destination=property=="DrawLabel" ? display.objectLabels : display.objectTrajectories;
+            auto &destination=property=="DrawLabel" ? display.objectLabels : property=="DrawTrajectory" ? display.objectTrajectories : property=="DrawCenterPoint" ? display.objectCenters : display.objectEndpoints;
             for (int i=0;i<flags.size();++i) {
                if (flags[i]!="true" && flags[i]!="false") { result.error=it.key()+"."+property+": expected true or false."; return result; }
                // OF applies the available prefix and leaves omitted objects at defaults.
                if (i<names.size()) destination[names[i]]=flags[i]=="true";
+            }
+         } else if (property=="DrawMarkerSize") {
+            if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+".DrawMarkerSize: expected a bracketed unsigned integer array."; return result; }
+            const auto sizes=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+            if (sizes.size()>names.size()) { result.error=it.key()+".DrawMarkerSize: a size index is outside the selected objects."; return result; }
+            for (int i=0;i<sizes.size();++i) {
+               bool ok=false; const auto size=sizes[i].toULongLong(&ok);
+               if (!ok || size>4294967295ULL || !QRegularExpression("^[0-9]+$").match(sizes[i]).hasMatch()) { result.error=it.key()+".DrawMarkerSize: expected unsigned integer pixel sizes."; return result; }
+               if (i<names.size()) display.objectMarkerSizes[names[i]]=static_cast<quint32>(size);
             }
          }
       }
@@ -161,9 +198,9 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize")) {
          output.append("% Qt conversion: "+lines[i]);
-         result.notes.append(name+"."+key+": independent per-object flags retained in Qt metadata.");
+         result.notes.append(name+"."+key+": independent per-object drawing retained in Qt metadata.");
       } else if (types[name]=="OpenFramesInterface" && key=="DrawGrid") {
          const auto value=properties[name][key];
          const bool anyTrue=QRegularExpression("\\btrue\\b",QRegularExpression::CaseInsensitiveOption).match(value).hasMatch();
@@ -208,6 +245,9 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       QtCameraSetting cameraSetting{true,fov};
       cameraSetting.objectLabels=displaySettings.value(plot).objectLabels;
       cameraSetting.objectTrajectories=displaySettings.value(plot).objectTrajectories;
+      cameraSetting.objectCenters=displaySettings.value(plot).objectCenters;
+      cameraSetting.objectEndpoints=displaySettings.value(plot).objectEndpoints;
+      cameraSetting.objectMarkerSizes=displaySettings.value(plot).objectMarkerSizes;
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool trajectory=values.value("ViewTrajectory")=="On";
       const bool segment=frame.contains('.');
@@ -324,6 +364,9 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.segmentFrame.isEmpty()) object.insert("segmentFrame",setting.segmentFrame);
    if (!setting.objectLabels.isEmpty()) object.insert("objectLabels",objectFlagsJson(setting.objectLabels));
    if (!setting.objectTrajectories.isEmpty()) object.insert("objectTrajectories",objectFlagsJson(setting.objectTrajectories));
+   if (!setting.objectCenters.isEmpty()) object.insert("objectCenters",objectFlagsJson(setting.objectCenters));
+   if (!setting.objectEndpoints.isEmpty()) object.insert("objectEndpoints",objectFlagsJson(setting.objectEndpoints));
+   if (!setting.objectMarkerSizes.isEmpty()) object.insert("objectMarkerSizes",objectSizesJson(setting.objectMarkerSizes));
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -381,6 +424,9 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
       if (object.contains("objectLabels")) setting.objectLabels=objectFlags(object.value("objectLabels"));
       if (object.contains("objectTrajectories")) setting.objectTrajectories=objectFlags(object.value("objectTrajectories"));
+      if (object.contains("objectCenters")) setting.objectCenters=objectFlags(object.value("objectCenters"));
+      if (object.contains("objectEndpoints")) setting.objectEndpoints=objectFlags(object.value("objectEndpoints"));
+      if (object.contains("objectMarkerSizes")) setting.objectMarkerSizes=objectSizes(object.value("objectMarkerSizes"));
       if (object.contains("segmentFrame")) {
          setting.segmentFrame=object.value("segmentFrame").toString();
          if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$").match(setting.segmentFrame).hasMatch() || object.contains("automaticTrajectory"))

@@ -1,0 +1,2 @@
+PASS isolated wayland independent center/ring and named-arc endpoint/rose rendering, size, replay, visibility, behind-camera, sphere depth, invalid-state gaps and trim; no engine mission.
+PASS automatic OF center/end/size conversion, prefix/Add defaults, actual persistent marker Cancel/pending/invalid correction/retained Apply, exact source/camera/Undo/Redo/Unicode recovery, complete reused 19-column reports and removal pruning; no old conversion matrix/reference mission.

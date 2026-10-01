@@ -52,6 +52,21 @@ void PlotModel::trim()
       if (!curve.points.empty()) curve.points.front().connect = false;
    }
 }
+QVector<PlotOrbitMarker> PlotModel::orbitMarkers(const PlotCurve &curve,quint64 through) const
+{
+   QVector<PlotOrbitMarker> result;
+   if (!curve.visible || curve.orbitMarkerSize==0 || (!curve.centerMarker && !curve.endpointMarkers)) return result;
+   const auto first=firstVisibleFrame(curve,through);
+   const PlotPoint *start=nullptr,*last=nullptr;
+   auto ends=[&] { if (curve.endpointMarkers && start) { result.append({start,true}); if (last!=start) result.append({last,true}); } };
+   for (const auto &point:curve.points) {
+      if (point.frame>through || point.frame<first) continue;
+      if (!last || !point.connect || point.provider!=last->provider) { ends(); start=&point; }
+      last=&point;
+   }
+   ends(); if (curve.centerMarker && last) result.append({last,false});
+   return result;
+}
 quint64 PlotModel::firstVisibleFrame(const PlotCurve &curve,quint64 through) const
 {
    if (kind==Kind::XY || redrawPoints<=0 || (endOfRun && through>=frame)) return 0;

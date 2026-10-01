@@ -264,7 +264,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    if (orbit) {
       // Paint from far to near so foreground trajectory segments remain visible
       // over the central body, while the far side is occluded by its disk.
-      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; };
+      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; };
       QVector<Primitive> objects;
       auto depth=[&](const PlotPoint &p) { return osg::Vec3d(p.x,p.y,p.z)*camera.outward; };
       for (const auto &curve:data->curves) {
@@ -278,13 +278,43 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             previous=&point; last=&point;
          }
          if (last && curve.showObject) objects.append({depth(*last),&curve,last,nullptr});
+         for (const auto &marker:data->orbitMarkers(curve,visibleFrame)) {
+            const auto &point=*marker.point;
+            if (perspectiveScale(point)<=0) continue;
+            // The fallback's bodies are spheres. Hide glyphs behind their near
+            // surface, including an object's center inside its own shown body.
+            const osg::Vec3d position(point.x,point.y,point.z);
+            const auto eye=camera.target+camera.outward*camera.distance;
+            const auto direction=data->perspective ? position-eye : -camera.outward;
+            const auto origin=data->perspective ? eye : position+camera.outward*camera.distance;
+            const double reach=data->perspective ? 1.0 : camera.distance;
+            bool occluded=false;
+            for (const auto &body:data->curves) if (body.visible && body.showObject && body.radius>0) {
+               const PlotPoint *center=nullptr; for (const auto &p:body.points) if (p.frame<=visibleFrame) center=&p;
+               if (!center) continue;
+               const auto delta=origin-osg::Vec3d(center->x,center->y,center->z);
+               const double a=direction*direction,b=delta*direction,c=delta*delta-body.radius*body.radius;
+               const double discriminant=b*b-a*c;
+               if (a>0 && discriminant>=0) { const double near=(-b-std::sqrt(discriminant))/a; if (near>=0 && near<reach-1e-9) { occluded=true; break; } }
+            }
+            if (!occluded) objects.append({depth(point),&curve,&point,nullptr,marker.endpoint ? 2 : 1});
+         }
       }
       std::stable_sort(objects.begin(),objects.end(),[](const Primitive &a,const Primitive &b) { return a.depth<b.depth; });
       for (const auto &object:objects) {
          const auto &curve=*object.curve;
          painter.setPen(QPen(object.a->color,curve.width,curve.style));
          const auto pixel=screen(project(*object.a));
-         if (object.b) painter.drawLine(pixel,screen(project(*object.b)));
+         if (object.marker) {
+            const double size=curve.orbitMarkerSize;
+            if (object.marker==1) {
+               painter.setPen(QPen(object.a->color,size*.1)); painter.setBrush(Qt::NoBrush); painter.drawEllipse(pixel,size*.45,size*.45);
+            } else {
+               QPainterPath rose;
+               for (int i=0;i<=180;++i) { const double angle=i*3.14159265358979323846/90,r=size*.5*std::abs(std::sin(2*angle)); const auto edge=pixel+QPointF(r*std::cos(angle),r*std::sin(angle)); if (i==0) rose.moveTo(edge); else rose.lineTo(edge); }
+               rose.closeSubpath(); painter.setPen(Qt::NoPen); painter.setBrush(object.a->color); painter.drawPath(rose);
+            }
+         } else if (object.b) painter.drawLine(pixel,screen(project(*object.b)));
          else if (curve.radius>0) {
             const double radius=curve.radius/(xmax-xmin)*area.width()*perspectiveScale(*object.a);
             QRadialGradient gradient(pixel-QPointF(radius*.3,radius*.3),radius*1.4);

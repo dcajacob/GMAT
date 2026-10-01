@@ -1,0 +1,71 @@
+OF center/end markers and size audit — 2026-10-01
+
+Scope: Linux on codex/qt6-gui, actual GmatQt/startup, MATLAB off.
+No numerical engine change. Existing complete three-spacecraft reference reused.
+
+Authoritative source:
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/SpacePointOptions.cpp:43–60
+  DrawCenter and DrawEnds each true by default; marker size 10.
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/OpenFramesInterface.cpp
+  parameter names 74–80; Add resets unique ordered options; boolean setters
+  2101–2118 apply supplied prefixes; size setter 2316–2337 checks each index.
+src/base/interpreter/Interpreter.cpp:5951–5962,6791–6799
+  Unsigned integer arrays are bracketed and set by index, not bulk booleans.
+  Excess size indices reject; valid short arrays retain omitted defaults.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSpaceObject.cpp:442–458
+  Center MarkerArtist is separate from body/model/trajectory/label flags.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSegment.cpp:130–163
+  START/END markers independent of trajectory visibility; option pixel size.
+/home/dan/GIT/OpenFramesInterface/data/shader/Marker_Circle.frag
+  Ring fragment radius squared .16 through .25.
+/home/dan/GIT/OpenFramesInterface/data/shader/Marker_Rose.frag
+  Four-petal rose radius .5*abs(sin(2*theta)).
+
+Implementation:
+ScriptCompatibility: named objectCenters/objectEndpoints/objectMarkerSizes in
+Qt directive, source-ordered defaults/prefixes/Add reset, strict boolean and
+unsigned 32-bit JSON/parser values, original source on malformed conversion.
+Final extra-index guard matches OF indexed-size rejection, not boolean overflow.
+QtPlotReceiver: actual OrbitView/Add validation, copies maps by curve name.
+PlotModel::orbitMarkers: retained/replay endpoints of each disconnected or
+provider-changing arc, plus latest center; visibility/zero size hide glyphs.
+OrbitRenderer: depth-tested point sprites, ring/rose shaders and pixel ratio.
+Final source review fixes empty-group raw array leaks with reference ownership;
+two programs are cached per scene instead of compiled anew for each frame.
+PlotWidget fallback: depth-sorted ring/rose paint; sphere-ray occlusion prevents
+center glyphs appearing over a shown body's near surface. Models use existing
+fallback sphere/point behavior; complex mesh parity is not newly qualified.
+OrbitObjectDrawingDialog: Markers tab with separate Default/On/Off center/end
+choices, unsigned size/empty Default. Invalid entry stays in dialog to correct;
+adjustable content-sized columns. Shared Help remains available.
+ResourceEditor/MainWindow: pending/Cancel/reopen; retained clean Apply, typed
+maps bypass engine setters, camera/source retention; Add removal prunes all
+maps; exact Undo and Unicode recovery; ordinary defaults remain implicit.
+
+Checks/evidence:
+check-converted-markers-initial.txt: ObjectDrawing .56 s and layout .18 s pass;
+new markers fails .06 s before mission because primary-camera copy omitted new
+maps. Product copy fixed; old affected tests not repeated.
+check-converted-markers-metadata.txt: corrected maps reach full controls and
+source/file/report recovery, then test removal input uses spaces instead of
+comma-separated resource API references. Harness input fixed without product
+relaxation; failure preserved.
+check-converted-markers-removal.txt: final full new case .73 s (.74 total),
+including isolated fallback probes. Reuses committed reference, no old matrix.
+converted-markers-wayland-20261001.txt: full new native case once, all six
+captures inspected: controls, scene/workspace, isolated markers/replay/occlusion.
+Native full case predates final lifetime/cache fix and extra-index guard.
+check-converted-markers-lifetime-wayland.txt: isolated final shader/cache native
+render probes pass, no engine/mission. Predates only pure extra-index tightening.
+check-converted-markers-indexed.txt: pure final empty/prefix/no-view defaults,
+unsigned JSON boundary and excess/no-Add/overflow size rejection pass .06 s;
+no engine/renderer. build-converted-markers-final.txt actual application relink
+and launcher recreation with final source; old matrices not repeated.
+
+Limits: synthetic retained arcs/replay/gaps/trim, not broader engine solver or
+backward/repeated segment regimes. Rendering sizes 16/18/24/32 covered; unsigned
+maximum is metadata-only, no huge glyph rendering claim. Qt size zero disables
+glyphs; OF zero/very large/device maximum behavior remains unqualified. Other
+OF axes/planes/grids/velocity/propagate labels/font/model overrides, VR/time
+synchronization remain open. No fresh desktop input, portal or top-level Wayland
+minimize/restore evidence; no blocked experiments repeated. Goal remains active.
