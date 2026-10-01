@@ -1596,6 +1596,18 @@ void GroundTrack::SetDataLabels(const StringArray& elements)
 }
 
 //------------------------------------------------------------------------------
+// Segment colors are display metadata; receivers may handle this optional
+// action without changing state publication or geodetic calculations.
+void GroundTrack::SetSegmentOrbitColor(GmatBase *, bool overrideColor,
+                                      UnsignedInt orbitColor, const StringArray &objNames)
+{
+   std::ostringstream action;
+   action << "SegmentColor=" << (overrideColor ? "On" : "Off") << '|' << orbitColor;
+   for (const auto &name : objNames) action << '|' << name;
+   PlotInterface::TakeGroundTrackAction(instanceName, action.str());
+}
+
+//------------------------------------------------------------------------------
 // bool Distribute(const double * dat, Integer len)
 //------------------------------------------------------------------------------
 /**

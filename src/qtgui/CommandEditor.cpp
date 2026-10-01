@@ -3,6 +3,7 @@
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
 #include "PropagationGroupsDialog.hpp"
+#include "PropagationColorDialog.hpp"
 #include "CommandForm.hpp"
 #include "ScriptEventDialog.hpp"
 #include <QComboBox>
@@ -65,6 +66,13 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    connect(stops,&QPushButton::clicked,this,[this] {
       PropagationStopsDialog dialog(source->toPlainText(),this);
       if (dialog.exec()!=QDialog::Accepted) return;
+      auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document); cursor.insertText(dialog.statement()); cursor.endEditBlock();
+   });
+   auto *color=new QPushButton("Segment color…",this); color->setObjectName("editPropagationColor"); layout->addWidget(color);
+   auto showColor=[this,color] { color->setVisible(PropagationColorDialog::supports(source->toPlainText())); };
+   connect(source,&QPlainTextEdit::textChanged,this,showColor); showColor();
+   connect(color,&QPushButton::clicked,this,[this] {
+      PropagationColorDialog dialog(source->toPlainText(),this); if (dialog.exec()!=QDialog::Accepted) return;
       auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document); cursor.insertText(dialog.statement()); cursor.endEditBlock();
    });
    auto *command=new CommandForm([this](const QString &text) {

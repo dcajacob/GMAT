@@ -150,6 +150,8 @@ public:
    std::vector<GroundstationInterface*> *GetStations();
 
    virtual void SetDataLabels(const StringArray& elements);
+   virtual void SetSegmentOrbitColor(GmatBase *originator, bool overrideColor,
+                                    UnsignedInt orbitColor, const StringArray &objNames) override;
    virtual bool Distribute(const Real * dat, Integer len);
    virtual bool TakeAction(const std::string &action, const std::string &actionData);
 

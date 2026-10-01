@@ -195,6 +195,7 @@ private:
       QVector<QVector<Cell>> cells;
       bool ignoreTimeSequence = false;
       bool solverData = false;
+      QMap<QString,QColor> segmentColors;
       bool automaticGeometry = false;
       QRect automaticRect;
       bool useInitialView = true;

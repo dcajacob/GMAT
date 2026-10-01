@@ -1,0 +1,1 @@
+PASS: exposed native segment-color dialog preview; no numerical workflow was repeated.

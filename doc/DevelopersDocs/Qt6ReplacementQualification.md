@@ -51,7 +51,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/TargetPanel.hpp` | Boundary-value solver selector, SolveMode/ExitMode dropdowns, progress checkbox and omitted-default insertion tested. Initial-guess execution, Undo and later solve verified; Stop/Discard and other combinations pending. |
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
-| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered; covariance controls and broader formation/mode combinations pending. |
+| `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls and broader formation/mode combinations remain pending. |
 | `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Broader object/string/array signature execution pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
@@ -87,7 +87,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/foundation/SinglePathSetupPanel.hpp` | wx pending directory text and directory chooser audited. Qt Set paths Output tab provides pending text/Browse, existing/writable validation and Apply. PathTests covers directory chooser acceptance/Cancel, invalid correction, Unicode output, relocated default reports/log and unchanged explicit report destination. Native Wayland layout checked; portal chooser and wider permission/storage failures remain unqualified. |
 | `src/gui/foundation/GmatPanel.hpp` | Shared Apply/OK/Cancel, dirty-state, resource refresh, Help, Script and Summary contract audited. Qt resource/command panels validate and rebuild atomically, retain and refresh accepted panels after Apply, reject stale edits and protect pending changes. Read-only applied-script previews and command/mission summaries are covered by InspectionTests. Desktop/Mission tests cover retained resource and command panels, clean companion refresh and protected pending companions. Offline context Help and inherited modal Help are implemented and exercised; broader mixed Apply/focus/desktop cases remain under qualification. |
 | `src/gui/foundation/MultiPathSetupPanel.hpp` | wx ordered path list, text/Browse, Add at top, Replace, Remove, Up/Down and directory validation audited. Qt Set paths GMAT Function tab provides these operations and duplicate protection, normalizing equivalent directories while keeping first search priority. PathTests exercises actual controls/choosers, Cancel/Apply, dotted/spaced directories and two same-named functions whose outputs change with GUI ordering. Broader keyboard/focus and optional MATLAB paths remain unqualified. |
-| `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Per-view override controls and other resource types pending. |
+| `src/gui/foundation/GmatColorPanel.hpp` | COLOR_TYPE resource fields and visual picker/swatch added. Spacecraft orbit/target Cancel, pending Apply, Undo/Redo, invalid RGB rollback, save/reopen and published trajectory color tested. Propagate's segment override has matching controls and independent trajectory/color-history checks, including Ground Track display metadata and default restoration; see the segment-color appendix. Per-view override controls and other resource types remain pending. |
 | `src/gui/foundation/ArraySetupDialog.hpp` | wx numeric grid, direct row/column selection, Value/Update, finite-value validation and clone/commit audited. Qt numeric grid adds direct Row/Column/Value/Set cell controls and Enter support; selection scrolls to the cell and synchronizes its value. Parameters tests cover actual 1000×1000 creation, last-cell navigation, invalid Set, Cancel, pending acceptance/Apply, adjustable columns and save/reopen. Broader keyboard/focus and shared Help remain unqualified. |
 | `src/gui/foundation/ShowScriptDialog.hpp` | Read-only object-generated script, monospaced/unwrapped display and Close audited. Qt resource and command Show script dialogs capture applied configuration; actual MDI controls preserve pending edits/source/undo state. Local Find and Copy are available. Singleton formatting, font zoom and broader object families remain unqualified. |
 | `src/gui/foundation/GmatSavePanel.hpp` | Shared Save/Save As, save-build-run, active/dirty status, reload and close contract audited. ScriptDocumentTests qualifies independent active/inactive MDI scripts, per-document Save/search/Undo, explicit activation, pending Apply/Discard/Cancel and rejected-Apply recovery, selected save-build-run, active/inactive reload, encoding/write/collision failure protection and all-document runtime/close guards with independent relative-include reports. FileTests, WorkflowTests and ScriptEditingTests retain existing mission/file evidence. Widget choosers and synthetic shortcuts are covered; native portal input remains unqualified. |
@@ -4888,3 +4888,70 @@ window/viewer evidence is reused, with no full-suite or native-layout rerun.
 Full Linux replacement qualification remains active under the original gates,
 including native Wayland main-window restore/input, desktop portal and remaining
 plugin/workflow limits. Windows/macOS remain deferred.
+
+
+## Propagation segment color controls and Ground Track display metadata
+
+The active wx PropagatePanel constructs a GmatColorPanel and writes
+SetOverrideSegmentColor/SetSegmentOrbitColor on Apply. Qt retained an existing
+OrbitColor option but lacked that editing operation. CommandEditor now supplies
+Segment color controls for a representable propagation statement: an override
+checkbox, GMAT named/RGB input and color picker. Turning it off removes only the
+color option; other stops/options, labels, flags, comments and command text are
+retained. One-step commands can acquire a color-only option block or return to
+their original step form. RGB validation uses the engine's color conversion.
+Cancel leaves pending source alone; OK changes it in one editor Undo; the normal
+command Apply still validates/rebuilds the complete mission and retains its MDI
+window. Duplicate color options and unrelated/incomplete statements do not offer
+a lossy editor. Source mapping retains comment line breaks when replacing an RGB
+literal, including comments inside the original literal.
+
+The focused check exposed that the current GroundTrack subscriber inherited a
+no-op SetSegmentOrbitColor callback, while Qt's SolverData action read only the
+spacecraft default. Orbit View already received the publisher's segment palette.
+GroundTrack now forwards the publisher's object list and override as optional
+display metadata through the existing action channel. Qt records overrides per
+object, clears only the named objects on Off, and selects the target palette for
+solver trial samples and the segment/default palette for accepted samples.
+Reinitialize clears the override map. The legacy wx receiver passes actions to
+its widget; the additional optional action can be ignored. No state publication,
+propagation force calculation, geodetic conversion or numerical algorithm changes.
+
+PropagationColorTests exercises actual Mission/MDI controls for adding an RGB
+override, replacing an existing named color and disabling another segment.
+It covers parent/picker Cancel, invalid RGB correction through the picker,
+pending exact Undo/Redo, each applied mission's exact Undo/Redo, retained panel
+refresh, original force/report source and stop tolerance/comments, and Unicode
+save/reopen. An independently configured three-segment mission supplies the
+six-state report and Orbit/Ground per-sample paths/colors; reopened GUI edits
+produce the same report bytes and paths within 1e-8 display-coordinate tolerance.
+Both histories contain the chosen blue/orange/default red segments. Display-only
+action checks cover a subset reset, solver target/accepted palette transitions,
+invalid metadata and unchanged history on default restoration. Those are callback
+checks, not a new solver numerical run or a full multi-spacecraft propagation
+qualification. Pure source cases cover first/middle/last/sole color removal,
+one-step insertion, labels, BackProp/Synchronized/variational flags, other options
+and RGB comments. Existing broader solver, replay and window evidence is reused.
+
+check-propagation-colors.txt records the initial mapping check's missing space
+before a retained comment; the mapper now retains that separation and line break.
+check-propagation-colors-mapped.txt records the first viewer-color assertion
+failure. check-propagation-colors-palettes.txt identifies Ground as all red despite
+colored Orbit segments. The display callback fix passed in
+check-propagation-colors-ground.txt (0.64 seconds). A later display-only assertion
+used the wrong hard-coded RGB integer, retained in check-propagation-colors-final.txt;
+it now derives the integer from QColor. The final focused check is
+check-propagation-colors-metadata.txt (0.62 seconds).
+
+The native Wayland preview runs no numerical workflow. Its initial exposed image,
+propagation-color-wayland-20260930-initial.png, showed clipped explanatory text
+at a small height. Minimum layout sizing and a minimum vertical label policy
+correct it; the final propagation-color-wayland-20260930.txt/.png records and
+shows the complete explanation, checkbox, RGB input, picker and action buttons.
+The preview explicitly asserts the label meets heightForWidth before saving.
+This is widget exposure/layout evidence, not fresh compositor input or portal
+qualification. build-propagation-colors-layout.txt records the final actual
+GmatQt-R2026a relink and GmatQt launcher recreation. No full-suite or repeated
+numerical run followed this layout-only adjustment. Original acceptance gates,
+native Wayland main-window restore/input, portals and remaining plugin/workflow
+requirements remain open; Windows/macOS remain deferred.

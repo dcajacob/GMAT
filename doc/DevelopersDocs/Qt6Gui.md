@@ -1125,6 +1125,14 @@ Propagation stops when any condition is satisfied. OK updates the source as one
 undoable edit; Cancel leaves it unchanged, and Apply validates the mission.
 Existing StopTolerance and OrbitColor options remain in the command.
 
+**Segment color…** provides the wx propagation color override. Choose a color
+or enter a GMAT color name or RGB triplet. Turn the override off to use each
+spacecraft's orbit color. Cancel leaves the command unchanged; OK updates its
+pending source, and Apply validates the mission. Existing stops, tolerance,
+labels, flags and comments stay in place. Orbit View and Ground Track retain
+the colors of each segment in their trajectory histories; solver trial samples
+keep the target-color palette.
+
 ### Propagator assignments
 
 **Propagators and spacecraft…** opens an adjustable table of propagators and their

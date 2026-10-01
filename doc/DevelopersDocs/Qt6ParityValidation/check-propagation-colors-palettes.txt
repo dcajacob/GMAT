@@ -1,0 +1,24 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 43: QtGui.PropagationColors
+1/1 Test #43: QtGui.PropagationColors ..........***Failed    0.66 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Ground color samples: blue=0, orange=0, red=39
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.66 sec*proc (1 test)
+
+Total Test time (real) =   0.66 sec
+
+The following tests FAILED:
+	 43 - QtGui.PropagationColors (Failed)                  qt-gui
+Errors while running CTest

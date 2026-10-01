@@ -49,6 +49,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    FileComparison.cpp FileComparison.hpp ComparisonPanel.cpp ComparisonPanel.hpp
    PropagationStopsDialog.cpp PropagationStopsDialog.hpp
    PropagationGroupsDialog.cpp PropagationGroupsDialog.hpp
+   PropagationColorDialog.cpp PropagationColorDialog.hpp
    OrbitRenderer.cpp OrbitRenderer.hpp
    OrbitCamera.hpp
    StarCatalog.cpp StarCatalog.hpp
@@ -197,6 +198,9 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtKalmanTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtKalmanTests GmatQt)
    add_executable(GmatQtCovarianceTests tests/CovarianceTests.cpp)
+   add_executable(GmatQtPropagationColorTests tests/PropagationColorTests.cpp)
+   target_link_libraries(GmatQtPropagationColorTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtPropagationColorTests GmatQt)
    target_link_libraries(GmatQtCovarianceTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtCovarianceTests GmatQt)
    add_executable(GmatQtComparisonTests tests/ComparisonTests.cpp)
@@ -283,6 +287,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.ExternalModuleSource GmatQtExternalForceTests "${qt_test_startup}" --module-source)
    add_qt_test(QtGui.Polyhedron GmatQtPolyhedronTests "${qt_test_startup}")
    add_qt_test(QtGui.PolyhedronBodySource GmatQtPolyhedronTests "${qt_test_startup}" --body-source)
+   add_qt_test(QtGui.PropagationColors GmatQtPropagationColorTests "${qt_test_startup}")
    add_qt_test(QtGui.OrbitSetup GmatQtOrbitSetupTests "${qt_test_startup}")
    add_qt_test(QtGui.SolverPlots GmatQtSolverPlotTests "${qt_test_startup}")
    add_qt_test(QtGui.Desktop GmatQtDesktopTests "${qt_test_startup}")
@@ -309,6 +314,7 @@ if(GMAT_QT_BUILD_TESTS)
       USES_TERMINAL VERBATIM)
    add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests GmatQtSolarSystemTests GmatQtCelestialBodyTests)
    add_dependencies(check-qt GmatQtCovarianceTests GmatQtForceSourceTests GmatQtForceSelectorTests GmatQtGravityBodyTests)
+   add_dependencies(check-qt GmatQtPropagationColorTests)
    add_dependencies(check-qt GmatQtResourceRoundTripTests GmatQtScriptDocumentTests)
    add_dependencies(check-qt GmatQtSolverPlotTests)
    add_dependencies(check-qt GmatQtDesktopTests)

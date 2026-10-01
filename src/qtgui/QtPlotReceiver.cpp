@@ -681,7 +681,14 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       entry->solverData=argument=="On";
       for (auto &curve:entry->data->curves)
          if (auto *point=Moderator::Instance()->GetSpacePoint(curve.name.toStdString()))
-            curve.color=rgb(entry->solverData ? point->GetCurrentTargetColor() : point->GetCurrentOrbitColor());
+            curve.color=entry->solverData ? rgb(point->GetCurrentTargetColor()) : entry->segmentColors.value(curve.name,rgb(point->GetCurrentOrbitColor()));
+   } else if (command=="SegmentColor") {
+      const auto fields=argument.split('|'); if (fields.size()<2 || (fields[0]!="On" && fields[0]!="Off")) return false;
+      bool ok=false; const auto value=fields[1].toUInt(&ok); if (!ok) return false;
+      for (int i=2;i<fields.size();++i) {
+         if (fields[0]=="On") entry->segmentColors[fields[i]]=rgb(value);
+         else entry->segmentColors.remove(fields[i]);
+      }
    } else if (command=="MarkBreak") XyPlotMarkBreak(name);
    else if (command=="ClearFromBreak") {
       bool ok=false; const auto index=argument.toInt(&ok);
@@ -710,7 +717,7 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       if (command=="LatitudeLineCount") entry->data->latitudeLines=value; else entry->data->longitudeLines=value;
    } else if (command=="Reinitialize" || command=="ClearData" || command=="Reset") {
       entry->data->clear(); entry->data->stations.clear();
-      if (command=="Reinitialize") entry->data->curves.clear();
+      if (command=="Reinitialize") { entry->data->curves.clear(); entry->segmentColors.clear(); }
    } else if (command=="Refresh" || command=="RunComplete") {
       if (command=="RunComplete") entry->data->endOfRun=true;
       refresh(*entry,true);
