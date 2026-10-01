@@ -1272,7 +1272,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
-   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes"};
+   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths"};
    const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
@@ -1532,7 +1532,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
                   if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
                }
             };
-            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes);
+            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
@@ -1543,6 +1543,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
          if (changes.contains("@QtObjectCenters")) setting.objectCenters=qtObjectFlags(changes.value("@QtObjectCenters"));
          if (changes.contains("@QtObjectEndpoints")) setting.objectEndpoints=qtObjectFlags(changes.value("@QtObjectEndpoints"));
          if (changes.contains("@QtObjectMarkerSizes")) setting.objectMarkerSizes=qtObjectSizes(changes.value("@QtObjectMarkerSizes"));
+         if (changes.contains("@QtObjectLineWidths")) setting.objectLineWidths=qtObjectWidths(changes.value("@QtObjectLineWidths"));
          candidate=setQtCameraSetting(candidate,name,setting);
       }
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }

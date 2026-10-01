@@ -8,6 +8,8 @@
 #include <QLineEdit>
 #include <QTabWidget>
 #include <stdexcept>
+#include <cmath>
+#include <limits>
 #include <QLabel>
 #include <QDialogButtonBox>
 #include <QGuiApplication>
@@ -18,11 +20,11 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
 {
    setObjectName("orbitObjectDrawingDialog"); setWindowTitle("Object drawing");
    auto *layout=new QVBoxLayout(this);
-   auto *help=new QLabel("Choose each object's paths, labels and markers. Default inherits normal viewer choices; an empty marker size uses 10 pixels. Show labels is the label master switch. Body/model visibility is set in Orbit-view setup. OK keeps edits pending until Apply.",this);
+   auto *help=new QLabel("Choose each object's paths, labels and markers. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. OK keeps edits pending until Apply.",this);
    help->setWordWrap(true); layout->addWidget(help);
-   objects=new QTableWidget(names.size(),3,this); objects->setObjectName("orbitObjectDrawing");
-   objects->setHorizontalHeaderLabels({"Object","Trajectory","Label"}); objects->verticalHeader()->hide();
-   configureTableColumns(objects,{10,8,8});
+   objects=new QTableWidget(names.size(),4,this); objects->setObjectName("orbitObjectDrawing");
+   objects->setHorizontalHeaderLabels({"Object","Trajectory","Label","Width (px)"}); objects->verticalHeader()->hide();
+   configureTableColumns(objects,{10,8,8,6});
    for (int row=0;row<names.size();++row) {
       auto *item=new QTableWidgetItem(names[row]); item->setFlags(item->flags()&~Qt::ItemIsEditable); objects->setItem(row,0,item);
       for (int column=1;column<3;++column) {
@@ -31,6 +33,9 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
          choice->addItems({"Default","On","Off"}); choice->setCurrentIndex(values.contains(names[row]) ? (values.value(names[row]) ? 1 : 2) : 0);
          objects->setCellWidget(row,column,choice);
       }
+      auto *width=new QLineEdit(objects); width->setObjectName("orbitDrawing_width_"+names[row]); width->setPlaceholderText("Default");
+      if (drawing && drawing->objectLineWidths.contains(names[row])) width->setText(QString::number(drawing->objectLineWidths.value(names[row]),'g',17));
+      objects->setCellWidget(row,3,width);
    }
    markers=new QTableWidget(names.size(),4,this); markers->setObjectName("orbitObjectMarkers");
    markers->setHorizontalHeaderLabels({"Object","Center","Endpoints","Size (px)"}); markers->verticalHeader()->hide(); configureTableColumns(markers,{10,8,8,6});
@@ -58,6 +63,14 @@ QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
       const auto *choice=qobject_cast<QComboBox *>(objects->cellWidget(row,column));
       if (choice->currentIndex()) (column==1 ? trajectories : labels).insert(objects->item(row,0)->text(),choice->currentIndex()==1);
    }
+   QMap<QString,double> widths;
+   for (int row=0;row<objects->rowCount();++row) {
+      const auto text=qobject_cast<QLineEdit *>(objects->cellWidget(row,3))->text().trimmed();
+      if (text.isEmpty()) continue;
+      bool ok=false; const auto width=text.toDouble(&ok);
+      if (!ok || !std::isfinite(width) || width<1 || width>std::numeric_limits<float>::max()) throw std::runtime_error((objects->item(row,0)->text()+": enter a finite line width >= 1 within the renderer's range, or leave it empty for Default.").toStdString());
+      widths[objects->item(row,0)->text()]=width;
+   }
    QMap<QString,bool> centers,endpoints; QMap<QString,quint32> sizes;
    for (int row=0;row<markers->rowCount();++row) {
       const auto name=markers->item(row,0)->text();
@@ -72,5 +85,5 @@ QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
          sizes[name]=static_cast<quint32>(size);
       }
    }
-   return {{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)}};
+   return {{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)}};
 }

@@ -130,7 +130,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
 | `src/gui/app/TextEphemFileDialog.hpp` | Source and Generate Text Ephemeris caller audited: prototype spacecraft/epoch/frame/interval/output selection creates a TextEphemFile subscriber and runs the mission. The menu is TESTING-only and additionally guarded by the disabled __SHOW_EPHEM_FILE__ macro in GmatMenuBar. No current menu route exists in this Linux build. The engine still registers TextEphemFile; its generic/script behavior is not qualified by the modern EphemerisFile export suite. |
 | `src/gui/subscriber/TsPlotOptionsDialog.hpp` | PlotWidget Style dialog: per-curve visibility, lines/markers, widths, marker sizes/shapes, line styles, colors and error bars; plot grid/legend. Cancel, existing-point styling, curve isolation and rendered differences tested. Active plot/axis labels, independent min/max ranges, tick counts and precision are now implemented and covered by XYAxes, including actual MDI Cancel/invalid correction/close-reopen and source/report retention, independent rendered positions/clipping/grid/labels and native Wayland tabs. XYExport now covers the active wx data export action, full-precision retained samples, source/output protection, atomic write failure/correction and native widget chooser. wx logarithmic and minor-tick controls are disabled and not applied; see the XY axis/export appendices. |
-| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. ObjectDrawing adds persistent per-object Default/On/Off controls, Cancel/pending/retained Apply, mixed invalid rollback, paired removal, exact Undo/Redo/Unicode recovery, ordinary implicit-default retention and byte-identical reused complete reports. Native controls/scene and corrected adjustable initial columns were inspected; the final isolated layout probe repeats no mission. ConvertedMarkers adds independent center/end markers and pixel sizes, source-ordered conversion defaults, persistent Markers controls, runtime/report/file recovery and native/fallback ring/rose replay/depth checks; final cached shader/lifetime and indexed-size guards have isolated evidence. Other OF object decorations remain pending. |
+| `src/gui/subscriber/OrbitViewPanel.hpp` | Active object/draw, camera, frame/up-axis/scale, drawing/star, solver and data controls audited. Grouped Qt setup, ordered/paired visibility Apply, pending/Cancel, validation/rollback, exact Undo/Redo/save/reopen, report invariance, object/vector camera histories and UseInitialView rerun/close/reopen behavior covered. Drawing-only edits retain imported primary-camera metadata. SolverPlots and OptimizerPlots cover DC/Yukon All/Current/None histories, accepted endpoints/camera, replay and native close/reopen. SolverToggle, OptimizerToggle and NestedSolverToggle cover Current-mode targeter/Yukon/nested toggles, suppressed samples and separated resumption; Ground/XY accepted paths match a None-mode reference, with exact reports and native replay/close-reopen. NestedSolverPlots/Cleanup add two-level targeter histories, initialization/trial filtering, accepted camera/replay and failure/Stop recovery. Optimizer/mixed/deeper nested cases and broader camera/frame combinations remain pending. InvalidPlotData now excludes finite unavailable/unrenderable positions from Orbit and primary/alternate camera history; 20 retained valid points, final camera recovery, native replay/close-reopen/rerun and unchanged complete reports are covered. SegmentCameras adds named OF propagation-segment conversion, stored/automatic body/inertial cameras, captured nonzero-attitude endpoint clamp, late data, LookAt, replay, primary override/Undo and invalid-reference/Unicode file recovery with independent complete reports. Native reopened-viewer cascade clipping was reproduced and fixed for new windows; final geometry and rendered controls pass. Repeated/solver/backward/evicted segment regimes remain pending. ConvertedVisibility now preserves independent OF per-object label/trajectory flags alongside standard model/body flags, named reorder/removal metadata, source/file recovery and complete three-spacecraft reports, with native/fallback label-only rendering and latest-pose clipping evidence. ObjectDrawing adds persistent per-object Default/On/Off controls, Cancel/pending/retained Apply, mixed invalid rollback, paired removal, exact Undo/Redo/Unicode recovery, ordinary implicit-default retention and byte-identical reused complete reports. Native controls/scene and corrected adjustable initial columns were inspected; the final isolated layout probe repeats no mission. ConvertedMarkers adds independent center/end markers and pixel sizes, source-ordered conversion defaults, persistent Markers controls, runtime/report/file recovery and native/fallback ring/rose replay/depth checks; final cached shader/lifetime and indexed-size guards have isolated evidence. ConvertedWidths adds fractional named line widths, OF defaults/prefixes, persistent width controls and source/report recovery; native stroke clamping was reproduced and fixed with depth-tested screen-space geometry, with isolated native/fallback near-plane checks. Other OF object decorations remain pending. |
 | `src/gui/app/RunScriptFolderDialog.hpp` | Active ResourceTree folder caller and result/error aggregation audited. wx supports starting index/count, repeats, two include/exclude filename filters, output and per-run directories, saved-script copies/re-run, comparison directory/name replacement/tolerance and optional saved comparison results, plus interrupted/build/init/run failure reporting and path/log restoration. Qt Mission / Run scripts from folder implements those operations, with isolated batch viewer/solver windows, preserved document/Undo/normal viewer history and restored engine/path/log state. FolderRunTests covers repeated output/comparison, exact copies and relative includes, failure categories, active/between-run Stop and retry; native Wayland rendered scenes and automatic OF conversion were inspected. Native portal Browse and exceptionally large result display remain unqualified; see the folder-run appendix. |
 | `src/gui/subscriber/OpenGlOptionDialog.hpp` | Source modeless option controls and MdiChildTrajFrame caller audited: animation interval/increment, initial view, alternate coordinate system, drawing/colors, object visibility and orbit normals. The only creator is the unused MdiChildTrajFrame; neither that frame nor this dialog is in the current GUI CMake source list, and no caller constructs the frame. Active wx 3D viewers use MdiChild3DViewFrame/OrbitViewCanvas. Qt current camera/display/replay controls have separate evidence; this inactive helper does not qualify remaining active viewer capabilities. |
 | `src/gui/subscriber/SubscriberSetupPanel.hpp` | Generic writable subscriber fields, boolean choices, load/save and validation audited. Qt ResourceEditor exposes engine-typed subscriber properties and specialized report/plot/file controls; selected execution, round trips and recovery are covered by plot, dynamic-data, ephemeris and report suites. Remaining subscriber types and generic field combinations remain pending. |
@@ -7095,3 +7095,99 @@ limits. Native checks remain Qt widget/rendering evidence, not fresh desktop
 input. Top-level Wayland minimize/restore and portal gates remain unchanged;
 blocked experiments were not repeated. Full Linux qualification remains active,
 Windows/macOS deferred, and MATLAB off.
+
+
+## OF per-object line widths and native wide-stroke reliability — 2026-10-01
+
+DrawLineWidth arrays were still comments during conversion, losing independent
+fractional widths and OF's 2-pixel default. The authoritative OF real-vector
+setter validates selected values >= 1.0, applies the supplied prefix, retains
+omitted defaults and ignores excess entries. Add resets those defaults. The
+segment passes the real width to its curve artist. audit-converted-widths.txt
+records these sources and implementation locations.
+
+Qt now stores objectLineWidths by name in the existing directive, with strict
+finite real values >= 1 within the renderer's scalar range. Source-ordered
+conversion retains empty/short/default/extra-prefix semantics and Add resets.
+Malformed or unrenderable values retain the original source. Primary camera
+metadata copies retain the map; receiver validation requires actual OrbitView
+Add membership. Optional imported width overrides the existing Orbit width
+without converting it to an integer; ordinary/XY width fields remain unchanged.
+Removed overrides reset during receiver initialization.
+
+Object drawing / Paths and labels adds a Width (px) field; blank means ordinary
+Default 1 pixel. Imported OF defaults are explicit 2-pixel choices. Invalid
+values leave the dialog open to correct. Cancel/untouched OK, pending/reopen,
+retained clean Apply, exact Undo/Redo/build, Unicode Save/reopen, invalid map and
+mixed camera rollback, other drawing/camera retention and named reorder/removal
+are checked through actual MDI controls. The ordinary-viewer branch is Build-only:
+untouched widths keep implicit source, one override changes only the directive
+and Undo restores exact original text. No numerical engine code changed.
+
+QtGui.ConvertedWidths / --widths reuses the previous complete independent
+three-spacecraft state reference, with no reference mission or old conversion
+matrix rerun. check-converted-widths-controls.txt passes the new case in 0.69 s
+and the affected four-column ObjectDrawingLayout in 0.18 s, 0.87 s total, using
+offscreen CPU rendering. These checks predate the later native-wide geometry
+and fallback near-plane correction.
+
+The once-run native controls/engine case then exposed actual stroke clamping in
+its final isolated renderWidths assertion. converted-widths-wayland-20261001.txt
+records that failed command; it is not an all-green native suite. The failure
+occurs only after all preceding conversion, source, MDI, default/invalid Apply,
+Undo/Redo, Unicode/reopened-report and object removal assertions completed.
+Its controls/scene/workspace captures were inspected: all four columns and
+Help/Cancel/OK fit, pending A=9.5/B=Default/C=3.25 are visible, and textured Earth
+plus separate A/B/C paths render with accessible viewer controls. Those scene
+captures predate the rendering correction and cannot prove final wide strokes.
+
+converted-widths-render-wayland-initial.txt and .widths.png reproduce the clamp
+without engine initialization: thin red 1.5 logical pixels covers 1,956 pixels,
+while green 6.25 covers only 4,564 (seven physical rows at captured 2.25 DPR).
+The native pixel count ratio requirement was retained. Imported strokes above
+the conservative aliased/smooth GL width limit now use cached GLSL screen-space
+quads with physical viewport sizing, per-end colors and original projected
+depth. Homogeneous near/far clipping precedes division by w, avoiding inverted
+screen directions through the camera. GPU clipping handles expanded viewport
+edges rather than culling by the world-space centerline bound. Small/native
+strokes retain their existing strips, avoiding blanket expanded-history cost.
+
+The stronger isolated probe adds a blue sphere behind/in front of the stroke,
+near-plane crossing and entirely behind-camera rejection. Two intermediate
+harness assertions were corrected: fallback margins shift the plot center away
+from the window center, and the correctly shaded blue sphere has green=82,
+contradicting a raw green<80 threshold. The final test locates the actual crossing
+and checks blue dominance. check-converted-widths-wide-final.txt,
+check-converted-widths-depth.txt and converted-widths-depth-offscreen-initial
+preserve those failures and the inspected correctly occluded blue-sphere image.
+The fallback renderer also now clips crossing trajectory segments to the near
+plane, retaining their visible part instead of dropping the connecting pair;
+clipped-point ownership is stable and stored numerical histories are untouched.
+
+Final QtGui.WidthRendering / --width-render passes offscreen in 0.21 s in
+check-converted-widths-final.txt. converted-widths-render-wayland-final.txt passes
+the isolated native case: thin remains 1,956 pixels and corrected thick becomes
+9,324. Per-curve edits retain the other stroke, visibility/defaults work, a
+foreground path covers the sphere, a background path is occluded, crossing paths
+clip and wholly behind paths disappear. All final .widths/.depth/.front.png
+captures were inspected. No engine/control/reference mission was repeated after
+the renderer fix. The earlier native control assertions remain evidence for
+unchanged source/control behavior; final isolated checks establish new rendering.
+
+Both full 19-column rows before editing and after Unicode Save/reopen/rerun match
+the reused independent reference byte for byte. The captured report is 990 bytes,
+SHA-256 1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab;
+converted-widths-report-preservation.txt records a static full-byte comparison.
+build-converted-widths-depth.txt records the final product GmatQt-R2026a relink
+and launcher recreation. build-converted-widths-final.txt compiles the final
+harness while the requested actual application is current. Broad old
+viewer/marker/solver/plugin/numerical matrices were not repeated.
+
+Normal 1.5/6.25 widths have native/fallback rendering evidence; metadata/control
+values 1.25/3.25/3.75/4.75/9.5 and 1/2 defaults are covered. Very large widths,
+extreme joins, zero-length projected segments and other GPUs remain unqualified.
+Other OF object decorations, broader camera/solver regimes and Fit cases retain
+their prior limits. Native evidence remains Qt widget/rendering evidence, not
+fresh desktop input. Top-level Wayland minimize/restore and portal gates are
+unchanged; blocked experiments were not repeated. Full Linux qualification
+remains active, Windows/macOS deferred and MATLAB off.

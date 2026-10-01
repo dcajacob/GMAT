@@ -1,0 +1,67 @@
+OF per-object line-width audit — 2026-10-01
+
+Scope: codex/qt6-gui Linux, actual GmatQt/startup, no MATLAB/numerical-engine edits.
+Authoritative OF source:
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/SpacePointOptions.cpp:54
+  DrawLineWidth default 2.0; independent real value per object.
+/home/dan/GIT/OpenFramesInterface/src/base/subscriber/OpenFramesInterface.cpp
+  PARAMETER_TEXT/TYPE: DrawLineWidth/RVECTOR; Add resets default options.
+  SetRvectorParameter 2617–2639 validates/applies min(object count, vector count),
+  selected values >= 1.0; omitted values retain defaults, excess ignored.
+/home/dan/GIT/OpenFramesInterface/src/gui/subscriber/OFSegment.cpp:155
+  Per-object width passed to CurveArtist; fractional values are not integers.
+
+Implementation:
+ScriptCompatibility: objectLineWidths named double map, source-ordered Add/prefix
+and 2-pixel defaults; strict finite >=1 and float-renderer range; malformed source
+unchanged; JSON/camera metadata retains real values.
+QtPlotReceiver: OrbitView/Add validation and optional imported width by name;
+removed override resets on reused callback. Ordinary/XY integer width untouched.
+OrbitObjectDrawingDialog: Width (px) column, blank Default ordinary 1 pixel;
+invalid values stay correctable. Adjustable content-size widths/four-column fit.
+ResourceEditor/MainWindow: pending/Cancel/reopen, retained clean Apply, synthetic
+map bypasses engine setters; preserves camera/other drawing/source; Add pruning,
+exact Undo/Redo/build and Unicode Save/reopen/report recovery.
+OrbitRenderer: native width range queried; imported strokes exceeding conservative
+aliased/smooth limits use cached GLSL screen-space quads, physical viewport/DPR
+once, homogeneous near/far clipping, color interpolation and original depth.
+GPU clips expanded edges rather than world-centerline frustum culling. Native
+small strokes keep existing strips; no blanket expanded-history allocation.
+PlotWidget: double Orbit QPen width; near-plane clipping retains a visible
+trajectory portion when the preceding point is behind the camera; temporary
+clipped points have stable ownership and never alter stored numerical history.
+
+Evidence and failures:
+check-converted-widths-controls.txt: new ConvertedWidths .69 s and affected
+four-column ObjectDrawingLayout .18 s pass, .87 s total; offscreen CPU.
+Native --widths once passes all engine, MDI, source/default/Undo/removal/Unicode
+and report assertions, then fails its final renderWidths ratio assertion.
+converted-widths-wayland-20261001.txt is a failed command, not an all-green suite.
+Its inspected controls/scene/workspace captures and report precede the wider
+geometry correction; control/engine code remains unchanged by that correction.
+converted-widths-render-wayland-initial.txt/.widths.png isolate native clamp:
+red 1.5 logical pixel stroke 1956 pixels; green 6.25 stroke only 4564 (7 physical
+rows), rather than expected wide stroke at captured 2.25 DPR. No mission rerun.
+New screen-space geometry closes that native limit instead of relaxing ratio.
+New depth test first assumed window center despite fallback plot margins; then
+raw green<80 rejected correctly shaded blue (#5252d5) with green=82. Intermediate
+check-converted-widths-wide-final/depth logs and offscreen depth capture retain
+both harness failures. Locate the actual green crossing and assert blue dominance.
+check-converted-widths-final.txt: final isolated fallback width/depth/clip/default
+probe passes .21 s, no engine. converted-widths-render-wayland-final.txt passes
+same isolated native probe: thin=1956, thick=9324; all three final captures
+(widths, depth, foreground) inspected. Final native centerline behind/through
+camera and per-curve isolation assertions pass. No engine/control/reference rerun.
+build-converted-widths-depth.txt records final product relink/launcher recreation;
+build-converted-widths-final.txt compiles final harness, actual GmatQt current.
+
+Reports: two complete 19-column rows, 990 bytes, SHA-256
+1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab.
+Static complete reference comparison: converted-widths-report-preservation.txt.
+
+Limits: normal 1.5/6.25 widths rendered; metadata/control 1.25/3.25/3.75/4.75/9.5
+values and 1/2 defaults covered. Very large widths, joins at extreme turn angles,
+zero-length projected segments and other GPUs/deployment remain unqualified.
+No old conversion/marker/solver/plugin/numerical matrix repeated. No fresh desktop
+input, portal or top-level Wayland minimize/restore evidence. Full goal active;
+Windows/macOS deferred and MATLAB off.

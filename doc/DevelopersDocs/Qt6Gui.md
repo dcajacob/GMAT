@@ -2112,3 +2112,22 @@ correction, retained hidden-object histories and complete independent numerical
 reports. Other OF-specific object axes/planes/grids, endpoint markers, velocity
 vectors, font/model overrides, VR and time synchronization remain under the
 broader OF capability gate.
+
+
+### Persistent per-object trajectory widths
+
+Object drawing / Paths and labels now has a Width (px) field for every object.
+It accepts finite fractional widths at least 1; leave it empty to inherit the
+ordinary Qt 1-pixel width. OF DrawLineWidth arrays retain their supplied prefix,
+omitted 2-pixel defaults and source-ordered Add resets. Reordering retains named
+widths; removal prunes them, and Undo restores exact source and choices. Width
+edits remain pending until Apply and preserve other drawing/camera settings.
+
+Imported widths above the native GL stroke limit use depth-tested screen-space
+geometry, so a wide trajectory does not become thinner at the desktop's pixel
+scale. Ordinary/default strokes keep the established rendering path. Near-plane
+clipping retains the visible part of a segment crossing the camera; entirely
+behind-camera paths remain hidden. Bounded native/fallback width, depth and
+clipping checks passed without repeating the calculation reference. Very large
+widths, extreme joins, zero-length projected paths and other GPU limits remain
+unqualified.

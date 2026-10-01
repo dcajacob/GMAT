@@ -1,0 +1,1 @@
+FAIL: Independent fractional line widths not rendered

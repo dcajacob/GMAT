@@ -1,0 +1,2 @@
+Width pixels thin=1956 thick=4564
+FAIL: Independent fractional line widths not rendered

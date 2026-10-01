@@ -1,0 +1,17 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 14: QtGui.WidthRendering
+1/1 Test #14: QtGui.WidthRendering .............***Failed    0.19 sec
+Width pixels thin=238 thick=1452
+FAIL: Wide line fixture does not cross sphere center
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.19 sec*proc (1 test)
+
+Total Test time (real) =   0.19 sec
+
+The following tests FAILED:
+	 14 - QtGui.WidthRendering (Failed)                     qt-gui
+Errors while running CTest

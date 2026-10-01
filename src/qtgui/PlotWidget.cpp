@@ -266,6 +266,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       // over the central body, while the far side is occluded by its disk.
       struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; };
       QVector<Primitive> objects;
+      std::deque<PlotPoint> clippedPoints;
       auto depth=[&](const PlotPoint &p) { return osg::Vec3d(p.x,p.y,p.z)*camera.outward; };
       for (const auto &curve:data->curves) {
          if (!curve.visible) continue;
@@ -273,11 +274,26 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          const auto first=data->firstVisibleFrame(curve,visibleFrame);
          for (const auto &point:curve.points) {
             if (point.frame>visibleFrame || point.frame<first) continue;
-            if (perspectiveScale(point)==0) { previous=nullptr; last=nullptr; continue; }
-            if (curve.lines && previous && point.connect) objects.append({(depth(*previous)+depth(point))/2,&curve,previous,&point});
+            if (curve.lines && previous && point.connect) {
+               const PlotPoint *a=previous,*b=&point;
+               if (data->perspective) {
+                  const double near=std::max(1e-6,std::min(extent*.01,camera.distance*.001));
+                  const double da=camera.distance-(osg::Vec3d(a->x,a->y,a->z)-camera.target)*camera.outward-near;
+                  const double db=camera.distance-(osg::Vec3d(b->x,b->y,b->z)-camera.target)*camera.outward-near;
+                  if (da<0 && db<0) a=nullptr;
+                  else if (da<0 || db<0) {
+                     const double t=da/(da-db); PlotPoint clipped=*a;
+                     clipped.x=a->x+(b->x-a->x)*t; clipped.y=a->y+(b->y-a->y)*t; clipped.z=a->z+(b->z-a->z)*t;
+                     auto blend=[t](double x,double y) { return x+(y-x)*t; };
+                     clipped.color=QColor::fromRgbF(blend(a->color.redF(),b->color.redF()),blend(a->color.greenF(),b->color.greenF()),blend(a->color.blueF(),b->color.blueF()),blend(a->color.alphaF(),b->color.alphaF()));
+                     clippedPoints.push_back(clipped); if (da<0) a=&clippedPoints.back(); else b=&clippedPoints.back();
+                  }
+               }
+               if (a) objects.append({(depth(*a)+depth(*b))/2,&curve,a,b});
+            }
             previous=&point; last=&point;
          }
-         if (last && curve.showObject) objects.append({depth(*last),&curve,last,nullptr});
+         if (last && curve.showObject && perspectiveScale(*last)>0) objects.append({depth(*last),&curve,last,nullptr});
          for (const auto &marker:data->orbitMarkers(curve,visibleFrame)) {
             const auto &point=*marker.point;
             if (perspectiveScale(point)<=0) continue;
@@ -303,7 +319,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       std::stable_sort(objects.begin(),objects.end(),[](const Primitive &a,const Primitive &b) { return a.depth<b.depth; });
       for (const auto &object:objects) {
          const auto &curve=*object.curve;
-         painter.setPen(QPen(object.a->color,curve.width,curve.style));
+         painter.setPen(QPen(object.a->color,curve.orbitLineWidth(),curve.style));
          const auto pixel=screen(project(*object.a));
          if (object.marker) {
             const double size=curve.orbitMarkerSize;

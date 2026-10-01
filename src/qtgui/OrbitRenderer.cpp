@@ -20,6 +20,7 @@
 #include <osg/PointSprite>
 #include <osg/Program>
 #include <osg/Shader>
+#include <osg/Uniform>
 #include <osg/ComputeBoundsVisitor>
 #include <osg/LightSource>
 #include <osg/Depth>
@@ -30,6 +31,7 @@
 #include <algorithm>
 #include <cmath>
 #include <map>
+#include <limits>
 
 namespace {
 osg::Vec4 color(const QColor &c) { return {float(c.redF()),float(c.greenF()),float(c.blueF()),1}; }
@@ -40,6 +42,40 @@ osg::ref_ptr<osg::Program> markerProgram(bool endpoint)
    const std::string shape=endpoint ? "float r=length(v); if (r>0.001 && r>abs(v.x*v.y/(r*r))) discard;" : "float r=dot(v,v); if (r>0.25 || r<0.16) discard;";
    program->addShader(new osg::Shader(osg::Shader::FRAGMENT,"#version 120\nvoid main() { vec2 v=gl_PointCoord-vec2(0.5); "+shape+" gl_FragColor=gl_Color; }"));
    return program;
+}
+osg::ref_ptr<osg::Program> wideLineProgram()
+{
+   auto program=new osg::Program;
+   program->addShader(new osg::Shader(osg::Shader::VERTEX,R"(#version 120
+uniform vec2 viewportSize;
+uniform float lineWidth;
+void main() {
+   vec4 p=gl_ModelViewProjectionMatrix*gl_Vertex;
+   vec4 q=gl_ModelViewProjectionMatrix*vec4(gl_MultiTexCoord0.xyz,1.0);
+   vec2 delta=(q.xy/q.w-p.xy/p.w)*viewportSize;
+   vec2 direction=length(delta)>0.000001 ? normalize(delta) : vec2(1.0,0.0);
+   vec2 offset=(vec2(-direction.y,direction.x)*gl_MultiTexCoord0.w-direction)*lineWidth/viewportSize;
+   p.xy+=offset*p.w;
+   gl_Position=p; gl_FrontColor=gl_Color;
+})"));
+   program->addShader(new osg::Shader(osg::Shader::FRAGMENT,"#version 120\nvoid main() { gl_FragColor=gl_Color; }"));
+   return program;
+}
+// Clip before dividing by homogeneous w in the width shader. This also keeps
+// segments through/behind the camera from flipping their screen-space direction.
+bool clipLine(osg::Vec3d &a,osg::Vec3d &b,osg::Vec4 &ca,osg::Vec4 &cb,const osg::Matrixd &projection)
+{
+   for (const int side:{1,-1}) {
+      const auto p=osg::Vec4d(a.x(),a.y(),a.z(),1)*projection,q=osg::Vec4d(b.x(),b.y(),b.z(),1)*projection;
+      const double da=p.w()+side*p.z(),db=q.w()+side*q.z();
+      if (da<0 && db<0) return false;
+      if (da<0 || db<0) {
+         const double fraction=da/(da-db); const auto position=a+(b-a)*fraction;
+         const auto tint=ca+(cb-ca)*float(fraction);
+         if (da<0) { a=position; ca=tint; } else { b=position; cb=tint; }
+      }
+   }
+   return true;
 }
 osg::ref_ptr<osg::Image> readTexture(const QString &path)
 {
@@ -167,6 +203,8 @@ struct OrbitRenderer::Scene
    osg::ref_ptr<osg::LightSource> illumination=new osg::LightSource;
    std::map<int,Curve> curves;
    osg::ref_ptr<osg::Program> markerShaders[2]={markerProgram(false),markerProgram(true)};
+   osg::ref_ptr<osg::Program> widthShader=wideLineProgram();
+   double nativeLineWidthLimit=1;
    double zoom=1,yaw=.55,pitch=.45;
    QPointF pan;
    quint64 frame=std::numeric_limits<quint64>::max();
@@ -380,24 +418,58 @@ struct OrbitRenderer::Scene
          auto positions=new osg::Vec3Array; auto colors=new osg::Vec4Array;
          const PlotPoint *last=nullptr;
          unsigned start=0;
+         const bool wide=source.lines && source.importedLineWidth.has_value() && source.orbitLineWidth()*pixelRatio>nativeLineWidthLimit;
+         // Shader expansion can cross a viewport edge beyond the world-space
+         // centerline's bound; let the GPU clip that geometry instead.
+         curve.root->setCullingActive(!wide); curve.track->setCullingActive(!wide);
          const auto first=model->firstVisibleFrame(source,frame);
          for (const auto &p:source.points) {
             if (p.frame>frame || p.frame<first) continue;
             if (!p.connect && positions->size()>start) {
-               if (source.lines) geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP,start,positions->size()-start));
+               if (source.lines && !wide) geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP,start,positions->size()-start));
                start=positions->size();
             }
             positions->push_back(osg::Vec3(p.x,p.y,p.z)); colors->push_back(color(p.color)); last=&p;
          }
-         if (source.lines && positions->size()>start) geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP,start,positions->size()-start));
+         if (source.lines && !wide && positions->size()>start) geometry->addPrimitiveSet(new osg::DrawArrays(GL_LINE_STRIP,start,positions->size()-start));
          geometry->setVertexArray(positions); geometry->setColorArray(colors,osg::Array::BIND_PER_VERTEX);
          geometry->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-         geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(source.width*pixelRatio));
+         geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(std::min(double(std::numeric_limits<float>::max()),source.orbitLineWidth()*pixelRatio)));
          if (last && source.showObject && source.radius==0 && !curve.modelLoaded) {
             geometry->addPrimitiveSet(new osg::DrawArrays(GL_POINTS,positions->size()-1,1));
             geometry->getOrCreateStateSet()->setAttributeAndModes(new osg::Point(7*pixelRatio));
          }
          curve.track->removeDrawables(0,curve.track->getNumDrawables()); curve.track->addDrawable(geometry);
+         if (wide) {
+            osg::ref_ptr<osg::Vec3Array> vertices=new osg::Vec3Array;
+            osg::ref_ptr<osg::Vec4Array> neighbors=new osg::Vec4Array,tints=new osg::Vec4Array;
+            const auto projection=viewer.getCamera()->getViewMatrix()*viewer.getCamera()->getProjectionMatrix();
+            const PlotPoint *previous=nullptr;
+            for (const auto &p:source.points) {
+               if (p.frame>frame || p.frame<first) continue;
+               if (previous && p.connect) {
+                  osg::Vec3d a(previous->x,previous->y,previous->z),b(p.x,p.y,p.z);
+                  auto ca=color(previous->color),cb=color(p.color);
+                  if (clipLine(a,b,ca,cb,projection)) {
+                     auto vertex=[&](const osg::Vec3d &point,const osg::Vec3d &other,float side,const osg::Vec4 &tint) {
+                        vertices->push_back(osg::Vec3(point.x(),point.y(),point.z())); neighbors->push_back(osg::Vec4(other.x(),other.y(),other.z(),side)); tints->push_back(tint);
+                     };
+                     vertex(a,b,1,ca); vertex(a,b,-1,ca); vertex(b,a,1,cb);
+                     vertex(a,b,1,ca); vertex(b,a,1,cb); vertex(b,a,-1,cb);
+                  }
+               }
+               previous=&p;
+            }
+            if (!vertices->empty()) {
+               auto triangles=new osg::Geometry; isolateArrays(triangles);
+               triangles->setVertexArray(vertices.get()); triangles->setTexCoordArray(0,neighbors.get()); triangles->setColorArray(tints.get(),osg::Array::BIND_PER_VERTEX);
+               triangles->addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLES,0,vertices->size()));
+               auto *state=triangles->getOrCreateStateSet(); state->setMode(GL_LIGHTING,osg::StateAttribute::OFF); state->setAttributeAndModes(widthShader,osg::StateAttribute::ON);
+               state->addUniform(new osg::Uniform("viewportSize",osg::Vec2(width*pixelRatio,height*pixelRatio)));
+               state->addUniform(new osg::Uniform("lineWidth",float(std::min(double(std::numeric_limits<float>::max()),source.orbitLineWidth()*pixelRatio))));
+               curve.track->addDrawable(triangles);
+            }
+         }
          curve.markers->removeDrawables(0,curve.markers->getNumDrawables());
          const auto markers=model->orbitMarkers(source,frame);
          for (const bool endpoint:{false,true}) {
@@ -446,6 +518,10 @@ void OrbitRenderer::releaseGraphics()
 }
 void OrbitRenderer::initializeGL()
 {
+   GLfloat aliased[2]={1,1},smooth[2]={1,1};
+   context()->functions()->glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE,aliased);
+   context()->functions()->glGetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE,smooth);
+   scene->nativeLineWidthLimit=std::max(1.0,double(std::min(aliased[1],smooth[1])));
    scene->context=new osgViewer::GraphicsWindowEmbedded(0,0,qRound(width()*devicePixelRatioF()),qRound(height()*devicePixelRatioF()));
    scene->viewer.getCamera()->setGraphicsContext(scene->context);
    scene->viewer.getCamera()->setDrawBuffer(GL_COLOR_ATTACHMENT0);

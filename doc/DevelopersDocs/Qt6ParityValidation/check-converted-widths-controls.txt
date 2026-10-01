@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 14: QtGui.ConvertedWidths
+1/2 Test #14: QtGui.ConvertedWidths ............   Passed    0.69 sec
+    Start 17: QtGui.ObjectDrawingLayout
+2/2 Test #17: QtGui.ObjectDrawingLayout ........   Passed    0.18 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   0.86 sec*proc (2 tests)
+
+Total Test time (real) =   0.87 sec

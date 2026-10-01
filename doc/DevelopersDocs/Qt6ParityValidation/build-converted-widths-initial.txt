@@ -1,0 +1,29 @@
+[1/18] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[3/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitObjectDrawingDialog.cpp.o
+[4/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/VisualModelDialog.cpp.o
+[5/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[6/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotModel.cpp.o
+[7/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CelestialBodyPanel.cpp.o
+[8/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[9/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitRenderer.cpp.o
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp: In function ‘osg::ref_ptr<osg::Image> {anonymous}::readTexture(const QString&)’:
+/home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:47:86: warning: ‘QImage QImage::mirrored(bool, bool) &&’ is deprecated: Use flipped(Qt::Orientations) instead [-Wdeprecated-declarations]
+   47 |    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/QImage:1,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/PlotModel.hpp:3,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.hpp:2,
+                 from /home/dan/GIT/GMAT/GMAT/src/qtgui/OrbitRenderer.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qimage.h:223:26: note: declared here
+  223 |     [[nodiscard]] QImage mirrored(bool horizontally = false, bool vertically = true) &&
+      |                          ^~~~~~~~
+[10/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotWidget.cpp.o
+[11/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[12/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[13/18] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[14/18] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[15/18] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[16/18] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[17/18] Building CXX object src/qtgui/CMakeFiles/GmatQtConvertedVisibilityTests.dir/tests/ConvertedVisibilityTests.cpp.o
+[18/18] Linking CXX executable src/qtgui/GmatQtConvertedVisibilityTests

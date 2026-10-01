@@ -1,0 +1,3 @@
+Width pixels thin=238 thick=1452
+Depth sample 320,225 clear=#00ff00 body=#5252d5 visible=1 radius=100 points=1
+FAIL: Wide geometry ignores sphere depth

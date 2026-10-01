@@ -4,6 +4,7 @@
 #include <QRegularExpression>
 #include <array>
 #include <cmath>
+#include <limits>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -61,6 +62,23 @@ QJsonObject objectSizesJson(const QMap<QString,quint32> &values)
 {
    QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),double(it.value())); return result;
 }
+QMap<QString,double> objectWidths(const QJsonValue &value)
+{
+   if (!value.isObject()) throw std::runtime_error("Line widths must be objects of named finite values >= 1");
+   QMap<QString,double> result; const auto values=value.toObject();
+   const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+   for (auto it=values.begin();it!=values.end();++it) {
+      const double width=it.value().toDouble(-1);
+      if (!identifier.match(it.key()).hasMatch() || !it.value().isDouble() || !std::isfinite(width) || width<1 || width>std::numeric_limits<float>::max())
+         throw std::runtime_error("Line widths need valid names and finite pixel values >= 1 within the renderer's range");
+      result.insert(it.key(),width);
+   }
+   return result;
+}
+QJsonObject objectWidthsJson(const QMap<QString,double> &values)
+{
+   QJsonObject result; for (auto it=values.cbegin();it!=values.cend();++it) result.insert(it.key(),it.value()); return result;
+}
 QString formatVector(const std::array<double,3> &value)
 {
    return QString("[%1 %2 %3]").arg(QString::number(value[0],'g',17),QString::number(value[1],'g',17),QString::number(value[2],'g',17));
@@ -87,6 +105,17 @@ QMap<QString,quint32> qtObjectSizes(const QString &json)
 QString qtObjectSizesJson(const QMap<QString,quint32> &sizes)
 {
    return QString::fromUtf8(QJsonDocument(objectSizesJson(sizes)).toJson(QJsonDocument::Compact));
+}
+
+QMap<QString,double> qtObjectWidths(const QString &json)
+{
+   QJsonParseError error; const auto document=QJsonDocument::fromJson(json.toUtf8(),&error);
+   if (error.error!=QJsonParseError::NoError || !document.isObject()) throw std::runtime_error("Invalid line widths: expected named finite pixel values >= 1");
+   return objectWidths(document.object());
+}
+QString qtObjectWidthsJson(const QMap<QString,double> &widths)
+{
+   return QString::fromUtf8(QJsonDocument(objectWidthsJson(widths)).toJson(QJsonDocument::Compact));
 }
 
 QtScriptConversion convertOpenFramesViews(const QString &source)
@@ -160,8 +189,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
             // OF Add resets the ordered object list and its display defaults.
-            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear();
-            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; }
+            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; }
          } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
             const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
@@ -170,6 +199,15 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
                if (flags[i]!="true" && flags[i]!="false") { result.error=it.key()+"."+property+": expected true or false."; return result; }
                // OF applies the available prefix and leaves omitted objects at defaults.
                if (i<names.size()) destination[names[i]]=flags[i]=="true";
+            }
+         } else if (property=="DrawLineWidth") {
+            if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+".DrawLineWidth: expected a bracketed real array."; return result; }
+            const auto widths=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+            for (int i=0;i<widths.size();++i) {
+               bool ok=false; const double width=widths[i].toDouble(&ok);
+               if (!ok || !std::isfinite(width) || (i<names.size() && (width<1 || width>std::numeric_limits<float>::max()))) { result.error=it.key()+".DrawLineWidth: selected objects need finite widths >= 1 within the renderer's range."; return result; }
+               // OF's bulk real setter validates/applies only the selected prefix.
+               if (i<names.size()) display.objectLineWidths[names[i]]=width;
             }
          } else if (property=="DrawMarkerSize") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+".DrawMarkerSize: expected a bracketed unsigned integer array."; return result; }
@@ -198,7 +236,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth")) {
          output.append("% Qt conversion: "+lines[i]);
          result.notes.append(name+"."+key+": independent per-object drawing retained in Qt metadata.");
       } else if (types[name]=="OpenFramesInterface" && key=="DrawGrid") {
@@ -248,6 +286,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       cameraSetting.objectCenters=displaySettings.value(plot).objectCenters;
       cameraSetting.objectEndpoints=displaySettings.value(plot).objectEndpoints;
       cameraSetting.objectMarkerSizes=displaySettings.value(plot).objectMarkerSizes;
+      cameraSetting.objectLineWidths=displaySettings.value(plot).objectLineWidths;
       const auto frame=values.value("ViewFrame","CoordinateSystem");
       const bool trajectory=values.value("ViewTrajectory")=="On";
       const bool segment=frame.contains('.');
@@ -367,6 +406,7 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.objectCenters.isEmpty()) object.insert("objectCenters",objectFlagsJson(setting.objectCenters));
    if (!setting.objectEndpoints.isEmpty()) object.insert("objectEndpoints",objectFlagsJson(setting.objectEndpoints));
    if (!setting.objectMarkerSizes.isEmpty()) object.insert("objectMarkerSizes",objectSizesJson(setting.objectMarkerSizes));
+   if (!setting.objectLineWidths.isEmpty()) object.insert("objectLineWidths",objectWidthsJson(setting.objectLineWidths));
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -427,6 +467,7 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       if (object.contains("objectCenters")) setting.objectCenters=objectFlags(object.value("objectCenters"));
       if (object.contains("objectEndpoints")) setting.objectEndpoints=objectFlags(object.value("objectEndpoints"));
       if (object.contains("objectMarkerSizes")) setting.objectMarkerSizes=objectSizes(object.value("objectMarkerSizes"));
+      if (object.contains("objectLineWidths")) setting.objectLineWidths=objectWidths(object.value("objectLineWidths"));
       if (object.contains("segmentFrame")) {
          setting.segmentFrame=object.value("segmentFrame").toString();
          if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*\\.[A-Za-z][A-Za-z0-9_]*$").match(setting.segmentFrame).hasMatch() || object.contains("automaticTrajectory"))

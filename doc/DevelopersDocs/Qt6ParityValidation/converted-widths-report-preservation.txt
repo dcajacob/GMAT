@@ -1,0 +1,8 @@
+PASS static full-byte report comparison; no mission repeated.
+Width viewer: converted-widths-wayland-20261001.report.txt
+Reused independent reference: converted-visibility-wayland-20261001.reference.txt
+Bytes: 990
+Rows: 2; columns: 19 (elapsed time and complete Cartesian states of A/B/C).
+SHA-256: 1273493f914d401d5510ac2f3421bbc0f6b4d8c54f7aa8a93d25ab3d6c8d13ab
+The native --widths invocation passed its source/control/Unicode/reopened-report assertions before failing the final separate renderer probe.
+Final isolated native renderer passes without repeating that engine/control workflow.
