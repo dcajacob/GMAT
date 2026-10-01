@@ -211,6 +211,83 @@ QString patchResourceConfiguration(const QString &source,const QString &name,con
    const bool changedForceSelector=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) {
       return forceSelectors.contains(field) || field=="Drag.AtmosphereModel" || field=="Drag.AtmosphereBody";
    });
+   const bool dragCreator=changed.contains("Drag") || changed.contains("Drag.AtmosphereModel") || changed.contains("Drag.AtmosphereBody");
+   const bool otherCreator=std::any_of(changed.cbegin(),changed.cend(),[&](const QString &field) { return field!="Drag" && forceSelectors.contains(field); });
+   if (replaceOwnedConfiguration && dragCreator && !otherCreator) {
+      const QRegularExpression value("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z0-9_.]+)\\s*=\\s*(.*?)\\s*;?\\s*$",QRegularExpression::DotMatchesEverythingOption);
+      auto rhs=[&](const QString &field) { const auto codes=pending.values.value(field); return codes.isEmpty() ? QString() : value.match(codes.last()).captured(2); };
+      auto creator=rhs("Drag"); if (creator.isEmpty()) creator=rhs("Drag.AtmosphereModel");
+      if (creator.isEmpty()) creator="None";
+      QStringList aliases={"AtmosphereModel","AtmosphereBody"};
+      for (const auto *configuration:{&old,&pending}) for (auto it=configuration->values.cbegin();it!=configuration->values.cend();++it)
+         if (it.key().startsWith("Drag.")) aliases.append(it.key().mid(5));
+      const auto dragField=[&](const QString &field) { return field=="Drag" || field.startsWith("Drag.") || (aliases.contains(field) && !old.values.contains(field) && !pending.values.contains(field)); };
+      QString firstCommand;
+      if (!firstMissionStatement.isEmpty()) { const auto commands=statements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
+      const auto parsed=statements(source); QVector<Statement> configuration;
+      auto boundary=source.size(); bool located=firstCommand.isEmpty();
+      for (const auto &statement:parsed) {
+         if (QRegularExpression("^\\s*BeginMissionSequence\\b").match(statement.code).hasMatch() || (!firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) {
+            int first=0; while (first<statement.code.size() && statement.code[first].isSpace()) ++first;
+            boundary=statement.positions[first]; located=true; break;
+         }
+         configuration.append(statement);
+      }
+      if (!located) throw std::runtime_error("Cannot locate the mission boundary safely. Add BeginMissionSequence before changing the drag creator.");
+      if (creator=="None") {
+         QStringList remove;
+         for (const auto &statement:configuration) { const auto match=value.match(statement.code); if (match.hasMatch() && dragField(match.captured(1))) remove.append(match.captured(1)); }
+         // Disabling removes this family's assignments only. Other forces and
+         // their unprinted defaults/expressions must not be reconstructed.
+         QString block="GMAT "+name+".Drag = None;\n";
+         for (const auto &field:changed) if (!dragField(field)) remove.append(field);
+         for (const auto &entry:pending.ordered) if (changed.contains(entry.first) && !dragField(entry.first)) block+=entry.second+'\n';
+         return setConfigurationBlock(source,name,remove,block,firstMissionStatement);
+      }
+      struct Edit { qsizetype position,length; QString text; };
+      QVector<Edit> edits; bool creatorFound=false,bodyFound=false; qsizetype afterCreator=-1,firstDependent=boundary;
+      const bool creatorChanged=changed.contains("Drag") || changed.contains("Drag.AtmosphereModel");
+      const bool bodyChanged=changed.contains("Drag.AtmosphereBody"); const auto body=rhs("Drag.AtmosphereBody");
+      auto replace=[&](const Statement &statement,const QRegularExpressionMatch &match,const QString &text) {
+         const auto positions=statement.positions.mid(match.capturedStart(2),match.capturedLength(2));
+         if (positions.isEmpty()) throw std::runtime_error("Cannot locate the drag creator value safely.");
+         for (auto position:positions) edits.append({position,1,{}});
+         for (auto position:statement.continuations) if (position>=positions.first() && position<=positions.last()) edits.append({position,1,{}});
+         edits.append({positions.first(),0,text});
+      };
+      for (const auto &statement:configuration) {
+         const auto match=value.match(statement.code); if (!match.hasMatch() || !dragField(match.captured(1))) continue;
+         const auto field=match.captured(1); int first=0; while (first<statement.code.size() && statement.code[first].isSpace()) ++first;
+         firstDependent=std::min(firstDependent,statement.positions[first]);
+         if (field=="Drag" || field=="Drag.AtmosphereModel" || field=="AtmosphereModel") {
+            creatorFound=true; if (creatorChanged) replace(statement,match,creator);
+            auto end=statement.positions.last()+1,cursor=end;
+            while (cursor<source.size() && (source[cursor]==' ' || source[cursor]=='\t')) ++cursor;
+            if (cursor<source.size() && source[cursor]=='%') { const auto newline=source.indexOf('\n',cursor); end=newline<0 ? source.size() : newline+1; }
+            afterCreator=std::max(afterCreator,end);
+         }
+         if (field=="Drag.AtmosphereBody" || field=="AtmosphereBody") { bodyFound=true; if (bodyChanged && !body.isEmpty()) replace(statement,match,body); }
+      }
+      QString insert;
+      if (!creatorFound) insert+="GMAT "+name+".Drag = "+creator+";\n";
+      if (bodyChanged && !bodyFound && !body.isEmpty()) insert+="GMAT "+name+".Drag.AtmosphereBody = "+body+";\n";
+      if (!insert.isEmpty()) {
+         const auto position=creatorFound ? afterCreator : firstDependent;
+         edits.append({position,0,(position>0 && source[position-1]!='\n' ? "\n" : "")+insert});
+      }
+      // Delete mapped RHS characters before inserting at the same offset.
+      // Comments inside continued statements remain at their source positions.
+      std::stable_sort(edits.begin(),edits.end(),[](const Edit &a,const Edit &b) { return a.position!=b.position ? a.position>b.position : a.length>b.length; });
+      QString candidate=source; for (const auto &edit:edits) candidate.replace(edit.position,edit.length,edit.text);
+      changed.removeAll("Drag"); changed.removeAll("Drag.AtmosphereModel"); changed.removeAll("Drag.AtmosphereBody");
+      QString block; for (const auto &entry:pending.ordered) if (changed.contains(entry.first)) block+=entry.second+'\n';
+      // Remove an explicitly changed legacy leaf alias too, so its old value
+      // cannot survive beside the new body-qualified assignment.
+      for (const auto &field:QStringList(changed)) if (field.startsWith("Drag.")) {
+         const auto alias=field.mid(5); if (!old.values.contains(alias) && !pending.values.contains(alias)) changed.append(alias);
+      }
+      return changed.isEmpty() ? candidate : setConfigurationBlock(candidate,name,changed,block,firstMissionStatement);
+   }
    if (replaceOwnedConfiguration && changedForceSelector) {
       // A root selector creates its owned force. Moving just that selector
       // behind unchanged subfields makes valid source fail interpretation.

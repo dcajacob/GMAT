@@ -98,7 +98,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/propagator/PropagatorSelectDialog.hpp` | Active PropagatePanel caller audited: configured PropSetup single selection, OK updates a pending grid row and Cancel leaves it unchanged. Qt PropagationForm/PropagationGroupsDialog provide configured propagator dropdowns and paired spacecraft groups. CompatibilityTests covers Cancel, a selected second propagator, empty/duplicate-spacecraft rejection, pending Apply, synchronized execution and save/reopen; WorkflowTests covers source/modifier/formation and variational flags. Broader propagation cases remain under PropagatePanel. |
 | `src/gui/asset/GroundStationPanel.hpp` | Active wx ID/elevation/body/state/horizon/location controls and colors audited. Grouped Qt station editor, dependent conversion/labels/units, color and horizon-mask pickers implemented. Cancel, pending Apply, paired state/location ordering, Earth/Mars geometry, compact scrolling, exact Undo/Redo/save/reopen, contact intervals, mask execution/clear and missing-mask recovery covered. Station hardware/media/error models and broader bodies/contact cases remain unqualified. |
 | `src/gui/debugger/InspectorPanel.hpp` | Active wx-only DebuggerCommandFactory registration in GmatApp and transient, non-serialized Breakpoint caller audited. Qt now supplies mission-tree breakpoint markers, Run/Debug, read-only live DEBUG_INSPECT/current Parameter values, spacecraft/all filters, command stepping, resume on Close/Escape and End/Stop. DebuggerTests exercises real context menus, For/If/propagation, Target/Optimize iteration values/reports, script events and function step-over, independent byte-exact reports, source/pending protection, Undo/Redo/save/reopen, Pause, safe main-window close and build/initialization/execution recovery. Offscreen/native X11 keyboard routing, Help and exposed native Wayland inspection were verified. Fresh desktop input and larger nested combinations remain under shared qualification; function-local stepping is outside this main-mission inspector. |
-| `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
+| `src/gui/forcemodel/DragInputsDialog.hpp` | Nine wx weather controls audited. Grouped Qt atmosphere/body/shape selection, dependent weather/Schatten controls and input pickers implemented. Earth MSISE90/JacchiaRoberts/NRLMSISE00 and Exponential configuration, validation/Cancel, paired Apply, Undo/Redo, save/reopen, density/trajectory reports and file-error recovery covered. ForceSourceTests adds narrow creator switching, first creation, disable/re-enable and mixed ErrorControl Apply without regenerating unrelated force settings. CSSI historic/predicted and selected Schatten prediction covered; broader file contents, coverage boundaries, Schatten modes and non-Earth cases remain to qualify. |
 | `src/gui/coordsystem/CoordSysCreateDialog.hpp` | Basic creation plus dedicated Axes dialog tested; MOEEq epoch and constrained-frame edits checked. Remaining origin and specialized-mode cases pending. |
 | `src/gui/coordsystem/CoordSystemConfigPanel.hpp` | Axis replacement, dependent field exposure, protected built-ins, failed-edit rollback, Undo and save/reopen tested. Broader modes pending. |
 | `src/gui/coordsystem/CoordPanel.hpp` | ObjectReferenced radial frame, MOEEq epoch edits and Sun-aligned LocalAlignedConstrained transforms checked, including save/reopen. Other modes and dependency cases pending. |
@@ -4664,3 +4664,44 @@ broader run. build-covariance.txt and build-covariance-display.txt record the ta
 builds, which also rebuild the actual application/bin/GmatQt dependency. The full
 Linux acceptance checklist remains in progress with its remaining plugin/source
 operations and native desktop-input gates intact.
+
+
+## Drag creator transitions retain unrelated force source
+
+Changing the drag creator or its atmosphere body previously selected the generic
+owned-force fallback, reconstructing the full edited force model from canonical
+output. That could replace unrelated source syntax and make unprinted defaults
+explicit. Drag-only creator transitions now replace the creator/body RHS at its
+original position, retaining qualified or legacy creator spelling and comments.
+Missing creators are inserted ahead of their dependent fields. Disabling removes
+only drag-family assignments, including legacy aliases, and writes Drag = None.
+Other scalar changes in the same Apply, such as ErrorControl, remain atomic.
+Changed legacy leaf aliases are removed beside their canonical replacement.
+The explicit or engine-located implicit mission boundary protects runtime code;
+unlocatable boundaries fail before changing the source. Other root-force selector
+transitions still use the existing ordered reconstruction fallback and retain
+that source-fidelity limitation for further work.
+
+ForceSourceTests covers mapped continuations/comments, unqualified aliases,
+body-only and missing creator/body assignments, both mission boundaries and
+refusal when the implicit boundary cannot be located. Its execution cases use
+actual Resources/MDI atmosphere controls for first NRLMSISE00 creation, switching
+to Exponential through a shipped-style creator, disabling and re-enabling drag.
+Cancel and invalid-flux correction, pending acceptance, retained mixed Apply,
+unchanged primary/gravity/point-mass source, unprinted SRP/relativistic/polyhedron
+defaults, exact Undo/Redo and Unicode save/reopen are checked. Six reported states
+agree with independently configured 600-second scripts for the three resulting
+configurations. Body-only and continued-alias checks here concern source mapping;
+no new non-Earth numerical regime is claimed. Existing atmosphere weather/SPAD
+and native dialog evidence is reused without rerunning it.
+
+The first execution fixture omitted the explicit Earth primary selection needed
+by the existing engine to support drag. check-force-source-initial.txt and
+check-force-source-fixture.txt retain those failures; no engine change was made.
+After fixing the fixture, check-force-source-transition.txt records the focused
+suite passing in 0.84 seconds. build-force-source.txt records its build and the
+actual application dependency rebuild. No full-suite or native-layout rerun was
+needed for this source-only change. The prior complete document regression and
+focused covariance evidence remain the baseline; the new suite is available in
+check-qt for later broader verification. Full replacement qualification and its
+outstanding source/plugin and native desktop-input gates remain in progress.

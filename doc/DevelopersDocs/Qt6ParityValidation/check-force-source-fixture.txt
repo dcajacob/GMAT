@@ -1,0 +1,50 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 15: QtGui.ForceSource
+1/1 Test #15: QtGui.ForceSource ................***Failed    0.20 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL: Force fixture execution failed: Moderator is updating data files...
+Moderator is creating core engine...
+Previous SPICE diagnostics retained. New diagnostics: /home/dan/GIT/GMAT/GMAT/application/bin/../output/GMATSpiceKernelError.39.txt
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT/GMAT/application/bin/../data/time/tai-utc.dat
+2026-09-30 20:37:46 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+1: : **** ERROR **** ODEModel Exception Thrown: Attempted to add a drag force for the body Earth, but that body is not set as a primary body, so it does not support additional forces. in line:
+   "  15: DragFM.Drag.AtmosphereModel = NRLMSISE00; % preserve creator comment"
+
+2: : **** ERROR **** Interpreter Exception: : The scripted force type "Drag" is not a known force or force model setting
+ in line:
+   "  16: DragFM.Drag.F107 = 160;"
+
+3: : **** ERROR **** Interpreter Exception: : The scripted force type "Drag" is not a known force or force model setting
+ in line:
+   "  17: DragFM.Drag.F107A = 155;"
+
+4: : **** ERROR **** Interpreter Exception: : The scripted force type "Drag" is not a known force or force model setting
+ in line:
+   "  18: DragFM.Drag.MagneticIndex = 3;"
+
+
+========================================
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.20 sec*proc (1 test)
+
+Total Test time (real) =   0.20 sec
+
+The following tests FAILED:
+	 15 - QtGui.ForceSource (Failed)                        qt-gui
+Errors while running CTest

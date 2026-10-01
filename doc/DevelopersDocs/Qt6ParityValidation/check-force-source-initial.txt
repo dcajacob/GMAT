@@ -1,0 +1,17 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 15: QtGui.ForceSource
+1/1 Test #15: QtGui.ForceSource ................***Failed    0.20 sec
+This plugin does not support propagateSizeHints()
+FAIL: 
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.20 sec*proc (1 test)
+
+Total Test time (real) =   0.21 sec
+
+The following tests FAILED:
+	 15 - QtGui.ForceSource (Failed)                        qt-gui
+Errors while running CTest
