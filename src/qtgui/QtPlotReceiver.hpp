@@ -196,6 +196,7 @@ private:
       bool ignoreTimeSequence = false;
       bool solverData = false;
       QMap<QString,QColor> segmentColors;
+      QMap<QString,QColor> orbitColors,targetColors;
       bool automaticGeometry = false;
       QRect automaticRect;
       bool useInitialView = true;

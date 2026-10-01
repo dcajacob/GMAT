@@ -52,7 +52,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/command/VaryPanel.hpp` | Solver selector offers boundary-value solvers and optimizers; writable numeric variable picker added. Selected Vary variable and Achieve target survive save/reopen and solve correctly. Missing option controls can be inserted from engine defaults without losing pending edits; edited bounds/step and reopened solve covered. Solver capability flags now control field enabling; DC/Yukon switching, Cancel and unknown-solver recovery preserve pending values. Other plugin-specific variable cases pending. |
 | `src/gui/command/FindEventsPanel.hpp` | Event-locator selector and Append controls covered; manual EclipseLocator replace/append execution and round trips tested. Other locator types and failure modes remain pending. |
 | `src/gui/command/PropagatePanel.hpp` | Single parameter/value stop selection and source-preserving controls covered; periapsis/apoapsis selectors and execution covered; direction/tolerance and multiple-stop editing covered; multi-propagator assignment editing and synchronized two-spacecraft execution covered; STM/A-matrix controls and two-spacecraft execution covered. Segment color override now has pending controls, named/RGB picker, invalid correction, Cancel, exact Undo/Redo/save/reopen and independent calculation and Orbit/Ground color-history agreement; see the segment-color appendix. Covariance controls and broader formation/mode combinations remain pending. |
-| `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested; destination-specific execution and complex syntax audit pending. |
+| `src/gui/command/AssignmentPanel.hpp` | CommandForm destination/expression controls plus writable destination picker (including user strings/arrays); source-preservation tests. Picker filtering tested. Actual MDI spacecraft runtime OrbitColor/TargetColor string/RGB expression edits, rejected-syntax correction, retained Apply, exact Undo/Redo/Unicode save/reopen, independent reports and Orbit/Ground color histories are now covered; see the runtime-color appendix. Other destination-specific execution and complex syntax audit remain pending. |
 | `src/gui/command/CallFunctionPanel.hpp` | Function resource selector plus ordered input/output argument browsers provided. Cancel, quoted/nested comma preservation, invalid numeric outputs, reordering and multi-output execution after save/reopen covered. Broader object/string/array signature execution pending. |
 | `src/gui/command/EndFiniteBurnPanel.hpp` | Typed finite-burn/spacecraft selectors; fuel remains constant during coast after selected EndFiniteBurn. Other thruster/tank models pending. |
 | `src/gui/command/MinimizePanel.hpp` | Optimizer selector and single-parameter objective browser provided. Solver selector tested; objective-browser execution combinations pending. |
@@ -4955,3 +4955,60 @@ GmatQt-R2026a relink and GmatQt launcher recreation. No full-suite or repeated
 numerical run followed this layout-only adjustment. Original acceptance gates,
 native Wayland main-window restore/input, portals and remaining plugin/workflow
 requirements remain open; Windows/macOS remain deferred.
+
+
+## Ground Track runtime spacecraft palettes and assignment controls
+
+The segment-color control checkpoint did not establish mission-time default
+color changes. OrbitPlot maintains runtime orbit/target palettes when Assignment
+notifies the publisher. The current GroundTrack subscriber's inherited color
+callbacks did nothing, and Qt's SolverData action fell back to the configuration
+copy of each spacecraft. A mission that assigned Green or an RGB color therefore
+showed those colors in Orbit View but restored the original red in Ground Track.
+check-runtime-colors-initial.txt confirms the discrepancy: Ground retained blue
+segment overrides and the peer's yellow but had zero green/RGB default samples.
+
+GroundTrack now includes the live sandbox spacecraft's orbit/target palettes as
+optional display metadata immediately before its existing solver-state/sample
+callbacks. Qt validates the entire palette packet before replacing the stored
+maps. Accepted samples select the segment override or live default; trial samples
+select the live target palette. Reinitialize clears all color maps. No color
+metadata is inferred from script text or from stale configured objects, and
+existing history keeps its captured per-sample colors. The sampled palettes also
+support views that start receiving data after a runtime color change, although a
+specific late-Toggle execution is not qualified here. This changes display
+metadata only: state publication, coordinate conversion, forces and numerical
+algorithms stay unchanged. Receivers may ignore the optional action, using the
+same existing Ground Track callback channel as segment and solver metadata.
+
+RuntimeColorTests is a separate focused executable; it does not repeat the older
+color-dialog or plugin suites. Its two-spacecraft mission contains an initial
+default arc, runtime named orbit/target assignments, a blue segment override for
+both spacecraft, a second RGB default assignment and an arc with the override
+off. Both plots must contain the resulting named/RGB/blue/default histories,
+including the peer's unchanged yellow default. Actual Mission/MDI assignment
+expression controls change the named/RGB and target values. A rejected unclosed
+string preserves the original mission and pending panel; correction applies in
+the retained MDI window. Each successful change has exact source Undo/Redo;
+the force/spacecraft/report configuration remains exact, followed by Unicode
+save/reopen and execution.
+
+The independent uncolored mission and the independently colored reference
+produce identical twelve-state report bytes. Reopened GUI edits reproduce those
+reports and both spacecraft's Orbit/Ground histories, with a 1e-8 bound on display
+coordinate differences. Direct display-state transitions after the actual target
+assignment confirm Cyan/Magenta trial colors and restored live default colors.
+That last check exercises palette selection without another numerical solve;
+the existing solver execution/replay evidence is reused. A rerun is specifically
+included to verify previous runtime defaults do not leak into the initial
+red/yellow arc. Other assignment destinations, broader runtime/Toggled-view and
+solver combinations remain under their original qualification limits.
+
+check-runtime-colors-palettes.txt records the corrected focused check passing in
+1.23 seconds. build-runtime-colors-palettes.txt records the shared subscriber,
+Qt receiver and actual GmatQt-R2026a rebuild and GmatQt launcher recreation.
+No widget layout or rendering algorithm changed, so the existing native dialog,
+viewer/rendering and complete regression evidence is reused. No full-suite or
+native-layout rerun was needed. Full Linux replacement qualification remains
+active, including the original outstanding Wayland restore/input, portal and
+plugin/workflow gates. Windows/macOS remain deferred.

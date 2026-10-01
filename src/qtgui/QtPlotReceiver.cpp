@@ -681,7 +681,16 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       entry->solverData=argument=="On";
       for (auto &curve:entry->data->curves)
          if (auto *point=Moderator::Instance()->GetSpacePoint(curve.name.toStdString()))
-            curve.color=entry->solverData ? rgb(point->GetCurrentTargetColor()) : entry->segmentColors.value(curve.name,rgb(point->GetCurrentOrbitColor()));
+            curve.color=entry->solverData ? entry->targetColors.value(curve.name,rgb(point->GetCurrentTargetColor())) : entry->segmentColors.value(curve.name,entry->orbitColors.value(curve.name,rgb(point->GetCurrentOrbitColor())));
+   } else if (command=="SpacecraftColors") {
+      const auto fields=argument.split('|'); if (fields.size()%3!=0) return false;
+      QMap<QString,QColor> orbit,target;
+      for (int i=0;i<fields.size();i+=3) {
+         bool orbitOk=false,targetOk=false; const auto orbitValue=fields[i+1].toUInt(&orbitOk),targetValue=fields[i+2].toUInt(&targetOk);
+         if (fields[i].isEmpty() || orbit.contains(fields[i]) || !orbitOk || !targetOk) return false;
+         orbit[fields[i]]=rgb(orbitValue); target[fields[i]]=rgb(targetValue);
+      }
+      entry->orbitColors=orbit; entry->targetColors=target;
    } else if (command=="SegmentColor") {
       const auto fields=argument.split('|'); if (fields.size()<2 || (fields[0]!="On" && fields[0]!="Off")) return false;
       bool ok=false; const auto value=fields[1].toUInt(&ok); if (!ok) return false;
@@ -717,7 +726,7 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       if (command=="LatitudeLineCount") entry->data->latitudeLines=value; else entry->data->longitudeLines=value;
    } else if (command=="Reinitialize" || command=="ClearData" || command=="Reset") {
       entry->data->clear(); entry->data->stations.clear();
-      if (command=="Reinitialize") { entry->data->curves.clear(); entry->segmentColors.clear(); }
+      if (command=="Reinitialize") { entry->data->curves.clear(); entry->segmentColors.clear(); entry->orbitColors.clear(); entry->targetColors.clear(); }
    } else if (command=="Refresh" || command=="RunComplete") {
       if (command=="RunComplete") entry->data->endOfRun=true;
       refresh(*entry,true);

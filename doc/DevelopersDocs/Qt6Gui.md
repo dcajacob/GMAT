@@ -1133,6 +1133,11 @@ labels, flags and comments stay in place. Orbit View and Ground Track retain
 the colors of each segment in their trajectory histories; solver trial samples
 keep the target-color palette.
 
+Mission assignments to spacecraft OrbitColor and TargetColor also reach Ground
+Track. Each displayed sample uses the live mission's current colors, so removing
+a segment override restores the updated spacecraft color. Earlier trajectory
+samples keep their original colors, and a rerun starts from the saved configuration.
+
 ### Propagator assignments
 
 **Propagators and spacecraft…** opens an adjustable table of propagators and their

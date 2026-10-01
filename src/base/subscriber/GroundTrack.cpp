@@ -1698,6 +1698,20 @@ bool GroundTrack::Distribute(const double * dat, Integer len)
    if (!hasPosition)
       return true;
 
+   // Colors belong to the live sandbox objects, not the configuration copies.
+   // Include them as display metadata so runtime assignments and late-opened
+   // views use the current default/solver palettes. Segment overrides remain
+   // a separate callback and do not modify spacecraft color properties.
+   std::ostringstream colors;
+   colors << "SpacecraftColors=";
+   for (unsigned int i = 0; i < theSats.size(); ++i)
+   {
+      if (i > 0) colors << '|';
+      colors << theSats[i]->GetName() << '|' << theSats[i]->GetCurrentOrbitColor()
+             << '|' << theSats[i]->GetCurrentTargetColor();
+   }
+   PlotInterface::TakeGroundTrackAction(instanceName, colors.str());
+
    // The ground-track callback has no run-state argument. Supply it as an
    // optional action for receivers that distinguish trial and accepted arcs.
    PlotInterface::TakeGroundTrackAction(instanceName,

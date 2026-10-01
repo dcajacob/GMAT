@@ -1,0 +1,53 @@
+[1/53] cd /home/dan/GIT/GMAT/GMAT/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT/GMAT/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT/GMAT/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT/GMAT/application/bin/gmat_startup_qt.txt
+[2/53] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[3/53] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[4/53] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/GroundTrack.cpp.o
+[5/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/bin/libGmatBase.so.R2026a
+[6/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/bin/libGmatBase.so
+[7/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEphemPropagator.so.R2026a
+[8/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEventLocator.so.R2026a
+[9/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libDataInterface.so.R2026a
+[10/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExtraPropagators.so.R2026a
+[11/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so.R2026a
+[12/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libDataInterface.so
+[13/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPythonInterface_py314.so
+[14/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libFormation.so.R2026a
+[15/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatFunction.so.R2026a
+[16/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatEstimation.so.R2026a
+[17/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so.R2026a
+[18/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatEstimation.so
+[19/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libNewParameters.so.R2026a
+[20/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libMsise00.so.R2026a
+[21/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libPolyhedronGravity.so.R2026a
+[22/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libProductionPropagators.so.R2026a
+[23/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libScriptTools.so.R2026a
+[24/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libSaveCommand.so.R2026a
+[25/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libEKF.so.R2026a
+[26/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEphemPropagator.so
+[27/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEKF.so
+[28/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libEventLocator.so
+[29/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExternalForceModel_py314.so
+[30/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libExtraPropagators.so
+[31/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libFormation.so
+[32/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libGmatFunction.so
+[33/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libMsise00.so
+[34/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libNewParameters.so
+[35/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libPolyhedronGravity.so
+[36/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libProductionPropagators.so
+[37/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libThrustFile.so.R2026a
+[38/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libSaveCommand.so
+[39/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libThrustFile.so
+[40/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libScriptTools.so
+[41/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libStation.so.R2026a
+[42/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libStation.so
+[43/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/thinksys/libTLEPropagator.so.R2026a
+[44/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/thinksys/libTLEPropagator.so
+[45/53] Linking CXX shared library /home/dan/GIT/GMAT/GMAT/application/plugins/libYukonOptimizer.so.R2026a
+[46/53] Creating library symlink /home/dan/GIT/GMAT/GMAT/application/plugins/libYukonOptimizer.so
+[47/53] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[48/53] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[49/53] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[50/53] Linking CXX executable /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt-R2026a
+[51/53] Creating executable symlink /home/dan/GIT/GMAT/GMAT/application/bin/GmatQt
+[52/53] Building CXX object src/qtgui/CMakeFiles/GmatQtRuntimeColorTests.dir/tests/RuntimeColorTests.cpp.o
+[53/53] Linking CXX executable src/qtgui/GmatQtRuntimeColorTests
