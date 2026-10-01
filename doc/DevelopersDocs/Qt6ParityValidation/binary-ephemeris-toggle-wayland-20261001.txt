@@ -1,0 +1,15 @@
+Orb accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+SPK: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer two-arc suppression/replay/camera/close-reopen; SPK two coverage arcs and all 26 fixed-step states.
+SPK plugin: both accepted arcs match analytic state; after-coverage start fails with released controls and Unicode reopen/rerun recovery.
+Orb accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Code-500-LittleEndian: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer two-arc suppression/replay/camera/close-reopen; Code-500 continuous 37-state block while only viewers pause/resume.
+Code-500 plugin: complete continuous readback states at 60/180/300 s match analytic circle. Internal ephemeris Toggle gaps remain unqualified.
+Orb accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Code-500-BigEndian: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer two-arc suppression/replay/camera/close-reopen; Code-500 continuous 37-state block while only viewers pause/resume.
+Code-500 plugin: complete continuous readback states at 60/180/300 s match analytic circle. Internal ephemeris Toggle gaps remain unqualified.

@@ -2003,3 +2003,13 @@ state rows remain byte identical across the fix. Native replay/close-reopen,
 Current/None accepted-history agreement and exact source/file recovery are
 recorded in the solver-contained ephemeris qualification appendix. The actual
 application was rebuilt; broader solver/binary cases and desktop gates remain.
+
+
+Binary ephemeris Toggle workflows now have bounded SPK two-arc and Code-500
+continuous-output activation/terminal-Off evidence in both byte orders, with
+complete decoded states, exact source/file recovery, binary Output details/Copy
+path and native viewer/plugin readback. Internal Code-500 Toggle gaps and SPK
+reader gap traversal exposed legacy engine limitations and remain unqualified;
+the continuous Code-500 case keeps Export enabled while only viewers pause.
+See the binary Toggle qualification appendix for raw failures and scope limits.
+No numerical engine or product behavior was changed in that increment.

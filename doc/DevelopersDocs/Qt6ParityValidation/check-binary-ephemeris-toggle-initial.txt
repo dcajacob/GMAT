@@ -1,0 +1,18 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 54: QtGui.BinaryEphemerisToggle
+1/1 Test #54: QtGui.BinaryEphemerisToggle ......***Failed    0.42 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+FAIL SPK: Circular state mismatch at 5 s column 4: 7.5459434917132695 vs 7.545943671637743
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.42 sec*proc (1 test)
+
+Total Test time (real) =   0.43 sec
+
+The following tests FAILED:
+	 54 - QtGui.BinaryEphemerisToggle (Failed)              qt-gui
+Errors while running CTest

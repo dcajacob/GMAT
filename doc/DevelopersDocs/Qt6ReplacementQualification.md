@@ -39,7 +39,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/hardware/PowerSystemConfigPanel.hpp` | wx field inventory audited; grouped general/bus/solar/shadow controls and shadow-body picker covered. List reconstruction, invalid-body rollback and Undo tested. Epoch-format conversion, failed conversion recovery and paired Apply/Undo covered; GUI-configured nuclear and unshadowed solar report execution covered; eclipse attenuation and decay cases pending. |
 | `src/gui/hardware/TankAndMixDialog.hpp` | Combined tank/ratio editor, first-tank addition, type filtering, reorder with paired ratios, paired Apply, round trips and two-tank chemical/electric burns covered. Mass-decrement off, clear-all save/reopen and failed-burn restore covered. Broader tank combinations remain pending. |
 | `src/gui/event/EventLocatorPanel.hpp` | Common and Contact/Eclipse/Intrusion-specific controls audited. Grouped Qt editor provides typed targets/bodies/observers/sensors/shadow types, paired epoch conversion, interval/light-time/report dependencies and input/output pickers. Pending Apply/Cancel, validation/rollback, Undo/Redo/save/reopen, bounded contacts, Transmit/Receive corrections, selected detailed reports, eclipse intervals, shipped Mercury transit and failed-output-directory recovery covered. FixedGrid execution, region/spacecraft-observer contacts, additional formats/coverage boundaries and disk-write failures remain pending. |
-| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. SolverToggle covers actual Current-mode differential-corrector loop toggles. OptimizerToggle/NestedSolverToggle now add Yukon and a complete inner targeter inside the disabled interval: exact source/Undo/Redo/Unicode reopen, independent full reports/known goals, suppression/separated resumption, Ground/XY accepted paths matching None, full camera/replay and native close/reopen. EphemerisToggle now covers actual ordered EphemerisFile/Orbit/Ground/XY selection, initially disabled writer activation, two enabled arcs, terminal Off, OEM/STK complete state rows, analytic circle and script-reference reports, correct resumed STK segment starts, Output access, invalid-subscriber correction and repeat-run cleanup. New command/resource/report placement stays within the workspace; native Wayland controls and scenes inspected. SolverEphemerisToggle adds first-command DC/OEM and Yukon/STK scopes, accepted-only ephemeris with complete trial reports, Current/None accepted-history agreement and native recovery. Ground Track now names empty curves before the first solver breakpoint, removing accumulated trials without changing calculations. Binary/Code-500 ephemeris toggles, nested solver ephemeris and other mixed/deeper combinations remain pending. |
+| `src/gui/command/TogglePanel.hpp` | Subscriber checklist and On/Off dropdown; empty selection, Cancel, filtering and dual-report suppression/resumption after save/reopen tested. TogglePlotTests now covers actual MDI selection of Orbit/Ground/XY subscribers, exact Undo/Redo/Unicode save/reopen, independent state reports, suppressed samples with separated resumed arcs, live colors changed while disabled and close/reopen retention. CompletedDisabledPlots adds final ToggleOff with recent-segment display, retained full Latest history and unchanged source/state reports. SolverToggle covers actual Current-mode differential-corrector loop toggles. OptimizerToggle/NestedSolverToggle now add Yukon and a complete inner targeter inside the disabled interval: exact source/Undo/Redo/Unicode reopen, independent full reports/known goals, suppression/separated resumption, Ground/XY accepted paths matching None, full camera/replay and native close/reopen. EphemerisToggle now covers actual ordered EphemerisFile/Orbit/Ground/XY selection, initially disabled writer activation, two enabled arcs, terminal Off, OEM/STK complete state rows, analytic circle and script-reference reports, correct resumed STK segment starts, Output access, invalid-subscriber correction and repeat-run cleanup. New command/resource/report placement stays within the workspace; native Wayland controls and scenes inspected. SolverEphemerisToggle adds first-command DC/OEM and Yukon/STK scopes, accepted-only ephemeris with complete trial reports, Current/None accepted-history agreement and native recovery. Ground Track now names empty curves before the first solver breakpoint, removing accumulated trials without changing calculations. BinaryEphemerisToggle adds actual SPK two-arc output and Code-500 initial activation/terminal Off in both byte orders, binary Output details/Copy path, complete decoded/script-reference states, native viewer recovery and plugin readback. Code-500 internal Toggle gaps corrupt the independent script output and remain unqualified; nested solver ephemeris and other mixed/deeper combinations remain pending. |
 | `src/gui/command/GmatCommandPanel.hpp` | Generic editable command text, interpretation/object validation, failure rollback and shared inspection buttons audited. Qt full-mission transactional Apply retains the text fallback; InspectionTests exercises ClearPlot to MarkPoint correction, missing-reference rollback, Unicode save/reopen and report invariance. Other generic command types remain partial. |
 | `src/gui/command/ManeuverPanel.hpp` | Typed impulsive-burn and spacecraft selectors; Cancel, label/comment preservation, save/reopen and inertial delta-V execution tested. Backprop checkbox and reverse inertial delta-V tested. BurnTests extends execution to GUI-configured MJ2000Eq/VNB/LVLH/SpacecraftBody/EarthFixed, fuel depletion and backward state/fuel restoration. Broader spacecraft/frame/error combinations pending. |
 | `src/gui/command/ScriptEventPanel.hpp` | wx comment/body separation, fixed Begin/End labels, resizable editor areas and pending Save/validation audited. Qt Script event dialog provides separate plain comments and a highlighted, numbered script body with a splitter; preserves named/inline outer boundaries and nested content. MissionTests covers opening without changes, comment-only preservation, Cancel, invalid-command rollback and correction, nested branches/events and quoted marker literals, single pending Undo/Redo, exact mission Undo/Redo, Unicode save/reopen and empty-body execution. Native Wayland layout/execution inspected. Common editor/menu workflows remain under their separate inventory audits. |
@@ -124,7 +124,7 @@ Every row begins unaudited; a panel's existence is not proof of Qt equivalence.
 | `src/gui/solarsys/BarycenterPanel.hpp` | Active body add/remove/clear and colors audited. Qt membership checklist, retained order, nonempty/unique/celestial-body validation, pending/Cancel/rollback, exact Undo/Redo/save/reopen, mass-weighted positions and dependent frame/libration execution covered. Built-in membership is protected while colors remain editable and persist without creating a new definition. Broader membership/epoch regimes pending. |
 | `src/gui/solarsys/CelestialBodyOrbitPanel.hpp` | Runtime source choices, protected built-in source/file/central-body fields, NAIF ID and SPK lists audited. New Asteroid Ceres from the resource dialog, copied Unicode SPK, ephemeris-relative reports and separate scripts agree; unknown-ID and missing-SPK execution failures recover after correction. Dormant wx TwoBody/source-file controls are not enabled. Wider bodies, coverage and relative kernel paths remain unqualified. |
 | `src/gui/app/CompareTextDialog.hpp` | Source audited: this compiled legacy class has no caller in the current wx GUI. GmatMainFrame::CompareFiles uses CompareFilesDialog for text/numeric comparison, mapped to the qualified Qt comparison workspace above. No separate exposed workflow was found. |
-| `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. EphemerisToggle adds initially disabled activation, OEM/STK two-arc suppression/resumption and terminal Off, exact GUI source transactions, complete independent state rows/reports and analytic circular states, Output access and repeat-run cleanup. STK resumed segment metadata now uses its first actual data epoch, with pre/post state rows unchanged. Native Wayland mixed viewer/workspace checks pass. SolverEphemerisToggle adds bounded DC/OEM and Yukon/STK output within first-command solver scopes: 26 accepted ephemeris rows, complete 16/40-row trial/accepted reports, known goals and independent Current/None history agreement, with native recovery evidence. CK quaternion, covariance/acceleration, binary toggles, nested/broader solver ephemeris, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
+| `src/gui/subscriber/EphemerisFilePanel.hpp` | Active wx output, sampling, interval and dependent-format controls audited. Grouped Qt editor, typed spacecraft/frame selection, editable sampling/endpoints, paired epoch conversion, format-specific byte order/units/events and filename chooser implemented. OEM (custom extension), STK meters, Code-500 both byte orders and SPK exports/readback covered by pending/Cancel, invalid-edit rollback, exact Undo/Redo, Unicode script save/reopen, independent report/state checks, Output access, directory preservation, coverage and missing-file recovery. EphemerisToggle adds initially disabled activation, OEM/STK two-arc suppression/resumption and terminal Off, exact GUI source transactions, complete independent state rows/reports and analytic circular states, Output access and repeat-run cleanup. STK resumed segment metadata now uses its first actual data epoch, with pre/post state rows unchanged. Native Wayland mixed viewer/workspace checks pass. SolverEphemerisToggle adds bounded DC/OEM and Yukon/STK output within first-command solver scopes: 26 accepted ephemeris rows, complete 16/40-row trial/accepted reports, known goals and independent Current/None history agreement, with native recovery evidence. BinaryEphemerisToggle adds SPK two coverage arcs/all 26 states and both Code-500 byte orders with initial activation/terminal Off/all 37 continuous states, exact source/file recovery, binary Output details/Copy path and native viewer/plugin readback. Code-500 internal gaps and SPK reader gap traversal remain unqualified; CK quaternion, covariance/acceleration, nested/broader solver ephemeris, broader frames/bodies/event boundaries and disk-write cases remain unqualified. |
 | `src/gui/burn/FiniteBurnSetupPanel.hpp` | Active wx individual/bulk thruster add/remove operations audited; Qt typed checklist and ordered selection serve the workflow. Cancel/pending Apply, paired-engine execution, analytic fuel/coast, report equivalence, Undo/Redo, Unicode save/reopen, wrong/missing/duplicate references, unattached-thruster recovery and clear-all covered. Empty active burns produce the same explicit engine diagnosis as scripts; GUI reselection recovers. Broader electric/shared-power combinations pending. |
 | `src/gui/burn/ImpulsiveBurnSetupPanel.hpp` | Active wx fields audited. Grouped delta-V/frame/optional mass-depletion editor, single typed fuel tank, Isp/gravity dependency and corrective validation implemented. Inertial and all four Local axes, EarthFixed and zero delta-V covered by pending/Cancel, Undo/Redo, Unicode save/reopen, script-reference state, analytic fuel and VNB/LVLH transforms, backward restoration, invalid edit rollback, unattached-tank recovery and mass-off tank clear. Broader bodies, attitudes, epochs and fuel limits pending. |
 | `src/gui/app/FileUpdateDialog.hpp` | Source and GmatMainFrame Help caller audited. The menu exists only in TESTING mode. FileUpdaterSVN::CheckForUpdates explicitly returns a non-Windows-not-implemented error before performing updates; the later selected-file/restart batch workflow is Windows-only. No active Linux update workflow is omitted. Windows deployment remains deferred; no Qt Windows update qualification is claimed. |
@@ -149,7 +149,7 @@ Every row requires real-engine evidence, not just registration.
 | Plugin | Configuration / execution / reports / recovery evidence |
 | --- | --- |
 | `../plugins/libDataInterface` | DataInterfaceTests: GUI input-file selection and format, typed Set target/source and all/seven field subsets, independent epoch/state/Cr and propagated reports, exact Undo/Redo/Unicode save/reopen, Output access, missing/malformed/invalid-epoch/missing-field/unknown-field recovery, Task-9 input and converted shortened shipped OF example covered. Broader bodies/frames, multiple records, repeated imports within one mission and filesystem permission failures remain pending. |
-| `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. Broader frames/bodies, segment gaps, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
+| `../plugins/libEphemPropagator` | Mars Express SPK configured through Qt kernel lists, converted viewer, exact round trips, report/view agreement and missing-clock recovery tested. EphemerisTests adds generated OEM, STK, Code-500 both byte orders and SPK readback, GUI-selected first spacecraft input files and propagator steps, Unicode script round trips, independent circular-orbit states, FromSpacecraft start clamping, after-coverage rejection and missing-file restore/reopen. BinaryEphemerisToggle now checks generated SPK coverage spans for two arcs and every fixed-step state, plugin readback within both arcs, after-coverage failure/reopen recovery, and Code500 continuous readback in both byte orders. Internal SPK reader gap traversal completes under the legacy skip policy and remains unqualified; Code-500 internal Toggle gaps produce mislabeled states in the independent writer reference. Broader frames/bodies, backward/boundary stepping and multiple-kernel coverage cases remain pending. |
 | `../plugins/libEKF` | KalmanTests: one-hour, noise-free GPS version of the shipped filter/smoother example with SNC process noise and Gauss-Markov drag. Typed run/reference/solve-for controls, owned model settings, warm-start input/output browsing and paired epoch conversion, both continuation boundaries, exact state/covariance CSV equivalence with independent script configuration, report access, pending/Cancel/Undo/Redo/Unicode mission reopen, invalid-edit rollback and missing/malformed/late-seed recovery covered. Native Wayland panels/execution passed. CovarianceTests now qualifies the actual spacecraft initial covariance grid, pending/Cancel and invalid-value recovery, retained Apply, exact Undo/Redo/Unicode save/reopen and independently configured cold-start state/covariance CSV agreement; the native preview confirms layout and full stored precision. PluginCreation now covers actual creation/removal menus for EKF, Smoother, ProcessNoiseModel and EstimatedParameter with exact Undo/Redo and Unicode save/reopen. Full-day/noisy or real data, other measurement/model regimes, residual graphics, prediction, warm-start smoothing and broader malformed/disk cases remain pending. |
 | `../plugins/libGmatEstimation` | EstimationTests: Qt tracking path/type table, typed simulator/estimator and station/solve-for lists, observation output selection, typed run commands, noise-free shortened shipped range-skin simulation/batch fit, independent state/observation equivalence, exact Undo/Redo/Unicode script save/reopen, report access, invalid-edit rollback and missing-observation recovery covered. Paired simulator/filter epochs, exact numeric observation boundaries and GUI-configured batch accept/reject frequency thinning and record rejection match independent state and residual edit-flag reports. KalmanTests also covers GPS simulation and concrete RunSmoother serialization, including labels/comments and command edits. Broader measurements, noisy/real data, level-one and other filter regimes, estimator epochs, multiple propagator mappings, pass biases and covariance settings remain pending. |
 | `../plugins/libEventLocator` | CompatibilityTests: edited eclipse lists, exact save/Save As/reopen, invalid-type build recovery, eclipse intervals and Output report access. StationTests: GUI-edited station Cartesian/elevation/mask settings, save/reopen, automatic contact intervals and missing-mask recovery covered. EventLocatorTests: grouped configuration, paired epochs, bounded contacts, Transmit/Receive corrections, ISOYD max-elevation and azimuth/elevation/range reports, eclipse intervals, shipped Mercury intrusion and failed-output-directory restore/reopen covered. FixedGrid execution, region/spacecraft-observer contacts, broader hardware/FOV, remaining formats/coverage boundaries and disk-write failures remain pending. |
@@ -6463,3 +6463,105 @@ Wayland minimize/restore and portal choosers remain unqualified; no compositor
 policy was bypassed or repeated. Binary/Code-500 Toggle, nested solver ephemeris
 and broader state-dependent solver output remain under qualification. The
 original Linux acceptance gates remain active; Windows/macOS are deferred.
+
+
+## Binary Toggle output, continuous Code-500 and reader limits — 2026-10-01
+
+GmatQtEphemerisToggleTests --binary / QtGui.BinaryEphemerisToggle adds three
+bounded actual-MDI cases: SPK, Code-500 LittleEndian and Code-500 BigEndian. The
+Earth point-mass, 7000 km circular state and fixed 10-second propagation fixture
+is unchanged. Initial Export.WriteEphemeris=false is activated by the actual
+ordered Toggle subscriber selector; terminal Off at 360 s suppresses output
+through 420 s. Every case covers empty-selection filtering, Cancel/pending/
+retained Apply, named commands/comments and unrelated bytes, exact Undo/Redo,
+Unicode Save/Save As/reopen, missing-subscriber rollback/correction and repeat-run
+replacement without accumulated data. Command/resource/report windows remain
+inside the workspace and opening a resource preserves existing window geometry.
+
+SPK selects Export/Orb/Ground/XY for all four Toggle commands. Its coverage spans
+are exactly 0–120 and 240–360 s. SpiceOrbitKernelReader queries all 26 fixed-step
+states, including all four coverage endpoints; there is no coverage in the
+disabled interior. The complete queried epoch/six-state rows match an independently
+configured script and an analytic circular orbit. The kernel is unloaded before
+repeat writing, avoiding a stale loaded file. libEphemPropagator then reads valid
+states in each arc at absolute 60 and 300 s in separate configured missions.
+Starting at 420 s is Failed, releases controls and has an ephemeris diagnostic;
+Unicode saved-script reopen/rerun restores the second-arc report byte for byte.
+The retained .reader.txt concatenates the two one-row reports, whose ElapsedSecs
+is 60 relative to each mission's own start (0 and 240 s).
+
+Code-500 is different. Its documented format supports one continuous fixed-step
+block; EphemerisFile::Initialize explicitly sets allowMultipleSegments=false.
+The passing cases select all four outputs for initial On/terminal Off, but only
+Orb/Ground/XY for Pause/Resume. Export therefore remains enabled from 0 to 360 s.
+Code500EphemerisFile decodes all 37 ten-second states, checking UTC, Earth and
+coordinate-system indicator 4, the first/last epochs, complete six-state data
+and the analytic circle. Both byte orders agree on every decoded state. The
+Code500 propagator reads the complete three-state 60/180/300 s report correctly,
+including the period when only viewers are disabled. This is qualification of
+Code-500 activation/finalization with continuous output, not internal Toggle-gap
+qualification.
+
+All three viewers retain exactly 26 points over their two enabled arcs, with no
+disabled interior samples or joined boundary. Orbit/Ground completion and full
+camera XYZ/frame, rendered scenes, Earlier/Latest replay and close/reopen history
+are covered. Binary Output opens its details window with the actual format, full
+Unicode path and byte size; Copy path matches that path. Open folder is visible,
+but was not invoked (no external desktop/file-manager routing claim).
+
+Raw unsuccessful checks are retained and establish explicit limits:
+
+- check-binary-ephemeris-toggle-initial.txt fails an additional SPK 5-second
+  interpolation velocity check (about 1.8e-7 km/s error versus a 2e-8 threshold).
+  check-binary-ephemeris-toggle-readback.txt also fails the existing binary
+  readback threshold at 15 s (about 2.1e-7 versus 2e-7 km/s). The final fixture
+  checks all 26 serialized ten-second nodes with the established binary readback
+  tolerances of 2e-4 km and 2e-7 km/s. Extra between-node interpolation precision
+  remains unqualified; no interpolation implementation or state generation was
+  changed to make those assertions pass.
+- check-binary-ephemeris-toggle-nodes.txt passes SPK's complete GUI/output case,
+  then fails the independently configured Code-500 internal-gap reference before
+  any GUI edits. Decoding its uniform-step slots finds a 240-second position
+  (X=6767.0244744138172 km) at the slot labeled 110 s (analytic X at 110 s is
+  6950.8426898279995 km). The utility accumulates states in one fixed-step data
+  record while the resumed writer resets its requested epochs. A passing
+  independent-script comparison alone would not make those times correct.
+  That gap case remains unresolved; it was not rewritten as passing continuous
+  output evidence or silently filled with invented disabled samples.
+- build-binary-ephemeris-toggle-continuous.txt records a harness compile error
+  from declaring QByteArray and row-list results in one auto declaration. It was
+  corrected in the harness; no stale test executable was run after that build.
+- check-binary-ephemeris-toggle-plugin.txt fails an incorrect expectation that
+  traversing an internal SPK gap must fail. SPKPropagator explicitly uses a legacy
+  skipEphemerisProp policy, while SpiceOrbitKernelReader returns sentinel states
+  for failures inside the overall span and throws outside that span. The mission
+  can complete through the hole. Gap-traversal states are not qualified by the
+  positive within-arc readback cases; no numerical/reader policy rewrite was
+  made. The final recovery test uses a genuine after-coverage failure.
+
+The final build-binary-ephemeris-toggle-accepted.txt rebuilds the affected harness
+and requests the already current GmatQt application. QtGui.BinaryEphemerisToggle
+passes in check-binary-ephemeris-toggle-accepted.txt (3.10 s, 3.11 s wall time).
+This increment changes no product code; the actual application already contains
+the preceding rebuilt Ground initialization fix. No full suite or old complete
+text/solver/viewer/plugin matrix was rerun.
+
+binary-ephemeris-toggle-wayland-20261001.txt passes the three final cases once on
+native Wayland using application/bin/gmat_startup_qt.txt. All three workspace
+captures, SPK Orbit/Ground scenes, BigEndian XY/checklist, and SPK/BigEndian binary
+details captures were inspected. They show accessible Help/Show script/Summary/
+Apply/Close controls, the textured Earth/starfield, Ground map, separated XY arcs,
+ordered four-output selector and binary paths/sizes/Copy path controls. The raw
+.bsp/.eph, complete .decoded.txt, .state.txt, .reader.txt and after-coverage
+.outside.txt evidence are retained. check-binary-ephemeris-toggle-report-preservation.txt
+compares these artifacts without rerunning missions: all four-row ReportFiles
+are byte identical to the previously qualified direct OEM report (SHA-256
+1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431), and all 37
+decoded plus three reader rows agree byte for byte across Code-500 byte orders.
+
+Native programmatic widgets/rendering do not qualify fresh desktop input,
+top-level Wayland minimize/restore or portal choosers. No compositor policy was
+bypassed or repeated. Code-500 internal gaps, SPK reader gap traversal, additional
+interpolation precision, binary/nested solver output and broader numerical regimes
+remain unqualified. The original Linux replacement goal stays active;
+Windows/macOS remain deferred and MATLAB remains outside the selected runtime.

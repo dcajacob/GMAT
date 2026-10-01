@@ -1,0 +1,31 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 54: QtGui.BinaryEphemerisToggle
+1/1 Test #54: QtGui.BinaryEphemerisToggle ......***Failed    1.16 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Orb accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+Ground accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+XY accepted=26 retained=26 separated enabled arcs=2 terminal disabled
+SPK: PASS actual MDI Ephemeris/Orbit/Ground/XY ordered Toggle selection, empty filtering/Cancel/pending/retained Apply, exact source/Undo/Redo/Unicode Save/Save As/reopen; initially disabled ephemeris activation, final Off through 420 s, every ephemeris state analytically circular and full script-reference rows/reports equal, metadata/finalization/Output access, invalid-subscriber rollback/correction and clean repeat-run; viewer two-arc suppression/replay/camera/close-reopen; SPK two coverage arcs and all 26 fixed-step states.
+FAIL Code-500: Circular state mismatch at 110 s column 0: 6767.0244744138172 vs 6950.8426898279995
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.16 sec*proc (1 test)
+
+Total Test time (real) =   1.17 sec
+
+The following tests FAILED:
+	 54 - QtGui.BinaryEphemerisToggle (Failed)              qt-gui
+Errors while running CTest

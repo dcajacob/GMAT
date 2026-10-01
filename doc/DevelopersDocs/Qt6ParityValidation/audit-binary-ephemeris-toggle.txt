@@ -1,0 +1,48 @@
+Binary ephemeris Toggle qualification audit, 2026-10-01
+
+Selected Linux runtime only; no product/numerical engine changes. New --binary
+fixture and QtGui.BinaryEphemerisToggle reuse actual MDI Toggle selection and
+source/window recovery checks for SPK and Code-500 in both byte orders.
+
+Affirmative evidence:
+- SPK: coverage spans0..120 and240..360; all26 fixed-step epoch/six-state rows
+  queryable, analytically circular and equal the independent configured script.
+- Code-500: initial On and terminal Off, Export continuously enabled0..360 while
+  only viewers pause/resume; all37 fixed-step decoded states in both byte orders.
+- Orb/Ground/XY two-arc26-point retention, no disabled samples/joined gaps,
+  camera XYZ/frame, replay, close/reopen, resource/command/report viewport bounds.
+- Ordered selection/filtering/empty rejection/Cancel/pending/retained Apply,
+  exact labels/comments/unrelated source/Undo/Redo/Unicode Save/Save As/reopen,
+  missing-subscriber rollback/correction and repeat-run output replacement.
+- Binary Output details verify format/Unicode path/size and Copy path; external
+  Open folder routing not invoked or qualified.
+- EphemPropagator: valid SPK states in each arc, after-coverage failure with
+  released controls and Unicode reopen/rerun; continuous Code500 states60/180/300.
+- All complete four-row numerical reports equal prior OEM report byte for byte.
+  Both Code-500 endian decoded37 rows and reader3 rows agree byte for byte.
+- Final affected harness rebuilt; actual GmatQt requested and already current.
+  New suite passes3.10 s. One final native Wayland run passes all three cases.
+  No unrelated suites or prior full matrices rerun.
+
+Explicit negative evidence/source contracts:
+- First two checks failed additional SPK5-second interpolation velocity limits.
+  Final26-node checks use established binary readback tolerances2e-4 km/2e-7 km/s;
+  between-node precision remains unqualified, with no interpolation changes.
+- Node check passes SPK, then fails independent Code-500 internal-gap reference
+  before GUI edits: a240-second position is stored at a uniform-step110-second
+  slot. Initialize disallows multiple segments; WriteDataSegment accumulates
+  states in a fixed-step record while resumed interpolation requests reset.
+  The continuous positive case does not establish gap correctness.
+- Continuous build has a harness auto-declaration compile error; corrected in
+  next build, with no stale executable test run.
+- Plugin check expected gap traversal to fail, but SPKPropagator explicitly uses
+  skipEphemerisProp=true, and SpiceOrbitKernelReader's in-span failed states are
+  sentinels. The overall mission may complete through a hole. Actual gap-state
+  correctness/recovery is unqualified; the final positive failure/recovery uses
+  an epoch after the entire span. No numerical/reader policy rewrite.
+
+Limits: Code-500 internal gaps, SPK gap traversal, extra interpolation precision,
+binary/nested solver cases, wider bodies/frames/disk cases remain unqualified.
+Native widget evidence does not qualify fresh desktop input, top-level Wayland
+minimize/restore or portals. No compositor bypass. Windows/macOS deferred.
+Full original Linux replacement goal stays active; this audit is not completion.

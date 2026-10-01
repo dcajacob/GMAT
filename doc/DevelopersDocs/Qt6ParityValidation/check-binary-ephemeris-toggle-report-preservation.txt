@@ -1,0 +1,6 @@
+SPK: complete four-state ReportFile byte identical to previously qualified direct OEM report; SHA-256 1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431.
+Code-500-LittleEndian: complete four-state ReportFile byte identical to previously qualified direct OEM report; SHA-256 1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431.
+Code-500-BigEndian: complete four-state ReportFile byte identical to previously qualified direct OEM report; SHA-256 1e11c446e1337836e40593aee92fb1057e2ab4920f55eadc81fc5e86c9c7c431.
+Code-500 endian comparison: all 37 .decoded.txt rows byte identical after decoding/readback.
+Code-500 endian comparison: all 3 .reader.txt rows byte identical after decoding/readback.
+SPK decoded evidence: all 26 epoch/six-state rows, two enabled arc epochs 0..120/240..360 s; no disabled interior row.
