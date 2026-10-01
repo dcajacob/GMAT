@@ -54,6 +54,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    OrbitRenderer.cpp OrbitRenderer.hpp
    OrbitCamera.hpp
    StarCatalog.cpp StarCatalog.hpp
+   PlotPlaybackControls.cpp PlotPlaybackControls.hpp
    PlotModel.cpp PlotModel.hpp PlotWidget.cpp PlotWidget.hpp QtPlotReceiver.cpp QtPlotReceiver.hpp)
 target_link_libraries(GmatQtFrontend PUBLIC Qt6::Widgets Qt6::OpenGLWidgets GmatBase GmatUtil ${OPENSCENEGRAPH_LIBRARIES})
 target_include_directories(GmatQtFrontend PRIVATE ${OPENSCENEGRAPH_INCLUDE_DIRS})
@@ -152,6 +153,9 @@ if(GMAT_QT_BUILD_TESTS)
    target_link_libraries(GmatQtWorkflowTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtPlotTests tests/PlotTests.cpp)
    target_link_libraries(GmatQtPlotTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtSharedPlaybackTests tests/SharedPlaybackTests.cpp)
+   target_link_libraries(GmatQtSharedPlaybackTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtSharedPlaybackTests GmatQt)
    add_executable(GmatQtMissionTests tests/MissionTests.cpp)
    target_link_libraries(GmatQtMissionTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtCompatibilityTests tests/CompatibilityTests.cpp)
@@ -292,6 +296,7 @@ if(GMAT_QT_BUILD_TESTS)
          RESOURCE_LOCK gmat_qt_engine WORKING_DIRECTORY "$<TARGET_FILE_DIR:GmatQt>")
    endfunction()
    set(qt_test_startup "$<TARGET_FILE_DIR:GmatQt>/gmat_startup_qt.txt")
+   add_qt_test(QtGui.SharedPlayback GmatQtSharedPlaybackTests "${qt_test_startup}")
    if(UNIX AND NOT APPLE AND QT_XVFB_RUN)
       add_test(NAME QtGui.NativeWindows COMMAND ${QT_XVFB_RUN} -a
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
@@ -440,5 +445,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtWelcomeTests)
    add_dependencies(check-qt GmatQtParameterSelectionTests)
    add_dependencies(check-qt GmatQtDebuggerTests)
+   add_dependencies(check-qt GmatQtSharedPlaybackTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

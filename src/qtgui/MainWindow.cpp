@@ -1,6 +1,8 @@
 #include "ReportViewer.hpp"
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
+#include "PlotPlaybackControls.hpp"
+#include <QPainter>
 #include "MissionNavigation.hpp"
 #include "WelcomeDialog.hpp"
 #include <QScopedValueRollback>
@@ -297,7 +299,8 @@ MainWindow::MainWindow()
          }
       }
    });
-   plots->changed = [this] { refreshOutput(); };
+   plots->changed = [this] { refreshOutput(); if (plotPlayback) plotPlayback->syncFromReceiver(); };
+   plots->replayChanged = [this] { if (plotPlayback) plotPlayback->syncFromReceiver(); };
    plots->saveProjection=[this](const QString &name,bool perspective,double fov) { return savePlotProjection(name,perspective,fov); };
    plots->protectedPaths=[this] {
       QStringList paths{scriptPath,startupFile};
@@ -525,6 +528,21 @@ MainWindow::MainWindow()
    stopAction->setObjectName("stopMission");
    editingActions.removeOne(stopAction);
    auto *debug=add(run,"Debug mission…",QStyle::SP_MediaPlay,QKeySequence("Ctrl+F5"),[this] { debugMission(); }); debug->setObjectName("debugMission");
+   // A bug pictogram distinguishes Debug from Run even without a theme icon.
+   QPixmap bug(32,32); bug.fill(Qt::transparent);
+   {
+      QPainter painter(&bug); painter.setRenderHint(QPainter::Antialiasing);
+      painter.setPen(QPen(palette().buttonText().color(),2.5,Qt::SolidLine,Qt::RoundCap));
+      for (int y:{14,20,26}) { painter.drawLine(5,y-2,11,y); painter.drawLine(21,y,27,y-2); }
+      painter.drawLine(12,7,9,3); painter.drawLine(20,7,23,3);
+      painter.setBrush(palette().buttonText()); painter.drawEllipse(QRectF(12,5,8,8));
+      painter.setBrush(QColor(230,150,40)); painter.drawEllipse(QRectF(10,10,12,19));
+      painter.drawLine(16,12,16,27);
+   }
+   debug->setIcon(QIcon(bug));
+   toolbar->addSeparator();
+   plotPlayback=new PlotPlaybackControls(*plots,toolbar);
+   toolbar->addWidget(plotPlayback);
    stepAction=run->addAction("Step command"); stepAction->setObjectName("stepMission"); stepAction->setShortcut(QKeySequence("F10")); stepAction->setShortcutContext(Qt::ApplicationShortcut);
    connect(stepAction,&QAction::triggered,this,[this] { stepMission(); });
    auto *clearBreakpoints=run->addAction("Clear breakpoints"); clearBreakpoints->setObjectName("clearBreakpoints"); editingActions.append(clearBreakpoints);
@@ -703,6 +721,8 @@ MainWindow::~MainWindow()
    for (const auto &document:scriptDocuments) if (document->editor) disconnect(document->editor->document(),nullptr,this,nullptr);
    for (const auto &document:scriptDocuments) if (auto *window=dynamic_cast<ScriptSubWindow *>(document->window.data())) window->mayClose={};
    plots->changed = {};
+   plots->replayChanged = {};
+   plotPlayback->stop();
    Moderator::SetUiInterpreter(nullptr);
    if (ready) Moderator::Instance()->Finalize();
    ListenerManagerInterface::SetListenerManager(nullptr);

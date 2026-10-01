@@ -1,0 +1,2 @@
+This plugin does not support propagateSizeHints()
+PASS: distinct Debug bug icon; shared Orbit/Ground/XY Start, Play/Pause, Latest, speed, scrubbing, unequal histories, incoming/reset data, local override, close/reopen, clear/rerun; table excluded; source histories retained. Offscreen only.

@@ -16,6 +16,7 @@ class QCloseEvent;
 class QtMessageReceiver;
 class QtInterpreter;
 class QtPlotReceiver;
+class PlotPlaybackControls;
 class QtSolverListenerManager;
 class EditablePanel;
 class HelpController;
@@ -122,6 +123,7 @@ private:
    std::unique_ptr<QtMessageReceiver> receiver;
    std::unique_ptr<QtInterpreter> interpreter;
    std::unique_ptr<QtPlotReceiver> plots;
+   PlotPlaybackControls *plotPlayback=nullptr;
    std::unique_ptr<QtSolverListenerManager> solverListeners;
    QList<QAction *> editingActions;
    QAction *runAction = nullptr;

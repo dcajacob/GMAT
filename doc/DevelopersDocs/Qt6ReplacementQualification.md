@@ -7341,3 +7341,53 @@ source evidence. Native popup safety/fresh desktop input and the compositor cras
 remain unresolved; no further native rerun was attempted. Existing top-level
 Wayland and portal gates remain open. Full Linux qualification remains active,
 Windows/macOS deferred and MATLAB off.
+
+## Debug icon and shared animation toolbar — 2026-10-01
+
+The user requested a Debug icon distinct from Play and animation controls in the
+same panel that control all displays together. Debug now uses a drawn bug icon
+in the Standard toolbar and Run menu; its Ctrl+F5 shortcut and command remain.
+The adjacent Animation group has Start, Play/Pause, Latest, a history slider,
+position label and 0.25×–4× speed. Its single 30 ms timer drives Orbit, Ground
+Track and XY retained histories. Position means the same percentage within each
+plot's retained interval, not the same simulation epoch. Dynamic data tables
+have current values without retained replay histories and are excluded.
+
+The receiver retains shared position for closed MDI plots; reopening joins that
+position. Global controls stop local timers to avoid competing playback clocks.
+Individual plot actions or scrubbing release shared ownership, stop the master
+timer and change its label to Local. Global Start/Latest also reclaim ownership
+when their slider value is unchanged. Incoming data and history generation
+resets resolve the retained interval at the shared position. Receiver clearing
+stops animation and resets the toolbar; MainWindow shutdown stops the timer and
+disconnects receiver callbacks before engine finalization. The controls remain
+available independently of source-edit actions during a mission.
+
+New QtGui.SharedPlayback / SharedPlaybackTests initializes the selected runtime
+and creates synthetic histories through production receiver callbacks: Orbit
+20 samples, Ground Track 40, XY 10 then 11, plus a live table. It verifies the
+actual MainWindow toolbar and distinct Debug/Run icon pixels and shortcut,
+empty/table-only disablement, start/scrub frame selection for unequal histories,
+XY rendered history change, one shared timer and stopped local timers, speed
+including fractional steps, pause/resume/end/restart, close/reopen at a new
+shared position, local override and same-value Latest reclaim, incoming data,
+cleared history, retained sample counts, clear/rerun state and default toolbar
+fit. It refuses all non-offscreen platforms before constructing MainWindow.
+
+check-shared-animation.txt records the initial focused pass through RunTest.py,
+the same offscreen wrapper used by CTest. check-shared-animation-final.txt
+records a second pass only after compacting toolbar layout; the final capture
+shared-animation-toolbar-offscreen.png was inspected for icon distinction and
+layout. This is offscreen widget/CPU evidence, not native OSG or desktop input
+qualification. No mission, numerical report or old broad suite was repeated.
+build-shared-animation.txt records the initial test-only compile error (Qt
+requires Q_OBJECT for a typed findChild); the corrected harness locates the named
+QWidget then dynamic_casts it. build-shared-animation-final.txt and final
+build-shared-animation-layout.txt record successful frontend/test builds,
+actual application/bin/GmatQt-R2026a relinks and GmatQt launcher recreation.
+
+All live desktop testing remains stopped following the earlier GNOME Shell
+crash. Native animation smoothness, multi-monitor/HiDPI toolbar behavior, theme
+changes, common-epoch playback and table replay are not qualified by this work.
+Top-level Wayland/portal and broader replacement gates remain open. The full
+Linux goal remains active, Windows/macOS deferred and MATLAB off.

@@ -1,0 +1,129 @@
+#include "MainWindow.hpp"
+#include "QtPlotReceiver.hpp"
+#include "PlotPlaybackControls.hpp"
+#include "PlotWidget.hpp"
+#include "TestSettings.hpp"
+#include <QApplication>
+#include <QAction>
+#include <QComboBox>
+#include <QDir>
+#include <QFileInfo>
+#include <QLabel>
+#include <QMdiArea>
+#include <QMdiSubWindow>
+#include <QSlider>
+#include <QTableWidget>
+#include <QTimer>
+#include <QToolBar>
+#include <iostream>
+#include <stdexcept>
+
+static void require(bool condition,const char *message)
+{
+   if (!condition) throw std::runtime_error(message);
+}
+static PlotWidget *plot(QtPlotReceiver &receiver,const QString &name)
+{
+   for (auto *window:receiver.workspaceArea()->subWindowList())
+      if (window->property("plotName")==name) return dynamic_cast<PlotWidget *>(window->widget());
+   throw std::runtime_error("Missing plot widget");
+}
+int main(int argc,char **argv)
+{
+   QApplication app(argc,argv);
+   // Desktop qualification is suspended after the recorded compositor crash.
+   if (QGuiApplication::platformName()!="offscreen") return 2;
+   if (argc<2 || argc>3) return 2;
+   QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("SharedPlayback");
+   const auto startup=QFileInfo(argv[1]).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
+   try {
+      TestSettings settings;
+      MainWindow window; require(window.initialize(startup),"Engine initialization failed"); window.show(); app.processEvents();
+      auto *controls=dynamic_cast<PlotPlaybackControls *>(window.findChild<QWidget *>("allPlotPlaybackControls"));
+      auto *toolbar=window.findChild<QToolBar *>("standardToolbar");
+      require(controls && toolbar && controls->parentWidget()==toolbar,"Animation missing from standard toolbar");
+      auto *debug=window.findChild<QAction *>("debugMission"),*run=window.findChild<QAction *>("runMission");
+      require(debug && run && !debug->icon().isNull(),"Missing Debug icon");
+      require(debug->icon().pixmap(32,32).toImage()!=run->icon().pixmap(32,32).toImage(),"Debug still uses Run icon");
+      require(debug->shortcut()==QKeySequence("Ctrl+F5"),"Debug shortcut changed");
+      auto &receiver=*window.plotReceiver();
+      auto *start=controls->findChild<QAction *>("allPlotReplayStart"),*play=controls->findChild<QAction *>("allPlotReplayPlay");
+      auto *latest=controls->findChild<QAction *>("allPlotReplayLatest");
+      auto *slider=controls->findChild<QSlider *>("allPlotTimeline");
+      auto *timer=controls->findChild<QTimer *>("allPlotReplayTimer");
+      auto *speed=controls->findChild<QComboBox *>("allPlotReplaySpeed");
+      auto *position=controls->findChild<QLabel *>("allPlotReplayPosition");
+      require(start && play && latest && slider && timer && speed && position,"Incomplete global transport");
+      require(!controls->isEnabled(),"Empty transport enabled");
+      receiver.CreateDynamicDataDisplay("Table","","Live values",0,0,0,0);
+      require(!controls->isEnabled(),"Table alone enabled retained animation");
+      receiver.CreateGlPlotWindow("Orbit","",0,0,0,0,false,0);
+      receiver.SetGlObject("Orbit",{"Vehicle"},{});
+      receiver.CreateGroundTrackWindow("Ground","","Ground",0,0,0,0,false);
+      receiver.CreateXyPlotWindow("XY","",0,0,0,0,false,"XY","x","y");
+      receiver.AddXyPlotCurve("XY",0,"Curve",0xff0000);
+      for (int i=0;i<20;++i) {
+         receiver.UpdateGlPlot("Orbit","",{"Vehicle"},21545.+i,{7000.},{double(i)*100},{0.},{},{},{},{},{},false,0,true,true,false);
+      }
+      for (int i=0;i<40;++i) { double point[]={double(i)*4-80,double(i)-20}; receiver.UpdateGroundTrackData("Ground",21545.+i,point,1); }
+      for (int i=0;i<10;++i) receiver.UpdateXyPlotCurve("XY",0,i,i*i);
+      receiver.missionFinished(); app.processEvents();
+      require(controls->isEnabled(),"Plot transport disabled");
+      for (const auto &name:{"Orbit","Ground","XY"}) require(!receiver.model(name)->curves[0].points.empty(),"Synthetic plot has no history");
+      auto checkPosition=[&](int value) {
+         require(receiver.replayPosition()==value,"Receiver lost shared position");
+         for (const auto &name:{"Orbit","Ground","XY"}) {
+            auto *widget=plot(receiver,name);
+            require(widget->findChild<QSlider *>("plotTimeline")->value()==value,"Plot position diverged from master");
+            require(!widget->findChild<QTimer *>("plotReplayTimer")->isActive(),"Competing local animation timer");
+         }
+      };
+      latest->trigger(); checkPosition(1000);
+      const auto xyLatest=plot(receiver,"XY")->canvas()->captureImage();
+      start->trigger(); checkPosition(0);
+      require(plot(receiver,"XY")->canvas()->captureImage()!=xyLatest,"XY render ignored shared history");
+      slider->setValue(500); checkPosition(500);
+      require(plot(receiver,"Orbit")->canvas()->frame()==10 && plot(receiver,"Ground")->canvas()->frame()==20 && plot(receiver,"XY")->canvas()->frame()==5,"Unequal histories mapped incorrectly");
+      play->trigger(); require(timer->isActive() && play->isChecked(),"Master playback did not start");
+      QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection); checkPosition(510);
+      speed->setCurrentIndex(4); QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection); checkPosition(550);
+      play->trigger(); require(!timer->isActive(),"Master pause failed");
+      play->trigger(); require(slider->value()==550,"Resume reset position"); play->trigger();
+      slider->setValue(990); play->trigger(); QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection);
+      checkPosition(1000); require(!timer->isActive() && !play->isChecked(),"Playback did not finish at Latest");
+      play->trigger(); checkPosition(0); play->trigger();
+      speed->setCurrentIndex(0); play->trigger();
+      QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection); checkPosition(2);
+      QMetaObject::invokeMethod(timer,"timeout",Qt::DirectConnection); checkPosition(5); play->trigger();
+      slider->setValue(750);
+      auto *closed=dynamic_cast<QMdiSubWindow *>(plot(receiver,"Orbit")->parentWidget());
+      require(closed && closed->close(),"Plot close failed"); app.processEvents();
+      slider->setValue(250); require(receiver.show("Orbit"),"Reopen failed"); checkPosition(250);
+      require(plot(receiver,"Orbit")->canvas()->frame()==5,"Reopened plot used stale frame");
+      play->trigger();
+      plot(receiver,"Ground")->findChild<QAction *>("plotReplayPlay")->trigger();
+      require(!receiver.replayPosition() && !timer->isActive() && !play->isChecked() && position->text()=="Local","Local playback did not release master");
+      require(plot(receiver,"Ground")->findChild<QTimer *>("plotReplayTimer")->isActive(),"Local playback stopped unexpectedly");
+      latest->trigger(); checkPosition(1000);
+      // Latest must take ownership again even when the master slider is already 1000.
+      plot(receiver,"Ground")->findChild<QAction *>("plotReplayStart")->trigger();
+      require(!receiver.replayPosition(),"Local Start retained global ownership");
+      latest->trigger(); checkPosition(1000);
+      slider->setValue(500); receiver.UpdateXyPlotCurve("XY",0,10,100); checkPosition(500);
+      require(plot(receiver,"XY")->canvas()->frame()==6,"Incoming data lost shared frame position");
+      require(receiver.model("Orbit")->curves[0].points.size()==20 && receiver.model("Ground")->curves[0].points.size()==40 && receiver.model("XY")->curves[0].points.size()==11,"Playback mutated retained history");
+      receiver.ClearXyPlotData("XY"); receiver.RefreshXyPlot("XY"); checkPosition(500);
+      require(plot(receiver,"XY")->canvas()->frame()==0,"Cleared history retained old frame");
+      require(window.findChild<QTableWidget *>(),"Global playback removed live table");
+      latest->trigger(); app.processEvents();
+      require(controls->isVisible() && toolbar->rect().contains(controls->geometry()),"Transport does not fit default toolbar");
+      if (argc==3) require(toolbar->grab().save(QFileInfo(argv[2]).absoluteFilePath()),"Toolbar capture failed");
+      play->trigger(); receiver.clear();
+      require(!controls->isEnabled() && !timer->isActive() && !receiver.replayPosition() && slider->value()==1000,"Clear left stale master state");
+      receiver.CreateXyPlotWindow("Rerun","",0,0,0,0,false,"XY","x","y");
+      require(controls->isEnabled() && !play->isChecked(),"New run inherited playback");
+      receiver.clear();
+      std::cout << "PASS: distinct Debug bug icon; shared Orbit/Ground/XY Start, Play/Pause, Latest, speed, scrubbing, unequal histories, incoming/reset data, local override, close/reopen, clear/rerun; table excluded; source histories retained. Offscreen only.\n";
+      return 0;
+   } catch (const std::exception &error) { std::cerr << error.what() << '\n'; return 1; }
+}

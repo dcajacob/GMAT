@@ -9,6 +9,7 @@
 #include <QRect>
 #include <functional>
 #include <memory>
+#include <optional>
 class QMdiArea;
 class QMdiSubWindow;
 class QTableWidget;
@@ -20,12 +21,17 @@ public:
    ~QtPlotReceiver() override;
    void clear(bool resetViews=false);
    void missionFinished();
+   bool hasReplayDisplays() const;
+   void setReplayPosition(int value);
+   void releaseSharedReplay();
+   std::optional<int> replayPosition() const { return sharedReplayPosition; }
    static void validateCameraReferences(const QMap<QString,QtCameraSetting> &settings);
    QStringList names() const;
    bool show(const QString &name);
    QMdiArea *workspaceArea() const { return workspace; }
    std::shared_ptr<const PlotModel> model(const QString &name) const;
    std::function<void()> changed;
+   std::function<void()> replayChanged;
    std::function<QString(const QString &,bool,double)> saveProjection;
    std::function<QStringList()> protectedPaths;
    QMap<QString,QtCameraSetting> cameraSettings;
@@ -217,6 +223,7 @@ private:
    }
    QMdiArea *workspace;
    QMap<QString, Entry> entries;
+   std::optional<int> sharedReplayPosition;
    QSet<QString> warnings;
    QMap<QString,PlotViewState> savedViews;
 };

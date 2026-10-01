@@ -553,8 +553,9 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
       replay->setToolTip("Play or pause recorded history; resumes from the current position");
       auto *latest=addPlaybackAction(QStyle::SP_MediaSkipForward,"Latest"); latest->setObjectName("plotReplayLatest");
       latest->setToolTip("Stop playback and follow the latest available data");
-      connect(start,&QAction::triggered,this,[this] { replay->setChecked(false); timeline->setValue(0); });
-      connect(latest,&QAction::triggered,this,[this] { replay->setChecked(false); timeline->setValue(1000); });
+      connect(start,&QAction::triggered,this,[this] { if (replayRequested) replayRequested(); replay->setChecked(false); timeline->setValue(0); });
+      connect(latest,&QAction::triggered,this,[this] { if (replayRequested) replayRequested(); replay->setChecked(false); timeline->setValue(1000); });
+      connect(replay,&QAction::triggered,this,[this] { if (replayRequested) replayRequested(); });
       connect(replay,&QAction::toggled,this,[this](bool checked) {
          replay->setText(checked ? "Pause" : "Play");
          replay->setIcon(style()->standardIcon(checked ? QStyle::SP_MediaPause : QStyle::SP_MediaPlay));
@@ -575,11 +576,19 @@ PlotWidget::PlotWidget(std::shared_ptr<PlotModel> model, QWidget *parent) : QWid
          timeline->setValue(std::min(1000,timeline->value()+steps));
          if (timeline->value()==1000) replay->setChecked(false);
       });
-      connect(timeline,&QSlider::sliderPressed,this,[this] { replay->setChecked(false); });
+      connect(timeline,&QSlider::sliderPressed,this,[this] { if (replayRequested) replayRequested(); replay->setChecked(false); });
 
    }
-   connect(timeline,&QSlider::valueChanged,this,[this] { updateReplayFrame(); });
+   connect(timeline,&QSlider::valueChanged,this,[this] { if (replayRequested) replayRequested(); updateReplayFrame(); });
    layout->addWidget(drawing,1);
+}
+void PlotWidget::setSharedReplayPosition(int value)
+{
+   timer->stop();
+   if (replay) replay->setChecked(false);
+   const QSignalBlocker block(timeline);
+   timeline->setValue(std::clamp(value,0,1000));
+   updateReplayFrame();
 }
 void PlotWidget::updateReplayFrame()
 {
@@ -603,6 +612,7 @@ void PlotWidget::refresh()
       historyGeneration=data->historyGeneration;
       timer->stop();
       if (replay) replay->setChecked(false);
+      const QSignalBlocker block(timeline);
       timeline->setValue(1000);
    }
    // The retained interval moves as MaxPlotPoints evicts old samples. Resolve

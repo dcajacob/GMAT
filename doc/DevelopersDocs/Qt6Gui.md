@@ -511,6 +511,17 @@ retained history. The timeline occupies a separate row so it remains accessible
 in narrow tiled windows. Speeds describe a nominal three-second sweep of the
 retained history, not elapsed simulation seconds.
 
+The Standard toolbar's Animation controls share one playback clock across Orbit,
+Ground Track and XY displays. Start pauses at the beginning; Play/Pause resumes
+from the selected position, Latest follows incoming data, and the slider and
+0.25×–4× speed apply to all retained plot histories. A plot reopened from Output
+joins the shared position. The position is the same percentage of each plot's
+retained history, not a common simulation epoch. Tables contain current values
+and do not replay. Using an individual plot's transport releases shared playback
+and the toolbar reads Local; a shared control takes ownership again. Rebuild and
+new-run clearing stop animation and reset the transport. Debug mission uses a
+bug pictogram, distinct from the Run triangle; Ctrl+F5 remains its shortcut.
+
 Configured spacecraft models retain their texture materials, display scale,
 offset and rotation. Like wx, normalized spacecraft display size is exaggerated
 (1000 km at ModelScale=1), so it is visible on orbital scales. Fit includes that

@@ -17,6 +17,7 @@ public:
    void scriptView();
    void restoreView(const PlotViewState &state);
    void setFrame(quint64 value);
+   quint64 frame() const { return visibleFrame; }
    double zoomFactor() const { return zoom; }
    void zoomBy(double wheelSteps);
    void setViewAngles(double azimuth, double elevation);
@@ -41,6 +42,8 @@ class PlotWidget final : public QWidget
 public:
    explicit PlotWidget(std::shared_ptr<PlotModel> data, QWidget *parent = nullptr);
    void refresh();
+   void setSharedReplayPosition(int value);
+   std::function<void()> replayRequested;
    void restoreView(const PlotViewState &state);
    void setProjectionSaver(std::function<QString(bool,double)> callback);
    void setProtectedPaths(std::function<QStringList()> callback);

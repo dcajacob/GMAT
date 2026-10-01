@@ -109,7 +109,23 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
    }
 }
 QtPlotReceiver::QtPlotReceiver(QMdiArea *area) : workspace(area) {}
-QtPlotReceiver::~QtPlotReceiver() { changed = {}; clear(); }
+QtPlotReceiver::~QtPlotReceiver() { changed = {}; replayChanged = {}; clear(); }
+bool QtPlotReceiver::hasReplayDisplays() const
+{
+   for (const auto &entry:entries) if (entry.data->kind!=PlotModel::Kind::Table) return true;
+   return false;
+}
+void QtPlotReceiver::setReplayPosition(int value)
+{
+   sharedReplayPosition=std::clamp(value,0,1000);
+   for (auto &entry:entries) if (entry.widget) entry.widget->setSharedReplayPosition(*sharedReplayPosition);
+   if (replayChanged) replayChanged();
+}
+void QtPlotReceiver::releaseSharedReplay()
+{
+   sharedReplayPosition.reset();
+   if (replayChanged) replayChanged();
+}
 QtPlotReceiver::Entry *QtPlotReceiver::find(const std::string &name)
 {
    auto it=entries.find(text(name)); return it==entries.end() ? nullptr : &it.value();
@@ -120,7 +136,9 @@ void QtPlotReceiver::clear(bool resetViews)
       if (it->data->kind==PlotModel::Kind::Orbit && it->data->userView) savedViews.insert(it.key(),*it->data->userView);
    if (resetViews) savedViews.clear();
    for (auto &entry : entries) if (entry.window) delete entry.window.data();
-   entries.clear(); warnings.clear(); if (changed) changed();
+   entries.clear(); warnings.clear(); sharedReplayPosition.reset();
+   if (replayChanged) replayChanged();
+   if (changed) changed();
 }
 void QtPlotReceiver::missionFinished()
 {
@@ -166,6 +184,8 @@ bool QtPlotReceiver::show(const QString &name)
          entry.window=workspace->addSubWindow(entry.table);
       } else {
          entry.widget=new PlotWidget(entry.data);
+         entry.widget->replayRequested=[this] { releaseSharedReplay(); };
+         if (sharedReplayPosition) entry.widget->setSharedReplayPosition(*sharedReplayPosition);
          entry.widget->setProtectedPaths([this] { return protectedPaths ? protectedPaths() : QStringList(); });
          if (saveProjection) entry.widget->setProjectionSaver([this,name](bool perspective,double fov) { return saveProjection(name,perspective,fov); });
          entry.widget->setFocusPolicy(Qt::StrongFocus);
@@ -257,7 +277,11 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
 void QtPlotReceiver::refresh(Entry &entry, bool force)
 {
    if (++entry.data->pendingUpdates >= entry.data->updateFrequency || force) {
-      entry.data->pendingUpdates=0; if (entry.widget) entry.widget->refresh();
+      entry.data->pendingUpdates=0;
+      if (entry.widget) {
+         entry.widget->refresh();
+         if (sharedReplayPosition) entry.widget->setSharedReplayPosition(*sharedReplayPosition);
+      }
    }
 }
 bool QtPlotReceiver::remove(const std::string &name)
