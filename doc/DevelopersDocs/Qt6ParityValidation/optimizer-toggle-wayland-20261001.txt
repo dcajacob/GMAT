@@ -1,0 +1,5 @@
+Reference rows=11 acceptedElapsed=140 finalElapsed=160
+Orb Current retained=21 resumedBoundaries=1 finalElapsed=160
+Ground Current retained=17 resumedBoundaries=1 finalElapsed=160
+XY Current retained=17 resumedBoundaries=1 finalElapsed=160
+Yukon: PASS: actual solver-loop Orbit/Ground/XY Toggle controls, exact source/comments/Undo/Redo/Unicode reopen, independent full iteration state/geodetic report, suppressed interval and separated resumed buffered histories, render capture, replay/Latest and close/reopen retention. Current mode; earlier solver mode matrix was not repeated.

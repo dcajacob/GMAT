@@ -1932,3 +1932,20 @@ and Yukon in a repeated spacecraft propagation fixture; the disabled Stop and
 write-failure variants also have native Wayland viewer/recovery evidence. Exact
 coverage and remaining qualification limits are recorded in
 Qt6ReplacementQualification.md.
+
+
+### Plot toggles inside optimization and nested targeting
+
+The same subscriber checklist and On/Off controls apply inside Yukon optimization
+and nested Target sequences. Disabled intervals suppress plot samples; resuming
+begins a separate arc. Numerical propagation, solver values and ReportFile
+output retain their script-configured behavior.
+
+OptimizerToggle and NestedSolverToggle exercise the actual controls with Current
+Orbit/Ground/XY plots, exact source/Undo/Redo/Unicode reopen, known solver goals
+and complete independent state/geodetic reports. Ground/XY accepted histories
+also match an independently filtered None-mode run. The nested case solves an
+entire inner Target while those plots are disabled. Both cases have native
+Wayland captures, camera/replay and immediate close/reopen evidence in
+Qt6ReplacementQualification.md. Other mixed/deeper and ephemeris subscriber
+combinations remain under qualification.

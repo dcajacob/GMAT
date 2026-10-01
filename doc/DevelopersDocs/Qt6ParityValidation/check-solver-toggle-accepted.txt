@@ -1,0 +1,12 @@
+Test project /home/dan/GIT/GMAT/GMAT/build/linux-gui
+    Start 48: QtGui.OptimizerToggle
+1/2 Test #48: QtGui.OptimizerToggle ............   Passed    3.17 sec
+    Start 49: QtGui.NestedSolverToggle
+2/2 Test #49: QtGui.NestedSolverToggle .........   Passed    2.44 sec
+
+100% tests passed, 0 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   5.61 sec*proc (2 tests)
+
+Total Test time (real) =   5.61 sec
