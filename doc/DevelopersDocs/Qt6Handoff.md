@@ -944,3 +944,17 @@ are reused without noisy reference reruns. Appb807/corecf147/startup5f80 remain
 bounded private evidence; new consolef80e and unused corrected Bulirsch0472
 identities are recorded. MATLAB analysis/conditioning, host/hardware/crash and
 full replacement gates remain open. No old suite/corpus was repeated.
+
+
+### Bulirsch positive custom controls passed — 2026-10-02
+
+[Custom-control evidence](Qt6ParityValidation/bulirsch-controls-20261002.md)
+retains an actual Apply/readback failure and the narrow two-field copy fix.
+One new focused test0.27s checks GUI/source and actual runtime clone retention;
+one private GUI retry applies0.6/.0001, saves/reopens, runs60s Completed0.336s,
+and opens/report-compares the finite endpoint with the saved command summary.
+MinimumTolerance is deprecated/read-only/no-effect and correctly remains hidden.
+Original numerical algorithms/core/startup are unchanged. Rebuilt plugin
+SHA04726589... is required; appb8074b02... stays unchanged. Actual File Exit0 is
+recorded separately from first helper termination and final helper's expected
+already-exited-app diagnostic. Broad native/plugin/scientific gates remain open.
