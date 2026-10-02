@@ -46,14 +46,14 @@ struct PlotCurve
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
    std::optional<bool> importedLabel;
-   bool centerMarker=false,endpointMarkers=false;
+   bool centerMarker=false,endpointMarkers=false,objectAxes=false;
    quint32 orbitMarkerSize=10;
    std::optional<double> importedLineWidth;
    std::optional<quint32> importedFontSize;
    QString importedFontPosition;
    double orbitLineWidth() const { return importedLineWidth.value_or(width); }
    bool drawsLabel() const { return visible && importedLabel.value_or(showObject); }
-   bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || importedLabel.value_or(false)); }
+   bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || objectAxes || importedLabel.value_or(false)); }
    bool wireframeObject = false;
    double radius = 0;
    QString texturePath;

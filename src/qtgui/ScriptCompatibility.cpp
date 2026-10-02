@@ -228,12 +228,12 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
             // OF Add resets the ordered object list and its display defaults.
-            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear(); display.objectFontSizes.clear(); display.objectFontPositions.clear();
-            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; display.objectFontSizes[name]=14; display.objectFontPositions[name]="Top-Right"; }
-         } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints") {
+            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear(); display.objectFontSizes.clear(); display.objectFontPositions.clear(); display.objectAxes.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; display.objectFontSizes[name]=14; display.objectFontPositions[name]="Top-Right"; display.objectAxes[name]=false; }
+         } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints" || property=="DrawAxes") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
             const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
-            auto &destination=property=="DrawLabel" ? display.objectLabels : property=="DrawTrajectory" ? display.objectTrajectories : property=="DrawCenterPoint" ? display.objectCenters : display.objectEndpoints;
+            auto &destination=property=="DrawLabel" ? display.objectLabels : property=="DrawTrajectory" ? display.objectTrajectories : property=="DrawCenterPoint" ? display.objectCenters : property=="DrawEndPoints" ? display.objectEndpoints : display.objectAxes;
             for (int i=0;i<flags.size();++i) {
                if (flags[i]!="true" && flags[i]!="false") { result.error=it.key()+"."+property+": expected true or false."; return result; }
                // OF applies the available prefix and leaves omitted objects at defaults.
@@ -292,7 +292,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth" || key=="DrawFontSize" || key=="DrawFontPosition")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth" || key=="DrawFontSize" || key=="DrawFontPosition" || key=="DrawAxes")) {
          output.append("% Qt conversion: "+lines[i]);
          result.notes.append(name+"."+key+": independent per-object drawing retained in Qt metadata.");
       } else if (types[name]=="OpenFramesInterface" && key=="DrawGrid") {
@@ -341,6 +341,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       cameraSetting.objectTrajectories=displaySettings.value(plot).objectTrajectories;
       cameraSetting.objectCenters=displaySettings.value(plot).objectCenters;
       cameraSetting.objectEndpoints=displaySettings.value(plot).objectEndpoints;
+      cameraSetting.objectAxes=displaySettings.value(plot).objectAxes;
       cameraSetting.objectMarkerSizes=displaySettings.value(plot).objectMarkerSizes;
       cameraSetting.objectLineWidths=displaySettings.value(plot).objectLineWidths;
       cameraSetting.objectFontSizes=displaySettings.value(plot).objectFontSizes;
@@ -463,6 +464,7 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.objectTrajectories.isEmpty()) object.insert("objectTrajectories",objectFlagsJson(setting.objectTrajectories));
    if (!setting.objectCenters.isEmpty()) object.insert("objectCenters",objectFlagsJson(setting.objectCenters));
    if (!setting.objectEndpoints.isEmpty()) object.insert("objectEndpoints",objectFlagsJson(setting.objectEndpoints));
+   if (!setting.objectAxes.isEmpty()) object.insert("objectAxes",objectFlagsJson(setting.objectAxes));
    if (!setting.objectMarkerSizes.isEmpty()) object.insert("objectMarkerSizes",objectSizesJson(setting.objectMarkerSizes));
    if (!setting.objectLineWidths.isEmpty()) object.insert("objectLineWidths",objectWidthsJson(setting.objectLineWidths));
    if (!setting.objectFontSizes.isEmpty()) object.insert("objectFontSizes",objectSizesJson(setting.objectFontSizes));
@@ -526,6 +528,7 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       if (object.contains("objectTrajectories")) setting.objectTrajectories=objectFlags(object.value("objectTrajectories"));
       if (object.contains("objectCenters")) setting.objectCenters=objectFlags(object.value("objectCenters"));
       if (object.contains("objectEndpoints")) setting.objectEndpoints=objectFlags(object.value("objectEndpoints"));
+      if (object.contains("objectAxes")) setting.objectAxes=objectFlags(object.value("objectAxes"));
       if (object.contains("objectMarkerSizes")) setting.objectMarkerSizes=objectSizes(object.value("objectMarkerSizes"));
       if (object.contains("objectLineWidths")) setting.objectLineWidths=objectWidths(object.value("objectLineWidths"));
       if (object.contains("objectFontSizes")) setting.objectFontSizes=objectFontSizes(object.value("objectFontSizes"));

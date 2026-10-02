@@ -1,5 +1,6 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
+#include "OrbitObjectAxes.hpp"
 #include <osg/PolygonMode>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
@@ -394,6 +395,14 @@ struct OrbitRenderer::Scene
          line(back+right*x-up*halfHeight,back+right*x+up*halfHeight,{.11f,.14f,.19f,1});
          line(back+up*y-right*halfWidth,back+up*y+right*halfWidth,{.11f,.14f,.19f,1});
       }
+      for (const auto &source:model->curves) if (source.visible && source.objectAxes) {
+         const auto *pose=orbitObjectPose(source,frame); if (!pose) continue;
+         const auto axes=orbitObjectAxes(*pose,orbitObjectAxisRadius(source,objects.value(source.name).radius));
+         for (const auto &axis:axes) {
+            line(axis.start,axis.end,color(pose->color));
+            for (const auto &wing:axis.arrow) line(axis.end,wing,color(pose->color));
+         }
+      }
       guideGeometry->setVertexArray(guidePositions);
       guideGeometry->setColorArray(guideColors,osg::Array::BIND_PER_VERTEX);
       guideGeometry->addPrimitiveSet(new osg::DrawArrays(GL_LINES,0,guidePositions->size()));
@@ -605,6 +614,22 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
          if (clip.w()<=0 || std::abs(clip.x())>clip.w() || std::abs(clip.y())>clip.w() || std::abs(clip.z())>clip.w()) continue;
          const osg::Vec3d ndc(clip.x()/clip.w(),clip.y()/clip.w(),clip.z()/clip.w());
          drawOrbitLabel(painter,QPointF((ndc.x()+1)*width()/2,(1-ndc.y())*height()/2),curve);
+      }
+   }
+   if (scene->model->labels) {
+      const auto projection=scene->viewer.getCamera()->getViewMatrix()*scene->viewer.getCamera()->getProjectionMatrix();
+      for (auto it=scene->model->curves.cbegin();it!=scene->model->curves.cend();++it) {
+         const auto &curve=it.value(); if (!curve.visible || !curve.objectAxes) continue;
+         const auto *pose=orbitObjectPose(curve,scene->frame); if (!pose) continue;
+         const auto &prepared=scene->curves.at(it.key());
+         const double radius=prepared.modelLoaded ? prepared.modelPose->getBound().radius() : 0;
+         const auto axes=orbitObjectAxes(*pose,orbitObjectAxisRadius(curve,radius));
+         painter.setPen(pose->color);
+         for (int axis=0;axis<3;++axis) {
+            const auto &p=axes[axis].end; const auto clip=osg::Vec4d(p.x(),p.y(),p.z(),1)*projection;
+            if (clip.w()<=0 || std::abs(clip.x())>clip.w() || std::abs(clip.y())>clip.w() || std::abs(clip.z())>clip.w()) continue;
+            painter.drawText(QPointF((clip.x()/clip.w()+1)*width()/2+4,(1-clip.y()/clip.w())*height()/2-4),QString(QChar('X'+axis)));
+         }
       }
    }
    if (scene->model->legend) {

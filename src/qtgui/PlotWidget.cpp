@@ -18,6 +18,7 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitLabels.hpp"
 #include "OrbitCamera.hpp"
+#include "OrbitObjectAxes.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
 #include <QAction>
@@ -265,7 +266,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    if (orbit) {
       // Paint from far to near so foreground trajectory segments remain visible
       // over the central body, while the far side is occluded by its disk.
-      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; };
+      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; bool guide=false; };
       QVector<Primitive> objects;
       std::deque<PlotPoint> clippedPoints;
       auto depth=[&](const PlotPoint &p) { return osg::Vec3d(p.x,p.y,p.z)*camera.outward; };
@@ -294,6 +295,22 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             }
             previous=&point; last=&point;
          }
+         if (last && curve.objectAxes) {
+            const auto axes=orbitObjectAxes(*last,orbitObjectAxisRadius(curve));
+            auto line=[&](const osg::Vec3d &from,const osg::Vec3d &to) {
+               PlotPoint a=*last,b=*last; a.x=from.x(); a.y=from.y(); a.z=from.z(); b.x=to.x(); b.y=to.y(); b.z=to.z();
+               if (data->perspective) {
+                  const double near=1e-6;
+                  const double da=camera.distance-(from-camera.target)*camera.outward-near;
+                  const double db=camera.distance-(to-camera.target)*camera.outward-near;
+                  if (da<0 && db<0) return;
+                  if (da<0 || db<0) { const auto clipped=from+(to-from)*(da/(da-db)); auto &point=da<0 ? a : b; point.x=clipped.x(); point.y=clipped.y(); point.z=clipped.z(); }
+               }
+               clippedPoints.push_back(a); const auto *start=&clippedPoints.back(); clippedPoints.push_back(b); const auto *end=&clippedPoints.back();
+               objects.append({(depth(a)+depth(b))/2,&curve,start,end,0,true});
+            };
+            for (const auto &axis:axes) { line(axis.start,axis.end); for (const auto &wing:axis.arrow) line(axis.end,wing); }
+         }
          if (last && curve.showObject && perspectiveScale(*last)>0) objects.append({depth(*last),&curve,last,nullptr});
          for (const auto &marker:data->orbitMarkers(curve,visibleFrame)) {
             const auto &point=*marker.point;
@@ -320,7 +337,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       std::stable_sort(objects.begin(),objects.end(),[](const Primitive &a,const Primitive &b) { return a.depth<b.depth; });
       for (const auto &object:objects) {
          const auto &curve=*object.curve;
-         painter.setPen(QPen(object.a->color,curve.orbitLineWidth(),curve.style));
+         painter.setPen(QPen(object.a->color,object.guide ? 1 : curve.orbitLineWidth(),object.guide ? Qt::SolidLine : curve.style));
          const auto pixel=screen(project(*object.a));
          if (object.marker) {
             const double size=curve.orbitMarkerSize;
@@ -338,6 +355,11 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             gradient.setColorAt(0,curve.color.lighter(145)); gradient.setColorAt(1,curve.color.darker(240));
             painter.setPen(curve.color); painter.setBrush(data->wireframe || curve.wireframeObject ? QBrush(Qt::NoBrush) : QBrush(gradient)); painter.drawEllipse(pixel,radius,radius);
          } else { painter.setBrush(object.a->color); painter.drawEllipse(pixel,3.5,3.5); }
+      }
+      if (data->labels) for (const auto &curve:data->curves) if (curve.visible && curve.objectAxes) {
+         const auto *pose=orbitObjectPose(curve,visibleFrame); if (!pose) continue;
+         const auto axes=orbitObjectAxes(*pose,orbitObjectAxisRadius(curve)); painter.setPen(pose->color);
+         for (int axis=0;axis<3;++axis) { PlotPoint p=*pose; p.x=axes[axis].end.x(); p.y=axes[axis].end.y(); p.z=axes[axis].end.z(); if (perspectiveScale(p)>0) painter.drawText(screen(project(p))+QPointF(4,-4),QString(QChar('X'+axis))); }
       }
       if (data->labels) for (const auto &curve:data->curves) {
          if (!curve.drawsLabel()) continue;

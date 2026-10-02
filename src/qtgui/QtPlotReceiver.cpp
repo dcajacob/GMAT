@@ -42,6 +42,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
       for (const auto &name:it->objectTrajectories.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectCenters.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectEndpoints.keys()) validateTrajectory(name,false);
+      for (const auto &name:it->objectAxes.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectMarkerSizes.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectLineWidths.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectFontSizes.keys()) validateTrajectory(name,false);
@@ -318,6 +319,7 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
       if (setting.objectLabels.contains(curve.name)) curve.importedLabel=setting.objectLabels.value(curve.name);
       curve.centerMarker=setting.objectCenters.value(curve.name,false);
       curve.endpointMarkers=setting.objectEndpoints.value(curve.name,false);
+      curve.objectAxes=setting.objectAxes.value(curve.name,false);
       curve.orbitMarkerSize=setting.objectMarkerSizes.value(curve.name,10);
       curve.importedLineWidth=setting.objectLineWidths.contains(curve.name) ? std::optional<double>(setting.objectLineWidths.value(curve.name)) : std::nullopt;
       curve.importedFontSize=setting.objectFontSizes.contains(curve.name) ? std::optional<quint32>(setting.objectFontSizes.value(curve.name)) : std::nullopt;

@@ -2194,3 +2194,13 @@ an explanation. The bounded rendered evidence covers 12/24/32 pixels and all
 four placements. Very large sizes, font substitution and edge clipping remain
 unqualified. See the font qualification appendix for controls, native captures
 and byte-identical complete state reports.
+
+
+### Per-object body axes
+
+OrbitView / Advanced / Object drawing / Body guides provides Body axes for each
+plotted object. On shows the object's X/Y/Z axes at its recorded position and
+attitude, including during replay. Off hides them; Default leaves them hidden.
+These choices are independent of the model/body and trajectory controls and stay
+pending until the parent resource Apply. Show labels controls the axis captions.
+Converted OpenFrames DrawAxes arrays retain the corresponding named choices.

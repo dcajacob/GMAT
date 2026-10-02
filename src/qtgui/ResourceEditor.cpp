@@ -423,7 +423,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto initial=std::shared_ptr<GmatBase>(object.Clone());
       if (orbit) {
          const auto setting=qtCameraSettings(script).value(QString::fromStdString(object.GetName()));
-         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)},{"@QtObjectFontSizes",qtObjectSizesJson(setting.objectFontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(setting.objectFontPositions)}};
+         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)},{"@QtObjectFontSizes",qtObjectSizesJson(setting.objectFontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(setting.objectFontPositions)},{"@QtObjectAxes",qtObjectFlagsJson(setting.objectAxes)}};
          auto *drawing=new QPushButton("Object drawing…",this); drawing->setObjectName("editOrbitDrawing"); layout->addWidget(drawing);
          connect(drawing,&QPushButton::clicked,this,[this,originalDrawing,drawing] {
             try {
@@ -442,6 +442,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                QtCameraSetting markers;
                markers.objectCenters=qtObjectFlags(objectDrawingEdits.value("@QtObjectCenters",originalDrawing.value("@QtObjectCenters")));
                markers.objectEndpoints=qtObjectFlags(objectDrawingEdits.value("@QtObjectEndpoints",originalDrawing.value("@QtObjectEndpoints")));
+               markers.objectAxes=qtObjectFlags(objectDrawingEdits.value("@QtObjectAxes",originalDrawing.value("@QtObjectAxes")));
                markers.objectMarkerSizes=qtObjectSizes(objectDrawingEdits.value("@QtObjectMarkerSizes",originalDrawing.value("@QtObjectMarkerSizes")));
                markers.objectLineWidths=qtObjectWidths(objectDrawingEdits.value("@QtObjectLineWidths",originalDrawing.value("@QtObjectLineWidths")));
                markers.objectFontSizes=qtObjectFontSizes(objectDrawingEdits.value("@QtObjectFontSizes",originalDrawing.value("@QtObjectFontSizes")));
