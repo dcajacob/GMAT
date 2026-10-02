@@ -1338,6 +1338,15 @@ spelling and comments. Adding inputs to a bare call inserts parentheses; clearin
 those inputs restores the bare spelling. Single-output calls use the function's
 context Help, and leading labels survive serialization and source-mapped edits.
 
+
+Whole Spacecraft and String arguments can be selected as local function inputs;
+Variable and String results can be selected as outputs. Declare the output
+objects inside the function and use the input formal names from its header.
+Avoid re-creating formal inputs inside the function: GMAT then ignores their
+incoming settings. [One actual-input case](Qt6ParityValidation/local-function-arguments-20261002.md)
+verifies the offered choices, ordered call, saved/reopened source and independently
+known mass/text result.
+
 ### Omitted Vary and Achieve options
 
 Use **Add default options** in a Vary or Achieve command form to expose settings

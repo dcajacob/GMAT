@@ -1,0 +1,6 @@
+function [massResult, textResult] = ReadObjectInputs(inputSat, inputLabel)
+Create Variable massResult;
+Create String textResult;
+BeginMissionSequence;
+massResult = inputSat.DryMass;
+textResult = inputLabel;

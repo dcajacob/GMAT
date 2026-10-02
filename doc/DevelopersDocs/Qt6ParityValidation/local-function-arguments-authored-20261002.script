@@ -1,0 +1,14 @@
+Create GmatFunction ReadObjectInputs;
+GMAT ReadObjectInputs.FunctionPath = '/tmp/local-function-arguments-live/isolated-x11-d7ypcww8/ReadObjectInputs.gmf';
+Create Spacecraft ProbeSC;
+ProbeSC.DryMass = 123.5;
+Create String LabelIn Echoed;
+LabelIn = 'local spacecraft stamp';
+Create Variable ReturnedMass;
+Create ReportFile Values;
+Values.Filename = '/tmp/local-function-arguments-live/isolated-x11-d7ypcww8/output/local-inputs.txt';
+Values.WriteHeaders = false;
+BeginMissionSequence;
+[ReturnedMass, Echoed] = ReadObjectInputs(ProbeSC, LabelIn);
+Report Values ReturnedMass Echoed ProbeSC.DryMass LabelIn;
+

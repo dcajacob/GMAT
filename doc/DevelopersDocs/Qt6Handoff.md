@@ -1055,3 +1055,19 @@ EventLocators 4.65 s once retain production route/metadata failures and detached
 context fixture correction. App 244dc41a... / 5,926,536 B/core/util/startup controlled;
 no old matrix repeated. Broader locator/host/portal/GPU/scientific replacement
 gates stay open, Windows/macOS/MATLAB deferred.
+
+
+### Local Spacecraft/String function arguments passed — 2026-10-02
+
+[The local-arguments record](Qt6ParityValidation/local-function-arguments-20261002.md)
+adds one independently authored ordinary positional call through the actual
+ordered pickers: whole ProbeSC/String LabelIn inputs and Variable ReturnedMass/
+String Echoed outputs. After Apply/Save/CtrlO/Build, sole F5 Completed 0.021 s;
+the exact 123.5/text report also retains the declared caller mass/text and actual
+Output readback. Mission/function hashes remain unchanged. Full actions/screens,
+incomplete initial chooser Save/Enter timing and normal owned exits 0/0/0 are
+retained; helper already-exited diagnostic 1 is separate. App 244dc41a... /
+5,926,536 B, compiled source 2f9810c0 and core/util/startup remain controlled.
+Existing Array/global/zero-input passes were reused without repetition. Other
+resource/signature/object-output, physical desktop/GPU/crash and full replacement
+gates stay separate; Windows/macOS/MATLAB remain deferred.
