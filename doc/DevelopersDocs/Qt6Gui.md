@@ -2206,6 +2206,15 @@ pending until the parent resource Apply. Show labels controls the axis captions.
 Converted OpenFrames DrawAxes arrays retain the corresponding named choices.
 
 
+The same Body guides page provides **Lat/lon grid** and **Local XY plane** for
+each object. On draws the guide at its recorded position and attitude; Default
+and Off hide it. The grid follows the object's sphere, while the radial plane
+extends to fifteen times its radius. These controls are independent of global
+Grid/XYPlane, object visibility and paths. Changes remain pending until Apply
+and survive replay, Save/reopen, Rename and Undo/Redo. Converted OpenFrames
+DrawGrid/DrawXYPlane arrays retain the corresponding named choices.
+
+
 ### Cloning configured resources
 
 Select a resource in Resources and use **Clone resource…** from its context menu
@@ -2235,3 +2244,13 @@ follows the wx naming rule. Filenames, literal strings/comments and camera
 labels retain their text. Documents with includes or external GMAT functions,
 and unsupported tracking signal-path syntax, require coordinated edits in the
 script editor; the GUI explains that boundary before changing the mission.
+
+
+### Undo after a GUI edit
+
+Undo and Redo use the focused text field's history. With a tree, plot or button
+focused, they restore the selected script's committed edits, including resource
+and mission Apply. An independently selected inactive script keeps its own
+history. Fields in owned dialogs retain local history; a dialog's non-text
+controls cannot undo a script behind it. Use the shortcuts displayed in Edit
+(Ctrl+Z / Ctrl+Y on the qualified Linux configuration).

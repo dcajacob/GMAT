@@ -12,9 +12,12 @@ requirements. Windows, macOS and MATLAB remain deferred.
 **Preparation only: every walkthrough below is pending.** The earlier shipped
 script build/run corpus and tutorial repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
-the user's desktop remains stopped following the GNOME Shell crash. Establish a
-safe interactive display route before starting this phase; offscreen fixtures
-do not close the native desktop/window acceptance gate.
+the user's desktop remains stopped following the GNOME Shell crash. A private,
+authenticated X11/software-GL route with actual mouse/keyboard input is now
+established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
+It can support independent GUI construction while host GNOME/Wayland, portals
+and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
+for interactive construction. No tutorial walkthrough has started.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available

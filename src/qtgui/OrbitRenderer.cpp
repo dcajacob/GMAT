@@ -1,6 +1,8 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
+#include "OrbitObjectGuides.hpp"
+#include <osg/PolygonOffset>
 #include "OrbitVectors.hpp"
 #include <osg/PolygonMode>
 #include <osg/BlendFunc>
@@ -267,9 +269,11 @@ struct OrbitRenderer::Scene
          const double scale=std::abs(source.modelScale)*(source.radius==0 ? 1000 : 1);
          const double offset=std::hypot(source.modelOffset[0],source.modelOffset[1],source.modelOffset[2]);
          const double radius=prepared.modelLoaded ? prepared.assetExtent*scale+offset*(source.radius==0 ? scale : 1) : source.radius;
+         const double guideRadius=orbitObjectGuideRadius(source,prepared.modelLoaded ? prepared.modelPose->getBound().radius() : 0)*(source.objectXYPlane ? 15 : source.objectGrid ? 1 : 0);
+         const double visibleRadius=std::max(source.showObject ? radius : 0,guideRadius);
          for (const auto &p:source.points) {
-            extent=std::max(extent,std::hypot(p.x,p.y,p.z)+(source.showObject ? radius : 0));
-            bounds.include(p.x,p.y,p.z,source.showObject ? radius : 0);
+            extent=std::max(extent,std::hypot(p.x,p.y,p.z)+visibleRadius);
+            bounds.include(p.x,p.y,p.z,visibleRadius);
          }
       }
       vectorBounds=objects;
@@ -372,6 +376,10 @@ struct OrbitRenderer::Scene
       }
       auto guideGeometry=new osg::Geometry; isolateArrays(guideGeometry);
       auto guidePositions=new osg::Vec3Array; auto guideColors=new osg::Vec4Array;
+      osg::ref_ptr<osg::Vec3Array> thickPositions=new osg::Vec3Array;
+      osg::ref_ptr<osg::Vec4Array> thickNeighbors=new osg::Vec4Array,thickColors=new osg::Vec4Array;
+      osg::ref_ptr<osg::Vec3Array> planePositions=new osg::Vec3Array;
+      osg::ref_ptr<osg::Vec4Array> planeColors=new osg::Vec4Array;
       auto line=[&](const osg::Vec3d &a,const osg::Vec3d &b,const osg::Vec4 &c) {
          guidePositions->push_back(a); guidePositions->push_back(b);
          guideColors->push_back(c); guideColors->push_back(c);
@@ -411,6 +419,27 @@ struct OrbitRenderer::Scene
             for (const auto &wing:axis.arrow) line(axis.end,wing,color(pose->color));
          }
       }
+      const auto guideProjection=viewer.getCamera()->getViewMatrix()*viewer.getCamera()->getProjectionMatrix();
+      for (auto it=model->curves.cbegin();it!=model->curves.cend();++it) {
+         const auto &source=it.value(); if (!source.visible || (!source.objectGrid && !source.objectXYPlane)) continue;
+         const auto *pose=orbitObjectPose(source,frame); if (!pose) continue;
+         const auto &prepared=curves.at(it.key());
+         const auto geometry=orbitObjectGuides(source,*pose,orbitObjectGuideRadius(source,prepared.modelLoaded ? prepared.modelPose->getBound().radius() : 0));
+         for (const auto &edge:geometry.lines) {
+            const auto &c=edge.color; osg::Vec4 tint(float(c.redF()),float(c.greenF()),float(c.blueF()),float(c.alphaF()));
+            if (edge.width==1) { line(edge.start,edge.end,tint); continue; }
+            auto a=edge.start,b=edge.end; auto ca=tint,cb=tint;
+            if (!clipLine(a,b,ca,cb,guideProjection)) continue;
+            auto vertex=[&](const osg::Vec3d &point,const osg::Vec3d &other,float side,const osg::Vec4 &tint) {
+               thickPositions->push_back(point); thickNeighbors->push_back(osg::Vec4(other.x(),other.y(),other.z(),side)); thickColors->push_back(tint);
+            };
+            vertex(a,b,1,ca); vertex(a,b,-1,ca); vertex(b,a,1,cb);
+            vertex(a,b,1,ca); vertex(b,a,1,cb); vertex(b,a,-1,cb);
+         }
+         for (const auto &triangle:geometry.triangles) for (const auto &point:triangle.points) {
+            const auto &c=triangle.color; planePositions->push_back(point); planeColors->push_back(osg::Vec4(float(c.redF()),float(c.greenF()),float(c.blueF()),float(c.alphaF())));
+         }
+      }
       for (const auto &vector:model->vectors) if (const auto arrow=orbitVectorArrow(*model,vector,frame,&vectorBounds)) {
          const osg::Vec4 tint(float(vector.color.redF()),float(vector.color.greenF()),float(vector.color.blueF()),float(vector.color.alphaF()));
          line(arrow->start,arrow->end,tint); for (const auto &wing:arrow->arrow) line(arrow->end,wing,tint);
@@ -422,6 +451,26 @@ struct OrbitRenderer::Scene
       guideGeometry->getOrCreateStateSet()->setAttributeAndModes(new osg::BlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA),osg::StateAttribute::ON);
       guideGeometry->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(pixelRatio));
       guides->removeDrawables(0,guides->getNumDrawables()); guides->addDrawable(guideGeometry);
+      if (!thickPositions->empty()) {
+         auto geometry=new osg::Geometry; isolateArrays(geometry);
+         geometry->setVertexArray(thickPositions.get()); geometry->setTexCoordArray(0,thickNeighbors.get()); geometry->setColorArray(thickColors.get(),osg::Array::BIND_PER_VERTEX);
+         geometry->addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLES,0,thickPositions->size()));
+         auto *state=geometry->getOrCreateStateSet(); state->setMode(GL_LIGHTING,osg::StateAttribute::OFF); state->setAttributeAndModes(widthShader,osg::StateAttribute::ON);
+         state->setAttributeAndModes(new osg::BlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA),osg::StateAttribute::ON);
+         state->addUniform(new osg::Uniform("viewportSize",osg::Vec2(width*pixelRatio,height*pixelRatio)));
+         state->addUniform(new osg::Uniform("lineWidth",float(3*pixelRatio)));
+         geometry->setCullingActive(false); guides->addDrawable(geometry);
+      }
+      if (!planePositions->empty()) {
+         auto geometry=new osg::Geometry; isolateArrays(geometry);
+         geometry->setVertexArray(planePositions.get()); geometry->setColorArray(planeColors.get(),osg::Array::BIND_PER_VERTEX);
+         geometry->addPrimitiveSet(new osg::DrawArrays(GL_TRIANGLES,0,planePositions->size()));
+         auto *state=geometry->getOrCreateStateSet(); state->setMode(GL_LIGHTING,osg::StateAttribute::OFF); state->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
+         state->setAttributeAndModes(new osg::BlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA),osg::StateAttribute::ON);
+         state->setAttributeAndModes(new osg::Depth(osg::Depth::LEQUAL,0,1,false),osg::StateAttribute::ON);
+         state->setAttributeAndModes(new osg::PolygonOffset(1,1),osg::StateAttribute::ON); state->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+         guides->addDrawable(geometry);
+      }
       for (auto it=curves.begin();it!=curves.end();) {
          if (!model->curves.contains(it->first)) { root->removeChild(it->second.root); it=curves.erase(it); }
          else ++it;

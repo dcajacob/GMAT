@@ -318,3 +318,37 @@ notes and evidence requirements. All walkthroughs are pending. Earlier example
 runs and tutorial repairs do not satisfy this new GUI acceptance phase. Resolve
 a safe interactive display route before testing; the native acceptance gate and
 the existing Linux replacement goal remain open. Avoid repeating passing tests.
+
+
+## Isolated actual-input windows, object guides and Undo — 2026-10-02
+
+A safe private authenticated X11 route now operates the actual Qt application
+with mouse/keyboard input, private settings/output and software GL. It avoids
+the user's desktop. New mission execution, one main minimize/restore and viewer
+close/reopen cycle, category-specific GroundStation creation/Cancel/automatic
+name/Save, and long-fixture pause/stop were exercised. The host GNOME Shell PID
+and start time remain unchanged. These are bounded X11 results; host GNOME/
+Wayland, portals, hardware-driver and repeated lifecycle acceptance remain open.
+
+The attempt exposed Ctrl+Z doing nothing with plot/tree focus. Undo/Redo now
+fall back to the selected script when non-text controls have focus, preserve
+local/inactive-document histories and block background modal actions. Owned
+modal fields now follow parentWidget ownership across the dialog window boundary.
+The final focused check passes 0.28 seconds. An actual Mission-tree Ctrl+Z retry
+restores the entire saved authored source byte for byte, and its short mission
+completes 0.563 seconds. The first failed shortcut assumption and the actual
+modal-routing failures are preserved; no old full matrix was repeated.
+
+Per-object DrawGrid and DrawXYPlane conversion, pending controls, native/fallback
+geometry and retained replay now exist. QtGui.ObjectGuides passes 0.31 seconds;
+actual native X11 controls show Earth's spherical grid and filled 15R radial
+plane. The saved guide source retains global Grid Off / XYPlane On. Unsupported
+velocity/other decorations and wider conversion/camera regimes remain open.
+
+See Qt6ParityValidation/object-guides-20261002.md and
+Qt6ParityValidation/isolated-x11-input-20261002.md for identity, selected captures
+and limits. Full raw sessions/check failures are retained under
+build/example-qualification/20261002/isolated-x11. The actual application/bin/GmatQt
+is rebuilt, final SHA256 9bc8115f4200bc4c933b72de2383cfe7722d79c463d148a64c029238b460ea8d.
+All Help tutorial walkthroughs remain pending; this route can support their
+future independent construction. Full Linux replacement remains unfinished.

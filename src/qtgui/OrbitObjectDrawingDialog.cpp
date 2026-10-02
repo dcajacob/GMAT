@@ -20,7 +20,7 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
 {
    setObjectName("orbitObjectDrawingDialog"); setWindowTitle("Object drawing");
    auto *layout=new QVBoxLayout(this);
-   auto *help=new QLabel("Choose each object's paths, labels, markers and body axes. Body axes follow recorded position and attitude; Default hides them. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. Label style uses pixel sizes (0 hides the label); Default uses the viewer font and placement. OK keeps edits pending until Apply.",this);
+   auto *help=new QLabel("Choose each object's paths, labels, markers and body guides. Axes, latitude/longitude grid and local XY plane follow recorded position and attitude; Default hides them. The local XY plane extends to 15 object radii. These are separate from the plot-wide Grid and XY plane settings. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. Label style uses pixel sizes (0 hides the label); Default uses the viewer font and placement. OK keeps edits pending until Apply.",this);
    help->setWordWrap(true); layout->addWidget(help);
    objects=new QTableWidget(names.size(),4,this); objects->setObjectName("orbitObjectDrawing");
    objects->setHorizontalHeaderLabels({"Object","Trajectory","Label","Width (px)"}); objects->verticalHeader()->hide();
@@ -61,13 +61,18 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
       if (drawing && drawing->objectFontPositions.contains(names[row])) position->setCurrentText(drawing->objectFontPositions.value(names[row]));
       fonts->setCellWidget(row,2,position);
    }
-   guides=new QTableWidget(names.size(),2,this); guides->setObjectName("orbitObjectGuides");
-   guides->setHorizontalHeaderLabels({"Object","Body axes"}); guides->verticalHeader()->hide(); configureTableColumns(guides,{10,8});
+   guides=new QTableWidget(names.size(),4,this); guides->setObjectName("orbitObjectGuides");
+   guides->setHorizontalHeaderLabels({"Object","Body axes","Lat/lon grid","Local XY plane"}); guides->verticalHeader()->hide(); configureTableColumns(guides,{10,8,9,10});
    for (int row=0;row<names.size();++row) {
       auto *item=new QTableWidgetItem(names[row]); item->setFlags(item->flags()&~Qt::ItemIsEditable); guides->setItem(row,0,item);
-      auto *choice=new QComboBox(guides); choice->setObjectName("orbitDrawing_axes_"+names[row]); choice->addItems({"Default","On","Off"});
-      if (drawing && drawing->objectAxes.contains(names[row])) choice->setCurrentIndex(drawing->objectAxes.value(names[row]) ? 1 : 2);
-      guides->setCellWidget(row,1,choice);
+      for (int column=1;column<4;++column) {
+         auto *choice=new QComboBox(guides);
+         const QString field=column==1 ? "axes" : column==2 ? "grid" : "xyPlane";
+         choice->setObjectName("orbitDrawing_"+field+"_"+names[row]); choice->addItems({"Default","On","Off"});
+         const auto values=drawing ? (column==1 ? drawing->objectAxes : column==2 ? drawing->objectGrids : drawing->objectXYPlanes) : QMap<QString,bool>();
+         if (values.contains(names[row])) choice->setCurrentIndex(values.value(names[row]) ? 1 : 2);
+         guides->setCellWidget(row,column,choice);
+      }
    }
    auto *tabs=new QTabWidget(this); tabs->setObjectName("orbitDrawingTabs"); tabs->addTab(objects,"Paths and labels"); tabs->addTab(markers,"Markers"); tabs->addTab(fonts,"Label style"); tabs->addTab(guides,"Body guides"); layout->addWidget(tabs,1);
    auto *status=new QLabel(this); status->setObjectName("orbitDrawingStatus"); status->setWordWrap(true); layout->addWidget(status);
@@ -114,10 +119,10 @@ QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
       }
       const auto *position=qobject_cast<QComboBox *>(fonts->cellWidget(row,2)); if (position->currentIndex()) fontPositions[name]=position->currentText();
    }
-   QMap<QString,bool> axes;
-   for (int row=0;row<guides->rowCount();++row) {
-      const auto *choice=qobject_cast<QComboBox *>(guides->cellWidget(row,1));
-      if (choice->currentIndex()) axes.insert(guides->item(row,0)->text(),choice->currentIndex()==1);
+   QMap<QString,bool> axes,grids,planes;
+   for (int row=0;row<guides->rowCount();++row) for (int column=1;column<4;++column) {
+      const auto *choice=qobject_cast<QComboBox *>(guides->cellWidget(row,column));
+      if (choice->currentIndex()) (column==1 ? axes : column==2 ? grids : planes).insert(guides->item(row,0)->text(),choice->currentIndex()==1);
    }
-   return {{"@QtObjectAxes",qtObjectFlagsJson(axes)},{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)},{"@QtObjectFontSizes",qtObjectSizesJson(fontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(fontPositions)}};
+   return {{"@QtObjectAxes",qtObjectFlagsJson(axes)},{"@QtObjectGrids",qtObjectFlagsJson(grids)},{"@QtObjectXYPlanes",qtObjectFlagsJson(planes)},{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)},{"@QtObjectFontSizes",qtObjectSizesJson(fontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(fontPositions)}};
 }

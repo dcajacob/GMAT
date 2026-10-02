@@ -520,7 +520,12 @@ MainWindow::MainWindow()
    connect(qApp,&QApplication::focusChanged,this,[this](QWidget *,QWidget *focused) {
       // Menus temporarily take focus; keep the editor they were opened from.
       if (!focused || qobject_cast<QMenu *>(focused) || focused==menuBar()) return;
-      if (isAncestorOf(focused) && (qobject_cast<QPlainTextEdit *>(focused) ||
+      // QWidget::isAncestorOf stops at an owned dialog's window boundary.
+      // Follow ownership so its fields retain their local editing history.
+      bool owned=false;
+      for (auto *parent=focused;parent;parent=parent->parentWidget())
+         if (parent==this) { owned=true; break; }
+      if (owned && (qobject_cast<QPlainTextEdit *>(focused) ||
           qobject_cast<QTextEdit *>(focused) || qobject_cast<QLineEdit *>(focused))) textEditTarget=focused;
       else textEditTarget.clear();
    });
@@ -528,7 +533,21 @@ MainWindow::MainWindow()
       auto *action = edit->addAction(label); action->setShortcut(key);
       action->setObjectName(QString("edit_")+slot);
       connect(action, &QAction::triggered, this, [this,slot] {
-         if (textEditTarget && textEditTarget->isEnabled()) QMetaObject::invokeMethod(textEditTarget,slot,Qt::DirectConnection);
+         auto *modal=QApplication::activeModalWidget();
+         if (textEditTarget) {
+            // A field keeps its own history, including fields in modal editors.
+            // Never reuse a target behind an active modal dialog.
+            if (textEditTarget->isEnabled() && (!modal || modal==textEditTarget || modal->isAncestorOf(textEditTarget)))
+               QMetaObject::invokeMethod(textEditTarget,slot,Qt::DirectConnection);
+            return;
+         }
+         // GUI Apply records one script edit even when a tree, plot or button
+         // has focus. Preserve selected inactive documents; clipboard actions
+         // and modal controls must never fall back to the mission source.
+         if (modal || (qstrcmp(slot,"undo") && qstrcmp(slot,"redo"))) return;
+         const auto document=selectedScriptDocument();
+         if (document && document->editor && document->editor->isEnabled() && !document->editor->isReadOnly())
+            QMetaObject::invokeMethod(document->editor,slot,Qt::DirectConnection);
       });
       editingActions.append(action);
    };
@@ -1452,7 +1471,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
    const auto name=QString::fromStdString(resource.GetName());
    QMap<QString,QString> changes=requested;
    if (changes.isEmpty()) return applyModelScript(expectedScript);
-   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions","@QtObjectAxes"};
+   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions","@QtObjectAxes","@QtObjectGrids","@QtObjectXYPlanes"};
    const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
@@ -1712,7 +1731,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
                   if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
                }
             };
-            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths); prune(setting.objectFontSizes); prune(setting.objectFontPositions); prune(setting.objectAxes);
+            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths); prune(setting.objectFontSizes); prune(setting.objectFontPositions); prune(setting.objectAxes); prune(setting.objectGrids); prune(setting.objectXYPlanes);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
@@ -1723,6 +1742,8 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
          if (changes.contains("@QtObjectCenters")) setting.objectCenters=qtObjectFlags(changes.value("@QtObjectCenters"));
          if (changes.contains("@QtObjectEndpoints")) setting.objectEndpoints=qtObjectFlags(changes.value("@QtObjectEndpoints"));
          if (changes.contains("@QtObjectAxes")) setting.objectAxes=qtObjectFlags(changes.value("@QtObjectAxes"));
+         if (changes.contains("@QtObjectGrids")) setting.objectGrids=qtObjectFlags(changes.value("@QtObjectGrids"));
+         if (changes.contains("@QtObjectXYPlanes")) setting.objectXYPlanes=qtObjectFlags(changes.value("@QtObjectXYPlanes"));
          if (changes.contains("@QtObjectMarkerSizes")) setting.objectMarkerSizes=qtObjectSizes(changes.value("@QtObjectMarkerSizes"));
          if (changes.contains("@QtObjectLineWidths")) setting.objectLineWidths=qtObjectWidths(changes.value("@QtObjectLineWidths"));
          if (changes.contains("@QtObjectFontSizes")) setting.objectFontSizes=qtObjectFontSizes(changes.value("@QtObjectFontSizes"));

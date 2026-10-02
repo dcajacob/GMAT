@@ -7835,3 +7835,42 @@ Live desktop testing remains stopped after the compositor crash. Establish a
 safe interactive display route for the walkthroughs; synthetic model fixtures
 cannot replace human-style GUI construction or native window qualification.
 Windows/macOS and MATLAB remain deferred. The full goal remains unfinished.
+
+
+## Actual isolated X11 input, per-object guides and focus recovery — 2026-10-02
+
+[Isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md)
+records actual XTest input to the rebuilt application on authenticated private
+Xvfb/Openbox/software GL. It establishes new-mission textured display execution,
+one main minimize/restore and viewer close/reopen cycle, typed GroundStation
+creation/Cancel/automatic naming/Save, and a deliberately long fixture's pause/
+stop. The failed Ctrl+Z and still-running rerun are retained as failures.
+Host GNOME Shell retained its original PID/start time after all sessions;
+no root cause or fix for its earlier crash is established. Host GNOME/Wayland,
+portal/hardware and wider repeated lifecycle gates remain open.
+
+MainWindow now routes non-text Undo/Redo to the selected script, while focused
+fields and selected inactive documents retain their own history. Modal controls
+cannot undo source behind them; an explicit ownership chain recognizes fields
+in owned dialog windows. The final QtGui.FocusUndo passes 0.28 seconds after
+rebuilding the actual application. First Redo binding and two actual modal
+boundary failures remain preserved with corrected dispositions. A separate
+actual Mission-tree Ctrl+Z restores the complete GUI-authored saved script byte
+for byte, then completes its mission in 0.563 seconds and saves the same source.
+Native plot/modal input remains distinct from the focused offscreen cases.
+
+[Object-guide evidence](Qt6ParityValidation/object-guides-20261002.md) adds
+independent per-object DrawGrid/DrawXYPlane conversion and pending Body guides
+controls, named source retention/rename/pruning and recorded pose geometry shared
+by native/fallback/replay. QtGui.ObjectGuides passes 0.31 seconds. Actual native
+X11 pixels show Earth's spherical grid and translucent 15R radial disk after
+GUI Apply, camera drag and Fit. The saved global XYPlane stays On while Grid is
+Off; this is not a native global-plane-Off isolation claim. Mesh/solver/camera
+regimes and unsupported velocity/other decoration limits remain open.
+
+Only newly affected focused checks were run. GmatQt is rebuilt, with final
+SHA256 9bc8115f4200bc4c933b72de2383cfe7722d79c463d148a64c029238b460ea8d.
+Durable raw evidence is in build/example-qualification/20261002/isolated-x11.
+All interactive Help tutorial walkthroughs remain pending. This bounded route
+supports future independent construction; it does not close full replacement
+or native desktop acceptance. Windows/macOS and MATLAB remain deferred.

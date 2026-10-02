@@ -98,7 +98,7 @@ QJsonObject camera(QJsonObject value,const Names &names)
 {
    for (const auto *key:{"plot","reference","target","automaticTrajectory","automaticBody","segmentFrame"})
       if (value.contains(key)) value[key]=reference(value.value(key).toString(),names);
-   for (const auto *key:{"objectLabels","objectTrajectories","objectCenters","objectEndpoints","objectAxes","objectMarkerSizes","objectLineWidths","objectFontSizes","objectFontPositions"}) {
+   for (const auto *key:{"objectLabels","objectTrajectories","objectCenters","objectEndpoints","objectAxes","objectGrids","objectXYPlanes","objectMarkerSizes","objectLineWidths","objectFontSizes","objectFontPositions"}) {
       if (!value.contains(key)) continue;
       auto map=value.value(key).toObject();
       for (auto it=names.cbegin();it!=names.cend();++it) if (map.contains(it.key())) { const auto setting=map.take(it.key()); map.insert(it.value(),setting); }

@@ -19,6 +19,7 @@
 #include "OrbitLabels.hpp"
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
+#include "OrbitObjectGuides.hpp"
 #include "OrbitVectors.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
@@ -176,8 +177,10 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    OrbitSceneBounds bounds;
    for (const auto &curve:data->curves) if (curve.drawsContent())
       for (const auto &point:curve.points) {
-         extent=std::max(extent,std::hypot(point.x,point.y,point.z)+(curve.showObject ? curve.radius : 0));
-         bounds.include(point.x,point.y,point.z,curve.showObject ? curve.radius : 0);
+         const double guideRadius=orbitObjectGuideRadius(curve)*(curve.objectXYPlane ? 15 : curve.objectGrid ? 1 : 0);
+         const double radius=std::max(curve.showObject ? curve.radius : 0,guideRadius);
+         extent=std::max(extent,std::hypot(point.x,point.y,point.z)+radius);
+         bounds.include(point.x,point.y,point.z,radius);
       }
    if (orbit) for (const auto &vector:data->vectors) for (const auto &sample:vector.samples)
       if (const auto arrow=orbitVectorArrow(*data,vector,sample)) for (const auto &point:{arrow->start,arrow->end}) {
@@ -271,7 +274,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
    if (orbit) {
       // Paint from far to near so foreground trajectory segments remain visible
       // over the central body, while the far side is occluded by its disk.
-      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; bool guide=false; };
+      struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; bool guide=false; const PlotPoint *c=nullptr; double guideWidth=1; };
       QVector<Primitive> objects;
       std::deque<PlotPoint> clippedPoints;
       std::deque<PlotCurve> vectorCurves;
@@ -317,6 +320,38 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             };
             for (const auto &axis:axes) { line(axis.start,axis.end); for (const auto &wing:axis.arrow) line(axis.end,wing); }
          }
+         if (last && (curve.objectGrid || curve.objectXYPlane)) {
+            const auto geometry=orbitObjectGuides(curve,*last,orbitObjectGuideRadius(curve));
+            auto point=[&](const osg::Vec3d &position,QColor color) -> const PlotPoint * {
+               PlotPoint p; p.x=position.x(); p.y=position.y(); p.z=position.z(); p.color=color; clippedPoints.push_back(p); return &clippedPoints.back();
+            };
+            auto eyeDepth=[&](const osg::Vec3d &p) { return camera.distance-(p-camera.target)*camera.outward-1e-6; };
+            for (const auto &edge:geometry.lines) {
+               auto a=edge.start,b=edge.end;
+               if (data->perspective) {
+                  const double da=eyeDepth(a),db=eyeDepth(b); if (da<0 && db<0) continue;
+                  if (da<0 || db<0) { const auto clip=a+(b-a)*(da/(da-db)); if (da<0) a=clip; else b=clip; }
+               }
+               const auto *pa=point(a,edge.color),*pb=point(b,edge.color);
+               objects.append({(depth(*pa)+depth(*pb))/2,&curve,pa,pb,0,true,nullptr,edge.width});
+            }
+            for (const auto &triangle:geometry.triangles) {
+               std::vector<osg::Vec3d> polygon(triangle.points.begin(),triangle.points.end());
+               if (data->perspective) {
+                  std::vector<osg::Vec3d> clipped; auto previous=polygon.back(); auto da=eyeDepth(previous);
+                  for (const auto &current:polygon) {
+                     const auto db=eyeDepth(current);
+                     if ((da>=0)!=(db>=0)) clipped.push_back(previous+(current-previous)*(da/(da-db)));
+                     if (db>=0) clipped.push_back(current); previous=current; da=db;
+                  }
+                  polygon=std::move(clipped);
+               }
+               for (size_t i=1;i+1<polygon.size();++i) {
+                  const auto *a=point(polygon[0],triangle.color),*b=point(polygon[i],triangle.color),*c=point(polygon[i+1],triangle.color);
+                  objects.append({(depth(*a)+depth(*b)+depth(*c))/3,&curve,a,b,0,true,c});
+               }
+            }
+         }
          if (last && curve.showObject && perspectiveScale(*last)>0) objects.append({depth(*last),&curve,last,nullptr});
          for (const auto &marker:data->orbitMarkers(curve,visibleFrame)) {
             const auto &point=*marker.point;
@@ -360,9 +395,12 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       std::stable_sort(objects.begin(),objects.end(),[](const Primitive &a,const Primitive &b) { return a.depth<b.depth; });
       for (const auto &object:objects) {
          const auto &curve=*object.curve;
-         painter.setPen(QPen(object.a->color,object.guide ? 1 : curve.orbitLineWidth(),object.guide ? Qt::SolidLine : curve.style));
+         painter.setPen(QPen(object.a->color,object.guide ? object.guideWidth : curve.orbitLineWidth(),object.guide ? Qt::SolidLine : curve.style));
          const auto pixel=screen(project(*object.a));
-         if (object.marker) {
+         if (object.c) {
+            painter.setPen(Qt::NoPen); painter.setBrush(object.a->color);
+            painter.drawPolygon(QPolygonF{pixel,screen(project(*object.b)),screen(project(*object.c))});
+         } else if (object.marker) {
             const double size=curve.orbitMarkerSize;
             if (object.marker==1) {
                painter.setPen(QPen(object.a->color,size*.1)); painter.setBrush(Qt::NoBrush); painter.drawEllipse(pixel,size*.45,size*.45);
