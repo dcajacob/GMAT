@@ -5,7 +5,9 @@ brief, not proof of qualification. Recheck the repository before making changes.
 
 ## Start here
 
-1. Work in `/home/dan/GIT/GMAT/GMAT` on `codex/qt6-gui`.
+1. Work in `/home/dan/GIT/GMAT-Qt` on `codex/qt6-gui`, the separate Qt
+   checkout requested on 2026-10-01. See `Qt6Project.md` for launch/build details.
+   The original `/home/dan/GIT/GMAT/GMAT` checkout and historical evidence are retained.
 2. Read this file, `Qt6Gui.md`, and the acceptance gates and current inventory
    in `Qt6ReplacementQualification.md`. Read that document's latest appendices
    before treating an older checkpoint's pending items as current.
