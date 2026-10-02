@@ -1919,6 +1919,23 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       if (!object || !object->IsOfType(Gmat::SPACECRAFT)) return "Select a configured Spacecraft for the EphemerisFile.";
       initializer="GMAT "+name+".Spacecraft = "+selected+";\n";
    }
+   const auto locatorTypes=Moderator::Instance()->GetListOfFactoryItems(Gmat::EVENT_LOCATOR);
+   if (std::find(locatorTypes.begin(),locatorTypes.end(),type.toStdString())!=locatorTypes.end()) {
+      try {
+         const auto draft=resourceDraft(type,name);
+         const bool contact=draft->IsOfType("ContactLocator");
+         const QString field=contact ? "Target" : "Spacecraft";
+         const auto selected=settings.value(field,QString::fromStdString(draft->GetStringParameter(field.toStdString()))).trimmed();
+         if (selected.isEmpty()) return contact ? "Create a Spacecraft or select a configured PlanetographicRegion before adding a ContactLocator." : "Create a Spacecraft before adding an event locator.";
+         auto *target=Moderator::Instance()->GetConfiguredObject(selected.toStdString());
+         if (!target || (!target->IsOfType(Gmat::SPACECRAFT) && !(contact && target->IsOfType(Gmat::REGION))))
+            return contact ? "Select a configured Spacecraft or PlanetographicRegion for the ContactLocator." : "Select a configured Spacecraft for the event locator.";
+         // The creator omits unchanged fields. Persist the displayed default
+         // explicitly so interpreter reconstruction and Save/reopen retain it.
+         initializer="GMAT "+name+"."+field+" = "+selected+";\n";
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    if (type=="GmatFunction") {
       if (functionPath.trimmed().isEmpty()) return "Choose a function file, or use New file to create one before adding this function.";
       const QFileInfo file(functionPath);

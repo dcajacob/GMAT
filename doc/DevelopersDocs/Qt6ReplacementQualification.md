@@ -8354,3 +8354,22 @@ ramp and full observations accompany the indexed complete raw evidence. App
 identities3ba673f1.../ef933221... retain base cf147e23.../startup5f80be1f... .
 Full Linux host/Wayland/portal/hardware/crash and remaining tutorial acceptance
 remain separate; Windows/macOS/MATLAB deferred; no old matrix/corpus repeated.
+
+
+## Event-locator creation defaults repaired — 2026-10-02
+
+[Focused creation evidence](Qt6ParityValidation/event-locator-creation-20261002.md)
+records the empty-target issue found in actual Help tutorial 7 construction.
+New drafts select the first existing spacecraft and creation persists it even
+when untouched. Explicit spacecraft/Contact regions are retained; invalid
+choices reject before mutation; merely opening/Cancel creates no spacecraft.
+One new offscreen widget regression passes in 0.37 s; independent source review
+found no substantive regression. The first test compile error and identity
+recorder correction remain recorded; no old suite or corpus was repeated.
+
+The application is rebuilt as e5337acd... with controlled core/startup unchanged.
+Subsequent independent Help 10–12 runs exposed a separate shared estimator
+residual-plot issue: legends appear but samples are dropped, although numerical
+reports complete. That plotting fix and the remaining tutorial/host/hardware
+acceptance continue; no full replacement pass is claimed. Windows/macOS/MATLAB
+remain deferred.

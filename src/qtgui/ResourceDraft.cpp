@@ -70,6 +70,12 @@ QtResourcePreview resourceDraft(const QString &type,const QString &name)
    if (auto *array=dynamic_cast<Array *>(draft.get())) array->SetSize(1,1);
    const auto spacecraft=moderator->GetListOfObjects(Gmat::SPACECRAFT);
    if (type=="EphemerisFile" && !spacecraft.empty()) draft->SetStringParameter("Spacecraft",spacecraft.front());
+   if (draft->IsOfType("EventLocator") && !spacecraft.empty()) {
+      // Match wx's CreateEventLocator(createDefault=true) without registering
+      // another spacecraft when the creator is merely opened or canceled.
+      const auto *field=draft->IsOfType("ContactLocator") ? "Target" : "Spacecraft";
+      if (draft->GetStringParameter(field).empty()) draft->SetStringParameter(field,spacecraft.front());
+   }
    if ((type=="OrbitView" || type=="GroundTrack" || type=="GroundTrackPlot") && !spacecraft.empty()) {
       draft->SetStringParameter("Add",spacecraft.front()); draft->SetStringParameter("Add","Earth");
    }
