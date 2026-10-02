@@ -44,9 +44,12 @@ The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing 
 the user's desktop remains stopped following the GNOME Shell crash. A private,
 authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
-It can support independent GUI construction while host GNOME/Wayland, portals
-and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. All twelve tutorials used that bounded route through
+It supports independent GUI construction. Separate
+[private software Wayland lifecycle](Qt6ParityValidation/private-wayland-20261002.md)
+and [complementary private portal/Output input](Qt6ParityValidation/private-wayland-followup-20261002.md)
+also have bounded evidence. Host GNOME/Wayland, host portals, physical hardware
+and the compositor-crash cause remain unqualified. Offscreen fixtures do not
+substitute for interactive construction. All twelve tutorials used that bounded route through
 actual Help/resource/mission controls or the expressly Help-taught code editor,
 with separate per-chapter evidence. These passes do not close the host desktop
 or full Linux replacement gates.

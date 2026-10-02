@@ -5,6 +5,15 @@ and 5. Existing milestone tests do not establish full replacement qualification.
 Windows/macOS deployment is deferred. MATLAB is outside the selected Linux
 runtime; supported plugins below come from its actual startup configuration.
 
+## Current acceptance map — 2026-10-02
+
+[The current nine-gate reconciliation](Qt6ParityValidation/current-acceptance-20261002.md)
+maps these requirements to bounded workflow/plugin, full-example and Help
+evidence, with remaining ordinary operations and host/external limits explicit.
+Historical appendices retain the state at their recorded checkpoint; their old
+pending phrases are not the current test queue. The original gates below stay
+visible and are not blanket-marked complete by tutorial or private-desktop passes.
+
 ## Acceptance gates
 
 - [ ] Audit each wx workflow below against Qt; implement missing user operations

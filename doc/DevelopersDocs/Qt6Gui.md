@@ -105,6 +105,11 @@ an unrelated directory, and failure exit codes for missing or invalid inputs.
 
 ## Current evidence and remaining work
 
+[The current acceptance map](Qt6ParityValidation/current-acceptance-20261002.md)
+reconciles the workflow/viewer/plugin requirements, completed example and Help
+phases, and remaining host/external limits. Historical milestones below retain
+their recorded scope and do not constitute a new verification queue.
+
 Mission-tree context menus provide transient **Breakpoint before command**
 markers. Run (`F5`) honors those markers; **Debug mission** (`Ctrl+F5`) stops
 before the first command when none are set. The paused inspector shows read-only
@@ -708,9 +713,11 @@ unchanged; viewer differences are documented in comments and the message
 window. It imports common plot flags and named camera views into Qt OrbitView,
 including perspective projection and vertical FOV. A camera selector switches
 views during playback. Body-relative cameras follow object orientation;
-two-frame look-at orientation is retained in both rotation modes. Trajectory views
-remain pending. Unsupported
-OpenFrames object kinds or dynamic viewer assignments require manual editing.
+two-frame look-at orientation is retained in both rotation modes. Named
+trajectory-relative views use recorded regular arcs and copied endpoint poses;
+see [bounded camera evidence](Qt6ParityValidation/named-arc-navigation-20261002.md).
+Unsupported OpenFrames object kinds, unresolved velocity/thrust camera modes
+or dynamic viewer assignments require manual editing.
 Keep the original file if it will also be used with the OFI application.
 
 The Linux compatibility tests execute a GMAT function after editing its

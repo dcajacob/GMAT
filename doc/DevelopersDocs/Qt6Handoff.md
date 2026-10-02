@@ -9,8 +9,10 @@ brief, not proof of qualification. Recheck the repository before making changes.
    checkout requested on 2026-10-01. See `Qt6Project.md` for launch/build details.
    The original `/home/dan/GIT/GMAT/GMAT` checkout and historical evidence are retained.
 2. Read this file, `Qt6Gui.md`, and the acceptance gates and current inventory
-   in `Qt6ReplacementQualification.md`. Read that document's latest appendices
-   before treating an older checkpoint's pending items as current.
+   in `Qt6ReplacementQualification.md`. Use the
+   [current nine-gate reconciliation](Qt6ParityValidation/current-acceptance-20261002.md)
+   for remaining work; dated appendices retain historical checkpoint states.
+   Do not treat an older pending item as a request to repeat covered work.
 3. Prioritize viewer/window reliability on the user's Linux desktop, then
    finish the active wx workflows and the remaining qualification gates.
 4. Make concrete fixes, validate them, record their evidence, and rebuild the
@@ -121,10 +123,10 @@ its pending dispositions. Evidence directory: `doc/DevelopersDocs/Qt6ParityValid
   generated/unwritten Output windows, captured and inspected.
 - `check-source-deletion.txt`: all 36 suites passed after deletion changes.
   `round-trip-deletion-wayland.txt` records native deletion coverage.
-- Existing native X11 lifecycle tests and multiple Wayland viewer/panel checks
-  passed. Top-level main-window Wayland minimize/restore remains unqualified.
-- Widget file choosers were exercised with native dialogs disabled. Desktop
-  portal choosers have not been qualified.
+- At the initial handoff, top-level Wayland minimize/restore and portal
+  responses were unqualified. Later private software Wayland lifecycle and
+  complementary private portal evidence are recorded in the current gate map.
+  The user's host GNOME/physical GPU/crash qualification remains separate.
 - Negative SPICE runs emit `FILEOPENFAILED` / `IOSTAT 128` while writing
   `GMATSpiceKernelError.txt`. Correction/rerun succeeds; diagnostic-file handling
   remains unresolved/unqualified. Preserve the raw evidence of these messages.
@@ -135,12 +137,13 @@ Green suites establish their covered cases, not full GUI or scientific parity.
 
 ### 1. Native viewer/window acceptance
 
-Use the user's executable and startup path. Exercise the default example,
-Orbit View and Ground Track, switching/focusing windows, minimizing/restoring,
-repeated close/reopen, run/stop/rerun, and pending edits. Finish top-level Wayland
-minimize/restore qualification. Check rendered trajectories/bodies/textures,
-camera histories/replay and remaining solver-loop display cases. Complete
-required OF translation behavior while keeping the Qt viewer UX.
+Reconcile the existing private X11/software Wayland viewer, minimize/restore,
+close/reopen, run/stop/rerun, replay and pending-edit evidence before selecting
+any new verification. Complementary private portal cases also have bounded
+evidence. The host GNOME/physical GPU and later compositor-crash cause remain
+unqualified; private software rendering does not close that gate. Continue only
+actual remaining viewer/OF requirements identified by the current gate map,
+keeping the Qt viewer UX.
 
 ### 2. Finish source audits and active wx workflows
 
