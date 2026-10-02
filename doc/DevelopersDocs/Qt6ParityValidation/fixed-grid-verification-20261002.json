@@ -1,0 +1,28 @@
+{
+  "raw": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/fixed-grid-live/isolated-x11-_oz5w2n3",
+  "source_sha256": "af8ac7e9fd42e455e8bf140696193f3c7c2aa83a590ff57099f93b103bfb45bd",
+  "report_sha256": "58c3b89066114dfb5cc70334712f2c7e56d27f29b02a25ec4369d44d5f638952",
+  "frame_sha256": "e20cb37e6b04098c8de8ec39726f94f3acf373e2757f581629858620265607a7",
+  "preserved_first_source_sha256": "c67929e0697ecf7495d0b6eaa5276e95eb30875c38b47c1c4a91fae438e8638a",
+  "only_fixture_differences": [
+    "Prop.MaxStep = 10",
+    "ElapsedSecs60 ->300"
+  ],
+  "explicit_epoch": "2015-01-01T12:00:00.000 UTC",
+  "use_entire_interval": true,
+  "sample_rows": 31,
+  "total_intrusion_events": 1,
+  "reported_start_utc": "2015-01-01T12:00:00.000",
+  "reported_end_utc": "2015-01-01T12:05:00.000",
+  "sample_step_seconds": 10,
+  "nondegenerate_interval_seconds": 300,
+  "all_numeric_rows_finite": true,
+  "reported_run_seconds": 0.052,
+  "exit_codes": {
+    "xvfb": 0,
+    "wm": 0,
+    "application": 0
+  },
+  "helper_exit_code": 1,
+  "helper_exit_disposition": "File Exit terminated app0; next action detected already exited owned app; cleanup WM/Xvfb0"
+}

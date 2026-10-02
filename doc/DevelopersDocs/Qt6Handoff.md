@@ -999,3 +999,15 @@ The single build-qt-help build exits 0 at 21:31:25.812008 UTC; installed-content
 checks at 21:32:17.193642 UTC confirm EarthFixed inputs and refreshed verified
 GMD/report-frame excerpts. Supplemental build/check metadata retains the initial
 checker path correction; no repeated build or mission.
+
+
+### Positive FixedGrid report passed — 2026-10-02
+
+[Valid owned frame evidence](Qt6ParityValidation/fixed-grid-20261002.md) records
+actual selector/file/Apply/save-reopen and Output Enter. First insufficient-SPK
+60-s fixture stays unqualified; GUI MaxStep 10/300s supplies adequate coverage.
+One corrected F5 Completed0.052s gives 31 finite entries/one Sun event from
+UTC 2015 Jan 1 noon to 12:05, matching explicit epoch/UseEntireInterval. No engine or
+production code changed. Raw disk artifacts preserve both outcomes. Actual File
+Exit app/WM/Xvfb 0; helper already-exited-app handling 1 is separate. Appb807/core/
+startup unchanged; broader locator/native/scientific acceptance remains open.
