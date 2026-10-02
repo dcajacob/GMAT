@@ -745,3 +745,23 @@ ignored Tutorial 5 evidence. Runtime updated app 3ba673f1…/controlled base cf1
 is bounded private X11/softwareGL evidence; host/hardware/full replacement gates
 remain open. Ledger 1–3 and 5 Passed, 4 and 6 In progress, 7–12 Pending.
 Windows/macOS/MATLAB remain deferred; no old matrix/corpus was repeated.
+
+
+### Mars B-plane Help walkthrough completed — 2026-10-02
+
+[Tutorial 4](Qt6ParityValidation/help-tutorial-04-20261002.md) passed independent
+Help-driven resource and command construction. The first B-plane target meets
+both 1e-5 km tolerances in six iterations; Apply Corrections reduces the next run
+to one. Mars capture reaches 12000.01965272428 km within its 0.1 km tolerance in
+11 iterations; its corrections also reduce the next run to one. Four exported
+summaries and three native views show fuel consumption, polar arrival and capture.
+Actual own save/reopen precedes the frozen 8628-byte source at 19:57:35.160009 UTC
+(SHA e889a806…). One later reference GUI run satisfies the same targets; the
+original sample remains unchanged. Source/default and drawing differences remain
+explicit, without claiming complete-report, every-state or pixel equality.
+
+All eight private sessions and intermediate failures are retained and indexed.
+The final authored and reference sessions exit through the GUI with owned process
+statuses 0/0/0. App 3ba673f1…, controlled base cf147e23… and startup 5f80be1f… are
+unchanged; no old matrix or corpus was repeated. Other tutorials and full Linux,
+host, hardware and crash gates remain open. Windows/macOS/MATLAB remain deferred.
