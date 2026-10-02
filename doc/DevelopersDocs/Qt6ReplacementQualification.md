@@ -8408,3 +8408,28 @@ Rebuilt app b8074b02 retains unchanged base cf147/startup 5f80. One affected
 actual GPS filter retry shows populated curves/export and identical CSV, with
 report differences limited to Run Date. Chapter completion and host/physical
 GPU gates remain separate; no old corpus or successful matrix repeated.
+
+
+## DSN/GN orbit estimation Help walkthrough passed — 2026-10-02
+
+[Help tutorial10 evidence](Qt6ParityValidation/help-tutorial-10-20261002.md)
+records independent Help script-editor construction using own frozen9 inputs,
+DSN two-iteration convergence, the actual shared residual-loss finding and
+one changed-path34.357-s verification with allsixcurves/style/text/PNG export.
+CAN range209 points reconcile report filtering and known A1 epoch offset.
+Mandatory GN simulation24.271 s generates1348 paired observations; one
+justified retry after preserved/tmp exhaustion completes53.322 s with full
+three-iteration report,1342 used,WRMS.959887 and six rendered residuals. GN
+CAN RangeRate209 exportpoints reconcile report/epochs. Rounded GN position
+truth error27.585935 km exceedsprior7.549834 km; statistical convergence is
+not scientific truth-accuracy acceptance.
+
+Own Save/Ctrl+O reopen/Build and all0/0/0 cleanup precede21:17:24.535580 UTC
+freeze. Post-freeze source/settings comparison plus source-matched earlier
+55.659-s corpus sample avoids a needless noisy reference rerun. Known
+hardware/input/data-output differences and all omitted defaults remain
+explicit. Full raw failures/actions/results,three authored sources,own GN
+observations,text/PNG exports and11 unchangedPNGs accompany the record.
+Appb8074b02... retains basecf147e23.../startup5f80be1f... . MATLAB-dependent
+analysis,full scientific/host/Wayland/hardware/crash and remainingtutorial
+gates stay separate; Windows/macOS deferred; no old matrix/corpus repeated.

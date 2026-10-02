@@ -1,0 +1,148 @@
+%  Create the Sun-centered J2000 frame.
+Create CoordinateSystem SunMJ2000Eq;
+SunMJ2000Eq.Origin = Sun;
+SunMJ2000Eq.Axes   = MJ2000Eq;  %Earth mean equator axes
+
+Create Spacecraft Sat;
+Sat.DateFormat       = UTCGregorian;
+Sat.CoordinateSystem = SunMJ2000Eq;
+Sat.DisplayStateType = Cartesian;
+Sat.Epoch            = 19 Aug 2015 00:00:00.000;
+Sat.X                = -126544963   %-126544968
+Sat.Y                = 61978518     %61978514
+Sat.Z                = 24133225     %24133221
+Sat.VX               = -13.789
+Sat.VY               = -24.673
+Sat.VZ               = -10.662
+
+Sat.Id               = 11111;
+
+Create Antenna HGA;  %High Gain Antenna
+
+Create Transponder SatTransponder;
+SatTransponder.PrimaryAntenna   = HGA;
+SatTransponder.HardwareDelay    = 1e-06; %seconds
+SatTransponder.TurnAroundRatio  = '880/749';
+
+Sat.AddHardware                 = {SatTransponder, HGA};
+Sat.SolveFors                   = {CartesianState};
+
+%  Ground Station electronics. 
+Create Transmitter DSNTransmitter;
+Create Receiver DSNReceiver;
+Create Antenna DSNAntenna;
+
+DSNTransmitter.PrimaryAntenna     = DSNAntenna;
+DSNReceiver.PrimaryAntenna        = DSNAntenna;
+DSNTransmitter.Frequency          = 7200;   %MHz
+
+%   Create ground station and associated error models
+Create GroundStation CAN;
+CAN.CentralBody           = Earth;
+CAN.StateType             = Cartesian;
+CAN.HorizonReference      = Ellipsoid;
+CAN.Location1             = -4461.083514
+CAN.Location2             = 2682.281745
+CAN.Location3             = -3674.570392
+CAN.Id                    = 22222;
+CAN.MinimumElevationAngle = 7.0;
+CAN.IonosphereModel       = 'IRI2007';
+CAN.TroposphereModel      = 'HopfieldSaastamoinen';
+CAN.AddHardware           = {DSNTransmitter, DSNAntenna, ...
+                                DSNReceiver};
+
+%   Create GDS transmitter and ground station 
+Create GroundStation GDS;  
+GDS.CentralBody           = Earth;
+GDS.StateType             = Cartesian;
+GDS.HorizonReference      = Ellipsoid;
+GDS.Location1             = -2353.621251;
+GDS.Location2             = -4641.341542;
+GDS.Location3             = 3677.052370;
+GDS.Id                    = '33333';
+GDS.MinimumElevationAngle = 7.0;
+GDS.IonosphereModel       = 'IRI2007';
+GDS.TroposphereModel      = 'HopfieldSaastamoinen';
+GDS.AddHardware           = {DSNTransmitter, DSNAntenna, ...
+                                DSNReceiver};
+
+%   Create MAD transmitter and ground station 
+Create GroundStation MAD;  
+MAD.CentralBody           = Earth;
+MAD.StateType             = Cartesian;
+MAD.HorizonReference      = Ellipsoid;
+MAD.Location1             = 4849.519988;
+MAD.Location2             = -360.641653;
+MAD.Location3             = 4114.504590;
+MAD.Id                    = '44444';
+MAD.MinimumElevationAngle = 7.0;
+MAD.IonosphereModel       = 'IRI2007';
+MAD.TroposphereModel      = 'HopfieldSaastamoinen';
+MAD.AddHardware           = {DSNTransmitter, DSNAntenna, ...
+                                DSNReceiver};
+
+%   Create Ground station error models
+Create ErrorModel DSNrange;
+DSNrange.Type                   = 'DSN_SeqRange';
+DSNrange.NoiseSigma             = 10.63;
+DSNrange.Bias                   = 0.0;
+
+Create ErrorModel DSNdoppler;
+DSNdoppler.Type                 = 'DSN_TCP';
+DSNdoppler.NoiseSigma           = 0.0282;
+DSNdoppler.Bias                 = 0.0;
+
+CAN.ErrorModels                 = {DSNrange, DSNdoppler};
+GDS.ErrorModels                 = {DSNrange, DSNdoppler};
+MAD.ErrorModels                 = {DSNrange, DSNdoppler};
+
+Create TrackingFileSet DSNsimData;
+DSNsimData.AddTrackingConfig         = {{CAN, Sat, CAN}, 'DSN_SeqRange'};   
+DSNsimData.AddTrackingConfig         = {{CAN, Sat, CAN}, 'DSN_TCP'};                 
+DSNsimData.AddTrackingConfig         = {{GDS, Sat, GDS}, 'DSN_SeqRange'};   
+DSNsimData.AddTrackingConfig         = {{GDS, Sat, GDS}, 'DSN_TCP'};                 
+DSNsimData.AddTrackingConfig         = {{MAD, Sat, MAD}, 'DSN_SeqRange'};   
+DSNsimData.AddTrackingConfig         = {{MAD, Sat, MAD}, 'DSN_TCP'};                 
+DSNsimData.FileName                  = ...
+      {'/tmp/gmat-help-tutorials/09-dsn-simulation/realistic-stage/isolated-x11-mea7n9jg/output/Simulate DSN Range and Doppler Data 3 weeks.gmd'};
+DSNsimData.RampTable                 = ... 
+      {'/tmp/gmat-help-tutorials/09-dsn-simulation/realistic-stage/isolated-x11-mea7n9jg/Simulate DSN Range and Doppler Data 3 weeks.rmp'};
+
+DSNsimData.UseLightTime              = true;
+DSNsimData.UseRelativityCorrection   = true;
+DSNsimData.UseETminusTAI             = true;
+
+Create ForceModel Fm;
+Create Propagator Prop;
+Fm.CentralBody             = Sun;
+Fm.PointMasses             = {Sun, Earth, Luna, Mars, Saturn, ...
+                             Uranus, Mercury, Venus, Jupiter};
+Fm.SRP                     = On;
+Fm.RelativisticCorrection  = On;
+Fm.ErrorControl            = None;
+Prop.FM                    = Fm;
+Prop.MinStep               = 0;
+
+Create BatchEstimator bat
+bat.ShowProgress               = true;
+bat.ReportStyle                = Normal;
+bat.ReportFile                 =  ...
+         'Orbit Estimation using DSN Range and Doppler Data.report';
+bat.Measurements               = {DSNsimData} 
+bat.AbsoluteTol                = 0.001;
+bat.RelativeTol                = 0.0001;
+bat.MaximumIterations          = 10
+bat.MaxConsecutiveDivergences  = 3;
+bat.Propagator                 = Prop;
+bat.ShowAllResiduals           = On;
+bat.OLSEInitialRMSSigma        = 10000;
+bat.OLSEMultiplicativeConstant = 3;
+bat.OLSEAdditiveConstant       = 0;
+bat.EstimationEpochFormat      = 'FromParticipants'; 
+bat.InversionAlgorithm         = 'Internal';    
+bat.MatlabFile                 =  ...
+           'Orbit Estimation using DSN Range and Doppler Data.mat'
+
+BeginMissionSequence
+
+RunEstimator bat

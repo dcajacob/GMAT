@@ -890,3 +890,35 @@ Rebuilt app b8074b02 retains unchanged base cf147/startup 5f80. One affected
 actual GPS filter retry shows populated curves/export and identical CSV, with
 report differences limited to Run Date. Chapter completion and host/physical
 GPU gates remain separate; no old corpus or successful matrix repeated.
+
+
+### DSN/GN orbit estimation Help walkthrough passed — 2026-10-02
+
+[Tutorial 10](Qt6ParityValidation/help-tutorial-10-20261002.md) passes bounded
+private actual-input construction from an empty Help-prescribed script editor,
+using immutable own Tutorial9 observations/ramp. DSN estimation converges in
+two iterations,1344/1348 used,WRMS1459.977978→.963600. Six blank residual plots
+exposed shared bulk replacement data loss; after the focused receiver fix,
+one affected34.357-s retry renders iterations0/1 and actual CAN range export
+reconciles209 accepted rows. Text/PNG export and grid/legend toggles pass.
+
+Mandatory GN appendix actual SaveAs/Edit→Replace construction simulates1348
+paired Range/RangeRate observations in24.271 s. Temporary-storage exhaustion
+truncates the first estimator report; preserved as environmental failure,
+not accepted complete evidence. One justified same-source/input retry53.322 s
+produces a complete three-iteration report,1342/1348 used,WRMS431.749062→.959887,
+relative2.19625e-7<.0001 and six populated curves. CAN RangeRate export209 points
+reconciles accepted rows, rounding and known A1 epoch offset. GN final rounded
+position truth error27.585935 km exceeds7.549834 km prior; convergence does
+not imply improved truth accuracy. Misnamed ASCII export is not a PNG claim.
+
+All three own missions Save/reopen/Build and normal0/0/0 cleanup precede
+21:17:24.535580 UTC freeze. Post-freeze86 shared explicit properties match the
+sample; known input/hardware/output differences and omitted defaults remain
+explicit. Earlier source-matched55.659-s sample corpus execution is reused
+with earlier-app/offscreen limits; no noisy reference rerun. Current patched
+appb8074b02... retains basecf147e23.../startup5f80be1f... . Full indexed raw
+evidence/failures,three authored sources,GN observations,exports and11 unchanged
+PNGs are retained. MATLAB analysis and full scientific/host/Wayland/hardware/
+crash gates stay separate; Windows/macOS remain deferred. No old matrix/corpus
+was repeated.
