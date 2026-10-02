@@ -1,0 +1,9 @@
+Create Variable Result;
+Create ReportFile PathCheck;
+PathCheck.Filename = '/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/python-paths-live/readback.txt';
+PathCheck.WriteHeaders = false;
+PathCheck.Precision = 16;
+BeginMissionSequence;
+[Result] = Python.QtPathLiveReadback.value();
+Python.QtPathLiveReadback.show_origin();
+Report PathCheck Result;

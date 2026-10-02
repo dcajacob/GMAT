@@ -1011,3 +1011,30 @@ UTC 2015 Jan 1 noon to 12:05, matching explicit epoch/UseEntireInterval. No engi
 production code changed. Raw disk artifacts preserve both outcomes. Actual File
 Exit app/WM/Xvfb 0; helper already-exited-app handling 1 is separate. Appb807/core/
 startup unchanged; broader locator/native/scientific acceptance remains open.
+
+
+### Ordered Python module paths and fresh restart readback — 2026-10-02
+
+[The bounded path record](Qt6ParityValidation/python-module-paths-20261002.md)
+qualifies Python Module Add/Replace/Remove/Up/Down/Browse in Set paths, pending
+startup import/export that retains other source, Cancel/invalid rollback and
+other-path Apply that preserves the live Python list. Imported pending rows remain
+independent of the engine's stale list. Export and restarting with that file
+are required for Python changes; no live reload/cache reset is promised.
+
+One affected Paths check passes in 1.20 s; the new PythonPaths check passes in 1.17 s
+after its preserved raw-absolute getter fixture failure is corrected, with no
+production change or diagnostic rerun. Two fresh children select independent
+13.25/23.5 constants. One private actual-input workflow adds/reorders/exports/
+imports and reopens its GUI-authored source. A fresh exported-startup GUI run
+completes in 0.031 s, opens report 23.5 and records the exact modules-second origin.
+Both owned sessions close app/WM/Xvfb 0/0/0; helpers' already exited app diagnostic 1 is
+separate. Full original 47 files / 5,064,944 bytes, startup/source/module hashes,
+typing-protocol mistakes and five unchanged PNGs are retained and indexed.
+
+Source a922195f... and actual app 787cd09b... / 5,876,904 B retain base cf147...,
+util 1e4e... and production startup 5f80... . First-failure fixtures/logs and passing
+stdout/source identities remain in the owned controls tree. Custom-path
+ExternalForce execution, package/environment/cache behavior, host/Wayland/
+portal/GPU/crash and full replacement gates remain separate. No old successful
+matrix or corpus stage was repeated; Windows/macOS/MATLAB stay deferred.
