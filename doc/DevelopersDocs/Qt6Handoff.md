@@ -1118,3 +1118,30 @@ is preserved. Both File Exits app/WM/Xvfb 0/0/0 are separate from helper diagnos
 App 244dc41a... / 5,926,536 B/core/util/startup fixed; no engine/build/test or old
 matrix/corpus repeat. Package/environment/cache, host/hardware and full Linux
 acceptance stay open; Windows/macOS/MATLAB remain deferred.
+
+
+## Missing-spacecraft viewer checkpoint — 2026-10-02
+
+The independently authored two-history case exposed a completed OrbitView that
+placed SatA at Earth's origin when a subsequent SatB publication omitted SatA.
+Commit `08cdda3c` carries explicit presentation availability metadata through
+ordinary callbacks, Current replay and named-camera preparation. Qt retains the
+last real pose and breaks the resumed trajectory; valid origin coordinates and
+existing numerical arrays/commands remain unchanged. Legacy absent-data warnings
+remain visible. The wx capability guard is source-reviewed, with no wx build claim.
+
+[The repair/build record](Qt6ParityValidation/viewer-data-availability-20261002.md)
+binds the rebuilt 5,935,320-byte application, SHA `989d3499...`, and core SHA
+`2082a341...` to the recorded source. The new availability regression passes
+0.31 s after its preserved test-only structural-notification assertion failure;
+only the failed test target was rebuilt/retried. Affected InvalidPlotData and
+SolverPlots pass once in 1.49/4.07 s and were reused.
+
+[One actual-input affected retry](Qt6ParityValidation/multi-thrust-viewer-retry-20261002.md)
+opens the frozen authored source, completes one effective F5 in 0.335 s, displays
+both spacecraft off Earth's origin and opens the Output report. The entire
+2,502-byte report is byte-identical to the frozen pre-fix report. Normal owned
+application/WM/Xvfb exits are 0/0/0. No passing tutorial, corpus or old matrix was
+repeated. This private X11/software GL evidence does not qualify the host desktop,
+physical GPU or compositor-crash cause; synchronized thrust and other explicitly
+recorded external/domain limits remain separate.

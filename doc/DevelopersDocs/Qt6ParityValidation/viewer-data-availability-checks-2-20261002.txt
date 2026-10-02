@@ -1,0 +1,24 @@
+Start testing: Oct 02 17:39 MDT
+----------------------------------------------------------
+44/140 Testing: QtGui.OrbitDataAvailability
+44/140 Test: QtGui.OrbitDataAvailability
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT-Qt/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT-Qt/build/linux-gui/src/qtgui/GmatQtOrbitDataAvailabilityTests" "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt"
+Directory: /home/dan/GIT/GMAT-Qt/application/bin
+"QtGui.OrbitDataAvailability" start time: Oct 02 17:39 MDT
+Output:
+----------------------------------------------------------
+Sequential independent report rows=3
+SatA samples=23 providers=ALeg,ALater; SatB samples=5 providers=BLeg
+PASS sequential A/B/A publication retains last real state, breaks missing histories and matches independent Reports; valid spacecraft-centered origins; both production CURRENT replay overrides preserve masks and clear subsequent replay state; one-shot/stale/malformed/data-object-solver-ground reset and named-camera preparation guards. No host/pixel/solver-convergence claim.
+<end of output>
+Test time =   0.31 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.OrbitDataAvailability" end time: Oct 02 17:39 MDT
+"QtGui.OrbitDataAvailability" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 02 17:39 MDT
+
+qt-gui =   0.31 sec*proc
+

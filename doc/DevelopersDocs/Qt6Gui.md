@@ -2333,6 +2333,10 @@ reports at 10, 15, 20, 25 and 30 seconds use durations 10, 5, 5, 5 and 5.
 
 [The bounded two-history record](Qt6ParityValidation/multi-thrust-live-20261002.md)
 qualifies sequential independent propagation and boundary fuel reports. Its
-synchronized boundary attempt failed, and the combined asynchronous OrbitView
-still draws a zero placeholder for an unpublished spacecraft; these routes
-remain unqualified. The original attempts and source limitations are retained.
+synchronized boundary attempt failed and remains unqualified. The later
+[viewer availability repair](Qt6ParityValidation/viewer-data-availability-20261002.md)
+retains the last real pose when a spacecraft is absent from a publication. One
+[unchanged-source affected GUI retry](Qt6ParityValidation/multi-thrust-viewer-retry-20261002.md)
+shows both spacecraft at their orbital endpoints and produces the same complete
+numerical report. Legitimate zero coordinates remain valid. Original attempts
+and source limitations are retained.

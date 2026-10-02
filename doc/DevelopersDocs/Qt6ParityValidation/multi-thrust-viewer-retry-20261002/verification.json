@@ -1,0 +1,209 @@
+{
+  "recorded_UTC": "2026-10-02T23:46:23.056526+00:00",
+  "status": "Passed one affected private completedLatest viewer retry with exact numerical-report preservation",
+  "compiled_source_before": "2f9810c07c7c3b24c4b3f11b7130d9a77a130d7b",
+  "compiled_source_after": "08cdda3c561cc9e7eab8e67ed876b870e59e41b9",
+  "runtime_before": {
+    "app": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "bytes": 5926536,
+      "sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+      "inode": 134504765,
+      "mtime_ns": 1790980086562908195
+    },
+    "base": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+      "bytes": 25036288,
+      "sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+      "inode": 134517343,
+      "mtime_ns": 1790959937689993230
+    },
+    "util": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+      "bytes": 2929664,
+      "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+      "inode": 134517344,
+      "mtime_ns": 1790915817496393632
+    },
+    "startup": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "inode": 134517345,
+      "mtime_ns": 1790925246080292151
+    },
+    "helper": {
+      "path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+      "bytes": 26996,
+      "sha256": "4232bdb0a050ab22b5f0513a15f92339501edc88719339e2dac1c476a8d3358f",
+      "inode": 147360423,
+      "mtime_ns": 1790962210960784230
+    },
+    "thrust_plugin": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a",
+      "bytes": 980216,
+      "sha256": "e97880025502b09d2330daa9d3beed980b59f7bfbf323423e2e80a2fe44322f0",
+      "inode": 134517444,
+      "mtime_ns": 1790959965775580457
+    },
+    "own_input_source": {
+      "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/own-independent-corrected.script",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/own-independent-corrected.script",
+      "bytes": 5205,
+      "sha256": "317e151e09253e9ef5fc30a57bfaf39b1765ec518170de291bfa1fd872a7417d",
+      "inode": 153619692,
+      "mtime_ns": 1790981593709475932
+    },
+    "source_HEAD": "3fbd30895057d53f2275690ecbd452cc3cd9f517",
+    "recorded_UTC": "2026-10-02T23:01:45.194347+00:00",
+    "scope": "One actual CtrlO reopening already GUI-authored corrected source; F5 once, actual Output and analytic6rows; no reconstruction or prior cases repeated."
+  },
+  "runtime_after": {
+    "app": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "bytes": 5935320,
+      "sha256": "989d3499cfb85fe4d72703c9029823e1247e213fd26458b1c616d184d9530371",
+      "inode": 134504765,
+      "mtime_ns": 1790983784270287245
+    },
+    "base": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+      "bytes": 25040656,
+      "sha256": "2082a341f5f123e81bad362972cd2b28a0a4753047ae51b5c09609e246be430c",
+      "inode": 134517343,
+      "mtime_ns": 1790983758091655618
+    },
+    "util": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+      "bytes": 2929664,
+      "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+      "inode": 134517344,
+      "mtime_ns": 1790915817496393632
+    },
+    "startup": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "inode": 134517345,
+      "mtime_ns": 1790925246080292151
+    },
+    "helper": {
+      "path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+      "bytes": 26996,
+      "sha256": "4232bdb0a050ab22b5f0513a15f92339501edc88719339e2dac1c476a8d3358f",
+      "inode": 147360423,
+      "mtime_ns": 1790962210960784230
+    },
+    "thrust_plugin": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a",
+      "bytes": 980216,
+      "sha256": "e97880025502b09d2330daa9d3beed980b59f7bfbf323423e2e80a2fe44322f0",
+      "inode": 134517444,
+      "mtime_ns": 1790983776880818144
+    },
+    "own_input_source": {
+      "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/corrected-passed-attempt/own-independent-corrected.script",
+      "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/corrected-passed-attempt/own-independent-corrected.script",
+      "bytes": 5205,
+      "sha256": "317e151e09253e9ef5fc30a57bfaf39b1765ec518170de291bfa1fd872a7417d",
+      "inode": 153619753,
+      "mtime_ns": 1790982696125551456
+    },
+    "source_HEAD": "08cdda3c561cc9e7eab8e67ed876b870e59e41b9",
+    "recorded_UTC": "2026-10-02T23:40:37.733129+00:00",
+    "scope": "ONE affected actual CtrlO+Build+F5 of own immutable5205 source after explicit-availability viewer repair; completedLatest+Output and originalfuel/fullreport comparison; no reconstruction/old tests."
+  },
+  "old_documentary_context_not_compiled_source": "3fbd30895057d53f2275690ecbd452cc3cd9f517",
+  "unchanged_runtime_and_source_sha": {
+    "util": true,
+    "startup": true,
+    "helper": true,
+    "thrust_plugin": true,
+    "own_input_source": true
+  },
+  "input_data": {
+    "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/inputs/history-a.thf": {
+      "bytes": 530,
+      "sha256": "73903bd1b9c554c5b02d57c12370a033ace7dc4a67558d57cbce9aa3b0da795a"
+    },
+    "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/inputs/history-b.thf": {
+      "bytes": 532,
+      "sha256": "2311a80752ceac8593c9358f36463bb0b0b1d8cffef12a857bbd39c6c1e9682c"
+    }
+  },
+  "old_artifact_index": {
+    "identity": {
+      "bytes": 25553,
+      "sha256": "9fb746e3d38080e15434fcd65cf98417408a6e280d30219c6a8958a793e41793"
+    },
+    "verified_existing_entries": 138,
+    "all_unchanged": true
+  },
+  "source_before": {
+    "bytes": 5205,
+    "sha256": "317e151e09253e9ef5fc30a57bfaf39b1765ec518170de291bfa1fd872a7417d"
+  },
+  "source_after": {
+    "bytes": 5205,
+    "sha256": "317e151e09253e9ef5fc30a57bfaf39b1765ec518170de291bfa1fd872a7417d"
+  },
+  "report_before": {
+    "bytes": 2502,
+    "sha256": "c2a06348a5f9b7068255dae4dbc7d1c8396a008e35afe05591ddadbb45a989bd"
+  },
+  "report_after": {
+    "bytes": 2502,
+    "sha256": "c2a06348a5f9b7068255dae4dbc7d1c8396a008e35afe05591ddadbb45a989bd"
+  },
+  "report_byte_exact": true,
+  "effective_F5_runs": 1,
+  "F5_key_actions": 1,
+  "completed_seconds": 0.335,
+  "analytic": {
+    "passed": true,
+    "rows": 6,
+    "max_fuel_residual_kg": 4.121147867408581e-13,
+    "max_epoch_residual_s": 2.1653249859809875e-07
+  },
+  "scene": "005 completedLatest button: SatA and SatB nearorbitalendpoint; Earthlabelonlyatcenter; overlappingclose-spacecraftlabels, no calibratedpixel-to-state metric asserted",
+  "actual_Output": "006 BoundaryValues selected and Enter;2502B reportopened",
+  "normal_FileExit": {
+    "file_menu_screenshot": "007-normal-File-menu",
+    "last_action": {
+      "elapsed": 150.84638787800213,
+      "action": "click",
+      "x": 205,
+      "y": 473,
+      "result": null
+    },
+    "cleanup": {
+      "xvfb": 0,
+      "wm": 0,
+      "application": 0
+    },
+    "helper_exit": 1,
+    "meaning": "actualFileExitnormalapp0; helperalready-exited-app diagnostic1; not timeout/crash"
+  },
+  "limitations": [
+    "Core legacy absence/zero warning text remains; Qtexplicitmask skips artificialpoints",
+    "No synchronized boundary-protocol fix/pass",
+    "No extra solver/groundtrack/mixedpublication native run/replay/lifecycle matrix",
+    "No calibratedpixel/geometrictruth/fullhistoryexport",
+    "No hostGNOME/Wayland/portal/GPU/crash/fullLinuxclaim"
+  ],
+  "raw_session": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb",
+  "action_count": 28,
+  "png_count": 7
+}

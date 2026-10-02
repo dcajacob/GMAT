@@ -1,0 +1,76 @@
+{
+  "mode": "checks",
+  "command": [
+    "ctest",
+    "--test-dir",
+    "build/linux-gui",
+    "--output-on-failure",
+    "--no-tests=error",
+    "-R",
+    "^QtGui\\.(OrbitDataAvailability|InvalidPlotData|SolverPlots)$"
+  ],
+  "started_utc": "2026-10-02T23:30:59.395156+00:00",
+  "runtime_before": [
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "bytes": 5935320,
+      "sha256": "989d3499cfb85fe4d72703c9029823e1247e213fd26458b1c616d184d9530371",
+      "inode": 134504765,
+      "mtime_ns": 1790983784270287245
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+      "bytes": 25040656,
+      "sha256": "2082a341f5f123e81bad362972cd2b28a0a4753047ae51b5c09609e246be430c",
+      "inode": 134517343,
+      "mtime_ns": 1790983758091655618
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+      "bytes": 2929664,
+      "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+      "inode": 134517344,
+      "mtime_ns": 1790915817496393632
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "inode": 134517345,
+      "mtime_ns": 1790925246080292151
+    }
+  ],
+  "finished_utc": "2026-10-02T23:31:05.666523+00:00",
+  "exit_code": 8,
+  "stdout": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/viewer-availability-controls/checks-1.stdout",
+  "runtime_after": [
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "bytes": 5935320,
+      "sha256": "989d3499cfb85fe4d72703c9029823e1247e213fd26458b1c616d184d9530371",
+      "inode": 134504765,
+      "mtime_ns": 1790983784270287245
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+      "bytes": 25040656,
+      "sha256": "2082a341f5f123e81bad362972cd2b28a0a4753047ae51b5c09609e246be430c",
+      "inode": 134517343,
+      "mtime_ns": 1790983758091655618
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+      "bytes": 2929664,
+      "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+      "inode": 134517344,
+      "mtime_ns": 1790915817496393632
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "inode": 134517345,
+      "mtime_ns": 1790925246080292151
+    }
+  ]
+}

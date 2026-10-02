@@ -1,0 +1,81 @@
+{
+  "utc": "2026-10-02T23:15:29.280442+00:00",
+  "compiled_source_ref": "2f9810c0",
+  "document_head": "d76779990ee48d5a3df8f13829548a2618a7491d",
+  "sources": [
+    {
+      "path": "src/base/subscriber/OrbitPlot.cpp",
+      "bytes": 99065,
+      "sha256": "e3b859fe54f01147d775ac92b41c67cf62c14618ad4613e4e99213fd9ab8b785"
+    },
+    {
+      "path": "src/base/subscriber/OrbitPlot.hpp",
+      "bytes": 11754,
+      "sha256": "50def36b041de0f8a99076ebfa599883cf3d120a56d8349f1005bdba98089e00"
+    },
+    {
+      "path": "src/gui/app/GuiPlotReceiver.cpp",
+      "bytes": 92255,
+      "sha256": "d695a57bbb44415747c768405ee40c40b2ea3e7d5cdf66f8eea9012decb91a19"
+    },
+    {
+      "path": "src/qtgui/QtPlotReceiver.cpp",
+      "bytes": 73854,
+      "sha256": "5da4e95eb8abb3dc13e72f5f351df7c1eab1ece5ec872b1cfe882af283a6a099"
+    },
+    {
+      "path": "src/qtgui/QtPlotReceiver.hpp",
+      "bytes": 13100,
+      "sha256": "04ae281dad9fef33514fea6adb7e3a9c182487cb55adefb3e661f0c915a6be94"
+    },
+    {
+      "path": "src/qtgui/CMakeLists.txt",
+      "bytes": 43348,
+      "sha256": "eb66743600d05d73195d81528ccde997e8bd9c93091896909c75e4c3ff677ea4"
+    },
+    {
+      "path": "src/base/subscriber/OrbitView.cpp",
+      "bytes": 75742,
+      "sha256": "ed7e8db8b4f90fe37deee27957575f8ac83fcd0f8a1d14342a5d7d2326f2a968"
+    },
+    {
+      "path": "src/base/subscriber/GroundTrackPlot.cpp",
+      "bytes": 45486,
+      "sha256": "f23a93192dafaaf1adb6256cd1d25d183d20a34a47260b2a62fa275f7c2af79e"
+    }
+  ],
+  "runtime": [
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "bytes": 5926536,
+      "sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+      "inode": 134504765,
+      "mtime_ns": 1790980086562908195
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+      "bytes": 25036288,
+      "sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+      "inode": 134517343,
+      "mtime_ns": 1790959937689993230
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+      "bytes": 2929664,
+      "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+      "inode": 134517344,
+      "mtime_ns": 1790915817496393632
+    },
+    {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "inode": 134517345,
+      "mtime_ns": 1790925246080292151
+    }
+  ],
+  "preparation_note": "Initial source-copy invocation stopped at incorrect src/gui/subscriber path after preserving two identical base files; corrected path is src/gui/app, no build/test/application was run.",
+  "scope": "Baseline source from known compiled commit; runtime observed before coordinated viewer rebuild. No build, test, or application run.",
+  "scope_extension": "OrbitView overrides solver replay; its matching presentation metadata sends/cleanup are required and the old compiled source is captured here.",
+  "wx_scope": "Selected separate-checkout cache has GMAT_INCLUDE_GUI=OFF, GMAT_INCLUDE_QT_GUI=ON. The one-line legacy receiver metadata-probe false guard is source-reviewed; no wx build/runtime qualification is claimed."
+}

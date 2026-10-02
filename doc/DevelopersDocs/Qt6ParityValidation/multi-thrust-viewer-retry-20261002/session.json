@@ -1,0 +1,36 @@
+{
+  "app": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+  "startup": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+  "script": null,
+  "app_sha256": "989d3499cfb85fe4d72703c9029823e1247e213fd26458b1c616d184d9530371",
+  "original_startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+  "clone_startup_sha256": "b79146ef38519af02773421a9b32d114533f63ba5c3750e80058c19b54fe6b54",
+  "startup_change": "OUTPUT_PATH value only",
+  "artifacts": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb",
+  "seconds": 180,
+  "screen": [
+    1600,
+    1200
+  ],
+  "wm_command": [
+    "/tmp/gmat-isolated-x11/wm/usr/bin/openbox",
+    "--sm-disable",
+    "--config-file",
+    "/tmp/gmat-isolated-x11/openbox.xml"
+  ],
+  "limits": "Own X11/software GL input and rendering only; GNOME/Wayland/portal and hardware-driver acceptance remain open",
+  "display": ":2",
+  "qpa": "xcb",
+  "software_gl": true,
+  "processes": {
+    "xvfb": 1004403,
+    "wm": 1004427,
+    "application": 1004466
+  },
+  "closed": true,
+  "exit_codes": {
+    "xvfb": 0,
+    "wm": 0,
+    "application": 0
+  }
+}

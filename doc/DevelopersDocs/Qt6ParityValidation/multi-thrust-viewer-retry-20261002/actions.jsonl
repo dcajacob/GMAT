@@ -1,0 +1,28 @@
+{"elapsed": 10.626602089963853, "action": "wait", "ms": 300, "result": null}
+{"elapsed": 10.73622570297448, "action": "screenshot", "label": "001-initial-private-actual-app", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/001-001-initial-private-actual-app.png"}
+{"elapsed": 27.77290878497297, "action": "click", "x": 918, "y": 631, "result": null}
+{"elapsed": 27.873164189979434, "action": "wait", "ms": 100, "result": null}
+{"elapsed": 27.903637867013458, "action": "key", "keys": ["CTRL", "o"], "result": null}
+{"elapsed": 28.103955729980953, "action": "wait", "ms": 200, "result": null}
+{"elapsed": 28.10683688701829, "action": "text", "text": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/corrected-passed-attempt/own-independent-corrected.script", "result": null}
+{"elapsed": 28.40740355796879, "action": "wait", "ms": 300, "result": null}
+{"elapsed": 28.530156671011355, "action": "screenshot", "label": "002-exact-immutable-own-open-dialog", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/002-002-exact-immutable-own-open-dialog.png"}
+{"elapsed": 45.89768565900158, "action": "key", "keys": ["ESC"], "result": null}
+{"elapsed": 45.968192894011736, "action": "click", "x": 1064, "y": 738, "result": null}
+{"elapsed": 46.46858088998124, "action": "wait", "ms": 500, "result": null}
+{"elapsed": 46.59919994696975, "action": "screenshot", "label": "003-immutable-own-reopened-build-succeeded", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/003-003-immutable-own-reopened-build-succeeded.png"}
+{"elapsed": 67.87765831901925, "action": "key", "keys": ["F5"], "result": null}
+{"elapsed": 68.77802945999429, "action": "wait", "ms": 900, "result": null}
+{"elapsed": 68.90446975798113, "action": "screenshot", "label": "004-one-affected-F5-completed", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/004-004-one-affected-F5-completed.png"}
+{"elapsed": 68.9749262650148, "action": "click", "x": 598, "y": 320, "result": null}
+{"elapsed": 69.1253673399915, "action": "wait", "ms": 150, "result": null}
+{"elapsed": 69.25591699400684, "action": "screenshot", "label": "005-completed-Latest-scene", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/005-005-completed-Latest-scene.png"}
+{"elapsed": 131.2055857310188, "action": "click", "x": 342, "y": 278, "result": null}
+{"elapsed": 131.27611535298638, "action": "click", "x": 260, "y": 320, "result": null}
+{"elapsed": 131.306756948994, "action": "key", "keys": ["ENTER"], "result": null}
+{"elapsed": 131.50720729201566, "action": "wait", "ms": 200, "result": null}
+{"elapsed": 131.62147416902008, "action": "screenshot", "label": "006-actual-Output-byte-exact-report", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/006-006-actual-Output-byte-exact-report.png"}
+{"elapsed": 131.6921323799761, "action": "click", "x": 177, "y": 196, "result": null}
+{"elapsed": 131.7926957019954, "action": "wait", "ms": 100, "result": null}
+{"elapsed": 131.90548036899418, "action": "screenshot", "label": "007-normal-File-menu", "result": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-viewer-retry/isolated-x11-uwu930qb/screenshots/007-007-normal-File-menu.png"}
+{"elapsed": 150.84638787800213, "action": "click", "x": 205, "y": 473, "result": null}

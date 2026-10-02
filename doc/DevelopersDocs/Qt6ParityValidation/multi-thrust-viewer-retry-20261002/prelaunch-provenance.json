@@ -1,0 +1,61 @@
+{
+  "app": {
+    "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+    "bytes": 5935320,
+    "sha256": "989d3499cfb85fe4d72703c9029823e1247e213fd26458b1c616d184d9530371",
+    "inode": 134504765,
+    "mtime_ns": 1790983784270287245
+  },
+  "base": {
+    "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+    "bytes": 25040656,
+    "sha256": "2082a341f5f123e81bad362972cd2b28a0a4753047ae51b5c09609e246be430c",
+    "inode": 134517343,
+    "mtime_ns": 1790983758091655618
+  },
+  "util": {
+    "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+    "bytes": 2929664,
+    "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+    "inode": 134517344,
+    "mtime_ns": 1790915817496393632
+  },
+  "startup": {
+    "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+    "bytes": 10260,
+    "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+    "inode": 134517345,
+    "mtime_ns": 1790925246080292151
+  },
+  "helper": {
+    "path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/IsolatedX11Session.py",
+    "bytes": 26996,
+    "sha256": "4232bdb0a050ab22b5f0513a15f92339501edc88719339e2dac1c476a8d3358f",
+    "inode": 147360423,
+    "mtime_ns": 1790962210960784230
+  },
+  "thrust_plugin": {
+    "path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a",
+    "bytes": 980216,
+    "sha256": "e97880025502b09d2330daa9d3beed980b59f7bfbf323423e2e80a2fe44322f0",
+    "inode": 134517444,
+    "mtime_ns": 1790983776880818144
+  },
+  "own_input_source": {
+    "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/corrected-passed-attempt/own-independent-corrected.script",
+    "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/corrected-passed-attempt/own-independent-corrected.script",
+    "bytes": 5205,
+    "sha256": "317e151e09253e9ef5fc30a57bfaf39b1765ec518170de291bfa1fd872a7417d",
+    "inode": 153619753,
+    "mtime_ns": 1790982696125551456
+  },
+  "source_HEAD": "08cdda3c561cc9e7eab8e67ed876b870e59e41b9",
+  "recorded_UTC": "2026-10-02T23:40:37.733129+00:00",
+  "scope": "ONE affected actual CtrlO+Build+F5 of own immutable5205 source after explicit-availability viewer repair; completedLatest+Output and originalfuel/fullreport comparison; no reconstruction/old tests."
+}
