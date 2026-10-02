@@ -27,6 +27,7 @@
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QSignalBlocker>
 
 CommandForm::CommandForm(std::function<void(const QString &)> callback,QWidget *parent)
    : QGroupBox("Command settings",parent),layout(new QFormLayout(this)),changed(std::move(callback))
@@ -66,7 +67,18 @@ void CommandForm::updateSource()
 
 QString CommandForm::validationError() const
 {
-   if (fields.isEmpty() || !Moderator::Instance()->IsInitialized()) return {};
+   if (fields.isEmpty()) return {};
+   if (title()=="File thrust") {
+      const auto *input=findChild<QLineEdit *>("commandField_Spacecraft");
+      auto names=input ? input->text().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts) : QStringList{};
+      // The plugin ignores duplicate references to the same spacecraft, but
+      // rejects a second distinct spacecraft in either file-thrust command.
+      names.removeDuplicates();
+      if (names.size()!=1)
+         return "Select one spacecraft. Use separate BeginFileThrust and EndFileThrust commands for each spacecraft.";
+      return {};
+   }
+   if (!Moderator::Instance()->IsInitialized()) return {};
    QStringList operands;
    if (title()=="Constraint") operands={"Left side","Right side"};
    else if (title()=="Vary") operands={"Variable","Initial value","Perturbation","Lower","Upper","MaxStep","AdditiveScaleFactor","MultiplicativeScaleFactor"};
@@ -196,15 +208,24 @@ void CommandForm::setStatement(const QString &statement)
          auto *choose=new QPushButton("Select spacecraft…",container); choose->setObjectName("commandChoose_Spacecraft"); row->addWidget(choose); layout->addRow(name,container);
          connect(choose,&QPushButton::clicked,this,[this,input] {
             QDialog dialog(this); dialog.setObjectName("fileThrustSpacecraftDialog"); dialog.setWindowTitle("File thrust spacecraft"); auto *layout=new QVBoxLayout(&dialog);
-            auto *list=new QListWidget(&dialog); list->setObjectName("fileThrustSpacecraftList"); list->setDragDropMode(QAbstractItemView::InternalMove); layout->addWidget(list);
-            const auto selected=input->text().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); QStringList names=selected;
+            auto *guidance=new QLabel("Choose one spacecraft. Use separate BeginFileThrust and EndFileThrust commands for each spacecraft.",&dialog); guidance->setWordWrap(true); layout->addWidget(guidance);
+            auto *list=new QListWidget(&dialog); list->setObjectName("fileThrustSpacecraftList"); list->setSelectionMode(QAbstractItemView::SingleSelection); layout->addWidget(list);
+            auto selected=input->text().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); selected.removeDuplicates(); QStringList names=selected;
             for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT)) if (!names.contains(QString::fromStdString(name))) names.append(QString::fromStdString(name));
-            for (const auto &name:names) { auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.contains(name) ? Qt::Checked : Qt::Unchecked); }
+            // An unsupported imported list stays unchanged on Cancel. It has
+            // no preselected choice, so accepting explicitly repairs it.
+            for (const auto &name:names) { auto *item=new QListWidgetItem(name,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.size()==1 && selected.contains(name) ? Qt::Checked : Qt::Unchecked); }
             auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); layout->addWidget(buttons);
-            auto validate=[list,buttons] { bool any=false; for (int i=0;i<list->count();++i) any=any || list->item(i)->checkState()==Qt::Checked; buttons->button(QDialogButtonBox::Ok)->setEnabled(any); };
-            connect(list,&QListWidget::itemChanged,&dialog,[validate] { validate(); }); validate();
+            auto validate=[list,buttons] { int count=0; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) ++count; buttons->button(QDialogButtonBox::Ok)->setEnabled(count==1); };
+            connect(list,&QListWidget::itemChanged,&dialog,[list,validate](QListWidgetItem *changed) {
+               if (changed->checkState()==Qt::Checked) {
+                  QSignalBlocker blocker(list);
+                  for (int i=0;i<list->count();++i) if (list->item(i)!=changed) list->item(i)->setCheckState(Qt::Unchecked);
+               }
+               validate();
+            }); validate();
             connect(buttons,&QDialogButtonBox::accepted,&dialog,&QDialog::accept); connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject); dialog.resize(450,350);
-            if (dialog.exec()==QDialog::Accepted) { QStringList values; for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) values.append(list->item(i)->text()); input->setText(values.join(", ")); }
+            if (dialog.exec()==QDialog::Accepted) for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) { input->setText(list->item(i)->text()); break; }
          });
       } else if (title()=="File import" && name=="Data") {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0); row->addWidget(input);

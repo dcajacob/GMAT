@@ -18,8 +18,8 @@ private:
    void loadControls();
    PathSettings settings;
    QString missionFile;
-   QListWidget *functions;
-   QLineEdit *output,*entry,*startup;
+   QListWidget *functions,*pythonModules;
+   QLineEdit *output,*entry,*pythonEntry,*startup;
    QLabel *status,*saved;
    QPlainTextEdit *preview;
 };

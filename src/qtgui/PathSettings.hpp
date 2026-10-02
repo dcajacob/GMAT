@@ -4,7 +4,7 @@ class QtMessageReceiver;
 struct PathSettings
 {
    QString startupFile, startupText, output;
-   QStringList functions;
+   QStringList functions, pythonModules;
 };
 PathSettings capturePathSettings(const QString &startupFile);
 PathSettings readPathSettings(const QString &path, QtMessageReceiver &receiver);

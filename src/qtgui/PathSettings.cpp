@@ -33,6 +33,30 @@ QStringList functionPaths()
    }
    return paths;
 }
+QStringList pythonPaths()
+{
+   QStringList paths,seen;
+   for (const auto &path:FileManager::Instance()->GetAllPythonModulePaths()) {
+      const auto absolute=QDir::cleanPath(QFileInfo(QString::fromStdString(path)).absoluteFilePath());
+      const auto canonical=QFileInfo(absolute).canonicalFilePath();
+      const auto key=canonical.isEmpty() ? absolute : canonical;
+      if (!seen.contains(key)) { seen.append(key); paths.append(absolute); }
+   }
+   return paths;
+}
+const QRegularExpression pythonAssignment("^\\s*PYTHON_MODULE_PATH\\s*=\\s*(.*?)\\s*$");
+QStringList startupPythonPaths(const QString &text)
+{
+   QStringList paths,seen;
+   for (const auto &line:text.split('\n')) {
+      const auto match=pythonAssignment.match(line); if (!match.hasMatch()) continue;
+      const auto path=QDir::cleanPath(QString::fromStdString(FileManager::Instance()->ConvertToAbsPath(match.captured(1).toStdString())));
+      const auto canonical=QFileInfo(path).canonicalFilePath();
+      const auto key=canonical.isEmpty() ? path : canonical;
+      if (!seen.contains(key)) { seen.append(key); paths.append(path); }
+   }
+   return paths;
+}
 // FileManager parsing also changes global UI modes and the message receiver.
 // Previewing another startup must restore all three, including unknown file
 // aliases and ordered include/Python paths that serialization cannot restore.
@@ -92,45 +116,64 @@ PathSettings capturePathSettings(const QString &startupFile)
    if (!directory.isValid()) throw std::runtime_error("Cannot prepare startup settings.");
    const auto path=directory.filePath("startup.txt");
    FileManager::Instance()->WriteStartupFile(path.toStdString());
-   return {startupFile,read(path),QFileInfo(QString::fromStdString(FileManager::Instance()->GetAbsPathname("OUTPUT_PATH"))).absoluteFilePath(),functionPaths()};
+   return {startupFile,read(path),QFileInfo(QString::fromStdString(FileManager::Instance()->GetAbsPathname("OUTPUT_PATH"))).absoluteFilePath(),functionPaths(),pythonPaths()};
 }
 PathSettings readPathSettings(const QString &path,QtMessageReceiver &receiver)
 {
    const auto error=qtStartupCompatibilityError(path);
    if (!error.isEmpty()) throw std::runtime_error(error.toStdString());
    StartupTransaction transaction(receiver);
+   const auto text=read(path);
    FileManager::Instance()->ReadStartupFile(QFileInfo(path).absoluteFilePath().toStdString());
-   return capturePathSettings(QFileInfo(path).absoluteFilePath());
+   auto result=capturePathSettings(QFileInfo(path).absoluteFilePath());
+   // Preserve the imported source and parse its Python list separately. The
+   // engine keeps earlier Python paths across startup reads, so its combined
+   // vector is not the pending configuration of this imported file.
+   result.startupText=text; result.pythonModules=startupPythonPaths(text);
+   return result;
 }
 QString pathSettingsScript(const PathSettings &settings)
 {
-   QStringList result; bool output=false,functions=false;
-   const QRegularExpression assignment("^\\s*(OUTPUT_PATH|GMAT_FUNCTION_PATH)\\s*=.*$");
-   auto paths=[&] { QStringList lines; for (const auto &path:settings.functions) lines.append("GMAT_FUNCTION_PATH = "+QDir::cleanPath(path)+"/"); return lines; };
+   QStringList result; bool output=false,functions=false,python=false;
+   const QRegularExpression assignment("^\\s*(OUTPUT_PATH|GMAT_FUNCTION_PATH|PYTHON_MODULE_PATH)\\s*=.*$");
+   auto paths=[](const QString &key,const QStringList &values) {
+      QStringList lines; for (const auto &path:values) lines.append(key+" = "+QDir::cleanPath(path)+"/"); return lines;
+   };
    for (const auto &line:settings.startupText.split('\n')) {
       const auto match=assignment.match(line);
       if (!match.hasMatch()) { result.append(line); continue; }
       if (match.captured(1)=="OUTPUT_PATH") { if (!output) result.append("OUTPUT_PATH = "+QDir::cleanPath(settings.output)+"/"); output=true; }
-      else { if (!functions) result.append(paths()); functions=true; }
+      else if (match.captured(1)=="GMAT_FUNCTION_PATH") { if (!functions) result.append(paths("GMAT_FUNCTION_PATH",settings.functions)); functions=true; }
+      else { if (!python) result.append(paths("PYTHON_MODULE_PATH",settings.pythonModules)); python=true; }
    }
    if (!output) result.append("OUTPUT_PATH = "+QDir::cleanPath(settings.output)+"/");
-   if (!functions) result.append(paths());
+   if (!functions) result.append(paths("GMAT_FUNCTION_PATH",settings.functions));
+   if (!python) result.append(paths("PYTHON_MODULE_PATH",settings.pythonModules));
    return result.join('\n');
 }
+
 QString validatePathSettings(const PathSettings &settings)
 {
-   QStringList directories=settings.functions; directories.prepend(settings.output);
-   QStringList seen;
-   for (int i=0;i<directories.size();++i) {
-      const auto &path=directories[i];
-      if (path.isEmpty() || !QDir::isAbsolutePath(path) || path.contains('=') || path.contains(QRegularExpression("[\\x00-\\x1f]")))
-         return "Choose an absolute directory without control characters or '='.";
-      const QFileInfo directory(path);
-      if (!directory.isDir() || !directory.isReadable()) return "Directory is unavailable: "+path;
-      const auto canonical=directory.canonicalFilePath();
-      if (i>0 && seen.contains(canonical)) return "Each function directory should appear once.";
-      if (i>0) seen.append(canonical);
-   }
+   auto validate=[](const QStringList &directories,bool python) -> QString {
+      QStringList seen;
+      for (const auto &path:directories) {
+         if (path.isEmpty() || !QDir::isAbsolutePath(path) || path.contains('=') || path.contains(QRegularExpression("[\\x00-\\x1f]")))
+            return "Choose an absolute directory without control characters or '='.";
+         // The existing Python plugin interpolates these paths into a quoted
+         // Python string and changes backslashes to slashes. Reject filenames
+         // that it cannot represent rather than changing the Python engine.
+         if (python && (path.contains('"') || path.contains('\\')))
+            return "Choose a Python module directory without double quotes or backslashes.";
+         const QFileInfo directory(path);
+         if (!directory.isDir() || !directory.isReadable()) return "Directory is unavailable: "+path;
+         const auto canonical=directory.canonicalFilePath();
+         if (seen.contains(canonical)) return python ? "Each Python module directory should appear once." : "Each function directory should appear once.";
+         seen.append(canonical);
+      }
+      return {};
+   };
+   for (const auto &error:{validate({settings.output},false),validate(settings.functions,false),validate(settings.pythonModules,true)})
+      if (!error.isEmpty()) return error;
    QTemporaryFile probe(QDir(settings.output).filePath(".gmat-write-XXXXXX"));
    if (!probe.open() || probe.write("probe")!=5 || !probe.flush()) return "Cannot write to the output directory: "+probe.errorString();
    return {};
@@ -141,7 +184,14 @@ QString applyPathSettings(const PathSettings &settings,QtMessageReceiver &receiv
    try {
       QTemporaryDir directory; if (!directory.isValid()) return "Cannot prepare startup settings.";
       const auto path=directory.filePath("startup.txt"); QFile file(path);
-      const auto text=pathSettingsScript(settings).toUtf8();
+      // Python imports and sys.path are cached; the engine has no public path
+      // replacement API. Apply only the session's other settings. Export keeps
+      // the full pending Python list for a fresh launch, including its order.
+      const auto livePython=FileManager::Instance()->GetAllPythonModulePaths();
+      QStringList liveLines;
+      for (const auto &line:pathSettingsScript(settings).split('\n'))
+         if (!pythonAssignment.match(line).hasMatch()) liveLines.append(line);
+      const auto text=liveLines.join('\n').toUtf8();
       if (!file.open(QIODevice::WriteOnly) || file.write(text)!=text.size() || !file.flush()) return "Cannot prepare startup settings: "+file.errorString();
       file.close();
       const auto compatibility=qtStartupCompatibilityError(path); if (!compatibility.isEmpty()) return compatibility;
@@ -149,6 +199,8 @@ QString applyPathSettings(const PathSettings &settings,QtMessageReceiver &receiv
       FileManager::Instance()->ReadStartupFile(path.toStdString());
       QStringList actual; for (const auto &entry:functionPaths()) actual.append(QDir::cleanPath(entry));
       QStringList expected; for (const auto &entry:settings.functions) expected.append(QDir::cleanPath(entry));
+      if (FileManager::Instance()->GetAllPythonModulePaths()!=livePython)
+         return "Python paths require exporting startup settings and restarting GMAT with that file. The previous session settings were restored.";
       if (actual!=expected || QDir::cleanPath(QString::fromStdString(FileManager::Instance()->GetAbsPathname("OUTPUT_PATH")))!=QDir::cleanPath(settings.output))
          return "GMAT could not preserve the requested paths and order.";
       receiver.SetLogPath(settings.output.toStdString(),true);

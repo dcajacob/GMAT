@@ -168,7 +168,7 @@ int main(int argc,char **argv)
       editor->setPlainText(source); require(window.saveScriptTo(missionFile) && window.runMission()==MainWindow::RunResult::Completed,qPrintable("First priority function failed: "+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText())); require(Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==10 && QFileInfo::exists(out1+"/path-report.txt"),"First priority/output wrong");
       modal(window,[&] { action->trigger(); },[&](QDialog *dialog) {
          auto *list=dialog->findChild<QListWidget *>("pathFunctions"); auto found=list->findItems(first,Qt::MatchExactly); require(found.size()==1,"Current function path missing"); list->setCurrentItem(found.first()); dialog->findChild<QPushButton *>("pathFunctionDown")->click();
-         choose(dialog,"pathOutputBrowse",out2); dialog->findChild<QTabWidget *>("pathTabs")->setCurrentIndex(1); capture(dialog,screenshots.isEmpty() ? QString() : screenshots+".output.png"); apply(dialog); require(output()==out2,"Output Browse/Apply failed");
+         choose(dialog,"pathOutputBrowse",out2); dialog->findChild<QTabWidget *>("pathTabs")->setCurrentIndex(2); capture(dialog,screenshots.isEmpty() ? QString() : screenshots+".output.png"); apply(dialog); require(output()==out2,"Output Browse/Apply failed");
       }); require(editor->toPlainText()==source && window.runMission()==MainWindow::RunResult::Completed && Moderator::Instance()->GetInternalObject("y")->GetRealParameter("Value")==15,"Reordered function result wrong");
       const auto report=read(out2+"/path-report.txt"); require(report==read(explicitReport),"Explicit report destination or calculations changed");
       auto *outputs=window.findChild<QTreeWidget *>("Output"); QTreeWidgetItemIterator reportItem(outputs);
@@ -196,7 +196,7 @@ int main(int argc,char **argv)
          const auto aliasFile=files.filePath("mission alias.txt"); require(QFile::link(missionFile,aliasFile) && !paths->exportStartup(aliasFile).isEmpty() && read(missionFile)==source.toUtf8(),"Startup save overwrote mission through alias");
          choose(dialog,"pathSaveStartup",savedStartup,true); require(read(savedStartup)==savedText,"Startup Save Cancel changed file");
          choose(dialog,"pathReadStartup",savedStartup); require(dialog->findChild<QLineEdit *>("pathStartupFile")->text()==savedStartup && functions()==currentFunctions && output()==currentOutput,"Read startup was not pending");
-         dialog->findChild<QTabWidget *>("pathTabs")->setCurrentIndex(2); capture(dialog,screenshots.isEmpty() ? QString() : screenshots+".startup.png");
+         dialog->findChild<QTabWidget *>("pathTabs")->setCurrentIndex(3); capture(dialog,screenshots.isEmpty() ? QString() : screenshots+".startup.png");
       }); require(functions()==currentFunctions && output()==currentOutput && fm->GetAbsPathname("QT_CUSTOM_FILE_ABS")==alias,"Imported startup Cancel changed engine");
       modal(window,[&] { action->trigger(); },[&](QDialog *dialog) { choose(dialog,"pathReadStartup",savedStartup); apply(dialog); require(dialog->findChild<QLabel *>("pathStatus")->text().startsWith("Applied"),"Saved startup Apply failed"); });
       require(fm->GetFullStartupFilePath()==savedStartup.toStdString() && window.runMission()==MainWindow::RunResult::Completed && read(out2+"/path-report.txt")==report,"Startup reload changed calculation or identity");
