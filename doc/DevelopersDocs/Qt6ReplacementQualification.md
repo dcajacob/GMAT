@@ -8590,3 +8590,34 @@ deadline. App 244dc41a... / 5,926,536 B and controlled core/util/startup are unc
 Existing whole-Array/global/zero-input evidence is reused without reruns. Other
 resource/signature/object-output cases and physical desktop/GPU/crash/full Linux
 replacement gates remain separate; no source/build/test changes were required.
+
+
+## Two independent thrust histories through the GUI — 2026-10-02
+
+[The bounded thrust record](Qt6ParityValidation/multi-thrust-live-20261002.md)
+qualifies distinct two-segment histories, segment/tank readback, retained History
+selection, separate one-spacecraft Begin/End controls, cardinality rejection,
+Save/CtrlO/Build and actual Output Enter. Independent setup was typed in the
+actual Script editor; only owned documented thrust data was supplied, no sample
+mission seed. Original Synchronized F5 failed 0.351 s; its exact failure epoch
+is unknown and the source-backed step-boundary explanation remains an inference.
+The first sequential revision Completed 0.349 s but failed intended epochs/fuels
+because ElapsedSecs goals are per-command durations. Only eight later literals
+changed to 5; first 10 values and all physical settings/inputs were retained.
+
+One corrected saved-source F5 Completed 0.330 s gives six finite boundary rows at
+0/10/15/20/25/30 s. Max time/fuel residuals 2.165325e-7 s / 4.121148e-13 kg pass
+independent 1e-6 bounds; final own source 5205 B SHA 317e151e... and 2502 B report
+SHA c2a06348... remain exact. Actual AltF4 exits app/WM/Xvfb 0/0/0, distinct from
+helper already-exited diagnostic 1. Original sources/reports, unsaved attempt,
+600 s controlled -15 expiry after corrected Save, chooser/operator corrections,
+full runtime identities/actions and eight unchanged PNGs remain retained/indexed.
+App 244dc41a... / 5926536 B, core cf147..., util 1e4e..., startup 5f80..., plugin
+e978... stayed fixed; prior cardinality 0.25 s was reused, no old tests repeated.
+
+Synchronized boundary operation and combined asynchronous OrbitView remain
+unqualified: completed final scene/log confirms absent SatA receives zero
+placeholders in the shared callback and latest display; source appends earlier
+history rather than clears it, actual point counts were not exported. No
+trajectory truth/backward/time-varying-profile/solve-for, host/Wayland/portal/GPU/
+crash or full replacement claim; Windows/macOS/MATLAB remain deferred.

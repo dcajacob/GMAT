@@ -2320,3 +2320,19 @@ New resource settings panels open within the workspace. Activate a retained
 panel through Window or by double-clicking its resource to bring all its controls
 back into view. Pending edits remain in that same panel. Other positioned
 windows keep their placement.
+
+
+### Separate spacecraft for file thrust
+
+BeginFileThrust and EndFileThrust each select one spacecraft. Use separate
+commands and distinct thrust histories/segments for independent spacecraft;
+the form rejects several typed choices before Apply and explains the separate
+command workflow. Each spacecraft needs its own Propagate mapping under thrust.
+ElapsedSecs conditions give an additional duration for each command, so matching
+reports at 10, 15, 20, 25 and 30 seconds use durations 10, 5, 5, 5 and 5.
+
+[The bounded two-history record](Qt6ParityValidation/multi-thrust-live-20261002.md)
+qualifies sequential independent propagation and boundary fuel reports. Its
+synchronized boundary attempt failed, and the combined asynchronous OrbitView
+still draws a zero placeholder for an unpublished spacecraft; these routes
+remain unqualified. The original attempts and source limitations are retained.

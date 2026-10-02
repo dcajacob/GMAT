@@ -1,0 +1,20 @@
+BeginThrust {BFirst}
+Start_Epoch = 01 Jan 2000 12:00:00.000
+Thrust_Vector_Coordinate_System = EarthMJ2000Eq
+Thrust_Vector_Interpolation_Method = None
+Mass_Flow_Rate_Interpolation_Method = None
+ModelThrustAndMassRate
+0 -1 0 0 .0005
+10 -1 0 0 .0005
+EndThrust {BFirst}
+
+BeginThrust {BSecond}
+Start_Epoch = 01 Jan 2000 12:00:15.000
+Thrust_Vector_Coordinate_System = EarthMJ2000Eq
+Thrust_Vector_Interpolation_Method = None
+Mass_Flow_Rate_Interpolation_Method = None
+ModelThrustAndMassRate
+0 0 0 2 .001
+10 0 0 2 .001
+EndThrust {BSecond}
+

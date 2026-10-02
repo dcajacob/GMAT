@@ -1,0 +1,84 @@
+% Owned short two-history qualification, authored directly in Qt Script editor.
+% Profiles: constant Newton vectors and kg/s; two segments with a five-second gap.
+% Separate history/segment/tank/propagator resources, one spacecraft per thrust command.
+Create Spacecraft SatA SatB;
+SatA.DateFormat = UTCGregorian;
+SatA.Epoch = '01 Jan 2000 12:00:00.000';
+SatA.CoordinateSystem = EarthMJ2000Eq;
+SatA.DisplayStateType = Cartesian;
+SatA.X = 7100;
+SatA.Y = 0;
+SatA.Z = 1300;
+SatA.VX = 0;
+SatA.VY = 7.35;
+SatA.VZ = 1;
+SatA.DryMass = 850;
+SatB.DateFormat = UTCGregorian;
+SatB.Epoch = '01 Jan 2000 12:00:00.000';
+SatB.CoordinateSystem = EarthMJ2000Eq;
+SatB.DisplayStateType = Cartesian;
+SatB.X = 7100;
+SatB.Y = 20;
+SatB.Z = 1300;
+SatB.VX = -0.02;
+SatB.VY = 7.35;
+SatB.VZ = 1;
+SatB.DryMass = 850;
+Create ChemicalTank TankA TankB;
+TankA.FuelMass = 100;
+TankB.FuelMass = 100;
+SatA.Tanks = {TankA};
+SatB.Tanks = {TankB};
+Create ThrustSegment AFirst ASecond BFirst BSecond;
+AFirst.MassSource = {TankA};
+ASecond.MassSource = {TankA};
+BFirst.MassSource = {TankB};
+BSecond.MassSource = {TankB};
+Create ThrustHistoryFile HistoryA HistoryB;
+HistoryA.FileName = '/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/inputs/history-a.thf';
+HistoryB.FileName = '/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/inputs/history-b.thf';
+Create ForceModel FMA FMB;
+FMA.PrimaryBodies = {};
+FMA.PointMasses = {Earth};
+FMB.PrimaryBodies = {};
+FMB.PointMasses = {Earth};
+Create Propagator PropA PropB;
+PropA.FM = FMA;
+PropA.InitialStepSize = 1;
+PropA.MaxStep = 1;
+PropA.Accuracy = 1e-12;
+PropB.FM = FMB;
+PropB.InitialStepSize = 1;
+PropB.MaxStep = 1;
+PropB.Accuracy = 1e-12;
+Create ReportFile BoundaryValues;
+BoundaryValues.Filename = '/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/multi-thrust-live/results/boundaries.txt';
+BoundaryValues.Precision = 16;
+BoundaryValues.WriteHeaders = false;
+Create OrbitView ThrustView;
+ThrustView.Add = {SatA, SatB, Earth};
+ThrustView.CoordinateSystem = EarthMJ2000Eq;
+ThrustView.ShowPlot = true;
+HistoryA.AddThrustSegment = {'AFirst', 'ASecond'};
+HistoryB.AddThrustSegment = {'BFirst', 'BSecond'};
+BeginMissionSequence;
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
+BeginFileThrust 'A_start' HistoryA(SatA); % independent history A
+BeginFileThrust 'B_on' HistoryB(SatB); % independent history B
+Propagate 'Boundary10' PropA(SatA) {SatA.ElapsedSecs = 10};
+Propagate 'Boundary10_B' PropB(SatB) {SatB.ElapsedSecs = 10};
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
+Propagate 'Boundary15' PropA(SatA) {SatA.ElapsedSecs = 5};
+Propagate 'Boundary15_B' PropB(SatB) {SatB.ElapsedSecs = 5};
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
+Propagate 'Boundary20' PropA(SatA) {SatA.ElapsedSecs = 5};
+Propagate 'Boundary20_B' PropB(SatB) {SatB.ElapsedSecs = 5};
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
+EndFileThrust 'A_off' HistoryA(SatA); % A stops midway through second segment
+Propagate 'Boundary25' PropA(SatA) {SatA.ElapsedSecs = 5};
+Propagate 'Boundary25_B' PropB(SatB) {SatB.ElapsedSecs = 5};
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
+EndFileThrust 'B_off' HistoryB(SatB); % B reaches second-segment endpoint
+Propagate 'Boundary30' PropA(SatA) {SatA.ElapsedSecs = 5};
+Propagate 'Boundary30_B' PropB(SatB) {SatB.ElapsedSecs = 5};
+Report BoundaryValues SatA.ElapsedSecs SatB.ElapsedSecs SatA.TankA.FuelMass SatB.TankB.FuelMass SatA.EarthMJ2000Eq.X SatA.EarthMJ2000Eq.Y SatA.EarthMJ2000Eq.Z SatA.EarthMJ2000Eq.VX SatA.EarthMJ2000Eq.VY SatA.EarthMJ2000Eq.VZ SatB.EarthMJ2000Eq.X SatB.EarthMJ2000Eq.Y SatB.EarthMJ2000Eq.Z SatB.EarthMJ2000Eq.VX SatB.EarthMJ2000Eq.VY SatB.EarthMJ2000Eq.VZ;
