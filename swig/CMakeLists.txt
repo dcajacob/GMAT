@@ -45,7 +45,18 @@ if(_GMATAPI_GENERATE_PYTHON)
 
    _SETUPSWIG("gmat" "Python" "gmat_py.i" "GmatUtil;GmatBase")
    ADD_DEPENDENCIES(${TargetNameFull} GmatBase)
-   
+
+   # Make the development output importable without an installation step.
+   # The common package imports this version-specific package when callbacks
+   # use gmatpy from application/bin.
+   foreach(api_config bin debug)
+      configure_file(
+         "${GMAT_BUILDOUTPUT_DIRECTORY}/${api_config}/gmatpy/__init__.specific.py"
+         "${GMAT_BUILDOUTPUT_DIRECTORY}/${api_config}/gmatpy/${TargetModuleSuffix}/__init__.py"
+         COPYONLY
+      )
+   endforeach()
+
    # Install Python initialization file for this Python version
    INSTALL( FILES
        ${GMAT_BUILDOUTPUT_DIRECTORY}/bin/gmatpy/__init__.specific.py

@@ -1,15 +1,14 @@
 import math
 import sys
+from pathlib import Path
 
-GmatApiPath = r'..\..\api'
-
-if not GmatApiPath in sys.path:
-    sys.path.insert(0, GmatApiPath)
-    
-GmatBinPath = r'..\..\bin'
-
-if not GmatBinPath in sys.path:
-    sys.path.insert(0, GmatBinPath)
+# Locate the API and binary directories from this shipped module, regardless
+# of the mission working directory or platform path separator.
+application_path = Path(__file__).resolve().parents[2]
+for folder in (application_path / 'api', application_path / 'bin'):
+    location = str(folder)
+    if location not in sys.path:
+        sys.path.insert(0, location)
 
 import gmatpy as gmat
 

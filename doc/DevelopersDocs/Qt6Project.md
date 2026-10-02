@@ -42,6 +42,25 @@ snapshot above records the initial bootstrap. The preset is machine-local; on
 another machine use the general setup instructions
 in `Qt6Gui.md` with the dependency locations for that system.
 
+The shipped `Ex_ExternalForceModel` example also needs the public Python API.
+The local preset now enables Python API generation (Java and MATLAB stay off)
+and builds `gmat_py314`, `station_py314` and `navigation_py314` with the GUI.
+SWIG 4.4.0 is extracted under `build/tools/swig/local`; the preset supplies its
+executable and `SWIG_LIB`, without installing a system package. The Python
+version comes from this machine's Python 3.14 development installation. On a
+fresh machine, use its installed SWIG/Python locations and matching target suffix.
+
+For an incremental API build using this preset:
+
+```sh
+cmake --build --preset qt-linux --target gmat_py314 station_py314 navigation_py314 --parallel 2
+```
+
+The version-specific `gmatpy` initializer is now generated for development output,
+so installing GMAT is not required to import the built API. The shipped external
+force callback resolves its API paths relative to its own file. The unchanged
+mission script completed successfully through Qt after these setup repairs.
+
 Open `/home/dan/GIT/GMAT-Qt` as a separate Codex project for future work. Creating
 the directory does not automatically register a project in the desktop sidebar.
 Do not resume live desktop tests until the GNOME Shell crash/safety issue is
