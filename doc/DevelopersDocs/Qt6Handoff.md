@@ -18,6 +18,13 @@ brief, not proof of qualification. Recheck the repository before making changes.
 
 ## User intent and boundaries
 
+Current priority, clarified on 2026-10-01: deliver a usable Qt GMAT GUI with broad
+capability coverage. Prioritize ordinary resource, mission and output workflows
+and failures that block using them; defer exhaustive visual and edge-case
+refinements until that coverage is in place. Do not unnecessarily repeat
+previous tests. The full Linux replacement scope remains, with native desktop
+testing stopped after the recorded compositor crash.
+
 Deliver a fully qualified Qt 6 replacement for the selected Linux GMAT GUI
 runtime. Keep the familiar wx arrangement: Resources/Mission/Output navigation,
 MDI workspace, messages, menus and toolbar. Improve from that recognizable base.
@@ -47,7 +54,10 @@ shows only a vector triad. Several subsequent fixes and tests passed, but the
 remaining native desktop acceptance gates must still be closed. Do not infer
 that these exact bugs still reproduce, or that every desktop case is now fixed.
 
-## Current repository and executable
+## Initial handoff repository checkpoint
+
+Historical checkpoint from handoff preparation; use Qt6Project.md and the latest
+qualification appendices for the active new checkout/build:
 
 Verified when preparing this handoff:
 
@@ -193,8 +203,9 @@ Full replacement is unfinished until the requirements have affirmative evidence.
 
 ## Build and run
 
-Run from `/home/dan/GIT/GMAT/GMAT`. Use the existing configured build rather than
-recreating dependency configuration without cause.
+Run from `/home/dan/GIT/GMAT-Qt`. Its Qt-only build is configured and has completed
+the first engine/frontend/plugin build. See `Qt6Project.md`; keep incremental
+builds and select checks affected by current changes.
 
 ```bash
 cmake --build build/linux-gui --target GmatQt --parallel 8
@@ -204,7 +215,7 @@ cmake --build build/linux-gui --target check-qt --parallel 8
 Launch exactly as the user does:
 
 ```bash
-cd /home/dan/GIT/GMAT/GMAT/application/bin
+cd /home/dan/GIT/GMAT-Qt/application/bin
 ./GmatQt
 ```
 

@@ -1,0 +1,72 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 19: QtGui.ObjectAxes
+1/3 Test #19: QtGui.ObjectAxes .................***Failed    0.09 sec
+Axes replay used latest pose
+
+    Start 29: QtGui.Workflow
+2/3 Test #29: QtGui.Workflow ...................***Failed    4.23 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Qt orbit: could not load model /tmp/QtWorkflow-AOCTLk/broken.obj ; using the default body or marker.
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Obj unable to find material ''
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+    Start 45: QtGui.Parameters
+3/3 Test #45: QtGui.Parameters .................   Passed    8.92 sec
+
+33% tests passed, 2 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =  13.24 sec*proc (3 tests)
+
+Total Test time (real) =  13.24 sec
+
+The following tests FAILED:
+	 19 - QtGui.ObjectAxes (Failed)                         qt-gui
+	 29 - QtGui.Workflow (Failed)                           qt-gui
+Errors while running CTest

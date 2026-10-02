@@ -1,0 +1,71 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 19: QtGui.ObjectAxes
+1/2 Test #19: QtGui.ObjectAxes .................   Passed    0.23 sec
+    Start 29: QtGui.Workflow
+2/2 Test #29: QtGui.Workflow ...................***Failed    3.96 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Qt orbit: could not load model /tmp/QtWorkflow-jSMPaN/broken.obj ; using the default body or marker.
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Obj unable to find material ''
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS: spacecraft orbit frame/origin, representation/anomaly conversion, pending epoch/state Apply, Undo/Redo, save/reopen and report execution
+*** line not handled *** :not a model
+CHECK FAILED: Reopening a clean stale resource panel did not refresh its values
+FAIL: Reopening a clean stale resource panel did not refresh its values
+
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =   4.19 sec*proc (2 tests)
+
+Total Test time (real) =   4.19 sec
+
+The following tests FAILED:
+	 29 - QtGui.Workflow (Failed)                           qt-gui
+Errors while running CTest

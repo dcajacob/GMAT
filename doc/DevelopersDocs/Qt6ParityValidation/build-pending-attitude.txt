@@ -1,0 +1,11 @@
+[1/11] cd /home/dan/GIT/GMAT-Qt/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT-Qt/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT-Qt/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt
+[2/11] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceForm.cpp.o
+[3/11] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/AttitudeDialog.cpp.o
+[4/11] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[5/11] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[6/11] Linking CXX executable /home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a
+[7/11] Creating executable symlink /home/dan/GIT/GMAT-Qt/application/bin/GmatQt
+[8/11] Building CXX object src/qtgui/CMakeFiles/GmatQtUnifiedResourceTests.dir/tests/UnifiedResourceTests.cpp.o
+[9/11] Linking CXX executable src/qtgui/GmatQtUnifiedResourceTests
+[10/11] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[11/11] Linking CXX executable src/qtgui/GmatQtWorkflowTests

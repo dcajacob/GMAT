@@ -15,6 +15,10 @@
 #include "Moderator.hpp"
 #include "Spacecraft.hpp"
 #include "ResourceEditor.hpp"
+#include "ResourceForm.hpp"
+#include <QStatusBar>
+#include <QMdiArea>
+#include <QMdiSubWindow>
 #include "VisualModelDialog.hpp"
 #include "AttitudeDialog.hpp"
 #include "SpacecraftOrbit.hpp"
@@ -1606,7 +1610,16 @@ int main(int argc, char **argv)
       const auto createdEpoch=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetConfiguredObject("CreatedSat"))->GetEpoch();
       require(window.applyMissionChange(window.missionSnapshot(),-1,MissionEdit::Append,
          "Propagate QtProp(CreatedSat) {CreatedSat.ElapsedSecs = 60};").isEmpty(),"Created spacecraft could not be used by mission");
-      require(window.runMission()==MainWindow::RunResult::Completed,"Mission with created spacecraft failed");
+      const auto createdRun=window.runMission();
+      if (createdRun!=MainWindow::RunResult::Completed) {
+         std::cerr<<"Created-resource run: "<<window.statusBar()->currentMessage().toStdString()<<'\n';
+         if (auto *messages=window.findChild<QPlainTextEdit *>("messageWindow")) std::cerr<<messages->toPlainText().right(1500).toStdString()<<'\n';
+         for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (auto *view=dynamic_cast<ResourceEditor *>(child->widget())) {
+            std::cerr<<"Panel "<<child->property("resourceName").toString().toStdString()<<" pending="<<view->hasChanges()<<'\n';
+            if (auto *form=dynamic_cast<ResourceForm *>(view->findChild<QWidget *>("resourceForm"))) { const auto pending=form->changes(); for (auto it=pending.cbegin();it!=pending.cend();++it) std::cerr<<"  "<<it.key().toStdString()<<"="<<it.value().toStdString()<<'\n'; }
+         }
+      }
+      require(createdRun==MainWindow::RunResult::Completed,"Mission with created spacecraft failed");
       auto *createdResult=dynamic_cast<Spacecraft *>(Moderator::Instance()->GetInternalObject("CreatedSat"));
       require(createdResult && std::abs((createdResult->GetEpoch()-createdEpoch)*86400-60)<.01,"Created spacecraft did not propagate");
       require(window.applyResourceChanges("CreatedSat",{{"DryMass","932"}},editor->toPlainText()).isEmpty(),"Could not update resource behind clean panel");
@@ -1619,6 +1632,15 @@ int main(int argc, char **argv)
          auto *properties=resource->findChild<QTableWidget *>();
          for (int row=0;row<properties->rowCount();++row)
             if (properties->item(row,0)->text()=="DryMass") refreshedMass=properties->item(row,1)->text()=="932";
+      }
+      if (!refreshedMass) {
+         std::cerr<<"Configured created mass="<<Moderator::Instance()->GetConfiguredObject("CreatedSat")->GetRealParameter("DryMass")<<'\n';
+         for (auto *child:window.findChild<QMdiArea *>("workspace")->subWindowList()) if (auto *view=dynamic_cast<ResourceEditor *>(child->widget())) {
+            std::cerr<<"Refresh panel "<<child->property("resourceName").toString().toStdString()<<" pending="<<view->hasChanges()<<'\n';
+            auto *properties=view->findChild<QTableWidget *>("resourceProperties");
+            for (int row=0;properties && row<properties->rowCount();++row) if (properties->item(row,0)->text()=="DryMass") std::cerr<<"  stored mass="<<properties->item(row,1)->text().toStdString()<<'\n';
+            if (auto *field=view->findChild<QLineEdit *>("ballistics_DryMass")) std::cerr<<"  inline mass="<<field->text().toStdString()<<'\n';
+         }
       }
       require(refreshedMass,"Reopening a clean stale resource panel did not refresh its values");
       QApplication::processEvents();

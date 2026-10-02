@@ -7612,3 +7612,68 @@ register a Codex sidebar project.
 
 Native desktop qualification remains open after the GNOME Shell crash. All live
 desktop testing remains stopped. Windows/macOS remain deferred and MATLAB off.
+
+## Broad usability priority, retained attitude input and fresh Qt build — 2026-10-01
+
+The user clarified that a broadly usable Qt GMAT GUI takes priority over
+exhaustive display details at this stage. The handoff records that priority;
+the full Linux scope is retained. The new checkout now has its own completed
+Qt-only build of the engine, frontend and 20 selected native plugins. The first
+894-step build succeeded (build-qt-project-first.txt); the later attitude fix
+relinked the actual application/bin/GmatQt (build-pending-attitude.txt). This
+supersedes the initial copied-runtime bootstrap, without modifying the original
+checkout or enabling MATLAB/wx OF providers.
+
+The first affected workflow run failed at ordinary created-resource execution
+and stale-panel refresh/loading transitions; failure location varied under
+diagnostics. The embedded ResourceForm was calling AttitudeDialog::settings
+merely to inspect pending values. That method submits and clones the attitude
+candidate and reads engine-backed fields. A retained form can outlive the model
+references from its construction. The embedded reader now uses pendingValues,
+which reads only its controls without normalization, cloning or engine reads.
+Shared resource Apply still validates against a fresh current-model clone. The
+standalone attitude dialog retains its conversion/validation behavior.
+
+The broad QtGui.Workflow passes after the fix in 12.14 seconds, covering the
+existing resource/mission editing, validation, pending/stale guards, creation/
+deletion, propagation, execution interruption/recovery, source/Undo and reopened
+report/viewer cases in that harness. QtGui.Parameters had already passed in
+8.92 seconds and was not repeated. check-usability-initial.txt preserves the
+initial failures and parameter pass; check-workflow-after-attitude.txt records
+the later workflow pass alongside an intermediate new-fixture failure.
+
+The expanded UnifiedResources regression keeps a clean Spinner-attitude form
+across two interpreter rebuilds, detects/restores pending attitude input,
+rejects stale Apply without changing source, and checks a fresh embedded Euler
+angle Apply against the configured engine value with exact Undo/Redo/build.
+Its existing fourteen draft types, configured creation, cancel/rollback and
+Unicode round trips pass in the final check-retained-attitude-final.txt (0.78 s).
+The first new fixture used the default attitude, which lacks writable angle
+inputs; a later successful standalone Apply used MainWindow as its owner and
+opened the normal unsaved-script close prompt, producing the retained offscreen
+fixture timeout. Both fixture assumptions were corrected to use a writable
+Spinner attitude and a separate owner widget. No native desktop hang or success
+is inferred from that timeout. No numerical mission was added to this regression.
+
+The in-progress display addition is also finished: OF DrawAxes prefix arrays
+and Add/default resets now retain per-object flags rather than comments. Named
+flags serialize, validate OrbitView Add membership and prune removed objects.
+Object drawing / Body guides provides pending Default/On/Off controls. Native
+geometry and the fallback use the retained body pose/radius; arrows follow
+attitude and replay independently of models/paths, and the label master controls
+captions. QtGui.ObjectAxes passes offscreen in 0.23 s, covering conversion,
+typed maps, radius/rotation, hidden-model visibility, replay/behind-camera
+handling and actual Cancel/pending/retained Apply/Undo/Redo/Unicode/pruning.
+The initial driver used an older compiled frame fixture and was rebuilt after
+its sequence correction. The axes implementation was unchanged by the later
+attitude-reader fix. Native axes pixels, wider guide/camera cases and OF planes/
+grids/velocity/other prior display limits remain open; no old display matrix or
+reference mission was repeated.
+
+qt-usability-results.txt summarizes these separate runs, not a full-suite pass.
+The actual rebuilt executable completed isolated offscreen startup; the inspected
+qt-project-built-startup-offscreen.png shows the shell, resources, script and
+messages, with the debug icon and animation toolbar. Core libraries resolve
+inside the new checkout. Live desktop testing remains stopped after the GNOME
+Shell crash; native desktop/portal and full replacement gates remain open.
+Windows/macOS remain deferred and the numerical engine was not rewritten.

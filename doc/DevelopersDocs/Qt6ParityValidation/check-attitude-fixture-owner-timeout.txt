@@ -1,0 +1,17 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 7: QtGui.UnifiedResources
+1/1 Test #7: QtGui.UnifiedResources ...........***Timeout  60.08 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =  60.08 sec*proc (1 test)
+
+Total Test time (real) =  60.08 sec
+
+The following tests FAILED:
+	  7 - QtGui.UnifiedResources (Timeout)                  qt-gui
+Errors while running CTest

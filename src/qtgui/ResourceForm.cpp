@@ -52,7 +52,7 @@ ResourceForm::ResourceForm(GmatBase &object,QWidget *parent) : QWidget(parent)
       QMap<QString,QString> values; QMap<QString,QStringList> choices;
       for (const auto &field:resourceProperties(object)) { values[field.name]=field.value; choices[field.name]=field.choices; }
       auto *mass=new BallisticsMassDialog(values,choices,this); add("Ballistics and mass",mass,[mass] { return mass->values(); });
-      auto *attitude=new AttitudeDialog(object,{},this); add("Attitude",attitude,[attitude] { return attitude->settings(); });
+      auto *attitude=new AttitudeDialog(object,{},this); add("Attitude",attitude,[attitude] { return attitude->pendingValues(); });
       auto snapshot=std::shared_ptr<GmatBase>(object.Clone());
       QMap<QString,QString> modelValues;
       for (auto it=values.cbegin();it!=values.cend();++it) if (it.key().startsWith("Model") || it.key()=="OrbitColor" || it.key()=="TargetColor") modelValues.insert(it.key(),it.value());

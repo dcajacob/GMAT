@@ -147,6 +147,15 @@ void AttitudeDialog::rebuild()
    groups->addStretch(); layout->insertWidget(2,fields,1);
 }
 
+QMap<QString,QString> AttitudeDialog::pendingValues() const
+{
+   // A retained form may outlive an interpreter rebuild. Reading pending input
+   // must not clone/read engine objects or normalize the controls.
+   QMap<QString,QString> result{{"Attitude",model->currentText()}};
+   for (auto it=controls.cbegin();it!=controls.cend();++it) result[it.key()]=controlValue(it.value());
+   return result;
+}
+
 QMap<QString,QString> AttitudeDialog::settings()
 {
    if (!submit()) throw std::runtime_error(error->text().toStdString());

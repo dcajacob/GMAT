@@ -25,6 +25,7 @@
 #include <QSpinBox>
 #include <QTreeWidget>
 #include <iostream>
+#include <cmath>
 #include <stdexcept>
 
 static void require(bool value,const char *message) { if (!value) throw std::runtime_error(message); }
@@ -52,6 +53,39 @@ int main(int argc,char **argv)
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const QString baseline="% Keep source α and implicit settings\nCreate Spacecraft Vehicle;\nCreate Variable Keep;\nKeep = 7; % keep comment\nBeginMissionSequence;\nKeep = Keep + 2;\n";
       editor->setPlainText(baseline); require(window.buildScript(),"Baseline failed");
+      // A clean retained spacecraft form must stay clean across model rebuilds.
+      // Reading it must not consult the previous model's attitude references.
+      {
+         const auto attitudeSource=QString(baseline).replace("Create Variable Keep;","Vehicle.Attitude = Spinner;\nVehicle.AttitudeDisplayStateType = EulerAngles;\nCreate Variable Keep;");
+         editor->setPlainText(attitudeSource); require(window.buildScript(),"Writable attitude fixture failed");
+         QString staleError; QWidget owner;
+         ResourceEditor retained(*Moderator::Instance()->GetConfiguredObject("Vehicle"),[&](const auto &changes) {
+            staleError=window.applyResourceChanges("Vehicle",changes,attitudeSource); return staleError;
+         },&owner,attitudeSource);
+         require(!retained.hasChanges(),"Untouched spacecraft form has pending edits");
+         require(window.applyResourceChanges("Vehicle",{{"DryMass","650"}},attitudeSource).isEmpty(),"Retained-form rebuild fixture failed");
+         require(!retained.hasChanges(),"Model rebuild changed untouched attitude input");
+         const auto current=editor->toPlainText();
+         require(window.applyResourceChanges("Vehicle",{{"DryMass","675"}},current).isEmpty() && !retained.hasChanges(),"Second rebuild read an old attitude model");
+         QLineEdit *angle=nullptr;
+         for (auto *field:retained.findChildren<QLineEdit *>()) if (field->objectName().startsWith("attitude_EulerAngle") || field->objectName()=="attitude_Q1") { angle=field; break; }
+         require(angle,"Retained attitude input missing"); const auto old=angle->text(); angle->setText("1");
+         require(retained.hasChanges(),"Pending attitude edit was not detected");
+         const auto stable=editor->toPlainText(); retained.requestApply();
+         require(!staleError.isEmpty() && editor->toPlainText()==stable && retained.hasChanges(),"Stale retained attitude Apply changed the new model");
+         angle->setText(old); require(!retained.hasChanges(),"Restored attitude input remained dirty");
+      }
+      {
+         const auto current=editor->toPlainText(); QString error; QWidget owner;
+         ResourceEditor fresh(*Moderator::Instance()->GetConfiguredObject("Vehicle"),[&](const auto &changes) {
+            error=window.applyResourceChanges("Vehicle",changes,current); return error;
+         },&owner,current);
+         auto *angle=fresh.findChild<QLineEdit *>("attitude_EulerAngle1"); require(angle,"Fresh attitude input missing"); angle->setText("5"); fresh.requestApply();
+         require(error.isEmpty() && !fresh.hasChanges() && std::abs(Moderator::Instance()->GetConfiguredObject("Vehicle")->GetOwnedObject(0)->GetRealParameter("EulerAngle1")-5)<1e-9,"Fresh embedded attitude Apply failed");
+         const auto applied=editor->toPlainText(); editor->undo(); require(editor->toPlainText()==current && window.buildScript(),"Embedded attitude Undo lost source");
+         editor->redo(); require(editor->toPlainText()==applied && window.buildScript(),"Embedded attitude Redo lost source");
+      }
+      editor->setPlainText(baseline); require(window.buildScript(),"Retained-form fixture restoration failed");
       std::exception_ptr failure;
       auto creator=[&](const std::function<void(QDialog *)> &check) {
          QTimer::singleShot(0,&window,[&] {

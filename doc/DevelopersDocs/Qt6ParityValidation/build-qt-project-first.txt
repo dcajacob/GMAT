@@ -1,0 +1,976 @@
+[0/1] Re-running CMake...
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64
+-- Found F2C: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:301 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+-- Could NOT find SWIG (missing: SWIG_EXECUTABLE SWIG_DIR)
+==============================
+Setting up install directory structure for GMAT
+-- Will install GMAT to /home/dan/GIT/GMAT-Qt/GMAT-R2026a-Linux-x64
+==============================
+GMAT util setup
+==============================
+GMAT base setup
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+==============================
+GMAT DataInterface Plugin setup
+==============================
+GMAT EphemPropagator Plugin setup
+==============================
+GMAT EKF Plugin setup
+==============================
+GMAT Estimation Plugin setup
+==============================
+GMAT EventLocator Plugin setup
+==============================
+GMAT External Force Model Plugin setup (for Python 3.14)
+-- Found Python3: /usr/include/python3.14 (found suitable exact version "3.14.4") found components: Development Development.Module Development.Embed
+==============================
+GMAT ExtraPropagators Plugin setup
+==============================
+GMAT Formation Plugin setup
+==============================
+GMAT GmatFunction Plugin setup
+==============================
+GMAT Msise00 Plugin setup
+==============================
+GMAT NewParameter Plugin setup
+==============================
+GMAT PolyhedronGravity Plugin setup
+==============================
+GMAT ProductionPropagators Plugin setup
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.14)
+==============================
+GMAT SaveCommand Plugin setup
+==============================
+GMAT ScriptTools Plugin setup
+==============================
+GMAT Station Plugin setup
+==============================
+GMAT ThrustFile Plugin setup
+==============================
+GMAT TLE Propagator Plugin setup
+==============================
+GMAT Yukon Optimizer Plugin setup
+======================================
+Skipping the OVtoOFI Plugin:
+OpenFramesInterface is not being built
+=======================================
+==============================
+Setting up wxWidgets install instructions for GMAT
+-- Configuring done (0.8s)
+-- Generating done (0.2s)
+-- Build files have been written to: /home/dan/GIT/GMAT-Qt/build/linux-gui
+[1/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/A1Date.cpp.o
+[2/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/AngleUtil.cpp.o
+[3/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/A1Mjd.cpp.o
+[4/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/BaseException.cpp.o
+[5/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/AttitudeUtil.cpp.o
+[6/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/AttitudeConversionUtility.cpp.o
+[7/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/BodyFixedStateConverter.cpp.o
+[8/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CalculationUtilities.cpp.o
+[9/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSAEMEulerAngleSegment.cpp.o
+[10/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSAEMQuaternionSegment.cpp.o
+[11/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSAEMSegment.cpp.o
+[12/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSAEMReader.cpp.o
+[13/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSEMReader.cpp.o
+[14/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSEMWriter.cpp.o
+[15/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSEMSegment.cpp.o
+[16/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSOEMSegment.cpp.o
+[17/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSOEMWriter.cpp.o
+[18/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSEphemerisFile.cpp.o
+[19/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/ColorDatabase.cpp.o
+[20/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CCSDSOEMReader.cpp.o
+[21/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/CubicSpline.cpp.o
+[22/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/DateUtil.cpp.o
+[23/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/ElapsedTime.cpp.o
+[24/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Code500EphemerisFile.cpp.o
+[25/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Date.cpp.o
+[26/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Ephemeris.cpp.o
+[27/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/EopFile.cpp.o
+[28/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/GmatGlobal.cpp.o
+[29/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/GmatTime.cpp.o
+[30/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/GregorianDate.cpp.o
+[31/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/GravityFileUtil.cpp.o
+[32/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/IFileUpdater.cpp.o
+[33/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/FileUtil.cpp.o
+[34/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/FileManager.cpp.o
+[35/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/LeapSecsFileReader.cpp.o
+[36/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/MemoryTracker.cpp.o
+[37/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/MessageInterface.cpp.o
+[38/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/MessageReceiver.cpp.o
+[39/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Linear.cpp.o
+[40/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/RandomNumber.cpp.o
+[41/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/NPlateHistoryFileReader.cpp.o
+[42/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/NumericJacobian.cpp.o
+[43/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/RealUtilities.cpp.o
+[44/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/RgbColor.cpp.o
+[45/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rvector3.cpp.o
+[46/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rmatrix33.cpp.o
+[47/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rmatrix66.cpp.o
+[48/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rvector6.cpp.o
+[49/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rvector.cpp.o
+[50/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/SPADFileReader.cpp.o
+[51/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Rmatrix.cpp.o
+[52/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/StringTokenizer.cpp.o
+[53/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/TextParser.cpp.o
+[54/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/STKEphemerisFile.cpp.o
+[55/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/TimeTypes.cpp.o
+[56/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/TimeSystemConverter.cpp.o
+[57/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/UtcDate.cpp.o
+[58/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/datawriter/DataWriter.cpp.o
+[59/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/StringUtil.cpp.o
+[60/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/datawriter/DataWriterMaker.cpp.o
+[61/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/datawriter/DataWriterInterface.cpp.o
+[62/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/datawriter/WriterData.cpp.o
+[63/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/InterpolatorException.cpp.o
+[64/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/Interpolator.cpp.o
+[65/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/BrentDekkerZero.cpp.o
+[66/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/StateConversionUtil.cpp.o
+[67/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/CubicSplineInterpolator.cpp.o
+[68/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/LinearInterpolator.cpp.o
+[69/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/datawriter/DataBucket.cpp.o
+[70/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/HermiteInterpolator.cpp.o
+[71/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/NotAKnotInterpolator.cpp.o
+[72/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/interpolator/LagrangeInterpolator.cpp.o
+[73/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/matrixoperations/CholeskyFactorization.cpp.o
+[74/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/matrixoperations/MatrixFactorization.cpp.o
+[75/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/matrixoperations/LUFactorization.cpp.o
+[76/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/Frozen.cpp.o
+[77/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/matrixoperations/QRFactorization.cpp.o
+[78/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/matrixoperations/SchurFactorization.cpp.o
+[79/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/OrbitDesignerTime.cpp.o
+[80/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/RepeatSunSync.cpp.o
+[81/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/RepeatGroundTrack.cpp.o
+[82/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/api/APIException.cpp.o
+[83/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/api/APIMessageReceiver.cpp.o
+[84/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/asset/AssetException.cpp.o
+[85/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/api/HelpSystem.cpp.o
+[86/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/api/APIFunctions.cpp.o
+[87/894] Building CXX object src/gmatutil/CMakeFiles/GmatUtil.dir/util/SunSync.cpp.o
+[88/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a
+[89/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so
+[90/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/AttitudeException.cpp.o
+[91/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/asset/GroundstationInterface.cpp.o
+[92/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/CCSDSAttitude.cpp.o
+[93/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/asset/BodyFixedPoint.cpp.o
+[94/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/CSFixed.cpp.o
+[95/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/Kinematic.cpp.o
+[96/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/CommandableNadirPointing.cpp.o
+[97/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/Attitude.cpp.o
+[98/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/PrecessingSpinner.cpp.o
+[99/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/Spinner.cpp.o
+[100/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/BurnException.cpp.o
+[101/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/NadirPointing.cpp.o
+[102/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/ThreeAxisKinematic.cpp.o
+[103/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/InertialManeuverFrame.cpp.o
+[104/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/ManeuverFrameManager.cpp.o
+[105/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/Burn.cpp.o
+[106/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/ManeuverFrame.cpp.o
+[107/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/VnbManeuverFrame.cpp.o
+[108/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/ImpulsiveBurn.cpp.o
+[109/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/burn/FiniteBurn.cpp.o
+[110/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Achieve.cpp.o
+[111/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/BeginFiniteBurn.cpp.o
+[112/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/BeginMissionSequence.cpp.o
+[113/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/BeginFunction.cpp.o
+[114/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Assignment.cpp.o
+[115/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/BeginScript.cpp.o
+[116/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/CommandException.cpp.o
+[117/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/CallBuiltinGmatFunction.cpp.o
+[118/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/BranchCommand.cpp.o
+[119/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/FindEvents.cpp.o
+[120/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/CallFunction.cpp.o
+[121/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/ClearPlot.cpp.o
+[122/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/CommandUtil.cpp.o
+[123/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/ConditionalBranch.cpp.o
+[124/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Create.cpp.o
+[125/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/GmatCommand.cpp.o
+[126/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Else.cpp.o
+[127/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndFor.cpp.o
+[128/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndFunction.cpp.o
+[129/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndIf.cpp.o
+[130/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndFiniteBurn.cpp.o
+[131/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndScript.cpp.o
+[132/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndOptimize.cpp.o
+[133/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndTarget.cpp.o
+[134/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/EndWhile.cpp.o
+[135/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/If.cpp.o
+[136/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/For.cpp.o
+[137/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/ManageObject.cpp.o
+[138/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/MarkPoint.cpp.o
+[139/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Maneuver.cpp.o
+[140/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/NoOp.cpp.o
+[141/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Minimize.cpp.o
+[142/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/PenDown.cpp.o
+[143/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Optimize.cpp.o
+[144/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/NonlinearConstraint.cpp.o
+[145/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/PenUp.cpp.o
+[146/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/SolverSequenceCommand.cpp.o
+[147/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/PlotCommand.cpp.o
+[148/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/PropagationEnabledCommand.cpp.o
+[149/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/RHSEquation.cpp.o
+[150/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Report.cpp.o
+[151/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/RunSolver.cpp.o
+[152/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/SaveMission.cpp.o
+[153/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Stop.cpp.o
+[154/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/SolverBranchCommand.cpp.o
+[155/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Propagate.cpp.o
+[156/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Target.cpp.o
+[157/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Toggle.cpp.o
+[158/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/While.cpp.o
+[159/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/configs/ConfigManagerException.cpp.o
+[160/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/UpdateDynamicData.cpp.o
+[161/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Vary.cpp.o
+[162/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/configs/ItemManager.cpp.o
+[163/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/configs/PluginItemManager.cpp.o
+[164/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/AxisSystem.cpp.o
+[165/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/command/Write.cpp.o
+[166/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/BodyInertialAxes.cpp.o
+[167/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/BodyFixedAxes.cpp.o
+[168/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateBase.cpp.o
+[169/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateSystemException.cpp.o
+[170/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/configs/ConfigManager.cpp.o
+[171/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateConverter.cpp.o
+[172/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateTransformation.cpp.o
+[173/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateTranslation.cpp.o
+[174/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/DynamicAxes.cpp.o
+[175/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/EquatorAxes.cpp.o
+[176/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/GeocentricSolarEclipticAxes.cpp.o
+[177/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/CoordinateSystem.cpp.o
+[178/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/GeocentricSolarMagneticAxes.cpp.o
+[179/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/InertialAxes.cpp.o
+[180/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/ItrfCoefficientsFile.cpp.o
+[181/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MeanOfDateAxes.cpp.o
+[182/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MJ2000EcAxes.cpp.o
+[183/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MJ2000EqAxes.cpp.o
+[184/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/LocalAlignedConstrainedAxes.cpp.o
+[185/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MODEcAxes.cpp.o
+[186/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MODEqAxes.cpp.o
+[187/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MOEEqAxes.cpp.o
+[188/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/MOEEcAxes.cpp.o
+[189/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/SpiceAxes.cpp.o
+[190/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TODEcAxes.cpp.o
+[191/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TODEqAxes.cpp.o
+[192/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/ObjectReferencedAxes.cpp.o
+[193/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TOEEcAxes.cpp.o
+[194/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TEMEAxes.cpp.o
+[195/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TOEEqAxes.cpp.o
+[196/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TopocentricAxes.cpp.o
+[197/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TransformUtil.cpp.o
+[198/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/ICRFAxes.cpp.o
+[199/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/TrueOfDateAxes.cpp.o
+[200/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/ICRFFile.cpp.o
+[201/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/IAUFile.cpp.o
+[202/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/event/EventException.cpp.o
+[203/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/ITRFAxes.cpp.o
+[204/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/event/LocatedEvent.cpp.o
+[205/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/coordsystem/BodySpinSunAxes.cpp.o
+[206/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/ListenerManager.cpp.o
+[207/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/ListenerManagerInterface.cpp.o
+[208/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/PlotReceiver.cpp.o
+[209/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/PlotInterface.cpp.o
+[210/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/PublisherException.cpp.o
+[211/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/SandboxException.cpp.o
+[212/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/event/EventLocator.cpp.o
+[213/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/AtmosphereFactory.cpp.o
+[214/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/Publisher.cpp.o
+[215/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/AttitudeFactory.cpp.o
+[216/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/AxisSystemFactory.cpp.o
+[217/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/Sandbox.cpp.o
+[218/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/BurnFactory.cpp.o
+[219/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/CalculatedPointFactory.cpp.o
+[220/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/CelestialBodyFactory.cpp.o
+[221/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/FactoryException.cpp.o
+[222/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/CoordinateSystemFactory.cpp.o
+[223/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/CommandFactory.cpp.o
+[224/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/Factory.cpp.o
+[225/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/FunctionFactory.cpp.o
+[226/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/FactoryManager.cpp.o
+[227/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/HardwareFactory.cpp.o
+[228/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/FieldOfViewFactory.cpp.o
+[229/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/InterfaceFactory.cpp.o
+[230/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/executive/Moderator.cpp.o
+[231/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/ODEModelFactory.cpp.o
+[232/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/MathFactory.cpp.o
+[233/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/PlateFactory.cpp.o
+[234/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/PhysicalModelFactory.cpp.o
+[235/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/PlanetographicRegionFactory.cpp.o
+[236/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/PropSetupFactory.cpp.o
+[237/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/PropagatorFactory.cpp.o
+[238/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/SolarSystemFactory.cpp.o
+[239/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/ParameterFactory.cpp.o
+[240/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/SolverFactory.cpp.o
+[241/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/SpacecraftFactory.cpp.o
+[242/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/StopConditionFactory.cpp.o
+[243/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/guicomponents/GuiFactory.cpp.o
+[244/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/SubscriberFactory.cpp.o
+[245/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/guicomponents/PluginWidget.cpp.o
+[246/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/ODEModelException.cpp.o
+[247/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/factory/guicomponents/GmatWidget.cpp.o
+[248/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/FiniteThrust.cpp.o
+[249/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/GravityBase.cpp.o
+[250/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/GravityField.cpp.o
+[251/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/DragForce.cpp.o
+[252/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/HarmonicField.cpp.o
+[253/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/NumericJacobianOriginal.cpp.o
+[254/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/PhysicalModel.cpp.o
+[255/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/PointMassForce.cpp.o
+[256/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/ODEModel.cpp.o
+[257/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/harmonic/Harmonic.cpp.o
+[258/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/RelativisticCorrection.cpp.o
+[259/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/SolarRadiationPressure.cpp.o
+[260/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/Covariance.cpp.o
+[261/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/forcemodel/harmonic/HarmonicGravity.cpp.o
+[262/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/ElementWrapper.cpp.o
+[263/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/GmatBaseException.cpp.o
+[264/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/EquationInitializer.cpp.o
+[265/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/GmatType.cpp.o
+[266/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/GmatState.cpp.o
+[267/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/FileUpdaterSVN.cpp.o
+[268/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/IChangeListener.cpp.o
+[269/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/StateManager.cpp.o
+[270/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/ObjectInitializer.cpp.o
+[271/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/SpacePoint.cpp.o
+[272/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/TriggerManager.cpp.o
+[273/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/FunctionException.cpp.o
+[274/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/BuiltinGmatFunction.cpp.o
+[275/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Function.cpp.o
+[276/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/GetLastState.cpp.o
+[277/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/foundation/GmatBase.cpp.o
+[278/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/GetEphemStates.cpp.o
+[279/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/FunctionManager.cpp.o
+[280/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Pause.cpp.o
+[281/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/ObjectManagedFunction.cpp.o
+[282/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/QuaternionProduct.cpp.o
+[283/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/QuaternionRotation.cpp.o
+[284/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/QuaternionToDCM.cpp.o
+[285/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/SetSeed.cpp.o
+[286/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/SystemTime.cpp.o
+[287/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/ConvertTime.cpp.o
+[288/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Sign.cpp.o
+[289/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Str2num.cpp.o
+[290/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Num2str.cpp.o
+[291/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/RotationMatrix.cpp.o
+[292/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/ChemicalTank.cpp.o
+[293/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/Angle.cpp.o
+[294/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/function/UserDefinedFunction.cpp.o
+[295/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/ConicalFOV.cpp.o
+[296/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/ElectricTank.cpp.o
+[297/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/ChemicalThruster.cpp.o
+[298/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/FieldOfView.cpp.o
+[299/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/ElectricThruster.cpp.o
+[300/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/FieldOfViewException.cpp.o
+[301/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/HardwareException.cpp.o
+[302/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/CustomFOV.cpp.o
+[303/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/FuelTank.cpp.o
+[304/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/Hardware.cpp.o
+[305/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/Imager.cpp.o
+[306/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/NuclearPowerSystem.cpp.o
+[307/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/RectangularFOV.cpp.o
+[308/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interface/InterfaceException.cpp.o
+[309/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/PowerSystem.cpp.o
+[310/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interface/Interface.cpp.o
+[311/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/SolarPowerSystem.cpp.o
+[312/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/InterpreterException.cpp.o
+[313/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interface/GmatInterface.cpp.o
+[314/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/hardware/Thruster.cpp.o
+[315/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/MathTree.cpp.o
+[316/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/ScriptReadWriter.cpp.o
+[317/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/MathParser.cpp.o
+[318/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/ScriptInterpreter.cpp.o
+[319/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/ApiInterpreter.cpp.o
+[320/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Abs.cpp.o
+[321/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Acos.cpp.o
+[322/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Acosh.cpp.o
+[323/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Add.cpp.o
+[324/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Asin.cpp.o
+[325/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Asinh.cpp.o
+[326/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Atan.cpp.o
+[327/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/Validator.cpp.o
+[328/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Atan2.cpp.o
+[329/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Ceil.cpp.o
+[330/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Cos.cpp.o
+[331/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/BuiltinFunctionNode.cpp.o
+[332/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Cosh.cpp.o
+[333/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Cross3.cpp.o
+[334/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/DegToRad.cpp.o
+[335/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Determinant.cpp.o
+[336/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Diag.cpp.o
+[337/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Divide.cpp.o
+[338/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Exp.cpp.o
+[339/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Fix.cpp.o
+[340/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Floor.cpp.o
+[341/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Log.cpp.o
+[342/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Log10.cpp.o
+[343/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Inverse.cpp.o
+[344/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/MathException.cpp.o
+[345/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/FunctionRunner.cpp.o
+[346/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/MathNode.cpp.o
+[347/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/MathElement.cpp.o
+[348/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/MathFunction.cpp.o
+[349/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/interpreter/Interpreter.cpp.o
+[350/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Min.cpp.o
+[351/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Mod.cpp.o
+[352/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Negate.cpp.o
+[353/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Multiply.cpp.o
+[354/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Norm.cpp.o
+[355/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/NumericFunctionNode.cpp.o
+[356/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/RadToDeg.cpp.o
+[357/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Power.cpp.o
+[358/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Rand.cpp.o
+[359/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Randn.cpp.o
+[360/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Sin.cpp.o
+[361/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Sinh.cpp.o
+[362/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Sqrt.cpp.o
+[363/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Strcat.cpp.o
+[364/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/StringFunctionNode.cpp.o
+[365/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Sprintf.cpp.o
+[366/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Strcmp.cpp.o
+[367/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Strfind.cpp.o
+[368/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Strlen.cpp.o
+[369/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Strrep.cpp.o
+[370/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Substr.cpp.o
+[371/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Tan.cpp.o
+[372/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Subtract.cpp.o
+[373/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Tanh.cpp.o
+[374/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/Transpose.cpp.o
+[375/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/math/EquationWrapper.cpp.o
+[376/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AlternateEquinoctialParameters.cpp.o
+[377/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AngularParameters.cpp.o
+[378/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ArrayWrapper.cpp.o
+[379/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ArrayElementWrapper.cpp.o
+[380/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Array.cpp.o
+[381/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeData.cpp.o
+[382/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeReal.cpp.o
+[383/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeRmat33.cpp.o
+[384/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeRvector.cpp.o
+[385/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeParameters.cpp.o
+[386/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BooleanWrapper.cpp.o
+[387/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BallisticMassReal.cpp.o
+[388/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BplaneData.cpp.o
+[389/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BallisticMassParameters.cpp.o
+[390/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BplaneParameters.cpp.o
+[391/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BplaneReal.cpp.o
+[392/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BrouwerMeanLongParameters.cpp.o
+[393/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BrouwerMeanShortParameters.cpp.o
+[394/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BurnData.cpp.o
+[395/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BurnParameters.cpp.o
+[396/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/BurnReal.cpp.o
+[397/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/CartesianParameters.cpp.o
+[398/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/EnvData.cpp.o
+[399/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/DelaunayParameters.cpp.o
+[400/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/EnvReal.cpp.o
+[401/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ExpressionParser.cpp.o
+[402/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/EquinoctialParameters.cpp.o
+[403/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/HardwareReal.cpp.o
+[404/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/HardwareRvector.cpp.o
+[405/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/HardwareString.cpp.o
+[406/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/IncomingAsymptoteParameters.cpp.o
+[407/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/HardwareParameters.cpp.o
+[408/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ModEquinoctialParameters.cpp.o
+[409/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/KeplerianParameters.cpp.o
+[410/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/NumberWrapper.cpp.o
+[411/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitTime.cpp.o
+[412/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ObjectWrapper.cpp.o
+[413/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OnOffWrapper.cpp.o
+[414/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ObjectPropertyWrapper.cpp.o
+[415/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitCovarianceParameters.cpp.o
+[416/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitalParameters.cpp.o
+[417/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitReal.cpp.o
+[418/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitRmat33.cpp.o
+[419/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitRmat66.cpp.o
+[420/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitRvec6.cpp.o
+[421/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OutgoingAsymptoteParameters.cpp.o
+[422/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitStmParameters.cpp.o
+[423/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/OrbitData.cpp.o
+[424/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ParameterDatabase.cpp.o
+[425/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ParameterWrapper.cpp.o
+[426/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/PlanetodeticParameters.cpp.o
+[427/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Parameter.cpp.o
+[428/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/ParameterInfo.cpp.o
+[429/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/PlanetData.cpp.o
+[430/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/PlanetParameters.cpp.o
+[431/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/PlanetReal.cpp.o
+[432/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/RealVar.cpp.o
+[433/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Rmat66Var.cpp.o
+[434/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Rmat33Var.cpp.o
+[435/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Rvec3Var.cpp.o
+[436/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/RefData.cpp.o
+[437/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Rvec6Var.cpp.o
+[438/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/RvectorVar.cpp.o
+[439/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/StringWrapper.cpp.o
+[440/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/SphericalParameters.cpp.o
+[441/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/StringObjectWrapper.cpp.o
+[442/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/SpacecraftData.cpp.o
+[443/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/StringVar.cpp.o
+[444/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/TimeData.cpp.o
+[445/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/TimeReal.cpp.o
+[446/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/TimeParameters.cpp.o
+[447/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/TimeString.cpp.o
+[448/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/Variable.cpp.o
+[449/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/VariableWrapper.cpp.o
+[450/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/plugin/GmatEventHandler.cpp.o
+[451/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/plugin/DynamicLibrary.cpp.o
+[452/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/parameter/AttitudeString.cpp.o
+[453/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/plugin/GuiInterface.cpp.o
+[454/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/AdamsBashforthMoulton.cpp.o
+[455/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/DormandElMikkawyPrince68.cpp.o
+[456/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/Integrator.cpp.o
+[457/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/PrinceDormand45.cpp.o
+[458/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/PredictorCorrector.cpp.o
+[459/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/PrinceDormand78.cpp.o
+[460/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/RungeKutta89.cpp.o
+[461/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/Propagator.cpp.o
+[462/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/PropSetup.cpp.o
+[463/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/RungeKuttaFehlberg56.cpp.o
+[464/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/RungeKuttaNystrom.cpp.o
+[465/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/RungeKutta.cpp.o
+[466/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Asteroid.cpp.o
+[467/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/propagator/PropagationStateManager.cpp.o
+[468/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/AtmosphereModel.cpp.o
+[469/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Barycenter.cpp.o
+[470/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/CalculatedPoint.cpp.o
+[471/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Comet.cpp.o
+[472/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/EphemSmoother.cpp.o
+[473/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/DeFile.cpp.o
+[474/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/ExponentialAtmosphere.cpp.o
+[475/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/JacchiaRobertsAtmosphere.cpp.o
+[476/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/CelestialBody.cpp.o
+[477/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/LibrationPoint.cpp.o
+[478/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Moon.cpp.o
+[479/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/PlanetaryEphemException.cpp.o
+[480/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Msise90Atmosphere.cpp.o
+[481/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/PlanetaryEphem.cpp.o
+[482/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/MediaCorrectionInterface.cpp.o
+[483/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Planet.cpp.o
+[484/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/ShadowState.cpp.o
+[485/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SolarSystemException.cpp.o
+[486/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SlpFile.cpp.o
+[487/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/PlanetographicRegion.cpp.o
+[488/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/Star.cpp.o
+[489/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SolarFluxReader.cpp.o
+[490/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/Solver.cpp.o
+[491/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/Optimizer.cpp.o
+[492/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/DifferentialCorrector.cpp.o
+[493/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SolarSystem.cpp.o
+[494/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/InternalOptimizer.cpp.o
+[495/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/ISolverListener.cpp.o
+[496/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/DerivativeModel.cpp.o
+[497/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/Gradient.cpp.o
+[498/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/Jacobian.cpp.o
+[499/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/LineSearch.cpp.o
+[500/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solver/ExternalOptimizer.cpp.o
+[501/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spacecraft/FormationInterface.cpp.o
+[502/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spacecraft/TextTrajectoryFile.cpp.o
+[503/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spacecraft/SpaceObject.cpp.o
+[504/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/AttitudeWriterCK.cpp.o
+[505/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spacecraft/Plate.cpp.o
+[506/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/stopcond/StopCondition.cpp.o
+[507/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemerisWriter.cpp.o
+[508/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemWriterCCSDS.cpp.o
+[509/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemWriterCode500.cpp.o
+[510/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemerisFile.cpp.o
+[511/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemWriterSPK.cpp.o
+[512/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemWriterSTK.cpp.o
+[513/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemWriterWithInterpolator.cpp.o
+[514/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/MessageWindow.cpp.o
+[515/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/TextEphemFile.cpp.o
+[516/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/EphemManager.cpp.o
+[517/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/OrbitView.cpp.o
+[518/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/OwnedPlot.cpp.o
+[519/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spacecraft/Spacecraft.cpp.o
+[520/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/ReportFile.cpp.o
+[521/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/Subscriber.cpp.o
+[522/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/XyPlot.cpp.o
+[523/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/GroundTrackPlot.cpp.o
+[524/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/DynamicDataInterface.cpp.o
+[525/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/OrbitPlot.cpp.o
+[526/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SimpleExponentialAtmosphere.cpp.o
+[527/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/solarsys/SpecialCelestialPoint.cpp.o
+[528/894] Building C object src/base/CMakeFiles/GmatBase.dir/solarsys/msise90_sub.c.o
+[529/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/DynamicDataDisplay.cpp.o
+[530/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceAttitudeKernelReader.cpp.o
+[531/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/subscriber/GroundTrack.cpp.o
+[532/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceFrameKernelWriter.cpp.o
+[533/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/attitude/SpiceAttitude.cpp.o
+[534/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceAttitudeKernelWriter.cpp.o
+[535/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceInterface.cpp.o
+[536/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceKernelReader.cpp.o
+[537/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceKernelWriter.cpp.o
+[538/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceOrbitKernelReader.cpp.o
+[539/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceOrbitKernelWriter.cpp.o
+[540/894] Building CXX object src/base/CMakeFiles/GmatBase.dir/spice/SpiceSCClockKernelWriter.cpp.o
+[541/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datainterface/DataInterface.cpp.o
+[542/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/command/Set.cpp.o
+[543/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a
+[544/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so
+[545/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datainterface/FileInterface.cpp.o
+[546/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datareader/FileReader.cpp.o
+[547/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datareader/TcopsVHFAscii.cpp.o
+[548/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datareader/DataReader.cpp.o
+[549/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/datareader/TcopsVHFData.cpp.o
+[550/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/factory/DataInterfaceCommandFactory.cpp.o
+[551/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/factory/ReaderFactory.cpp.o
+[552/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/plugin/GmatPluginFunctions.cpp.o
+[553/894] Building CXX object plugins/DataInterfacePlugin/src/base/CMakeFiles/DataInterface.dir/factory/DataInterfaceFactory.cpp.o
+[554/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/AzimuthAdapter.cpp.o
+[555/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/BRTSDopplerAdapter.cpp.o
+[556/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/BRTSRangeAdapter.cpp.o
+[557/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/DeclinationAdapter.cpp.o
+[558/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/AngleAdapterDeg.cpp.o
+[559/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/DSNRangeAdapter.cpp.o
+[560/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/DopplerAdapter.cpp.o
+[561/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/DSNPNRangeAdapter.cpp.o
+[562/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/ElevationAdapter.cpp.o
+[563/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/GNDopplerAdapter.cpp.o
+[564/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/GNRangeAdapter.cpp.o
+[565/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/GPSAdapter.cpp.o
+[566/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/PointRangeRateAdapterKps.cpp.o
+[567/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/RightAscAdapter.cpp.o
+[568/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/RangeRateAdapterKps.cpp.o
+[569/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/RangeAdapterKm.cpp.o
+[570/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/TDRSDopplerAdapter.cpp.o
+[571/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/TDRSRangeAdapter.cpp.o
+[572/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/TDRSDOWDAdapter.cpp.o
+[573/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/XEastAdapter.cpp.o
+[574/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/TDRS3LReturnDopplerAdapter.cpp.o
+[575/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/XSouthAdapter.cpp.o
+[576/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/YEastAdapter.cpp.o
+[577/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/TrackingDataAdapter.cpp.o
+[578/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/YNorthAdapter.cpp.o
+[579/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/adapter/RangeSkinAdapter.cpp.o
+[580/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/datafilter/AcceptFilter.cpp.o
+[581/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/command/RunSimulator.cpp.o
+[582/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/datafilter/DataFilter.cpp.o
+[583/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/datafilter/RejectFilter.cpp.o
+[584/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/command/RunEstimator.cpp.o
+[585/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/errormodel/ErrorModel.cpp.o
+[586/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/BatchEstimatorBase.cpp.o
+[587/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/EstimatorException.cpp.o
+[588/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/BatchEstimator.cpp.o
+[589/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/event/EstimationRootFinder.cpp.o
+[590/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/event/Event.cpp.o
+[591/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/Simulator.cpp.o
+[592/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/EstimationStateManager.cpp.o
+[593/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/event/EventData.cpp.o
+[594/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/event/EventException.cpp.o
+[595/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/DataFileFactory.cpp.o
+[596/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/ErrorModelFactory.cpp.o
+[597/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/event/EventManager.cpp.o
+[598/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/EstimationDataFilterFactory.cpp.o
+[599/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/EstimationCommandFactory.cpp.o
+[600/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/EstimatorFactory.cpp.o
+[601/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/EstimatorHardwareFactory.cpp.o
+[602/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/MeasurementModelFactory.cpp.o
+[603/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/NavPropagatorFactory.cpp.o
+[604/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/ObTypeFactory.cpp.o
+[605/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/factory/SignalModelFactory.cpp.o
+[606/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Antenna.cpp.o
+[607/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/RFHardware.cpp.o
+[608/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Signal.cpp.o
+[609/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Sensor.cpp.o
+[610/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Receiver.cpp.o
+[611/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Transponder.cpp.o
+[612/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/hardware/Transmitter.cpp.o
+[613/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/APData.cpp.o
+[614/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/Ionosphere.cpp.o
+[615/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/MagneticField.cpp.o
+[616/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/IonosphereCoefficients.cpp.o
+[617/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/MagneticHistory.cpp.o
+[618/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/MeasurementData.cpp.o
+[619/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/MeasurementModelBase.cpp.o
+[620/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/MediaCorrection.cpp.o
+[621/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Ionosphere/IonosphereCoefficientsFull.cpp.o
+[622/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/B3_obtype.cpp.o
+[623/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/Troposphere/Troposphere.cpp.o
+[624/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/DataFileAdapter.cpp.o
+[625/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/DataFile.cpp.o
+[626/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/GmatData.cpp.o
+[627/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurement/MeasurementManager.cpp.o
+[628/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/GmatObType.cpp.o
+[629/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/ObservationData.cpp.o
+[630/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/ObType.cpp.o
+[631/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/RampTableData.cpp.o
+[632/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementfile/RampTableType.cpp.o
+[633/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/plugin/GmatPluginFunctions.cpp.o
+[634/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/propagator/RungeKutta4.cpp.o
+[635/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementmodel/GPSPointMeasureModel.cpp.o
+[636/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/reporter/ProgressReporter.cpp.o
+[637/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/measurementmodel/MeasureModel.cpp.o
+[638/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/estimator/Estimator.cpp.o
+[639/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/SinglePointSignal.cpp.o
+[640/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/SignalData.cpp.o
+[641/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/SignalDataCache.cpp.o
+[642/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/PassivePhysicalSignal.cpp.o
+[643/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/tdmReader/TdmErrorHandler.cpp.o
+[644/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/SignalBase.cpp.o
+[645/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/tdmReader/TdmObType.cpp.o
+[646/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/signal/PhysicalSignal.cpp.o
+[647/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/tdmReader/TdmReadWriter.cpp.o
+[648/894] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/factory/PythonCommandFactory.cpp.o
+[649/894] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/function/PythonModule.cpp.o
+[650/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/trackingfile/TFSMagicNumbers.cpp.o
+[651/894] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/command/CallPythonFunction.cpp.o
+[652/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libDataInterface.so.R2026a
+[653/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libDataInterface.so
+[654/894] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/interface/PythonInterface.cpp.o
+[655/894] Building CXX object plugins/PythonInterfacePlugin/src/base/py3.14/CMakeFiles/PythonInterface_py314.dir/plugin/GmatPluginFunctions.cpp.o
+[656/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libPythonInterface_py314.so.R2026a
+[657/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/plugin/GmatPluginFunctions.cpp.o
+[658/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/factory/EphemPropFactory.cpp.o
+[659/894] Building CXX object plugins/EstimationPlugin/src/base/CMakeFiles/GmatEstimation.dir/trackingfile/TrackingFileSet.cpp.o
+[660/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/propagator/CcsdsEphPropagator.cpp.o
+[661/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libGmatEstimation.so.R2026a
+[662/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/propagator/EphemerisPropagator.cpp.o
+[663/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/propagator/Code500Propagator.cpp.o
+[664/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/propagator/StkEPropagator.cpp.o
+[665/894] Building CXX object plugins/EphemPropagatorPlugin/src/base/CMakeFiles/EphemPropagator.dir/propagator/SPKPropagator.cpp.o
+[666/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/command/RunSmoother.cpp.o
+[667/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/EKF/ExtendedKalmanFilter.cpp.o
+[668/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/estimatedparam/EstimatedParameterModel.cpp.o
+[669/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/estimatedparam/EstimatedParameter.cpp.o
+[670/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/estimatedparam/FirstOrderGaussMarkov.cpp.o
+[671/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/EKFCommandFactory.cpp.o
+[672/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/EstimatedParameterFactory.cpp.o
+[673/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/ExtendedKalmanFilterFactory.cpp.o
+[674/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/EstimatedParameterModelFactory.cpp.o
+[675/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/ProcessNoiseModelFactory.cpp.o
+[676/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/ProcessNoiseFactory.cpp.o
+[677/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/factory/SmootherFactory.cpp.o
+[678/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/noise/LinearProcessNoise.cpp.o
+[679/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/EKF/SeqEstimator.cpp.o
+[680/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/noise/ProcessNoiseBase.cpp.o
+[681/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/noise/ProcessNoiseModel.cpp.o
+[682/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/noise/SNCProcessNoise.cpp.o
+[683/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libGmatEstimation.so
+[684/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/plugin/GmatPluginFunctions.cpp.o
+[685/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/smoother/Smoother.cpp.o
+[686/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/ContactResult.cpp.o
+[687/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/ContactEvent.cpp.o
+[688/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/EclipseEvent.cpp.o
+[689/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/EclipseTotalEvent.cpp.o
+[690/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/IntrusionResult.cpp.o
+[691/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/event/IntrusionEvent.cpp.o
+[692/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/factory/EventLocatorFactory.cpp.o
+[693/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/locator/EclipseLocator.cpp.o
+[694/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/plugin/GmatPluginFunctions.cpp.o
+[695/894] Building CXX object plugins/ExtendedKalmanFilterPlugin/src/base/CMakeFiles/EKF.dir/smoother/SmootherBase.cpp.o
+[696/894] Building CXX object plugins/ExternalForceModelPlugin/src/base/py3.14/CMakeFiles/ExternalForceModel_py314.dir/factory/ExternalModelFactory.cpp.o
+[697/894] Building CXX object plugins/ExternalForceModelPlugin/src/base/py3.14/CMakeFiles/ExternalForceModel_py314.dir/plugin/GmatPluginFunctions.cpp.o
+[698/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/locator/IntrusionLocator.cpp.o
+[699/894] Building CXX object plugins/ExtraPropagatorsPlugin/src/base/CMakeFiles/ExtraPropagators.dir/factory/ExtraPropagatorFactory.cpp.o
+[700/894] Building CXX object plugins/ExtraPropagatorsPlugin/src/base/CMakeFiles/ExtraPropagators.dir/plugin/GmatPluginFunctions.cpp.o
+[701/894] Building CXX object plugins/ExternalForceModelPlugin/src/base/py3.14/CMakeFiles/ExternalForceModel_py314.dir/forcemodel/ExternalModel.cpp.o
+[702/894] Building CXX object plugins/FormationPlugin/src/base/CMakeFiles/Formation.dir/factory/FormationFactory.cpp.o
+[703/894] Building CXX object plugins/ExtraPropagatorsPlugin/src/base/CMakeFiles/ExtraPropagators.dir/propagator/BulirschStoer.cpp.o
+[704/894] Building CXX object plugins/FormationPlugin/src/base/CMakeFiles/Formation.dir/plugin/GmatPluginFunctions.cpp.o
+[705/894] Building CXX object plugins/EventLocatorPlugin/src/base/CMakeFiles/EventLocator.dir/locator/ContactLocator.cpp.o
+[706/894] Building CXX object plugins/FormationPlugin/src/base/CMakeFiles/Formation.dir/formation/Formation.cpp.o
+[707/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/command/CallGmatFunction.cpp.o
+[708/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/command/Global.cpp.o
+[709/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/factory/GmatFunctionCommandFactory.cpp.o
+[710/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/factory/GmatFunctionFactory.cpp.o
+[711/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/plugin/GmatPluginFunctions.cpp.o
+[712/894] Building CXX object plugins/Msise00Plugin/src/base/CMakeFiles/Msise00.dir/atmosphere/NRLMsise00Atmosphere.cpp.o
+[713/894] Building C object plugins/Msise00Plugin/src/base/CMakeFiles/Msise00.dir/atmosphere/nrlmsise00_sub.c.o
+[714/894] Building CXX object plugins/Msise00Plugin/src/base/CMakeFiles/Msise00.dir/factory/NRLMsise00Factory.cpp.o
+[715/894] Building CXX object plugins/Msise00Plugin/src/base/CMakeFiles/Msise00.dir/plugin/GmatPluginFunctions.cpp.o
+[716/894] Building CXX object plugins/GmatFunctionPlugin/src/base/CMakeFiles/GmatFunction.dir/function/GmatFunction.cpp.o
+[717/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/factory/NewParameterFactory.cpp.o
+[718/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/AtmosDensity.cpp.o
+[719/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/FMAcceleration.cpp.o
+[720/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/FMDensity.cpp.o
+[721/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/OdeData.cpp.o
+[722/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/OdeReal.cpp.o
+[723/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/OdeRvec3.cpp.o
+[724/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/SolverData.cpp.o
+[725/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/SolverState.cpp.o
+[726/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/SolverReal.cpp.o
+[727/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/SolverStatus.cpp.o
+[728/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/SolverString.cpp.o
+[729/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/plugin/GmatPluginFunctions.cpp.o
+[730/894] Building CXX object plugins/NewParameterPlugin/src/base/CMakeFiles/NewParameters.dir/parameter/Torque.cpp.o
+[731/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/factory/PolyhedronGravityModelFactory.cpp.o
+[732/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/factory/GravityParameterFactory.cpp.o
+[733/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/parameter/GravData.cpp.o
+[734/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/gravitymodel/PolyhedronBody.cpp.o
+[735/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/parameter/GravReal.cpp.o
+[736/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/gravitymodel/PolyhedronGravityModel.cpp.o
+[737/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/parameter/SurfaceHeight.cpp.o
+[738/894] Building CXX object plugins/PolyhedronGravityPlugin/src/base/CMakeFiles/PolyhedronGravity.dir/plugin/GmatPluginFunctions.cpp.o
+[739/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libPythonInterface_py314.so
+[740/894] Building CXX object plugins/ProductionPropagatorPlugin/src/base/CMakeFiles/ProductionPropagators.dir/plugin/GmatPluginFunctions.cpp.o
+[741/894] Building CXX object plugins/ProductionPropagatorPlugin/src/base/CMakeFiles/ProductionPropagators.dir/factory/ProductionPropagatorFactory.cpp.o
+[742/894] Building CXX object plugins/ProductionPropagatorPlugin/src/base/CMakeFiles/ProductionPropagators.dir/propagator/PrinceDormand853.cpp.o
+[743/894] Building CXX object plugins/SaveCommandPlugin/src/base/CMakeFiles/SaveCommand.dir/plugin/GmatPluginFunctions.cpp.o
+[744/894] Building CXX object plugins/SaveCommandPlugin/src/base/CMakeFiles/SaveCommand.dir/factory/SaveCommandFactory.cpp.o
+[745/894] Building CXX object plugins/ScriptToolsPlugin/src/base/CMakeFiles/ScriptTools.dir/plugin/GmatPluginFunctions.cpp.o
+[746/894] Building CXX object plugins/SaveCommandPlugin/src/base/CMakeFiles/SaveCommand.dir/command/Save.cpp.o
+[747/894] Building CXX object plugins/ScriptToolsPlugin/src/base/CMakeFiles/ScriptTools.dir/factory/CommandEchoFactory.cpp.o
+[748/894] Building CXX object plugins/ScriptToolsPlugin/src/base/CMakeFiles/ScriptTools.dir/command/CommandEcho.cpp.o
+[749/894] Building CXX object plugins/StationPlugin/src/base/CMakeFiles/Station.dir/plugin/GmatPluginFunctions.cpp.o
+[750/894] Building CXX object plugins/StationPlugin/src/base/CMakeFiles/Station.dir/factory/StationFactory.cpp.o
+[751/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/command/BeginFileThrust.cpp.o
+[752/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/datareader/ThfDataSegment.cpp.o
+[753/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/command/EndFileThrust.cpp.o
+[754/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/factory/ThrustFileCommandFactory.cpp.o
+[755/894] Building CXX object plugins/StationPlugin/src/base/CMakeFiles/Station.dir/station/GroundStation.cpp.o
+[756/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/factory/ThrustFileForceFactory.cpp.o
+[757/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/datareader/ThrustSegment.cpp.o
+[758/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/factory/ThrustFileReaderFactory.cpp.o
+[759/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/factory/ThrustSegmentParameterFactory.cpp.o
+[760/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/datareader/ThrustHistoryFile.cpp.o
+[761/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/plugin/GmatPluginFunctions.cpp.o
+[762/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/parameter/ThrustSegmentData.cpp.o
+[763/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/parameter/ThrustSegmentReal.cpp.o
+[764/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/parameter/ThrustSegmentParameters.cpp.o
+[765/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/parameter/ThrustSegmentRvector.cpp.o
+[766/894] Building CXX object plugins/TLEPropagatorPlugin/src/CMakeFiles/TLEPropagator.dir/plugin/GmatPluginFunctions.cpp.o
+[767/894] Building CXX object plugins/TLEPropagatorPlugin/src/CMakeFiles/TLEPropagator.dir/propagator/TLEData.cpp.o
+[768/894] Building CXX object plugins/TLEPropagatorPlugin/src/CMakeFiles/TLEPropagator.dir/factory/TlePropFactory.cpp.o
+[769/894] Building CXX object plugins/TLEPropagatorPlugin/src/CMakeFiles/TLEPropagator.dir/propagator/TLEReader.cpp.o
+[770/894] Building CXX object plugins/ThrustFilePlugin/src/base/CMakeFiles/ThrustFile.dir/forcemodel/FileThrust.cpp.o
+[771/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/plugin/GmatPluginFunctions.cpp.o
+[772/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/factory/YukonOptimizerFactory.cpp.o
+[773/894] Building CXX object plugins/TLEPropagatorPlugin/src/CMakeFiles/TLEPropagator.dir/propagator/SPICEPropagator.cpp.o
+[774/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/GmatProblemInterface.cpp.o
+[775/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/YukonUserProblem.cpp.o
+[776/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/Yukon.cpp.o
+[777/894] cd /home/dan/GIT/GMAT-Qt/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT-Qt/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT-Qt/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt
+[778/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/NLPFunctionGenerator.cpp.o
+[779/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/Yukonad.cpp.o
+[780/894] Building CXX object plugins/YukonOptimizerPlugin/src/base/CMakeFiles/YukonOptimizer.dir/solver/MinQP.cpp.o
+[781/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtMessageReceiver.cpp.o
+[782/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtInterpreter.cpp.o
+[783/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[784/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/AboutDialog.cpp.o
+[785/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/HelpDialog.cpp.o
+[786/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/UserParameter.cpp.o
+[787/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRun.cpp.o
+[788/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[789/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MissionNavigation.cpp.o
+[790/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/WelcomeDialog.cpp.o
+[791/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/Debugger.cpp.o
+[792/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/SolarSystemPanel.cpp.o
+[793/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PathSettings.cpp.o
+[794/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[795/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CelestialBodyPanel.cpp.o
+[796/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PathSettingsDialog.cpp.o
+[797/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceDraft.cpp.o
+[798/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/EditablePanel.cpp.o
+[799/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceForm.cpp.o
+[800/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CommandEditor.cpp.o
+[801/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceProperties.cpp.o
+[802/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MissionModel.cpp.o
+[803/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PropagationForm.cpp.o
+[804/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ConditionDialog.cpp.o
+[805/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[806/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ReportParameterDialog.cpp.o
+[807/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ParameterReferences.cpp.o
+[808/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CommandForm.cpp.o
+[809/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/BulkPropertyDialog.cpp.o
+[810/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/StartupCompatibility.cpp.o
+[811/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtSolverListener.cpp.o
+[812/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/BallisticsMassDialog.cpp.o
+[813/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/VisualModelDialog.cpp.o
+[814/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/SpacecraftOrbit.cpp.o
+[815/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/AttitudeDialog.cpp.o
+[816/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[817/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/AtmosphereDialog.cpp.o
+[818/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ExternalForceDialog.cpp.o
+[819/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/GroundStationDialog.cpp.o
+[820/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PolyhedronDialog.cpp.o
+[821/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/XYPlotDialog.cpp.o
+[822/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/EventLocatorDialog.cpp.o
+[823/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/GroundTrackDialog.cpp.o
+[824/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitObjectDrawingDialog.cpp.o
+[825/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitViewDialog.cpp.o
+[826/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ThrusterDialog.cpp.o
+[827/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/BurnDialog.cpp.o
+[828/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/EphemerisDialog.cpp.o
+[829/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/DynamicDataDialog.cpp.o
+[830/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptEventDialog.cpp.o
+[831/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/TrackingConfigDialog.cpp.o
+[832/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/EpochIntervalDialog.cpp.o
+[833/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptEditor.cpp.o
+[834/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptDocument.cpp.o
+[835/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FunctionFileDialog.cpp.o
+[836/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/InspectionDialog.cpp.o
+[837/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FindReplaceDialog.cpp.o
+[838/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FileComparison.cpp.o
+[839/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ReportViewer.cpp.o
+[840/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ComparisonPanel.cpp.o
+[841/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PropagationStopsDialog.cpp.o
+[842/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PropagationColorDialog.cpp.o
+[843/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PropagationGroupsDialog.cpp.o
+[844/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/StarCatalog.cpp.o
+[845/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotPlaybackControls.cpp.o
+[846/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotModel.cpp.o
+[847/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libEphemPropagator.so.R2026a
+[848/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libEKF.so.R2026a
+[849/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libEventLocator.so.R2026a
+[850/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libExternalForceModel_py314.so.R2026a
+[851/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libExtraPropagators.so.R2026a
+[852/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libFormation.so.R2026a
+[853/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libGmatFunction.so.R2026a
+[854/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libMsise00.so.R2026a
+[855/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libNewParameters.so.R2026a
+[856/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libPolyhedronGravity.so.R2026a
+[857/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libProductionPropagators.so.R2026a
+[858/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libSaveCommand.so.R2026a
+[859/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libScriptTools.so.R2026a
+[860/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libStation.so.R2026a
+[861/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a
+[862/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/thinksys/libTLEPropagator.so.R2026a
+[863/894] Linking CXX shared library /home/dan/GIT/GMAT-Qt/application/plugins/libYukonOptimizer.so.R2026a
+[864/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitRenderer.cpp.o
+/home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp: In function ‘osg::ref_ptr<osg::Image> {anonymous}::readTexture(const QString&)’:
+/home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp:85:86: warning: ‘QImage QImage::mirrored(bool, bool) &&’ is deprecated: Use flipped(Qt::Orientations) instead [-Wdeprecated-declarations]
+   85 |    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/QImage:1,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/PlotModel.hpp:3,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.hpp:2,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qimage.h:223:26: note: declared here
+  223 |     [[nodiscard]] QImage mirrored(bool horizontally = false, bool vertically = true) &&
+      |                          ^~~~~~~~
+[865/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libEphemPropagator.so
+[866/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libEKF.so
+[867/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libEventLocator.so
+[868/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libExternalForceModel_py314.so
+[869/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libExtraPropagators.so
+[870/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libFormation.so
+[871/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libGmatFunction.so
+[872/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libMsise00.so
+[873/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libNewParameters.so
+[874/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libPolyhedronGravity.so
+[875/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libProductionPropagators.so
+[876/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libSaveCommand.so
+[877/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libScriptTools.so
+[878/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libStation.so
+[879/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so
+[880/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/thinksys/libTLEPropagator.so
+[881/894] Creating library symlink /home/dan/GIT/GMAT-Qt/application/plugins/libYukonOptimizer.so
+[882/894] Building CXX object src/qtgui/CMakeFiles/GmatQt.dir/main.cpp.o
+[883/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotWidget.cpp.o
+[884/894] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[885/894] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[886/894] Linking CXX executable /home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a
+[887/894] Creating executable symlink /home/dan/GIT/GMAT-Qt/application/bin/GmatQt
+[888/894] Building CXX object src/qtgui/CMakeFiles/GmatQtObjectAxesTests.dir/tests/ObjectAxesTests.cpp.o
+[889/894] Linking CXX executable src/qtgui/GmatQtObjectAxesTests
+[890/894] Building CXX object src/qtgui/CMakeFiles/GmatQtParameterTests.dir/tests/ParameterTests.cpp.o
+[891/894] Linking CXX executable src/qtgui/GmatQtParameterTests
+[892/894] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[893/894] Linking CXX executable src/qtgui/GmatQtWorkflowTests

@@ -1,0 +1,12 @@
+Linux Qt usability follow-up, 2026-10-01
+Project: /home/dan/GIT/GMAT-Qt, branch codex/qt6-gui
+Fresh Qt-only build: 894 Ninja steps, exit 0; 20 selected native plugins.
+GmatQt and targeted harnesses built; later pending-attitude fix relinked GmatQt.
+QtGui.Parameters: PASS 8.92 s (check-usability-initial.txt).
+QtGui.ObjectAxes: PASS 0.23 s (check-object-axes-and-workflow-diagnostic.txt).
+QtGui.Workflow after pending-attitude fix: PASS 12.14 s (check-workflow-after-attitude.txt).
+QtGui.UnifiedResources with final retained/fresh attitude regression: PASS 0.78 s (check-retained-attitude-final.txt).
+These are separate targeted runs, not a full-suite pass. Passing unrelated tests were not repeated.
+Actual application/bin/GmatQt isolated offscreen startup/capture: exit 0.
+ldd resolves GmatBase/GmatUtil inside this new checkout, no missing or wx libraries.
+No live desktop test; compositor/Wayland/portal qualification still open.

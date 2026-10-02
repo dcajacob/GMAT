@@ -35,10 +35,11 @@ cmake --preset qt-linux
 cmake --build --preset qt-linux
 ```
 
-The fresh build directory contains no copied object files. Its first build must
-compile the engine and frontend; subsequent builds are incremental. The existing
-application is immediately available while that build has not been run. The
-preset is machine-local; on another machine use the general setup instructions
+The first build from this checkout completed on 2026-10-01, compiling the engine,
+Qt frontend and selected native plugins without copied object files. The actual
+application is now rebuilt here; subsequent builds are incremental. The runtime
+snapshot above records the initial bootstrap. The preset is machine-local; on
+another machine use the general setup instructions
 in `Qt6Gui.md` with the dependency locations for that system.
 
 Open `/home/dan/GIT/GMAT-Qt` as a separate Codex project for future work. Creating

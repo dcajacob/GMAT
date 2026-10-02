@@ -14,6 +14,7 @@ public:
    ~AttitudeDialog() override;
    QMap<QString,QString> values() const { return acceptedValues; }
    QMap<QString,QString> settings();
+   QMap<QString,QString> pendingValues() const;
 private:
    void rebuild();
    bool submit(const QString &selector={}, const QString &selected={});

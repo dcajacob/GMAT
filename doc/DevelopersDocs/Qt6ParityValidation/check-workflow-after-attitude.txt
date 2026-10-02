@@ -1,0 +1,19 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start  7: QtGui.UnifiedResources
+1/2 Test  #7: QtGui.UnifiedResources ...........***Failed    0.21 sec
+This plugin does not support propagateSizeHints()
+Retained attitude input missing
+
+    Start 29: QtGui.Workflow
+2/2 Test #29: QtGui.Workflow ...................   Passed   12.14 sec
+
+50% tests passed, 1 tests failed out of 2
+
+Label Time Summary:
+qt-gui    =  12.35 sec*proc (2 tests)
+
+Total Test time (real) =  12.36 sec
+
+The following tests FAILED:
+	  7 - QtGui.UnifiedResources (Failed)                   qt-gui
+Errors while running CTest
