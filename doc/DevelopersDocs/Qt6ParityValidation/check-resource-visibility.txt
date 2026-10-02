@@ -1,0 +1,6 @@
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS: hidden subscriber metadata absent in six output editors and three plot creators; object drawing retained, empty Advanced grid removed; saved layout/comments preserved on Apply, Undo/Redo and Unicode Save/reopen. Offscreen only; no mission.

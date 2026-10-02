@@ -1367,14 +1367,19 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    if (!primary->isEmpty()) pages->insertTab(0,primary,"Setup"); else primary->hide();
    if (spacecraft && common) pages->setCurrentWidget(generic);
    auto *advanced=new QWidget(pages); auto *advancedLayout=new QVBoxLayout(advanced);
+   bool advancedProperties=false; int advancedActions=0;
+   for (int row=0;row<table->rowCount();++row) advancedProperties=advancedProperties || !table->item(row,0)->data(Qt::UserRole+1).toBool();
    const QSet<QString> replaced={"editEphemeris","editBurn","editThruster","editDynamicData","editTrackingConfigs","editEventLocator","editGroundStation","editOrbitView","editXYPlot","editGroundTrack","spacecraftAttitude","spacecraftBallisticsMass","spacecraftVisualModel"};
    for (auto *button:findChildren<QPushButton *>(QString(),Qt::FindDirectChildrenOnly)) {
       layout->removeWidget(button);
-      if (replaced.contains(button->objectName())) button->hide(); else advancedLayout->addWidget(button);
+      if (replaced.contains(button->objectName())) button->hide(); else { advancedLayout->addWidget(button); ++advancedActions; }
    }
    layout->removeWidget(search); advancedLayout->addWidget(search);
    if (sections) { layout->removeWidget(sections); advancedLayout->addWidget(sections); }
-   advancedLayout->addWidget(table,1); pages->addTab(advanced,"Advanced"); layout->addWidget(pages,1);
+   advancedLayout->addWidget(table,1);
+   if (!advancedProperties) { search->hide(); table->hide(); if (sections) sections->hide(); advancedLayout->addStretch(); }
+   if (advancedProperties || advancedActions) pages->addTab(advanced,"Advanced"); else advanced->hide();
+   layout->addWidget(pages,1);
    if (!primary->isEmpty() && !spacecraft) pages->setCurrentWidget(primary);
    status = new QLabel(creation ? "Create validates settings and adds the resource to the mission." : "Apply validates changes and updates the mission script.", this); status->setObjectName("resourceStatus");
    if (object.IsOfType("SeqEstimator")) {

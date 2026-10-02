@@ -107,6 +107,9 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
    std::optional<Rvector6> orbit;
    for (Integer id = 0; id < object.GetParameterCount(); ++id) {
       try {
+         // Subscriber visibility separates editable output settings from the
+         // window layout/state metadata that is still valid in saved scripts.
+         if (object.IsOfType(Gmat::SUBSCRIBER) && !object.IsParameterVisible(id)) continue;
          // Array values are marked read-only for ordinary property syntax;
          // their specialized editor writes the array's indexed initial values.
          const bool arrayValues=object.GetTypeName()=="Array" && object.GetParameterText(id)=="RmatValue";

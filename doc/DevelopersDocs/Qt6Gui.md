@@ -247,6 +247,11 @@ settings, event locators, dynamic data and tracking configuration use their
 specialized forms directly in the panel. Spacecraft provide orbit/hardware,
 ballistics/mass, attitude and visual-model pages. Other types use typed form
 fields. Common fields appear once; the Advanced table holds remaining settings.
+Subscriber window position, size, stacking order and minimized/maximized state
+are hidden from both Setup and Advanced, as specified by the engine's property
+visibility metadata. Existing script assignments remain supported and preserved.
+Empty Advanced property grids are hidden; legitimate actions such as Object
+drawing remain available.
 Scalar numbers,
 booleans, strings, enumerations and references are supported. Applying edits
 changes a clone, validates it, compares its serialized settings with the original

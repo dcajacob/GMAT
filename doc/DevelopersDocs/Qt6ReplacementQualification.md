@@ -7535,3 +7535,31 @@ actual application/bin/GmatQt-R2026a relink and GmatQt launcher recreation. All
 live desktop testing remains stopped following the GNOME Shell crash. Native
 interaction/Wayland/portal and broader replacement gates remain open; full Linux
 qualification remains active, Windows/macOS deferred and MATLAB off.
+
+## Subscriber window metadata visibility — 2026-10-01
+
+The user identified UpperLeft, Size, RelativeZOrder and Maximized in the OrbitView
+creator's Advanced table as inappropriate resource controls. Subscriber already
+marks these fields, along with Minimized and TargetStatus, invisible through
+IsParameterVisible. Qt resourceProperties was checking only read-only status.
+It now honors the subscriber visibility metadata, removing these internal
+layout/state entries from new-resource and existing-resource forms. Engine
+setters, serialization and startup layout handling remain intact. Empty Advanced
+property grids/filters are hidden, and wholly empty Advanced tabs are omitted;
+legitimate Object drawing remains available for OrbitView.
+
+QtGui.ResourceVisibility / ResourceVisibilityTests checks six output editors
+(OrbitView, GroundTrack, XYPlot, ReportFile, EphemerisFile, DynamicDataDisplay),
+three plot creator drafts, preserved Object drawing, and absence of empty grid
+controls. A fixture with explicit layout values and Unicode comments retains
+those exact assignments through a normal ShowPlot Apply, Undo/Redo and Unicode
+Save/reopen. check-resource-visibility.txt records the focused offscreen pass;
+the harness refuses non-offscreen platforms. The inspected resource-visibility-
+create-offscreen.png and resource-visibility-editor-offscreen.png show the
+cleaned-up Advanced page. No mission or previous broad suite was repeated.
+
+build-resource-visibility.txt records successful frontend/test compilation and
+actual application/bin/GmatQt-R2026a relink/launcher recreation. Live desktop
+testing remains stopped following the GNOME Shell crash; native desktop and
+broader Linux replacement gates remain open. Windows/macOS remain deferred and
+MATLAB remains off.
