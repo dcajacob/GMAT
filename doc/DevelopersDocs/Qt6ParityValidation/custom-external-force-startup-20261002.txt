@@ -1,0 +1,183 @@
+#-------------------------------------------------------------------------------
+# General Mission Analysis Tool (GMAT) startup file
+#-------------------------------------------------------------------------------
+# Comment line starts with #
+# Comment line starting with ## will be saved when saving startup file.
+#
+# Path/File naming convention:
+#   - Path name should end with _PATH
+#   - File name should end with _FILE
+#   - Path/File names are case sensative
+#
+# You can add potential and texture files by following the naming convention.
+#   - Potential file should begin with planet name and end with _POT_FILE
+#   - Texture file should begin with planet name and end with _TEXTURE_FILE
+#
+# If same _FILE is specified multiple times, it will use the last one.
+#
+# You can have more than one line containing GMAT_FUNCTION_PATH. GMAT will store 
+# the multiple paths you specify and scan for GMAT Functions using the paths 
+# in top to bottom order and use the first function found from the search paths.
+#
+# In order for an object plugin to work inside GMAT, the plugin dynamic link libraries; 
+# Windows(.dll), Linux(.so) and Mac(.dylib), must be placed in the folder containing
+# the GMAT executable or application. Once placed in the correct folder 
+# the PLUGIN line below must be set equal to the plugin name without the dynamic link 
+# library extension with the comment (#) removed from the front of the line.
+#
+# Some available PLUGINs are:
+# PLUGIN = libMatlabInterface
+# PLUGIN = libFminconOptimizer
+# PLUGIN = libVF13Optimizer
+# PLUGIN = libDataFile
+# PLUGIN = libCcsdsEphemerisFile
+# PLUGIN = libGmatEstimation
+#
+#===============================================================================
+#RUN_MODE              = TESTING
+#RUN_MODE              = TESTING_NO_PLOTS
+#RUN_MODE              = EXIT_AFTER_RUN
+#MATLAB_MODE           = SINGLE
+#MATLAB_MODE           = SHARED
+#MATLAB_MODE           = NO_MATLAB
+WRITE_GMAT_KEYWORD     = OFF
+#-----------------------------------------------------------
+ROOT_PATH              = ../
+#-----------------------------------------------------------
+PLUGIN                 = ../plugins/libDataInterface
+PLUGIN                 = ../plugins/libEphemPropagator
+PLUGIN                 = ../plugins/libEKF
+PLUGIN                 = ../plugins/libGmatEstimation
+PLUGIN                 = ../plugins/libEventLocator
+PLUGIN                 = ../plugins/libExternalForceModel_py314
+PLUGIN                 = ../plugins/libExtraPropagators
+PLUGIN                 = ../plugins/libFormation
+PLUGIN                 = ../plugins/libGmatFunction
+PLUGIN                 = ../plugins/libMsise00
+PLUGIN                 = ../plugins/libNewParameters
+PLUGIN                 = ../plugins/libPolyhedronGravity
+PLUGIN                 = ../plugins/libProductionPropagators
+PLUGIN                 = ../plugins/libPythonInterface_py314
+PLUGIN                 = ../plugins/libSaveCommand
+PLUGIN                 = ../plugins/libScriptTools
+PLUGIN                 = ../plugins/libStation
+PLUGIN                 = ../plugins/libThrustFile
+PLUGIN                 = ../plugins/thinksys/libTLEPropagator
+PLUGIN                 = ../plugins/libYukonOptimizer
+PLUGIN                 = ../plugins/thinksys/vf13ad/libVF13adOptimizer
+#-----------------------------------------------------------
+OUTPUT_PATH = /home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-frzn3ej8/output/
+LOG_FILE               = OUTPUT_PATH/GmatLog.txt
+REPORT_FILE            = OUTPUT_PATH/ReportFile.txt
+SCREENSHOT_FILE        = OUTPUT_PATH/GmatScreenShot
+#-----------------------------------------------------------
+MEASUREMENT_PATH       = OUTPUT_PATH/
+#-----------------------------------------------------------
+VEHICLE_EPHEM_CCSDS_PATH = DATA_PATH/vehicle/ephem/ccsds/
+#-----------------------------------------------------------
+GMAT_INCLUDE_PATH      = /home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-frzn3ej8/
+#-----------------------------------------------------------
+GMAT_FUNCTION_PATH = /home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-frzn3ej8/
+GMAT_FUNCTION_PATH = /home/dan/GIT/GMAT-Qt/application/userfunctions/gmat/
+#-----------------------------------------------------------
+MATLAB_FUNCTION_PATH   = /home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-frzn3ej8/
+MATLAB_FUNCTION_PATH   = ROOT_PATH/matlab/
+MATLAB_FUNCTION_PATH   = ROOT_PATH/userfunctions/matlab/
+#MATLAB_FUNCTION_PATH  = 
+#-----------------------------------------------------------
+DATA_PATH              = ROOT_PATH/data/
+#-----------------------------------------------------------
+PLANETARY_EPHEM_SPK_PATH = DATA_PATH/planetary_ephem/spk/
+#-----------------------------------------------------------
+PLANETARY_EPHEM_DE_PATH = DATA_PATH/planetary_ephem/de/
+DE405_FILE             = PLANETARY_EPHEM_DE_PATH/leDE1941.405
+#-----------------------------------------------------------
+PLANETARY_COEFF_PATH   = DATA_PATH/planetary_coeff/
+EOP_FILE               = PLANETARY_COEFF_PATH/eopc04_08.62-now
+NUTATION_COEFF_FILE    = PLANETARY_COEFF_PATH/NUTATION.DAT
+PLANETARY_PCK_FILE     = PLANETARY_COEFF_PATH/SPICEPlanetaryConstantsKernel.tpc
+EARTH_LATEST_PCK_FILE  = PLANETARY_COEFF_PATH/earth_latest_high_prec.bpc
+EARTH_PCK_PREDICTED_FILE = PLANETARY_COEFF_PATH/SPICEEarthPredictedKernel.bpc
+EARTH_PCK_CURRENT_FILE = PLANETARY_COEFF_PATH/SPICEEarthCurrentKernel.bpc
+LUNA_PCK_CURRENT_FILE  = PLANETARY_COEFF_PATH/SPICELunaCurrentKernel.bpc
+LUNA_FRAME_KERNEL_FILE = PLANETARY_COEFF_PATH/SPICELunaFrameKernel.tf
+#-----------------------------------------------------------
+TIME_PATH              = DATA_PATH/time/
+LEAP_SECS_FILE         = TIME_PATH/tai-utc.dat
+LSK_FILE               = TIME_PATH/SPICELeapSecondKernel.tls
+#-----------------------------------------------------------
+ATMOSPHERE_PATH        = DATA_PATH/atmosphere/earth/
+CSSI_FLUX_FILE         = ATMOSPHERE_PATH/SpaceWeather-All-v1.2.txt
+SCHATTEN_FILE          = ATMOSPHERE_PATH/SchattenPredict.txt
+#-----------------------------------------------------------
+IONOSPHERE_PATH        = DATA_PATH/IonosphereData/
+EARTH_POT_PATH         = DATA_PATH/gravity/earth/
+LUNA_POT_PATH          = DATA_PATH/gravity/luna/
+MARS_POT_PATH          = DATA_PATH/gravity/mars/
+OTHER_POT_PATH         = DATA_PATH/gravity/other/
+VENUS_POT_PATH         = DATA_PATH/gravity/venus/
+#-----------------------------------------------------------
+EGM96_FILE             = EARTH_POT_PATH/EGM96.cof
+JGM2_FILE              = EARTH_POT_PATH/JGM2.cof
+JGM3_FILE              = EARTH_POT_PATH/JGM3.cof
+MARS50C_FILE           = MARS_POT_PATH/Mars50c.cof
+MGNP180U_FILE          = VENUS_POT_PATH/MGNP180U.cof
+LP165P_FILE            = LUNA_POT_PATH/LP165P.cof
+#-----------------------------------------------------------
+GUI_CONFIG_PATH        = DATA_PATH/gui_config/
+PERSONALIZATION_FILE   = GUI_CONFIG_PATH/MyGmat.ini
+#-----------------------------------------------------------
+ICON_PATH              = DATA_PATH/graphics/icons/
+MAIN_ICON_FILE         = ICON_PATH/GMATWin32.ico
+#-----------------------------------------------------------
+SPLASH_PATH            = DATA_PATH/graphics/splash/
+SPLASH_FILE            = SPLASH_PATH/GMATSplashScreenBETA.png
+#-----------------------------------------------------------
+TEXTURE_PATH           = DATA_PATH/graphics/texture/
+EARTH_TEXTURE_FILE     = TEXTURE_PATH/ModifiedBlueMarble.jpg
+JUPITER_TEXTURE_FILE   = TEXTURE_PATH/Jupiter_HermesCelestiaMotherlode.jpg
+LUNA_TEXTURE_FILE      = TEXTURE_PATH/Moon_HermesCelestiaMotherlode.jpg
+MARS_TEXTURE_FILE      = TEXTURE_PATH/Mars_JPLCaltechUSGS.jpg
+MERCURY_TEXTURE_FILE   = TEXTURE_PATH/Mercury_JPLCaltech.jpg
+NEPTUNE_TEXTURE_FILE   = TEXTURE_PATH/Neptune_BjornJonsson.jpg
+PLUTO_TEXTURE_FILE     = TEXTURE_PATH/Pluto_JPLCaltech.jpg
+SATURN_TEXTURE_FILE    = TEXTURE_PATH/Saturn_gradiusCelestiaMotherlode.jpg
+SUN_TEXTURE_FILE       = TEXTURE_PATH/Sun.jpg
+URANUS_TEXTURE_FILE    = TEXTURE_PATH/Uranus_JPLCaltech.jpg
+VENUS_TEXTURE_FILE     = TEXTURE_PATH/Venus_BjornJonsson.jpg
+#-----------------------------------------------------------
+STAR_PATH              = DATA_PATH/graphics/stars/
+STAR_FILE              = STAR_PATH/inp_StarCatalog.txt
+CONSTELLATION_FILE     = STAR_PATH/inp_Constellation.txt
+#-----------------------------------------------------------
+VEHICLE_EPHEM_SPK_PATH = DATA_PATH/vehicle/ephem/spk/
+#-----------------------------------------------------------
+VEHICLE_MODEL_PATH     = DATA_PATH/vehicle/models/
+SPACECRAFT_MODEL_FILE  = VEHICLE_MODEL_PATH/aura.3ds
+#-----------------------------------------------------------
+HELP_PATH              = ROOT_PATH/docs/help/
+#HELP_DIRECTORY_FILE   = 
+HELP_HTML_FILE         = HELP_PATH/help.html
+#-----------------------------------------------------------
+BODY_3D_MODEL_PATH     = DATA_PATH/graphics/models/
+FILE_UPDATE_PATH       = ROOT_PATH/data/
+HELP_PATH              = ROOT_PATH/docs/help/
+MARS_ATMOSPHERE_PATH   = DATA_PATH/atmosphere/mars/
+PYTHON_MODULE_PATH = /home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/inputs/constant-modules/
+PYTHON_MODULE_PATH = /home/dan/GIT/GMAT-Qt/application/userfunctions/python/
+SPAD_PATH              = DATA_PATH/vehicle/spad/
+VEHICLE_EPHEM_PATH     = OUTPUT_PATH/
+BORDER_FILE            = STAR_PATH/inp_Border.txt
+DE421_FILE             = PLANETARY_EPHEM_DE_PATH/leDE1900.421
+DE424_FILE             = PLANETARY_EPHEM_DE_PATH/leDE18002100.424
+EARTH_EXPONENTIAL_FILE = ATMOSPHERE_PATH/EarthExponentialAtmosphereData.txt
+EPHEM_OUTPUT_FILE      = OUTPUT_PATH/EphemerisFile.eph
+HELP_HTML_TUTORIALS_FILE = HELP_PATH/html/Tutorials.html
+HELP_HTML_USING_GMAT_FILE = HELP_PATH/html/UsingGmat.html
+ICRF_FILE              = DATA_PATH/icrf/ICRF_Table.txt
+MARINI_TROPO_FILE      = ATMOSPHERE_PATH/marini.dat
+MARS_EXPONENTIAL_FILE  = MARS_ATMOSPHERE_PATH/MarsExponentialAtmosphereData.txt
+PLANETARY_SPK_FILE     = PLANETARY_EPHEM_SPK_PATH/DE421AllPlanets.bsp
+SPAD_SRP_FILE          = SPAD_PATH/SphericalModel.spo
+#-----------------------------------------------------------
+

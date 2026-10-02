@@ -1102,3 +1102,19 @@ placeholders in the shared callback and latest display; source appends earlier
 history rather than clears it, actual point counts were not exported. No
 trajectory truth/backward/time-varying-profile/solve-for, host/Wayland/portal/GPU/
 crash or full replacement claim; Windows/macOS/MATLAB remain deferred.
+
+
+### Custom-path Python ExternalForce passed after GUI restart — 2026-10-02
+
+[The constant-force record](Qt6ParityValidation/custom-external-force-20261002.md)
+qualifies Set paths Add/export followed by a fresh startup, actual force-panel
+module/function/exclusion Apply, Save/CtrlO/readback and one 0.038 s run. Engine
+and callback origin identify the owned module outside bundled paths. Two finite
+rows match the independently known 60 s polynomial within predeclared component
+bounds; all reported/nominal-time differences are retained. Source 1344 B SHA
+8318112e... stays exact. Startup export normalizes the live FileManager snapshot,
+with no original-comment-byte/live-cache claim; terminal-slash verifier correction
+is preserved. Both File Exits app/WM/Xvfb 0/0/0 are separate from helper diagnostics.
+App 244dc41a... / 5,926,536 B/core/util/startup fixed; no engine/build/test or old
+matrix/corpus repeat. Package/environment/cache, host/hardware and full Linux
+acceptance stay open; Windows/macOS/MATLAB remain deferred.

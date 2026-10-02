@@ -1,0 +1,202 @@
+{
+  "recorded_utc": "2026-10-02T23:26:32.216915+00:00",
+  "actual_input_batches": [
+    6,
+    12
+  ],
+  "last_successful_input_elapsed_seconds": [
+    112.96403659600765,
+    346.2885170869995
+  ],
+  "source_commit": "2f9810c0",
+  "documentation_base_commit": "d76779990ee48d5a3df8f13829548a2618a7491d",
+  "app_sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+  "app_bytes": 5926536,
+  "base_sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+  "util_sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+  "production_startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+  "sessions": [
+    {
+      "app": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "startup": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "script": null,
+      "app_sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+      "original_startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "clone_startup_sha256": "76a95859003bd3b63c207bcd0eb64d0b8138ab7f284f8f6aec34397f5ca2dfc8",
+      "startup_change": "OUTPUT_PATH value only",
+      "artifacts": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-frzn3ej8",
+      "seconds": 600,
+      "screen": [
+        1600,
+        1200
+      ],
+      "wm_command": [
+        "/tmp/gmat-isolated-x11/wm/usr/bin/openbox",
+        "--sm-disable",
+        "--config-file",
+        "/tmp/gmat-isolated-x11/openbox.xml"
+      ],
+      "limits": "Own X11/software GL input and rendering only; GNOME/Wayland/portal and hardware-driver acceptance remain open",
+      "display": ":2",
+      "qpa": "xcb",
+      "software_gl": true,
+      "processes": {
+        "xvfb": 858640,
+        "wm": 858650,
+        "application": 858653
+      },
+      "closed": true,
+      "exit_codes": {
+        "xvfb": 0,
+        "wm": 0,
+        "application": 0
+      }
+    },
+    {
+      "app": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+      "startup": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/custom-python-startup.txt",
+      "script": null,
+      "app_sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+      "original_startup_sha256": "6b83f495e344c6045dcfecb7179b9dc5209485e043836cca06ced274a3b25292",
+      "clone_startup_sha256": "df02dc2b47e922683a867713ed5807a2fce8b509465da779434a70112e6f57d0",
+      "startup_change": "OUTPUT_PATH value only",
+      "artifacts": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/isolated-x11-boo99f4d",
+      "seconds": 600,
+      "screen": [
+        1600,
+        1200
+      ],
+      "wm_command": [
+        "/tmp/gmat-isolated-x11/wm/usr/bin/openbox",
+        "--sm-disable",
+        "--config-file",
+        "/tmp/gmat-isolated-x11/openbox.xml"
+      ],
+      "limits": "Own X11/software GL input and rendering only; GNOME/Wayland/portal and hardware-driver acceptance remain open",
+      "display": ":2",
+      "qpa": "xcb",
+      "software_gl": true,
+      "processes": {
+        "xvfb": 875275,
+        "wm": 875285,
+        "application": 875317
+      },
+      "closed": true,
+      "exit_codes": {
+        "xvfb": 0,
+        "wm": 0,
+        "application": 0
+      }
+    }
+  ],
+  "helper_exit_codes": [
+    1,
+    1
+  ],
+  "helper_exit_disposition": "Both actual File Exit applications exited0. Next queued wait detects already exited app, then own WM/Xvfb cleanup0. No timeout/forced app termination.",
+  "all_six_owned_pids_absent": true,
+  "source_bytes": 1344,
+  "source_sha256": "8318112ebcd417731a67ee964fa06829c1920c2c8677bdd09ebcb17e9580051d",
+  "source_unchanged_after_reopen_and_run": true,
+  "source_only_external_assignments_added_to_keyboard_scaffold": true,
+  "module_bytes": 591,
+  "module_sha256": "b7f9386c4031a2e5c743ce3af2e7959c867ba2b0ea1b3352f247807c74b8b409",
+  "resolved_module_origin": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/inputs/constant-modules/QtOwnedConstantForce.py",
+  "module_outside_bundled_and_mission_paths": true,
+  "startup_export_bytes": 10184,
+  "startup_export_sha256": "6b83f495e344c6045dcfecb7179b9dc5209485e043836cca06ced274a3b25292",
+  "startup_export_semantics": {
+    "ordered_plugin_count": 21,
+    "ordered_plugin_values_unchanged": true,
+    "initial_output_unchanged": true,
+    "python_directories": [
+      "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/custom-external-force-live/inputs/constant-modules/",
+      "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/"
+    ],
+    "difference": "Live dialog starts from FileManager::WriteStartupFile engine snapshot. Initial generated production comments/format are normalized; no comments-byte-preservation claim."
+  },
+  "harness_verifier_correction": "First read-only exported-list comparison omitted serialized terminal slashes and raised AssertionError. Canonical physical directory identities match; no GUI or mission failure, no source change or rerun.",
+  "run_seconds": 0.038,
+  "mission_runs": 1,
+  "rows": [
+    [
+      0.0,
+      7000.0,
+      0.0,
+      0.0,
+      0.0,
+      7.5,
+      0.0
+    ],
+    [
+      59.99999988125637,
+      7001.8,
+      449.6400000000001,
+      0.5399999999999997,
+      0.06,
+      7.488000000000001,
+      0.018
+    ]
+  ],
+  "all_finite": true,
+  "acceleration_km_per_s2": [
+    0.001,
+    -0.0002,
+    0.0003
+  ],
+  "reported_elapsed_seconds": 59.99999988125637,
+  "elapsed_minus_nominal_60_seconds": -1.1874362826347351e-07,
+  "reported_time_closed_form": [
+    7001.799999992875,
+    449.6399991108477,
+    0.5399999978626147,
+    0.05999999988125637,
+    7.4880000000237485,
+    0.01799999996437691
+  ],
+  "reported_time_component_errors": [
+    7.12498149368912e-09,
+    8.891523748388863e-07,
+    2.1373850467298894e-09,
+    1.1874362604302746e-10,
+    -2.3747226407522248e-11,
+    3.562308781290824e-11
+  ],
+  "nominal_60_closed_form": [
+    7001.8,
+    449.64,
+    0.54,
+    0.06,
+    7.488,
+    0.018
+  ],
+  "nominal_60_component_errors": [
+    0.0,
+    1.1368683772161603e-13,
+    -3.3306690738754696e-16,
+    0.0,
+    8.881784197001252e-16,
+    0.0
+  ],
+  "declared_tolerances": {
+    "elapsed_seconds": 1e-06,
+    "position_component_km": 1e-06,
+    "velocity_component_km_per_s": 1e-09
+  },
+  "max_position_component_error_km": 8.891523748388863e-07,
+  "max_velocity_component_error_km_per_s": 1.1874362604302746e-10,
+  "report_bytes": 366,
+  "report_sha256": "4ba65842a68af7e13ae9cb272a679247f98efa5b5c89e42b372c5628b4ce3619",
+  "observations": [
+    "ExternalForce panel enable/module/function/exclusion Apply and saved-source CtrlO/Build readback",
+    "Exactly one F5 Completed and actual Output Enter two rows",
+    "Engine resolved __file__/entry and first callback origin print both identify owned custom module"
+  ],
+  "limits": [
+    "Private X11/software GL only",
+    "No live cache/reload/package/environment precedence/API work",
+    "No general scientific or numerical-engine requalification",
+    "No host GNOME/Wayland/portal/hardware/crash acceptance",
+    "No path-order/recovery matrix/tutorial/corpus/old suite repeated"
+  ]
+}
