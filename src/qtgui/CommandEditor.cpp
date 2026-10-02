@@ -23,7 +23,7 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
 {
    auto *layout=new QVBoxLayout(this);
    layout->addWidget(new QLabel(adding ? "Insert mission command" : "Edit mission command",this));
-   auto *choices=new QComboBox(this);
+   auto *choices=new QComboBox(this); choices->setObjectName("commandTemplate");
    choices->addItem("Choose a command template…"); choices->addItems(templates.keys());
    if (adding) layout->addWidget(choices); else choices->hide();
    source=new QPlainTextEdit(statement,this); source->setObjectName("commandSource");

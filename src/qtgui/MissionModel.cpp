@@ -291,6 +291,22 @@ MissionSnapshot snapshotMission(GmatCommand *first,const QString &canonical,cons
    if (commands) *commands=builder.commands;
    return builder.result;
 }
+int missionBranchEnd(const MissionSnapshot &snapshot,int index)
+{
+   if (index<0 || index>=snapshot.nodes.size()) return -1;
+   const auto &branch=snapshot.nodes[index];
+   static const QMap<QString,QString> endings={{"If","EndIf"},{"For","EndFor"},
+      {"While","EndWhile"},{"Target","EndTarget"},{"Optimize","EndOptimize"}};
+   const auto ending=endings.value(branch.type);
+   if (ending.isEmpty() || !branch.editable) return -1;
+   for (auto child:branch.children) {
+      if (child<0 || child>=snapshot.nodes.size()) continue;
+      const auto &node=snapshot.nodes[child];
+      if (node.parent==index && node.type==ending && node.start>=branch.start &&
+          node.end>node.start && node.end<=branch.end) return child;
+   }
+   return -1;
+}
 QString editMission(const MissionSnapshot &snapshot,int index,MissionEdit operation,const QString &replacement)
 {
    if (operation!=MissionEdit::Remove && replacement.trimmed().isEmpty()) throw std::runtime_error("Enter a command");

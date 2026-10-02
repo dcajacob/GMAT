@@ -38,6 +38,26 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
          if (std::find(objects.begin(),objects.end(),name.toStdString())==objects.end())
             throw std::runtime_error((it.key()+": plot display/camera object must be in Add: "+name).toStdString());
       };
+      // A body camera can reference an undrawn SpacePoint. OrbitView already
+      // resolves primary references and sunlight independently of Add; named
+      // secondary cameras resolve their objects at each published sample.
+      auto validateBody=[&](const QString &name) {
+         if (name.isEmpty()) return;
+         auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+         if (!plot || !plot->IsOfType("OrbitView")) throw std::runtime_error("Plot display/camera metadata requires an OrbitView");
+         auto *object=moderator->GetConfiguredObject(name.toStdString());
+         if (!object) object=moderator->GetSolarSystemInUse()->GetBody(name.toStdString());
+         if (!dynamic_cast<SpacePoint *>(object)) throw std::runtime_error((it.key()+": automatic body camera needs a space point: "+name).toStdString());
+      };
+      for (const auto &vector:it->vectors) {
+         for (const auto &name:vector.type=="Body-Fixed" ? QStringList{vector.source} : QStringList{vector.source,vector.destination}) {
+            auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
+            auto *object=moderator->GetConfiguredObject(name.toStdString());
+            if (!object) object=moderator->GetSolarSystemInUse()->GetBody(name.toStdString());
+            if (!plot || !plot->IsOfType("OrbitView") || !dynamic_cast<SpacePoint *>(object))
+               throw std::runtime_error((it.key()+" vector "+vector.name+": unknown source/destination space point "+name).toStdString());
+         }
+      }
       for (const auto &name:it->objectLabels.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectTrajectories.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectCenters.keys()) validateTrajectory(name,false);
@@ -84,7 +104,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
             throw std::runtime_error("Segment camera must match ViewPointReference");
       }
       validateTrajectory(it->automaticTrajectory);
-      validateTrajectory(it->automaticBody);
+      validateBody(it->automaticBody);
       if (!it->automaticBody.isEmpty()) {
          auto *plot=moderator->GetConfiguredObject(it.key().toStdString());
          if (plot->GetStringParameter("ViewPointRefType")=="Vector" || plot->GetStringParameter("ViewPointReference")!=it->automaticBody.toStdString())
@@ -99,7 +119,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
       for (const auto &view:it->views) {
       validateSegment(view.segmentFrame);
       validateTrajectory(view.automaticTrajectory);
-      validateTrajectory(view.automaticBody);
+      validateBody(view.automaticBody);
       for (const auto &name:{view.reference,view.target}) {
          if (name.isEmpty() || name=="CoordinateSystem") continue;
          auto *object=moderator->GetConfiguredObject(name.toStdString());
@@ -221,6 +241,12 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
    auto &entry=entries[text(name)]; entry.data=std::make_shared<PlotModel>(kind); entry.data->title=text(name);
    if (kind==PlotModel::Kind::Orbit && cameraSettings.contains(text(name))) {
       const auto setting=cameraSettings.value(text(name));
+      for (const auto &definition:setting.vectors) {
+         PlotVector vector; vector.name=definition.name; vector.source=definition.source; vector.destination=definition.destination;
+         vector.label=definition.label; vector.bodyFixed=definition.type=="Body-Fixed"; vector.automaticLength=definition.automaticLength;
+         vector.length=definition.length; vector.color=rgb(definition.color); vector.color.setAlphaF(.8);
+         vector.start=definition.start; vector.direction=definition.direction; entry.data->vectors.append(vector);
+      }
       entry.data->perspective=setting.perspective; entry.data->fieldOfView=setting.fieldOfView;
       entry.data->automaticTrajectory=setting.automaticTrajectory;
       entry.data->automaticBody=setting.automaticBody;
@@ -313,6 +339,21 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
 {
    auto *entry=find(name); if (!entry) return;
    entry->objects=names; entry->points=points;
+   const auto setting=cameraSettings.value(text(name));
+   // Retain physical bounds for a secondary body camera whose reference is
+   // absent from the drawn objects. Replay must not consult engine pointers.
+   const auto cameraRadius=[&](const QString &body,const QString &segment) {
+      if (body.isEmpty()) return 0.0;
+      if (!segment.isEmpty()) return 1.0;
+      SpacePoint *point=nullptr;
+      for (auto *candidate:points) if (candidate && text(candidate->GetName())==body) { point=candidate; break; }
+      if (!point && entry->solarSystem) point=entry->solarSystem->GetBody(body.toStdString());
+      if (auto *celestial=dynamic_cast<CelestialBody *>(point)) return celestial->GetEquatorialRadius();
+      return 1.0;
+   };
+   if (!setting.automaticBody.isEmpty()) entry->data->automaticRadius=cameraRadius(setting.automaticBody,setting.segmentFrame);
+   for (int index=0;index<setting.views.size();++index) if (!setting.views[index].automaticBody.isEmpty())
+      entry->data->cameraViews[index+1].automaticRadius=cameraRadius(setting.views[index].automaticBody,setting.views[index].segmentFrame);
    for (size_t i=0;i<names.size();++i) {
       auto &curve=entry->data->curves[static_cast<int>(i)]; curve.name=text(names[i]);
       const auto setting=cameraSettings.value(text(name));
@@ -638,6 +679,61 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
    }
    for (auto &curve:data.curves) if (!curve.points.empty() && curve.points.back().frame==data.frame)
       curve.points.back().provider=entry->provider;
+   if (data.kind==PlotModel::Kind::Orbit && data.active) for (auto &vector:data.vectors) {
+      PlotVectorSample sample; sample.source.frame=data.frame; sample.source.epoch=epoch; sample.source.solver=solving;
+      try {
+         auto findObject=[&](const QString &objectName) -> SpacePoint * {
+            for (auto *point:entry->points) if (point && text(point->GetName())==objectName) return point;
+            if (entry->solarSystem) if (auto *body=entry->solarSystem->GetBody(objectName.toStdString())) return body;
+            return dynamic_cast<SpacePoint *>(Moderator::Instance()->GetInternalObject(objectName.toStdString()));
+         };
+         auto position=[&](SpacePoint *object,const QString &objectName) {
+            const auto found=std::find(names.begin(),names.end(),objectName.toStdString());
+            std::array<double,3> value{};
+            if (found!=names.end()) {
+               const auto index=static_cast<size_t>(found-names.begin());
+               if (index>=x.size() || index>=y.size() || index>=z.size()) throw std::runtime_error("Vector state array is incomplete");
+               value={x[index],y[index],z[index]};
+            } else {
+               if (!object) throw std::runtime_error("Vector space point is unavailable");
+               auto state=object->GetMJ2000State(epoch);
+               if (entry->internal && entry->view && entry->internal!=entry->view) {
+                  Rvector6 converted; CoordinateConverter converter;
+                  converter.Convert(epoch,state,entry->internal,converted,entry->view); state=converted;
+               }
+               value={state[0],state[1],state[2]};
+            }
+            if (!PlotModel::usableOrbitPosition(value[0],value[1],value[2])) throw std::runtime_error("Vector position is unavailable or unrenderable");
+            return value;
+         };
+         auto *source=findObject(vector.source);
+         if (!source) throw std::runtime_error("Vector source is unavailable");
+         const auto origin=position(source,vector.source);
+         sample.source.x=origin[0]; sample.source.y=origin[1]; sample.source.z=origin[2];
+         bool retainedPose=false;
+         for (const auto &curve:data.curves) if (curve.name==vector.source && !curve.points.empty() && curve.points.back().frame==data.frame) {
+            sample.source=curve.points.back(); sample.sourceRadius=curve.radius>0 ? curve.radius : 1; retainedPose=true; break;
+         }
+         if (!retainedPose) {
+            if (auto *body=dynamic_cast<CelestialBody *>(source)) sample.sourceRadius=body->GetEquatorialRadius();
+            Rmatrix33 viewToBase;
+            if (entry->view) { entry->view->ToBaseSystem(A1Mjd(epoch),Rvector6(),true); viewToBase=entry->view->GetLastRotationMatrix(); }
+            auto attitude=source->GetAttitude(epoch);
+            if (source->IsOfType(Gmat::SPACECRAFT)) attitude=attitude.Transpose();
+            const auto rotation=viewToBase.Transpose()*attitude;
+            for (int row=0;row<3;++row) for (int col=0;col<3;++col) sample.source.bodyToView[row*3+col]=rotation(row,col);
+         }
+         for (auto value:sample.source.bodyToView) if (!std::isfinite(value)) throw std::runtime_error("Vector source orientation is nonfinite");
+         if (!vector.bodyFixed) sample.destination=position(findObject(vector.destination),vector.destination);
+      } catch (...) {
+         sample.valid=false;
+         warn(name,("unresolved vector "+vector.name+" (hidden at unavailable samples)").toStdString());
+      }
+      // An invalid sample suppresses this frame instead of replaying a stale
+      // direction from an earlier epoch. Trim and solver reset match cameras.
+      vector.samples.push_back(sample);
+      while (vector.samples.size()>static_cast<size_t>(data.maxPoints)) vector.samples.pop_front();
+   }
    // Segment references use positions and attitude captured with this sample.
    updateCameras(true);
    if (update) refresh(*entry,true); return true;
@@ -650,11 +746,13 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
    else if (action=="PenDown") entry->data->penDown=true;
    else if (action=="ToggleOff") { entry->data->active=false; entry->data->breakLines(); }
    else if (action=="ToggleOn") entry->data->active=true;
-   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
+   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &vector:entry->data->vectors) vector.samples.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
    else if (action=="ClearSolverData") {
       auto clearSolver=[](std::deque<PlotCamera> &cameras) {
          cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
       };
+      for (auto &vector:entry->data->vectors)
+         vector.samples.erase(std::remove_if(vector.samples.begin(),vector.samples.end(),[](const PlotVectorSample &sample) { return sample.source.solver; }),vector.samples.end());
       clearSolver(entry->data->cameras);
       for (auto &view:entry->data->cameraViews) clearSolver(view.cameras);
       for (auto &curve:entry->data->curves) {

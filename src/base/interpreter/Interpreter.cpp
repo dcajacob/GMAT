@@ -6580,24 +6580,30 @@ bool Interpreter::SetPropertyStringValue(GmatBase *obj, const Integer id,
             // SpacePoint kernel setters support an empty braced list as a
             // complete clear. Do not discard it as an empty scalar: doing so
             // retains startup kernels after a GUI removal/save/reopen.
-            const std::string property = obj->GetParameterText(id);
             const bool emptyList = GmatStringUtil::IsEnclosedWithBraces(valueToUse) &&
                GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}")).empty();
-            if (emptyList && property == "ShadowBodies" && obj->IsOfType("SolarPowerSystem"))
+            // Owned force parameters use encoded ids. Their setters support
+            // string arrays even when the parent has no text getter for that
+            // id. Only these class-specific empty-list cases need the name.
+            if (emptyList && (obj->IsOfType(Gmat::SPACE_POINT) ||
+                              obj->IsOfType("SolarPowerSystem")))
             {
-               // The indexed setter distinguishes an explicit empty list
-               // from the implicit Earth default installed at Initialize.
-               obj->TakeAction("ClearShadowBodies");
-               return obj->SetStringParameter(id, "", 0);
+               const std::string property = obj->GetParameterText(id);
+               if (property == "ShadowBodies" && obj->IsOfType("SolarPowerSystem"))
+               {
+                  // The indexed setter distinguishes an explicit empty list
+                  // from the implicit Earth default installed at Initialize.
+                  obj->TakeAction("ClearShadowBodies");
+                  return obj->SetStringParameter(id, "", 0);
+               }
+               if (obj->IsOfType(Gmat::SPACE_POINT) &&
+                   (property == "OrbitSpiceKernelName" ||
+                    property == "AttitudeSpiceKernelName" ||
+                    property == "PlanetarySpiceKernelName" ||
+                    property == "SCClockSpiceKernelName" ||
+                    property == "FrameSpiceKernelName"))
+                  return obj->SetStringParameter(id, "{}");
             }
-            if (obj->IsOfType(Gmat::SPACE_POINT) &&
-                (property == "OrbitSpiceKernelName" ||
-                 property == "AttitudeSpiceKernelName" ||
-                 property == "PlanetarySpiceKernelName" ||
-                 property == "SCClockSpiceKernelName" ||
-                 property == "FrameSpiceKernelName") &&
-                emptyList)
-               return obj->SetStringParameter(id, "{}");
 
             // remove enclosing curly brackets if used
             valueToUse = GmatStringUtil::Trim(GmatStringUtil::RemoveEnclosingString(valueToUse, "{}"));

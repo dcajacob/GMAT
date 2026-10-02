@@ -36,6 +36,7 @@ void PlotModel::clear()
    for (auto &curve : curves) { curve.points.clear(); curve.breaks.clear(); curve.breakNext = true; }
    frame = 0; pendingUpdates = 0; endOfRun=false; ++historyGeneration;
    cameras.clear();
+   for (auto &vector:vectors) vector.samples.clear();
    for (auto &view:cameraViews) view.cameras.clear();
 }
 void PlotModel::breakLines()
@@ -45,6 +46,7 @@ void PlotModel::breakLines()
 void PlotModel::trim()
 {
    maxPoints = std::max(1, maxPoints);
+   for (auto &vector:vectors) while (vector.samples.size()>static_cast<size_t>(maxPoints)) vector.samples.pop_front();
    while (cameras.size()>static_cast<size_t>(maxPoints)) cameras.pop_front();
    for (auto &view:cameraViews) while (view.cameras.size()>static_cast<size_t>(maxPoints)) view.cameras.pop_front();
    for (auto &curve : curves) {

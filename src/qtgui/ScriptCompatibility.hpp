@@ -23,11 +23,20 @@ struct QtCameraPreset {
    bool bodyRelative=false;
    bool lookAtRotation=false, shortestAngle=false;
 };
+struct QtVectorSetting {
+   QString name,source,destination,label="DefaultVector";
+   QString type="Body-Fixed";
+   quint32 color=0xff0000;
+   bool automaticLength=true;
+   double length=1;
+   std::array<double,3> start{},direction{1,0,0};
+};
 struct QtCameraSetting {
    bool perspective=false; double fieldOfView=50;
    std::optional<std::array<double,3>> up;
    QString primaryName;
    QVector<QtCameraPreset> views;
+   QVector<QtVectorSetting> vectors;
    bool bodyRelative=false;
    bool lookAtRotation=false, shortestAngle=false;
    std::optional<std::array<double,3>> centerOffset;

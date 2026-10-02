@@ -31,6 +31,7 @@ private:
    class QPushButton *applyButton=nullptr;
    QLabel *status;
    QMap<QString, QString> original;
+   QMap<QString, QString> coordinateAxisEdits;
    QMap<QString, QString> attitudeEdits;
    QMap<QString, QString> atmosphereEdits;
    QMap<QString, QString> externalEdits,originalExternal;

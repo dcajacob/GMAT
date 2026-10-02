@@ -144,7 +144,7 @@ int main(int argc, char **argv)
             multiSetting.views[0].eye==std::array<double,3>{0,-9000,500} && multiSetting.views[0].center==std::array<double,3>{1,2,3} &&
             multiSetting.views[0].up==std::array<double,3>{1,1,0} && multiSetting.views[0].fieldOfView==22.5,"Additional current camera pose/FOV lost");
          for (const auto &invalid:{QString(multiple).replace("Close.FOVy = 22.5","Close.FOVy = 180"),
-               QString(multiple).replace("{Camera, Close}","{Camera, Missing}"),QString(multiple).replace("{Camera, Close}","{Camera, Camera}"),
+               QString(multiple).replace("{Camera, Close}","{Camera, Missing}"),
                QString(multiple).replace("Close.CurrentUp = [1 1 0]","Close.CurrentUp = [0 0 0]")})
             require(!convertOpenFramesViews(invalid).error.isEmpty(),"Invalid secondary view silently accepted");
 
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
          catch (const std::exception &) { rejected=true; }
          require(rejected,"Conflicting camera directives were accepted");
          require(!convertOpenFramesViews(input+"GMAT total = Camera.FOVy;\n").error.isEmpty(),"Converter removed a view used by calculations");
-         require(!convertOpenFramesViews("Create OpenFramesVector Vec;\n").error.isEmpty(),"Unsupported OFI declaration was silently removed");
+         require(!convertOpenFramesViews("Create OpenFramesVector Vec;\nVec.VectorType = 'Thrust Vector';\n").error.isEmpty(),"Unsupported OFI declaration was silently removed");
          require(!convertOpenFramesViews(input+"Display.Axes = Off;\n").error.isEmpty(),"Dynamic viewer setting was silently rewritten");
       }
       MainWindow window;
@@ -762,10 +762,12 @@ int main(int argc, char **argv)
                }
                auto *buttons=dialog->findChild<QDialogButtonBox *>();
                buttons->button(QDialogButtonBox::Apply)->click();
-               if (!appliedAxes) dialog->reject();
+               if (dialog->result()!=QDialog::Accepted) dialog->reject();
             }
          });
          panel.findChild<QPushButton *>("editCoordinateAxes")->click();
+         require(!appliedAxes && editor->toPlainText()==beforeAxes && panel.hasChanges(),"Nested axes OK committed before parent Apply");
+         panel.requestApply();
       }
       require(appliedAxes && axisPickers,"Dependent coordinate-axis settings or reference pickers are missing");
       auto *userFrame=dynamic_cast<CoordinateSystem *>(Moderator::Instance()->GetConfiguredObject("UserFrame"));
@@ -807,10 +809,12 @@ int main(int argc, char **argv)
             if (auto *dialog=qobject_cast<QDialog *>(QApplication::activeModalWidget())) {
                dialog->findChild<QComboBox *>("coordinateAxisType")->setCurrentText("MJ2000Ec");
                dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
-               if (!appliedType) dialog->reject();
+               if (dialog->result()!=QDialog::Accepted) dialog->reject();
             }
          });
          panel.findChild<QPushButton *>("editCoordinateAxes")->click();
+         require(!appliedType && editor->toPlainText()==beforeAxes && panel.hasChanges(),"Nested type-only OK committed before parent Apply");
+         panel.requestApply();
       }
       require(appliedType && Moderator::Instance()->GetConfiguredObject("UserFrame")->GetStringParameter("Axes")=="MJ2000Ec",
          "Axes type-only dialog edit did not replace axes");
@@ -2160,7 +2164,7 @@ int main(int argc, char **argv)
          editor->undo(); require(editor->toPlainText()==beforeDirection && window.runMission()==MainWindow::RunResult::Completed,"Look-at override Undo failed");
          checkLookAt();
       }
-      editor->setPlainText("Create OpenFramesVector Vec;\nBeginMissionSequence;\n");
+      editor->setPlainText("Create OpenFramesVector Vec;\nVec.VectorType = 'Thrust Vector';\nBeginMissionSequence;\n");
       bool manualExplanation=false;
       QTimer::singleShot(0,&window,[&] {
          if (auto *prompt=qobject_cast<QMessageBox *>(QApplication::activeModalWidget())) {

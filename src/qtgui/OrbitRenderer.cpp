@@ -1,7 +1,9 @@
 #include "OrbitRenderer.hpp"
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
+#include "OrbitVectors.hpp"
 #include <osg/PolygonMode>
+#include <osg/BlendFunc>
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QOpenGLExtraFunctions>
@@ -204,6 +206,7 @@ struct OrbitRenderer::Scene
    osg::ref_ptr<osg::Geode> sky=new osg::Geode;
    osg::ref_ptr<osg::LightSource> illumination=new osg::LightSource;
    std::map<int,Curve> curves;
+   QMap<QString,OrbitObjectBounds> vectorBounds;
    osg::ref_ptr<osg::Program> markerShaders[2]={markerProgram(false),markerProgram(true)};
    osg::ref_ptr<osg::Program> widthShader=wideLineProgram();
    double nativeLineWidthLimit=1;
@@ -269,6 +272,11 @@ struct OrbitRenderer::Scene
             bounds.include(p.x,p.y,p.z,source.showObject ? radius : 0);
          }
       }
+      vectorBounds=objects;
+      for (const auto &vector:model->vectors) for (const auto &sample:vector.samples)
+         if (const auto arrow=orbitVectorArrow(*model,vector,sample,&objects)) for (const auto &point:{arrow->start,arrow->end}) {
+            extent=std::max(extent,point.length()); bounds.include(point.x(),point.y(),point.z(),0);
+         }
       // Preserve the orbit controls and stable replay framing in either projection.
       const double aspect=double(width)/height;
       const auto camera=orbitCamera(*model,frame,yaw,pitch,extent,aspect,&bounds,&objects);
@@ -403,10 +411,16 @@ struct OrbitRenderer::Scene
             for (const auto &wing:axis.arrow) line(axis.end,wing,color(pose->color));
          }
       }
+      for (const auto &vector:model->vectors) if (const auto arrow=orbitVectorArrow(*model,vector,frame,&vectorBounds)) {
+         const osg::Vec4 tint(float(vector.color.redF()),float(vector.color.greenF()),float(vector.color.blueF()),float(vector.color.alphaF()));
+         line(arrow->start,arrow->end,tint); for (const auto &wing:arrow->arrow) line(arrow->end,wing,tint);
+      }
       guideGeometry->setVertexArray(guidePositions);
       guideGeometry->setColorArray(guideColors,osg::Array::BIND_PER_VERTEX);
       guideGeometry->addPrimitiveSet(new osg::DrawArrays(GL_LINES,0,guidePositions->size()));
       guideGeometry->getOrCreateStateSet()->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+      guideGeometry->getOrCreateStateSet()->setAttributeAndModes(new osg::BlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA),osg::StateAttribute::ON);
+      guideGeometry->getOrCreateStateSet()->setAttributeAndModes(new osg::LineWidth(pixelRatio));
       guides->removeDrawables(0,guides->getNumDrawables()); guides->addDrawable(guideGeometry);
       for (auto it=curves.begin();it!=curves.end();) {
          if (!model->curves.contains(it->first)) { root->removeChild(it->second.root); it=curves.erase(it); }
@@ -631,6 +645,16 @@ void OrbitRenderer::drawOverlay(QPainter &painter)
             painter.drawText(QPointF((clip.x()/clip.w()+1)*width()/2+4,(1-clip.y()/clip.w())*height()/2-4),QString(QChar('X'+axis)));
          }
       }
+   }
+   if (scene->model->labels) {
+      const auto projection=scene->viewer.getCamera()->getViewMatrix()*scene->viewer.getCamera()->getProjectionMatrix();
+      for (const auto &vector:scene->model->vectors) if (!vector.label.isEmpty())
+         if (const auto arrow=orbitVectorArrow(*scene->model,vector,scene->frame,&scene->vectorBounds)) {
+            const auto &point=arrow->end; const auto clip=osg::Vec4d(point.x(),point.y(),point.z(),1)*projection;
+            if (clip.w()<=0 || std::abs(clip.x())>clip.w() || std::abs(clip.y())>clip.w() || std::abs(clip.z())>clip.w()) continue;
+            painter.setPen(vector.color);
+            painter.drawText(QPointF((clip.x()/clip.w()+1)*width()/2+4,(1-clip.y()/clip.w())*height()/2-4),vector.label);
+         }
    }
    if (scene->model->legend) {
       int x=12;

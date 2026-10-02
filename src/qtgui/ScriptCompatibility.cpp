@@ -1,4 +1,6 @@
 #include "ScriptCompatibility.hpp"
+#include "RgbColor.hpp"
+#include "BaseException.hpp"
 #include <QMap>
 #include <QSet>
 #include <QRegularExpression>
@@ -161,17 +163,24 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
 {
    QtScriptConversion result; result.script=source;
    const auto lines=source.split('\n');
-   const QRegularExpression declaration("^Create\\s+(OpenFramesInterface|OpenFramesView)\\s+([A-Za-z][A-Za-z0-9_]*)\\s*;?$");
+   const QRegularExpression declaration("^Create\\s+(OpenFramesInterface|OpenFramesView|OpenFramesVector)\\s+([A-Za-z][A-Za-z0-9_]*(?:\\s+[A-Za-z][A-Za-z0-9_]*)*)\\s*;?$");
    QMap<QString,QString> types;
    QMap<QString,QMap<QString,QString>> properties;
    for (int i=0;i<lines.size();++i) {
       const auto code=codePart(lines[i]);
       if (!QRegularExpression("^Create\\s+OpenFrames").match(code).hasMatch()) continue;
       const auto match=declaration.match(code);
-      if (!match.hasMatch() || types.contains(match.captured(2))) {
-         result.error=QString("Line %1: unsupported or duplicate OpenFrames declaration. Convert this definition manually.").arg(i+1); return result;
+      if (!match.hasMatch()) {
+         result.error=QString("Line %1: unsupported OpenFrames declaration. Convert this definition manually.").arg(i+1);
+         return result;
       }
-      types[match.captured(2)]=match.captured(1);
+      const auto names=match.captured(2).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts);
+      for (const auto &name:names) {
+         if (types.contains(name)) {
+            result.error=QString("Line %1: duplicate OpenFrames declaration for %2. The original script is unchanged.").arg(i+1).arg(name); return result;
+         }
+         types[name]=match.captured(1);
+      }
    }
    if (types.isEmpty()) return result;
    const QRegularExpression assignment("^(?:GMAT\\s+)?([A-Za-z][A-Za-z0-9_]*)\\.([A-Za-z][A-Za-z0-9_]*)\\s*=\\s*(.+?)\\s*;?$");
@@ -197,8 +206,8 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          // unrecognized continuation. Subscriber Toggle commands remain valid.
          for (auto it=types.cbegin();it!=types.cend();++it) {
             const QRegularExpression reference("\\b"+QRegularExpression::escape(it.key())+"\\b");
-            if (reference.match(code).hasMatch() && it.value()=="OpenFramesView") {
-               result.error=QString("Line %1: view %2 is referenced outside a supported viewer setting.").arg(i+1).arg(it.key()); return result;
+            if (reference.match(code).hasMatch() && (it.value()=="OpenFramesView" || it.value()=="OpenFramesVector")) {
+               result.error=QString("Line %1: %2 %3 is referenced outside a supported viewer setting.").arg(i+1).arg(it.value(),it.key()); return result;
             }
          }
       }
@@ -217,13 +226,65 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             result.error=it.key()+"."+key+": expected On or Off."; return result;
          }
    }
+   QMap<QString,QtVectorSetting> vectorSettings;
+   const QRegularExpression vectorIdentifier("^[A-Za-z][A-Za-z0-9_]*$");
+   auto stringValue=[](QString value) {
+      if (value.startsWith('\'') && value.endsWith('\'') && value.size()>=2) {
+         value=value.mid(1,value.size()-2); value.replace("''","'");
+      }
+      return value;
+   };
+   for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesVector") {
+      const auto values=properties.value(it.key()); QtVectorSetting vector; vector.name=it.key();
+      const QSet<QString> supported={"SourceObject","DestinationObject","VectorType","BFStartPoint","BFDirection","VectorColor","VectorLabel","VectorLengthType","VectorLength"};
+      for (auto property=values.cbegin();property!=values.cend();++property) if (!supported.contains(property.key())) {
+         result.error=it.key()+"."+property.key()+": unsupported OpenFramesVector field; original source retained."; return result;
+      }
+      vector.source=stringValue(values.value("SourceObject")); vector.destination=stringValue(values.value("DestinationObject"));
+      vector.type=stringValue(values.value("VectorType","Body-Fixed")); vector.label=stringValue(values.value("VectorLabel","DefaultVector"));
+      if (vector.type!="Relative Position" && vector.type!="Body-Fixed") {
+         result.error=it.key()+".VectorType: Qt supports Relative Position and Body-Fixed; "+vector.type+" is not implemented. The original script is unchanged."; return result;
+      }
+      const auto lengthType=stringValue(values.value("VectorLengthType","Auto"));
+      if (lengthType!="Auto" && lengthType!="Manual") { result.error=it.key()+".VectorLengthType: expected Auto or Manual."; return result; }
+      vector.automaticLength=lengthType=="Auto";
+      bool validLength=false; vector.length=values.value("VectorLength","1").toDouble(&validLength);
+      if (!validLength || !std::isfinite(vector.length) || vector.length<=0 || vector.length>std::numeric_limits<float>::max()) {
+         result.error=it.key()+".VectorLength: expected a finite positive length within the renderer's range."; return result;
+      }
+      for (auto field:{qMakePair(QString("BFStartPoint"),&vector.start),qMakePair(QString("BFDirection"),&vector.direction)})
+         if (values.contains(field.first) && !vectorValue(values.value(field.first),*field.second)) {
+            result.error=it.key()+"."+field.first+": expected three finite numbers."; return result;
+         }
+      if (vector.type=="Body-Fixed" && (!std::isfinite(std::hypot(vector.direction[0],vector.direction[1],vector.direction[2])) || std::hypot(vector.direction[0],vector.direction[1],vector.direction[2])<1e-12)) {
+         result.error=it.key()+".BFDirection: expected a nonzero direction."; return result;
+      }
+      try { vector.color=RgbColor::ToIntColor(stringValue(values.value("VectorColor","Red")).toStdString()); }
+      catch (BaseException &) { result.error=it.key()+".VectorColor: expected a GMAT color name or an RGB integer triplet from 0 to 255."; return result; }
+      vectorSettings.insert(it.key(),vector);
+   }
    QMap<QString,QtCameraSetting> displaySettings;
    for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesInterface") {
       QStringList names; int fontPositionIndex=0; auto &display=displaySettings[it.key()];
       for (auto line=settings.cbegin();line!=settings.cend();++line) {
          if (line->first!=it.key()) continue;
          const auto property=line->second,value=assignment.match(codePart(lines[line.key()])).captured(3).trimmed();
-         if (property=="Add") {
+         if (property=="Vector") {
+            const bool array=value.startsWith('{') && value.endsWith('}');
+            if (!array && !vectorIdentifier.match(value).hasMatch()) { result.error=it.key()+".Vector: expected a vector name or braced list."; return result; }
+            if (array) display.vectors.clear();
+            const auto selected=array ? value.mid(1,value.size()-2).split(',') : QStringList{value};
+            for (auto vectorName:selected) {
+               vectorName=vectorName.trimmed(); if (vectorName.isEmpty()) continue;
+               if (!vectorIdentifier.match(vectorName).hasMatch() || !vectorSettings.contains(vectorName)) { result.error=it.key()+".Vector: unknown OpenFramesVector "+vectorName+"."; return result; }
+               const auto vector=vectorSettings.value(vectorName);
+               if (!vectorIdentifier.match(vector.source).hasMatch() || (vector.type=="Relative Position" && !vectorIdentifier.match(vector.destination).hasMatch())) {
+                  result.error=vector.name+": selected vector requires a SourceObject and, for Relative Position, a DestinationObject."; return result;
+               }
+               bool duplicate=false; for (const auto &existing:display.vectors) if (existing.name==vectorName) duplicate=true;
+               if (!duplicate) display.vectors.append(vector);
+            }
+         } else if (property=="Add") {
             const auto list=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*(?:[\\s,]+[A-Za-z][A-Za-z0-9_]*)*)?\\s*\\}$").match(value);
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
@@ -285,7 +346,10 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       const auto declared=declaration.match(codePart(lines[i]));
       if (declared.hasMatch()) {
          if (declared.captured(1)=="OpenFramesInterface") {
-            output.append("Create OrbitView "+declared.captured(2)+"; % Converted from OpenFramesInterface for Qt"); ++result.plots;
+            // Keep an original inline declaration comment, including grouped names.
+            if (lines[i].contains('%')) output.append("% Qt conversion: "+lines[i]);
+            output.append("Create OrbitView "+declared.captured(2)+"; % Converted from OpenFramesInterface for Qt");
+            result.plots+=declared.captured(2).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts).size();
          } else output.append("% Qt conversion: "+lines[i]);
          continue;
       }
@@ -302,24 +366,37 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.notes.append(name+"."+key+": per-object flags combined into one plot setting.");
       } else {
          output.append("% Qt conversion: "+lines[i]);
-         if (types[name]=="OpenFramesInterface" && key!="View") result.notes.append(name+"."+key+": retained as a comment; no direct Qt equivalent.");
+         if (types[name]=="OpenFramesInterface" && key=="Vector") result.notes.append(name+".Vector: source/destination pointing, body-fixed pose, color/label and Auto/Manual length retained in Qt metadata.");
+         else if (types[name]=="OpenFramesInterface" && key!="View") result.notes.append(name+"."+key+": retained as a comment; no direct Qt equivalent.");
       }
    }
    QStringList cameras;
    for (auto it=types.cbegin();it!=types.cend();++it) if (it.value()=="OpenFramesInterface") {
       const auto plot=it.key();
-      const auto views=properties[plot].value("View");
-      const auto match=QRegularExpression("^\\{\\s*([A-Za-z][A-Za-z0-9_]*(?:\\s*,\\s*[A-Za-z][A-Za-z0-9_]*)*)\\s*\\}$").match(views);
-      if (!match.hasMatch()) {
-         if (!views.isEmpty()) { result.error=plot+": invalid camera view list."; return result; }
-         result.notes.append(plot+": no supported view selection; review the default OrbitView camera.");
+      QStringList viewNames;
+      const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+      for (auto line=settings.cbegin();line!=settings.cend();++line) {
+         if (line->first!=plot || line->second!="View") continue;
+         const auto value=assignment.match(codePart(lines[line.key()])).captured(3).trimmed();
+         const bool array=value.startsWith('{') && value.endsWith('}');
+         if (!array && !identifier.match(value).hasMatch()) { result.error=plot+": invalid camera view list."; return result; }
+         // OpenFramesInterface::SetStringParameter(VIEW) clears a braced list,
+         // while scalar settings append. AddView ignores blanks and duplicates.
+         if (array) viewNames.clear();
+         const auto entries=array ? value.mid(1,value.size()-2).split(',') : QStringList{value};
+         for (auto entry:entries) {
+            entry=entry.trimmed(); if (entry.isEmpty()) continue;
+            if (!identifier.match(entry).hasMatch()) { result.error=plot+": invalid camera view list."; return result; }
+            if (!viewNames.contains(entry)) viewNames.append(entry);
+         }
+      }
+      if (viewNames.isEmpty()) {
+         result.notes.append(plot+": no selected view; review the default OrbitView camera.");
          cameras.append(qtCameraDirective(plot,displaySettings.value(plot)).trimmed()); continue;
       }
-      const auto viewNames=match.captured(1).split(QRegularExpression("\\s*,\\s*"));
-      QSet<QString> seen;
       for (const auto &viewName:viewNames) {
-         if (types.value(viewName)!="OpenFramesView" || seen.contains(viewName)) {
-            result.error=plot+": unknown or duplicate camera view "+viewName+"."; return result;
+         if (types.value(viewName)!="OpenFramesView") {
+            result.error=plot+": unknown camera view "+viewName+"."; return result;
          }
          const auto viewSettings=properties.value(viewName);
          if (viewSettings.value("ViewTrajectory")=="On" && viewSettings.value("ViewFrame","CoordinateSystem")!="CoordinateSystem") {
@@ -328,7 +405,6 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
                result.error=viewName+": trajectory frame must name an object in "+plot+".Add or CoordinateSystem."; return result;
             }
          }
-         seen.insert(viewName);
       }
       const auto view=viewNames.first(); const auto values=properties.value(view);
       bool validFov=false;
@@ -337,6 +413,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
          result.error=plot+": field of view must be a finite number from 1 to 150 degrees for Qt conversion."; return result;
       }
       QtCameraSetting cameraSetting{true,fov};
+      cameraSetting.vectors=displaySettings.value(plot).vectors;
       cameraSetting.objectLabels=displaySettings.value(plot).objectLabels;
       cameraSetting.objectTrajectories=displaySettings.value(plot).objectTrajectories;
       cameraSetting.objectCenters=displaySettings.value(plot).objectCenters;
@@ -469,6 +546,15 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.objectLineWidths.isEmpty()) object.insert("objectLineWidths",objectWidthsJson(setting.objectLineWidths));
    if (!setting.objectFontSizes.isEmpty()) object.insert("objectFontSizes",objectSizesJson(setting.objectFontSizes));
    if (!setting.objectFontPositions.isEmpty()) object.insert("objectFontPositions",objectFontPositionsJson(setting.objectFontPositions));
+   if (!setting.vectors.isEmpty()) {
+      QJsonArray vectors;
+      for (const auto &vector:setting.vectors) vectors.append(QJsonObject{
+         {"name",vector.name},{"source",vector.source},{"destination",vector.destination},{"type",vector.type},
+         {"label",vector.label},{"color",double(vector.color)},{"automaticLength",vector.automaticLength},{"length",vector.length},
+         {"start",QJsonArray{vector.start[0],vector.start[1],vector.start[2]}},
+         {"direction",QJsonArray{vector.direction[0],vector.direction[1],vector.direction[2]}}});
+      object.insert("vectors",vectors);
+   }
    if (!setting.views.isEmpty()) {
       QJsonArray views;
       auto vector=[](const std::array<double,3> &v) { return QJsonArray{v[0],v[1],v[2]}; };
@@ -524,6 +610,42 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
          setting.centerOffset=center;
       }
       const QRegularExpression identifier("^[A-Za-z][A-Za-z0-9_]*$");
+      if (object.contains("vectors")) {
+         if (!object.value("vectors").isArray()) throw std::runtime_error("Plot vectors must be an array");
+         QSet<QString> names;
+         auto finiteVector=[](const QJsonValue &value) {
+            const auto array=value.toArray(); std::array<double,3> result{};
+            if (array.size()!=3) throw std::runtime_error("Plot vector pose needs three numbers");
+            for (int axis=0;axis<3;++axis) {
+               if (!array[axis].isDouble() || !std::isfinite(array[axis].toDouble())) throw std::runtime_error("Plot vector pose must be finite");
+               result[axis]=array[axis].toDouble();
+            }
+            return result;
+         };
+         for (const auto &item:object.value("vectors").toArray()) {
+            if (!item.isObject()) throw std::runtime_error("Plot vector definition must be an object");
+            const auto value=item.toObject(); QtVectorSetting vector;
+            const QSet<QString> fields={"name","source","destination","type","label","color","automaticLength","length","start","direction"};
+            for (auto field=value.begin();field!=value.end();++field) if (!fields.contains(field.key())) throw std::runtime_error("Unsupported plot vector metadata field");
+            vector.name=value.value("name").toString(); vector.source=value.value("source").toString();
+            vector.destination=value.value("destination").toString(); vector.type=value.value("type").toString();
+            if (!identifier.match(vector.name).hasMatch() || names.contains(vector.name) || !identifier.match(vector.source).hasMatch() ||
+                !value.value("destination").isString() || (!vector.destination.isEmpty() && !identifier.match(vector.destination).hasMatch()) ||
+                (vector.type!="Relative Position" && vector.type!="Body-Fixed") || (vector.type=="Relative Position" && vector.destination.isEmpty()))
+               throw std::runtime_error("Invalid or duplicate plot vector: check names, source/destination and Relative Position or Body-Fixed mode");
+            const auto color=value.value("color").toDouble(-1);
+            vector.length=value.value("length").toDouble(-1);
+            if (!value.value("color").isDouble() || color<0 || color>0xffffff || std::floor(color)!=color ||
+                !value.value("length").isDouble() || !std::isfinite(vector.length) || vector.length<=0 || vector.length>std::numeric_limits<float>::max() ||
+                !value.value("automaticLength").isBool() || !value.value("label").isString())
+               throw std::runtime_error("Plot vector needs an RGB color, label, automaticLength boolean and finite positive length");
+            vector.color=static_cast<quint32>(color); vector.label=value.value("label").toString(); vector.automaticLength=value.value("automaticLength").toBool();
+            vector.start=finiteVector(value.value("start")); vector.direction=finiteVector(value.value("direction"));
+            if (vector.type=="Body-Fixed" && (!std::isfinite(std::hypot(vector.direction[0],vector.direction[1],vector.direction[2])) || std::hypot(vector.direction[0],vector.direction[1],vector.direction[2])<1e-12))
+               throw std::runtime_error("Body-Fixed plot vector direction must be nonzero");
+            names.insert(vector.name); setting.vectors.append(vector);
+         }
+      }
       if (object.contains("objectLabels")) setting.objectLabels=objectFlags(object.value("objectLabels"));
       if (object.contains("objectTrajectories")) setting.objectTrajectories=objectFlags(object.value("objectTrajectories"));
       if (object.contains("objectCenters")) setting.objectCenters=objectFlags(object.value("objectCenters"));

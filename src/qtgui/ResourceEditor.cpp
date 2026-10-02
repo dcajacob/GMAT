@@ -121,36 +121,65 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       return;
    }
    if (object.IsOfType("CoordinateSystem") && object.GetOwnedObject(0)) {
-      // Retain a snapshot: applying any resource reconstructs the engine model.
       auto initial=std::shared_ptr<GmatBase>(object.GetOwnedObject(0)->Clone());
+      QMap<QString,QString> initialValues;
+      for (const auto &field:resourceProperties(*initial)) initialValues[field.name]=field.value;
+      initialValues["Axes"]=QString::fromStdString(initial->GetTypeName());
       auto *axesButton=new QPushButton("Axes…",this); axesButton->setObjectName("editCoordinateAxes");
       layout->addWidget(axesButton);
-      connect(axesButton,&QPushButton::clicked,this,[this,initial,apply] {
-         if (hasChanges()) { reportStatus("Apply or discard pending property changes before opening Axes."); return; }
+      connect(axesButton,&QPushButton::clicked,this,[this,initial,initialValues] {
+         QMap<QString,QString> pending;
+         for (int row=0;row<table->rowCount();++row) {
+            const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1));
+            pending[table->item(row,0)->text()]=choice ? comboValue(choice) : table->item(row,1)->text();
+         }
+         for (auto it=coordinateAxisEdits.cbegin();it!=coordinateAxisEdits.cend();++it)
+            if (!pending.contains(it.key())) pending[it.key()]=it.value();
          QDialog dialog(this); dialog.setObjectName("coordinateAxesDialog"); dialog.setWindowTitle("Coordinate system axes");
          auto *layout=new QVBoxLayout(&dialog);
          auto *type=new QComboBox(&dialog); type->setObjectName("coordinateAxisType");
          for (const auto &name:Moderator::Instance()->GetListOfFactoryItems(Gmat::AXIS_SYSTEM)) type->addItem(QString::fromStdString(name));
-         type->setCurrentText(QString::fromStdString(initial->GetTypeName())); layout->addWidget(type);
-         auto *help=new QLabel("Choose an axis type and set its dependent properties. Changing type resets pending axis edits. Apply validates the complete coordinate system.",&dialog);
+         type->setCurrentText(pending.value("Axes",initialValues.value("Axes"))); layout->addWidget(type);
+         auto *help=new QLabel("Choose an axis type and set its dependent properties. Changing type resets pending axis edits. OK keeps these settings pending until the parent Create or Apply.",&dialog);
          help->setWordWrap(true); layout->addWidget(help);
-         ResourceEditor *panel=nullptr; bool completed=false;
+         ResourceEditor *panel=nullptr;
          auto rebuild=[&] {
             if (panel) { delete panel; panel=nullptr; }
             try {
-               std::unique_ptr<GmatBase> axes(type->currentText()==QString::fromStdString(initial->GetTypeName()) ? initial->Clone() :
-                  Moderator::Instance()->CreateAxisSystem(type->currentText().toStdString(),"",0));
+               const auto selected=type->currentText();
+               std::unique_ptr<GmatBase> axes(selected==initialValues.value("Axes") ? initial->Clone() :
+                  Moderator::Instance()->CreateAxisSystem(selected.toStdString(),"",0));
                if (!axes) { help->setText("The engine could not create these axes."); return; }
-               panel=new ResourceEditor(*axes,[&,selected=type->currentText()](const QMap<QString,QString> &changes) {
-                  auto candidate=changes; candidate.insert("Axes",selected);
-                  const auto error=apply(candidate); completed=error.isEmpty(); return error;
+               if (selected==pending.value("Axes")) for (const auto &field:resourceProperties(*axes))
+                  if (pending.contains(field.name)) setResourceProperty(*axes,field.name,pending.value(field.name));
+               QMap<QString,QString> values;
+               for (const auto &field:resourceProperties(*axes)) values[field.name]=field.value;
+               panel=new ResourceEditor(*axes,[&,selected,values](const QMap<QString,QString> &changes) {
+                  auto candidate=values;
+                  for (auto it=changes.cbegin();it!=changes.cend();++it) candidate[it.key()]=it.value();
+                  candidate["Axes"]=selected;
+                  // Update fields already present in the parent and retain new
+                  // dependent fields locally. No parent callback runs here.
+                  for (int row=0;row<table->rowCount();++row) {
+                     const auto name=table->item(row,0)->text(); if (!candidate.contains(name)) continue;
+                     if (auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1))) choice->setCurrentText(candidate.value(name));
+                     else table->item(row,1)->setText(candidate.value(name));
+                  }
+                  coordinateAxisEdits.clear();
+                  for (auto it=candidate.cbegin();it!=candidate.cend();++it)
+                     if (selected!=initialValues.value("Axes") || !initialValues.contains(it.key()) || it.value()!=initialValues.value(it.key()))
+                        coordinateAxisEdits[it.key()]=it.value();
+                  return QString();
                },&dialog,{},true);
+               auto *buttons=panel->findChild<QDialogButtonBox *>("resourceButtons");
+               buttons->button(QDialogButtonBox::Apply)->setText("OK"); buttons->button(QDialogButtonBox::Close)->setText("Cancel");
+               panel->onApplied=[&dialog] { dialog.accept(); };
                layout->addWidget(panel);
             } catch (BaseException &error) { help->setText(QString::fromStdString(error.GetFullMessage())); }
+            catch (const std::exception &error) { help->setText(QString::fromUtf8(error.what())); }
          };
          connect(type,&QComboBox::currentTextChanged,&dialog,[&] { rebuild(); }); rebuild();
          dialog.resize(700,600); dialog.exec();
-         if (completed) { applied=true; appliedSuccessfully(); }
       });
    }
    auto *search = new QLineEdit(this);
@@ -1322,6 +1351,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       const int columns=rows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
       if (columns>0 && columns<=1000 && rows.size()<=1000) onArrayDimensions(rows.size(),columns);
    });
+   if (object.IsOfType("CoordinateSystem")) for (int row=0;row<table->rowCount();++row)
+      if (table->item(row,0)->text()=="Axes") if (auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1)))
+         connect(choice,&QComboBox::currentTextChanged,this,[this] { coordinateAxisEdits.clear(); });
    // Primary forms and Advanced share one pending snapshot and one Apply.
    // The table remains the backing store for generic controls and converters.
    auto *pages=new QTabWidget(this); pages->setObjectName("resourceEditorTabs");
@@ -1445,7 +1477,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
    filter();
    connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged,creation] {
-      QMap<QString, QString> changes=attitudeEdits;
+      QMap<QString, QString> changes=coordinateAxisEdits;
+      for (auto it=attitudeEdits.cbegin();it!=attitudeEdits.cend();++it) changes[it.key()]=it.value();
       if (formValues) try {
          const auto values=formEdits();
          for (auto it=values.cbegin();it!=values.cend();++it)
@@ -1525,7 +1558,7 @@ bool ResourceEditor::hasChanges() const
    if (scalarValue) return scalarValue()!=originalScalarValue;
    if (formValues) try { if (formValues()!=formOriginal) return true; }
    catch (...) { return true; }
-   if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
+   if (!coordinateAxisEdits.isEmpty() || !attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (!externalEdits.isEmpty() && externalEdits!=originalExternal) return true;
    if (!pendingPolyhedron.isEmpty()) return true;
    if (expressions!=originalExpressions || !objectDrawingEdits.isEmpty()) return true;

@@ -4,6 +4,7 @@
 #include "GmatBase.hpp"
 #include "Spacecraft.hpp"
 #include "CoordinateSystem.hpp"
+#include "AxisSystem.hpp"
 #include "SolarSystem.hpp"
 #include "Array.hpp"
 #include "CelestialBody.hpp"
@@ -17,6 +18,14 @@ std::unique_ptr<GmatBase> resourceDraft(const QString &type,const QString &name)
    auto *moderator=Moderator::Instance();
    if (auto *body=dynamic_cast<CelestialBody *>(draft.get())) {
       body->SetUserDefined(true); body->SetSolarSystem(moderator->GetSolarSystemInUse()); body->SetUpBody();
+   }
+   if (auto *frame=dynamic_cast<CoordinateSystem *>(draft.get())) {
+      // Factory drafts are unregistered and do not receive Moderator's default
+      // axes. Supply the same default so dependent settings can be edited before
+      // the outer Create transaction registers the coordinate system.
+      std::unique_ptr<AxisSystem> axes(moderator->CreateAxisSystem("MJ2000Eq","",0));
+      if (!axes || !frame->SetRefObject(axes.get(),Gmat::AXIS_SYSTEM,""))
+         throw std::runtime_error("The runtime cannot prepare coordinate system axes.");
    }
    if (auto *spacecraft=dynamic_cast<Spacecraft *>(draft.get())) {
       spacecraft->SetSolarSystem(moderator->GetSolarSystemInUse());

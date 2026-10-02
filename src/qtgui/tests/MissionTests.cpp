@@ -28,6 +28,8 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMdiSubWindow>
+#include <QMdiArea>
+#include <QMessageBox>
 #include <QTimer>
 #include <QInputDialog>
 #include <QTemporaryDir>
@@ -53,16 +55,116 @@ static int forAssignment(const MissionSnapshot &snapshot)
    }
    throw std::runtime_error("For-body assignment missing");
 }
+static void insertionTests(MainWindow &window,QPlainTextEdit *editor)
+{
+   auto *tree=window.findChild<QTreeWidget *>("Mission");
+   auto *workspace=window.findChild<QMdiArea *>();
+   require(tree && workspace,"Insertion workspace unavailable");
+   const QString baseline="% preserve insertion source α\nCreate Variable V i;\nV = 1;\n"
+      "Create DifferentialCorrector DC;\nCreate Yukon Opt;\nCreate ReportFile Idle;\n"
+      "BeginMissionSequence;\nIf 'Outer' V > 0; % keep condition\n"
+      "   For 'Inner' i = 1:1:2;\n      V = V + 1; % keep inner body\n"
+      "   EndFor; % inner for end\nElse; % alternate branch\n"
+      "   While V < 0;\n      V = V + 2;\n   EndWhile; % while end\n"
+      "EndIf; % outer if end\n"
+      "Target 'Keep target' DC {SolveMode = RunInitialGuess, ShowProgressWindow = false};\n"
+      "   Vary DC(V = 1, {Perturbation = 0.001});\n   Achieve DC(V = 2);\n"
+      "EndTarget; % target end\n"
+      "Optimize 'Keep optimizer' Opt {SolveMode = RunInitialGuess, ShowProgressWindow = false};\n"
+      "   Vary Opt(V = 1, {Perturbation = 0.001});\n   Minimize Opt(V);\n"
+      "EndOptimize; % optimizer end\n";
+   auto build=[&] { editor->setPlainText(baseline); require(window.buildScript(),"Branch insertion fixture failed to build"); };
+   auto open=[&](int index) {
+      QTreeWidgetItem *item=nullptr;
+      for (QTreeWidgetItemIterator it(tree);*it;++it)
+         if ((*it)->data(0,Qt::UserRole).isValid() && (*it)->data(0,Qt::UserRole).toInt()==index) item=*it;
+      require(item,"Branch insertion tree anchor missing"); tree->expandAll(); tree->scrollToItem(item); QApplication::processEvents();
+      std::exception_ptr failure; bool visited=false;
+      QTimer::singleShot(0,&window,[&] {
+         auto *menu=qobject_cast<QMenu *>(QApplication::activePopupWidget());
+         try {
+            require(menu,"Branch insertion menu missing"); QAction *choice=nullptr;
+            for (auto *action:menu->actions()) if (action->objectName()=="appendInsideMissionBranch") choice=action;
+            require(choice && choice->isEnabled(),"Append inside branch action missing or disabled"); visited=true;
+            menu->setActiveAction(choice); QKeyEvent enter(QEvent::KeyPress,Qt::Key_Return,Qt::NoModifier); QApplication::sendEvent(menu,&enter);
+         } catch (...) { failure=std::current_exception(); if (menu) menu->close(); }
+      });
+      tree->customContextMenuRequested(tree->visualItemRect(item).center());
+      if (failure) std::rethrow_exception(failure); require(visited,"Branch insertion menu was not exercised");
+      auto *child=workspace->currentSubWindow();
+      require(child && dynamic_cast<CommandEditor *>(child->widget()),"Branch insertion editor missing"); return child;
+   };
+   auto apply=[&](QMdiSubWindow *child) {
+      auto *buttons=child->widget()->findChild<QDialogButtonBox *>();
+      require(buttons && buttons->button(QDialogButtonBox::Apply),"Insertion Apply unavailable"); buttons->button(QDialogButtonBox::Apply)->click();
+   };
+   // A mapped nested terminator must belong to the selected branch itself.
+   const QMap<QString,QString> boundaries={{"For","   EndFor; % inner for end\n"},
+      {"While","   EndWhile; % while end\n"},{"If","EndIf; % outer if end\n"},
+      {"Target","EndTarget; % target end\n"},{"Optimize","EndOptimize; % optimizer end\n"}};
+   for (auto it=boundaries.cbegin();it!=boundaries.cend();++it) {
+      build(); const auto snapshot=window.missionSnapshot(); const int index=find(snapshot,it.key());
+      const int end=missionBranchEnd(snapshot,index);
+      require(end>=0 && snapshot.nodes[end].parent==index && snapshot.nodes[end].type=="End"+it.key(),"Branch append selected a nested or unrelated terminator");
+      require(missionBranchEnd(snapshot,end)==-1 && missionBranchEnd(snapshot,find(snapshot,"GMAT"))==-1 && missionBranchEnd(snapshot,-1)==-1,"Non-branch has an interior append target");
+      auto *child=open(index); auto *source=child->widget()->findChild<QPlainTextEdit *>("commandSource");
+      require(source,"Insertion source missing"); source->setPlainText("V = V + 5;");
+      require(editor->toPlainText()==baseline,"Pending insertion changed mission source"); apply(child);
+      auto expected=baseline; expected.replace(it.value(),"V = V + 5;\n"+it.value());
+      require(editor->toPlainText()==expected && child->isVisible() && !dynamic_cast<CommandEditor *>(child->widget())->hasChanges(),"Branch append changed outside source or did not retain the accepted editor");
+      source=child->widget()->findChild<QPlainTextEdit *>("commandSource");
+      require(source && source->toPlainText().trimmed()=="V = V + 5;","Accepted branch insertion points to its terminator or enclosing branch");
+      source->setPlainText("V = V + 6;"); apply(child); expected.replace("V = V + 5;","V = V + 6;");
+      require(editor->toPlainText()==expected && editor->toPlainText().count("V = V + 6;")==1,"Retained insertion Apply duplicated the command or changed its anchor"); child->close();
+      editor->undo(); expected.replace("V = V + 6;","V = V + 5;"); require(editor->toPlainText()==expected,"Retained insertion Undo lost exact source");
+      editor->undo(); require(editor->toPlainText()==baseline && window.buildScript(),"Branch insertion Undo lost exact source or model");
+      editor->redo(); editor->redo(); expected.replace("V = V + 5;","V = V + 6;");
+      require(editor->toPlainText()==expected && window.buildScript(),"Branch insertion Redo changed exact source or model");
+   }
+   // Toggle creation must expose the same typed controls as existing Toggles.
+   build(); auto *child=open(find(window.missionSnapshot(),"For"));
+   auto selectToggle=[&](QMdiSubWindow *window) {
+      auto *templates=window->widget()->findChild<QComboBox *>("commandTemplate");
+      require(templates && templates->findText("Toggle")>=0,"Toggle creation template unavailable");
+      templates->setCurrentText("Toggle"); templates->textActivated("Toggle");
+      require(window->widget()->findChild<QComboBox *>("commandToggleState") && window->widget()->findChild<QPushButton *>("commandChoose_Subscribers"),"Toggle template did not expose typed output/state controls");
+   };
+   selectToggle(child); bool discarded=false; std::exception_ptr cancelFailure;
+   QTimer::singleShot(0,&window,[&] {
+      auto *prompt=qobject_cast<QMessageBox *>(QApplication::activeModalWidget());
+      try { require(prompt && prompt->button(QMessageBox::Discard),"Pending Toggle close guard unavailable"); discarded=true; prompt->button(QMessageBox::Discard)->click(); }
+      catch (...) { cancelFailure=std::current_exception(); if (prompt) prompt->reject(); }
+   });
+   child->widget()->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Close)->click();
+   if (cancelFailure) std::rethrow_exception(cancelFailure);
+   require(discarded && editor->toPlainText()==baseline,"Discarding a pending Toggle changed source");
+   child=open(find(window.missionSnapshot(),"For")); selectToggle(child);
+   auto *source=child->widget()->findChild<QPlainTextEdit *>("commandSource");
+   source->setPlainText("Toggle MissingOutput Off;"); apply(child);
+   require(editor->toPlainText()==baseline && dynamic_cast<CommandEditor *>(child->widget())->hasChanges() && source->toPlainText()=="Toggle MissingOutput Off;","Invalid inserted Toggle lost pending input or mutated mission");
+   source->setPlainText("Toggle 'Pause outputs' Idle On; % retain toggle comment");
+   auto *state=child->widget()->findChild<QComboBox *>("commandToggleState"); require(state,"Corrected Toggle typed state unavailable"); state->setCurrentText("Off");
+   require(source->toPlainText()=="Toggle 'Pause outputs' Idle Off; % retain toggle comment","Typed Toggle state lost label/comment"); apply(child);
+   auto expected=baseline; expected.replace(boundaries.value("For"),"Toggle 'Pause outputs' Idle Off; % retain toggle comment\n"+boundaries.value("For"));
+   require(editor->toPlainText()==expected && !dynamic_cast<CommandEditor *>(child->widget())->hasChanges(),"Configured Toggle was not inserted inside the selected loop"); child->close();
+   editor->undo(); require(editor->toPlainText()==baseline && window.buildScript(),"Toggle insertion Undo changed exact source");
+   editor->redo(); require(editor->toPlainText()==expected && window.buildScript(),"Toggle insertion Redo changed exact source");
+   QTemporaryDir saved; require(saved.isValid(),"Insertion round-trip folder unavailable"); const auto path=saved.filePath("branch insertion ü.script");
+   require(window.saveScriptTo(path) && window.loadScript(path) && editor->toPlainText()==expected && window.buildScript(),"Branch/Toggle Unicode Save and reopen changed exact source or model");
+   std::cout<<"PASS: actual If/For/While/Target/Optimize interior append, own closing boundaries, retained Apply, exact unrelated source and Undo/Redo; Toggle template/typed state, pending Discard, invalid-reference correction and Unicode Save/reopen without mission execution\n";
+}
 int main(int argc,char **argv)
 {
    QApplication app(argc,argv); QApplication::setOrganizationName("GMATTests"); QApplication::setApplicationName("QtMission");
    if (argc<3 || argc>4) return 2;
    const auto startup=QFileInfo(argv[1]).absoluteFilePath(), script=QFileInfo(argv[2]).absoluteFilePath();
-   const auto screenshot=argc==4 ? QFileInfo(argv[3]).absoluteFilePath() : QString();
+   const bool insertionOnly=argc==4 && QString::fromLocal8Bit(argv[3])=="--insertion";
+   if (insertionOnly && QApplication::platformName()!="offscreen") return 2;
+   const auto screenshot=argc==4 && !insertionOnly ? QFileInfo(argv[3]).absoluteFilePath() : QString();
    QDir::setCurrent(QFileInfo(startup).absolutePath());
    try {
       TestSettings isolatedSettings;
-      {
+      if (!insertionOnly) {
          QString result;
          CommandForm form([&](const QString &text) { result=text; });
          const QString vary="  Vary 'Change X' DC(x = 1, {Upper = 10, Perturbation = 0.001, Lower = -10}); % keep this\n";
@@ -169,6 +271,9 @@ int main(int argc,char **argv)
       require(window.loadScript(script) && window.buildScript(),"Mission failed to build");
       auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor");
       const QString original=editor->toPlainText();
+      insertionTests(window,editor);
+      if (insertionOnly) return 0;
+      require(window.loadScript(script) && window.buildScript(),"Insertion test restoration failed");
       {
          editor->setPlainText("Create Spacecraft FirstSat SecondSat;\nCreate ImpulsiveBurn FirstBurn SecondBurn;\n"
             "SecondBurn.CoordinateSystem = EarthMJ2000Eq;\nSecondBurn.Element1 = 0.01;\n"

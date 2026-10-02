@@ -28,10 +28,48 @@ static void write(const QString &path,const QByteArray &bytes) { QFile file(path
 static osg::Vec3d position(const PlotPoint &point) { return {point.x,point.y,point.z}; }
 static osg::Vec3d body(const PlotPoint &point,const osg::Vec3d &vector) { const auto &r=point.bodyToView; return {r[0]*vector.x()+r[1]*vector.y()+r[2]*vector.z(),r[3]*vector.x()+r[4]*vector.y()+r[5]*vector.z(),r[6]*vector.x()+r[7]*vector.y()+r[8]*vector.z()}; }
 static osg::Vec3d xyz(const std::array<double,3> &value) { return {value[0],value[1],value[2]}; }
+static void syntaxTests(const QString &startup)
+{
+   const QString prefix="% preserve physics α\nCreate Variable Value;\nValue = 3;\n";
+   const QString mission="BeginMissionSequence;\nValue = Value + 2; % retain calculation\n";
+   const QString declarations="Create OpenFramesView First Close Far; % preserve grouped views\n"
+      "First.ViewFrame = CoordinateSystem;\nFirst.SetDefaultLocation = On;\nFirst.DefaultEye = [1 2 3];\n"
+      "Close.ViewFrame = CoordinateSystem;\nFar.ViewFrame = CoordinateSystem;\n"
+      "Create OpenFramesInterface Display Other; % preserve grouped displays\n"
+      "Display.Add = {Earth};\nOther.Add = {Earth};\nOther.View = First;\n";
+   const auto input=prefix+declarations+"Display.View = {First, , Close, Far}; % empty entry accepted by OF\n"+mission;
+   const auto converted=convertOpenFramesViews(input);
+   require(converted.error.isEmpty(),qPrintable(converted.error));
+   const auto settings=qtCameraSettings(converted.script);
+   require(converted.plots==2 && settings.size()==2 && settings.value("Display").primaryName=="First" && settings.value("Display").views.size()==2 && settings.value("Display").views[0].name=="Close" && settings.value("Display").views[1].name=="Far","Grouped/blank-entry conversion lost displays or ordered cameras");
+   require(settings.value("Other").primaryName=="First" && settings.value("Other").views.isEmpty(),"Scalar camera selection lost its configured view");
+   require(converted.script.contains(prefix) && converted.script.endsWith(mission) && converted.script.contains("Create OrbitView Display Other;") && converted.script.contains("% Qt conversion: Create OpenFramesInterface Display Other; % preserve grouped displays") && converted.script.contains("% Qt conversion: Create OpenFramesView First Close Far; % preserve grouped views") && converted.script.contains("% empty entry accepted by OF"),"Camera syntax conversion changed physics/source comments or grouped object identity");
+   auto ordered=prefix+declarations+"Display.View = Far;\nDisplay.View = Close;\nDisplay.View = {First, , Close, First,};\nDisplay.View = Far;\nDisplay.View = Close;\n"+mission;
+   const auto combined=convertOpenFramesViews(ordered); require(combined.error.isEmpty(),qPrintable(combined.error));
+   const auto selection=qtCameraSettings(combined.script).value("Display");
+   require(selection.primaryName=="First" && selection.views.size()==2 && selection.views[0].name=="Close" && selection.views[1].name=="Far","Array clear/scalar append/dedup semantics differ from OF AddView");
+   const auto cleared=convertOpenFramesViews(prefix+declarations+"Display.View = First;\nDisplay.View = {};\n"+mission);
+   require(cleared.error.isEmpty() && qtCameraSettings(cleared.script).value("Display").primaryName.isEmpty(),"Empty braced View did not clear the old camera selection");
+   const auto noSemicolons=convertOpenFramesViews(QString(input).replace("Create OpenFramesView First Close Far;","Create OpenFramesView First Close Far").replace("Create OpenFramesInterface Display Other;","Create OpenFramesInterface Display Other"));
+   require(noSemicolons.error.isEmpty() && noSemicolons.plots==2,"Optional declaration semicolon changed accepted grouped syntax");
+   for (const auto &bad:QStringList{QString(input).replace("First Close Far;","First First;"),QString(input).replace("First Close Far;","First, Close;"),QString(input).replace("{First, , Close, Far}","{First Close}"),QString(input).replace("{First, , Close, Far}","{First, Missing}"),QString(input).replace("{First, , Close, Far}","[First]")}) {
+      const auto rejected=convertOpenFramesViews(bad); require(!rejected.error.isEmpty() && rejected.script==bad,"Invalid grouped/view syntax silently changed original source");
+   }
+   const auto samples=QDir(QFileInfo(startup).absolutePath()).absoluteFilePath("../samples");
+   const auto geo=QString::fromUtf8(read(QDir(samples).filePath("Ex_GEOTransfer.script")));
+   const auto geoConverted=convertOpenFramesViews(geo); require(geoConverted.error.isEmpty(),qPrintable(geoConverted.error));
+   const auto geoCameras=qtCameraSettings(geoConverted.script);
+   require(geoConverted.plots==2 && geoCameras.value("OFI_inertialView").primaryName=="inertial_View" && geoCameras.value("OFI_inertialView").views.size()==2 && geoCameras.value("OFI_fixedView").views.size()==2 && geoConverted.script.endsWith(geo.mid(geo.indexOf("BeginMissionSequence;"))),"Actual GEOTransfer conversion changed ordered views or mission source");
+   std::cout<<"PASS grouped OF display/view identities, scalar append/list reset/blank and duplicate entries, original physics/comments, invalid syntax rollback and actual GEOTransfer ordered cameras. Required vector sample conversion is covered by OpenFramesVectors. No engine initialization, mission, pixels or native desktop test.\n";
+
+}
 int main(int argc,char **argv)
 {
    QApplication app(argc,argv); app.setOrganizationName("GMATTests"); app.setApplicationName("QtSegmentCameras");
    try {
+      if (argc==3 && QString::fromLocal8Bit(argv[2])=="--syntax") {
+         require(QApplication::platformName()=="offscreen","OF syntax mode requires offscreen"); syntaxTests(QFileInfo(argv[1]).absoluteFilePath()); return 0;
+      }
       TestSettings settings; QTemporaryDir files; require((argc==2 || argc==3) && files.isValid(),"Segment-camera setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==3 ? QFileInfo(argv[2]).absoluteFilePath() : QString(); QDir::setCurrent(QFileInfo(startup).absolutePath()); const auto report=files.filePath("segment state Δ.txt"),saved=files.filePath("segment cameras Δ.script");
       const QString resources="% preserve segment calculations α\nCreate Spacecraft Sat;\nSat.CoordinateSystem = EarthMJ2000Eq;\nSat.DisplayStateType = Cartesian;\nSat.X = 7000;\nSat.Y = 0;\nSat.Z = 0;\nSat.VX = 0;\nSat.VY = 7.54605329010754;\nSat.VZ = 0;\nSat.Attitude = Spinner;\nSat.AttitudeDisplayStateType = EulerAngles;\nSat.EulerAngle1 = 30;\nSat.EulerAngle2 = 20;\nSat.EulerAngle3 = 10;\nSat.AttitudeRateDisplayStateType = AngularVelocity;\nSat.AngularVelocityX = 0;\nSat.AngularVelocityY = 0;\nSat.AngularVelocityZ = 0.2;\nCreate ForceModel Forces;\nForces.PrimaryBodies = {};\nForces.PointMasses = {Earth};\nForces.Drag = None;\nForces.SRP = Off;\nCreate Propagator Prop;\nProp.FM = Forces;\nProp.InitialStepSize = 10;\nProp.MaxStep = 10;\nCreate ReportFile Values;\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nValues.Precision = 17;\n";
       const QString state="Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.EarthMJ2000Eq.Y Sat.EarthMJ2000Eq.Z Sat.EarthMJ2000Eq.VX Sat.EarthMJ2000Eq.VY Sat.EarthMJ2000Eq.VZ;\n";

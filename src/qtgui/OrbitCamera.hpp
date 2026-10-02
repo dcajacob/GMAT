@@ -80,6 +80,7 @@ inline OrbitCameraBasis orbitCamera(const PlotModel &model,quint64 frame,double 
       OrbitSceneBounds path;
       OrbitObjectBounds objectBound;
       if (!body.isEmpty()) {
+         objectBound.radius=automaticRadius>0 ? automaticRadius : 1;
          if (!segment.isEmpty()) objectBound={osg::Vec3d(),1};
          else if (objects && objects->contains(body)) objectBound=objects->value(body);
          else for (const auto &curve:model.curves) if (curve.name==body) objectBound.radius=curve.radius>0 ? curve.radius : 1;

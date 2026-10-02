@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "QtPlotReceiver.hpp"
 #include "PathSettings.hpp"
 #include "PathSettingsDialog.hpp"
 #include "ResourceEditor.hpp"
@@ -29,6 +30,7 @@
 #include <QElapsedTimer>
 #include <QThread>
 #include <QTabWidget>
+#include <cmath>
 #include <iostream>
 #include <stdexcept>
 static void require(bool value,const char *message) { if (!value) throw std::runtime_error(message); }
@@ -63,12 +65,74 @@ static void capture(QWidget *widget,const QString &path)
    while (elapsed.elapsed()<300) { QApplication::processEvents(); QThread::msleep(5); }
    require(widget->grab().save(path),"Path screenshot failed");
 }
+static void scriptAssetTests(const QString &startup)
+{
+   require(qEnvironmentVariable("QT_QPA_PLATFORM")=="offscreen","Script asset regression requires offscreen Qt");
+   QTemporaryDir files; require(files.isValid(),"Script asset fixture unavailable");
+   const auto package=files.filePath("package with spaces ü"),navigation=package+"/samples/Navigation";
+   const auto support=package+"/samples/SupportFiles",data=package+"/data/vehicle/ephem/ccsds";
+   const auto output=files.filePath("ordinary output"),batchOutput=files.filePath("batch output"),copies=files.filePath("saved copies");
+   for (const auto &directory:QStringList{navigation,support+"/sections",data,output,batchOutput,copies})
+      require(QDir().mkpath(directory),"Script asset directory fixture failed");
+   const auto asset=data+"/states.oem";
+   const QByteArray ephemeris=
+      "CCSDS_OEM_VERS = 1.0\nCREATION_DATE = 2026-01-01T00:00:00\nORIGINATOR = GMAT TEST\n"
+      "META_START\nOBJECT_NAME = Sat\nOBJECT_ID = SatId\nCENTER_NAME = Earth\nREF_FRAME = EME2000\nTIME_SYSTEM = UTC\n"
+      "START_TIME = 2018-01-01T00:00:00.000\nUSEABLE_START_TIME = 2018-01-01T00:00:00.000\n"
+      "USEABLE_STOP_TIME = 2018-01-01T00:01:00.000\nSTOP_TIME = 2018-01-01T00:01:00.000\n"
+      "INTERPOLATION = LAGRANGE\nINTERPOLATION_DEGREE = 1\nMETA_STOP\n\n"
+      "2018-01-01T00:00:00.000 7000 0 0 0 7.5 0\n"
+      "2018-01-01T00:01:00.000 7001 2 3 0.1 7.4 0.2\n";
+   write(asset,ephemeris);
+   const QByteArray setup=
+      "Create Spacecraft Sat;\nSat.EphemerisName = '../../data/vehicle/ephem/ccsds/states.oem';\n"
+      "Create String StartEpoch EndEpoch;\nCreate Array InitialState[6,1] FinalState[6,1];\n"
+      "Create ReportFile Assets;\nAssets.Filename = 'assets.txt';\nAssets.WriteHeaders = false;\nAssets.Precision = 16;\n";
+   const QByteArray config="% nested includes remain anchored to the outer script folder\n#Include '../SupportFiles/sections/setup.inc'\n";
+   const QByteArray commands=
+      "[StartEpoch, InitialState, EndEpoch, FinalState] = GetEphemStates('CCSDS-OEM', Sat, 'UTCGregorian', EarthMJ2000Eq);\n"
+      "Report Assets InitialState(1,1) InitialState(2,1) InitialState(3,1) InitialState(4,1) InitialState(5,1) InitialState(6,1) FinalState(1,1) FinalState(2,1) FinalState(3,1) FinalState(4,1) FinalState(5,1) FinalState(6,1);\n";
+   write(support+"/config.inc",config); write(support+"/sections/setup.inc",setup); write(support+"/sections/read.inc",commands);
+   const QByteArray source="% exact script asset fixture α\n#Include '../SupportFiles/config.inc'\nBeginMissionSequence;\n#Include '../SupportFiles/sections/read.inc'\n";
+   const auto original=navigation+"/Assets.script",saved=navigation+"/SavedAssets.script";
+   write(original,source);
+   MainWindow window; require(window.initialize(startup),"Script asset runtime unavailable");
+   auto *manager=FileManager::Instance(); manager->SetAbsPathname("OUTPUT_PATH",(output+"/").toStdString());
+   auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor"); require(editor,"Script asset editor missing");
+   require(window.loadScript(original) && window.buildScript(),qPrintable("Nested asset script failed to build: "+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().right(2000)));
+   const auto folder=QString::fromStdString(manager->GetGmatWorkingDirectory());
+   require(folder.endsWith(QString::fromStdString(manager->GetPathSeparator())) && QDir::cleanPath(folder)==navigation,"Script asset working folder lacks its separator or moved into an include");
+   const auto resolved=QString::fromStdString(manager->FindPath("../../data/vehicle/ephem/ccsds/states.oem","",true,false));
+   require(QFileInfo(resolved).canonicalFilePath()==QFileInfo(asset).canonicalFilePath(),"Script-relative asset lookup did not use the outer document folder");
+   require(window.saveScriptTo(saved) && read(saved)==source && window.loadScript(saved),"Script asset Save As/reopen changed source bytes");
+   require(window.runMission()==MainWindow::RunResult::Completed,qPrintable("Reopened relative ephemeris read failed: "+window.findChild<QPlainTextEdit *>("messageWindow")->toPlainText().right(2000)));
+   const auto report=read(output+"/assets.txt");
+   const auto values=QString::fromUtf8(report).split(QRegularExpression("\\s+"),Qt::SkipEmptyParts);
+   const double expected[]={7000,0,0,0,7.5,0,7001,2,3,0.1,7.4,0.2};
+   require(values.size()==12,"Relative ephemeris report lost state elements");
+   for (int i=0;i<values.size();++i) { bool valid=false; const auto value=values[i].toDouble(&valid); require(valid && std::abs(value-expected[i])<1e-11,"Relative ephemeris read changed an independently expected endpoint"); }
+   require(Moderator::Instance()->GetInternalObject("StartEpoch")->GetStringParameter("Value")=="01 Jan 2018 00:00:00.000" &&
+           Moderator::Instance()->GetInternalObject("EndEpoch")->GetStringParameter("Value")=="01 Jan 2018 00:01:00.000","Relative ephemeris read changed endpoint epochs");
+   const auto accepted=editor->toPlainText(); editor->appendPlainText("% pending source retained through folder run"); const auto pending=editor->toPlainText();
+   const auto working=manager->GetGmatWorkingDirectory(),ordinaryOutput=manager->GetFullPathname("OUTPUT_PATH");
+   QMdiArea batchArea; QtPlotReceiver batchPlots(&batchArea); std::atomic_bool cancel=false;
+   FolderRunOptions options; options.directory=navigation; options.outputDirectory=batchOutput; options.copyDirectory=copies; options.saveCopies=true; options.count=1;
+   const auto result=window.runFolderScripts(options,batchPlots,cancel);
+   require(result.error.isEmpty() && result.items.size()==1 && result.items.first().category=="Completed",qPrintable("Saved-copy script asset folder run failed: "+result.summary()));
+   require(result.items.first().loadedScript==copies+"/Assets.script" && read(copies+"/Assets.script")==source && read(batchOutput+"/assets.txt")==report,"Saved-copy run resolved assets from the copy folder or changed source/results");
+   require(manager->GetGmatWorkingDirectory()==working && manager->GetFullPathname("OUTPUT_PATH")==ordinaryOutput && editor->toPlainText()==pending,"Script asset folder run lost the original path or pending document");
+   editor->undo(); require(editor->toPlainText()==accepted,"Script asset folder run damaged source Undo"); editor->redo(); require(editor->toPlainText()==pending,"Script asset folder run damaged source Redo");
+   require(read(original)==source && read(saved)==source && read(asset)==ephemeris && read(support+"/config.inc")==config && read(support+"/sections/setup.inc")==setup && read(support+"/sections/read.inc")==commands,"Relative asset reads modified an input file");
+   std::cout<<"PASS: outer script folder retains its separator across nested includes, exact Save As/reopen, GetEphemStates reads independently expected OEM endpoints from ../../data, saved-copy folder run uses original source assets, identical report, and pending source/Undo/path/output restoration. No propagation or prior path/native matrix repeated.\n";
+}
+
 int main(int argc,char **argv)
 {
    QApplication::setAttribute(Qt::AA_DontUseNativeDialogs); QApplication app(argc,argv); app.setOrganizationName("GMATTests"); app.setApplicationName("QtPaths");
    try {
       TestSettings settings; QTemporaryDir files; require(argc>1 && files.isValid(),"Fixture setup failed");
       const auto startup=QFileInfo(QString::fromLocal8Bit(argv[1])).absoluteFilePath(); QDir::setCurrent(QFileInfo(startup).absolutePath());
+      if (argc==3 && QString::fromLocal8Bit(argv[2])=="--script-assets") { scriptAssetTests(startup); return 0; }
       const auto screenshots=argc>2 ? QString::fromLocal8Bit(argv[2]) : QString();
       MainWindow window; window.show(); require(window.initialize(startup),"Initialize failed"); auto *fm=FileManager::Instance();
       const auto original=fm->CaptureState(); struct Restore { std::shared_ptr<const FileManager::State> state; ~Restore() { FileManager::Instance()->RestoreState(*state); } } restore{original};

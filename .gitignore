@@ -74,3 +74,7 @@ __pycache__
 /.clangd
 /application/bin/gmat_startup_qt.txt
 /application/debug/bin/gmat_startup_qt.txt
+
+# Generated version-specific Python API packages (common initializers are sources).
+/application/bin/gmatpy/_py*/
+/application/debug/gmatpy/_py*/

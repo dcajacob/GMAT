@@ -19,6 +19,7 @@
 #include "OrbitLabels.hpp"
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
+#include "OrbitVectors.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
 #include <QAction>
@@ -178,6 +179,10 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          extent=std::max(extent,std::hypot(point.x,point.y,point.z)+(curve.showObject ? curve.radius : 0));
          bounds.include(point.x,point.y,point.z,curve.showObject ? curve.radius : 0);
       }
+   if (orbit) for (const auto &vector:data->vectors) for (const auto &sample:vector.samples)
+      if (const auto arrow=orbitVectorArrow(*data,vector,sample)) for (const auto &point:{arrow->start,arrow->end}) {
+         extent=std::max(extent,point.length()); bounds.include(point.x(),point.y(),point.z(),0);
+      }
    const auto camera=orbitCamera(*data,visibleFrame,yaw,pitch,extent,area.width()/area.height(),&bounds);
    auto perspectiveScale=[&](const PlotPoint &point) {
       const auto relative=osg::Vec3d(point.x,point.y,point.z)-camera.target;
@@ -269,6 +274,7 @@ void PlotCanvas::paintEvent(QPaintEvent *)
       struct Primitive { double depth; const PlotCurve *curve; const PlotPoint *a; const PlotPoint *b; int marker=0; bool guide=false; };
       QVector<Primitive> objects;
       std::deque<PlotPoint> clippedPoints;
+      std::deque<PlotCurve> vectorCurves;
       auto depth=[&](const PlotPoint &p) { return osg::Vec3d(p.x,p.y,p.z)*camera.outward; };
       for (const auto &curve:data->curves) {
          if (!curve.visible) continue;
@@ -334,6 +340,23 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             if (!occluded) objects.append({depth(point),&curve,&point,nullptr,marker.endpoint ? 2 : 1});
          }
       }
+      for (const auto &vector:data->vectors) if (const auto arrow=orbitVectorArrow(*data,vector,visibleFrame)) {
+         vectorCurves.emplace_back(); auto &curve=vectorCurves.back(); curve.color=vector.color;
+         auto line=[&](const osg::Vec3d &from,const osg::Vec3d &to) {
+            PlotPoint a,b; a.color=b.color=vector.color;
+            a.x=from.x(); a.y=from.y(); a.z=from.z(); b.x=to.x(); b.y=to.y(); b.z=to.z();
+            if (data->perspective) {
+               const double near=1e-6;
+               const double da=camera.distance-(from-camera.target)*camera.outward-near;
+               const double db=camera.distance-(to-camera.target)*camera.outward-near;
+               if (da<0 && db<0) return;
+               if (da<0 || db<0) { const auto clipped=from+(to-from)*(da/(da-db)); auto &point=da<0 ? a : b; point.x=clipped.x(); point.y=clipped.y(); point.z=clipped.z(); }
+            }
+            clippedPoints.push_back(a); const auto *start=&clippedPoints.back(); clippedPoints.push_back(b); const auto *end=&clippedPoints.back();
+            objects.append({(depth(a)+depth(b))/2,&curve,start,end,0,true});
+         };
+         line(arrow->start,arrow->end); for (const auto &wing:arrow->arrow) line(arrow->end,wing);
+      }
       std::stable_sort(objects.begin(),objects.end(),[](const Primitive &a,const Primitive &b) { return a.depth<b.depth; });
       for (const auto &object:objects) {
          const auto &curve=*object.curve;
@@ -356,6 +379,11 @@ void PlotCanvas::paintEvent(QPaintEvent *)
             painter.setPen(curve.color); painter.setBrush(data->wireframe || curve.wireframeObject ? QBrush(Qt::NoBrush) : QBrush(gradient)); painter.drawEllipse(pixel,radius,radius);
          } else { painter.setBrush(object.a->color); painter.drawEllipse(pixel,3.5,3.5); }
       }
+      if (data->labels) for (const auto &vector:data->vectors) if (!vector.label.isEmpty())
+         if (const auto arrow=orbitVectorArrow(*data,vector,visibleFrame)) {
+            PlotPoint point; point.x=arrow->end.x(); point.y=arrow->end.y(); point.z=arrow->end.z();
+            if (perspectiveScale(point)>0) { painter.setPen(vector.color); painter.drawText(screen(project(point))+QPointF(4,-4),vector.label); }
+         }
       if (data->labels) for (const auto &curve:data->curves) if (curve.visible && curve.objectAxes) {
          const auto *pose=orbitObjectPose(curve,visibleFrame); if (!pose) continue;
          const auto axes=orbitObjectAxes(*pose,orbitObjectAxisRadius(curve)); painter.setPen(pose->color);

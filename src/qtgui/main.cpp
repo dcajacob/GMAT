@@ -7,6 +7,8 @@
 #include <QFile>
 #include <cstdio>
 #include <QTimer>
+#include <QPlainTextEdit>
+#include <QStatusBar>
 #include <QSettings>
 int main(int argc, char **argv)
 {
@@ -56,6 +58,16 @@ int main(int argc, char **argv)
       if (succeeded && script.isEmpty() && !parser.isSet("run") && screenshot.isEmpty()) window.showWelcome(true);
       if (parser.isSet("run") && succeeded)
          succeeded = window.runMission() == MainWindow::RunResult::Completed;
+      if (!succeeded) {
+         // Preserve the same diagnostic the GUI shows for command-line batch
+         // qualification, including conversion failures before interpretation.
+         const auto status=window.statusBar()->currentMessage().toUtf8();
+         if (!status.isEmpty()) std::fprintf(stderr,"%s\n",status.constData());
+         if (auto *messages=window.findChild<QPlainTextEdit *>("messageWindow")) {
+            const auto text=messages->toPlainText().toUtf8();
+            if (!text.isEmpty()) std::fprintf(stderr,"%s\n",text.constData());
+         }
+      }
       if (!screenshot.isEmpty())
          QTimer::singleShot(200, &window, [&, succeeded] {
             // QWidget::grab can repaint a QOpenGLWidget without its composed

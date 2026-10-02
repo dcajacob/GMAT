@@ -119,6 +119,17 @@
 #include <stdexcept>
 
 namespace {
+bool setGmatScriptDirectory(const QString &directory)
+{
+   // FileManager stores this path verbatim and FindPath joins it directly to
+   // relative asset names. Match the engine filename interpreter's trailing
+   // separator even though QFileInfo::absolutePath() omits it.
+   auto *manager=FileManager::Instance();
+   auto path=QDir::toNativeSeparators(directory);
+   const auto separator=QString::fromStdString(manager->GetPathSeparator());
+   if (!path.endsWith(separator)) path+=separator;
+   return manager->SetGmatWorkingDirectory(path.toStdString());
+}
 void showNewWorkspaceWindow(QMdiArea *workspace,QMdiSubWindow *child)
 {
    child->show();
@@ -274,11 +285,16 @@ MainWindow::MainWindow()
       auto *item=mission->itemAt(position);
       const int index=item && item->data(0,Qt::UserRole).isValid() ? item->data(0,Qt::UserRole).toInt() : -1;
       QMenu menu(this);
-      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*remove=nullptr,*summary=nullptr,*breakpoint=nullptr;
+      QAction *edit=nullptr,*before=nullptr,*after=nullptr,*inside=nullptr,*remove=nullptr,*summary=nullptr,*breakpoint=nullptr;
+      const int branchEnd=missionBranchEnd(missionState,index);
       if (index>=0 && index<missionState.nodes.size()) {
          edit=menu.addAction("Edit command…"); edit->setEnabled(missionState.nodes[index].editable);
          before=menu.addAction("Insert before…"); before->setEnabled(missionState.nodes[index].type!="BeginMissionSequence");
          after=menu.addAction("Insert after…");
+         if (branchEnd>=0) {
+            inside=menu.addAction("Append inside branch…"); inside->setObjectName("appendInsideMissionBranch");
+            inside->setToolTip("Add a command before this branch's closing command");
+         }
          remove=menu.addAction("Delete command"); remove->setEnabled(missionState.nodes[index].editable);
          summary=menu.addAction("Command summary…");
          breakpoint=menu.addAction("Breakpoint before command"); breakpoint->setObjectName("missionBreakpoint");
@@ -293,6 +309,7 @@ MainWindow::MainWindow()
       else if (summary && chosen==summary) showSummary(index);
       else if (breakpoint && chosen==breakpoint) setBreakpoint(index,breakpoint->isChecked());
       else if (chosen==append) openCommandEditor(-1,MissionEdit::Append);
+      else if (inside && chosen==inside) openCommandEditor(branchEnd,MissionEdit::InsertBefore);
       else if (chosen==edit) openCommandEditor(index,MissionEdit::Replace);
       else if (chosen==before) openCommandEditor(index,MissionEdit::InsertBefore);
       else if (chosen==after) openCommandEditor(index,MissionEdit::InsertAfter);
@@ -1196,7 +1213,7 @@ FolderRunResult MainWindow::runFolderScripts(const FolderRunOptions &options,QtP
             receiver->SetLogPath(output.toStdString(),true); receiver->SetLogEnable(true);
             if (repeat==1 || previous!=path) {
                previous=path; built=false; buildFailureCategory.clear(); buildFailureDetails.clear(); batchPlots.clear(true);
-               if (!fm->SetGmatWorkingDirectory(assetBase.toStdString())) throw std::runtime_error("The source script folder is unavailable.");
+               if (!setGmatScriptDirectory(assetBase)) throw std::runtime_error("The source script folder is unavailable.");
                QFile file(path);
                if (!file.open(QIODevice::ReadOnly)) { item.category=buildFailureCategory="Read error"; item.details=buildFailureDetails=file.errorString(); return item; }
                const auto bytes=file.readAll(); QStringDecoder decoder(QStringDecoder::Utf8,QStringConverter::Flag::Stateless); QString source=decoder(bytes);
@@ -1885,7 +1902,7 @@ void MainWindow::setScriptDirectory()
    // filename overload does. Keep input/include lookup tied to this document
    // without changing the process directory used for startup data assets.
    const auto directory = scriptPath.isEmpty() ? startupDirectory : QFileInfo(scriptPath).absolutePath();
-   if (!FileManager::Instance()->SetGmatWorkingDirectory(directory.toStdString()))
+   if (!setGmatScriptDirectory(directory))
       throw std::runtime_error("The script directory is unavailable: " + directory.toStdString());
 }
 
@@ -1997,6 +2014,7 @@ CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)
       {"Call function",QString("[OutputVariable] = %1(InputVariable);").arg(firstType(Gmat::FUNCTION,"GmatFunction","FunctionName"))},
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("CallPythonFunction")) templates.insert("Call Python function","[OutputVariable] = Python.ModuleName.FunctionName(InputVariable);");
+   if (availableEngineTypes().contains("Toggle")) templates.insert("Toggle",QString("Toggle %1 On;").arg(first(Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER),"SubscriberName")));
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
    if (availableEngineTypes().contains("Global")) templates.insert("Global",QString("Global %1;").arg(sat));
    if (availableEngineTypes().contains("CommandEcho")) templates.insert("CommandEcho","CommandEcho On;");

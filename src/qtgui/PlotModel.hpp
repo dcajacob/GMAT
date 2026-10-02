@@ -73,6 +73,22 @@ struct PlotStation
    double longitude = 0, latitude = 0;
    QColor color;
 };
+struct PlotVectorSample
+{
+   PlotPoint source;
+   std::array<double,3> destination{};
+   double sourceRadius=1;
+   bool valid=true;
+};
+struct PlotVector
+{
+   QString name,source,destination,label;
+   bool bodyFixed=false,automaticLength=true;
+   double length=1;
+   QColor color=Qt::red;
+   std::array<double,3> start{},direction{1,0,0};
+   std::deque<PlotVectorSample> samples;
+};
 struct PlotCamera
 {
    quint64 frame=0;
@@ -130,6 +146,7 @@ struct PlotModel
    bool perspective=false;
    double fieldOfView=50;
    std::deque<PlotCamera> cameras;
+   QVector<PlotVector> vectors;
    QVector<PlotCameraView> cameraViews; // Index zero uses the standard scripted history above.
    int selectedCamera=0;
    QString automaticTrajectory;
