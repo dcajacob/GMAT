@@ -341,7 +341,7 @@ separate name-only step. Leave **Name** blank to use the displayed type-based
 suggestion, such as `GroundStation1`; the engine chooses an unused suffix.
 Explicit names remain unchanged when switching types.
 The dialog lists the engine's viewable resource types, including plugin formations,
-ground stations, functions, estimators, smoothers, process-noise models and
+ground stations, regions, functions, estimators, smoothers, process-noise models and
 estimated parameters, plus Variable, String and Array. Variable and String creation includes an initial-value field;
 values remain pending when switching between types. Arrays have row/column
 controls (1–1000 each) synchronized with pending cell values. Unregistered drafts
@@ -358,6 +358,17 @@ reference together with its declaration before validating the candidate mission.
 If there is no spacecraft, create one first; the error leaves the script/model
 unchanged. The existing Sun remains editable, but new Star creation is excluded:
 the selected engine fails before its missing central-body setting can be assigned.
+
+Under Regions, **Add PlanetographicRegion…** opens a form with paired latitude
+and longitude rows. Choose Vertices, enter at least three finite pairs, and use
+Add/Remove to change the boundary. Alternatively, choose Area file and browse to
+a readable file in GMAT's PlanetographicRegion format. The inactive input mode
+is retained while editing; the saved resource uses only the selected mode.
+This engine supports Earth regions. Create/Apply validates the geometry and
+keeps invalid entries available for correction without changing the mission.
+For a ContactLocator with a Region target, choose exactly one spacecraft in
+Observers; the choices follow the pending target before Apply. See the
+[Region contact qualification](Qt6ParityValidation/region-contact-20261002.md).
 
 The Resources context menu can delete unused resources. GMAT's dependency
 checks protect resources referenced by other resources or mission commands;
@@ -1238,6 +1249,12 @@ Covariance propagation requires Cartesian spacecraft in MJ2000Eq frames and
 fixed-step integration with force-model ErrorControl = None. The existing engine
 validates those requirements when initializing the run; use its reported error to
 correct the spacecraft or propagator configuration.
+
+An ElapsedSecs stop is a duration for that Propagate command. To report at mission
+elapsed times 10, 15 and 20 seconds, use successive durations 10, 5 and 5 seconds.
+The retained synchronized file-thrust attempt failed at a leader step and remains
+unqualified. Separate independent commands preserve each spacecraft assignment;
+their recorded result does not qualify synchronized thrust propagation.
 
 ### For-loop selectors
 
