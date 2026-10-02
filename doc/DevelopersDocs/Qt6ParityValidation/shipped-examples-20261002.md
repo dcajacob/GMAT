@@ -18,8 +18,8 @@ this Qt mission-script corpus.
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `application/samples` | 138 | 123 | 15 | 119 | 0 | 1 | 3 |
 | Help tutorial downloads | 19 | 17 | 2 | 15 | 1 | 1 | 0 |
-| API and TLE sample missions | 7 | 7 | 0 | 2 | 5 | 0 | 0 |
-| Total | 164 | 147 | 17 | 136 | 6 | 2 | 3 |
+| API and TLE sample missions | 7 | 7 | 0 | 3 | 4 | 0 | 0 |
+| Total | 164 | 147 | 17 | 137 | 5 | 2 | 3 |
 
 Every standalone candidate has an actual build attempt; every successful build
 has an execution attempt. Failed builds prevent execution. There are no recorded
@@ -27,7 +27,7 @@ crashes in these stages. All 311 current child-stage records say their main
 source remained unchanged during that attempt. Repaired tutorial sources have
 new hashes and retain earlier failures in history. The two expected Stop rows
 retain raw exit 1/failed status plus an explicit tutorial-checkpoint assessment;
-raw counts are 136 passes, eight failures and three timeouts. They are not counted
+raw counts are 137 passes, seven failures and three timeouts. They are not counted
 as completed missions or optimizer convergence.
 
 The Yukon launch-window mission's existing 7200-second attempt reached its
@@ -144,20 +144,28 @@ remains a numerical transfer/event-domain failure, not missing proprietary data,
 and no further unchanged retry or exhaustive search was performed. See
 `l2-tutorial-bracket-2026-10-02.md` for exact phase reports and limits.
 
-Five TLE examples require absent public catalogs, not another plugin:
+The exact missing June 2020 catalog was recovered from the original Thinking
+Systems R2020 distribution. Only its two newly unblocked runtime stages were
+retried, using byte-identical staged sources and isolated historical input data:
 
-| Example | Required catalog |
+| Example | Current outcome or remaining input |
 | --- | --- |
-| FalconSat7Jupe, FalconSats | June 2020 `FALCONSAT-7` elements in `Active-2020-06-23.txt` |
-| FalconSat7Contacts | `active.txt` elements appropriate to its actual current time |
-| GSFCSats | `active.txt` for its 22 named satellites at 12 December 2019 |
-| Starlink | Historical `active.txt` containing its 117 named satellites at 12 December 2019 |
+| Falconsat7Jupe | Completed in 1.172 s at its unchanged fixed June 2020 epoch. |
+| FalconSats | Both catalogs resolved, then the unchanged current-time mission failed in 0.622 s with `SPICE(BADMECCENTRICITY)`. It remains an unexpected failure. |
+| Falconsat7Contacts | Current-time scenario for FalconSat-7, which CelesTrak records as decayed on 2021-07-02. Appropriate current-orbit elements cannot be supplied. |
+| GSFCSats | Matching historical `active.txt` for 22 named satellites at 12 December 2019 remains outstanding. |
+| Starlink | Matching historical `active.txt` for 117 named satellites at 12 December 2019 remains outstanding. |
 
-Do not rename the bundled November 2019 catalog to satisfy these filenames.
-The entries and epochs differ, and dynamic-time and historical examples require
-different versions of `active.txt`. The plugin's `Scripting.rst` records exact
-requirements; its GSFCSats epoch wording is corrected. Missing public input data
-remains open, rather than being waived as proprietary.
+FalconSats uses `SystemTime(now)` with historical elements; the failure is
+consistent with stale-element/current-time extrapolation, while the diagnostic
+does not identify which spacecraft failed. No current-tracking accuracy,
+scientific success, expected-Stop or proprietary waiver is inferred. Public
+historical inputs remain open; CelesTrak's name/email/CAPTCHA request route is
+recorded, with all requested NORAD identifiers prepared. No request was submitted.
+Do not rename the November/June catalogs as December `active.txt` substitutes.
+This targeted check repeated no other TLE/build/corpus stage or unchanged run. See
+[tle-dependency-inputs-20261002.md](tle-dependency-inputs-20261002.md) for exact
+source/input hashes, original failures/history, runtime artifacts and limits.
 
 The two SupportFiles fragments and five GMF helpers have inventoried parent
 missions, including the repaired ephemeris comparison. This static relationship
@@ -172,6 +180,10 @@ misclassified or run as standalone missions.
 - `shipped-examples-20261002.results.tsv`: all 177 script/helper source rows,
   with raw statuses and separate expected-stop dispositions.
 - `shipped-examples-20261002.failures.txt`: current diagnostic excerpts.
+- `shipped-examples-20261002.failures.md`: source-matched current failed/timeout
+  stages and their explicit qualification dispositions.
+- `tle-dependency-inputs-20261002.md`: exact recovered catalogs and only two
+  targeted runtime retries, plus remaining public/legacy input availability.
 - `shipped-tutorial-triage-20261002.md`: all 19 tutorial outcomes and repair map.
 - The full completed raw evidence is retained locally under
   `build/example-qualification/20261002/raw`, including reports/screenshots/logs.
@@ -203,3 +215,14 @@ checks or old full suite were repeated after fixture-only edits. Independent
 review also caught/fixed mission-boundary preference and managed Array-block
 copying before the final Clone check. This is offscreen workflow/report evidence,
 not native popup safety or a full replacement acceptance pass.
+
+## Targeted TLE input recovery reconciliation — 2026-10-02
+
+The source-matched manifest now includes the Jupe completion and FalconSats
+runtime failure after exact input recovery. API/TLE completion rises from two
+to three; corpus completion rises from 136 to 137. Raw failed executions fall
+from eight to seven, including the same two expected tutorial Stops. Build
+counts (147 passed / 17 failed), all three timeouts and helper/fragment coverage
+remain unchanged. The 177-row table and current failure excerpts reflect this
+checkpoint; earlier missing-file attempts remain in manifest history. No new
+mission, build, GUI session or test ran while deriving these summaries.

@@ -1,5 +1,6 @@
 application/samples/Ex_MarsGRAM2005.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__Ex_MarsGRAM2005.script/build/attempt-01
+Source SHA256: 4e233c2f3c382152f3bb25f6fcdbb5e0f62026a85f7908378be8405e9abaa1ed
 Build failed — see Message Window
 1: : **** ERROR **** Interpreter Exception: Unable to create AtmosphereModel "MarsGRAM2005" for drag force in line:
 1: : **** ERROR **** Interpreter Exception: Unable to create AtmosphereModel "MarsGRAM2005" for drag force in line:
@@ -27,6 +28,7 @@ Moderator is deleting core engine...
 
 application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script [run: timeout]
 /tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01
+Source SHA256: 3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
@@ -34,6 +36,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+
+********************************************************
+*** Performing Yukon Optimization (using "Yukon1")
 *** 7 variables; 6 equality constraints; 0 inequality constraints
    Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
    Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
@@ -59,12 +64,14 @@ Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
 
 application/samples/NeedMatlab/Ex_CallMatlabFunctions.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedMatlab__Ex_CallMatlabFunctions.script/build/attempt-01
+Source SHA256: 6af1e1524faa4b35d38cc266264eb5d7fa9ea10f16226a17374467bfab24045f
 Build failed — see Message Window
 1: : **** ERROR **** Interpreter Exception: Cannot create an object "max". The "MatlabFunction" is an unknown object type or invalid object name or dimension in line:
 2: : **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "max(vec)" found in line:
 1: : **** ERROR **** Interpreter Exception: Cannot create an object "max". The "MatlabFunction" is an unknown object type or invalid object name or dimension in line:
 2: : **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field "max(vec)" found in line:
 Last engine log lines:
+Moderator is updating data files...
 Moderator is creating core engine...
 Successfully set Planetary Source to use: DE405
 Successfully set Planetary Source to use: DE405
@@ -90,6 +97,7 @@ Moderator is deleting core engine...
 
 application/samples/NeedMatlab/Ex_MatlabEnv.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedMatlab__Ex_MatlabEnv.script/build/attempt-01
+Source SHA256: 16e3609c5f501a2a10c22bc5ee2c67eae584b3d5ced1bfc5141e96fefb201ac0
 Build failed — see Message Window
 1: : **** ERROR **** Interpreter Exception: Cannot create an object "matlabroot". The "MatlabFunction" is an unknown object type or invalid object name or dimension in line:
 1: : **** ERROR **** Interpreter Exception: Cannot create an object "matlabroot". The "MatlabFunction" is an unknown object type or invalid object name or dimension in line:
@@ -117,6 +125,28 @@ Moderator is deleting core engine...
 
 application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedSNOPT__Ex_AlgebraicOptimization.script/build/attempt-01
+Source SHA256: 0d7cf59d8cf373414488d111f2df2c9382a9c0954923d38b7f7ff9667845c6aa
+Build failed — see Message Window
+1: : **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+5: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+6: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+9: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+12: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Optimize in line:
+13: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+14: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+15: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
+16: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+1: : **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
 5: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
 6: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
 7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
@@ -130,6 +160,9 @@ application/samples/NeedSNOPT/Ex_AlgebraicOptimization.script [build: failed]
 15: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
 16: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
 Last engine log lines:
+
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+   "  23: NLP.SpecsFileName             = 'SNOPT.spec';"
 
 11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
    "  24: NLP.OverrideSpecsFileValues   = true;"
@@ -155,6 +188,33 @@ Moderator is deleting core engine...
 
 application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedSNOPT__Ex_MinFuelLunarTransfer.script/build/attempt-01
+Source SHA256: 499bcec4c749b0f37afe6264a3257e7d42a83bd97787fddec706361f40c75e91
+1: : **** ERROR **** Interpreter Exception: Cannot create an object "SQP1". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+5: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+6: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+9: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+11: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Optimize in line:
+12: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+13: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+14: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+15: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+16: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+17: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+18: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+19: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
+1: : **** ERROR **** Interpreter Exception: Cannot create an object "SQP1". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+5: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+6: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
 8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
 9: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
 10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
@@ -168,6 +228,9 @@ application/samples/NeedSNOPT/Ex_MinFuelLunarTransfer.script [build: failed]
 18: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
 19: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
 Last engine log lines:
+   " 378:    Vary 'Vary TOI.B' SQP1(TOI.Element3 = 0.1386, {Perturbation = 1e-005, Lower = 0, Upper = 1, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
+
+15: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
    " 386:    Vary 'Vary LOI.V' SQP1(LOI.Element1 = -0.6, {Perturbation = 1e-003, Lower = -2, Upper = 2, AdditiveScaleFactor = 1.0, MultiplicativeScaleFactor = 10.0});"
 
 16: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
@@ -193,6 +256,19 @@ Moderator is deleting core engine...
 
 application/samples/NeedSNOPT/Ex_OptFiniteBurn.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedSNOPT__Ex_OptFiniteBurn.script/build/attempt-01
+Source SHA256: 4e8c0eb1e965360b4da79e4dc697940904b271b26f3cb5455a3b8ea6bf41c6fd
+1: : **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
+2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
+5: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Optimize in line:
+6: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+7: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+8: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
+9: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+   " 312:    NonlinearConstraint NLP(smaError = 0);"
+10: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
+11: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
 1: : **** ERROR **** Interpreter Exception: Cannot create an object "NLP". The "SNOPT" is an unknown object type or invalid object name or dimension in line:
 2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
 3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "NLP" in line:
@@ -206,6 +282,9 @@ application/samples/NeedSNOPT/Ex_OptFiniteBurn.script [build: failed]
 10: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the NonlinearConstraint in line:
 11: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Minimize in line:
 Last engine log lines:
+   " 278:    Vary NLP(burn1Duration = 230, {Perturbation = .01, Lower = 1, Upper = 10000, MultiplicativeScaleFactor = .1});"
+
+7: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
    " 279:    Vary NLP(burn2Duration = 221, {Perturbation = .01,  Lower = 1, Upper = 10000, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = .1});"
 
 8: : **** ERROR **** Interpreter Exception: Nonexistent Solver "NLP" referenced in the Vary in line:
@@ -231,6 +310,7 @@ Moderator is deleting core engine...
 
 application/samples/NeedVF13ad/Ex_MarsLaunchWindowAnalysis.script [run: timeout]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedVF13ad__Ex_MarsLaunchWindowAnalysis.script/run/attempt-01
+Source SHA256: 7dc7e8bf90d13c9588cc06b42a5ad5ab2f4b03f996893ae8e1a440aca62d0cd8
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
@@ -238,6 +318,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
 ********************************************************
 NLP Iteration 1; Nominal Pass
    Variables:  arrivalEpoch = 27753.628774, satForward.VX = 1.20315109749, satForward.VY = 0.893124386737, satForward.VZ = -8.98523335807, satBackward.VX = -3.04947372729, satBackward.VY = -0.135211346999, satBackward.VZ = -1.94281567325
@@ -263,6 +346,7 @@ NLP Iteration 2; Nominal Pass
 
 application/samples/NeedVF13ad/Ex_MarsPatchConic.script [run: timeout]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedVF13ad__Ex_MarsPatchConic.script/run/attempt-01
+Source SHA256: eb8eb564d2d141ceab189454831d68788fda72d7a7bbb4c329af1c9f51b585a0
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
@@ -270,6 +354,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+
+   Current cost (cost) = 9.28406847613
+
 
 NLP Iteration 7; Nominal Pass
    Variables:  launchEpoch = 27355.9304047, arrivalEpoch = 27749.6977389, satForward.VX = 1.19442276282, satForward.VY = 0.798905038152, satForward.VZ = -9.25046550005, satBackward.VX = -4.36185341123, satBackward.VY = -0.234751871122, satBackward.VZ = -2.35461235607
@@ -295,7 +382,9 @@ NLP Iteration 8; Nominal Pass
 
 application/samples/NeedVF13ad/Tut_MultipleShootingTutorial_Step1.script [run: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__NeedVF13ad__Tut_MultipleShootingTutorial_Step1.script/run/attempt-01
-Disposition: expected tutorial Stop checkpoint; raw failure is retained, not mission completion.
+Source SHA256: 52583eea78d3a2c305c19e865270448fe2254d00eb56f6237456a343bd93b6f8
+Disposition: expected_tutorial_checkpoint
+The authoritative optimal lunar flyby tutorial explicitly inserts Stop in Step1 to inspect the nominal initial guess, then removes it in Step2. This is not optimizer convergence or mission completion.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
@@ -309,6 +398,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
@@ -334,6 +426,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_CelestialBodyRendezvous_Mars.script/build/attempt-01
+Source SHA256: 461518e558fa045f2b5dda42f30ae1e3e921017180b22c768d2cb40baecceafd
+47: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+48: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+49: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+50: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+51: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+57: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+60: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+61: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 303: thrustToArrival.MaxRelativeErrorTolerance = 1e-05;"
+62: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+63: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+64: : **** ERROR **** Interpreter Exception: Cannot create an object "MarsRendezvous". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+65: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+66: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+67: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "MarsRendezvous" in line:
+68: : **** ERROR **** Interpreter Exception: Found invalid function or command name "MarsRendezvous.SetModelParameter" in line:
+69: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_LAUNCH". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+70: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+71: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+72: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+73: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+74: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+75: : **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+76: : **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+77: : **** ERROR **** Interpreter Exception: Cannot create an object "launchBound". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+78: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+79: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+80: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+81: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+82: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+83: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+84: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+85: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+86: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+87: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+88: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+89: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+90: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+91: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+92: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+93: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 94: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 95: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 96: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -347,6 +488,9 @@ application/samples/OptimalControl/Ex_CelestialBodyRendezvous_Mars.script [build
 103: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 104: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+   " 361: traj.TotalIterationsLimits        = [ 20000 ];"
+
+100: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 362: traj.OptimizationMode             = {'Maximize'};"
 
 101: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -372,6 +516,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_BusPowerType0.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_EMTGSpacecraft_SCOpt_BusPowerType0.script/build/attempt-01
+Source SHA256: 4ad6197f43c08ac1db35adde5c9508cf491b8847ea5f7c5a5caecc2fd3523ae6
+10: : **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+13: : **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+29: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 100: thePhase.MaxRelativeErrorTolerance = 1e-5"
+30: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+31: : **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+33: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+34: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+35: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+36: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+37: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+38: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+39: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+40: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+41: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+42: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+43: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+44: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+45: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+46: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+47: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+48: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+49: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+50: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+51: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 57: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -385,6 +578,9 @@ application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_BusPowerType0.script 
 66: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 67: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+
+61: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 150: traj.FeasibilityTolerances        = [1e-5];"
 
 62: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 151: traj.MajorOptimalityTolerances    = [1e-3];"
@@ -410,6 +606,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_PowerSupplyCurve1.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_EMTGSpacecraft_SCOpt_PowerSupplyCurve1.script/build/attempt-01
+Source SHA256: 88bdffaae0a41d4aad1d17f4809f5930b53829e2da5c7167649c3fce55b345f6
+10: : **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+13: : **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+29: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  98: thePhase.MaxRelativeErrorTolerance = 1e-5"
+30: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+31: : **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+33: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+34: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+35: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+36: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+37: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+38: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+39: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+40: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+41: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+42: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+43: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+44: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+45: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+46: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+47: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+48: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+49: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+50: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+51: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 57: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -423,6 +668,9 @@ application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_PowerSupplyCurve1.scr
 66: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 67: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+
+61: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 148: traj.FeasibilityTolerances        = [1e-3,1e-3,1e-7];"
 
 62: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 149: traj.MajorOptimalityTolerances    = [1e-2,1e-2,1e-5];"
@@ -448,6 +696,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_EMTGSpacecraft_SCOpt_ThrustType1.script/build/attempt-01
+Source SHA256: 30e81f1bb7554fdd22bd6608baa52f270afea20926ac6022edb0b08e2e2c1abc
+10: : **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+13: : **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+29: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  87: thePhase.MaxRelativeErrorTolerance = 1e-5"
+30: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+31: : **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+33: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+34: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+35: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+36: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+37: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+38: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+39: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+40: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+41: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+42: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+43: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+44: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+45: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+46: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+47: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+48: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+49: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+50: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+51: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 57: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -461,6 +758,9 @@ application/samples/OptimalControl/Ex_EMTGSpacecraft_SCOpt_ThrustType1.script [b
 66: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 67: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+
+61: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 135: traj.FeasibilityTolerances = [1e-3,1e-3,1e-7];"
 
 62: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 136: traj.MajorOptimalityTolerances = [1e-2,1e-2,1e-5];"
@@ -486,6 +786,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script/build/attempt-01
+Source SHA256: d5ebc02790a795e3eb46742db55984c9a6c0937c125d8542598b8c5d41f012ed
+58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+60: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+61: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+   " 306: thrustToArrival.MaxRelativeErrorTolerance = 1e-05;"
+62: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+63: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thrustToArrival" in line:
+64: : **** ERROR **** Interpreter Exception: Cannot create an object "hitMarsSOI". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+65: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsSOI" in line:
+66: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsSOI" in line:
+67: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsSOI" in line:
+68: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsSOI.SetModelParameter" in line:
+69: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsSOI.SetModelParameter" in line:
+70: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsSOI.SetModelParameter" in line:
+71: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsSOI.SetModelParameter" in line:
+72: : **** ERROR **** Interpreter Exception: Cannot create an object "hitMarsC3". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+73: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsC3" in line:
+74: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsC3" in line:
+75: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "hitMarsC3" in line:
+76: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsC3.SetModelParameter" in line:
+77: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsC3.SetModelParameter" in line:
+78: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsC3.SetModelParameter" in line:
+79: : **** ERROR **** Interpreter Exception: Found invalid function or command name "hitMarsC3.SetModelParameter" in line:
+80: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_LAUNCH". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+81: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+82: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+83: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+84: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+85: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_LAUNCH" in line:
+86: : **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+87: : **** ERROR **** Interpreter Exception: "" is not a valid LHS of assignment in line:
+88: : **** ERROR **** Interpreter Exception: Cannot create an object "launchBound". The "OptimalControlFunction" is an unknown object type or invalid object name or dimension in line:
+89: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+90: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+91: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "launchBound" in line:
+92: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+93: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+94: : **** ERROR **** Interpreter Exception: Found invalid function or command name "launchBound.SetModelParameter" in line:
+95: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+96: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+97: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+98: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+99: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+100: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+101: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+102: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+103: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+104: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 105: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 106: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 107: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -499,6 +848,9 @@ application/samples/OptimalControl/Ex_EarthToMarsSOI_C3Eq0_CSALTTutorial.script 
 114: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 115: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+   " 377: traj.TotalIterationsLimits        = [ 20000 ];"
+
+111: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 378: traj.OptimizationMode             = {'Maximize'};"
 
 112: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -524,6 +876,7 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_IntegratedFlyby_MarsFlyby.script/build/attempt-01
+Source SHA256: d76d9ce9573966d0a5c653c9fdc66b5317dea4fb3284f1b1b683572045fe7776
 Last engine log lines:
 Moderator is updating data files...
 Moderator is creating core engine...
@@ -539,6 +892,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_OCPropTest_GEO_4x4.script/build/attempt-01
+Source SHA256: cfabf70f83e6f85d986139b95771de71ddf3dd9448d8e7e0755297b2914c986d
+7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "EarthThrustDynConfig" in line:
+9: : **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+13: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   " 118: thePhase.MaxRelativeErrorTolerance = 1e-9;"
+29: : **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+30: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+31: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+33: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+34: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+35: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+36: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+37: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+38: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+39: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+40: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+41: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+42: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+43: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+44: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+45: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+46: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+47: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+48: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+49: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+50: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+51: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -552,6 +954,9 @@ application/samples/OptimalControl/Ex_OCPropTest_GEO_4x4.script [build: failed]
    " 170: traj.AllowFailedMeshOptimizations = True"
 64: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+
+58: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 165: traj.TotalIterationsLimits        = [20000];"
 
 59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 166: traj.FeasibilityTolerances        = [1e-6];"
@@ -577,6 +982,7 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_PCLaunch_ConstrainedC3AndDLA_EarthLaunch_EarthOrigin.script/build/attempt-01
+Source SHA256: fa7bd2f42e8722eae55188c5949b2a32b35baf442a50b0b663ccf1234821125e
 Last engine log lines:
 Moderator is updating data files...
 Moderator is creating core engine...
@@ -592,6 +998,55 @@ Moderator is deleting core engine...
 
 application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__samples__OptimalControl__Ex_Phase_Type_ImplicitRKOrder6.script/build/attempt-01
+Source SHA256: 1dfb32ff7304d1779251e739bb30e90109ee9e6291db7b56a4e4e11fae1954dc
+8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SunThrustDynConfig" in line:
+9: : **** ERROR **** Interpreter Exception: Cannot create an object "trajectoryGuess". The "OptimalControlGuess" is an unknown object type or invalid object name or dimension in line:
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "trajectoryGuess" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot create an object "thePhase". The "Phase" is an unknown object type or invalid object name or dimension in line:
+13: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+   "  97: thePhase.MaxRelativeErrorTolerance = 1e-4"
+29: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "thePhase" in line:
+30: : **** ERROR **** Interpreter Exception: Cannot create an object "initialConditions". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+31: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+33: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "initialConditions" in line:
+34: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+35: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+36: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+37: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+38: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+39: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+40: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+41: : **** ERROR **** Interpreter Exception: Found invalid function or command name "initialConditions.SetModelParameter" in line:
+42: : **** ERROR **** Interpreter Exception: Cannot create an object "duration_Thrust". The "CustomLinkageConstraint" is an unknown object type or invalid object name or dimension in line:
+43: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+44: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+45: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+46: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+47: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "duration_Thrust" in line:
+48: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+49: : **** ERROR **** Interpreter Exception: Found invalid function or command name "duration_Thrust.SetModelParameter" in line:
+50: : **** ERROR **** Interpreter Exception: Cannot create an object "traj". The "Trajectory" is an unknown object type or invalid object name or dimension in line:
+51: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+52: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+53: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+54: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 55: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 56: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 57: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
@@ -605,6 +1060,9 @@ application/samples/OptimalControl/Ex_Phase_Type_ImplicitRKOrder6.script [build:
 64: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
 65: : **** ERROR **** Interpreter Exception: Found invalid function or command name "Collocate traj" in line:
 Last engine log lines:
+
+59: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
+   " 146: traj.TotalIterationsLimits        = [20000];"
 
 60: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "traj" in line:
    " 147: traj.FeasibilityTolerances        = [1e-3,1e-3,1e-7];"
@@ -629,23 +1087,36 @@ Last engine log lines:
 Moderator is deleting core engine...
 
 plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script [run: failed]
-/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02
+/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01
+Source SHA256: 419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce
+Disposition: historical_input_current_time_domain_failure
+Exact historical catalogs resolved; unchanged SystemTime(now) mission failed with SPICE(BADMECCENTRICITY), mean eccentricity -5.3807189001060E-03 outside [-0.001,1.0). Consistent with stale-element/current-time extrapolation; diagnostic does not identify the failing spacecraft. Raw unexpected failure retained; no proprietary or expected-Stop waiver, no unchanged retry.
+SPICE(BADMECCENTRICITY) --
+[-0.001,1.0). This error may indicate a bad TLE set.
 Mission failed — see Message Window
+Warning: Cannot create the SPICE diagnostic file in "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
-Propagator Exception: The 2-line element file "../../TLE/Active-2020-06-23.txt" could not be found.
-**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
+Warning: Cannot create the SPICE diagnostic file in "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Warning: invalid Gregorian format: Gregorian date '' is not valid.
  *** Mission run failed.
+*** WARNING *** Error unloading kernel "/home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc".  Message received from CSPICE is: Mean eccentricity value, -5.3807189001060E-03, beyond allowed bounds [-0.001,1.0). This error may indicate a bad TLE set.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Last engine log lines:
-Interpreting scripts from the input stream
-Successfully set Planetary Source to use: DE405
-Successfully set Planetary Source to use: DE405
-Running mission...
-Successfully set Planetary Source to use: DE405
 Successfully set Planetary Source to use: DE405
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
@@ -655,17 +1126,26 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
-Propagator Exception: The 2-line element file "../../TLE/Active-2020-06-23.txt" could not be found.
-**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
+
+Warning: invalid Gregorian format: Gregorian date '' is not valid.
 
  *** Mission run failed.
-===> Total Run Time: 0.056 seconds
+===> Total Run Time: 0.067 seconds
 
 ========================================
 Moderator is deleting core engine...
+*** WARNING *** Error unloading kernel "/home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc".  Message received from CSPICE is: Mean eccentricity value, -5.3807189001060E-03, beyond allowed bounds [-0.001,1.0). This error may indicate a bad TLE set.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 
 plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Contacts.script [run: failed]
 /tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Contacts.script/run/attempt-02
+Source SHA256: 9e89c249d2b910ed59da646c524ee29197f2d3f91b3a6e57ad1b041ab7abe9a5
 Mission failed — see Message Window
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
@@ -677,6 +1157,9 @@ Propagator Exception: The 2-line element file "../../TLE/active.txt" could not b
 **** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
  *** Mission run failed.
 Last engine log lines:
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
 Interpreting scripts from the input stream
 Successfully set Planetary Source to use: DE405
 Successfully set Planetary Source to use: DE405
@@ -700,44 +1183,9 @@ Propagator Exception: The 2-line element file "../../TLE/active.txt" could not b
 ========================================
 Moderator is deleting core engine...
 
-plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script [run: failed]
-/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02
-Mission failed — see Message Window
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
-Propagator Exception: The 2-line element file "../../TLE/Active-2020-06-23.txt" could not be found.
-**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
- *** Mission run failed.
-Last engine log lines:
-Interpreting scripts from the input stream
-Successfully set Planetary Source to use: DE405
-Successfully set Planetary Source to use: DE405
-Running mission...
-Successfully set Planetary Source to use: DE405
-Successfully set Planetary Source to use: DE405
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
-Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
-Propagator Exception: The 2-line element file "../../TLE/Active-2020-06-23.txt" could not be found.
-**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
-
- *** Mission run failed.
-===> Total Run Time: 0.059 seconds
-
-========================================
-Moderator is deleting core engine...
-
 plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/GSFCSats.script [run: failed]
 /tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__GSFCSats.script/run/attempt-02
+Source SHA256: 19c7d8ed7aa6274809f27707b9460efa69afa88b8399b09b333c9f023a78f34c
 Mission failed — see Message Window
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
@@ -749,6 +1197,9 @@ Propagator Exception: The 2-line element file "../../TLE/active.txt" could not b
 **** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
  *** Mission run failed.
 Last engine log lines:
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
 Interpreting scripts from the input stream
 Successfully set Planetary Source to use: DE405
 Successfully set Planetary Source to use: DE405
@@ -774,6 +1225,7 @@ Moderator is deleting core engine...
 
 plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Starlink.script [run: failed]
 /tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Starlink.script/run/attempt-02
+Source SHA256: c39f0f81a18c9c0b85648306d77b5523e85cd8227ab23b46406c93708eec14cf
 Mission failed — see Message Window
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
@@ -785,6 +1237,9 @@ Propagator Exception: The 2-line element file "../../TLE/active.txt" could not b
 **** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window
  *** Mission run failed.
 Last engine log lines:
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
 Interpreting scripts from the input stream
 Successfully set Planetary Source to use: DE405
 Successfully set Planetary Source to use: DE405
@@ -810,6 +1265,55 @@ Moderator is deleting core engine...
 
 application/docs/help/files/scripts/Ex_LowEarthMinFuelTransfer.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Ex_LowEarthMinFuelTransfer.script/build/attempt-01
+Source SHA256: 9473d6ae742f827ef4d235a0521edcf688b549c4bcc74d835d332778bdc1dc72
+2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+4: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+5: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.
+6: : *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthMJ2000Ec" already exists, so ignored in line:
+7: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+8: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+9: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+10: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Ec are not allowed.
+11: : *** WARNING *** Interpreter Exception: CoordinateSystem object named "EarthFixed" already exists, so ignored in line:
+12: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+13: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+14: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+15: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthFixed are not allowed.
+16: : **** ERROR **** Interpreter Exception: Cannot create an object "SQPfmincon". The "FminconOptimizer" is an unknown object type or invalid object name or dimension in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+23: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+24: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+25: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+26: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+27: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+28: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+29: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+30: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+31: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+32: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+33: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+34: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+35: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQPfmincon" in line:
+36: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "DefaultOpenGL" is no longer in use in line:
+37: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "DefaultOpenGL" is no longer in use in line:
+38: : **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_LowEarthMinFuelTransfer.report" - specified path does not exist.
+39: : **** ERROR **** Interpreter Exception: Setting "RefEpoch" to "Sat.A1ModJulian" is not allowed before BeginMissionSequence in line:
+40: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Optimize in line:
+41: : **** ERROR **** Interpreter Exception: Setting "Iterate" to "Iterate + 1" is not allowed before BeginMissionSequence in line:
+42: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+43: : **** ERROR **** Interpreter Exception: Setting "PropEpoch" to "RefEpoch + dV1Time" is not allowed before BeginMissionSequence in line:
+44: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+45: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+46: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+47: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
+48: : **** ERROR **** Interpreter Exception: Setting "PropEpoch" to "RefEpoch + TOF" is not allowed before BeginMissionSequence in line:
+49: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
 50: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
 51: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Vary in line:
 52: : **** ERROR **** Interpreter Exception: Setting "Constraint1" to "Sat.SMA/10000" is not allowed before BeginMissionSequence in line:
@@ -823,6 +1327,9 @@ application/docs/help/files/scripts/Ex_LowEarthMinFuelTransfer.script [build: fa
 60: : **** ERROR **** Interpreter Exception: Setting "Cost" to "( dV1mag + dV2mag )" is not allowed before BeginMissionSequence in line:
 61: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the Minimize in line:
 Last engine log lines:
+
+55: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
+   " 283:    NonlinearConstraint SQPfmincon(Constraint1=1);    % SMA Constraint"
 
 56: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQPfmincon" referenced in the NonlinearConstraint in line:
    " 284:    NonlinearConstraint SQPfmincon(Constraint2=0.05);    % ECC Constraint "
@@ -848,6 +1355,55 @@ Moderator is deleting core engine...
 
 application/docs/help/files/scripts/Ex_MinFuelLunarCapture.script [build: failed]
 /tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Ex_MinFuelLunarCapture.script/build/attempt-01
+Source SHA256: e639f4ae835157a79fcd032f79dcf20cec862a552d56b00fb3f4cd888cba946b
+35: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+36: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+37: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+38: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+39: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+40: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+41: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+42: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+43: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+44: : **** ERROR **** Interpreter Exception: Setting "dV1Mag" to "sqrt( LSI.Element1^2 + LSI.Element2^2 + LSI.Element3^2 )" is not allowed before BeginMissionSequence in line:
+45: : **** ERROR **** Interpreter Exception: Setting "dV2Mag" to "sqrt( LOI.Element1^2 + LOI.Element2^2 + LOI.Element3^2 )" is not allowed before BeginMissionSequence in line:
+46: : **** ERROR **** Interpreter Exception: Setting "TotaldV" to "( dV1Mag + dV2Mag )" is not allowed before BeginMissionSequence in line:
+47: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
+1: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 3: "Epoch" on ObjectReferenced named "" in line:
+2: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: "UpdateInterval" on CoordinateSystem named "EarthSunRot" in line:
+3: : **** ERROR **** Interpreter Exception: Cannot create an object "SQP1". The "FminconOptimizer" is an unknown object type or invalid object name or dimension in line:
+4: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+5: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+6: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+7: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+8: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+9: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+10: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+11: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+12: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+13: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+14: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+15: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+16: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+17: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+18: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+19: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+20: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+21: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+22: : **** ERROR **** Interpreter Exception: Cannot find LHS object named "SQP1" in line:
+23: : *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "OGL_EarthMJ2K" is no longer in use in line:
+24: : *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "OGL_EarthMJ2K" is no longer in use in line:
+25: : *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "OGL_EarthMJ2K" is no longer in use in line:
+26: : *** WARNING *** Interpreter Exception: The field name "FixedFovAngle" on object "OGL_MoonMJ2K" is no longer in use in line:
+27: : *** WARNING *** Interpreter Exception: The field name "PerspectiveMode" on object "OGL_MoonMJ2K" is no longer in use in line:
+28: : *** WARNING *** Interpreter Exception: The field name "UseFixedFov" on object "OGL_MoonMJ2K" is no longer in use in line:
+29: : **** ERROR **** Utility Exception: Error finding relative path for file "./output/SampleMissions/Ex_MinFuelLunarCapture.report" - specified path does not exist.
+30: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Optimize in line:
+31: : **** ERROR **** Interpreter Exception: Setting "Iteration" to "Iteration + 1" is not allowed before BeginMissionSequence in line:
+32: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+33: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+34: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
+35: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
 36: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
 37: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
 38: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Vary in line:
@@ -861,6 +1417,9 @@ application/docs/help/files/scripts/Ex_MinFuelLunarCapture.script [build: failed
 46: : **** ERROR **** Interpreter Exception: Setting "TotaldV" to "( dV1Mag + dV2Mag )" is not allowed before BeginMissionSequence in line:
 47: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the Minimize in line:
 Last engine log lines:
+
+41: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
+   " 302:      NonlinearConstraint SQP1(MMSRef.Luna.SMA = 7600);   "
 
 42: : **** ERROR **** Interpreter Exception: Nonexistent Solver "SQP1" referenced in the NonlinearConstraint in line:
    " 303:      NonlinearConstraint SQP1(MMSRef.Luna.ECC = 0.2);  "
@@ -886,6 +1445,55 @@ Moderator is deleting core engine...
 
 application/docs/help/files/scripts/LunarTransferToL2-tutorial.script [run: failed]
 /tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__LunarTransferToL2-tutorial.script/run/attempt-02
+Source SHA256: f1e211c7c58edc0a693ae9081cbc83f0829eb800953b339b7debdc8786ef5e26
+3: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+4: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+5: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView2" is no longer in use in line:
+6: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView2" is no longer in use in line:
+7: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MoonView" is no longer in use in line:
+8: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "MoonView" is no longer in use in line:
+9: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthInertial" is no longer in use in line:
+10: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthInertial" is no longer in use in line:
+11: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "AboveL2" is no longer in use in line:
+12: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "AboveL2" is no longer in use in line:
+1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "SystemView" is no longer in use in line:
+2: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "SystemView" is no longer in use in line:
+3: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+4: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+5: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView2" is no longer in use in line:
+6: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView2" is no longer in use in line:
+7: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MoonView" is no longer in use in line:
+8: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "MoonView" is no longer in use in line:
+9: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthInertial" is no longer in use in line:
+10: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthInertial" is no longer in use in line:
+11: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "AboveL2" is no longer in use in line:
+12: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "AboveL2" is no longer in use in line:
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "SystemView" is no longer in use in line:
+2: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "SystemView" is no longer in use in line:
+3: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+4: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+5: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView2" is no longer in use in line:
+6: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView2" is no longer in use in line:
+7: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MoonView" is no longer in use in line:
+8: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "MoonView" is no longer in use in line:
+9: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthInertial" is no longer in use in line:
+10: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthInertial" is no longer in use in line:
+11: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "AboveL2" is no longer in use in line:
+12: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "AboveL2" is no longer in use in line:
+1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "SystemView" is no longer in use in line:
+2: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "SystemView" is no longer in use in line:
+3: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+4: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+5: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView2" is no longer in use in line:
+6: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView2" is no longer in use in line:
+7: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "MoonView" is no longer in use in line:
+8: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "MoonView" is no longer in use in line:
 9: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthInertial" is no longer in use in line:
 10: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthInertial" is no longer in use in line:
 11: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "AboveL2" is no longer in use in line:
@@ -899,6 +1507,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKern
 PlanetaryEphem (sub)class exception: Requested epoch 95008.539427940 is not on the DE file '/home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/de/leDE1941.405'.
  *** Mission run failed.
 Last engine log lines:
+
+   Completed iteration 8, pert 1 (P1.Element1 = 0.0320674110851)
+   Completed iteration 8, pert 2 (P1.Element3 = -0.182668301376)
 
 DC1 Iteration 9; Nominal Pass
    Variables:  P1.Element1 = 0.0320574779846, P1.Element3 = -0.182681413098
@@ -924,7 +1535,17 @@ Moderator is deleting core engine...
 
 application/docs/help/files/scripts/Tut_MultipleShootingTutorial_Step1.script [run: failed]
 /tmp/gmat-shipped-examples-vf13-tutorials/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step1.script/run/attempt-01
-Disposition: expected tutorial Stop checkpoint; raw failure is retained, not mission completion.
+Source SHA256: e4d75e3162e9a77a36a45a3a1fb038015ac6c4aea87eafa9292deb4d44c8cf95
+Disposition: expected_tutorial_checkpoint
+The authoritative optimal lunar flyby tutorial explicitly inserts Stop in Step1 to inspect the nominal initial guess, then removes it in Step2. This is not optimizer convergence or mission completion.
+1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+2: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
+2: : *** WARNING *** Interpreter Exception: The field name "TargetColor" on object "EarthView" is no longer in use in line:
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 1: : *** WARNING *** Interpreter Exception: The field name "OrbitColor" on object "EarthView" is no longer in use in line:
@@ -938,6 +1559,9 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.

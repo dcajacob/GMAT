@@ -35016,74 +35016,617 @@
         "phase": "run",
         "exit_code": 1,
         "timed_out": false,
-        "duration_seconds": 0.57,
+        "duration_seconds": 0.622,
         "timeout_seconds": 180,
         "command": [
           "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
           "--startup",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/startup.txt",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/startup.txt",
           "--settings-dir",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/settings",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/settings",
           "--convert-views",
           "--screenshot",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/result.png",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/result.png",
           "--run",
-          "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script"
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script"
         ],
-        "evidence": "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02",
+        "evidence": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01",
         "source_sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
         "source_unchanged": true,
+        "referenced_sources_unchanged": true,
+        "setup_sources_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
+          "SPICE(BADMECCENTRICITY) --",
+          "[-0.001,1.0). This error may indicate a bad TLE set.",
           "Mission failed — see Message Window",
+          "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
-          "Propagator Exception: The 2-line element file \"../../TLE/Active-2020-06-23.txt\" could not be found.",
-          "**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window",
-          " *** Mission run failed."
+          "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+          "Warning: invalid Gregorian format: \u0001Gregorian date '\u0001' is not valid.",
+          " *** Mission run failed.",
+          "*** WARNING *** Error unloading kernel \"/home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc\".  Message received from CSPICE is: Mean eccentricity value, -5.3807189001060E-03, beyond allowed bounds [-0.001,1.0). This error may indicate a bad TLE set.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded."
+        ],
+        "diagnostic_log_files": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stdout.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stdout.txt",
+            "sha256": "8ff85563fc183cee2341cdf48e51138c831758e64c55a54857e1ff1d3dd1fdc0",
+            "size": 434,
+            "mtime_ns": 1790960306861661320,
+            "inode": 153520571,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stderr.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stderr.txt",
+            "sha256": "db23f3d104936a507d3ad315302eaba07cb0f8de73db0a72029293de2af358fb",
+            "size": 5441,
+            "mtime_ns": 1790960306586665305,
+            "inode": 153520572,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/GmatLog.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/GmatLog.txt",
+            "sha256": "ace26041df7e64230fcae10e8fe9f51ea23fcceb789a884da8b7c4a1b662d1cf",
+            "size": 3536,
+            "mtime_ns": 1790960306855661407,
+            "inode": 153520574,
+            "device": 66311
+          }
+        ],
+        "diagnostics_by_log": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stdout.txt",
+            "diagnostics": [
+              "SPICE(BADMECCENTRICITY) --",
+              "[-0.001,1.0). This error may indicate a bad TLE set."
+            ]
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/stderr.txt",
+            "diagnostics": [
+              "Mission failed — see Message Window",
+              "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
+            ]
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/GmatLog.txt",
+            "diagnostics": [
+              "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+              "Warning: invalid Gregorian format: \u0001Gregorian date '\u0001' is not valid.",
+              " *** Mission run failed.",
+              "*** WARNING *** Error unloading kernel \"/home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc\".  Message received from CSPICE is: Mean eccentricity value, -5.3807189001060E-03, beyond allowed bounds [-0.001,1.0). This error may indicate a bad TLE set.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded."
+            ]
+          }
         ],
         "provenance": {
-          "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
-          "git_diff_sha256": "fdba72ba2374b179f6813d051f0dd083f1279bbe5fc7eb2b2e56b71719888358",
-          "git_diff_byte_count": 65558,
+          "repo_head": "e526e2c95a50cc1cdd462be16eaec9e1abd5d7f2",
+          "git_diff_sha256": "5c336584ffd417d2a53d41167babcfe0c85c3c07f6b4b36105dc4dfaa656a6dd",
+          "git_diff_byte_count": 32761,
           "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
           "launcher": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           },
           "actual_qt_binary": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           },
-          "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
-          "utc": "2026-10-02T06:02:48.802945+00:00",
+          "startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+          "utc": "2026-10-02T16:58:26.221821+00:00",
           "platform": "offscreen",
-          "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+          "runner_sha256": "95fb3988c6631eca66d3b6cfb8457fd8e526591ab20202ab0e96f44ea17feb0c",
+          "referenced_sources": [
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+              "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+              "size": 12492,
+              "mtime_ns": 1790904639932388525,
+              "inode": 134517314,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+              "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+              "size": 12492,
+              "mtime_ns": 1790904639932388525,
+              "inode": 153520214,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "sha256": "6b89cfa0c5bdde2437c74f6dc28ebaee835537f8159631028efe2abe3e2bac2a",
+              "size": 475272,
+              "mtime_ns": 1790959065086616129,
+              "inode": 153520539,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active_Nov-09-2019.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active_Nov-09-2019.txt",
+              "sha256": "ea099d5e92abd37d1fd22e70421539f4f48ac4dfcdbb3f486e67f6f97e284967",
+              "size": 381024,
+              "mtime_ns": 1790959065082235543,
+              "inode": 153520538,
+              "device": 66311
+            }
+          ],
+          "python_runtime_inputs": {
+            "scope": "SimpleExternalForceModel.py and installed gmatpy Python initializers/wrappers and versioned shared objects; presence/hashes do not establish API compatibility",
+            "gmatpy_package_present": true,
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "sha256": "ee33bc82fd77cfa0d0954799ff20afabbac8f8bcd1e3379f21c1e79679025ac0",
+                "size": 1822,
+                "mtime_ns": 1790904636208035214,
+                "inode": 134480879,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790904636208284147,
+                "inode": 134480880,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790920652028596474,
+                "inode": 153512578,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "sha256": "b3cd48cbcccd863a33a829f2cc51322b623c7ef106f04d536f3fd30125dfd8e8",
+                "size": 12648072,
+                "mtime_ns": 1790920269368210436,
+                "inode": 153512489,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "sha256": "84158cc9568f837c574e357a034d17a4396026f8572a03958af40c36e00462e6",
+                "size": 1765120,
+                "mtime_ns": 1790920729251472937,
+                "inode": 153512604,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "sha256": "56ed21e6e024ec6696f23d480bf0bea8288a8342bfc507a9e234cfb0dd385986",
+                "size": 264480,
+                "mtime_ns": 1790920706341806532,
+                "inode": 153512600,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "sha256": "64b0e311224de41ee71390cf00baad19f4a057dafc27d53a9577059147b60470",
+                "size": 811867,
+                "mtime_ns": 1790920269391210094,
+                "inode": 153512516,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "sha256": "86f7a27d517c3304087281f74761295cb4c89c3ef2584c16067ddc0944b4bf82",
+                "size": 101531,
+                "mtime_ns": 1790920729265472733,
+                "inode": 153512607,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "sha256": "bd3f38b9f35a807abe5ba7cbba28a794eb0b9266c1a3ce22c5b6f4827f0dc0e6",
+                "size": 6680,
+                "mtime_ns": 1790920706366806168,
+                "inode": 153512603,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "sha256": "d8a032163edbc2df087abb34e6a0cf6c92b6a04c5130850d59b30cc396551154",
+                "size": 2614,
+                "mtime_ns": 1790919882149703626,
+                "inode": 134498767,
+                "device": 66311
+              }
+            ]
+          },
+          "configured_plugin_files": {
+            "scope": "Linux plugin files explicitly named by selected startup; named snapshots do not prove successful loading or ABI compatibility",
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libDataInterface.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libDataInterface.so.R2026a",
+                "sha256": "ff8ed5f9d39c504d109855c7b97e75934ef766bd4432fa6950bf0fa11959e4d6",
+                "size": 479176,
+                "mtime_ns": 1790959937784233559,
+                "inode": 134517348,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEphemPropagator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEphemPropagator.so.R2026a",
+                "sha256": "1da68b1b480b6b5075782c3d7f6d8c1c84fbfcfc44edb7006e1d129f2f69c5c2",
+                "size": 456800,
+                "mtime_ns": 1790959964490536660,
+                "inode": 134517356,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEKF.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEKF.so.R2026a",
+                "sha256": "7f04d3b87c215dcde3fab923bf60e79b95d731f805caed2df9159c41863cfb0c",
+                "size": 1218408,
+                "mtime_ns": 1790959964600629390,
+                "inode": 134517358,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libGmatEstimation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libGmatEstimation.so.R2026a",
+                "sha256": "ce09722f3726a64065bf1b10c89b1cd2de1b4b2820b21e851b4e6adeb1c4ae35",
+                "size": 5516472,
+                "mtime_ns": 1790959937948989505,
+                "inode": 134517350,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEventLocator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEventLocator.so.R2026a",
+                "sha256": "dc925c73e27d2513bbe3ccdf18c09008a397dca2caa6be2f65028969b38a690a",
+                "size": 630448,
+                "mtime_ns": 1790959964697604676,
+                "inode": 134517360,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libExternalForceModel_py314.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libExternalForceModel_py314.so.R2026a",
+                "sha256": "d8a9b4d788dee458e000f27c33a0fb12c4bc7bbb01bae2a3726f54d4cca9b650",
+                "size": 202344,
+                "mtime_ns": 1790959964796455595,
+                "inode": 134517362,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libExtraPropagators.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libExtraPropagators.so.R2026a",
+                "sha256": "072fdade3722479e6e3e4ae8c68679cf64035971b74915b15024e5c018ae7f61",
+                "size": 148480,
+                "mtime_ns": 1790959964880442120,
+                "inode": 134517364,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libFormation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libFormation.so.R2026a",
+                "sha256": "05d288872c594639a991874bddbde6b925b6ae25e66694d8a7dd97ecf1583c33",
+                "size": 155096,
+                "mtime_ns": 1790959964965903900,
+                "inode": 134517366,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libGmatFunction.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libGmatFunction.so.R2026a",
+                "sha256": "d6ed5495d57733f049b05ba9dd539979d2d0e171e792c685712d82e6be5f834f",
+                "size": 319808,
+                "mtime_ns": 1790959965048164756,
+                "inode": 134517368,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libMsise00.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libMsise00.so.R2026a",
+                "sha256": "07af877e4b1a88e7c7d0bdcd8b20fb02dc3c371cf792fddbd4290ad3475e9d4c",
+                "size": 177056,
+                "mtime_ns": 1790959965139114121,
+                "inode": 134517370,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libNewParameters.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libNewParameters.so.R2026a",
+                "sha256": "3733e8c76e8782fac68788e3318cffb8f4ce665d08eeea913b47e0d02a24229e",
+                "size": 585504,
+                "mtime_ns": 1790959965225388798,
+                "inode": 134517372,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libPolyhedronGravity.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libPolyhedronGravity.so.R2026a",
+                "sha256": "1e548b3f38329219aa9a9b85f30cd67561aaf110f0356196f952d108a34e0d59",
+                "size": 395944,
+                "mtime_ns": 1790959965320371174,
+                "inode": 134517373,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libProductionPropagators.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libProductionPropagators.so.R2026a",
+                "sha256": "cc569275b76dcedbd079249bb81491036354c99dc0907022f6a6f63829acfdf7",
+                "size": 132688,
+                "mtime_ns": 1790959965401517180,
+                "inode": 134517374,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libPythonInterface_py314.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libPythonInterface_py314.so.R2026a",
+                "sha256": "e545c081338e5205db83256905519d82abb88c0f087c497bb55017c0b778e380",
+                "size": 263136,
+                "mtime_ns": 1790959938031811065,
+                "inode": 134517352,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libSaveCommand.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libSaveCommand.so.R2026a",
+                "sha256": "2a7b8e269e00e68777729fc9d5c56219b1bb894f95e59ea7d1a8fa54600ac7b1",
+                "size": 177704,
+                "mtime_ns": 1790959965479674487,
+                "inode": 134517376,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libScriptTools.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libScriptTools.so.R2026a",
+                "sha256": "b205610739069c630e0c17daa6df6e93efe45079b43820240b5c77ba626d0ea2",
+                "size": 144832,
+                "mtime_ns": 1790959965563407308,
+                "inode": 134517378,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libStation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libStation.so.R2026a",
+                "sha256": "e43c9b40d8b977321b30e57491a8864d34a640aa4debc59152606e66ce5d4581",
+                "size": 252976,
+                "mtime_ns": 1790959965667104077,
+                "inode": 134517380,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libThrustFile.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a",
+                "sha256": "e97880025502b09d2330daa9d3beed980b59f7bfbf323423e2e80a2fe44322f0",
+                "size": 980216,
+                "mtime_ns": 1790959965775580457,
+                "inode": 134517444,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/thinksys/libTLEPropagator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/thinksys/libTLEPropagator.so.R2026a",
+                "sha256": "765564ed765e4162aae780c618932b2183482cd88de386844df2757963a5031a",
+                "size": 267048,
+                "mtime_ns": 1790959965858939124,
+                "inode": 147353337,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libYukonOptimizer.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libYukonOptimizer.so.R2026a",
+                "sha256": "6d455d1957174c0c9db3dc7d7c612555cca4ec6b20c23bbfb14ad61008cd93b2",
+                "size": 480712,
+                "mtime_ns": 1790959965941836808,
+                "inode": 134517445,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/thinksys/vf13ad/libVF13adOptimizer.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/thinksys/vf13ad/libVF13adOptimizer.so.R2026a",
+                "sha256": "27ecf054f2ded98a5ed97cd344f203f214cfcab9e8f148298a08bbccb7d1106d",
+                "size": 256136,
+                "mtime_ns": 1777074579000000000,
+                "inode": 153517704,
+                "device": 66311
+              }
+            ],
+            "missing": []
+          },
+          "linked_core_libraries": {
+            "scope": "Installed bin-directory files named by GmatQt ELF DT_NEEDED; named inode snapshots, not a claim about loader overrides or the build source state",
+            "elf_needed_names": [
+              "libGmatBase.so.R2026a",
+              "libGmatUtil.so.R2026a"
+            ],
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+                "sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+                "size": 25036288,
+                "mtime_ns": 1790959937689993230,
+                "inode": 134517343,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+                "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+                "size": 2929664,
+                "mtime_ns": 1790915817496393632,
+                "inode": 134517344,
+                "device": 66311
+              }
+            ]
+          },
+          "setup": {
+            "scope": "Literal Filename assignments for declared ReportFile/EphemerisFile resources, including recursively read explicit includes; original filenames and sources unchanged",
+            "output_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output",
+            "prepared_directories": [],
+            "declared_outputs": [
+              {
+                "source": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+                "line": 239,
+                "resource": "ReportFile1",
+                "resource_type": "ReportFile",
+                "assignment": "'SpringsVisible.txt'",
+                "literal_filename": "SpringsVisible.txt",
+                "directory": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output"
+              }
+            ],
+            "skipped": [],
+            "sources": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+                "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+                "size": 12492,
+                "mtime_ns": 1790904639932388525,
+                "inode": 153520214,
+                "device": 66311
+              }
+            ],
+            "limits": "No input/asset directories, expression evaluation, parent/absolute/drive paths or EventLocator nested paths are prepared. GMAT may prefer an already existing source-relative directory before its OUTPUT_PATH fallback."
+          },
           "running_process_binary": {
-            "path": "/proc/4057304/exe",
+            "path": "/proc/3086386/exe",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           }
         },
-        "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
+        "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established; Execution qualification only; unchanged FalconSats resets every spacecraft epoch to SystemTime(now), so historic/decayed elements cannot establish current tracking accuracy.",
+        "targeted_input_qualification": {
+          "original_source": {
+            "path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+            "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+            "size": 12492,
+            "mtime_ns": 1790904639932388525,
+            "inode": 134517314,
+            "device": 66311
+          },
+          "staged_source": {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/FalconSats.script",
+            "sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+            "size": 12492,
+            "mtime_ns": 1790904639932388525,
+            "inode": 153520214,
+            "device": 66311
+          },
+          "original_corpus_key": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script",
+          "source_sha256_matches_corpus": true,
+          "preserved_tle_inputs": [
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "sha256": "6b89cfa0c5bdde2437c74f6dc28ebaee835537f8159631028efe2abe3e2bac2a",
+              "size": 475272,
+              "mtime_ns": 1790959065086616129,
+              "inode": 153520539,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active_Nov-09-2019.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active_Nov-09-2019.txt",
+              "sha256": "ea099d5e92abd37d1fd22e70421539f4f48ac4dfcdbb3f486e67f6f97e284967",
+              "size": 381024,
+              "mtime_ns": 1790959065082235543,
+              "inode": 153520538,
+              "device": 66311
+            }
+          ],
+          "distribution_provenance_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/provenance.json",
+          "distribution_provenance_sha256": "5ac1a9a82f445e37bc266a88d3be37217b9eb59167b99c4c779a75de9df57310",
+          "availability_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/availability.json",
+          "interpretation_limit": "Execution qualification only; unchanged FalconSats resets every spacecraft epoch to SystemTime(now), so historic/decayed elements cannot establish current tracking accuracy.",
+          "numerical_script_changed": false,
+          "only_runtime_retry": true,
+          "original_and_staged_sources_unchanged_after_both_runs": true,
+          "historic_inputs_unchanged_after_both_runs": true
+        },
+        "generated_output_files": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/GmatLog.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/output/GmatLog.txt",
+            "sha256": "ace26041df7e64230fcae10e8fe9f51ea23fcceb789a884da8b7c4a1b662d1cf",
+            "size": 3536,
+            "mtime_ns": 1790960306855661407,
+            "inode": 153520574,
+            "device": 66311
+          }
+        ],
+        "screenshot_file": {
+          "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/result.png",
+          "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__FalconSats.script/run/attempt-01/result.png",
+          "sha256": "b17a5d36d3846dc9cbd2aa9d87ef808d870cfabd89f722ab0625d82ac99245d1",
+          "size": 106996,
+          "mtime_ns": 1790960306817661957,
+          "inode": 153520576,
+          "device": 66311
+        }
       },
       "coverage_mission_parents": [],
       "input_paths": [
@@ -35163,8 +35706,91 @@
             }
           },
           "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
+        },
+        {
+          "status": "failed",
+          "phase": "run",
+          "exit_code": 1,
+          "timed_out": false,
+          "duration_seconds": 0.57,
+          "timeout_seconds": 180,
+          "command": [
+            "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+            "--startup",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/startup.txt",
+            "--settings-dir",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/settings",
+            "--convert-views",
+            "--screenshot",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02/result.png",
+            "--run",
+            "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/FalconSats.script"
+          ],
+          "evidence": "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__FalconSats.script/run/attempt-02",
+          "source_sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+          "source_unchanged": true,
+          "confirmed_dependency_diagnostics": [],
+          "diagnostics": [
+            "Mission failed — see Message Window",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+            "Propagator Exception: The 2-line element file \"../../TLE/Active-2020-06-23.txt\" could not be found.",
+            "**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window",
+            " *** Mission run failed."
+          ],
+          "provenance": {
+            "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
+            "git_diff_sha256": "fdba72ba2374b179f6813d051f0dd083f1279bbe5fc7eb2b2e56b71719888358",
+            "git_diff_byte_count": 65558,
+            "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
+            "launcher": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "actual_qt_binary": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
+            "utc": "2026-10-02T06:02:48.802945+00:00",
+            "platform": "offscreen",
+            "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+            "running_process_binary": {
+              "path": "/proc/4057304/exe",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            }
+          },
+          "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
         }
-      ]
+      ],
+      "qualification_assessment": {
+        "disposition": "historical_input_current_time_domain_failure",
+        "raw_status_preserved": "failed",
+        "reason": "Exact historical catalogs resolved; unchanged SystemTime(now) mission failed with SPICE(BADMECCENTRICITY), mean eccentricity -5.3807189001060E-03 outside [-0.001,1.0). Consistent with stale-element/current-time extrapolation; diagnostic does not identify the failing spacecraft. Raw unexpected failure retained; no proprietary or expected-Stop waiver, no unchanged retry.",
+        "source_sha256": "419e5bca578b181d813c628baaa366bd552ddab4553c5a786e7007a5a14469ce",
+        "evidence_note": "doc/DevelopersDocs/Qt6ParityValidation/tle-dependency-inputs-20261002.md",
+        "input_provenance": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/provenance.json",
+        "interpretation_limit": "Execution qualification only; unchanged FalconSats resets every spacecraft epoch to SystemTime(now), so historic/decayed elements cannot establish current tracking accuracy."
+      }
     },
     {
       "path": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Contacts.script",
@@ -35468,78 +36094,592 @@
         "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
       },
       "run": {
-        "status": "failed",
+        "status": "passed",
         "phase": "run",
-        "exit_code": 1,
+        "exit_code": 0,
         "timed_out": false,
-        "duration_seconds": 0.518,
+        "duration_seconds": 1.172,
         "timeout_seconds": 180,
         "command": [
           "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
           "--startup",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/startup.txt",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/startup.txt",
           "--settings-dir",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/settings",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/settings",
           "--convert-views",
           "--screenshot",
-          "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/result.png",
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/result.png",
           "--run",
-          "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script"
+          "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script"
         ],
-        "evidence": "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02",
+        "evidence": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01",
         "source_sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
         "source_unchanged": true,
+        "referenced_sources_unchanged": true,
+        "setup_sources_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed — see Message Window",
+          "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
-          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
-          "Propagator Exception: The 2-line element file \"../../TLE/Active-2020-06-23.txt\" could not be found.",
-          "**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window",
-          " *** Mission run failed."
+          "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
+        ],
+        "diagnostic_log_files": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stdout.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stdout.txt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mtime_ns": 1790960305022687969,
+            "inode": 153520554,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stderr.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stderr.txt",
+            "sha256": "31ef831540038ffe9ba794965c33031c7ef60591786e4ced6a2b8fb5f2a7e03c",
+            "size": 100,
+            "mtime_ns": 1790960305182685650,
+            "inode": 153520555,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/GmatLog.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/GmatLog.txt",
+            "sha256": "96c825ee5e02964bca5ae756c5347708bd4528af9719a608937a3f4d23fc5bfd",
+            "size": 2453,
+            "mtime_ns": 1790960306180671188,
+            "inode": 153520557,
+            "device": 66311
+          }
+        ],
+        "diagnostics_by_log": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stdout.txt",
+            "diagnostics": []
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/stderr.txt",
+            "diagnostics": []
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/GmatLog.txt",
+            "diagnostics": [
+              "Warning: Cannot create the SPICE diagnostic file in \"/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/\". Raw SPICE diagnostics will use the console; kernel errors still appear in GMAT.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
+            ]
+          }
         ],
         "provenance": {
-          "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
-          "git_diff_sha256": "fdba72ba2374b179f6813d051f0dd083f1279bbe5fc7eb2b2e56b71719888358",
-          "git_diff_byte_count": 65558,
+          "repo_head": "e526e2c95a50cc1cdd462be16eaec9e1abd5d7f2",
+          "git_diff_sha256": "5c336584ffd417d2a53d41167babcfe0c85c3c07f6b4b36105dc4dfaa656a6dd",
+          "git_diff_byte_count": 32761,
           "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
           "launcher": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           },
           "actual_qt_binary": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           },
-          "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
-          "utc": "2026-10-02T06:02:49.949041+00:00",
+          "startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+          "utc": "2026-10-02T16:58:24.966927+00:00",
           "platform": "offscreen",
-          "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+          "runner_sha256": "95fb3988c6631eca66d3b6cfb8457fd8e526591ab20202ab0e96f44ea17feb0c",
+          "referenced_sources": [
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+              "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+              "size": 4151,
+              "mtime_ns": 1790904639932388525,
+              "inode": 134517316,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+              "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+              "size": 4151,
+              "mtime_ns": 1790904639932388525,
+              "inode": 153520213,
+              "device": 66311
+            },
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "sha256": "6b89cfa0c5bdde2437c74f6dc28ebaee835537f8159631028efe2abe3e2bac2a",
+              "size": 475272,
+              "mtime_ns": 1790959065086616129,
+              "inode": 153520539,
+              "device": 66311
+            }
+          ],
+          "python_runtime_inputs": {
+            "scope": "SimpleExternalForceModel.py and installed gmatpy Python initializers/wrappers and versioned shared objects; presence/hashes do not establish API compatibility",
+            "gmatpy_package_present": true,
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "sha256": "ee33bc82fd77cfa0d0954799ff20afabbac8f8bcd1e3379f21c1e79679025ac0",
+                "size": 1822,
+                "mtime_ns": 1790904636208035214,
+                "inode": 134480879,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790904636208284147,
+                "inode": 134480880,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790920652028596474,
+                "inode": 153512578,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "sha256": "b3cd48cbcccd863a33a829f2cc51322b623c7ef106f04d536f3fd30125dfd8e8",
+                "size": 12648072,
+                "mtime_ns": 1790920269368210436,
+                "inode": 153512489,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "sha256": "84158cc9568f837c574e357a034d17a4396026f8572a03958af40c36e00462e6",
+                "size": 1765120,
+                "mtime_ns": 1790920729251472937,
+                "inode": 153512604,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "sha256": "56ed21e6e024ec6696f23d480bf0bea8288a8342bfc507a9e234cfb0dd385986",
+                "size": 264480,
+                "mtime_ns": 1790920706341806532,
+                "inode": 153512600,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "sha256": "64b0e311224de41ee71390cf00baad19f4a057dafc27d53a9577059147b60470",
+                "size": 811867,
+                "mtime_ns": 1790920269391210094,
+                "inode": 153512516,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "sha256": "86f7a27d517c3304087281f74761295cb4c89c3ef2584c16067ddc0944b4bf82",
+                "size": 101531,
+                "mtime_ns": 1790920729265472733,
+                "inode": 153512607,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "sha256": "bd3f38b9f35a807abe5ba7cbba28a794eb0b9266c1a3ce22c5b6f4827f0dc0e6",
+                "size": 6680,
+                "mtime_ns": 1790920706366806168,
+                "inode": 153512603,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "sha256": "d8a032163edbc2df087abb34e6a0cf6c92b6a04c5130850d59b30cc396551154",
+                "size": 2614,
+                "mtime_ns": 1790919882149703626,
+                "inode": 134498767,
+                "device": 66311
+              }
+            ]
+          },
+          "configured_plugin_files": {
+            "scope": "Linux plugin files explicitly named by selected startup; named snapshots do not prove successful loading or ABI compatibility",
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libDataInterface.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libDataInterface.so.R2026a",
+                "sha256": "ff8ed5f9d39c504d109855c7b97e75934ef766bd4432fa6950bf0fa11959e4d6",
+                "size": 479176,
+                "mtime_ns": 1790959937784233559,
+                "inode": 134517348,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEphemPropagator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEphemPropagator.so.R2026a",
+                "sha256": "1da68b1b480b6b5075782c3d7f6d8c1c84fbfcfc44edb7006e1d129f2f69c5c2",
+                "size": 456800,
+                "mtime_ns": 1790959964490536660,
+                "inode": 134517356,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEKF.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEKF.so.R2026a",
+                "sha256": "7f04d3b87c215dcde3fab923bf60e79b95d731f805caed2df9159c41863cfb0c",
+                "size": 1218408,
+                "mtime_ns": 1790959964600629390,
+                "inode": 134517358,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libGmatEstimation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libGmatEstimation.so.R2026a",
+                "sha256": "ce09722f3726a64065bf1b10c89b1cd2de1b4b2820b21e851b4e6adeb1c4ae35",
+                "size": 5516472,
+                "mtime_ns": 1790959937948989505,
+                "inode": 134517350,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libEventLocator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libEventLocator.so.R2026a",
+                "sha256": "dc925c73e27d2513bbe3ccdf18c09008a397dca2caa6be2f65028969b38a690a",
+                "size": 630448,
+                "mtime_ns": 1790959964697604676,
+                "inode": 134517360,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libExternalForceModel_py314.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libExternalForceModel_py314.so.R2026a",
+                "sha256": "d8a9b4d788dee458e000f27c33a0fb12c4bc7bbb01bae2a3726f54d4cca9b650",
+                "size": 202344,
+                "mtime_ns": 1790959964796455595,
+                "inode": 134517362,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libExtraPropagators.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libExtraPropagators.so.R2026a",
+                "sha256": "072fdade3722479e6e3e4ae8c68679cf64035971b74915b15024e5c018ae7f61",
+                "size": 148480,
+                "mtime_ns": 1790959964880442120,
+                "inode": 134517364,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libFormation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libFormation.so.R2026a",
+                "sha256": "05d288872c594639a991874bddbde6b925b6ae25e66694d8a7dd97ecf1583c33",
+                "size": 155096,
+                "mtime_ns": 1790959964965903900,
+                "inode": 134517366,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libGmatFunction.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libGmatFunction.so.R2026a",
+                "sha256": "d6ed5495d57733f049b05ba9dd539979d2d0e171e792c685712d82e6be5f834f",
+                "size": 319808,
+                "mtime_ns": 1790959965048164756,
+                "inode": 134517368,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libMsise00.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libMsise00.so.R2026a",
+                "sha256": "07af877e4b1a88e7c7d0bdcd8b20fb02dc3c371cf792fddbd4290ad3475e9d4c",
+                "size": 177056,
+                "mtime_ns": 1790959965139114121,
+                "inode": 134517370,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libNewParameters.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libNewParameters.so.R2026a",
+                "sha256": "3733e8c76e8782fac68788e3318cffb8f4ce665d08eeea913b47e0d02a24229e",
+                "size": 585504,
+                "mtime_ns": 1790959965225388798,
+                "inode": 134517372,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libPolyhedronGravity.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libPolyhedronGravity.so.R2026a",
+                "sha256": "1e548b3f38329219aa9a9b85f30cd67561aaf110f0356196f952d108a34e0d59",
+                "size": 395944,
+                "mtime_ns": 1790959965320371174,
+                "inode": 134517373,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libProductionPropagators.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libProductionPropagators.so.R2026a",
+                "sha256": "cc569275b76dcedbd079249bb81491036354c99dc0907022f6a6f63829acfdf7",
+                "size": 132688,
+                "mtime_ns": 1790959965401517180,
+                "inode": 134517374,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libPythonInterface_py314.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libPythonInterface_py314.so.R2026a",
+                "sha256": "e545c081338e5205db83256905519d82abb88c0f087c497bb55017c0b778e380",
+                "size": 263136,
+                "mtime_ns": 1790959938031811065,
+                "inode": 134517352,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libSaveCommand.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libSaveCommand.so.R2026a",
+                "sha256": "2a7b8e269e00e68777729fc9d5c56219b1bb894f95e59ea7d1a8fa54600ac7b1",
+                "size": 177704,
+                "mtime_ns": 1790959965479674487,
+                "inode": 134517376,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libScriptTools.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libScriptTools.so.R2026a",
+                "sha256": "b205610739069c630e0c17daa6df6e93efe45079b43820240b5c77ba626d0ea2",
+                "size": 144832,
+                "mtime_ns": 1790959965563407308,
+                "inode": 134517378,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libStation.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libStation.so.R2026a",
+                "sha256": "e43c9b40d8b977321b30e57491a8864d34a640aa4debc59152606e66ce5d4581",
+                "size": 252976,
+                "mtime_ns": 1790959965667104077,
+                "inode": 134517380,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libThrustFile.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libThrustFile.so.R2026a",
+                "sha256": "e97880025502b09d2330daa9d3beed980b59f7bfbf323423e2e80a2fe44322f0",
+                "size": 980216,
+                "mtime_ns": 1790959965775580457,
+                "inode": 134517444,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/thinksys/libTLEPropagator.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/thinksys/libTLEPropagator.so.R2026a",
+                "sha256": "765564ed765e4162aae780c618932b2183482cd88de386844df2757963a5031a",
+                "size": 267048,
+                "mtime_ns": 1790959965858939124,
+                "inode": 147353337,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/libYukonOptimizer.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/libYukonOptimizer.so.R2026a",
+                "sha256": "6d455d1957174c0c9db3dc7d7c612555cca4ec6b20c23bbfb14ad61008cd93b2",
+                "size": 480712,
+                "mtime_ns": 1790959965941836808,
+                "inode": 134517445,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/../plugins/thinksys/vf13ad/libVF13adOptimizer.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/plugins/thinksys/vf13ad/libVF13adOptimizer.so.R2026a",
+                "sha256": "27ecf054f2ded98a5ed97cd344f203f214cfcab9e8f148298a08bbccb7d1106d",
+                "size": 256136,
+                "mtime_ns": 1777074579000000000,
+                "inode": 153517704,
+                "device": 66311
+              }
+            ],
+            "missing": []
+          },
+          "linked_core_libraries": {
+            "scope": "Installed bin-directory files named by GmatQt ELF DT_NEEDED; named inode snapshots, not a claim about loader overrides or the build source state",
+            "elf_needed_names": [
+              "libGmatBase.so.R2026a",
+              "libGmatUtil.so.R2026a"
+            ],
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatBase.so.R2026a",
+                "sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+                "size": 25036288,
+                "mtime_ns": 1790959937689993230,
+                "inode": 134517343,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/libGmatUtil.so.R2026a",
+                "sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+                "size": 2929664,
+                "mtime_ns": 1790915817496393632,
+                "inode": 134517344,
+                "device": 66311
+              }
+            ]
+          },
+          "setup": {
+            "scope": "Literal Filename assignments for declared ReportFile/EphemerisFile resources, including recursively read explicit includes; original filenames and sources unchanged",
+            "output_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output",
+            "prepared_directories": [],
+            "declared_outputs": [
+              {
+                "source": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+                "line": 79,
+                "resource": "SpringsReport",
+                "resource_type": "ReportFile",
+                "assignment": "'ColoradoSpringsVisible.txt'",
+                "literal_filename": "ColoradoSpringsVisible.txt",
+                "directory": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output"
+              },
+              {
+                "source": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+                "line": 83,
+                "resource": "SandsReport",
+                "resource_type": "ReportFile",
+                "assignment": "'WhiteSandsVisible.txt'",
+                "literal_filename": "WhiteSandsVisible.txt",
+                "directory": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output"
+              }
+            ],
+            "skipped": [],
+            "sources": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+                "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+                "size": 4151,
+                "mtime_ns": 1790904639932388525,
+                "inode": 153520213,
+                "device": 66311
+              }
+            ],
+            "limits": "No input/asset directories, expression evaluation, parent/absolute/drive paths or EventLocator nested paths are prepared. GMAT may prefer an already existing source-relative directory before its OUTPUT_PATH fallback."
+          },
           "running_process_binary": {
-            "path": "/proc/4057475/exe",
+            "path": "/proc/3086283/exe",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
-            "size": 5426560,
-            "mtime_ns": 1790920880913259468,
-            "inode": 134480178,
+            "sha256": "7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3",
+            "size": 5806616,
+            "mtime_ns": 1790959969505535474,
+            "inode": 134517456,
             "device": 66311
           }
         },
-        "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
+        "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established; Execution qualification at unchanged fixed 23 June 2020 epoch; not independent scientific accuracy validation.",
+        "targeted_input_qualification": {
+          "original_source": {
+            "path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+            "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+            "size": 4151,
+            "mtime_ns": 1790904639932388525,
+            "inode": 134517316,
+            "device": 66311
+          },
+          "staged_source": {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/samples/NeedTlePropagator/Falconsat7Jupe.script",
+            "sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+            "size": 4151,
+            "mtime_ns": 1790904639932388525,
+            "inode": 153520213,
+            "device": 66311
+          },
+          "original_corpus_key": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script",
+          "source_sha256_matches_corpus": true,
+          "preserved_tle_inputs": [
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/TLE/Active-2020-06-23.txt",
+              "sha256": "6b89cfa0c5bdde2437c74f6dc28ebaee835537f8159631028efe2abe3e2bac2a",
+              "size": 475272,
+              "mtime_ns": 1790959065086616129,
+              "inode": 153520539,
+              "device": 66311
+            }
+          ],
+          "distribution_provenance_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/provenance.json",
+          "distribution_provenance_sha256": "5ac1a9a82f445e37bc266a88d3be37217b9eb59167b99c4c779a75de9df57310",
+          "availability_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/availability.json",
+          "interpretation_limit": "Execution qualification at unchanged fixed 23 June 2020 epoch; not independent scientific accuracy validation.",
+          "numerical_script_changed": false,
+          "only_runtime_retry": true,
+          "original_and_staged_sources_unchanged_after_both_runs": true,
+          "historic_inputs_unchanged_after_both_runs": true
+        },
+        "generated_output_files": [
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/ColoradoSpringsVisible.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/ColoradoSpringsVisible.txt",
+            "sha256": "50b3e6cda3ad2a372a4307003bfc8964552c93411f3c22eff3e668d0e501ccc8",
+            "size": 2376,
+            "mtime_ns": 1790960305838676144,
+            "inode": 153520561,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/GmatLog.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/GmatLog.txt",
+            "sha256": "96c825ee5e02964bca5ae756c5347708bd4528af9719a608937a3f4d23fc5bfd",
+            "size": 2453,
+            "mtime_ns": 1790960306180671188,
+            "inode": 153520557,
+            "device": 66311
+          },
+          {
+            "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/WhiteSandsVisible.txt",
+            "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/output/WhiteSandsVisible.txt",
+            "sha256": "6eaebf2072c6c16398c33c61d514a61d001b25dc86ebedec2f7b979eed7c6034",
+            "size": 4048,
+            "mtime_ns": 1790960305879675550,
+            "inode": 153520559,
+            "device": 66311
+          }
+        ],
+        "screenshot_file": {
+          "path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/result.png",
+          "resolved_path": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/runtime-retries/scripts/build__example-qualification__20261002__dependency-availability__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-01/result.png",
+          "sha256": "2186c3152c7fdb1a770d709c4df3fd3da3b89e5f443f20580cf4873cd9d74510",
+          "size": 224466,
+          "mtime_ns": 1790960306160671478,
+          "inode": 153520562,
+          "device": 66311
+        }
       },
       "coverage_mission_parents": [],
       "input_paths": [
@@ -35619,8 +36759,91 @@
             }
           },
           "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
+        },
+        {
+          "status": "failed",
+          "phase": "run",
+          "exit_code": 1,
+          "timed_out": false,
+          "duration_seconds": 0.518,
+          "timeout_seconds": 180,
+          "command": [
+            "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+            "--startup",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/startup.txt",
+            "--settings-dir",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/settings",
+            "--convert-views",
+            "--screenshot",
+            "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02/result.png",
+            "--run",
+            "/home/dan/GIT/GMAT-Qt/plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/Falconsat7Jupe.script"
+          ],
+          "evidence": "/tmp/gmat-shipped-examples/scripts/plugins__TLEPropagatorPlugin__samples__NeedTlePropagator__Falconsat7Jupe.script/run/attempt-02",
+          "source_sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+          "source_unchanged": true,
+          "confirmed_dependency_diagnostics": [],
+          "diagnostics": [
+            "Mission failed — see Message Window",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.",
+            "Propagator Exception: The 2-line element file \"../../TLE/Active-2020-06-23.txt\" could not be found.",
+            "**** ERROR **** Sandbox Exception: Errors were found in the mission control sequence; please correct the errors listed in the message window",
+            " *** Mission run failed."
+          ],
+          "provenance": {
+            "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
+            "git_diff_sha256": "fdba72ba2374b179f6813d051f0dd083f1279bbe5fc7eb2b2e56b71719888358",
+            "git_diff_byte_count": 65558,
+            "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
+            "launcher": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "actual_qt_binary": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
+            "utc": "2026-10-02T06:02:49.949041+00:00",
+            "platform": "offscreen",
+            "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+            "running_process_binary": {
+              "path": "/proc/4057475/exe",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "e3e3f8d7b9dc686715c6e7d080dc21d9add1ecaa655a2ba5fec0e5b3112f6922",
+              "size": 5426560,
+              "mtime_ns": 1790920880913259468,
+              "inode": 134480178,
+              "device": 66311
+            }
+          },
+          "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
         }
-      ]
+      ],
+      "qualification_assessment": {
+        "disposition": "historic_public_input_execution_completed",
+        "raw_status_preserved": "passed",
+        "reason": "Exact original June 2020 catalog recovered; unchanged fixed-2020 mission completed offscreen. Execution only, not independent scientific or native viewer validation.",
+        "source_sha256": "c375097106c87aaeaf095edfbcc00a031545b092469c38594f355c5f7784ee1c",
+        "evidence_note": "doc/DevelopersDocs/Qt6ParityValidation/tle-dependency-inputs-20261002.md",
+        "input_provenance": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/dependency-availability/provenance.json",
+        "interpretation_limit": "Execution qualification at unchanged fixed 23 June 2020 epoch; not independent scientific accuracy validation."
+      }
     },
     {
       "path": "plugins/TLEPropagatorPlugin/samples/NeedTlePropagator/GSFCSats.script",
