@@ -448,3 +448,22 @@ This is implementation preparation, not native Wayland acceptance or a proved
 fix for the user's earlier crash. Segment-arc identity and mixed solver cleanup
 remain substantive active gaps after the current checkpoint. Tutorial construction
 must still follow the Help and reserve shipped references for later comparison.
+
+
+### Mixed hierarchy follow-up
+
+The new mixed Yukon/DC check found a real outer-state leak; the five existing
+Optimize publisher transitions now synchronize its member display state. Both
+Yukon and installed VF13ad pass the new analytic/report/accepted-history/inner
+Stop/recovery checks (0.99/1.03 s). Numerical Yukon report bytes match the original
+failed run. See mixed-solver-scopes-20261002.md; all original failures are retained.
+App remains c15cb5c...; rebuilt dynamically linked core is now 68a79c56... .
+Private Wayland preparation has progressed to a mapped software-rendered mission,
+but accurate actual pointer input and window lifecycle are still being verified.
+Do not claim full Wayland or tutorial acceptance. Named regular-arc identity and
+trim-independent camera endpoints are being implemented next.
+
+VF13ad is an optional binary plugin but derives InternalOptimizer. The final
+new checks assert that path and the actual inner index9/command text;0.99/1.03 s
+passes supersede the weaker0.99/0.97 s Stop proof. ExternalOptimizer execution is
+still unqualified. See boundary-verified artifacts and the revised mixed record.

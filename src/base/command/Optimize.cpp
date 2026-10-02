@@ -994,6 +994,9 @@ bool Optimize::RunInternalSolver(Solver::SolverState state)
       
       GmatCommand *currentCmd = NULL;
       // Set GMAT run state to SOLVING (LOJ: 2010.01.12)
+      // Keep this optimizer's display scope in sync without propagating a
+      // different run state into its child commands or numerical execution.
+      currentRunState = Gmat::SOLVING;
       publisher->SetRunState(Gmat::SOLVING);
       
       switch (startMode)
@@ -1231,6 +1234,7 @@ bool Optimize::RunInternalSolver(Solver::SolverState state)
 //                  PenDownSubscribers();
 //               #endif
                LightenSubscribers(1);
+               currentRunState = Gmat::SOLVEDPASS;
                publisher->SetRunState(Gmat::SOLVEDPASS);
             }
             break;
@@ -1284,6 +1288,7 @@ bool Optimize::RunExternalSolver(Solver::SolverState state)
       #endif
       
       GmatCommand *currentCmd = NULL;
+      currentRunState = Gmat::SOLVING;
       publisher->SetRunState(Gmat::SOLVING);
 
       switch (startMode)
@@ -1339,6 +1344,7 @@ bool Optimize::RunExternalSolver(Solver::SolverState state)
                #endif
                ResetLoopData();
                branchExecuting = true;
+               currentRunState = Gmat::SOLVEDPASS;
                publisher->SetRunState(Gmat::SOLVEDPASS);
             }
             break;
@@ -1420,6 +1426,7 @@ bool Optimize::RunExternalSolver(Solver::SolverState state)
                ResetLoopData();
                ApplySubscriberBreakpoint();
                branchExecuting = true;
+               currentRunState = Gmat::SOLVEDPASS;
                publisher->SetRunState(Gmat::SOLVEDPASS);
             }
             break;

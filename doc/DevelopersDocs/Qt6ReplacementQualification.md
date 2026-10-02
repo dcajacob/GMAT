@@ -7949,3 +7949,26 @@ Host GNOME Shell's PID/start remains unchanged. This closes the named private
 X11 window/replay cases; host GNOME/Wayland, portal/hardware, wider solver/segment
 camera regimes, outstanding example failures and full replacement remain open.
 All independent Help tutorial walkthroughs are still Pending.
+
+
+## Mixed optimizer/targeter scope correction — 2026-10-02
+
+A new Yukon→DifferentialCorrector hierarchy exposed accepted inner samples leaking
+unaccepted outer trials into None displays. Optimize now keeps its currentRunState
+in sync with the five existing direct publisher transitions, without changing
+child command states or numerical execution. MixedSolverScopes passes 0.99 s; the
+same new check with installed VF13ad passes 1.03 s, including analytic goals, full
+Reports, accepted paths/endpoints/camera, Unicode source reopening, inner
+breakpoint Stop and exact complete recovery. The full 35-row Yukon report is
+byte-identical before/after the correction. Original failure and the subsequent
+Stop-file fixture failure are preserved. See
+[bounded mixed solver evidence](Qt6ParityValidation/mixed-solver-scopes-20261002.md).
+No old solver matrices or shipped corpus repeated. Actual GmatQt/core rebuilt;
+app hash c15cb5c... is unchanged but linked core is now 68a79c56... . Named-arc and
+full desktop gates remain open, as do all independent Help tutorials.
+
+Final read-only review strengthens the new Stop proof: both tests observe the
+intended index9/inner propagation text. VF13ad derives InternalOptimizer; these
+two runs qualify two internal optimizers. The three RunExternalSolver assignments
+are source-reviewed only. Boundary-verified preserves the final0.99/1.03 s checks;
+the prior0.99/0.97 s pass remains an intermediate with weaker boundary proof.
