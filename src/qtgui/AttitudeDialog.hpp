@@ -13,6 +13,7 @@ public:
    AttitudeDialog(GmatBase &spacecraft, const QMap<QString,QString> &pending, QWidget *parent=nullptr);
    ~AttitudeDialog() override;
    QMap<QString,QString> values() const { return acceptedValues; }
+   QMap<QString,QString> settings();
 private:
    void rebuild();
    bool submit(const QString &selector={}, const QString &selected={});

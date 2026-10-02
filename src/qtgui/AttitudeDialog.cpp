@@ -147,6 +147,13 @@ void AttitudeDialog::rebuild()
    groups->addStretch(); layout->insertWidget(2,fields,1);
 }
 
+QMap<QString,QString> AttitudeDialog::settings()
+{
+   if (!submit()) throw std::runtime_error(error->text().toStdString());
+   QMap<QString,QString> result{{"Attitude",QString::fromStdString(candidate->GetStringParameter("Attitude"))}};
+   for (const auto &field:attitudeFields(*candidate)) result[field.name]=field.value;
+   return result;
+}
 bool AttitudeDialog::submit(const QString &selector,const QString &selected)
 {
    try {

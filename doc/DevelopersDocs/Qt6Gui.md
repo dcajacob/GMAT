@@ -241,7 +241,13 @@ not invalidate engine listener pointers; subsequent runs recreate them.
 Mission stop/failure ends an otherwise unfinished progress indication.
 This is current-value feedback, not yet iteration-history plotting.
 
-Double-clicking a resource opens an editable property panel. Scalar numbers,
+Double-clicking a resource opens its main form, with extra supported properties
+under **Advanced**. Ephemeris output, burns, thrusters, ground stations, plot
+settings, event locators, dynamic data and tracking configuration use their
+specialized forms directly in the panel. Spacecraft provide orbit/hardware,
+ballistics/mass, attitude and visual-model pages. Other types use typed form
+fields. Common fields appear once; the Advanced table holds remaining settings.
+Scalar numbers,
 booleans, strings, enumerations and references are supported. Applying edits
 changes a clone, validates it, compares its serialized settings with the original
 resource, and patches changed configuration assignments into the current script
@@ -276,15 +282,11 @@ Row/Column selectors jump directly to a cell; enter a finite number and click
 it to the resource panel for **Apply**. Use **Expressions…** for formulas evaluated at mission start; see the expression
 workflow below.
 
-Spacecraft panels open on Orbit and group the existing editable fields under
-the familiar Attitude, Ballistic/Mass, Hardware, Power System, SPICE and Visualization
-tabs when those fields are available. All Properties retains access to every
-supported field. Orbit uses the engine's current state-element labels. The
-filter applies within the selected section; switching sections preserves
-pending values and Apply validates changes across all sections together.
-Thrusters, tanks, solvers and force models also group their available fields
-into sections (for example Fuel, Direction, Convergence and Bodies).
-These are grouped property controls, not yet the full specialized wx forms.
+Spacecraft panels open on **Orbit and hardware** and use the engine's current
+state-element labels. **Setup** contains the ballistics/mass, attitude and visual
+model forms. **Advanced** provides the remaining fields, grouped by section and
+searchable. Pending values survive page changes; one Apply validates all changes.
+Cell matrices, file choosers and compound selectors may still open focused dialogs.
 
 Variable and String panels provide a focused **Initial value** field. Use a
 finite number for a Variable and literal text without enclosing quotes for a
@@ -322,16 +324,22 @@ Arrays, Strings. Each action opens the creator for that type. Resource children
 inherit their category's creation options. Right-clicking the Resources root or
 empty space retains the general creator; **Edit > New resource** also lists all
 types. The popup closes before opening a creation dialog.
+The larger creator contains the name and configuration together; there is no
+separate name-only step. Leave **Name** blank to use the displayed type-based
+suggestion, such as `GroundStation1`; the engine chooses an unused suffix.
+Explicit names remain unchanged when switching types.
 The dialog lists the engine's viewable resource types, including plugin formations,
 ground stations, functions, estimators, smoothers, process-noise models and
 estimated parameters, plus Variable, String and Array. Variable and String creation includes an initial-value field;
-values remain pending when switching between these types. Arrays have row/column
-controls (1–1000 each). Creation validates a complete candidate mission and is one undoable
+values remain pending when switching between types. Arrays have row/column
+controls (1–1000 each) synchronized with pending cell values. Unregistered drafts
+use the same forms as existing resources; Cancel discards them without changing
+the mission. Creation validates a complete candidate mission and is one undoable
 script edit. Duplicate names, invalid identifiers, stale script snapshots and
 pending panel changes are rejected. The resource appears in the tree and its
-property panel opens after successful creation. Some resource types require
-further configuration before they can execute; specialized force-model and
-attitude forms remain future work. Force models have their own Resources category.
+main form opens after successful creation. Some resource types require
+further configuration before they can execute. Force models have their own
+Resources category.
 
 EphemerisFile creation includes a Spacecraft selector and writes that required
 reference together with its declaration before validating the candidate mission.

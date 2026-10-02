@@ -12,13 +12,23 @@ class ResourceEditor final : public EditablePanel
 {
 public:
    using Apply = std::function<QString(const QMap<QString, QString> &)>;
-   ResourceEditor(GmatBase &object, Apply apply, QWidget *parent = nullptr, const QString &script = {}, bool applyUnchanged = false);
+   ResourceEditor(GmatBase &object, Apply apply, QWidget *parent = nullptr, const QString &script = {}, bool applyUnchanged = false, bool creation = false);
+   void requestApply();
+   void resizeArray(int rows,int columns);
+   std::function<void(int,int)> onArrayDimensions;
+   std::function<void(const QString &)> onStatus;
    bool hasChanges() const override;
    void discardChanges() override { applied = true; }
 private:
+   void reportStatus(const QString &message);
    std::function<QString()> scalarValue;
    QString originalScalarValue;
-   QTableWidget *table;
+   QTableWidget *table=nullptr;
+   std::function<QMap<QString,QString>()> formValues;
+   std::function<QMap<QString,QString>()> formEdits;
+   QMap<QString,QString> formOriginal;
+   QSet<QString> formFields;
+   class QPushButton *applyButton=nullptr;
    QLabel *status;
    QMap<QString, QString> original;
    QMap<QString, QString> attitudeEdits;

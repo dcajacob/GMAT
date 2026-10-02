@@ -1,4 +1,7 @@
 #include "ResourceEditor.hpp"
+#include "ResourceForm.hpp"
+#include <QScrollArea>
+#include <QHBoxLayout>
 #include "InspectionDialog.hpp"
 #include "TrackingConfigDialog.hpp"
 #include "EpochIntervalDialog.hpp"
@@ -90,10 +93,10 @@ QString comboValue(const QComboBox *combo)
 }
 }
 
-ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script,bool applyUnchanged) : EditablePanel(parent)
+ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,const QString &script,bool applyUnchanged,bool creation) : EditablePanel(parent)
 {
    auto *layout = new QVBoxLayout(this);
-   layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
+   if (!creation) layout->addWidget(new QLabel(QString::fromStdString(object.GetName() + " — " + object.GetTypeName()), this));
    if (object.GetTypeName()=="Variable" || object.GetTypeName()=="String") {
       const bool numeric=object.GetTypeName()=="Variable";
       originalScalarValue=numeric ? QString::number(object.GetRealParameter("Value"),'g',17) : QString::fromStdString(object.GetStringParameter("Expression"));
@@ -104,15 +107,17 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       status=new QLabel(numeric ? "Mission assignments can change this value during execution. Edit expressions in the mission sequence." : "Enter literal text without enclosing quotes. Mission assignments stay unchanged.",this);
       status->setWordWrap(true); layout->addWidget(status); layout->addStretch();
       auto *buttons=new QDialogButtonBox(QDialogButtonBox::Apply|QDialogButtonBox::Close,this); layout->addWidget(buttons);
+      buttons->setObjectName("resourceButtons"); applyButton=buttons->button(QDialogButtonBox::Apply);
       const auto scriptPreview=QString::fromStdString(object.GetGeneratingString(Gmat::SHOW_SCRIPT));
       auto *preview=new QPushButton("Show script…",this); preview->setObjectName("showScript"); buttons->addButton(preview,QDialogButtonBox::ActionRole);
       connect(preview,&QPushButton::clicked,this,[this,scriptPreview] { InspectionDialog dialog("Parameter script",scriptPreview,"Applied initializer. Pending edits are not included.",this); dialog.exec(); });
       connect(buttons->button(QDialogButtonBox::Apply),&QPushButton::clicked,this,[this,apply] {
-         if (!hasChanges()) { status->setText("No changes to apply."); return; }
+         if (!hasChanges() && !applyButton->property("createResource").toBool()) { reportStatus("No changes to apply."); return; }
          const auto error=apply({{"Value",scalarValue()}});
-         if (error.isEmpty()) { applied=true; appliedSuccessfully(); } else status->setText(error);
+         if (error.isEmpty()) { applied=true; appliedSuccessfully(); } else reportStatus(error);
       });
       connect(buttons,&QDialogButtonBox::rejected,this,[this] { parentWidget()->close(); });
+      applyButton->setProperty("createResource",creation);
       return;
    }
    if (object.IsOfType("CoordinateSystem") && object.GetOwnedObject(0)) {
@@ -121,7 +126,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *axesButton=new QPushButton("Axes…",this); axesButton->setObjectName("editCoordinateAxes");
       layout->addWidget(axesButton);
       connect(axesButton,&QPushButton::clicked,this,[this,initial,apply] {
-         if (hasChanges()) { status->setText("Apply or discard pending property changes before opening Axes."); return; }
+         if (hasChanges()) { reportStatus("Apply or discard pending property changes before opening Axes."); return; }
          QDialog dialog(this); dialog.setObjectName("coordinateAxesDialog"); dialog.setWindowTitle("Coordinate system axes");
          auto *layout=new QVBoxLayout(&dialog);
          auto *type=new QComboBox(&dialog); type->setObjectName("coordinateAxisType");
@@ -206,8 +211,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       auto *setup=new QPushButton("Tracking configurations…",this); setup->setObjectName("editTrackingConfigs"); layout->addWidget(setup);
       connect(setup,&QPushButton::clicked,this,[this,initial] {
          try { TrackingConfigDialog dialog(*initial,pendingTrackingConfigs,this); if (dialog.exec()==QDialog::Accepted) pendingTrackingConfigs=dialog.settings(); }
-         catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
-         catch (const std::exception &failure) { status->setText(QString::fromUtf8(failure.what())); }
+         catch (BaseException &failure) { reportStatus(QString::fromStdString(failure.GetFullMessage())); }
+         catch (const std::exception &failure) { reportStatus(QString::fromUtf8(failure.what())); }
       });
    }
    if (object.IsOfType("ChemicalThruster") || object.IsOfType("ElectricThruster")) {
@@ -338,22 +343,22 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          chooser.setObjectName("newFunctionFileDialog"); chooser.setAcceptMode(QFileDialog::AcceptSave); chooser.setDefaultSuffix("gmf");
          if (chooser.exec()!=QDialog::Accepted || chooser.selectedFiles().isEmpty()) return;
          const auto path=chooser.selectedFiles().first();
-         if (QFileInfo::exists(path)) { status->setText("That file already exists. Use Edit function file or choose a new name."); return; }
+         if (QFileInfo::exists(path)) { reportStatus("That file already exists. Use Edit function file or choose a new name."); return; }
          QString source;
-         try { source=functionFileTemplate(path); } catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
+         try { source=functionFileTemplate(path); } catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); return; }
          FunctionFileDialog dialog(path,this,source);
          if (dialog.exec()!=QDialog::Accepted) return;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") table->item(row,1)->setText(dialog.savedPath());
-         status->setText("Function file created. Apply to use its path in the mission.");
+         reportStatus("Function file created. Apply to use its path in the mission.");
       });
       connect(edit,&QPushButton::clicked,this,[this] {
          QString path;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") path=table->item(row,1)->text();
-         if (path.trimmed().isEmpty()) { status->setText("Choose a function file first."); return; }
+         if (path.trimmed().isEmpty()) { reportStatus("Choose a function file first."); return; }
          FunctionFileDialog dialog(path,this);
          if (dialog.exec()==QDialog::Accepted && dialog.savedPath()!=QFileInfo(path).absoluteFilePath()) {
             for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="FunctionPath") table->item(row,1)->setText(dialog.savedPath());
-            status->setText("Function saved to a new file. Apply to use its new path in the mission.");
+            reportStatus("Function saved to a new file. Apply to use its new path in the mission.");
          }
       });
    }
@@ -426,6 +431,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Add") {
                   const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1)); names=splitResourceReferences(choice ? comboValue(choice) : table->item(row,1)->text());
                }
+               if (formValues) names=splitResourceReferences(formValues().value("Add"));
                QSet<QString> unique;
                for (const auto &name:names) {
                   auto *object=Moderator::Instance()->GetConfiguredObject(name.toStdString());
@@ -444,9 +450,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                const auto values=dialog.settings();
                for (auto it=values.cbegin();it!=values.cend();++it) { if (it.value()==originalDrawing.value(it.key())) objectDrawingEdits.remove(it.key()); else objectDrawingEdits.insert(it.key(),it.value()); }
                drawing->setText(objectDrawingEdits.isEmpty() ? "Object drawing…" : "Object drawing… (pending)");
-               status->setText(objectDrawingEdits.isEmpty() ? "Object drawing is unchanged." : "Object drawing is pending. Apply keeps the drawing choices.");
-            } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
-            catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+               reportStatus(objectDrawingEdits.isEmpty() ? "Object drawing is unchanged." : "Object drawing is pending. Apply keeps the drawing choices.");
+            } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); }
+            catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); }
          });
       }
       auto *button=new QPushButton(orbit ? "Orbit-view setup…" : ground ? "Ground-track setup…" : "XY plot setup…",this); button->setObjectName(orbit ? "editOrbitView" : ground ? "editGroundTrack" : "editXYPlot"); layout->addWidget(button);
@@ -663,7 +669,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          try {
             std::unique_ptr<GmatBase> copy(initial->Clone()); copy->SetStringParameter("Type",selected.toStdString()); const auto unit=QString::fromStdString(copy->GetParameterUnit(copy->GetParameterID("Bias")));
             for (int row=0;row<table->rowCount();++row) if (QStringList{"NoiseSigma","Bias","BiasSigma","PassBiases"}.contains(table->item(row,0)->text())) table->item(row,2)->setText(unit);
-         } catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
+         } catch (BaseException &failure) { reportStatus(QString::fromStdString(failure.GetFullMessage())); }
       });
    }
    if (object.IsOfType("EventLocator")) {
@@ -681,9 +687,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                if (auto *combo=qobject_cast<QComboBox *>(table->cellWidget(row,1))) combo->setCurrentText(eventEdits.value(field)); else table->item(row,1)->setText(eventEdits.value(field));
                for (int column=1;column<table->columnCount();++column) { if (auto *widget=table->cellWidget(row,column)) widget->setEnabled(false); if (auto *item=table->item(row,column)) item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
             }
-            button->setText("Event locator… (pending)"); status->setText("Locator settings are pending. Review them with Event locator…, then Apply.");
-         } catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
-         catch (const std::exception &failure) { status->setText(QString::fromUtf8(failure.what())); }
+            button->setText("Event locator… (pending)"); reportStatus("Locator settings are pending. Review them with Event locator…, then Apply.");
+         } catch (BaseException &failure) { reportStatus(QString::fromStdString(failure.GetFullMessage())); }
+         catch (const std::exception &failure) { reportStatus(QString::fromUtf8(failure.what())); }
       });
    }
    if (object.IsOfType("GroundStation")) {
@@ -713,9 +719,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                   if (auto *item=table->item(row,column)) item->setFlags(item->flags() & ~Qt::ItemIsEditable);
                }
             }
-            button->setText("Ground station… (pending)"); status->setText("Station settings are pending. Use Ground station… to review them, then Apply.");
-         } catch (BaseException &failure) { status->setText(QString::fromStdString(failure.GetFullMessage())); }
-         catch (const std::exception &failure) { status->setText(QString::fromUtf8(failure.what())); }
+            button->setText("Ground station… (pending)"); reportStatus("Station settings are pending. Use Ground station… to review them, then Apply.");
+         } catch (BaseException &failure) { reportStatus(QString::fromStdString(failure.GetFullMessage())); }
+         catch (const std::exception &failure) { reportStatus(QString::fromUtf8(failure.what())); }
       });
    }
    if (forces) {
@@ -748,9 +754,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                }
             }
             if (!changed) externalEdits.clear();
-            external->setText(changed ? "Python external force… (pending)" : "Python external force…"); status->setText(changed ? "External force settings are pending. Review them with Python external force…, then Apply." : "External force settings are unchanged.");
-         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
-         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+            external->setText(changed ? "Python external force… (pending)" : "Python external force…"); reportStatus(changed ? "External force settings are pending. Review them with Python external force…, then Apply." : "External force settings are unchanged.");
+         } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); }
       });
       originalPolyhedron=QString::fromUtf8(QJsonDocument(polyhedronSettings(object)).toJson(QJsonDocument::Compact));
       auto *polyhedron=new QPushButton("Polyhedron gravity…",this); polyhedron->setObjectName("forcePolyhedron"); layout->addWidget(polyhedron);
@@ -785,9 +791,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                }
             }
             if (!changed) pendingPolyhedron.clear();
-            polyhedron->setText(changed ? "Polyhedron gravity… (pending)" : "Polyhedron gravity…"); status->setText(changed ? "Polyhedron contributors are pending. Review them with Polyhedron gravity…, then Apply." : "Polyhedron settings are unchanged.");
-         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
-         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+            polyhedron->setText(changed ? "Polyhedron gravity… (pending)" : "Polyhedron gravity…"); reportStatus(changed ? "Polyhedron contributors are pending. Review them with Polyhedron gravity…, then Apply." : "Polyhedron settings are unchanged.");
+         } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); }
       });
       auto *button=new QPushButton("Atmosphere and drag…",this); button->setObjectName("forceAtmosphere"); layout->addWidget(button);
       const auto name=object.GetName();
@@ -829,9 +835,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                }
             }
             button->setText("Atmosphere and drag… (pending)");
-            status->setText("Atmosphere settings are pending. Use Atmosphere and drag… to review them, then Apply the force model.");
-         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
-         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+            reportStatus("Atmosphere settings are pending. Use Atmosphere and drag… to review them, then Apply the force model.");
+         } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); }
       });
    }
    if (spacecraft) {
@@ -872,9 +878,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                }
             }
             attitudeButton->setText("Attitude… (pending)");
-            status->setText("Attitude settings are pending. Use Attitude… to review them, then Apply the spacecraft.");
-         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); }
-         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); }
+            reportStatus("Attitude settings are pending. Use Attitude… to review them, then Apply the spacecraft.");
+         } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); }
+         catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); }
       });
       auto *visual=new QPushButton("Visual model…",this); visual->setObjectName("spacecraftVisualModel"); layout->addWidget(visual);
       const auto spacecraftName=object.GetName();
@@ -945,10 +951,10 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                Real mjd; std::string converted;
                TimeSystemConverter::Instance()->Convert(previous.toStdString(),-999.999,text.toStdString(),next.toStdString(),mjd,converted);
                epoch->setText(QString::fromStdString(converted)); previous=next;
-               status->setText("Epoch converted. Apply keeps the date and format together.");
+               reportStatus("Epoch converted. Apply keeps the date and format together.");
             } catch (BaseException &error) {
                const QSignalBlocker blocker(format); format->setCurrentText(previous);
-               status->setText("Epoch conversion failed: "+QString::fromStdString(error.GetFullMessage()));
+               reportStatus("Epoch conversion failed: "+QString::fromStdString(error.GetFullMessage()));
             }
          });
       }
@@ -982,8 +988,9 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             static_cast<Spacecraft &>(object).GetState().GetState()});
          anomaly->setEnabled(previous->representation=="Keplerian" || previous->representation=="ModifiedKeplerian");
          const auto resourceName=object.GetName();
-         pendingOrbit=[this,representation,frame,anomaly,elementRows,resourceName,previous] {
-            auto *current=Moderator::Instance()->GetConfiguredObject(resourceName);
+         auto orbitDraft=std::shared_ptr<GmatBase>(object.Clone());
+         pendingOrbit=[this,representation,frame,anomaly,elementRows,resourceName,previous,creation,orbitDraft] {
+            auto *current=creation ? orbitDraft.get() : Moderator::Instance()->GetConfiguredObject(resourceName);
             if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
             std::unique_ptr<GmatBase> preview(current->Clone());
             auto *spacecraft=static_cast<Spacecraft *>(preview.get());
@@ -1006,7 +1013,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             source.insert("@OrbitCartesianState",state.join(','));
             return source;
          };
-         auto convert=[this,representation,frame,anomaly,elementRows,resourceName,previous] {
+         auto convert=[this,representation,frame,anomaly,elementRows,resourceName,previous,creation,orbitDraft] {
             try {
                auto nextRepresentation=representation->currentText();
                const auto nextFrame=frame->currentText(); auto nextAnomaly=anomaly->currentText();
@@ -1014,7 +1021,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                // Like wx, changing to a frame that cannot support the current
                // representation falls back to Cartesian while retaining the orbit.
                if (nextFrame!=previous->frame && !available.contains(nextRepresentation)) nextRepresentation="Cartesian";
-               auto *current=Moderator::Instance()->GetConfiguredObject(resourceName);
+               auto *current=creation ? orbitDraft.get() : Moderator::Instance()->GetConfiguredObject(resourceName);
                if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
                std::unique_ptr<GmatBase> preview(current->Clone());
                QMap<QString,QString> source={{"CoordinateSystem",previous->frame},{"DisplayStateType",previous->representation},{"AnomalyType",previous->anomaly}};
@@ -1052,15 +1059,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                { const QSignalBlocker block(anomaly); anomaly->clear(); anomaly->addItems(availableAnomalies); anomaly->setCurrentText(nextAnomaly); }
                anomaly->setEnabled(nextRepresentation=="Keplerian" || nextRepresentation=="ModifiedKeplerian");
                *previous={nextFrame,nextRepresentation,nextAnomaly,values,static_cast<Spacecraft *>(preview.get())->GetState().GetState()};
-               status->setText("Orbit values converted. Apply keeps the frame, representation and state together.");
+               reportStatus("Orbit values converted. Apply keeps the frame, representation and state together.");
             } catch (BaseException &error) {
                const QSignalBlocker blockRepresentation(representation),blockFrame(frame),blockAnomaly(anomaly);
                representation->setCurrentText(previous->representation); frame->setCurrentText(previous->frame); anomaly->setCurrentText(previous->anomaly);
-               status->setText(QString::fromStdString(error.GetFullMessage()));
+               reportStatus(QString::fromStdString(error.GetFullMessage()));
             } catch (const std::exception &error) {
                const QSignalBlocker blockRepresentation(representation),blockFrame(frame),blockAnomaly(anomaly);
                representation->setCurrentText(previous->representation); frame->setCurrentText(previous->frame); anomaly->setCurrentText(previous->anomaly);
-               status->setText(QString::fromUtf8(error.what()));
+               reportStatus(QString::fromUtf8(error.what()));
             }
          };
          connect(representation,&QComboBox::currentTextChanged,this,[convert] { convert(); });
@@ -1304,12 +1311,72 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                if (value==(endpoint==start ? "InitialSpacecraftEpoch" : "FinalSpacecraftEpoch")) { converted.append(value); continue; }
                Real mjd; std::string result; TimeSystemConverter::Instance()->Convert(previous.toStdString(),-999.999,value.toStdString(),next.toStdString(),mjd,result); converted.append(QString::fromStdString(result));
             }
-            start->setCurrentText(converted[0]); end->setCurrentText(converted[1]); previous=next; status->setText("Both epochs converted. Apply retains the format and dates together.");
-         } catch (BaseException &failure) { const QSignalBlocker blocker(epochFormat); epochFormat->setCurrentText(previous); status->setText("Epoch conversion failed: "+QString::fromStdString(failure.GetFullMessage())); }
+            start->setCurrentText(converted[0]); end->setCurrentText(converted[1]); previous=next; reportStatus("Both epochs converted. Apply retains the format and dates together.");
+         } catch (BaseException &failure) { const QSignalBlocker blocker(epochFormat); epochFormat->setCurrentText(previous); reportStatus("Epoch conversion failed: "+QString::fromStdString(failure.GetFullMessage())); }
       });
    }
-   layout->addWidget(table, 1);
-   status = new QLabel("Apply validates changes and updates the mission script.", this); status->setObjectName("resourceStatus");
+   if (object.IsOfType("Array")) connect(table,&QTableWidget::itemChanged,this,[this](QTableWidgetItem *item) {
+      if (item->column()!=1 || table->item(item->row(),0)->text()!="RmatValue" || !onArrayDimensions) return;
+      const auto rows=item->text().split(';');
+      const int columns=rows.first().trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts).size();
+      if (columns>0 && columns<=1000 && rows.size()<=1000) onArrayDimensions(rows.size(),columns);
+   });
+   // Primary forms and Advanced share one pending snapshot and one Apply.
+   // The table remains the backing store for generic controls and converters.
+   auto *pages=new QTabWidget(this); pages->setObjectName("resourceEditorTabs");
+   auto *primary=new ResourceForm(object,pages);
+   if (creation) for (auto *label:primary->findChildren<QLabel *>())
+      if (label->text()=="Edit settings here. Apply commits them; Close lets you discard pending changes.")
+         label->setText("Edit settings here. Create adds the resource; Cancel discards pending settings.");
+   if (!primary->isEmpty()) {
+      formValues=[primary] { return primary->values(); };
+      formEdits=[primary] { return primary->changes(); };
+      formOriginal=formValues(); formFields=primary->fields();
+      formFields.unite(attitudeNames);
+   }
+   auto *generic=new QScrollArea(pages); generic->setWidgetResizable(true); generic->setFrameShape(QFrame::NoFrame);
+   auto *content=new QWidget(generic); auto *fields=new QFormLayout(content); generic->setWidget(content);
+   int common=0;
+   for (int row=0;row<table->rowCount();++row) {
+      auto *key=table->item(row,0); const auto name=key->text(),section=key->data(Qt::UserRole).toString();
+      const bool advanced=name.contains('.') || name.contains("Covariance") || section=="SPICE" || name.startsWith("NAIF");
+      if (formFields.contains(name) || advanced || (!primary->isEmpty() && !spacecraft)) { if (formFields.contains(name)) key->setData(Qt::UserRole+1,true); continue; }
+      auto *line=new QWidget(content); auto *lineLayout=new QHBoxLayout(line); lineLayout->setContentsMargins(0,0,0,0);
+      if (auto *source=qobject_cast<QComboBox *>(table->cellWidget(row,1))) {
+         auto *choice=new QComboBox(line); choice->setObjectName("resource_"+name); choice->setEditable(source->isEditable());
+         for (int i=0;i<source->count();++i) choice->addItem(source->itemText(i),source->itemData(i)); choice->setCurrentText(source->currentText());
+         connect(choice,&QComboBox::currentTextChanged,this,[source](const QString &value) { source->setCurrentText(value); });
+         connect(source,&QComboBox::currentTextChanged,choice,[choice](const QString &value) { const QSignalBlocker block(choice); if (choice->findText(value)<0) choice->addItem(value); choice->setCurrentText(value); });
+         lineLayout->addWidget(choice);
+      } else {
+         auto *value=new QLineEdit(table->item(row,1)->text(),line); value->setObjectName("resource_"+name);
+         value->setReadOnly(!(table->item(row,1)->flags() & Qt::ItemIsEditable));
+         connect(value,&QLineEdit::textChanged,this,[this,row](const QString &text) { if (table->item(row,1)->text()!=text) table->item(row,1)->setText(text); });
+         connect(table,&QTableWidget::itemChanged,value,[this,row,value](QTableWidgetItem *item) { if (item==table->item(row,1)) { const QSignalBlocker block(value); value->setText(item->text()); } });
+         lineLayout->addWidget(value);
+      }
+      if (auto *source=qobject_cast<QPushButton *>(table->cellWidget(row,3))) {
+         auto *choose=new QPushButton(source->text(),line); connect(choose,&QPushButton::clicked,source,&QPushButton::click); lineLayout->addWidget(choose);
+      }
+      if (!table->item(row,2)->text().isEmpty()) lineLayout->addWidget(new QLabel(table->item(row,2)->text(),line));
+      auto *label=new QLabel(name,content); fields->addRow(label,line);
+      connect(table,&QTableWidget::itemChanged,label,[key,label](QTableWidgetItem *item) { if (item==key) label->setText(key->text()); });
+      key->setData(Qt::UserRole+1,true); ++common;
+   }
+   if (common) pages->addTab(generic,spacecraft ? "Orbit and hardware" : "Properties"); else generic->hide();
+   if (!primary->isEmpty()) pages->insertTab(0,primary,"Setup"); else primary->hide();
+   if (spacecraft && common) pages->setCurrentWidget(generic);
+   auto *advanced=new QWidget(pages); auto *advancedLayout=new QVBoxLayout(advanced);
+   const QSet<QString> replaced={"editEphemeris","editBurn","editThruster","editDynamicData","editTrackingConfigs","editEventLocator","editGroundStation","editOrbitView","editXYPlot","editGroundTrack","spacecraftAttitude","spacecraftBallisticsMass","spacecraftVisualModel"};
+   for (auto *button:findChildren<QPushButton *>(QString(),Qt::FindDirectChildrenOnly)) {
+      layout->removeWidget(button);
+      if (replaced.contains(button->objectName())) button->hide(); else advancedLayout->addWidget(button);
+   }
+   layout->removeWidget(search); advancedLayout->addWidget(search);
+   if (sections) { layout->removeWidget(sections); advancedLayout->addWidget(sections); }
+   advancedLayout->addWidget(table,1); pages->addTab(advanced,"Advanced"); layout->addWidget(pages,1);
+   if (!primary->isEmpty() && !spacecraft) pages->setCurrentWidget(primary);
+   status = new QLabel(creation ? "Create validates settings and adds the resource to the mission." : "Apply validates changes and updates the mission script.", this); status->setObjectName("resourceStatus");
    if (object.IsOfType("SeqEstimator")) {
       int formatRow=-1,epochRow=-1;
       for (int row=0;row<table->rowCount();++row) {
@@ -1323,8 +1390,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             try {
                const auto converted=convertWarmStartEpoch(table->item(epochRow,1)->text(),format->property("previousEpochFormat").toString(),next);
                table->item(epochRow,1)->setText(converted); format->setProperty("previousEpochFormat",next); status->clear();
-            } catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromStdString(failure.GetFullMessage())); }
-            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromUtf8(failure.what())); }
+            } catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); reportStatus(QString::fromStdString(failure.GetFullMessage())); }
+            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); reportStatus(QString::fromUtf8(failure.what())); }
          });
       }
    }
@@ -1339,8 +1406,8 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          format->setProperty("previousEpochFormat",format->currentText());
          connect(format,&QComboBox::currentTextChanged,this,[this,format,read,write](const QString &next) {
             try { auto values=read(); values["EpochFormat"]=format->property("previousEpochFormat").toString(); write(convertEpochInterval(values,next)); status->clear(); }
-            catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromStdString(failure.GetFullMessage())); }
-            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); status->setText(QString::fromUtf8(failure.what())); }
+            catch (BaseException &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); reportStatus(QString::fromStdString(failure.GetFullMessage())); }
+            catch (const std::exception &failure) { const QSignalBlocker block(format); format->setCurrentText(format->property("previousEpochFormat").toString()); reportStatus(QString::fromUtf8(failure.what())); }
          });
          auto *button=new QPushButton("Time interval…",this); button->setObjectName("editEpochInterval"); layout->addWidget(button);
          connect(button,&QPushButton::clicked,this,[this,initial,read,write] { EpochIntervalDialog dialog(*initial,read(),this); if (dialog.exec()==QDialog::Accepted) write(dialog.settings()); });
@@ -1348,6 +1415,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    }
    status->setWordWrap(true); layout->addWidget(status);
    auto *buttons = new QDialogButtonBox(QDialogButtonBox::Apply | QDialogButtonBox::Close, this);
+   buttons->setObjectName("resourceButtons"); applyButton=buttons->button(QDialogButtonBox::Apply);
    layout->addWidget(buttons);
    QString previewText;
    try { previewText=QString::fromStdString(object.GetGeneratingString(Gmat::SHOW_SCRIPT)); }
@@ -1362,7 +1430,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       for (int row=0;row<table->rowCount();++row) {
          const auto *name=table->item(row,0);
          const bool inSection=!sections || section=="All Properties" || name->data(Qt::UserRole).toString()==section;
-         table->setRowHidden(row,!inSection || !name->text().contains(search->text(),Qt::CaseInsensitive));
+         table->setRowHidden(row,name->data(Qt::UserRole+1).toBool() || !inSection || !name->text().contains(search->text(),Qt::CaseInsensitive));
          actions=actions || (!table->isRowHidden(row) && table->cellWidget(row,3));
       }
       table->setColumnHidden(3,!actions);
@@ -1370,13 +1438,20 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    connect(search, &QLineEdit::textChanged, this, filter);
    if (sections) connect(sections,&QTabBar::currentChanged,this,filter);
    filter();
-   connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged] {
+   connect(buttons->button(QDialogButtonBox::Apply), &QPushButton::clicked, this, [this, apply, applyUnchanged,creation] {
       QMap<QString, QString> changes=attitudeEdits;
+      if (formValues) try {
+         const auto values=formEdits();
+         for (auto it=values.cbegin();it!=values.cend();++it)
+            if (!creation || it.value()!=formOriginal.value(it.key()) || !formOriginal.contains(it.key())) changes.insert(it.key(),it.value());
+      } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); return; }
+      catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); return; }
       if (!objectDrawingEdits.isEmpty()) {
          QStringList selected;
          for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Add") {
             const auto *choice=qobject_cast<QComboBox *>(table->cellWidget(row,1)); selected=splitResourceReferences(choice ? comboValue(choice) : table->item(row,1)->text());
          }
+         if (formValues) selected=splitResourceReferences(formValues().value("Add"));
          // Drawing edits may predate a pending object removal in Orbit setup.
          for (auto it=objectDrawingEdits.cbegin();it!=objectDrawingEdits.cend();++it) {
             auto prune=[&](auto &values) { for (auto item=values.begin();item!=values.end();) { if (!selected.contains(item.key())) item=values.erase(item); else ++item; } };
@@ -1397,6 +1472,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       if (expressions!=originalExpressions) changes.insert("@ArrayExpressions",expressions);
       for (int row = 0; row < table->rowCount(); ++row) {
          const QString name = table->item(row, 0)->text();
+         if (changes.contains(name) && formFields.contains(name)) continue;
          if (!attitudeEdits.isEmpty() && attitudeNames.contains(name)) continue;
          if (!atmosphereEdits.isEmpty() && (name=="Drag" || name.startsWith("Drag."))) continue;
          if (!externalEdits.isEmpty() && name.startsWith("External.")) continue;
@@ -1413,7 +1489,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             if (name=="Tank" || name=="MixRatio") changes.insert(name,table->item(row,1)->text());
          }
       }
-      if (changes.isEmpty() && !applyUnchanged) { status->setText("No changes to apply."); return; }
+      if (changes.isEmpty() && !applyUnchanged && !creation) { reportStatus("No changes to apply."); return; }
       if (pendingOrbit) {
          bool orbitChanged=false;
          for (int row=0;row<table->rowCount();++row)
@@ -1424,15 +1500,15 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             // dependent selectors so paired edits are interpreted together.
             for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->data(Qt::UserRole).toString()=="Orbit") changes.remove(table->item(row,0)->text());
             for (auto it=orbit.cbegin();it!=orbit.cend();++it) changes.insert(it.key(),it.value());
-         } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); return; }
-         catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
+         } catch (BaseException &error) { reportStatus(QString::fromStdString(error.GetFullMessage())); return; }
+         catch (const std::exception &error) { reportStatus(QString::fromUtf8(error.what())); return; }
       }
       const QString error = apply(changes);
       if (error.isEmpty()) {
          // The workspace replaces this snapshot with the reconstructed model.
          applied = true;
          appliedSuccessfully();
-      } else status->setText(error);
+      } else reportStatus(error);
    });
    connect(buttons, &QDialogButtonBox::rejected, this, [this] { parentWidget()->close(); });
 }
@@ -1441,6 +1517,8 @@ bool ResourceEditor::hasChanges() const
 {
    if (applied) return false;
    if (scalarValue) return scalarValue()!=originalScalarValue;
+   if (formValues) try { if (formValues()!=formOriginal) return true; }
+   catch (...) { return true; }
    if (!attitudeEdits.isEmpty() || !atmosphereEdits.isEmpty() || !stationEdits.isEmpty() || !eventEdits.isEmpty() || !pendingDynamicData.isEmpty() || !pendingTrackingConfigs.isEmpty()) return true;
    if (!externalEdits.isEmpty() && externalEdits!=originalExternal) return true;
    if (!pendingPolyhedron.isEmpty()) return true;
@@ -1453,4 +1531,24 @@ bool ResourceEditor::hasChanges() const
       if (value != original.value(table->item(row, 0)->text())) return true;
    }
    return false;
+}
+void ResourceEditor::reportStatus(const QString &message)
+{
+   status->setText(message); status->setToolTip(message);
+   if (onStatus) onStatus(message);
+}
+void ResourceEditor::requestApply() { if (applyButton) applyButton->click(); }
+void ResourceEditor::resizeArray(int rows,int columns)
+{
+   if (!table) return;
+   for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="RmatValue") {
+      auto *item=table->item(row,1); const auto oldRows=item->text().split(';'); QStringList values;
+      for (int r=0;r<rows;++r) {
+         const auto oldCells=oldRows.value(r).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); QStringList cells;
+         for (int c=0;c<columns;++c) cells.append(oldCells.value(c,"0"));
+         values.append(cells.join(" "));
+      }
+      item->setData(Qt::UserRole,rows); item->setData(Qt::UserRole+1,columns); item->setText(values.join("; "));
+      return;
+   }
 }

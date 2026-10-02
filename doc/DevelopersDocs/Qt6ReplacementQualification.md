@@ -7478,3 +7478,60 @@ recreation. All live desktop testing remains stopped following the GNOME Shell
 crash. Native interaction/Wayland/portal and broader replacement gates remain
 open; full Linux qualification remains active, Windows/macOS deferred and MATLAB
 off.
+
+## Unified resource forms and optional names — 2026-10-01
+
+The user requested a primary configuration form instead of a property grid plus
+separate setup dialog, and combining naming with configuration during creation.
+They also requested automatic names when the Name field is left blank.
+
+New resource now opens one larger dialog with optional Name, Type and the same
+forms used for existing resources. The field displays an available type-based
+suggestion; blank or whitespace input uses Moderator::GetNewName at Create.
+Existing names are preserved, including when changing types. Ephemeris/report
+default filenames follow the entered name until replaced with a custom filename.
+The creator caches each type's pending form while switching types. Drafts come
+from the runtime factories without registering objects in the mission. Cancel
+leaves source and configured resources unchanged.
+
+ResourceEditor embeds existing specialized forms for ephemeris output, thrusters,
+impulsive burns, ground stations, OrbitView/GroundTrack/XYPlot, event locators,
+dynamic data and tracking configurations. Spacecraft retain orbit/hardware as
+the first page and embed mass, attitude and visual model forms under Setup.
+Other supported properties use typed form fields. Advanced holds remaining
+properties and auxiliary selectors; it hides fields already owned by the main
+form. Focused cell/file/compound-selection dialogs remain available.
+
+Create and Apply share clone validation and source-preserving transactions.
+Creation includes changed pending values and required references in one edit;
+it does not write untouched template defaults into the source. Array dimensions
+and pending cell values stay synchronized, preserving retained cells and zeroing
+new cells. Errors remain correctable in the same window. Existing primary forms
+collect changed dependency groups; unrelated groups retain implicit defaults.
+Successful Apply refreshes the snapshot, and the existing close/discard guard
+handles pending inline edits.
+
+New QtGui.UnifiedResources / UnifiedResourceTests checks fourteen unregistered
+form drafts, main-form/Advanced separation, pending type switches and Cancel,
+invalid creation and inline Apply rollback, configured ephemeris/tank/spacecraft/
+string/array/planet creation, array resizing, name suggestions/collision avoidance and
+explicit-name preservation, direct Apply/Close-discard, one-step Undo/Redo and
+Unicode Save/reopen. check-unified-resources.txt records the final offscreen pass.
+The harness refuses non-offscreen platforms. The inspected unified-resource-
+create-offscreen.png and unified-resource-editor-offscreen.png show the actual
+creator and inline panel. No numerical mission ran.
+
+check-unified-resource-references.txt records the focused required-spacecraft
+check adapted to the embedded selector: missing/wrong-type references, selection
+between two spacecraft, exact unrelated source, tree/editor activation and
+Undo/Redo/Unicode Save/reopen pass. The broad 59-type creation probe, plugin and
+numerical matrices were not repeated. Parameter/Workflow fixtures were adapted
+to the primary controls and compiled (build-unified-resource-fixtures.txt), but
+their broader suites were not rerun; this is not a claim that the full historical
+suite was executed against the changed forms.
+
+build-unified-resources.txt records the final successful frontend/harness build,
+actual application/bin/GmatQt-R2026a relink and GmatQt launcher recreation. All
+live desktop testing remains stopped following the GNOME Shell crash. Native
+interaction/Wayland/portal and broader replacement gates remain open; full Linux
+qualification remains active, Windows/macOS deferred and MATLAB off.

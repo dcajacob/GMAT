@@ -6,6 +6,7 @@
 #include "MissionNavigation.hpp"
 #include "WelcomeDialog.hpp"
 #include <QScopedValueRollback>
+#include <QSignalBlocker>
 #include "InspectionDialog.hpp"
 #include "FunctionFileDialog.hpp"
 #include "AboutDialog.hpp"
@@ -27,6 +28,7 @@
 #include "QtMessageReceiver.hpp"
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
+#include "ResourceDraft.hpp"
 #include "ResourceProperties.hpp"
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
@@ -1323,6 +1325,14 @@ QString MainWindow::applyResourceChanges(const QString &name,
    auto *moderator = Moderator::Instance();
    auto *object = moderator->GetConfiguredObject(name.toStdString());
    if (!object) return "This resource no longer exists. Reopen the panel.";
+   return applyResourceSettings(*object,changes,expectedScript);
+}
+QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,QString> &requested,const QString &expectedScript)
+{
+   auto *object=&resource;
+   const auto name=QString::fromStdString(resource.GetName());
+   QMap<QString,QString> changes=requested;
+   if (changes.isEmpty()) return applyModelScript(expectedScript);
    const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions"};
    const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
@@ -1628,7 +1638,7 @@ QString MainWindow::applyResourceChanges(const QString &name,
    return applyModelScript(candidate,gravityCheck);
 }
 
-QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue,const QString &functionPath,const QString &spacecraft)
+QString MainWindow::createResource(const QString &type,const QString &name,const QString &expectedScript,int rows,int columns,const std::optional<QString> &initialValue,const QString &functionPath,const QString &spacecraft,const QMap<QString,QString> &settings)
 {
    if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
       return "Build the current script before creating a resource.";
@@ -1646,7 +1656,7 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
    const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
    QString initializer;
    if (type=="EphemerisFile") {
-      auto selected=spacecraft;
+      auto selected=settings.value("Spacecraft",spacecraft);
       if (selected.isEmpty()) {
          const auto configured=Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT);
          if (configured.empty()) return "Create a Spacecraft before adding an EphemerisFile.";
@@ -1667,7 +1677,13 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       try { initializer="GMAT "+name+" = "+userParameterLiteral(type,*initialValue)+";\n"; }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }
-   return applyModelScript("Create "+type+" "+name+dimensions+";\n"+initializer+builtScript,initialValue ? std::function<QString()>([name,type,value=*initialValue] { return userParameterValueError(name,type,value); }) : std::function<QString()>());
+   const auto source="Create "+type+" "+name+dimensions+";\n"+initializer+builtScript;
+   if (!settings.isEmpty() && type!="Variable" && type!="String" && type!="GmatFunction") {
+      try { auto draft=resourceDraft(type,name); return applyResourceSettings(*draft,settings,source); }
+      catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
+   return applyModelScript(source,initialValue ? std::function<QString()>([name,type,value=*initialValue] { return userParameterValueError(name,type,value); }) : std::function<QString()>());
 }
 
 void MainWindow::showPathSettings()
@@ -1699,23 +1715,28 @@ void MainWindow::showCreateResource(const QString &initialType)
    }
    const QString snapshot=builtScript;
    QDialog dialog(this); dialog.setWindowTitle(initialType.isEmpty() ? "New resource" : "New "+initialType); dialog.setObjectName("newResourceDialog");
-   auto *layout=new QFormLayout(&dialog);
+   auto *outer=new QVBoxLayout(&dialog); auto *layout=new QFormLayout; outer->addLayout(layout);
    auto *type=new QComboBox(&dialog); type->setObjectName("resourceType");
    const auto available=creatableResourceTypes();
    if (!initialType.isEmpty() && !available.contains(initialType)) { statusBar()->showMessage("This resource type is no longer available"); return; }
    type->addItems(initialType.isEmpty() ? available : QStringList{initialType}); type->setCurrentText(initialType.isEmpty() ? "Spacecraft" : initialType);
    type->setEnabled(initialType.isEmpty());
    auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName");
-   auto *status=new QLabel("Create the resource, then edit its properties.",&dialog); status->setObjectName("resourceCreationStatus"); status->setWordWrap(true);
-   layout->addRow("Type",type); layout->addRow("Name",name);
-   auto *spacecraft=new QComboBox(&dialog); spacecraft->setObjectName("resourceSpacecraft");
-   for (const auto &configured:Moderator::Instance()->GetListOfObjects(Gmat::SPACECRAFT)) spacecraft->addItem(QString::fromStdString(configured));
-   layout->addRow("Spacecraft",spacecraft);
-   auto *spacecraftNote=new QLabel("Create a Spacecraft first, then select it for this ephemeris output.",&dialog); spacecraftNote->setWordWrap(true); layout->addRow(spacecraftNote);
+   const auto suggestName=[type,name] {
+      name->setPlaceholderText(QString::fromStdString(Moderator::Instance()->GetNewName(type->currentText().toStdString(),1)));
+   };
+   const auto resolveName=[type,name] {
+      if (name->text().trimmed().isEmpty())
+         name->setText(QString::fromStdString(Moderator::Instance()->GetNewName(type->currentText().toStdString(),1)));
+      return name->text().trimmed();
+   };
+   name->setToolTip("Leave blank to use the suggested available name.");
+   connect(type,&QComboBox::currentTextChanged,&dialog,suggestName); suggestName();
+   auto *status=new QLabel("Name and configure the resource here. Create commits all settings together.",&dialog); status->setObjectName("resourceCreationStatus"); status->setWordWrap(true);
+   layout->addRow("Type",type); layout->addRow("Name (optional)",name);
    auto *rows=new QSpinBox(&dialog); rows->setObjectName("arrayRows"); rows->setRange(1,1000);
    auto *columns=new QSpinBox(&dialog); columns->setObjectName("arrayColumns"); columns->setRange(1,1000);
    layout->addRow("Rows",rows); layout->addRow("Columns",columns);
-   auto *value=new QLineEdit(&dialog); value->setObjectName("parameterInitialValue"); layout->addRow("Initial value",value);
    auto *functionFiles=new QWidget(&dialog); auto *functionRow=new QHBoxLayout(functionFiles); functionRow->setContentsMargins(0,0,0,0);
    auto *functionPath=new QLineEdit(functionFiles); functionPath->setObjectName("resourceFunctionPath"); functionRow->addWidget(functionPath,1);
    auto *browseFunction=new QPushButton("Browse…",functionFiles); browseFunction->setObjectName("resourceFunctionBrowse"); functionRow->addWidget(browseFunction);
@@ -1726,7 +1747,7 @@ void MainWindow::showCreateResource(const QString &initialType)
       if (!path.isEmpty()) functionPath->setText(path);
    });
    connect(newFunction,&QPushButton::clicked,&dialog,[&] {
-      const auto functionName=name->text().trimmed();
+      const auto functionName=resolveName();
       if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(functionName).hasMatch()) { status->setText("Enter a valid function name before creating its file."); name->setFocus(); return; }
       QFileDialog chooser(&dialog,"New GMAT function file",functionName+".gmf","GMAT functions (*.gmf);;All files (*)");
       chooser.setObjectName("newFunctionFileDialog"); chooser.setAcceptMode(QFileDialog::AcceptSave); chooser.setDefaultSuffix("gmf");
@@ -1738,31 +1759,74 @@ void MainWindow::showCreateResource(const QString &initialType)
       FunctionFileDialog function(path,&dialog,source);
       if (function.exec()==QDialog::Accepted) functionPath->setText(function.savedPath());
    });
-   auto initialValues=std::make_shared<QMap<QString,QString>>(QMap<QString,QString>{{"Variable","0"},{"String",""}});
-   auto previousType=std::make_shared<QString>(type->currentText());
-   const auto dimensions=[=] {
-      if (initialValues->contains(*previousType)) (*initialValues)[*previousType]=value->text();
-      *previousType=type->currentText();
-      const bool array=type->currentText()=="Array";
-      const bool ephemeris=type->currentText()=="EphemerisFile";
-      layout->setRowVisible(spacecraft,ephemeris); layout->setRowVisible(spacecraftNote,ephemeris && spacecraft->count()==0);
-      layout->setRowVisible(rows,array); layout->setRowVisible(columns,array);
-      const bool scalar=type->currentText()=="Variable" || type->currentText()=="String";
-      layout->setRowVisible(value,scalar);
-      const bool function=type->currentText()=="GmatFunction"; layout->setRowVisible(functionFiles,function); layout->setRowVisible(functionNote,function);
-      value->setText(initialValues->value(type->currentText()));
-      value->setPlaceholderText(type->currentText()=="Variable" ? "Finite number" : "Literal text (no enclosing quotes)");
+   auto *host=new QWidget(&dialog); auto *hostLayout=new QVBoxLayout(host); hostLayout->setContentsMargins(0,0,0,0); outer->addWidget(host,1);
+   auto panels=std::make_shared<QMap<QString,ResourceEditor *>>();
+   auto drafts=std::make_shared<QMap<QString,std::shared_ptr<GmatBase>>>();
+   auto active=std::make_shared<ResourceEditor *>(nullptr);
+   const auto buildForm=[&,panels,drafts,active] {
+      if (*active) (*active)->hide(); *active=nullptr;
+      const auto selected=type->currentText();
+      if (selected=="GmatFunction") return;
+      if (!panels->contains(selected)) try {
+         const auto draftName=name->text().trimmed().isEmpty() ? QString::fromStdString(Moderator::Instance()->GetNewName(selected.toStdString(),1)) : name->text().trimmed();
+         auto draft=std::shared_ptr<GmatBase>(resourceDraft(selected,draftName)); (*drafts)[selected]=draft;
+         auto *panel=new ResourceEditor(*draft,[&,selected](const QMap<QString,QString> &settings) {
+            const auto error=createResource(selected,resolveName(),snapshot,rows->value(),columns->value(),
+               (selected=="Variable" || selected=="String") ? std::optional<QString>(settings.value("Value")) : std::nullopt,{},settings.value("Spacecraft"),settings);
+            return error;
+         },host,{},false,true);
+         if (selected=="EphemerisFile" || selected=="ReportFile") {
+            auto *filename=panel->findChild<QLineEdit *>(selected=="EphemerisFile" ? "ephemeris_Filename" : "resource_Filename");
+            if (filename) {
+               auto previous=std::make_shared<QString>(draftName);
+               connect(name,&QLineEdit::textChanged,panel,[name,filename,selected,previous] {
+                  const auto next=name->text().trimmed().isEmpty() ? QString::fromStdString(Moderator::Instance()->GetNewName(selected.toStdString(),1)) : name->text().trimmed();
+                  if (filename->text().startsWith(*previous+".")) filename->setText(next+filename->text().mid(previous->size()));
+                  *previous=next;
+               });
+            }
+         }
+         if (selected=="Array") {
+            panel->onArrayDimensions=[rows,columns](int rowCount,int columnCount) {
+               const QSignalBlocker rowBlock(rows),columnBlock(columns);
+               rows->setValue(rowCount); columns->setValue(columnCount);
+            };
+            panel->resizeArray(rows->value(),columns->value());
+         }
+         panel->onStatus=[status](const QString &message) {
+            QStringList lines;
+            for (const auto &line:message.split('\n',Qt::SkipEmptyParts)) if (!lines.contains(line.trimmed())) lines.append(line.trimmed());
+            status->setText(lines.join(' ')); status->setToolTip(message);
+         };
+         if (auto *message=panel->findChild<QLabel *>("resourceStatus")) message->hide();
+         panel->onApplied=[&] { dialog.accept(); };
+         panel->findChild<QDialogButtonBox *>("resourceButtons")->hide();
+         (*panels)[selected]=panel; hostLayout->addWidget(panel);
+      } catch (BaseException &error) { status->setText(QString::fromStdString(error.GetFullMessage())); return; }
+      catch (const std::exception &error) { status->setText(QString::fromUtf8(error.what())); return; }
+      *active=panels->value(selected); (*active)->show();
    };
-   connect(type,&QComboBox::currentTextChanged,&dialog,dimensions); dimensions();
-   layout->addRow(status);
+   const auto dimensions=[=] {
+      const bool array=type->currentText()=="Array";
+      layout->setRowVisible(rows,array); layout->setRowVisible(columns,array);
+      const bool function=type->currentText()=="GmatFunction";
+      layout->setRowVisible(functionFiles,function); layout->setRowVisible(functionNote,function);
+   };
+   connect(type,&QComboBox::currentTextChanged,&dialog,dimensions);
+   connect(type,&QComboBox::currentTextChanged,&dialog,[&] { buildForm(); }); dimensions(); buildForm();
+   const auto resizeArray=[active,type,rows,columns] { if (*active && type->currentText()=="Array") (*active)->resizeArray(rows->value(),columns->value()); };
+   connect(rows,&QSpinBox::valueChanged,&dialog,resizeArray); connect(columns,&QSpinBox::valueChanged,&dialog,resizeArray);
+   outer->addWidget(status);
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog);
-   buttons->button(QDialogButtonBox::Ok)->setText("Create"); layout->addRow(buttons);
+   buttons->setObjectName("resourceCreationButtons"); buttons->button(QDialogButtonBox::Ok)->setText("Create"); outer->addWidget(buttons);
    connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] {
-      const auto error=createResource(type->currentText(),name->text().trimmed(),snapshot,rows->value(),columns->value(),(type->currentText()=="Variable" || type->currentText()=="String") ? std::optional<QString>(value->text()) : std::nullopt,functionPath->text(),spacecraft->currentText());
-      if (error.isEmpty()) dialog.accept(); else status->setText(error);
+      if (type->currentText()=="GmatFunction") {
+         const auto error=createResource(type->currentText(),resolveName(),snapshot,1,1,std::nullopt,functionPath->text());
+         if (error.isEmpty()) dialog.accept(); else status->setText(error);
+      } else if (*active) (*active)->requestApply();
    });
-   dialog.resize(460,180); name->setFocus();
+   dialog.resize(850,740); name->setFocus();
    if (dialog.exec()==QDialog::Accepted) {
       auto *navigation=findChild<QDockWidget *>("navigation");
       navigation->show(); navigation->findChild<QTabWidget *>()->setCurrentWidget(resources);

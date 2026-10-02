@@ -17,8 +17,8 @@ public:
    EventLocatorDialog(GmatBase &object,const QMap<QString,QString> &pending,QWidget *parent=nullptr);
    ~EventLocatorDialog() override;
    QMap<QString,QString> values() const { return acceptedValues; }
-private:
    QMap<QString,QString> settings() const;
+private:
    void updateDependencies();
    void convertEpochs();
    std::unique_ptr<GmatBase> original;

@@ -1231,10 +1231,10 @@ int main(int argc, char **argv)
             require(tab>=0,qPrintable("Missing power section: "+section)); sections->setCurrentIndex(tab);
             for (const auto &field:fields) {
                int row=-1; for (int i=0;i<grid->rowCount();++i) if (grid->item(i,0)->text()==field) row=i;
-               require(row>=0 && !grid->isRowHidden(row),qPrintable("Missing power control: "+field));
+               require(row>=0 && grid->isRowHidden(row) && panel.findChild<QWidget *>("resource_"+field),qPrintable("Missing primary power control: "+field));
             }
             for (int row=0;row<grid->rowCount();++row)
-               require(grid->isRowHidden(row)==(grid->item(row,0)->data(Qt::UserRole).toString()!=section),"Power section displayed unrelated settings");
+               require(grid->isRowHidden(row)==(grid->item(row,0)->data(Qt::UserRole+1).toBool() || grid->item(row,0)->data(Qt::UserRole).toString()!=section),"Power section displayed unrelated settings");
          };
          checkSection("General",{"EpochFormat","InitialEpoch","InitialMaxPower","AnnualDecayRate","Margin"});
          checkSection("Bus coefficients",{"BusCoeff1","BusCoeff2","BusCoeff3"});
@@ -1530,18 +1530,19 @@ int main(int argc, char **argv)
       require(massSection>=0,"Spacecraft mass section missing");
       for (int row=0;row<table->rowCount();++row) {
          if (table->item(row,0)->text()=="DryMass") require(table->isRowHidden(row),"Orbit includes mass properties");
-         if (table->item(row,0)->text()=="X") require(!table->isRowHidden(row),"Orbit is missing its state elements");
+         if (table->item(row,0)->text()=="X") require(table->isRowHidden(row) && panel->findChild<QLineEdit *>("resource_X")->isVisible(),"Primary orbit state missing or duplicated in Advanced");
       }
       sections->setCurrentIndex(massSection);
+      panel->findChild<QTabWidget *>("resourceEditorTabs")->setCurrentIndex(0);
+      panel->findChild<QTabWidget *>("resourceFormTabs")->setCurrentIndex(0);
       bool massFound = false;
       for (int row = 0; row < table->rowCount(); ++row) {
          if (table->item(row, 0)->text() == "DryMass") {
-            require(!table->isRowHidden(row),"Mass section did not reveal DryMass");
+            require(table->isRowHidden(row),"Mass duplicated in Advanced");
             const auto unchangedScript=editor->toPlainText();
-            const auto originalText=table->item(row,1)->text();
-            table->editItem(table->item(row,1)); QApplication::processEvents();
-            auto *field=qobject_cast<QLineEdit *>(QApplication::focusWidget());
-            require(field!=nullptr,"Property cell editor did not receive focus");
+            auto *field=panel->findChild<QLineEdit *>("ballistics_DryMass");
+            require(field && field->isVisible(),"Primary mass editor not visible");
+            const auto originalText=field->text(); field->setFocus(); QApplication::processEvents();
             field->selectAll(); QApplication::clipboard()->setText("888.25");
             window.findChild<QAction *>("edit_paste")->trigger();
             require(field->text()=="888.25" && editor->toPlainText()==unchangedScript,"Property Paste modified the script");
@@ -1550,7 +1551,7 @@ int main(int argc, char **argv)
             window.findChild<QAction *>("edit_redo")->trigger();
             panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->setFocus();
             QApplication::processEvents();
-            require(table->item(row,1)->text()=="888.25","Edited cell did not commit on focus change");
+            require(field->text()=="888.25","Primary mass edit lost on focus change");
             massFound = true; break;
          }
       }
@@ -1561,7 +1562,7 @@ int main(int argc, char **argv)
       auto *propertyFilter=panel->findChild<QLineEdit *>("propertyFilter");
       propertyFilter->setText("drymass");
       for (int row=0;row<table->rowCount();++row)
-         require(table->isRowHidden(row)==(table->item(row,0)->text()!="DryMass"),"Property filter did not combine with sections");
+         require(table->isRowHidden(row)==(table->item(row,0)->data(Qt::UserRole+1).toBool() || table->item(row,0)->text()!="DryMass"),"Property filter did not combine with sections");
       propertyFilter->clear(); sections->setCurrentIndex(massSection);
       tree->itemDoubleClicked(items.first(),0);
       int resourcePanelCount=0;

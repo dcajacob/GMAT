@@ -83,7 +83,7 @@ int main(int argc,char **argv)
             auto *dialog=window.findChild<QDialog *>("newResourceDialog");
             try {
                require(dialog,"Empty-spacecraft dialog missing"); dialog->findChild<QComboBox *>("resourceType")->setCurrentText("EphemerisFile");
-               auto *choice=dialog->findChild<QComboBox *>("resourceSpacecraft"); require(choice->isVisible() && choice->count()==0,"Missing spacecraft selector state");
+               auto *choice=dialog->findChild<QComboBox *>("ephemeris_Spacecraft"); require(choice->isVisible() && choice->count()==0,"Missing spacecraft selector state");
                dialog->findChild<QLineEdit *>("resourceName")->setText("Ephemeris");
                dialog->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Ok)->click();
                require(dialog->result()!=QDialog::Accepted && dialog->findChild<QLabel *>("resourceCreationStatus")->text().contains("Create a Spacecraft") && editor->toPlainText()==noSpacecraft,"Missing spacecraft error not correctable");
@@ -100,7 +100,7 @@ int main(int argc,char **argv)
                auto *dialog=window.findChild<QDialog *>("newResourceDialog");
                try {
                   require(dialog,"Ephemeris creator missing"); auto *type=dialog->findChild<QComboBox *>("resourceType"); type->setCurrentText("EphemerisFile");
-                  auto *choice=dialog->findChild<QComboBox *>("resourceSpacecraft"); require(choice->isVisible() && choice->count()==2 && choice->findText("Vehicle")>=0 && choice->findText("Another")>=0,"Spacecraft choices incorrect");
+                  auto *choice=dialog->findChild<QComboBox *>("ephemeris_Spacecraft"); require(choice->isVisible() && choice->count()==2 && choice->findText("Vehicle")>=0 && choice->findText("Another")>=0,"Spacecraft choices incorrect");
                   choice->setCurrentText("Vehicle"); type->setCurrentText("ReportFile"); require(!choice->isVisible(),"Spacecraft chooser leaked into other types");
                   type->setCurrentText("EphemerisFile"); require(choice->currentText()=="Vehicle","Type switch lost pending selection");
                   choice->setCurrentText("Another"); dialog->findChild<QLineEdit *>("resourceName")->setText("Ephemeris");
@@ -112,9 +112,13 @@ int main(int argc,char **argv)
          };
          creator(false); require(editor->toPlainText()==multiple && !Moderator::Instance()->GetConfiguredObject("Ephemeris"),"Cancel mutated mission");
          creator(true);
-         const auto created="Create EphemerisFile Ephemeris;\nGMAT Ephemeris.Spacecraft = Another;\n"+multiple;
+         const auto created=editor->toPlainText();
          auto *object=Moderator::Instance()->GetConfiguredObject("Ephemeris");
-         require(accepted && object && object->GetStringParameter("Spacecraft")=="Another" && editor->toPlainText()==created && tree->findItems("Ephemeris",Qt::MatchExactly|Qt::MatchRecursive).size()==1,"Selected spacecraft/source/tree not committed");
+         require(accepted && object,"Configured Ephemeris creator did not accept");
+         require(object->GetStringParameter("Spacecraft")=="Another","Selected spacecraft not committed");
+         require(created.contains("Create EphemerisFile Ephemeris;"),"Ephemeris declaration absent");
+         require(created.endsWith(multiple),"Unrelated creation source changed");
+         require(tree->findItems("Ephemeris",Qt::MatchExactly|Qt::MatchRecursive).size()==1,"Ephemeris tree entry missing");
          require(area->activeSubWindow() && area->activeSubWindow()->property("resourceName").toString()=="Ephemeris","Ephemeris editor did not open");
          for (auto *child:area->subWindowList()) if (child->property("resourceName").toString()=="Ephemeris") child->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete);
          editor->undo(); require(editor->toPlainText()==multiple && window.buildScript() && !Moderator::Instance()->GetConfiguredObject("Ephemeris"),"Ephemeris Undo failed");

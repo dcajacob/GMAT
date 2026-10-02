@@ -15,8 +15,8 @@ public:
    GroundStationDialog(GmatBase &station,const QMap<QString,QString> &pending,QWidget *parent=nullptr);
    ~GroundStationDialog() override;
    QMap<QString,QString> values() const { return acceptedValues; }
-private:
    QMap<QString,QString> settings() const;
+private:
    void convert();
    void refresh(GmatBase &station,bool updateValues=true);
    std::unique_ptr<GmatBase> original;

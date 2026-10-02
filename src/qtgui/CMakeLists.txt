@@ -13,6 +13,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    CelestialBodyPanel.cpp CelestialBodyPanel.hpp
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
    ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
+   ResourceForm.cpp ResourceForm.hpp ResourceDraft.cpp ResourceDraft.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
    PropagationForm.cpp PropagationForm.hpp
    CommandForm.cpp CommandForm.hpp
@@ -162,6 +163,9 @@ if(GMAT_QT_BUILD_TESTS)
    add_executable(GmatQtResourceCreationDefaultsTests tests/ResourceCreationDefaultsTests.cpp)
    target_link_libraries(GmatQtResourceCreationDefaultsTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtResourceCreationDefaultsTests GmatQt)
+   add_executable(GmatQtUnifiedResourceTests tests/UnifiedResourceTests.cpp)
+   target_link_libraries(GmatQtUnifiedResourceTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtUnifiedResourceTests GmatQt)
    add_executable(GmatQtMissionTests tests/MissionTests.cpp)
    target_link_libraries(GmatQtMissionTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtCompatibilityTests tests/CompatibilityTests.cpp)
@@ -305,6 +309,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.SharedPlayback GmatQtSharedPlaybackTests "${qt_test_startup}")
    add_qt_test(QtGui.SkyControls GmatQtSkyControlsTests "${qt_test_startup}")
    add_qt_test(QtGui.ResourceCreationDefaults GmatQtResourceCreationDefaultsTests "${qt_test_startup}")
+   add_qt_test(QtGui.UnifiedResources GmatQtUnifiedResourceTests "${qt_test_startup}")
    if(UNIX AND NOT APPLE AND QT_XVFB_RUN)
       add_test(NAME QtGui.NativeWindows COMMAND ${QT_XVFB_RUN} -a
          ${CMAKE_COMMAND} -E env QT_QPA_PLATFORM=xcb LIBGL_ALWAYS_SOFTWARE=1
@@ -456,5 +461,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtSharedPlaybackTests)
    add_dependencies(check-qt GmatQtSkyControlsTests)
    add_dependencies(check-qt GmatQtResourceCreationDefaultsTests)
+   add_dependencies(check-qt GmatQtUnifiedResourceTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()

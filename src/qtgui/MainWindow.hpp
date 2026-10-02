@@ -65,11 +65,12 @@ public:
    QString applySolverCorrections(const MissionSnapshot &snapshot,int index);
    QString applyResourceChanges(const QString &name, const QMap<QString, QString> &changes,
                                 const QString &expectedScript);
-   QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1, const std::optional<QString> &initialValue=std::nullopt, const QString &functionPath={}, const QString &spacecraft={});
+   QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1, const std::optional<QString> &initialValue=std::nullopt, const QString &functionPath={}, const QString &spacecraft={}, const QMap<QString,QString> &settings={});
    QString deleteResource(const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
 private:
+   QString applyResourceSettings(GmatBase &object,const QMap<QString,QString> &changes,const QString &source);
    QString savePlotProjection(const QString &name,bool perspective,double fov);
    void refreshTrees();
    void refreshOutput();

@@ -139,6 +139,12 @@ VisualModelDialog::VisualModelDialog(const QMap<QString,QString> &initial,Normal
    resize(std::min(1000,available.width()-40),std::min(720,available.height()-80)); refreshPreview();
 }
 
+QMap<QString,QString> VisualModelDialog::settings() const
+{
+   QMap<QString,QString> result;
+   for (auto it=fields.cbegin();it!=fields.cend();++it) result[it.key()]=it.value()->text();
+   return result;
+}
 bool VisualModelDialog::refreshPreview()
 {
    try {

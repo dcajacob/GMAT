@@ -85,7 +85,7 @@ EphemerisDialog::EphemerisDialog(GmatBase &object,const QMap<QString,QString> &p
    auto choice=[&](QFormLayout *form,const QString &name,const QString &label,bool editable=false) {
       auto *combo=new QComboBox(content); combo->setObjectName("ephemeris_"+name); combo->setEditable(editable); combo->setInsertPolicy(QComboBox::NoInsert);
       combo->addItems(fields.value(name).choices.isEmpty() ? fields.value(name).references : fields.value(name).choices);
-      if (combo->findText(initial.value(name))<0) combo->addItem(initial.value(name)); combo->setCurrentText(initial.value(name)); choices.insert(name,combo); form->addRow(label,combo);
+      if (combo->findText(initial.value(name))<0 && !initial.value(name).isEmpty()) combo->addItem(initial.value(name)); combo->setCurrentText(initial.value(name)); choices.insert(name,combo); form->addRow(label,combo);
    };
    auto line=[&](QFormLayout *form,const QString &name,const QString &label) { auto *edit=new QLineEdit(initial.value(name),content); edit->setObjectName("ephemeris_"+name); text.insert(name,edit); form->addRow(label,edit); };
    auto check=[&](QFormLayout *form,const QString &name,const QString &label) { auto *box=new QCheckBox(label,content); box->setObjectName("ephemeris_"+name); box->setChecked(initial.value(name)=="true"); checks.insert(name,box); form->addRow(box); };
