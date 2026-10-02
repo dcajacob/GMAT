@@ -43,10 +43,38 @@ int main(int argc,char **argv)
          for (const auto &node:snapshot.nodes) if (node.type=="CallGmatFunction" && node.statement.contains("Touch")) { require(node.editable,"No-output GMAT call not mapped"); CommandForm form([](const QString &) {}); form.setStatement(node.statement); require(form.title()=="Function call" && form.findChild<QLineEdit *>("commandField_Inputs") && form.findChild<QLineEdit *>("commandField_Inputs")->text().isEmpty(),"No-output GMAT call controls missing"); }
          auto *tree=window.findChild<QTreeWidget *>("Mission"); QTreeWidgetItemIterator item(tree); while (*item && (!(*item)->data(0,Qt::UserRole).isValid() || (*item)->data(0,Qt::UserRole).toInt()!=index)) ++item; require(*item,"Call tree item missing"); tree->itemDoubleClicked(*item,0); auto *child=window.findChild<QMdiArea *>("workspace")->activeSubWindow(); auto *panel=child ? dynamic_cast<CommandEditor *>(child->widget()) : nullptr; require(panel && panel->property("helpTopic")=="CallGmatFunction","GMAT call editor/Help missing"); auto *input=panel->findChild<QLineEdit *>("commandField_Inputs"); auto *function=panel->findChild<QLineEdit *>("commandField_Function"); require(input && input->text().isEmpty() && function,"Empty GMAT input field missing"); function->setText("Second"); require(panel->hasChanges() && editor->toPlainText()==source,"GMAT call edit did not remain pending"); panel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click(); require(editor->toPlainText()==reference && child->isVisible() && !dynamic_cast<EditablePanel *>(child->widget())->hasChanges(),"GMAT retained Apply changed source spelling/comments"); editor->undo(); require(editor->toPlainText()==source,"GMAT exact Undo failed"); editor->redo(); require(editor->toPlainText()==reference && window.saveScriptTo(saved) && window.loadScript(saved),"GMAT Redo/Unicode reopen failed"); run(window); require(read(report)==expected,"GUI-edited GMAT result differs from independent source"); std::cout<<"Covered: "<<shape.toStdString()<<'\n';
       }
+      // A human can start with the output-bearing call template, give it a
+      // caption, then clear outputs to call a no-output function. The caption
+      // must survive Apply and reopening instead of becoming a quoted LHS.
+      const QString withOutputs=prefix+"[Result] = First(); % retain call tail\nReport Values Result Keep;\n";
+      editor->setPlainText(withOutputs); require(window.buildScript(),"Output removal baseline failed");
+      auto removeSnapshot=window.missionSnapshot(); int removeIndex=-1;
+      for (int i=0;i<removeSnapshot.nodes.size();++i) if (removeSnapshot.nodes[i].type=="CallGmatFunction") removeIndex=i;
+      require(removeIndex>=0,"Output removal call missing");
+      auto *removeTree=window.findChild<QTreeWidget *>("Mission"); QTreeWidgetItemIterator removeItem(removeTree);
+      while (*removeItem && (!(*removeItem)->data(0,Qt::UserRole).isValid() || (*removeItem)->data(0,Qt::UserRole).toInt()!=removeIndex)) ++removeItem;
+      require(*removeItem,"Output removal tree item missing"); removeTree->itemDoubleClicked(*removeItem,0);
+      auto *removeChild=window.findChild<QMdiArea *>("workspace")->activeSubWindow();
+      auto *removePanel=removeChild ? dynamic_cast<CommandEditor *>(removeChild->widget()) : nullptr;
+      require(removePanel,"Output removal editor missing");
+      removePanel->findChild<QLineEdit *>("commandName")->setText("Touch without outputs");
+      removePanel->findChild<QLineEdit *>("commandField_Function")->setText("Touch");
+      removePanel->findChild<QLineEdit *>("commandField_Outputs")->clear();
+      const auto noOutputs=QString(withOutputs).replace("[Result] = First();","'Touch without outputs' Touch();");
+      require(editor->toPlainText()==withOutputs && removePanel->findChild<QLineEdit *>("commandName")->text()=="Touch without outputs", "Clearing outputs lost pending name or changed mission before Apply");
+      removePanel->findChild<QDialogButtonBox *>()->button(QDialogButtonBox::Apply)->click();
+      require(editor->toPlainText()==noOutputs && !dynamic_cast<EditablePanel *>(removeChild->widget())->hasChanges(),"Clearing outputs left assignment separator or lost call caption");
+      editor->undo(); require(editor->toPlainText()==withOutputs,"Output removal Undo failed");
+      editor->redo(); require(editor->toPlainText()==noOutputs && window.saveScriptTo(saved) && window.loadScript(saved),"Output removal save/reopen failed");
+      run(window); const auto noOutputValues=QString::fromUtf8(read(report)).simplified().split(' ');
+      require(noOutputValues.size()==2 && noOutputValues[0].toDouble()==0 && noOutputValues[1].toDouble()==1,"No-output GUI call did not execute its independent global increment");
       QString changed; CommandForm form([&](const QString &text) { changed=text; }); const QString bare="  [Result] = First; % retain bare tail\n"; form.setStatement(bare); form.findChild<QLineEdit *>("commandField_Inputs")->setText("Keep"); require(changed==QString(bare).replace("First;","First(Keep);"),"Adding bare GMAT inputs lost parentheses/source"); form.findChild<QLineEdit *>("commandField_Inputs")->clear(); require(changed==bare,"Clearing bare GMAT inputs lost spelling"); form.setStatement("Stop;"); require(!form.findChild<QLineEdit *>("commandField_Function"),"Non-function Stop mistaken for a bare call"); form.setStatement("Result = Keep;"); require(form.title()=="Assignment","Variable assignment mistaken for a bare call");
       // The shared bare-input wrapper changed; check that retained Python
       // field spans still insert and remove parentheses without rerunning Python.
       const QString python="Python.builtins.print; % retained\n"; form.setStatement(python); form.findChild<QLineEdit *>("commandField_Inputs")->setText("Keep"); require(changed==QString(python).replace("print;","print(Keep);"),"Shared wrapper broke bare Python input insertion"); form.findChild<QLineEdit *>("commandField_Inputs")->clear(); require(changed==python,"Shared wrapper broke Python source restoration");
+      form.setStatement("  'Python caption' [Result] = Python.builtins.print(); % retained\n");
+      form.findChild<QLineEdit *>("commandField_Outputs")->clear();
+      require(changed=="  'Python caption' Python.builtins.print(); % retained\n","Shared output removal lost Python label/callee/comments");
       std::cout<<"PASS: actual MDI GMAT empty/bare/scalar call editing, configured-function-only mapping/Help, pending retained Apply, exact Undo/Redo/Unicode save/reopen, independent 13/2 execution and negative mapping; shared Python span smoke only.\n";
    } catch (BaseException &failure) { std::cerr<<"FAIL: "<<failure.GetFullMessage()<<'\n'; return 1; } catch (const std::exception &failure) { std::cerr<<"FAIL: "<<failure.what()<<'\n'; return 1; }
 }

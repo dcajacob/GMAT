@@ -45,7 +45,15 @@ QString CommandForm::currentStatement() const
       auto value=field.input->text();
       if (field.input->property("bareCallArguments").toBool() && !value.isEmpty()) value="("+value+")";
       if (((title()=="Dynamic update" && field.input->objectName()=="commandField_Parameters") || (title()=="File import" && field.input->objectName()=="commandField_Data")) && !value.isEmpty() && !value.front().isSpace()) value.prepend(' ');
-      result.replace(field.start,field.length,value);
+      auto length=field.length;
+      if ((title()=="Function call" || title()=="Python call") &&
+          field.input->objectName()=="commandField_Outputs" && value.trimmed().isEmpty()) {
+         // Clearing outputs changes the call shape. Remove its assignment
+         // separator as well so a preceding command label stays a label.
+         const auto separator=QRegularExpression("^[ \t]*=[ \t]*").match(original.mid(field.start+length));
+         if (separator.hasMatch()) length+=separator.capturedLength();
+      }
+      result.replace(field.start,length,value);
    }
    return result;
 }
