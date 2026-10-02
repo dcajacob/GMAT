@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "ResourceRename.hpp"
 #include "ScriptStatements.hpp"
 #include "ScriptCompatibility.hpp"
@@ -59,7 +60,7 @@ bool renamedStringField(const Field &value,const Names &names)
 {
    if (!value.owner) return false;
    try {
-      std::unique_ptr<GmatBase> copy(value.owner->Clone());
+      QtResourcePreview copy(value.owner->Clone());
       for (auto it=names.cbegin();it!=names.cend();++it) {
          auto *original=Moderator::Instance()->GetConfiguredObject(it.key().toStdString());
          if (original) copy->RenameRefObject(original->GetType(),it.key().toStdString(),it.value().toStdString());
@@ -98,7 +99,7 @@ QJsonObject camera(QJsonObject value,const Names &names)
 {
    for (const auto *key:{"plot","reference","target","automaticTrajectory","automaticBody","segmentFrame"})
       if (value.contains(key)) value[key]=reference(value.value(key).toString(),names);
-   for (const auto *key:{"objectLabels","objectTrajectories","objectCenters","objectEndpoints","objectAxes","objectGrids","objectXYPlanes","objectMarkerSizes","objectLineWidths","objectFontSizes","objectFontPositions"}) {
+   for (const auto *key:{"objectLabels","objectTrajectories","objectCenters","objectEndpoints","objectAxes","objectGrids","objectXYPlanes","objectVelocities","objectMarkerSizes","objectLineWidths","objectFontSizes","objectFontPositions"}) {
       if (!value.contains(key)) continue;
       auto map=value.value(key).toObject();
       for (auto it=names.cbegin();it!=names.cend();++it) if (map.contains(it.key())) { const auto setting=map.take(it.key()); map.insert(it.value(),setting); }

@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "ResourceProperties.hpp"
 #include "TrackingConfigDialog.hpp"
 #include "EpochIntervalDialog.hpp"
@@ -796,7 +797,7 @@ QStringList dataInterfaceFields(GmatBase &object)
    // FileInterface creates its reader during initialization. Inspect a clone
    // so browsing its metadata does not alter the configured resource or read
    // data into a mission target.
-   std::unique_ptr<GmatBase> copy(object.Clone());
+   QtResourcePreview copy(object.Clone());
    if (!copy) throw std::runtime_error("Cannot inspect this data interface.");
    validateResourceProperties(*copy);
    if (!copy->Initialize()) throw std::runtime_error("The data interface could not initialize its field list.");
@@ -937,7 +938,7 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
       if (old && object.GetStringParameter(name.toStdString())==value.toStdString()) return;
       // The wrapper clones its model. Factory creation avoids installing a
       // temporary owned model in the mission's configured-object map.
-      std::unique_ptr<GmatBase> model(FactoryManager::Instance()->CreateObject(type,value.toStdString(),""));
+      QtResourcePreview model(FactoryManager::Instance()->CreateObject(type,value.toStdString(),""));
       if (!model) throw std::runtime_error("Cannot create the selected estimation model.");
       if (processType && old) model->SetStringParameter("CoordinateSystem",old->GetStringParameter("CoordinateSystem"));
       if (!object.SetRefObject(model.get(),type,"")) throw std::runtime_error("Cannot replace the estimation model.");

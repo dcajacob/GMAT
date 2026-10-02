@@ -2,6 +2,7 @@
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
 #include "OrbitObjectGuides.hpp"
+#include "OrbitVelocity.hpp"
 #include <osg/PolygonOffset>
 #include "OrbitVectors.hpp"
 #include <osg/PolygonMode>
@@ -274,6 +275,10 @@ struct OrbitRenderer::Scene
          for (const auto &p:source.points) {
             extent=std::max(extent,std::hypot(p.x,p.y,p.z)+visibleRadius);
             bounds.include(p.x,p.y,p.z,visibleRadius);
+            if (source.objectVelocity) if (const auto velocity=orbitVelocitySegment(p)) {
+               extent=std::max(extent,velocity->end.length());
+               bounds.include(velocity->end.x(),velocity->end.y(),velocity->end.z(),0);
+            }
          }
       }
       vectorBounds=objects;
@@ -410,6 +415,11 @@ struct OrbitRenderer::Scene
          const auto back=center-outward*extent*2;
          line(back+right*x-up*halfHeight,back+right*x+up*halfHeight,{.11f,.14f,.19f,1});
          line(back+up*y-right*halfWidth,back+up*y+right*halfWidth,{.11f,.14f,.19f,1});
+      }
+      for (const auto &source:model->curves) if (source.visible && source.objectVelocity) {
+         const auto first=model->firstVisibleFrame(source,frame);
+         for (const auto &point:source.points) if (point.frame>=first && point.frame<=frame)
+            if (const auto velocity=orbitVelocitySegment(point)) line(velocity->start,velocity->end,color(velocity->color));
       }
       for (const auto &source:model->curves) if (source.visible && source.objectAxes) {
          const auto *pose=orbitObjectPose(source,frame); if (!pose) continue;

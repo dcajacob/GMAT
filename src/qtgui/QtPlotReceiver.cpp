@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "QtPlotReceiver.hpp"
 #include "CameraAlignment.hpp"
 #include "TableColumns.hpp"
@@ -65,6 +66,7 @@ void QtPlotReceiver::validateCameraReferences(const QMap<QString,QtCameraSetting
       for (const auto &name:it->objectAxes.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectGrids.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectXYPlanes.keys()) validateTrajectory(name,false);
+      for (const auto &name:it->objectVelocities.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectMarkerSizes.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectLineWidths.keys()) validateTrajectory(name,false);
       for (const auto &name:it->objectFontSizes.keys()) validateTrajectory(name,false);
@@ -365,6 +367,7 @@ void QtPlotReceiver::SetGlObject(const std::string &name,const StringArray &name
       curve.objectAxes=setting.objectAxes.value(curve.name,false);
       curve.objectGrid=setting.objectGrids.value(curve.name,false);
       curve.objectXYPlane=setting.objectXYPlanes.value(curve.name,false);
+      curve.objectVelocity=setting.objectVelocities.value(curve.name,false);
       curve.orbitMarkerSize=setting.objectMarkerSizes.value(curve.name,10);
       curve.importedLineWidth=setting.objectLineWidths.contains(curve.name) ? std::optional<double>(setting.objectLineWidths.value(curve.name)) : std::nullopt;
       curve.importedFontSize=setting.objectFontSizes.contains(curve.name) ? std::optional<quint32>(setting.objectFontSizes.value(curve.name)) : std::nullopt;
@@ -476,7 +479,7 @@ bool QtPlotReceiver::DeleteGlPlot(const std::string &name) { return remove(name)
 bool QtPlotReceiver::SetGlEndOfRun(const std::string &name) { if (auto *entry=find(name)) { entry->data->endOfRun=true; refresh(*entry,true); return true; } return false; }
 void QtPlotReceiver::SetMaxGlDataPoints(const std::string &name,Integer count) { if (auto *entry=find(name)) { entry->data->maxPoints=static_cast<int>(std::clamp<Integer>(count,1,std::numeric_limits<int>::max())); entry->data->trim(); } }
 bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,const StringArray &names,const Real &epoch,
-      const RealArray &x,const RealArray &y,const RealArray &z,const RealArray &,const RealArray &,const RealArray &,
+      const RealArray &x,const RealArray &y,const RealArray &z,const RealArray &vx,const RealArray &vy,const RealArray &vz,
       const ColorMap &colors,const ColorMap &targetColors,bool solving,Integer,bool update,bool drawing,bool)
 {
    auto *entry=find(name); if (!entry) return false;
@@ -636,12 +639,16 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
       const auto &palette=solving ? targetColors : colors;
       const auto color=palette.find(object); if (color!=palette.end()) curve.color=rgb(color->second);
       auto found=std::find(names.begin(),names.end(),object);
-      double px=0,py=0,pz=0;
+      double px=0,py=0,pz=0; std::array<double,3> velocity{}; bool hasVelocity=false;
       if (found!=names.end()) {
          size_t index=static_cast<size_t>(found-names.begin());
          if (index>=x.size() || index>=y.size() || index>=z.size()) { curve.breakNext=true; continue; }
          // OrbitPlot::BufferOrbitData already converted these into view CS.
          px=x[index]; py=y[index]; pz=z[index];
+         if (index<vx.size() && index<vy.size() && index<vz.size()) {
+            velocity={vx[index],vy[index],vz[index]};
+            hasVelocity=std::all_of(velocity.begin(),velocity.end(),PlotModel::usableValue);
+         }
       } else if (i<entry->points.size() && entry->points[i] && !entry->points[i]->IsOfType(Gmat::SPACECRAFT)) {
          auto state=entry->points[i]->GetMJ2000State(epoch);
          if (entry->internal && entry->view && entry->internal!=entry->view) {
@@ -649,6 +656,8 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             converter.Convert(epoch,state,entry->internal,converted,entry->view); state=converted;
          }
          px=state[0]; py=state[1]; pz=state[2];
+         velocity={state[3],state[4],state[5]};
+         hasVelocity=std::all_of(velocity.begin(),velocity.end(),PlotModel::usableValue);
       } else { curve.breakNext=true; continue; }
       if (!PlotModel::usableOrbitPosition(px,py,pz)) { curve.breakNext=true; continue; }
       if (data.kind==PlotModel::Kind::GroundTrack) {
@@ -659,6 +668,8 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          data.append(static_cast<int>(i),px,py,pz,epoch,drawing,solving);
          if (!curve.points.empty() && curve.points.back().frame==data.frame) {
             curve.points.back().hasSun=hasSun;
+            curve.points.back().viewVelocity=velocity;
+            curve.points.back().hasVelocity=hasVelocity;
             for (int axis=0;axis<3;++axis) curve.points.back().sunPosition[axis]=sunState[axis];
          }
          if (!curve.points.empty() && curve.points.back().frame==data.frame &&
@@ -744,6 +755,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
 }
 bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &action)
 {
+   if (action=="ClearObjects" && qtResourcePreviewCleanupActive()) return true;
    auto *entry=find(name); if (!entry) return false;
    if (action.compare(0,16,"SetDataProvider:")==0) { entry->provider=text(action.substr(16)); return true; }
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }

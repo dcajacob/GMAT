@@ -3354,6 +3354,17 @@ void GmatCommand::InsertCommandName(std::string &genString)
 {
    if (instanceName != "")
    {
+      // An assignment without the optional GMAT keyword puts its accepted
+      // command name before the LHS. Searching for letters from "GMAT" in
+      // that LHS can omit the name or insert it into an operand instead.
+      if (typeName == "GMAT" && !GmatGlobal::Instance()->IsWritingGmatKeyword())
+      {
+         std::string::size_type first = genString.find_first_not_of(" \t\r\n");
+         if (first != genString.npos)
+            genString.insert(first, "'" + instanceName + "' ");
+         return;
+      }
+
       // Most commands use typeName as the script syntax, but a few do not --
       // CallMatlabFunction, for example.  So we do a bit of name substitution
       // here

@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceForm.hpp"
 #include <QScrollArea>
@@ -121,7 +122,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       return;
    }
    if (object.IsOfType("CoordinateSystem") && object.GetOwnedObject(0)) {
-      auto initial=std::shared_ptr<GmatBase>(object.GetOwnedObject(0)->Clone());
+      auto initial=qtResourcePreviewShared(object.GetOwnedObject(0)->Clone());
       QMap<QString,QString> initialValues;
       for (const auto &field:resourceProperties(*initial)) initialValues[field.name]=field.value;
       initialValues["Axes"]=QString::fromStdString(initial->GetTypeName());
@@ -147,7 +148,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             if (panel) { delete panel; panel=nullptr; }
             try {
                const auto selected=type->currentText();
-               std::unique_ptr<GmatBase> axes(selected==initialValues.value("Axes") ? initial->Clone() :
+               QtResourcePreview axes(selected==initialValues.value("Axes") ? initial->Clone() :
                   Moderator::Instance()->CreateAxisSystem(selected.toStdString(),"",0));
                if (!axes) { help->setText("The engine could not create these axes."); return; }
                if (selected==pending.value("Axes")) for (const auto &field:resourceProperties(*axes))
@@ -200,7 +201,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       layout->addWidget(sections);
    }
    if (thruster || impulsive || object.IsOfType("EphemerisFile")) {
-      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto initial=qtResourcePreviewShared(object.Clone());
       const bool ephemeris=object.IsOfType("EphemerisFile");
       auto *setup=new QPushButton(ephemeris ? "Ephemeris output…" : impulsive ? "Impulsive burn setup…" : "Thruster setup…",this); setup->setObjectName(ephemeris ? "editEphemeris" : impulsive ? "editBurn" : "editThruster"); layout->addWidget(setup);
       connect(setup,&QPushButton::clicked,this,[this,initial,impulsive,ephemeris] {
@@ -226,7 +227,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       note->setObjectName("builtInPointInfo"); note->setWordWrap(true); layout->addWidget(note);
    }
    if (object.IsOfType("DynamicDataDisplay")) {
-      auto initial=std::shared_ptr<GmatBase>(object.Clone()); auto *setup=new QPushButton("Dynamic data setup…",this); setup->setObjectName("editDynamicData"); layout->addWidget(setup);
+      auto initial=qtResourcePreviewShared(object.Clone()); auto *setup=new QPushButton("Dynamic data setup…",this); setup->setObjectName("editDynamicData"); layout->addWidget(setup);
       connect(setup,&QPushButton::clicked,this,[this,initial] {
          QMap<QString,QString> pending;
          if (!pendingDynamicData.isEmpty()) pending.insert("@DynamicData",pendingDynamicData);
@@ -236,7 +237,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       });
    }
    if (object.IsOfType("TrackingFileSet")) {
-      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto initial=qtResourcePreviewShared(object.Clone());
       auto *setup=new QPushButton("Tracking configurations…",this); setup->setObjectName("editTrackingConfigs"); layout->addWidget(setup);
       connect(setup,&QPushButton::clicked,this,[this,initial] {
          try { TrackingConfigDialog dialog(*initial,pendingTrackingConfigs,this); if (dialog.exec()==QDialog::Accepted) pendingTrackingConfigs=dialog.settings(); }
@@ -449,10 +450,10 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
    if (object.GetTypeName()=="OrbitView" || object.GetTypeName()=="XYPlot" || object.GetTypeName()=="GroundTrackPlot" || object.GetTypeName()=="GroundTrack") {
       const bool orbit=object.GetTypeName()=="OrbitView";
       const bool ground=!orbit && object.GetTypeName()!="XYPlot";
-      auto initial=std::shared_ptr<GmatBase>(object.Clone());
+      auto initial=qtResourcePreviewShared(object.Clone());
       if (orbit) {
          const auto setting=qtCameraSettings(script).value(QString::fromStdString(object.GetName()));
-         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)},{"@QtObjectFontSizes",qtObjectSizesJson(setting.objectFontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(setting.objectFontPositions)},{"@QtObjectAxes",qtObjectFlagsJson(setting.objectAxes)},{"@QtObjectGrids",qtObjectFlagsJson(setting.objectGrids)},{"@QtObjectXYPlanes",qtObjectFlagsJson(setting.objectXYPlanes)}};
+         const QMap<QString,QString> originalDrawing={{"@QtObjectLabels",qtObjectFlagsJson(setting.objectLabels)},{"@QtObjectTrajectories",qtObjectFlagsJson(setting.objectTrajectories)},{"@QtObjectCenters",qtObjectFlagsJson(setting.objectCenters)},{"@QtObjectEndpoints",qtObjectFlagsJson(setting.objectEndpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(setting.objectMarkerSizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(setting.objectLineWidths)},{"@QtObjectFontSizes",qtObjectSizesJson(setting.objectFontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(setting.objectFontPositions)},{"@QtObjectAxes",qtObjectFlagsJson(setting.objectAxes)},{"@QtObjectGrids",qtObjectFlagsJson(setting.objectGrids)},{"@QtObjectXYPlanes",qtObjectFlagsJson(setting.objectXYPlanes)},{"@QtObjectVelocities",qtObjectFlagsJson(setting.objectVelocities)}};
          auto *drawing=new QPushButton("Object drawing…",this); drawing->setObjectName("editOrbitDrawing"); layout->addWidget(drawing);
          connect(drawing,&QPushButton::clicked,this,[this,originalDrawing,drawing] {
             try {
@@ -474,6 +475,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                markers.objectAxes=qtObjectFlags(objectDrawingEdits.value("@QtObjectAxes",originalDrawing.value("@QtObjectAxes")));
                markers.objectGrids=qtObjectFlags(objectDrawingEdits.value("@QtObjectGrids",originalDrawing.value("@QtObjectGrids")));
                markers.objectXYPlanes=qtObjectFlags(objectDrawingEdits.value("@QtObjectXYPlanes",originalDrawing.value("@QtObjectXYPlanes")));
+               markers.objectVelocities=qtObjectFlags(objectDrawingEdits.value("@QtObjectVelocities",originalDrawing.value("@QtObjectVelocities")));
                markers.objectMarkerSizes=qtObjectSizes(objectDrawingEdits.value("@QtObjectMarkerSizes",originalDrawing.value("@QtObjectMarkerSizes")));
                markers.objectLineWidths=qtObjectWidths(objectDrawingEdits.value("@QtObjectLineWidths",originalDrawing.value("@QtObjectLineWidths")));
                markers.objectFontSizes=qtObjectFontSizes(objectDrawingEdits.value("@QtObjectFontSizes",originalDrawing.value("@QtObjectFontSizes")));
@@ -695,11 +697,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       table->setItem(row, 2, unit);
    }
    if (object.IsOfType("ErrorModel")) {
-      auto initial=std::shared_ptr<GmatBase>(object.Clone()); QComboBox *type=nullptr;
+      auto initial=qtResourcePreviewShared(object.Clone()); QComboBox *type=nullptr;
       for (int row=0;row<table->rowCount();++row) if (table->item(row,0)->text()=="Type") type=qobject_cast<QComboBox *>(table->cellWidget(row,1));
       if (type) connect(type,&QComboBox::currentTextChanged,this,[this,initial](const QString &selected) {
          try {
-            std::unique_ptr<GmatBase> copy(initial->Clone()); copy->SetStringParameter("Type",selected.toStdString()); const auto unit=QString::fromStdString(copy->GetParameterUnit(copy->GetParameterID("Bias")));
+            QtResourcePreview copy(initial->Clone()); copy->SetStringParameter("Type",selected.toStdString()); const auto unit=QString::fromStdString(copy->GetParameterUnit(copy->GetParameterID("Bias")));
             for (int row=0;row<table->rowCount();++row) if (QStringList{"NoiseSigma","Bias","BiasSigma","PassBiases"}.contains(table->item(row,0)->text())) table->item(row,2)->setText(unit);
          } catch (BaseException &failure) { reportStatus(QString::fromStdString(failure.GetFullMessage())); }
       });
@@ -848,7 +850,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             }
             // Preview pending gravity selections before validating drag, so
             // a newly selected primary can acquire drag in the same Apply.
-            std::unique_ptr<GmatBase> preview(configured->Clone()); applyGravityBodyProperties(*preview,bodyEdits);
+            QtResourcePreview preview(configured->Clone()); applyGravityBodyProperties(*preview,bodyEdits);
             AtmosphereDialog dialog(*preview,pending,this);
             if (dialog.exec()!=QDialog::Accepted) return;
             atmosphereEdits=dialog.values();
@@ -926,7 +928,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
          VisualModelDialog dialog(values,[spacecraftName](const QMap<QString,QString> &pending) {
             auto *configured=Moderator::Instance()->GetConfiguredObject(spacecraftName);
             if (!configured) throw std::runtime_error("This spacecraft is no longer available.");
-            std::unique_ptr<GmatBase> preview(configured->Clone());
+            QtResourcePreview preview(configured->Clone());
             if (!preview) throw std::runtime_error("This spacecraft cannot be previewed.");
             for (auto it=pending.cbegin();it!=pending.cend();++it) setResourceProperty(*preview,it.key(),it.value());
             QMap<QString,QString> normalized=pending;
@@ -1020,11 +1022,11 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
             static_cast<Spacecraft &>(object).GetState().GetState()});
          anomaly->setEnabled(previous->representation=="Keplerian" || previous->representation=="ModifiedKeplerian");
          const auto resourceName=object.GetName();
-         auto orbitDraft=std::shared_ptr<GmatBase>(object.Clone());
+         auto orbitDraft=qtResourcePreviewShared(object.Clone());
          pendingOrbit=[this,representation,frame,anomaly,elementRows,resourceName,previous,creation,orbitDraft] {
             auto *current=creation ? orbitDraft.get() : Moderator::Instance()->GetConfiguredObject(resourceName);
             if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
-            std::unique_ptr<GmatBase> preview(current->Clone());
+            QtResourcePreview preview(current->Clone());
             auto *spacecraft=static_cast<Spacecraft *>(preview.get());
             spacecraft->SetState(previous->internal);
             QMap<QString,QString> source={{"CoordinateSystem",frame->currentText()},{"DisplayStateType",representation->currentText()},{"AnomalyType",anomaly->currentText()}};
@@ -1055,7 +1057,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
                if (nextFrame!=previous->frame && !available.contains(nextRepresentation)) nextRepresentation="Cartesian";
                auto *current=creation ? orbitDraft.get() : Moderator::Instance()->GetConfiguredObject(resourceName);
                if (!current) throw std::runtime_error("The spacecraft no longer exists. Reopen this panel.");
-               std::unique_ptr<GmatBase> preview(current->Clone());
+               QtResourcePreview preview(current->Clone());
                QMap<QString,QString> source={{"CoordinateSystem",previous->frame},{"DisplayStateType",previous->representation},{"AnomalyType",previous->anomaly}};
                for (int row=0;row<table->rowCount();++row) {
                   const auto name=table->item(row,0)->text();
@@ -1436,7 +1438,7 @@ ResourceEditor::ResourceEditor(GmatBase &object, Apply apply, QWidget *parent,co
       }
    }
    if (hasEpochInterval(object)) {
-      auto initial=std::shared_ptr<GmatBase>(object.Clone()); QMap<QString,int> rows;
+      auto initial=qtResourcePreviewShared(object.Clone()); QMap<QString,int> rows;
       for (int row=0;row<table->rowCount();++row) if (QStringList{"EpochFormat","InitialEpoch","FinalEpoch"}.contains(table->item(row,0)->text())) rows.insert(table->item(row,0)->text(),row);
       auto *format=qobject_cast<QComboBox *>(table->cellWidget(rows.value("EpochFormat"),1));
       if (format && rows.size()==3) {

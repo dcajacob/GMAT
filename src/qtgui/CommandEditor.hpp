@@ -4,6 +4,7 @@
 #include <QStringList>
 #include <functional>
 class QPlainTextEdit;
+class QLineEdit;
 class CommandEditor final : public EditablePanel
 {
 public:
@@ -14,6 +15,9 @@ public:
    void discardChanges() override { applied=true; }
 private:
    QPlainTextEdit *source;
+   QLineEdit *name;
+   QString nameError;
+   bool synchronizingName=false;
    QString original;
    bool inserting=false, applied=false;
 };

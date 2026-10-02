@@ -2254,3 +2254,36 @@ and mission Apply. An independently selected inactive script keeps its own
 history. Fields in owned dialogs retain local history; a dialog's non-text
 controls cannot undo a script behind it. Use the shortcuts displayed in Edit
 (Ctrl+Z / Ctrl+Y on the qualified Linux configuration).
+
+
+### Velocity display for each object
+
+OrbitView / Advanced / Object drawing / Paths and labels provides Velocity
+Default/On/Off for each selected space point. On draws a line at every recorded
+sample, ending at position plus 1000 seconds times its velocity in the display
+coordinate system. Default and Off hide these lines. This fixed scale is a
+visual guide, not a propagation prediction. Paths and object visibility are
+independent controls. Changes remain pending until the parent Apply and survive
+Save/reopen, Rename, Undo/Redo and recorded replay. Converted OpenFrames
+DrawVelocity arrays retain their independent named choices.
+
+### Naming mission commands and adding Write
+
+Command settings include an optional Name. Leave it blank for the normal command
+label. Edits remain pending until Apply; the Name and source fields stay in sync.
+A name-only edit preserves the rest of the command and nested branch text.
+Structural command boundaries keep their original labels. SaveMission's quoted
+filename stays in its source editor.
+
+When the selected runtime supports Write, the mission insertion menu includes
+it. Its simple form selects an ordered list of parameters; full option syntax
+remains available in the source field. Names and Write are covered by
+Qt6ParityValidation/mission-label-write-20261002.md.
+
+
+### Keeping resource settings reachable
+
+New resource settings panels open within the workspace. Activate a retained
+panel through Window or by double-clicking its resource to bring all its controls
+back into view. Pending edits remain in that same panel. Other positioned
+windows keep their placement.

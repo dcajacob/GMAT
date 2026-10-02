@@ -298,12 +298,12 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
             if (!list.hasMatch()) { result.error=it.key()+": invalid Add list for per-object display settings."; return result; }
             names=list.captured(1).split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts); names.removeDuplicates();
             // OF Add resets the ordered object list and its display defaults.
-            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear(); display.objectFontSizes.clear(); display.objectFontPositions.clear(); display.objectAxes.clear(); display.objectGrids.clear(); display.objectXYPlanes.clear();
-            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; display.objectFontSizes[name]=14; display.objectFontPositions[name]="Top-Right"; display.objectAxes[name]=false; display.objectGrids[name]=false; display.objectXYPlanes[name]=false; }
-         } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints" || property=="DrawAxes" || property=="DrawGrid" || property=="DrawXYPlane") {
+            display.objectLabels.clear(); display.objectTrajectories.clear(); display.objectCenters.clear(); display.objectEndpoints.clear(); display.objectMarkerSizes.clear(); display.objectLineWidths.clear(); display.objectFontSizes.clear(); display.objectFontPositions.clear(); display.objectAxes.clear(); display.objectGrids.clear(); display.objectXYPlanes.clear(); display.objectVelocities.clear();
+            for (const auto &name:names) { display.objectLabels[name]=true; display.objectTrajectories[name]=true; display.objectCenters[name]=true; display.objectEndpoints[name]=true; display.objectMarkerSizes[name]=10; display.objectLineWidths[name]=2; display.objectFontSizes[name]=14; display.objectFontPositions[name]="Top-Right"; display.objectAxes[name]=false; display.objectGrids[name]=false; display.objectXYPlanes[name]=false; display.objectVelocities[name]=false; }
+         } else if (property=="DrawLabel" || property=="DrawTrajectory" || property=="DrawCenterPoint" || property=="DrawEndPoints" || property=="DrawAxes" || property=="DrawGrid" || property=="DrawXYPlane" || property=="DrawVelocity") {
             if (!value.startsWith('[') || !value.endsWith(']')) { result.error=it.key()+"."+property+": expected a bracketed true/false array."; return result; }
             const auto flags=value.mid(1,value.size()-2).trimmed().split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
-            auto &destination=property=="DrawLabel" ? display.objectLabels : property=="DrawTrajectory" ? display.objectTrajectories : property=="DrawCenterPoint" ? display.objectCenters : property=="DrawEndPoints" ? display.objectEndpoints : property=="DrawAxes" ? display.objectAxes : property=="DrawGrid" ? display.objectGrids : display.objectXYPlanes;
+            auto &destination=property=="DrawLabel" ? display.objectLabels : property=="DrawTrajectory" ? display.objectTrajectories : property=="DrawCenterPoint" ? display.objectCenters : property=="DrawEndPoints" ? display.objectEndpoints : property=="DrawAxes" ? display.objectAxes : property=="DrawGrid" ? display.objectGrids : property=="DrawXYPlane" ? display.objectXYPlanes : display.objectVelocities;
             for (int i=0;i<flags.size();++i) {
                if (flags[i]!="true" && flags[i]!="false") { result.error=it.key()+"."+property+": expected true or false."; return result; }
                // OF applies the available prefix and leaves omitted objects at defaults.
@@ -365,7 +365,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       if (!settings.contains(i)) { output.append(lines[i]); continue; }
       const auto name=settings[i].first,key=settings[i].second;
       if (types[name]=="OpenFramesInterface" && common.contains(key)) output.append(lines[i]);
-      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth" || key=="DrawFontSize" || key=="DrawFontPosition" || key=="DrawAxes" || key=="DrawGrid" || key=="DrawXYPlane")) {
+      else if (types[name]=="OpenFramesInterface" && (key=="DrawLabel" || key=="DrawTrajectory" || key=="DrawCenterPoint" || key=="DrawEndPoints" || key=="DrawMarkerSize" || key=="DrawLineWidth" || key=="DrawFontSize" || key=="DrawFontPosition" || key=="DrawAxes" || key=="DrawGrid" || key=="DrawXYPlane" || key=="DrawVelocity")) {
          output.append("% Qt conversion: "+lines[i]);
          result.notes.append(name+"."+key+": independent per-object drawing retained in Qt metadata.");
       } else {
@@ -425,6 +425,7 @@ QtScriptConversion convertOpenFramesViews(const QString &source)
       cameraSetting.objectAxes=displaySettings.value(plot).objectAxes;
       cameraSetting.objectGrids=displaySettings.value(plot).objectGrids;
       cameraSetting.objectXYPlanes=displaySettings.value(plot).objectXYPlanes;
+      cameraSetting.objectVelocities=displaySettings.value(plot).objectVelocities;
       cameraSetting.objectMarkerSizes=displaySettings.value(plot).objectMarkerSizes;
       cameraSetting.objectLineWidths=displaySettings.value(plot).objectLineWidths;
       cameraSetting.objectFontSizes=displaySettings.value(plot).objectFontSizes;
@@ -550,6 +551,7 @@ QString qtCameraDirective(const QString &plot,const QtCameraSetting &setting)
    if (!setting.objectAxes.isEmpty()) object.insert("objectAxes",objectFlagsJson(setting.objectAxes));
    if (!setting.objectGrids.isEmpty()) object.insert("objectGrids",objectFlagsJson(setting.objectGrids));
    if (!setting.objectXYPlanes.isEmpty()) object.insert("objectXYPlanes",objectFlagsJson(setting.objectXYPlanes));
+   if (!setting.objectVelocities.isEmpty()) object.insert("objectVelocities",objectFlagsJson(setting.objectVelocities));
    if (!setting.objectMarkerSizes.isEmpty()) object.insert("objectMarkerSizes",objectSizesJson(setting.objectMarkerSizes));
    if (!setting.objectLineWidths.isEmpty()) object.insert("objectLineWidths",objectWidthsJson(setting.objectLineWidths));
    if (!setting.objectFontSizes.isEmpty()) object.insert("objectFontSizes",objectSizesJson(setting.objectFontSizes));
@@ -661,6 +663,7 @@ QMap<QString,QtCameraSetting> qtCameraSettings(const QString &source)
       if (object.contains("objectAxes")) setting.objectAxes=objectFlags(object.value("objectAxes"));
       if (object.contains("objectGrids")) setting.objectGrids=objectFlags(object.value("objectGrids"));
       if (object.contains("objectXYPlanes")) setting.objectXYPlanes=objectFlags(object.value("objectXYPlanes"));
+      if (object.contains("objectVelocities")) setting.objectVelocities=objectFlags(object.value("objectVelocities"));
       if (object.contains("objectMarkerSizes")) setting.objectMarkerSizes=objectSizes(object.value("objectMarkerSizes"));
       if (object.contains("objectLineWidths")) setting.objectLineWidths=objectWidths(object.value("objectLineWidths"));
       if (object.contains("objectFontSizes")) setting.objectFontSizes=objectFontSizes(object.value("objectFontSizes"));

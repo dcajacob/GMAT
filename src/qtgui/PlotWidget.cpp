@@ -20,6 +20,7 @@
 #include "OrbitCamera.hpp"
 #include "OrbitObjectAxes.hpp"
 #include "OrbitObjectGuides.hpp"
+#include "OrbitVelocity.hpp"
 #include "OrbitVectors.hpp"
 #include <QGuiApplication>
 #include <QResizeEvent>
@@ -181,6 +182,10 @@ void PlotCanvas::paintEvent(QPaintEvent *)
          const double radius=std::max(curve.showObject ? curve.radius : 0,guideRadius);
          extent=std::max(extent,std::hypot(point.x,point.y,point.z)+radius);
          bounds.include(point.x,point.y,point.z,radius);
+         if (orbit && curve.objectVelocity) if (const auto velocity=orbitVelocitySegment(point)) {
+            extent=std::max(extent,velocity->end.length());
+            bounds.include(velocity->end.x(),velocity->end.y(),velocity->end.z(),0);
+         }
       }
    if (orbit) for (const auto &vector:data->vectors) for (const auto &sample:vector.samples)
       if (const auto arrow=orbitVectorArrow(*data,vector,sample)) for (const auto &point:{arrow->start,arrow->end}) {
@@ -301,6 +306,21 @@ void PlotCanvas::paintEvent(QPaintEvent *)
                   }
                }
                if (a) objects.append({(depth(*a)+depth(*b))/2,&curve,a,b});
+            }
+            if (curve.objectVelocity) if (const auto velocity=orbitVelocitySegment(point)) {
+               auto from=velocity->start,to=velocity->end; bool visible=true;
+               if (data->perspective) {
+                  const double near=1e-6;
+                  const double da=camera.distance-(from-camera.target)*camera.outward-near;
+                  const double db=camera.distance-(to-camera.target)*camera.outward-near;
+                  if (da<0 && db<0) visible=false;
+                  else if (da<0 || db<0) { const auto clipped=from+(to-from)*(da/(da-db)); if (da<0) from=clipped; else to=clipped; }
+               }
+               if (visible) {
+                  PlotPoint a=point,b=point; a.x=from.x(); a.y=from.y(); a.z=from.z(); b.x=to.x(); b.y=to.y(); b.z=to.z();
+                  clippedPoints.push_back(a); const auto *start=&clippedPoints.back(); clippedPoints.push_back(b); const auto *end=&clippedPoints.back();
+                  objects.append({(depth(a)+depth(b))/2,&curve,start,end,0,true});
+               }
             }
             previous=&point; last=&point;
          }

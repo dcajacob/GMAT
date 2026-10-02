@@ -141,3 +141,12 @@ limits. Host Wayland/GNOME minimize/focus, portal and broader keyboard workflows
 remain open, and all interactive Help tutorial walkthroughs remain pending.
 Windows/macOS and MATLAB stay deferred. Full Linux replacement qualification
 remains unfinished.
+
+
+## Subsequent velocity checkpoint — 2026-10-02
+
+The earlier unsupported DrawVelocity disposition above is superseded by
+[retained object velocity](object-velocity-20261002.md). DrawVelocity is now
+converted and editable. The directly affected guide fixture instead checks the
+still-unsupported registered DrawUsePropLabel field; its new focused result is
+0.34 seconds. Other original guide evidence and native limits remain unchanged.

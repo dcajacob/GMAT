@@ -1,6 +1,6 @@
 #pragma once
 #include <QString>
-#include <memory>
+#include "ResourcePreview.hpp"
 class GmatBase;
 // An unregistered template: opening/canceling the creator cannot mutate a mission.
-std::unique_ptr<GmatBase> resourceDraft(const QString &type,const QString &name);
+QtResourcePreview resourceDraft(const QString &type,const QString &name);

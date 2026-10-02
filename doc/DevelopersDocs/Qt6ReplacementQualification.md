@@ -7874,3 +7874,78 @@ Durable raw evidence is in build/example-qualification/20261002/isolated-x11.
 All interactive Help tutorial walkthroughs remain pending. This bounded route
 supports future independent construction; it does not close full replacement
 or native desktop acceptance. Windows/macOS and MATLAB remain deferred.
+
+
+## Preview lifetime, velocity and command naming checkpoint — 2026-10-02
+
+[Viewer/shared evidence](Qt6ParityValidation/viewer-preview-shared-20261002.md)
+records a demonstrated runtime reliability defect: destruction of same-name
+OrbitView settings/validation clones cleared the live display. Frontend preview
+ownership now suppresses only that synchronous ClearObjects; genuine engine
+cleanup remains active. QtGui.PreviewLifetime passes 0.89 seconds, including
+exact retained histories/cameras and ordinary cleanup. Actual private X11 input
+then establishes clean settings close plus two actual viewer deletion/Output
+reopens at shared 47.6%, rotated camera retention and three main minimize/restores.
+The original failure remains preserved. This is stronger bounded X11 lifecycle
+evidence, not host GNOME/Wayland or hardware acceptance.
+
+Actual GUI creation adds XYPlot to Orbit/Ground: all three scrub together,
+Start/Play/Pause stops at27% with identical captures after 500 ms, per-Orbit Local
+Start and global Latest work. A retained XY settings activation clips controls;
+the focused workspace correction and retry are recorded separately. Capture
+labels containing intended actions are not assumed outcomes: the early LocalXY
+attempts moved global controls, several SaveAs captures still contain the dialog,
+and the final velocity-replay attempt shows Latest. Their precise limitations
+are recorded alongside successful cases.
+
+[Velocity evidence](Qt6ParityValidation/object-velocity-20261002.md) adds retained
+DrawVelocity conversion and pending per-object controls, real view-frame state
+capture, independent fixed1000-second line geometry, native/fallback rendering,
+replay/trim/Fit/source/rename preservation. QtGui.ObjectVelocity passes 0.85 seconds;
+the independently affected ObjectGuides check passes 0.34 seconds. Actual private
+X11 controls Apply/run and Output reopen show native velocity at Latest. The
+rotating-frame comparison fixture sets NutationUpdateInterval=0 to align plot and
+Report calculation paths; no production numerics or tolerances changed. Relative
+Velocity/ThrustVector remain explicit unsupported converted modes. Wider solver,
+mesh and camera regimes remain open.
+
+[Name/Write evidence](Qt6ParityValidation/mission-label-write-20261002.md) adds
+pending optional command names with exact prefix-only branch/source edits and
+runtime-gated Write insertion/ordered parameter selection. Full option syntax
+and SaveMission's filename remain explicit source boundaries. The first check
+exposed a real existing named-assignment serialization defect with the GMAT
+keyword off; a narrow11-line core fix retains that label without changing
+numerical execution. QtGui.MissionLabelsWrite passes 0.89 seconds, including direct
+OFF/ON/OFF/repeated serialization and an actual report 9/2.5. Initial compile,
+fixture and product failures are retained with their final dispositions.
+
+No earlier successful full UI/example matrix was repeated. Core identity is
+recorded separately from the application: a shared-library-only fix does not
+change the executable hash. Durable full sessions/check logs remain in
+build/example-qualification/20261002. Read-only focused peer review found no
+additional substantive preview/velocity/command defects. All Help walkthroughs
+remain Pending: these qualification fixtures are not tutorial constructions.
+Full Linux replacement acceptance remains unfinished; Windows/macOS/MATLAB
+remain deferred.
+
+
+[Workspace/native retry](Qt6ParityValidation/workspace-reachability-20261002.md)
+resolves the clipped retained XY settings case. It also corrects an inherited
+script-maximized state restoring a new form's unclamped original geometry.
+New settings normalize before placement; explicit activation clamps the selected
+normal retained panel with settled layouts and unchanged pending/source/report/
+other-window state. QtGui.WorkspaceReachability passes 0.34 seconds. Actual input
+opens settings before a 0.553-second mission, deliberately displaces its pending
+panel, and restores full controls/edit through Window and Resources. Actual Close
+reaches the discard guard. Fresh post-Discard pixels then establish master Start,
+47.6% seek and native velocity retained after actual Output reopen. Wrong-button
+captures still containing the dialog remain explicitly excluded.
+
+The final rebuilt executable SHA256 is
+c15cb5c18930019978bb8c335ec374258c67a2e24857ca7d455975808fb432a3;
+core 5eb86098fbc52890a95d3226c56a4edd8e090308a940bb097749e23237532ab9;
+selected startup 5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a.
+Host GNOME Shell's PID/start remains unchanged. This closes the named private
+X11 window/replay cases; host GNOME/Wayland, portal/hardware, wider solver/segment
+camera regimes, outstanding example failures and full replacement remain open.
+All independent Help tutorial walkthroughs are still Pending.

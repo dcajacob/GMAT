@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "OrbitViewDialog.hpp"
 #include "ResourceProperties.hpp"
 #include "GmatBase.hpp"
@@ -78,7 +79,7 @@ QSet<QString> applyOrbitViewProperties(GmatBase &plot,const QMap<QString,QString
 }
 QString orbitViewScript(GmatBase &plot)
 {
-   std::unique_ptr<GmatBase> copy(plot.Clone());
+   QtResourcePreview copy(plot.Clone());
    BooleanArray flags;
    const auto names=copy->GetStringArrayParameter("Add");
    for (const auto &name:names) flags.push_back(static_cast<OrbitPlot &>(*copy).GetShowObject(name));
@@ -121,7 +122,7 @@ OrbitViewDialog::OrbitViewDialog(GmatBase &plot,const QMap<QString,QString> &pen
    for (const auto &field:resourceProperties(plot)) { initial.insert(field.name,field.value); fields.insert(field.name,field); }
    for (auto it=pending.cbegin();it!=pending.cend();++it) initial.insert(it.key(),it.value());
    initialSettings=initial;
-   auto snapshot=std::shared_ptr<GmatBase>(plot.Clone());
+   auto snapshot=qtResourcePreviewShared(plot.Clone());
    auto *layout=new QVBoxLayout(this); auto *help=new QLabel("Select plotted objects, camera and drawing settings. OK keeps edits pending; Apply updates the mission.",this); help->setWordWrap(true); layout->addWidget(help);
    auto *scroll=new QScrollArea(this); scroll->setObjectName("orbitViewScroll"); scroll->setWidgetResizable(true); layout->addWidget(scroll,1);
    auto *content=new QWidget(scroll); scroll->setWidget(content); auto *groups=new QVBoxLayout(content);
@@ -178,7 +179,7 @@ OrbitViewDialog::OrbitViewDialog(GmatBase &plot,const QMap<QString,QString> &pen
    connect(objects,&QListWidget::itemChanged,error,[this] { error->clear(); });
    auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,this); layout->addWidget(buttons); connect(buttons,&QDialogButtonBox::rejected,this,&QDialog::reject);
    connect(buttons,&QDialogButtonBox::accepted,this,[this,snapshot] {
-      try { const auto values=settings(); std::unique_ptr<GmatBase> candidate(snapshot->Clone()); auto applied=applyOrbitViewProperties(*candidate,values); for (auto it=values.cbegin();it!=values.cend();++it) if (!applied.contains(it.key())) setResourceProperty(*candidate,it.key(),it.value()); validateOrbitViewProperties(*candidate); accept(); }
+      try { const auto values=settings(); QtResourcePreview candidate(snapshot->Clone()); auto applied=applyOrbitViewProperties(*candidate,values); for (auto it=values.cbegin();it!=values.cend();++it) if (!applied.contains(it.key())) setResourceProperty(*candidate,it.key(),it.value()); validateOrbitViewProperties(*candidate); accept(); }
       catch (BaseException &exception) { error->setText(QString::fromStdString(exception.GetFullMessage())); }
       catch (const std::exception &exception) { error->setText(QString::fromUtf8(exception.what())); }
    });

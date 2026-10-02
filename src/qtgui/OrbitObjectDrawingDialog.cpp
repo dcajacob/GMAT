@@ -1,6 +1,8 @@
 #include "OrbitObjectDrawingDialog.hpp"
 #include "ScriptCompatibility.hpp"
 #include "TableColumns.hpp"
+#include "Moderator.hpp"
+#include "GmatBase.hpp"
 #include <QVBoxLayout>
 #include <QTableWidget>
 #include <QHeaderView>
@@ -20,11 +22,11 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
 {
    setObjectName("orbitObjectDrawingDialog"); setWindowTitle("Object drawing");
    auto *layout=new QVBoxLayout(this);
-   auto *help=new QLabel("Choose each object's paths, labels, markers and body guides. Axes, latitude/longitude grid and local XY plane follow recorded position and attitude; Default hides them. The local XY plane extends to 15 object radii. These are separate from the plot-wide Grid and XY plane settings. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. Label style uses pixel sizes (0 hides the label); Default uses the viewer font and placement. OK keeps edits pending until Apply.",this);
+   auto *help=new QLabel("Choose each object's paths, labels, markers and body guides. Velocity shows a segment at every recorded object sample, using a 1000-second scale in the display coordinate system; Default hides these segments. Axes, latitude/longitude grid and local XY plane follow recorded position and attitude; Default hides them. The local XY plane extends to 15 object radii. These are separate from the plot-wide Grid and XY plane settings. Default uses normal viewer choices: width 1 pixel and marker size 10 pixels. Show labels is the label master switch. Orbit-view setup controls models/bodies. Label style uses pixel sizes (0 hides the label); Default uses the viewer font and placement. OK keeps edits pending until Apply.",this);
    help->setWordWrap(true); layout->addWidget(help);
-   objects=new QTableWidget(names.size(),4,this); objects->setObjectName("orbitObjectDrawing");
-   objects->setHorizontalHeaderLabels({"Object","Trajectory","Label","Width (px)"}); objects->verticalHeader()->hide();
-   configureTableColumns(objects,{10,8,8,6});
+   objects=new QTableWidget(names.size(),5,this); objects->setObjectName("orbitObjectDrawing");
+   objects->setHorizontalHeaderLabels({"Object","Trajectory","Label","Width (px)","Velocity"}); objects->verticalHeader()->hide();
+   configureTableColumns(objects,{10,8,8,6,8});
    for (int row=0;row<names.size();++row) {
       auto *item=new QTableWidgetItem(names[row]); item->setFlags(item->flags()&~Qt::ItemIsEditable); objects->setItem(row,0,item);
       for (int column=1;column<3;++column) {
@@ -36,6 +38,12 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
       auto *width=new QLineEdit(objects); width->setObjectName("orbitDrawing_width_"+names[row]); width->setPlaceholderText("Default");
       if (drawing && drawing->objectLineWidths.contains(names[row])) width->setText(QString::number(drawing->objectLineWidths.value(names[row]),'g',17));
       objects->setCellWidget(row,3,width);
+      auto *velocity=new QComboBox(objects); velocity->setObjectName("orbitDrawing_velocity_"+names[row]); velocity->addItems({"Default","On","Off"});
+      if (drawing && drawing->objectVelocities.contains(names[row])) velocity->setCurrentIndex(drawing->objectVelocities.value(names[row]) ? 1 : 2);
+      auto *object=Moderator::Instance()->GetConfiguredObject(names[row].toStdString());
+      velocity->setEnabled(object && object->IsOfType(Gmat::SPACE_POINT));
+      velocity->setToolTip(velocity->isEnabled() ? "Segments use recorded velocity in this display frame, with a 1000-second scale." : "Velocity segments are available for space-point trajectories.");
+      objects->setCellWidget(row,4,velocity);
    }
    markers=new QTableWidget(names.size(),4,this); markers->setObjectName("orbitObjectMarkers");
    markers->setHorizontalHeaderLabels({"Object","Center","Endpoints","Size (px)"}); markers->verticalHeader()->hide(); configureTableColumns(markers,{10,8,8,6});
@@ -82,10 +90,14 @@ OrbitObjectDrawingDialog::OrbitObjectDrawingDialog(const QStringList &names,cons
 }
 QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
 {
-   QMap<QString,bool> labels,trajectories;
+   QMap<QString,bool> labels,trajectories,velocities;
    for (int row=0;row<objects->rowCount();++row) for (int column=1;column<3;++column) {
       const auto *choice=qobject_cast<QComboBox *>(objects->cellWidget(row,column));
       if (choice->currentIndex()) (column==1 ? trajectories : labels).insert(objects->item(row,0)->text(),choice->currentIndex()==1);
+   }
+   for (int row=0;row<objects->rowCount();++row) {
+      const auto *choice=qobject_cast<QComboBox *>(objects->cellWidget(row,4));
+      if (choice->currentIndex()) velocities.insert(objects->item(row,0)->text(),choice->currentIndex()==1);
    }
    QMap<QString,double> widths;
    for (int row=0;row<objects->rowCount();++row) {
@@ -124,5 +136,5 @@ QMap<QString,QString> OrbitObjectDrawingDialog::settings() const
       const auto *choice=qobject_cast<QComboBox *>(guides->cellWidget(row,column));
       if (choice->currentIndex()) (column==1 ? axes : column==2 ? grids : planes).insert(guides->item(row,0)->text(),choice->currentIndex()==1);
    }
-   return {{"@QtObjectAxes",qtObjectFlagsJson(axes)},{"@QtObjectGrids",qtObjectFlagsJson(grids)},{"@QtObjectXYPlanes",qtObjectFlagsJson(planes)},{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)},{"@QtObjectFontSizes",qtObjectSizesJson(fontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(fontPositions)}};
+   return {{"@QtObjectVelocities",qtObjectFlagsJson(velocities)},{"@QtObjectAxes",qtObjectFlagsJson(axes)},{"@QtObjectGrids",qtObjectFlagsJson(grids)},{"@QtObjectXYPlanes",qtObjectFlagsJson(planes)},{"@QtObjectLabels",qtObjectFlagsJson(labels)},{"@QtObjectTrajectories",qtObjectFlagsJson(trajectories)},{"@QtObjectCenters",qtObjectFlagsJson(centers)},{"@QtObjectEndpoints",qtObjectFlagsJson(endpoints)},{"@QtObjectMarkerSizes",qtObjectSizesJson(sizes)},{"@QtObjectLineWidths",qtObjectWidthsJson(widths)},{"@QtObjectFontSizes",qtObjectSizesJson(fontSizes)},{"@QtObjectFontPositions",qtObjectFontPositionsJson(fontPositions)}};
 }

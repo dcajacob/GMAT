@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "ReportViewer.hpp"
 #include "ComparisonPanel.hpp"
 #include "MainWindow.hpp"
@@ -95,6 +96,8 @@
 #include <QFileInfo>
 #include <QFontDatabase>
 #include <QMdiArea>
+#include <QLayout>
+#include <QTimer>
 #include <QMdiSubWindow>
 #include <QOpenGLWidget>
 #include <QMenuBar>
@@ -131,16 +134,38 @@ bool setGmatScriptDirectory(const QString &directory)
    if (!path.endsWith(separator)) path+=separator;
    return manager->SetGmatWorkingDirectory(path.toStdString());
 }
+void keepWorkspaceWindowReachable(QMdiArea *workspace,QMdiSubWindow *child)
+{
+   if (child->isMinimized() || child->isMaximized()) return;
+   // Embedded forms and restored MDI windows can acquire a larger minimum
+   // after their initial placement. Settle only this window's layouts before
+   // measuring it; do not move any other window or pump the global event loop.
+   child->ensurePolished();
+   if (auto *content=child->widget()) {
+      content->ensurePolished();
+      if (content->layout()) content->layout()->activate();
+   }
+   if (child->layout()) child->layout()->activate();
+   const auto bounds=workspace->viewport()->rect();
+   child->resize(child->size().expandedTo(child->minimumSizeHint()).boundedTo(bounds.size()));
+   child->move(qBound(bounds.left(),child->x(),qMax(bounds.left(),bounds.right()-child->width()+1)),
+               qBound(bounds.top(),child->y(),qMax(bounds.top(),bounds.bottom()-child->height()+1)));
+}
 void showNewWorkspaceWindow(QMdiArea *workspace,QMdiSubWindow *child)
 {
    child->show();
-   // Qt's cascade position can put a new panel below or beyond the viewport
-   // after several viewers have opened. Keep its controls reachable without
-   // rearranging any window the user has already positioned.
-   const auto bounds=workspace->viewport()->rect();
-   child->resize(child->size().boundedTo(bounds.size()));
-   child->move(qBound(bounds.left(),child->x(),qMax(bounds.left(),bounds.right()-child->width()+1)),
-               qBound(bounds.top(),child->y(),qMax(bounds.top(),bounds.bottom()-child->height()+1)));
+   // Configuration panels are created with a normal size. Do not inherit the
+   // active script's maximized state and later restore an unclamped position.
+   if (child->property("configurationPanel").toBool() && child->isMaximized()) child->showNormal();
+   // Keep new controls reachable when Qt's cascade position leaves the viewport.
+   keepWorkspaceWindowReachable(workspace,child);
+   // An active maximized script can briefly maximize the new child, then Qt
+   // restores its original geometry during deferred initialization. Bound that
+   // final normal geometry too, without altering an explicit min/max state.
+   const QPointer<QMdiSubWindow> guarded=child;
+   QTimer::singleShot(0,child,[workspace,guarded] {
+      if (guarded && guarded->isVisible()) keepWorkspaceWindowReachable(workspace,guarded);
+   });
 }
 // wx assigns display names while populating the mission tree. Qt keeps its
 // snapshots independent of engine objects; give summaries those names only
@@ -727,8 +752,9 @@ MainWindow::MainWindow()
          connect(action,&QAction::triggered,this,[this,guarded] {
             if (!guarded) return;
             if (guarded->isMinimized()) guarded->showNormal();
-            workspace->setActiveSubWindow(guarded); guarded->raise();
-            guarded->widget()->setFocus();
+            workspace->setActiveSubWindow(guarded);
+            if (guarded->property("configurationPanel").toBool()) keepWorkspaceWindowReachable(workspace,guarded);
+            guarded->raise(); guarded->widget()->setFocus();
          });
       }
    });
@@ -765,7 +791,9 @@ MainWindow::MainWindow()
          if (!panel) continue;
          if (child->property("sourceScript").toString()==snapshot || panel->hasChanges()) {
             if (child->isMinimized()) child->showNormal();
-            workspace->setActiveSubWindow(child); child->raise(); panel->setFocus();
+            workspace->setActiveSubWindow(child);
+            keepWorkspaceWindowReachable(workspace,child);
+            child->raise(); panel->setFocus();
             if (child->property("sourceScript").toString()!=snapshot)
                statusBar()->showMessage("This panel has changes from an older mission. Close and discard them before reopening.");
             return;
@@ -1471,7 +1499,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
    const auto name=QString::fromStdString(resource.GetName());
    QMap<QString,QString> changes=requested;
    if (changes.isEmpty()) return applyModelScript(expectedScript);
-   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions","@QtObjectAxes","@QtObjectGrids","@QtObjectXYPlanes"};
+   const QStringList objectDrawingKeys={"@QtObjectLabels","@QtObjectTrajectories","@QtObjectCenters","@QtObjectEndpoints","@QtObjectMarkerSizes","@QtObjectLineWidths","@QtObjectFontSizes","@QtObjectFontPositions","@QtObjectAxes","@QtObjectGrids","@QtObjectXYPlanes","@QtObjectVelocities"};
    const bool objectDrawing=std::any_of(objectDrawingKeys.cbegin(),objectDrawingKeys.cend(),[&](const auto &key) { return changes.contains(key); });
    if (objectDrawing && !object->IsOfType("OrbitView")) return "Object drawing settings belong to an OrbitView.";
    QMap<QString,QString> external;
@@ -1605,7 +1633,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
    QString candidate;
    try {
       setScriptDirectory();
-      std::unique_ptr<GmatBase> proposed(object->Clone());
+      QtResourcePreview proposed(object->Clone());
       if (!proposed) return "This resource cannot be edited.";
       if (changes.contains("@DynamicData")) applyDynamicDataSettings(*proposed,changes.value("@DynamicData"));
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
@@ -1666,7 +1694,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
          if (!resource.IsOfType(Gmat::PROP_SETUP)) return QString::fromStdString(resource.GetGeneratingString(Gmat::SCRIPTING));
          // The full script writes force models in their own section. Match that
          // convention without changing the configured object's output flags.
-         std::unique_ptr<GmatBase> copy(resource.Clone());
+         QtResourcePreview copy(resource.Clone());
          copy->TakeAction("ExcludeODEModel");
          return QString::fromStdString(copy->GetGeneratingString(Gmat::SCRIPTING));
       };
@@ -1731,7 +1759,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
                   if (std::find(objects.begin(),objects.end(),it.key().toStdString())==objects.end()) it=flags.erase(it); else ++it;
                }
             };
-            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths); prune(setting.objectFontSizes); prune(setting.objectFontPositions); prune(setting.objectAxes); prune(setting.objectGrids); prune(setting.objectXYPlanes);
+            prune(setting.objectLabels); prune(setting.objectTrajectories); prune(setting.objectCenters); prune(setting.objectEndpoints); prune(setting.objectMarkerSizes); prune(setting.objectLineWidths); prune(setting.objectFontSizes); prune(setting.objectFontPositions); prune(setting.objectAxes); prune(setting.objectGrids); prune(setting.objectXYPlanes); prune(setting.objectVelocities);
             candidate=setQtCameraSetting(candidate,name,setting);
          }
       }
@@ -1744,6 +1772,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
          if (changes.contains("@QtObjectAxes")) setting.objectAxes=qtObjectFlags(changes.value("@QtObjectAxes"));
          if (changes.contains("@QtObjectGrids")) setting.objectGrids=qtObjectFlags(changes.value("@QtObjectGrids"));
          if (changes.contains("@QtObjectXYPlanes")) setting.objectXYPlanes=qtObjectFlags(changes.value("@QtObjectXYPlanes"));
+         if (changes.contains("@QtObjectVelocities")) setting.objectVelocities=qtObjectFlags(changes.value("@QtObjectVelocities"));
          if (changes.contains("@QtObjectMarkerSizes")) setting.objectMarkerSizes=qtObjectSizes(changes.value("@QtObjectMarkerSizes"));
          if (changes.contains("@QtObjectLineWidths")) setting.objectLineWidths=qtObjectWidths(changes.value("@QtObjectLineWidths"));
          if (changes.contains("@QtObjectFontSizes")) setting.objectFontSizes=qtObjectFontSizes(changes.value("@QtObjectFontSizes"));
@@ -1845,7 +1874,7 @@ QString MainWindow::cloneResource(const QString &original,const QString &request
    try {
       QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
       const auto candidate=cloneResourceSource(expectedScript,original,name,firstCommand);
-      std::unique_ptr<GmatBase> draft(object->Clone()); draft->SetName(name.toStdString(),name.toStdString());
+      QtResourcePreview draft(object->Clone()); draft->SetName(name.toStdString(),name.toStdString());
       auto changes=settings;
       // Scalar forms submit Value even unchanged. Keep the original initializer's
       // source spelling when cloning without an edit, just like ordinary fields.
@@ -1871,7 +1900,7 @@ void MainWindow::showCloneResource(const QString &original)
       const auto suggested=QString::fromStdString(Moderator::Instance()->GetNewName(original.toStdString(),2));
       QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
       const auto preview=cloneResourceSource(snapshot,original,suggested,firstCommand);
-      std::unique_ptr<GmatBase> draft(object->Clone()); draft->SetName(suggested.toStdString(),suggested.toStdString());
+      QtResourcePreview draft(object->Clone()); draft->SetName(suggested.toStdString(),suggested.toStdString());
       QDialog dialog(this); dialog.setObjectName("cloneResourceDialog"); dialog.setWindowTitle("Clone "+original);
       auto *layout=new QVBoxLayout(&dialog); auto *form=new QFormLayout; layout->addLayout(form);
       form->addRow("Source",new QLabel(original+" — "+QString::fromStdString(object->GetTypeName()),&dialog));
@@ -2044,7 +2073,7 @@ void MainWindow::showCreateResource(const QString &initialType)
       if (selected=="GmatFunction") return;
       if (!panels->contains(selected)) try {
          const auto draftName=name->text().trimmed().isEmpty() ? QString::fromStdString(Moderator::Instance()->GetNewName(selected.toStdString(),1)) : name->text().trimmed();
-         auto draft=std::shared_ptr<GmatBase>(resourceDraft(selected,draftName)); (*drafts)[selected]=draft;
+         auto draft=qtResourcePreviewShared(resourceDraft(selected,draftName)); (*drafts)[selected]=draft;
          auto *panel=new ResourceEditor(*draft,[&,selected](const QMap<QString,QString> &settings) {
             const auto error=createResource(selected,resolveName(),snapshot,rows->value(),columns->value(),
                (selected=="Variable" || selected=="String") ? std::optional<QString>(settings.value("Value")) : std::nullopt,{},settings.value("Spacecraft"),settings);
@@ -2272,6 +2301,7 @@ CommandEditor *MainWindow::makeCommandPanel(int index,MissionEdit operation)
       {"Stop","Stop;"}, {"Script event","BeginScript;\n   % Insert commands here.\nEndScript;"}};
    if (availableEngineTypes().contains("CallPythonFunction")) templates.insert("Call Python function","[OutputVariable] = Python.ModuleName.FunctionName(InputVariable);");
    if (availableEngineTypes().contains("Toggle")) templates.insert("Toggle",QString("Toggle %1 On;").arg(first(Moderator::Instance()->GetListOfObjects(Gmat::SUBSCRIBER),"SubscriberName")));
+   if (availableEngineTypes().contains("Write")) templates.insert("Write",QString("Write %1.ElapsedSecs;").arg(sat));
    if (availableEngineTypes().contains("Save")) templates.insert("Save",QString("Save %1;").arg(sat));
    if (availableEngineTypes().contains("Global")) templates.insert("Global",QString("Global %1;").arg(sat));
    if (availableEngineTypes().contains("CommandEcho")) templates.insert("CommandEcho","CommandEcho On;");

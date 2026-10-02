@@ -129,6 +129,7 @@ void CommandForm::setStatement(const QString &statement)
       {"Minimize","Minimize\\s+"+label+name+"\\s*\\(\\s*"+scalar+"\\s*\\)"+end,{"Solver","Objective"}},
       {"Constraint","NonlinearConstraint\\s+"+label+name+"\\s*\\(\\s*([^;{}<>=\\n]+?)\\s*(<=|>=|=)\\s*([^;{}<>=\\n]+?)\\s*\\)"+end,{"Solver","Left side","Relation","Right side"}},
       {"Report","Report\\s+"+label+name+"\\s+([^;%\\n]+?)"+end,{"Report file","Parameters"}},
+      {"Write","Write\\s+"+label+"([^;{}%\\n]+?)"+end,{"Parameters"}},
       {"Dynamic update","UpdateDynamicData\\s+"+label+name+"([^;%\\n]*?)"+end,{"Display","Parameters"}},
       {"File import","Set\\s+"+label+name+"\\s+"+name+"([ \\t]*(?:\\(\\s*Data\\s*=\\s*\\{[^{}();%\\n]*\\}\\s*\\))?)"+end,{"Target","Data source","Data"}},
       {"Measurement simulation","RunSimulator\\s+"+label+name+end,{"Simulator"}},
@@ -358,7 +359,7 @@ void CommandForm::setStatement(const QString &statement)
             ReportParameterDialog dialog({input->text()},this,mode);
             if (dialog.exec()==QDialog::Accepted) input->setText(dialog.selection().first());
          });
-      } else if (!resourceType.isEmpty() || (title()=="Report" && name=="Parameters")) {
+      } else if (!resourceType.isEmpty() || ((title()=="Report" || title()=="Write") && name=="Parameters")) {
          auto *container=new QWidget(this); auto *row=new QHBoxLayout(container); row->setContentsMargins(0,0,0,0);
          row->addWidget(input); auto *choose=new QPushButton("Select…",container);
          choose->setObjectName("commandChoose_"+name); row->addWidget(choose); layout->addRow(name,container);

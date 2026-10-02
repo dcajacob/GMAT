@@ -6,6 +6,7 @@
 #include <QMap>
 #include <QRegularExpression>
 #include <stdexcept>
+#include <algorithm>
 
 namespace {
 struct Line { qsizetype start, end; QString normalized; };
@@ -307,6 +308,80 @@ int missionBranchEnd(const MissionSnapshot &snapshot,int index)
    }
    return -1;
 }
+
+MissionCommandLabel missionCommandLabel(const QString &source)
+{
+   const auto statements=scriptStatements(source);
+   if (statements.isEmpty()) return {};
+   const auto &statement=statements.first();
+   const auto &code=statement.code;
+   qsizetype first=0;
+   while (first<code.size() && code[first].isSpace()) ++first;
+   const auto prefix=QRegularExpression(R"(^GMAT\s+)").match(code.mid(first));
+   if (prefix.hasMatch()) first+=prefix.capturedLength();
+   const auto keyword=QRegularExpression(R"(^([A-Za-z][A-Za-z0-9_]*)\b)").match(code.mid(first));
+   const auto type=keyword.captured(1);
+   static const QSet<QString> structural={"BeginMissionSequence","Else","EndIf","EndFor","EndWhile","EndTarget","EndOptimize","EndScript","NoOp","SaveMission"};
+   if (structural.contains(type)) return {};
+   bool command=false;
+   auto *moderator=Moderator::Instance();
+   if (moderator->IsInitialized()) {
+      const auto types=moderator->GetListOfFactoryItems(Gmat::COMMAND);
+      command=std::find(types.begin(),types.end(),type.toStdString())!=types.end();
+   }
+   const bool afterKeyword=command && type!="GMAT" && type!="Assignment" && type!="Equation";
+   qsizetype label=first;
+   if (afterKeyword) {
+      label+=keyword.capturedLength();
+      // A registered function can share a leading word-shaped token. Only a
+      // separate command keyword places its name after that keyword.
+      if (label<code.size() && !code[label].isSpace() && code[label]!=';') return {};
+      while (label<code.size() && code[label].isSpace()) ++label;
+   }
+   qsizetype labelEnd=label;
+   QString name;
+   if (label<code.size() && code[label]=='\'') {
+      labelEnd=code.indexOf('\'',label+1);
+      if (labelEnd<0) return {};
+      name=code.mid(label+1,labelEnd-label-1); ++labelEnd;
+      if (labelEnd<code.size() && !code[labelEnd].isSpace() && code[labelEnd]!=';') return {};
+   }
+   if (!afterKeyword) {
+      // Assignments and function calls put the name before the LHS/callee.
+      // Never treat a quoted literal on the RHS as the command's name.
+      auto operands=code.mid(labelEnd).trimmed();
+      const bool assignment=QRegularExpression(R"(^(?:[A-Za-z][A-Za-z0-9_.]*(?:\([^;\n]*?\))?|\[[^\];\n]*\])\s*=)").match(operands).hasMatch();
+      const auto call=QRegularExpression(R"(^([A-Za-z][A-Za-z0-9_]*)(?:\s*\(|\s*;|\s*$))").match(operands);
+      auto *function=call.hasMatch() && moderator->IsInitialized() ? moderator->GetConfiguredObject(call.captured(1).toStdString()) : nullptr;
+      const bool python=QRegularExpression(R"(^Python\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\s*(?:\(|;|$))").match(operands).hasMatch();
+      if (!assignment && !python && !(function && function->IsOfType("Function"))) return {};
+   }
+   if (label>=statement.positions.size()) return {};
+   const auto start=statement.positions[label];
+   const auto length=labelEnd>label ? statement.positions[labelEnd-1]-start+1 : 0;
+   // A label split by a continuation/comment cannot be replaced as one token.
+   if (length && length!=labelEnd-label) return {};
+   return {name,start,length,afterKeyword};
+}
+QString setMissionCommandLabel(const QString &statement,const QString &input)
+{
+   const auto name=input.trimmed();
+   if (name.contains('\'')) throw std::runtime_error("Single quotes within a command name are not allowed.");
+   for (auto ch:input) if (ch.unicode()<32 || ch==QChar(0x2028) || ch==QChar(0x2029))
+      throw std::runtime_error("Use a command name on one line without control characters.");
+   const auto label=missionCommandLabel(statement);
+   if (!label.editable()) throw std::runtime_error("This command cannot be named safely. Complete its syntax or use the script editor.");
+   if (label.name==name) return statement;
+   QString result=statement;
+   auto value=name.isEmpty() ? QString() : "'"+name+"'";
+   if (!label.length && !value.isEmpty()) {
+      if (label.afterKeyword && label.start>0 && !statement[label.start-1].isSpace()) value.prepend(' ');
+      if (label.start<statement.size() && !statement[label.start].isSpace() && statement[label.start]!=';') value.append(' ');
+   }
+   result.replace(label.start,label.length,value);
+   return result;
+}
+
 QString editMission(const MissionSnapshot &snapshot,int index,MissionEdit operation,const QString &replacement)
 {
    if (operation!=MissionEdit::Remove && replacement.trimmed().isEmpty()) throw std::runtime_error("Enter a command");
@@ -323,7 +398,23 @@ QString editMission(const MissionSnapshot &snapshot,int index,MissionEdit operat
    if (operation==MissionEdit::InsertBefore && node.type=="BeginMissionSequence")
       throw std::runtime_error("Insert commands after BeginMissionSequence");
    if (operation==MissionEdit::Remove) candidate.remove(node.start,node.end-node.start);
-   else if (operation==MissionEdit::Replace) candidate.replace(node.start,node.end-node.start,replacement.trimmed()+"\n");
+   else if (operation==MissionEdit::Replace) {
+      const auto original=candidate.mid(node.start,node.end-node.start);
+      const auto text=replacement.trimmed();
+      bool labelOnly=false;
+      try {
+         const auto label=missionCommandLabel(text);
+         labelOnly=label.editable() && setMissionCommandLabel(original.trimmed(),label.name)==text;
+      } catch (const std::exception &) { }
+      if (labelOnly) {
+         // A label-only edit keeps the mapped command's outer indentation and
+         // line ending, including an absent final newline.
+         qsizetype begin=0,end=original.size();
+         while (begin<end && original[begin].isSpace()) ++begin;
+         while (end>begin && original[end-1].isSpace()) --end;
+         candidate.replace(node.start,node.end-node.start,original.left(begin)+text+original.mid(end));
+      } else candidate.replace(node.start,node.end-node.start,text+"\n");
+   }
    else if (operation==MissionEdit::InsertBefore) candidate.insert(node.start,replacement.trimmed()+"\n");
    else if (operation==MissionEdit::InsertAfter) candidate.insert(node.end,replacement.trimmed()+"\n");
    return candidate;

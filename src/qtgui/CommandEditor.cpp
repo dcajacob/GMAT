@@ -1,4 +1,5 @@
 #include "CommandEditor.hpp"
+#include "MissionModel.hpp"
 #include "InspectionDialog.hpp"
 #include "PropagationForm.hpp"
 #include "PropagationStopsDialog.hpp"
@@ -10,6 +11,10 @@
 #include <QDialogButtonBox>
 #include <QFontDatabase>
 #include <QLabel>
+#include <QLineEdit>
+#include <QFormLayout>
+#include <QSignalBlocker>
+#include <stdexcept>
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -27,6 +32,10 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    choices->addItem("Choose a command template…"); choices->addItems(templates.keys());
    if (adding) layout->addWidget(choices); else choices->hide();
    source=new QPlainTextEdit(statement,this); source->setObjectName("commandSource");
+   name=new QLineEdit(this); name->setObjectName("commandName");
+   name->setPlaceholderText("Optional command name");
+   name->setToolTip("Names appear in the Mission tree. Apply commits the name with the other pending command edits.");
+   auto *identity=new QFormLayout; identity->addRow("Name (optional)",name); layout->addLayout(identity);
    auto helpTopic=[this] {
       auto text=source->toPlainText();
       text.remove(QRegularExpression("(?m)^\\s*%[^\\n]*\\n?"));
@@ -37,7 +46,7 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       auto *function=call.hasMatch() && moderator->IsInitialized() ? moderator->GetConfiguredObject(call.captured(1).toStdString()) : nullptr;
       if (QRegularExpression(R"(^\s*(?:GMAT\s+)?(?:'[^'\n]*'\s+)?(?:(?:\[[^\];\n]*\]|[A-Za-z][A-Za-z0-9_]*)\s*=\s*)?Python\.[A-Za-z_][A-Za-z0-9_]*\.[A-Za-z_][A-Za-z0-9_]*\s*(?=\(|;|%|$))").match(text).hasMatch()) type="CallPythonFunction";
       else if (function && function->IsOfType("Function")) type="CallGmatFunction";
-      else if (type=="GMAT" || type=="Equation" || QRegularExpression("^\\s*[A-Za-z][A-Za-z0-9_.]*(?:\\([^)]*\\))?\\s*=").match(text).hasMatch()) type="Assignment";
+      else if (type=="GMAT" || type=="Equation" || QRegularExpression(R"(^\s*(?:GMAT\s+)?(?:'[^'\n]*'\s+)?[A-Za-z][A-Za-z0-9_.]*(?:\([^)]*\))?\s*=)").match(text).hasMatch()) type="Assignment";
       else if (auto *object=Moderator::Instance()->GetConfiguredObject(type.toStdString());object && object->IsOfType("Function")) type="CallGmatFunction";
       if (text.trimmed().isEmpty()) type="index";
       setProperty("helpTopic",type);
@@ -95,6 +104,30 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
    connect(source,&QPlainTextEdit::textChanged,status,[status] {
       status->setText("Apply validates the complete mission and updates the script. Branches include their enclosed commands.");
    });
+   auto syncName=[this] {
+      if (synchronizingName) return;
+      QSignalBlocker blocker(name); nameError.clear();
+      try {
+         const auto label=missionCommandLabel(source->toPlainText());
+         name->setEnabled(label.editable()); name->setText(label.name);
+      } catch (const std::exception &) { name->setEnabled(false); name->clear(); }
+   };
+   connect(source,&QPlainTextEdit::textChanged,this,syncName); syncName();
+   connect(name,&QLineEdit::textChanged,this,[this,status] {
+      if (synchronizingName) return;
+      try {
+         const auto replacement=setMissionCommandLabel(source->toPlainText(),name->text());
+         nameError.clear(); synchronizingName=true;
+         if (replacement!=source->toPlainText()) {
+            auto cursor=source->textCursor(); cursor.beginEditBlock(); cursor.select(QTextCursor::Document);
+            cursor.insertText(replacement); cursor.endEditBlock();
+         }
+         synchronizingName=false;
+         status->setText("Apply validates the complete mission and updates the script. Branches include their enclosed commands.");
+      } catch (const std::exception &error) {
+         synchronizingName=false; nameError=QString::fromUtf8(error.what()); status->setText(nameError);
+      }
+   });
    connect(choices,&QComboBox::textActivated,this,[this,templates](const QString &name) {
       if (!templates.contains(name)) return;
       if (source->document()->isModified() && QMessageBox::question(this,"Replace command text",
@@ -128,7 +161,8 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
       // A retained clean panel has nothing to commit. Rebuilding it would
       // invalidate run results and put a no-op ahead of the actual Undo edit.
       if (!hasChanges()) return;
-      auto error=command->validationError();
+      auto error=nameError;
+      if (error.isEmpty()) error=command->validationError();
       if (error.isEmpty()) error=apply(source->toPlainText());
       if (error.isEmpty()) { applied=true; appliedSuccessfully(); }
       else status->setText(error);
@@ -137,5 +171,5 @@ CommandEditor::CommandEditor(const QString &statement,bool adding,const QMap<QSt
 }
 bool CommandEditor::hasChanges() const
 {
-   return !applied && (inserting || source->toPlainText()!=original);
+   return !applied && (inserting || source->toPlainText()!=original || !nameError.isEmpty());
 }

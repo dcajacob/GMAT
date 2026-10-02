@@ -1,3 +1,4 @@
+#include "ResourcePreview.hpp"
 #include "ResourceForm.hpp"
 #include "EphemerisDialog.hpp"
 #include "ThrusterDialog.hpp"
@@ -53,11 +54,11 @@ ResourceForm::ResourceForm(GmatBase &object,QWidget *parent) : QWidget(parent)
       for (const auto &field:resourceProperties(object)) { values[field.name]=field.value; choices[field.name]=field.choices; }
       auto *mass=new BallisticsMassDialog(values,choices,this); add("Ballistics and mass",mass,[mass] { return mass->values(); });
       auto *attitude=new AttitudeDialog(object,{},this); add("Attitude",attitude,[attitude] { return attitude->pendingValues(); });
-      auto snapshot=std::shared_ptr<GmatBase>(object.Clone());
+      auto snapshot=qtResourcePreviewShared(object.Clone());
       QMap<QString,QString> modelValues;
       for (auto it=values.cbegin();it!=values.cend();++it) if (it.key().startsWith("Model") || it.key()=="OrbitColor" || it.key()=="TargetColor") modelValues.insert(it.key(),it.value());
       auto *model=new VisualModelDialog(modelValues,[snapshot](const QMap<QString,QString> &pending) {
-         std::unique_ptr<GmatBase> preview(snapshot->Clone());
+         QtResourcePreview preview(snapshot->Clone());
          for (auto it=pending.cbegin();it!=pending.cend();++it) setResourceProperty(*preview,it.key(),it.value());
          auto normalized=pending;
          normalized["@ResolvedModelFile"]=pending.value("ModelFile").isEmpty() ? QString() : QString::fromStdString(preview->GetStringParameter("ModelFileFullPath"));

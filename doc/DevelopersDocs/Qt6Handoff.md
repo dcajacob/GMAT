@@ -352,3 +352,99 @@ build/example-qualification/20261002/isolated-x11. The actual application/bin/Gm
 is rebuilt, final SHA256 9bc8115f4200bc4c933b72de2383cfe7722d79c463d148a64c029238b460ea8d.
 All Help tutorial walkthroughs remain pending; this route can support their
 future independent construction. Full Linux replacement remains unfinished.
+
+
+## Viewer preview/shared displays, velocity and command names — 2026-10-02
+
+All development continues in /home/dan/GIT/GMAT-Qt on codex/qt6-gui. The original
+checkout remains untouched. New actual-input evidence found that clean OrbitView
+settings close destroyed a same-name preview and cleared the live viewer's
+objects. ResourcePreview frontend ownership now suppresses just that clone's
+synchronous ClearObjects; genuine engine cleanup remains active.
+QtGui.PreviewLifetime passes 0.89 seconds. Its private X11 retry retains textured
+Earth/path/legend/rotated camera at 47.6% through two Output delete/reopens,
+three main minimize/restores and a viewer minimize/restore. Preserve the original
+failed captures; these passes do not establish the prior GNOME crash's cause.
+
+Three actual-input displays (Orbit/Ground/GUI-created XY) share scrubbing and
+Start/Play/Pause;27% pause captures remain identical after 500 ms. Confirmed
+per-Orbit Local override/global Latest works. Do not claim LocalXY from early
+mislabeled global-slider actions or save from screenshots still showing SaveAs.
+A new retained XY settings Window activation clips controls; its correction
+needs the focused workspace check and actual-input retry. See the accompanying
+viewer-preview-shared-20261002.md for full identities and bounded observations.
+
+DrawVelocity now converts source-ordered/default/prefix/Add-reset flags and
+provides pending per-object controls. Recorded view-frame velocities drive exact
+OF-style position+1000 s × velocity line segments, native/fallback/replay/trim/Fit
+and source/rename retention. QtGui.ObjectVelocity passes 0.85 seconds; affected
+ObjectGuides passes 0.34 seconds with DrawUsePropLabel as its unsupported fixture.
+The rotating-frame comparison uses NutationUpdateInterval=0 in the fixture to
+align Report and cached-plot paths; no production numerical changes. Actual
+input Apply/run and Output reopen show velocity at Latest. The attempted native
+middle replay ended at Latest and remains unqualified in that session. Relative
+Velocity/ThrustVector and wider scientific/solver regimes remain open.
+
+Command panels now support pending optional Name and runtime-gated Write with
+ordered parameters/full source fallback. A real named-assignment serialization
+failure with GMAT keyword OFF required an 11-line GmatCommand::InsertCommandName
+fix; no numerical execution changes. QtGui.MissionLabelsWrite passes 0.89 seconds,
+including keyword OFF/ON/OFF/repeated serialization and report 9/2.5. Read-only
+focused peer review found no additional substantive defects. All first failures,
+diagnostics and successful retries remain preserved in the ignored durable
+build/example-qualification/20261002 trees. No old successful full matrix or
+shipped corpus was repeated.
+
+All Help tutorial walkthroughs remain Pending. Qualification fixtures in these
+sessions are independently GUI-authored but are not Help tutorial constructions.
+After current gaps, use the Help actually available, build each scenario through
+visible GUI actions from a new mission/prerequisite authored tutorial, save/run/
+reopen and preserve results before consulting a shipped reference. Full Linux
+replacement acceptance remains open; Windows/macOS/MATLAB remain deferred.
+
+
+### Final workspace/native retry for this checkpoint
+
+WorkspaceReachability passes 0.34 seconds. Initial placement inherited the active
+script's maximized state and later restored an unclamped old geometry; normalizing
+new configuration panels plus settled/direct and guarded final placement fixes
+that case. Actual private X11 input confirms Window and Resources restore the
+same displaced pending XY form with full controls. A fresh accepted master
+Start/47.6% seek and actual Output Orbit reopen retain native velocity at that
+position. Earlier failed/inconclusive actions keep their dispositions; see
+Qt6ParityValidation/workspace-reachability-20261002.md.
+
+Application/bin/GmatQt is rebuilt, final SHA256
+c15cb5c18930019978bb8c335ec374258c67a2e24857ca7d455975808fb432a3;
+shared core 5eb86098fbc52890a95d3226c56a4edd8e090308a940bb097749e23237532ab9;
+selected startup 5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a.
+The authored fixture remains byte-identical. Host GNOME Shell remains PID399961,
+start 2026-10-01 11:34:56 MDT. Full replacement and all Help walkthroughs remain open.
+
+### Safe private Wayland route: preparation only
+
+Read-only inspection found installed GNOME Shell/Mutter 50.1, Qt Wayland, Mesa
+software EGL and Python Gio. A next isolated route may use an owned headless
+compositor with --wayland --headless --no-x11 --virtual-monitor=1600x1000 and a
+private --wayland-display under a fresh 0700 runtime/private HOME/config/cache and
+its own D-Bus. Remove inherited DISPLAY/WAYLAND_DISPLAY/WAYLAND_SOCKET/XAUTHORITY/
+DBUS session variables. Force Mesa/llvmpipe; bwrap may mask host sockets/dev/dri.
+Namespace availability, compositor startup and Qt rendering have NOT been tested.
+Do not use --display-server with headless. No compositor was launched here.
+
+Actual input can use one persistent Gio connection to Mutter RemoteDesktop
+CreateSession/Start/NotifyKeyboard and relative pointer/button/axis methods;
+transient gdbus callers fail ownership checks. Private Shell --unsafe-mode allows
+its screenshot service; relative input/screenshot need no PipeWire. Absolute
+input requires ScreenCast/PipeWire. Keep these capabilities confined to the owned
+private bus/runtime, with no physical devices or host desktop sockets.
+Authoritative installed-version source:
+[Mutter options](https://raw.githubusercontent.com/GNOME/mutter/50.1/src/core/meta-context-main.c),
+[headless backend](https://raw.githubusercontent.com/GNOME/mutter/50.1/src/backends/native/meta-backend-native.c),
+[GPU-less renderer](https://raw.githubusercontent.com/GNOME/mutter/50.1/src/backends/native/meta-renderer-native.c),
+[virtual input](https://raw.githubusercontent.com/GNOME/mutter/50.1/src/backends/meta-remote-desktop-session.c),
+[private screenshot](https://raw.githubusercontent.com/GNOME/gnome-shell/50.1/js/ui/screenshot.js).
+This is implementation preparation, not native Wayland acceptance or a proved
+fix for the user's earlier crash. Segment-arc identity and mixed solver cleanup
+remain substantive active gaps after the current checkpoint. Tutorial construction
+must still follow the Help and reserve shipped references for later comparison.

@@ -36,6 +36,9 @@ struct PlotPoint
    int marker=-1;
    bool highlighted=false;
    QString provider;
+   // Actual publisher velocity (km/s) in the same view frame as x/y/z.
+   std::array<double,3> viewVelocity{};
+   bool hasVelocity=false;
 };
 struct PlotCurve
 {
@@ -46,14 +49,14 @@ struct PlotCurve
    bool breakNext = true, visible = true, lines = true, markers = false;
    bool showObject = true;
    std::optional<bool> importedLabel;
-   bool centerMarker=false,endpointMarkers=false,objectAxes=false,objectGrid=false,objectXYPlane=false;
+   bool centerMarker=false,endpointMarkers=false,objectAxes=false,objectGrid=false,objectXYPlane=false,objectVelocity=false;
    quint32 orbitMarkerSize=10;
    std::optional<double> importedLineWidth;
    std::optional<quint32> importedFontSize;
    QString importedFontPosition;
    double orbitLineWidth() const { return importedLineWidth.value_or(width); }
    bool drawsLabel() const { return visible && importedLabel.value_or(showObject); }
-   bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || objectAxes || objectGrid || objectXYPlane || importedLabel.value_or(false)); }
+   bool drawsContent() const { return visible && (lines || markers || showObject || centerMarker || endpointMarkers || objectAxes || objectGrid || objectXYPlane || objectVelocity || importedLabel.value_or(false)); }
    bool wireframeObject = false;
    double radius = 0;
    QString texturePath;

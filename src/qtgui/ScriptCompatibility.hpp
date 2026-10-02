@@ -43,7 +43,7 @@ struct QtCameraSetting {
    QString automaticTrajectory;
    QString automaticBody;
    QString segmentFrame;
-   QMap<QString,bool> objectLabels,objectTrajectories,objectCenters,objectEndpoints,objectAxes,objectGrids,objectXYPlanes;
+   QMap<QString,bool> objectLabels,objectTrajectories,objectCenters,objectEndpoints,objectAxes,objectGrids,objectXYPlanes,objectVelocities;
    QMap<QString,quint32> objectMarkerSizes;
    QMap<QString,double> objectLineWidths;
    QMap<QString,quint32> objectFontSizes;

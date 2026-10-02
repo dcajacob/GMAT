@@ -26,12 +26,12 @@ int main(int argc,char **argv)
    if (argc!=2 || QGuiApplication::platformName()!="offscreen") return 2;
    try {
       TestSettings isolated; QTemporaryDir files;
-      const QString legacy="% guide settings α\nCreate OpenFramesInterface Display;\nGMAT Display.Add = {Sat, Earth};\nGMAT Display.DrawGrid = [true];\nGMAT Display.DrawXYPlane = [false true];\nGMAT Display.XYPlane = Off;\nGMAT Display.DrawVelocity = [true false];\n";
+      const QString legacy="% guide settings α\nCreate OpenFramesInterface Display;\nGMAT Display.Add = {Sat, Earth};\nGMAT Display.DrawGrid = [true];\nGMAT Display.DrawXYPlane = [false true];\nGMAT Display.XYPlane = Off;\nGMAT Display.DrawUsePropLabel = [true false];\n";
       const auto converted=convertOpenFramesViews(legacy); require(converted.error.isEmpty(),"Guide conversion failed");
       const auto setting=qtCameraSettings(converted.script).value("Display");
       require(setting.objectGrids==QMap<QString,bool>{{"Sat",true},{"Earth",false}} && setting.objectXYPlanes==QMap<QString,bool>{{"Sat",false},{"Earth",true}},"Per-object guide prefix/defaults lost");
       require(!converted.script.contains("Display.Grid =") && converted.script.contains("GMAT Display.XYPlane = Off;") && converted.script.contains("% Qt conversion: GMAT Display.DrawGrid = [true];"),"Body guides changed global guide settings or lost original source");
-      require(converted.notes.join('\n').contains("DrawVelocity: retained as a comment"),"Unsupported velocity warning disappeared");
+      require(converted.notes.join('\n').contains("DrawUsePropLabel: retained as a comment"),"Unsupported propagation-label warning disappeared");
       const auto retained=qtCameraSettings(qtCameraDirective("Display",setting)).value("Display");
       require(retained.objectGrids==setting.objectGrids && retained.objectXYPlanes==setting.objectXYPlanes,"Named guide metadata round trip failed");
       const auto reset=convertOpenFramesViews(legacy+"GMAT Display.Add = {Earth, Sat};\nGMAT Display.DrawGrid = [false true true];\nGMAT Display.DrawXYPlane = [true];\n");

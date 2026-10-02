@@ -10,10 +10,10 @@
 #include "CelestialBody.hpp"
 #include <stdexcept>
 
-std::unique_ptr<GmatBase> resourceDraft(const QString &type,const QString &name)
+QtResourcePreview resourceDraft(const QString &type,const QString &name)
 {
    auto *factory=FactoryManager::Instance();
-   std::unique_ptr<GmatBase> draft(factory->CreateObject(factory->GetBaseTypeOf(type.toStdString()),type.toStdString(),name.toStdString()));
+   QtResourcePreview draft(factory->CreateObject(factory->GetBaseTypeOf(type.toStdString()),type.toStdString(),name.toStdString()));
    if (!draft) throw std::runtime_error("The runtime cannot prepare this resource type.");
    auto *moderator=Moderator::Instance();
    if (auto *body=dynamic_cast<CelestialBody *>(draft.get())) {
