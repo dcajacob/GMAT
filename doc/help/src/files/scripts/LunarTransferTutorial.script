@@ -136,29 +136,12 @@ Create Variable RAAN AOP V;
 %---------- Coordinate Systems
 %----------------------------------------
 
-Create CoordinateSystem EarthMJ2000Eq;
-GMAT EarthMJ2000Eq.Origin = Earth;
-GMAT EarthMJ2000Eq.Axes = MJ2000Eq;
-GMAT EarthMJ2000Eq.UpdateInterval = 60;
-GMAT EarthMJ2000Eq.OverrideOriginInterval = false;
 
-Create CoordinateSystem EarthMJ2000Ec;
-GMAT EarthMJ2000Ec.Origin = Earth;
-GMAT EarthMJ2000Ec.Axes = MJ2000Ec;
-GMAT EarthMJ2000Ec.UpdateInterval = 60;
-GMAT EarthMJ2000Ec.OverrideOriginInterval = false;
 
-Create CoordinateSystem EarthFixed;
-GMAT EarthFixed.Origin = Earth;
-GMAT EarthFixed.Axes = BodyFixed;
-GMAT EarthFixed.UpdateInterval = 60;
-GMAT EarthFixed.OverrideOriginInterval = false;
 
 Create CoordinateSystem EarthToMoon;
 GMAT EarthToMoon.Origin = Luna;
 GMAT EarthToMoon.Axes = ObjectReferenced;
-GMAT EarthToMoon.UpdateInterval = 60;
-GMAT EarthToMoon.OverrideOriginInterval = false;
 GMAT EarthToMoon.XAxis = R;
 GMAT EarthToMoon.ZAxis = N;
 GMAT EarthToMoon.Primary = Luna;
@@ -167,8 +150,6 @@ GMAT EarthToMoon.Secondary = Earth;
 Create CoordinateSystem LunaFixed;
 GMAT LunaFixed.Origin = Luna;
 GMAT LunaFixed.Axes = BodyFixed;
-GMAT LunaFixed.UpdateInterval = 60;
-GMAT LunaFixed.OverrideOriginInterval = false;
 
 %----------------------------------------
 %---------- Solvers
@@ -240,6 +221,7 @@ GMAT EarthMoonOGL.ShowPlot = true;
 %************** Sequence 1 **************
 
 %  Set Sat equal to InitSat so we have the initial conditions saved for later use
+BeginMissionSequence;
 GMAT InitSat = Sat;
 
 % Parking orbit target orientation and TLI maneuver to align line of apsides with moon at lunar encounter

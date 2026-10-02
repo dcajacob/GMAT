@@ -252,3 +252,34 @@ GUI and qualification work remains possible. Goals live in conversation state;
 this Markdown does not transfer or resume a goal. A new chat should create a
 goal only when the user explicitly invokes it there. Do not manually edit goal
 storage, mark the old goal complete, or narrow the original acceptance scope.
+
+## Shipped examples and latest continuation — 2026-10-02
+
+The user requested every shipped example be checked, preserving successful
+results and identifying genuine fixes or unreasonable external dependencies.
+Qt6ParityValidation/shipped-examples-20261002.md records the complete 164-mission
+inventory and current stage evidence: 127 build successes, 120 completed runs,
+37 build failures, six runtime failures and one initial timeout. Do not interpret
+these numbers as full replacement or scientific qualification. All work and the
+rebuilt application/core/plugin runtime are in /home/dan/GIT/GMAT-Qt.
+
+The record covers the now-fixed coordinate pending transaction, branch insertion,
+relative assets, camera/list conversion, undrawn body cameras, retained OF
+vectors, public Python API and SRP string-array regression, with focused checks
+and exact mission/source preservation limits. Three repaired legacy tutorial
+missions complete. L2 needs a valid numerical bracket; FormationRendezvous's
+attachment is the wrong lunar content. Five TLE examples require matching absent
+public catalogs. Missing VF13ad/MarsGRAM installations are not automatically
+waived as proprietary. MATLAB remains deferred; CSALT/SNOPT requirements remain.
+
+A longer original Yukon launch-window run is active in a separate ledger under
+/tmp/gmat-shipped-examples-yukon with a 7200-second bound. Its first window
+completed and the next optimization started. Confirm its process handle before
+continuing or restarting; merge only its terminal selected record into the main
+ledger. The 900-second SPAD drag retry already completed in 209.91 seconds and
+must not be repeated. The resumable runner is src/qtgui/tests/QualifyExamples.py;
+use explicit failed selections after concrete changes. Current completed raw
+logs/reports/screenshots survive /tmp cleanup in
+build/example-qualification/20261002/raw. Keep the complete acceptance scope and
+continue meaningful broad GUI capability work; native desktop testing remains
+stopped until the GNOME Shell crash issue is resolved.

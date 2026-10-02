@@ -525,7 +525,7 @@
             <programlisting>DecoratedReport.WriteHeaders = Off;
 stringVar = '==================================================';
 Report DecoratedReport stringVar;
-stringVar = Report File in Time X Y Z VX VY VZ format;
+stringVar = 'GMAT Report File in Time X Y Z VX VY VZ format';
 Report DecoratedReport stringVar;
 stringVar = '==================================================';
 Report DecoratedReport stringVar;

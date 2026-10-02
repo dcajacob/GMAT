@@ -1,0 +1,4 @@
+[1/3] Swig compile gmat_py.i for python
+/home/dan/GIT/GMAT-Qt/src/base/command/SolverBranchCommand.hpp:122: Warning 325: Nested class not currently supported (PlotExecutionScope ignored)
+[2/3] Building CXX object swig/py3.14/CMakeFiles/gmat_py314.dir/CMakeFiles/gmat_py314.dir/gmat_pyPYTHON_wrap.cxx.o
+[3/3] Linking CXX shared module /home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so

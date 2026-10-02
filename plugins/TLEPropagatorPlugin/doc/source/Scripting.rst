@@ -46,13 +46,16 @@ element epochs must suit the script.
   ``FALCONSAT-7`` with elements appropriate to the current time used by ``now``.
 * ``GSFCSats.script`` requires ``active.txt`` with all 22 satellite names in its
   ``Id`` assignments (MMS 1--4, TDRS 3 and 5--13, TERRA, AQUA, AURA,
-  LANDSAT 7--8, ISS (ZARYA), NUSTAR and TIMED), appropriate to ``now``.
+  LANDSAT 7--8, ISS (ZARYA), NUSTAR and TIMED), appropriate to its fixed
+  ``12 Dec 2019 12:00:00.000`` epoch. Its variable is named ``now``, but the
+  ``SystemTime`` assignment is commented out. The optional real-time version
+  requires a fresh catalog before uncommenting that assignment.
 * ``Starlink.script`` requires a historical ``active.txt`` containing every
   satellite in its ``Id`` assignments at its 12 December 2019 epoch, including
   the November 2019 launch. The bundled 9 November catalog predates that launch
   and cannot replace this input.
 
-The dynamic-time contact examples and historical Starlink example have different
-requirements despite sharing the name ``active.txt``. Supply the appropriate
+The dynamic-time contact example and historical GSFC/Starlink examples have
+different requirements despite sharing the name ``active.txt``. Supply the appropriate
 catalog separately for each run. Obtaining those external catalogs is outside
 the offline tests.

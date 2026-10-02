@@ -12,7 +12,7 @@ import datetime
 import hashlib
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import signal
 import subprocess
@@ -51,11 +51,132 @@ def runtime_inputs(repo):
             'gmatpy_package_present': package.is_dir(),
             'files': [file_provenance(path) for path in sorted(paths)]}
 
+def linked_core_libraries(repo):
+    """Hash the installed core files named by this Qt executable's ELF linkage."""
+    binary = repo / 'application/bin/GmatQt-R2026a'
+    dynamic = subprocess.check_output(['readelf', '-d', str(binary)], text=True)
+    names = re.findall(r'\(NEEDED\).*Shared library: \[(libGmat(?:Base|Util)\.so[^\]]*)\]', dynamic)
+    return {'scope': 'Installed bin-directory files named by GmatQt ELF DT_NEEDED; named inode snapshots, not a claim about loader overrides or the build source state',
+            'elf_needed_names': names,
+            'files': [file_provenance(binary.parent / name) for name in names]}
+
+def script_statements(source):
+    """Read line statements, ignoring comments/terminators inside string literals."""
+    for number, line in enumerate(source.splitlines(), 1):
+        start, position, quote = 0, 0, None
+        while position < len(line):
+            character = line[position]
+            if quote:
+                if character == quote:
+                    if position + 1 < len(line) and line[position + 1] == quote:
+                        position += 2
+                        continue
+                    quote = None
+            elif character in "'\"":
+                quote = character
+            elif character in ';%':
+                statement = line[start:position].strip()
+                if statement:
+                    yield number, statement
+                if character == '%':
+                    start = len(line)
+                    break
+                start = position + 1
+            position += 1
+        statement = line[start:].strip()
+        if statement:
+            yield number, statement
+
+def script_path_literal(value):
+    """Accept a complete string or bare path, never an expression/variable."""
+    if len(value) >= 2 and value[0] in "'\"" and value[-1] == value[0]:
+        quote = value[0]
+        interior = value[1:-1]
+        if re.fullmatch(r'(?:[^' + re.escape(quote) + r']|' + re.escape(quote * 2) + r')*', interior):
+            return interior.replace(quote * 2, quote)
+        return None
+    if re.fullmatch(r"[^\s'\";{}()+*=,$]+", value) and any(character in value for character in './\\'):
+        return value
+    return None
+
+def prepare_output_directories(repo, script, output):
+    """Prepare only contained output paths declared by known writable resources."""
+    sources, statements, visited, skipped = [], [], set(), []
+
+    def visit(path):
+        path = path.resolve()
+        if path in visited:
+            return
+        visited.add(path)
+        sources.append(file_provenance(path))
+        for number, statement in script_statements(path.read_text(encoding='utf-8-sig')):
+            include = re.fullmatch(r'#Include\s+(.+)', statement, re.I)
+            if include:
+                literal = script_path_literal(include.group(1).strip())
+                target = path.parent / literal.replace('\\', '/') if literal is not None else None
+                if target is not None and target.is_file():
+                    visit(target)
+                else:
+                    skipped.append({'source': str(path), 'line': number, 'reason': 'Include is not an existing explicit literal path relative to its containing source'})
+            else:
+                statements.append((path, number, statement))
+
+    visit(script)
+    resources = {}
+    for path, number, statement in statements:
+        declaration = re.fullmatch(r'(?:GMAT\s+)?Create\s+(ReportFile|EphemerisFile)\s+(.+)', statement)
+        if declaration:
+            for name in re.findall(r'[A-Za-z]\w*', declaration.group(2)):
+                resources[name] = declaration.group(1)
+    root = output.resolve()
+    prepared, outputs = set(), []
+    for path, number, statement in statements:
+        assignment = re.fullmatch(r'(?:GMAT\s+)?([A-Za-z]\w*)\.Filename\s*=\s*(.+)', statement)
+        if not assignment or assignment.group(1) not in resources:
+            continue
+        name, value = assignment.groups()
+        record = {'source': str(path), 'line': number, 'resource': name,
+                  'resource_type': resources[name], 'assignment': value}
+        literal = script_path_literal(value)
+        if literal is None:
+            skipped.append({**record, 'reason': 'Filename is not a complete literal path'})
+            continue
+        normalized = literal.replace('\\', '/')
+        filename = PurePosixPath(normalized)
+        if (not normalized or '\x00' in normalized or normalized.endswith('/')
+                or filename.is_absolute() or re.match(r'^[A-Za-z]:', normalized)
+                or '..' in filename.parts or filename.name in ['', '.']):
+            skipped.append({**record, 'reason': 'Filename is not a contained relative file path'})
+            continue
+        directory = (root / filename.parent).resolve()
+        if not directory.is_relative_to(root):
+            skipped.append({**record, 'reason': 'Output directory resolves outside isolated OUTPUT_PATH'})
+            continue
+        missing, current = [], directory
+        while current != root and not current.exists():
+            missing.append(current)
+            current = current.parent
+        try:
+            for current in reversed(missing):
+                current.mkdir()
+                prepared.add(str(current))
+            if not directory.is_dir():
+                raise NotADirectoryError(str(directory))
+        except OSError as error:
+            skipped.append({**record, 'reason': 'Output directory could not be prepared: ' + str(error)})
+            continue
+        outputs.append({**record, 'literal_filename': literal, 'directory': str(directory)})
+    return {'scope': 'Literal Filename assignments for declared ReportFile/EphemerisFile resources, including recursively read explicit includes; original filenames and sources unchanged',
+            'output_path': str(root), 'prepared_directories': sorted(prepared),
+            'declared_outputs': outputs, 'skipped': skipped, 'sources': sources,
+            'limits': 'No input/asset directories, expression evaluation, parent/absolute/drive paths or EventLocator nested paths are prepared. GMAT may prefer an already existing source-relative directory before its OUTPUT_PATH fallback.'}
+
 def stage_provenance(repo, entry):
     difference = subprocess.check_output(['git', 'diff', 'HEAD', '--no-ext-diff', '--binary'], cwd=repo)
     return {'repo_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(), 'git_diff_sha256': hashlib.sha256(difference).hexdigest(), 'git_diff_byte_count': len(difference), 'source_context_limit': 'HEAD/diff describe current source context, not proof that the running binary was built from this worktree state', 'launcher': file_provenance(repo / 'application/bin/GmatQt'), 'actual_qt_binary': file_provenance(repo / 'application/bin/GmatQt-R2026a'), 'startup_sha256': sha(repo / 'application/bin/gmat_startup_qt.txt'), 'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'platform': 'offscreen', 'runner_sha256': sha(Path(__file__)),
             'referenced_sources': [file_provenance(repo / path) for path in entry['input_paths']],
-            'python_runtime_inputs': runtime_inputs(repo)}
+            'python_runtime_inputs': runtime_inputs(repo),
+            'linked_core_libraries': linked_core_libraries(repo)}
 
 def save(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -217,6 +338,7 @@ def child_stage(repo, evidence, entry, phase, timeout):
     root = stage_root / f'attempt-{attempt:02}'
     output = root / 'output'
     output.mkdir(parents=True)
+    setup = prepare_output_directories(repo, repo / entry['path'], output)
     startup = (repo / 'application/bin/gmat_startup_qt.txt').read_text()
     replacements = {'ROOT_PATH': str(repo / 'application') + '/', 'OUTPUT_PATH': str(output) + '/', 'LOG_FILE': str(output / 'GmatLog.txt'), 'PERSONALIZATION_FILE': str(root / 'MyGmat.ini')}
     for name, value in replacements.items():
@@ -230,6 +352,7 @@ def child_stage(repo, evidence, entry, phase, timeout):
     command.append(str(repo / entry['path']))
     environment = dict(os.environ, QT_QPA_PLATFORM='offscreen', LIBGL_ALWAYS_SOFTWARE='1', PYTHONDONTWRITEBYTECODE='1')
     provenance = stage_provenance(repo, entry)
+    provenance['setup'] = setup
     start = time.monotonic()
     timed_out = False
     with (root / 'stdout.txt').open('wb') as stdout, (root / 'stderr.txt').open('wb') as stderr:
@@ -274,6 +397,7 @@ def child_stage(repo, evidence, entry, phase, timeout):
                 confirmed.append(dependency)
     result = {'status': status, 'phase': phase, 'exit_code': code, 'timed_out': timed_out, 'duration_seconds': round(time.monotonic() - start, 3), 'timeout_seconds': timeout, 'command': command, 'evidence': str(root), 'source_sha256': entry['sha256'], 'source_unchanged': sha(repo / entry['path']) == entry['sha256'],
               'referenced_sources_unchanged': all(sha(Path(source['path'])) == source['sha256'] for source in provenance['referenced_sources']),
+              'setup_sources_unchanged': all(sha(Path(source['path'])) == source['sha256'] for source in setup['sources']),
               'confirmed_dependency_diagnostics': confirmed, 'diagnostics': diagnostics[-60:],
               'diagnostic_log_files': [file_provenance(path) for path in diagnostic_logs],
               'diagnostics_by_log': diagnostics_by_log, 'provenance': provenance, 'limits': 'Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established'}

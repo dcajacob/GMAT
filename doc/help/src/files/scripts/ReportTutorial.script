@@ -69,30 +69,14 @@ GMAT DefaultIB.Element3 = 0;
 
 
 Create String stringVar 
-GMAT stringVar = stringVar
 
 
 %----------------------------------------
 %---------- Coordinate Systems
 %----------------------------------------
 
-Create CoordinateSystem EarthMJ2000Eq;
-GMAT EarthMJ2000Eq.Origin = Earth;
-GMAT EarthMJ2000Eq.Axes = MJ2000Eq;
-GMAT EarthMJ2000Eq.UpdateInterval = 60;
-GMAT EarthMJ2000Eq.OverrideOriginInterval = false;
 
-Create CoordinateSystem EarthMJ2000Ec;
-GMAT EarthMJ2000Ec.Origin = Earth;
-GMAT EarthMJ2000Ec.Axes = MJ2000Ec;
-GMAT EarthMJ2000Ec.UpdateInterval = 60;
-GMAT EarthMJ2000Ec.OverrideOriginInterval = false;
 
-Create CoordinateSystem EarthFixed;
-GMAT EarthFixed.Origin = Earth;
-GMAT EarthFixed.Axes = BodyFixed;
-GMAT EarthFixed.UpdateInterval = 60;
-GMAT EarthFixed.OverrideOriginInterval = false;
 
 
 %----------------------------------------
@@ -157,13 +141,14 @@ GMAT DecoratedReport.ColumnWidth = 20;
 %----------------------------------------
 
 
+BeginMissionSequence;
 Report ManualReport DefaultSC.UTCGregorian DefaultSC.EarthMJ2000Eq.X DefaultSC.EarthMJ2000Eq.Y DefaultSC.EarthMJ2000Eq.Z DefaultSC.EarthMJ2000Eq.VX DefaultSC.EarthMJ2000Eq.VY DefaultSC.EarthMJ2000Eq.VZ 
 
 BeginScript;
    GMAT DecoratedReport.WriteHeaders = Off; % Turn report headers off
    GMAT stringVar = '=================================================='; % Heading
    Report DecoratedReport stringVar;   % Outputs the string variable to the report
-   GMAT stringVar = GMAT Report File in Time X Y Z VX VY VZ format; % Heading
+   GMAT stringVar = 'GMAT Report File in Time X Y Z VX VY VZ format'; % Heading
    Report DecoratedReport stringVar;   % Outputs the string variable to the report
    GMAT stringVar = '=================================================='; % Heading
    Report DecoratedReport stringVar;   % Outputs the string variable to the report

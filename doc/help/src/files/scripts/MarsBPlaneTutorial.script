@@ -141,26 +141,18 @@ GMAT MarsOI.Element3 = 0;
 Create CoordinateSystem MarsMJ2000Eq;
 GMAT MarsMJ2000Eq.Origin = Mars;
 GMAT MarsMJ2000Eq.Axes = MJ2000Eq;
-GMAT MarsMJ2000Eq.UpdateInterval = 60;
-GMAT MarsMJ2000Eq.OverrideOriginInterval = false;
 
 Create CoordinateSystem SunMJ2kEc;
 GMAT SunMJ2kEc.Origin = Sun;
 GMAT SunMJ2kEc.Axes = MJ2000Ec;
-GMAT SunMJ2kEc.UpdateInterval = 60;
-GMAT SunMJ2kEc.OverrideOriginInterval = false;
 
 Create CoordinateSystem SunMJ2kEq;
 GMAT SunMJ2kEq.Origin = Sun;
 GMAT SunMJ2kEq.Axes = MJ2000Eq;
-GMAT SunMJ2kEq.UpdateInterval = 60;
-GMAT SunMJ2kEq.OverrideOriginInterval = false;
 
 Create CoordinateSystem EarthSunRot;
 GMAT EarthSunRot.Origin = Earth;
 GMAT EarthSunRot.Axes = ObjectReferenced;
-GMAT EarthSunRot.UpdateInterval = 60;
-GMAT EarthSunRot.OverrideOriginInterval = false;
 GMAT EarthSunRot.XAxis = R;
 GMAT EarthSunRot.ZAxis = N;
 GMAT EarthSunRot.Primary = Sun;
@@ -249,6 +241,7 @@ GMAT MarsView.ShowPlot = true;
 
 %  When data report file is created, write headers are automatically set to on
 %  Including "GMAT Data.WriteHeaders = On;" would be redundant
+BeginMissionSequence;
 Report Data MarsSupply.A1ModJulian MarsSupply.X MarsSupply.Y MarsSupply.Z MarsSupply.VX MarsSupply.VY MarsSupply.VZ;
 GMAT Data.WriteHeaders = Off;
 

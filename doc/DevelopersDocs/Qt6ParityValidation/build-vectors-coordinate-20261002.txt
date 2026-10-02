@@ -1,0 +1,113 @@
+[0/1] Re-running CMake...
+-- *** Creating 64-bit GMAT Build System. Please ensure that 64-bit versions of all dependencies are available. ***
+-- Found CSPICE: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64
+-- Found F2C: /home/dan/Downloads/GMAT/GMAT-src_and_data-R2026a/GMAT-R2026a/depends/cspice/linux/cspice64/include
+-- Could NOT find Matlab (missing: Matlab_ROOT_DIR Matlab_INCLUDE_DIRS Matlab_MEX_LIBRARY Matlab_MEX_EXTENSION Matlab_MX_LIBRARY MAIN_PROGRAM MX_LIBRARY ENG_LIBRARY MAT_LIBRARY) (found version "NOTFOUND")
+CMake Warning at CMakeLists.txt:301 (MESSAGE):
+  Matlab NOT FOUND.  Set Matlab_ROOT_DIR to the path to Matlab and ensure you
+  have a working license.
+
+
+==============================
+Setting up install directory structure for GMAT
+-- Will install GMAT to /home/dan/GIT/GMAT-Qt/GMAT-R2026a-Linux-x64
+==============================
+GMAT util setup
+==============================
+GMAT base setup
+-- Use F2C version of MSISE.
+==============================
+GMAT Console setup
+-- Found Python3: /usr/bin/python3 (found version "3.14.4") found components: Interpreter
+==============================
+GMAT SWIG setup (for Python 3.14)
+-- Found Python3: /usr/include/python3.14 (found suitable exact version "3.14.4") found components: Development Development.Module Development.Embed
+==============================
+GMAT DataInterface Plugin setup
+==============================
+GMAT EphemPropagator Plugin setup
+==============================
+GMAT EKF Plugin setup
+==============================
+GMAT Estimation Plugin setup
+==============================
+GMAT EventLocator Plugin setup
+==============================
+GMAT External Force Model Plugin setup (for Python 3.14)
+==============================
+GMAT ExtraPropagators Plugin setup
+==============================
+GMAT Formation Plugin setup
+==============================
+GMAT GmatFunction Plugin setup
+==============================
+GMAT Msise00 Plugin setup
+==============================
+GMAT NewParameter Plugin setup
+==============================
+GMAT PolyhedronGravity Plugin setup
+==============================
+GMAT ProductionPropagators Plugin setup
+==============================
+GMAT PythonInterface Plugin setup (for Python 3.14)
+==============================
+GMAT SaveCommand Plugin setup
+==============================
+GMAT ScriptTools Plugin setup
+==============================
+GMAT Station Plugin setup
+==============================
+GMAT ThrustFile Plugin setup
+==============================
+GMAT TLE Propagator Plugin setup
+==============================
+GMAT Yukon Optimizer Plugin setup
+==============================
+STATION SWIG setup (for Python 3.14)
+==============================
+ESTIMATION SWIG setup (for Python 3.14)
+======================================
+Skipping the OVtoOFI Plugin:
+OpenFramesInterface is not being built
+=======================================
+==============================
+Setting up wxWidgets install instructions for GMAT
+-- Configuring done (3.5s)
+-- Generating done (0.8s)
+-- Build files have been written to: /home/dan/GIT/GMAT-Qt/build/linux-gui
+[1/26] cd /home/dan/GIT/GMAT-Qt/build/linux-gui && /usr/bin/cmake -E make_directory /home/dan/GIT/GMAT-Qt/application/bin && /usr/bin/cmake -E copy_if_different /home/dan/GIT/GMAT-Qt/build/linux-gui/qt-startup/Release/gmat_startup_qt.txt /home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt
+[2/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindowDocuments.cpp.o
+[3/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/FolderRunDialog.cpp.o
+[4/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/CelestialBodyPanel.cpp.o
+[5/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/MainWindow.cpp.o
+[6/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ScriptCompatibility.cpp.o
+[7/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/ResourceEditor.cpp.o
+[8/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/VisualModelDialog.cpp.o
+[9/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitObjectDrawingDialog.cpp.o
+[10/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotPlaybackControls.cpp.o
+[11/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotModel.cpp.o
+[12/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/OrbitRenderer.cpp.o
+/home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp: In function ‘osg::ref_ptr<osg::Image> {anonymous}::readTexture(const QString&)’:
+/home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp:87:86: warning: ‘QImage QImage::mirrored(bool, bool) &&’ is deprecated: Use flipped(Qt::Orientations) instead [-Wdeprecated-declarations]
+   87 |    const QImage pixels=QImage(path).convertToFormat(QImage::Format_RGBA8888).mirrored();
+      |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~
+In file included from /usr/include/x86_64-linux-gnu/qt6/QtGui/QImage:1,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/PlotModel.hpp:3,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.hpp:2,
+                 from /home/dan/GIT/GMAT-Qt/src/qtgui/OrbitRenderer.cpp:1:
+/usr/include/x86_64-linux-gnu/qt6/QtGui/qimage.h:223:26: note: declared here
+  223 |     [[nodiscard]] QImage mirrored(bool horizontally = false, bool vertically = true) &&
+      |                          ^~~~~~~~
+[13/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/PlotWidget.cpp.o
+[14/26] Building CXX object src/qtgui/CMakeFiles/GmatQtFrontend.dir/QtPlotReceiver.cpp.o
+[15/26] Linking CXX static library src/qtgui/libGmatQtFrontend.a
+[16/26] Linking CXX executable /home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a
+[17/26] Creating executable symlink /home/dan/GIT/GMAT-Qt/application/bin/GmatQt
+[18/26] Building CXX object src/qtgui/CMakeFiles/GmatQtSegmentCameraTests.dir/tests/SegmentCameraTests.cpp.o
+[19/26] Building CXX object src/qtgui/CMakeFiles/GmatQtOpenFramesVectorTests.dir/tests/OpenFramesVectorTests.cpp.o
+[20/26] Building CXX object src/qtgui/CMakeFiles/GmatQtCoordinateCreationTests.dir/tests/CoordinateCreationTests.cpp.o
+[21/26] Linking CXX executable src/qtgui/GmatQtSegmentCameraTests
+[22/26] Linking CXX executable src/qtgui/GmatQtOpenFramesVectorTests
+[23/26] Building CXX object src/qtgui/CMakeFiles/GmatQtWorkflowTests.dir/tests/WorkflowTests.cpp.o
+[24/26] Linking CXX executable src/qtgui/GmatQtCoordinateCreationTests
+[25/26] Linking CXX executable src/qtgui/GmatQtWorkflowTests

@@ -7677,3 +7677,46 @@ messages, with the debug icon and animation toolbar. Core libraries resolve
 inside the new checkout. Live desktop testing remains stopped after the GNOME
 Shell crash; native desktop/portal and full replacement gates remain open.
 Windows/macOS remain deferred and the numerical engine was not rewritten.
+
+## Complete shipped mission inventory and broad capability fixes — 2026-10-02
+
+Every standalone mission candidate in the selected distribution now has a build
+attempt: 138 primary samples, 19 help tutorials and 7 API/TLE samples. The current
+ledger has 127 build successes and 120 completed execution successes. It retains
+37 failed builds, five missing-catalog TLE runtime failures, the L2 tutorial's
+explicit failed-bracket Stop and the first Yukon timeout. A longer Yukon attempt
+is actively progressing in its separate ledger; it is not counted as passed.
+See Qt6ParityValidation/shipped-examples-20261002.md and its complete manifest,
+177-row source/helper table, current diagnostics and tutorial repair map.
+
+The failures drove actual fixes: script-directory separators for ephemeris assets
+and saved-copy folder runs; OF declaration/list semantics and unplotted body
+cameras; retained Relative Position/Body-Fixed vectors in native and fallback
+renderers; the public Python API/development initializer/portable callback;
+and the Qt-branch interpreter string-array metadata regression exposed by SRP
+ExtraShadowBodies. The actual application and affected core/plugins are rebuilt.
+All three regular vector examples now build and execute. Native vector pixels
+are not established by the offscreen arrow/report/replay check.
+
+Coordinate drafts and nested Axes now share one pending outer Create/Apply
+transaction. Mission menus append inside five branch types and offer Toggle
+creation. Separate focused checks pass for MissionInsertion, ScriptAssets,
+UnplottedBodyCameras, OpenFramesSyntax, CoordinateCreation, OpenFramesVectors and
+StringArrayDispatch. They cover source/Undo/Unicode/retained Apply, independent
+state reports, replay after engine replacement and empty-list semantics. The
+coordinate test's first failure was a source-layout fixture assumption; the
+comparison now strips only exact newly introduced coordinate statements and
+compares every other original byte. This is not a full-suite or native pass.
+
+Three repaired tutorial missions complete; the fourth builds and reaches its
+documented bracket guard with unchanged numerical guesses. The formation
+attachment is a duplicate lunar mission and still requires correct formation
+content. Dependencies, missing public TLE inputs, unparented helpers and early
+provenance limits remain explicit. Full raw completed outputs/logs/screenshots
+are retained in the new checkout's ignored build/example-qualification/20261002.
+Passing example stages and unrelated qualification matrices were not repeated.
+
+The complete Linux replacement goal remains active. Native window/OpenGL/portal
+and outstanding wx workflow/display acceptance gates remain open after the GNOME
+Shell crash; live desktop testing stays stopped. Windows/macOS and MATLAB remain
+deferred. No numerical algorithm was rewritten.

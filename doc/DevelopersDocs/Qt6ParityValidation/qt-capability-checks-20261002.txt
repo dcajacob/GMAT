@@ -1,0 +1,55 @@
+gmat-qt-mission-insertion.txt
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 31: QtGui.MissionInsertion
+1/1 Test #31: QtGui.MissionInsertion ...........   Passed    1.91 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   1.91 sec*proc (1 test)
+
+Total Test time (real) =   1.92 sec
+
+gmat-qt-example-fixes-tests.txt
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 29: QtGui.OpenFramesSyntax
+1/3 Test #29: QtGui.OpenFramesSyntax ...........   Passed    0.11 sec
+    Start 30: QtGui.UnplottedBodyCameras
+2/3 Test #30: QtGui.UnplottedBodyCameras .......   Passed    0.28 sec
+    Start 50: QtGui.ScriptAssets
+3/3 Test #50: QtGui.ScriptAssets ...............   Passed    0.28 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =   0.67 sec*proc (3 tests)
+
+Total Test time (real) =   0.68 sec
+
+gmat-qt-vectors-coordinate-tests.txt
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start  8: QtGui.CoordinateCreation
+1/3 Test  #8: QtGui.CoordinateCreation .........   Passed    1.89 sec
+    Start 30: QtGui.OpenFramesSyntax
+2/3 Test #30: QtGui.OpenFramesSyntax ...........   Passed    0.76 sec
+    Start 32: QtGui.OpenFramesVectors
+3/3 Test #32: QtGui.OpenFramesVectors ..........   Passed    2.85 sec
+
+100% tests passed, 0 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =   5.50 sec*proc (3 tests)
+
+Total Test time (real) =   5.52 sec
+
+gmat-qt-string-array-test.txt
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 33: QtGui.StringArrayDispatch
+1/1 Test #33: QtGui.StringArrayDispatch ........   Passed    0.34 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.34 sec*proc (1 test)
+
+Total Test time (real) =   0.34 sec

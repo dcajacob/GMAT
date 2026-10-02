@@ -1,0 +1,8 @@
+[1/6] Swig compile station_py.i for python
+/home/dan/GIT/GMAT-Qt/src/base/command/SolverBranchCommand.hpp:122: Warning 325: Nested class not currently supported (PlotExecutionScope ignored)
+[2/6] Swig compile navigation_py.i for python
+/home/dan/GIT/GMAT-Qt/src/base/command/SolverBranchCommand.hpp:122: Warning 325: Nested class not currently supported (PlotExecutionScope ignored)
+[3/6] Building CXX object plugins/StationPlugin/swig/py3.14/CMakeFiles/station_py314.dir/CMakeFiles/station_py314.dir/station_pyPYTHON_wrap.cxx.o
+[4/6] Linking CXX shared module /home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so
+[5/6] Building CXX object plugins/EstimationPlugin/swig/py3.14/CMakeFiles/navigation_py314.dir/CMakeFiles/navigation_py314.dir/navigation_pyPYTHON_wrap.cxx.o
+[6/6] Linking CXX shared module /home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so
