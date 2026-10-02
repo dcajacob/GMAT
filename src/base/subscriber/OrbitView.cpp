@@ -2019,27 +2019,36 @@ bool OrbitView::UpdateSolverData()
       #endif
       
       // Just buffer data up to last point - 1
+      if (!mCurrArcContextArray[i].empty()) {
+         PlotInterface::TakeGlAction(instanceName,mCurrArcContextArray[i]);
+         PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(i));
+      }
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
                       mCurrZArray[i], mCurrVxArray[i], mCurrVyArray[i],
                       mCurrVzArray[i], mCurrentOrbitColorMap, mCurrentTargetColorMap,
-                      true, mSolverIterOption, false, isDataOn);
+                      (mCurrArcContextArray[i].empty() ? true : mCurrSolvingArray[i]), mSolverIterOption, false, isDataOn);
    }
    
    // Buffer last point and Update the plot
+   if (!mCurrArcContextArray[last].empty()) {
+      PlotInterface::TakeGlAction(instanceName,mCurrArcContextArray[last]);
+      PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(last));
+   }
    PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
                    mCurrZArray[last], mCurrVxArray[last], mCurrVyArray[last],
                    mCurrVzArray[last], mCurrentOrbitColorMap, mCurrentTargetColorMap,
-                   true, mSolverIterOption, true, isDataOn);
+                   (mCurrArcContextArray[last].empty() ? true : mCurrSolvingArray[last]), mSolverIterOption, true, isDataOn);
    
    // clear arrays
    mCurrScArray.clear();
    mCurrProviderArray.clear();
+   mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
    mCurrYArray.clear();
@@ -2120,15 +2129,19 @@ bool OrbitView::Distribute(const Real *dat, Integer len)
    
    if (isEndOfReceive)
    {
+      // Flush(false) is still an OF trajectory boundary. Buffered samples must
+      // finish replaying before the final raw endpoint is committed.
+      const auto arcContext=mArcContext;
       if ((mSolverIterOption == SI_CURRENT) &&
           (runstate == Gmat::SOLVING || runstate == Gmat::SOLVEDPASS))
       {
          UpdateSolverData();
       }
-      else
-      {
-         return PlotInterface::RefreshGlPlot(instanceName);
+      if (!arcContext.empty()) {
+         PlotInterface::TakeGlAction(instanceName,arcContext);
+         PlotInterface::TakeGlAction(instanceName,"FinalizeOrbitArc");
       }
+      return PlotInterface::RefreshGlPlot(instanceName);
    }
    
    

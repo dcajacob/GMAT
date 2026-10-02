@@ -211,6 +211,11 @@ private:
       QRect automaticRect;
       bool useInitialView = true;
       QString provider;
+      QString arcProvider;
+      bool arcTrial=false, arcMetadataOnly=false, replayArcCamera=false;
+      QMap<QString,PlotPoint> arcPublishedPoses;
+      QMap<int,PlotCamera> preparedArcCameras, replayArcCameras;
+      QMap<int,QMap<int,PlotCamera>> bufferedArcCameras;
    };
    Entry *find(const std::string &name);
    Entry &create(const std::string &name, PlotModel::Kind kind, Real x, Real y, Real w, Real h, bool maximized);

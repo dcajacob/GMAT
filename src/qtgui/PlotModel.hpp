@@ -2,6 +2,7 @@
 #include <QColor>
 #include <QImage>
 #include <QMap>
+#include <QSet>
 #include <QPointF>
 #include <QVector>
 #include <QString>
@@ -39,6 +40,15 @@ struct PlotPoint
    // Actual publisher velocity (km/s) in the same view frame as x/y/z.
    std::array<double,3> viewVelocity{};
    bool hasVelocity=false;
+};
+// Regular trajectory identity is independent of collected/trimmed points.
+struct PlotRegularArc
+{
+   quint64 id=0;
+   QString name;
+   QSet<QString> providers;
+   PlotPoint first,last;
+   bool finalized=false;
 };
 struct PlotCurve
 {
@@ -162,6 +172,9 @@ struct PlotModel
    int defaultLineWidth = 1;
    int longitudeLines = 12, latitudeLines = 6;
    quint64 frame = 0, historyGeneration = 0;
+   quint64 nextRegularArc=0;
+   // Compact endpoints survive point trimming; retained until model/data reset.
+   QMap<QString,QVector<PlotRegularArc>> regularArcs;
    double lastEpoch = 0;
    void append(int curve, double x, double y, double z = 0, double epoch = 0,
                bool drawing = true, bool solver = false, double high = 0, double low = 0);

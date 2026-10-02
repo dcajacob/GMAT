@@ -20,6 +20,7 @@
 #include <QTemporaryDir>
 #include <QTimer>
 #include <iostream>
+#include <iomanip>
 #include <stdexcept>
 
 static void require(bool ok,const char *message) { if (!ok) throw std::runtime_error(message); }
@@ -85,8 +86,11 @@ int main(int argc,char **argv)
       }
       TestSettings settings; QTemporaryDir files; require((argc==2 || argc==3) && files.isValid(),"Segment-camera setup failed"); const auto startup=QFileInfo(argv[1]).absoluteFilePath(),capture=argc==3 ? QFileInfo(argv[2]).absoluteFilePath() : QString(); QDir::setCurrent(QFileInfo(startup).absolutePath()); const auto report=files.filePath("segment state Δ.txt"),saved=files.filePath("segment cameras Δ.script");
       const QString resources="% preserve segment calculations α\nCreate Spacecraft Sat;\nSat.CoordinateSystem = EarthMJ2000Eq;\nSat.DisplayStateType = Cartesian;\nSat.X = 7000;\nSat.Y = 0;\nSat.Z = 0;\nSat.VX = 0;\nSat.VY = 7.54605329010754;\nSat.VZ = 0;\nSat.Attitude = Spinner;\nSat.AttitudeDisplayStateType = EulerAngles;\nSat.EulerAngle1 = 30;\nSat.EulerAngle2 = 20;\nSat.EulerAngle3 = 10;\nSat.AttitudeRateDisplayStateType = AngularVelocity;\nSat.AngularVelocityX = 0;\nSat.AngularVelocityY = 0;\nSat.AngularVelocityZ = 0.2;\nCreate ForceModel Forces;\nForces.PrimaryBodies = {};\nForces.PointMasses = {Earth};\nForces.Drag = None;\nForces.SRP = Off;\nCreate Propagator Prop;\nProp.FM = Forces;\nProp.InitialStepSize = 10;\nProp.MaxStep = 10;\nCreate ReportFile Values;\nValues.Filename = '"+report+"';\nValues.WriteHeaders = false;\nValues.Precision = 17;\n";
-      const QString state="Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.EarthMJ2000Eq.Y Sat.EarthMJ2000Eq.Z Sat.EarthMJ2000Eq.VX Sat.EarthMJ2000Eq.VY Sat.EarthMJ2000Eq.VZ;\n";
-      const QString mission="BeginMissionSequence;\nPropagate 'FirstArc' Prop(Sat) {Sat.ElapsedSecs = 60}; % retain first named command\n"+state+"Propagate 'SecondArc' Prop(Sat) {Sat.ElapsedSecs = 120}; % retain second named command\n"+state;
+      const QString state="Report Values Sat.ElapsedSecs Sat.EarthMJ2000Eq.X Sat.EarthMJ2000Eq.Y Sat.EarthMJ2000Eq.Z Sat.EarthMJ2000Eq.VX Sat.EarthMJ2000Eq.VY Sat.EarthMJ2000Eq.VZ Sat.A1ModJulian Sat.DCM11 Sat.DCM12 Sat.DCM13 Sat.DCM21 Sat.DCM22 Sat.DCM23 Sat.DCM31 Sat.DCM32 Sat.DCM33;\n";
+      // A stop on an exact 10-second step skips TakeFinalStep's flush. Use
+      // non-step endpoints so these are two actual OF regular arcs, rather
+      // than inferring an arc boundary from a changed command summary name.
+      const QString mission="BeginMissionSequence;\nPropagate 'FirstArc' Prop(Sat) {Sat.ElapsedSecs = 61}; % retain first named command\n"+state+"Propagate 'SecondArc' Prop(Sat) {Sat.ElapsedSecs = 119}; % retain second named command\n"+state;
       const QString views="Create OpenFramesView Stored AutoFirst AlignedLate AutoLate;\nStored.ViewFrame = Sat.FirstArc;\nStored.ViewTrajectory = On;\nStored.InertialFrame = Off;\nStored.SetDefaultLocation = On;\nStored.DefaultEye = [0 -10000 1000];\nStored.DefaultCenter = [1 2 3];\nStored.DefaultUp = [1 0 1];\nStored.FOVy = 60;\nAutoFirst.ViewFrame = Sat.FirstArc;\nAutoFirst.ViewTrajectory = On;\nAutoFirst.InertialFrame = Off;\nAlignedLate.ViewFrame = Sat.SecondArc;\nAlignedLate.ViewTrajectory = Off;\nAlignedLate.InertialFrame = On;\nAlignedLate.LookAtFrame = Earth;\nAlignedLate.ShortestAngle = On;\nAlignedLate.SetCurrentLocation = On;\nAlignedLate.CurrentEye = [0 -12000 0];\nAlignedLate.CurrentUp = [0 0 1];\nAutoLate.ViewFrame = Sat.SecondArc;\nAutoLate.ViewTrajectory = Off;\nAutoLate.InertialFrame = On;\nCreate OpenFramesInterface Display;\nDisplay.Add = {Sat, Earth};\nDisplay.View = {Stored, AutoFirst, AlignedLate, AutoLate};\nDisplay.CoordinateSystem = EarthMJ2000Eq;\nDisplay.NumPointsToRedraw = 1;\n";
       // Converter accepts one declaration per line; grouped resources below remain engine syntax.
       const auto legacy=resources+QString(views).replace("Create OpenFramesView Stored AutoFirst AlignedLate AutoLate;","Create OpenFramesView Stored;\nCreate OpenFramesView AutoFirst;\nCreate OpenFramesView AlignedLate;\nCreate OpenFramesView AutoLate;")+mission;
@@ -94,7 +98,43 @@ int main(int argc,char **argv)
       MainWindow window; window.show(); require(window.initialize(startup),"Segment-camera runtime initialization failed"); auto *editor=window.findChild<QPlainTextEdit *>("scriptEditor"); editor->setPlainText(resources+mission); require(window.runMission()==MainWindow::RunResult::Completed,"Independent segment mission failed"); const auto expected=read(report); require(QString::fromUtf8(expected).trimmed().split('\n').size()==2,"Independent complete report missing rows");
       editor->setPlainText(legacy); bool offered=false; QTimer::singleShot(0,[&] { auto *prompt=qobject_cast<QMessageBox *>(QApplication::activeModalWidget()); if (prompt && prompt->objectName()=="openFramesConversionPrompt") { offered=true; prompt->done(QMessageBox::Yes); } else if (prompt) prompt->reject(); }); require(window.buildScript() && offered,"Actual segment Build did not automatically offer conversion"); const auto source=editor->toPlainText(); require(source==converted.script,"Actual conversion differed from source conversion"); editor->undo(); require(editor->toPlainText()==legacy,"Segment conversion Undo lost original OF source"); editor->redo(); require(editor->toPlainText()==source && window.saveScriptTo(saved) && window.loadScript(saved),"Segment conversion Redo/Unicode save/reopen failed"); require(window.runMission()==MainWindow::RunResult::Completed && read(report)==expected,"Segment camera display changed complete numerical report");
       auto model=window.plotReceiver()->model("Display"); require(model && model->cameraViews.size()==4,"Segment named camera views missing"); const PlotCurve *curve=nullptr; for (const auto &item:model->curves) if (item.name=="Sat") curve=&item; require(curve && !curve->points.empty(),"Segment spacecraft history missing"); const PlotPoint *first=nullptr,*last=nullptr,*secondBegin=nullptr; for (const auto &point:curve->points) { if (point.provider=="FirstArc") first=&point; if (point.provider=="SecondArc") { if (!secondBegin) secondBegin=&point; last=&point; } } require(first && last && secondBegin && (position(*last)-position(*first)).length()>500,"Named propagation segments missing or indistinguishable");
-      const auto &primary=model->cameras.back(); require((xyz(primary.eye)-(position(*first)+body(*first,{0,-10000,1000}))).length()<1e-7 && (xyz(primary.target)-(position(*first)+body(*first,{1,2,3}))).length()<1e-7 && (xyz(primary.up)-body(*first,{1,0,1})).length()<1e-10,"Stored first-segment camera followed later position/attitude or lost pose"); require((body(*first,{1,0,0})-body(*last,{1,0,0})).length()>0.01,"Nonzero attitude fixture did not distinguish endpoint orientation");
+      const auto arcs=model->regularArcs.value("Sat");
+      require(arcs.size()==2 && arcs[0].name=="FirstArc" && arcs[1].name=="SecondArc" &&
+         arcs[0].providers.size()==1 && arcs[1].providers.size()==1 && arcs[0].providers!=arcs[1].providers &&
+         arcs[0].finalized && arcs[1].finalized,"Fixture did not create two finalized provider-distinct OF regular arcs");
+      const auto reportRows=QString::fromUtf8(expected).trimmed().split('\n');
+      for (int index=0;index<2;++index) {
+         const auto fields=reportRows[index].simplified().split(' '); require(fields.size()==17,"Independent endpoint report columns missing");
+         std::array<double,17> row{};
+         for (int column=0;column<17;++column) { bool valid=false; row[column]=fields[column].toDouble(&valid); require(valid,"Independent endpoint report contains invalid numeric data"); }
+         const auto &pose=arcs[index].last;
+         require(std::abs(pose.epoch-row[7])<1e-12 && (position(pose)-osg::Vec3d(row[1],row[2],row[3])).length()<1e-7,"Regular arc endpoint differs from independent numerical report");
+         // GMAT reports inertial-to-body DCM; plot poses store its transpose.
+         for (int axis=0;axis<3;++axis) for (int column=0;column<3;++column)
+            require(std::abs(pose.bodyToView[3*axis+column]-row[8+3*column+axis])<1e-12,"Regular arc attitude differs from independent numerical report");
+         const auto &collected=index==0 ? *first : *last;
+         require(collected.epoch==pose.epoch && (position(collected)-position(pose)).length()<1e-7,"Collected segment endpoint differs from finalized regular arc");
+      }
+      const auto &primary=model->cameras.back();
+      const auto eyeError=(xyz(primary.eye)-(position(*first)+body(*first,{0,-10000,1000}))).length();
+      const auto targetError=(xyz(primary.target)-(position(*first)+body(*first,{1,2,3}))).length();
+      const auto upError=(xyz(primary.up)-body(*first,{1,0,1})).length();
+      if (!(eyeError<1e-7 && targetError<1e-7 && upError<1e-10)) {
+         std::cerr<<std::setprecision(17)<<"Segment endpoint errors eye="<<eyeError<<" target="<<targetError<<" up="<<upError<<" modelFrame="<<model->frame<<" cameraFrame="<<primary.frame<<'\n';
+         const auto dumpPoint=[](const char *label,const PlotPoint &point) {
+            std::cerr<<label<<" epoch="<<point.epoch<<" frame="<<point.frame<<" provider="<<point.provider.toStdString()<<" xyz="<<point.x<<','<<point.y<<','<<point.z<<" body=";
+            for (const auto value:point.bodyToView) std::cerr<<value<<',';
+            std::cerr<<'\n';
+         };
+         dumpPoint("collected first endpoint",*first); dumpPoint("collected last endpoint",*last);
+         for (const auto &arc:arcs) {
+            std::cerr<<"regular arc id="<<arc.id<<" name="<<arc.name.toStdString()<<" providers="<<arc.providers.size()<<" finalized="<<arc.finalized<<'\n';
+            dumpPoint("arc first",arc.first); dumpPoint("arc last",arc.last);
+         }
+         std::cerr<<"actual eye="<<primary.eye[0]<<','<<primary.eye[1]<<','<<primary.eye[2]<<" target="<<primary.target[0]<<','<<primary.target[1]<<','<<primary.target[2]<<" up="<<primary.up[0]<<','<<primary.up[1]<<','<<primary.up[2]<<"\nIndependent report:\n"<<expected.constData();
+      }
+      require(eyeError<1e-7 && targetError<1e-7 && upError<1e-10,"Stored first-segment camera followed later position/attitude or lost pose");
+      require((body(*first,{1,0,0})-body(*last,{1,0,0})).length()>0.01,"Nonzero attitude fixture did not distinguish endpoint orientation");
       auto &aligned=model->cameraViews[2].cameras; require(!aligned.empty() && aligned.front().frame>=secondBegin->frame,"Late segment camera acquired before its data existed"); const auto &alignedLast=aligned.back(); const auto toward=-position(*last); const auto forward=xyz(alignedLast.target)-xyz(alignedLast.eye); require((xyz(alignedLast.target)-position(*last)).length()<1e-7 && forward*toward/(forward.length()*toward.length())>1-1e-10,"Segment LookAt camera lost inertial alignment");
       for (int index:{1,3}) { PlotModel viewModel=*model; viewModel.selectedCamera=index; viewModel.perspective=model->cameraViews[index].perspective; viewModel.fieldOfView=model->cameraViews[index].fieldOfView; const auto &point=index==1 ? *first : *last; const auto camera=orbitCamera(viewModel,model->frame,0,0,7000,1.5); const auto half=viewModel.fieldOfView*3.14159265358979323846/360.; require((camera.target-position(point)).length()<1e-7 && std::abs(camera.distance-1/std::sin(half))<1e-9,"Automatic segment camera framed a whole trajectory/model instead of the empty segment frame"); require((camera.up-(index==1 ? body(point,{0,0,1}) : osg::Vec3d(0,0,1))).length()<1e-10,"Automatic segment inertial/body orientation wrong"); }
       require(window.plotReceiver()->show("Display"),"Segment viewer cannot activate"); auto *area=window.findChild<QMdiArea *>("workspace"); auto *plot=dynamic_cast<PlotWidget *>(area->activeSubWindow()->widget()); require(plot,"Segment viewer widget missing"); const auto latest=plot->canvas()->captureImage(); require(!latest.isNull(),"Segment scene failed to render"); auto *selector=plot->findChild<QComboBox *>("orbitCameraView"); auto *timeline=plot->findChild<QSlider *>("plotTimeline"); require(selector && timeline,"Segment camera/replay controls missing"); selector->setCurrentIndex(2); const auto lateImage=plot->canvas()->captureImage(); require(lateImage!=latest,"Segment named view switching did not change scene"); selector->setCurrentIndex(0); timeline->setValue(0); require(plot->canvas()->captureImage()!=latest,"Segment Earlier did not change pixels"); timeline->setValue(timeline->maximum()); require(plot->canvas()->captureImage()==latest,"Segment Latest did not restore frozen endpoint camera"); const auto count=curve->points.size(); area->activeSubWindow()->close(); QApplication::sendPostedEvents(nullptr,QEvent::DeferredDelete); require(window.plotReceiver()->show("Display") && window.plotReceiver()->model("Display")==model && model->cameras.back().eye==primary.eye,"Segment close/reopen lost retained history");

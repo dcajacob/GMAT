@@ -42,6 +42,10 @@
 #include <algorithm>               // for find(), distance()
 #include "ColorTypes.hpp"          // for namespace GmatColor::
 #include "GmatCommand.hpp"
+#include <cstdint>
+#include <iomanip>
+#include <locale>
+#include <sstream>
 
 namespace {
 std::string PlotProviderName(GmatBase *provider)
@@ -455,6 +459,10 @@ bool OrbitPlot::Initialize()
       return true;
    
    Subscriber::Initialize();
+   mArcContext.clear(); mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
+   mCurrScArray.clear(); mCurrProviderArray.clear(); mCurrEpochArray.clear();
+   mCurrXArray.clear(); mCurrYArray.clear(); mCurrZArray.clear();
+   mCurrVxArray.clear(); mCurrVyArray.clear(); mCurrVzArray.clear();
 
    #if DBGLVL_INIT
    MessageInterface::ShowMessage
@@ -2158,6 +2166,51 @@ void OrbitPlot::UpdateObjectList(SpacePoint *sp, bool show)
 //------------------------------------------------------------------------------
 // bool UpdateData(const Real *dat, Integer len)
 //------------------------------------------------------------------------------
+// Metadata observes the publisher before plot decimation, without modifying
+// collected arrays, counters, or numerical execution. Only requested segment
+// spacecraft incur the extra position/attitude conversion.
+void OrbitPlot::PublishArcMetadata(const Real *dat,Integer len)
+{
+   mArcContext.clear();
+   if (!PlotInterface::TakeGlAction(instanceName,"NeedsOrbitArcMetadata")) return;
+   std::ostringstream context; context.imbue(std::locale::classic());
+   context << "SetOrbitProvider:" << reinterpret_cast<std::uintptr_t>(currentProvider)
+           << ' ' << (runstate==Gmat::SOLVING) << ' ' << mNumData << ' ' << PlotProviderName(currentProvider);
+   mArcContext=context.str(); PlotInterface::TakeGlAction(instanceName,mArcContext);
+   PlotInterface::TakeGlAction(instanceName,"BeginOrbitArcSample");
+   if (runstate==Gmat::SOLVING || !isDataOn || theDataLabels.empty()) return;
+   auto &labels=theDataLabels[0];
+   for (Integer sc=0;sc<mScCount;++sc) {
+      const auto &name=mScNameArray[sc];
+      if (!PlotInterface::TakeGlAction(instanceName,"NeedsOrbitArcPose:"+name)) continue;
+      Integer indices[6]; const char *fields[]={".X",".Y",".Z",".Vx",".Vy",".Vz"};
+      bool present=true;
+      for (int i=0;i<6;++i) { indices[i]=FindIndexOfElement(labels,name+fields[i]); present=present && indices[i]>=0 && indices[i]<len; }
+      if (!present) continue;
+      SpacePoint *object=nullptr;
+      for (auto *point:mAllSpArray) if (point && point->GetName()==name) { object=point; break; }
+      if (!object) continue;
+      try {
+         Rvector6 state,converted;
+         state.Set(dat[indices[0]],dat[indices[1]],dat[indices[2]],dat[indices[3]],dat[indices[4]],dat[indices[5]]);
+         if (theDataCoordSystem && mViewCoordSystem && theDataCoordSystem!=mViewCoordSystem) {
+            CoordinateConverter converter; converter.Convert(dat[0],state,theDataCoordSystem,converted,mViewCoordSystem); state=converted;
+         }
+         Rmatrix33 viewToBase;
+         if (mViewCoordSystem) { mViewCoordSystem->ToBaseSystem(A1Mjd(dat[0]),Rvector6(),true); viewToBase=mViewCoordSystem->GetLastRotationMatrix(); }
+         auto attitude=object->GetAttitude(dat[0]);
+         if (object->IsOfType(Gmat::SPACECRAFT)) attitude=attitude.Transpose();
+         const auto rotation=viewToBase.Transpose()*attitude;
+         std::ostringstream sample; sample.imbue(std::locale::classic()); sample << std::setprecision(17);
+         sample << "OrbitArcPose:" << name << ' ' << dat[0] << ' ' << state[0] << ' ' << state[1] << ' ' << state[2];
+         for (int row=0;row<3;++row) for (int col=0;col<3;++col) sample << ' ' << rotation(row,col);
+         for (int row=0;row<3;++row) for (int col=0;col<3;++col) sample << ' ' << viewToBase(col,row);
+         PlotInterface::TakeGlAction(instanceName,sample.str());
+      } catch (BaseException &) { /* Unavailable visualization pose must not interrupt the mission. */ }
+   }
+   PlotInterface::TakeGlAction(instanceName,"PrepareOrbitArcCameras");
+}
+
 bool OrbitPlot::UpdateData(const Real *dat, Integer len)
 {
    if (len == 0)
@@ -2232,6 +2285,7 @@ bool OrbitPlot::UpdateData(const Real *dat, Integer len)
    
    
    mNumData++;
+   PublishArcMetadata(dat,len);
    
    #if DBGLVL_UPDATE > 1
    MessageInterface::ShowMessage
@@ -2315,27 +2369,36 @@ bool OrbitPlot::UpdateSolverData()
       #endif
       
       // Just buffer data up to last point - 1
+      if (!mCurrArcContextArray[i].empty()) {
+         PlotInterface::TakeGlAction(instanceName,mCurrArcContextArray[i]);
+         PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(i));
+      }
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
                       mCurrZArray[i], mCurrVxArray[i], mCurrVyArray[i],
                       mCurrVzArray[i], mCurrentOrbitColorMap, mCurrentTargetColorMap,
-                      true, mSolverIterOption, false, isDataOn);
+                      (mCurrArcContextArray[i].empty() ? true : mCurrSolvingArray[i]), mSolverIterOption, false, isDataOn);
    }
    
    // Buffer last point and Update the plot
+   if (!mCurrArcContextArray[last].empty()) {
+      PlotInterface::TakeGlAction(instanceName,mCurrArcContextArray[last]);
+      PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(last));
+   }
    PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
                    mCurrZArray[last], mCurrVxArray[last], mCurrVyArray[last],
                    mCurrVzArray[last], mCurrentOrbitColorMap, mCurrentTargetColorMap,
-                   true, mSolverIterOption, true, isDataOn);
+                   (mCurrArcContextArray[last].empty() ? true : mCurrSolvingArray[last]), mSolverIterOption, true, isDataOn);
    
    // clear arrays
    mCurrScArray.clear();
    mCurrProviderArray.clear();
+   mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
    mCurrYArray.clear();
@@ -2550,10 +2613,14 @@ Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
    if (mSolverIterOption == SI_CURRENT)
    {
       // save data when targeting or last iteration
-      if (runstate == Gmat::SOLVING || runstate == Gmat::SOLVEDPASS)
+      // Metadata-enabled accepted samples are already published immediately.
+      // Only trials need replay; retain the legacy path for other receivers.
+      if (runstate == Gmat::SOLVING || (runstate == Gmat::SOLVEDPASS && mArcContext.empty()))
       {
          mCurrScArray.push_back(mScNameArray);
          mCurrProviderArray.push_back(PlotProviderName(currentProvider));
+         mCurrArcContextArray.push_back(mArcContext); mCurrSolvingArray.push_back(runstate==Gmat::SOLVING);
+         if (!mArcContext.empty()) PlotInterface::TakeGlAction(instanceName,"SaveOrbitArcCamera:"+std::to_string(mCurrArcContextArray.size()-1));
          mCurrEpochArray.push_back(dat[0]);
          mCurrXArray.push_back(mScXArray);
          mCurrYArray.push_back(mScYArray);

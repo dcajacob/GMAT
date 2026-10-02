@@ -1,6 +1,9 @@
 #include "ResourcePreview.hpp"
 #include "QtPlotReceiver.hpp"
 #include "CameraAlignment.hpp"
+#include "SegmentArc.hpp"
+#include <sstream>
+#include <locale>
 #include "TableColumns.hpp"
 #include "PlotWidget.hpp"
 #include "BodyFixedPoint.hpp"
@@ -483,21 +486,24 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
       const ColorMap &colors,const ColorMap &targetColors,bool solving,Integer,bool update,bool drawing,bool)
 {
    auto *entry=find(name); if (!entry) return false;
-   auto &data=*entry->data; ++data.frame;
+   auto &data=*entry->data; if (!entry->arcMetadataOnly) ++data.frame;
+   auto storeCamera=[&](int index,PlotCamera camera) {
+      if (entry->arcMetadataOnly) { entry->preparedArcCameras[index]=camera; return; }
+      auto &history=index==0 ? data.cameras : data.cameraViews[index].cameras;
+      history.push_back(camera);
+      while (history.size()>static_cast<size_t>(data.maxPoints)) history.pop_front();
+   };
    auto updateCameras=[&](bool segmentPass) {
+   if (segmentPass && entry->replayArcCamera) {
+      for (auto it=entry->replayArcCameras.cbegin();it!=entry->replayArcCameras.cend();++it) {
+         auto camera=it.value(); camera.frame=data.frame; storeCamera(it.key(),camera);
+      }
+      return;
+   }
    if (data.kind==PlotModel::Kind::Orbit && data.scriptedCamera) {
       auto segmentPoint=[&](const QString &frame) -> const PlotPoint * {
          if (frame.isEmpty()) return nullptr;
-         const auto object=frame.section('.',0,0),provider=frame.section('.',1,1);
-         for (const auto &curve:data.curves) if (curve.name==object) {
-            const PlotPoint *last=nullptr;
-            for (const auto &point:curve.points) {
-               if (point.provider==provider) last=&point;
-               else if (last) break; // OF selects the first arc with that name.
-            }
-            return last;
-         }
-         return nullptr;
+         return firstRegularArcPose(data,frame);
       };
       auto resolve=[&](bool vector,SpacePoint *object,const std::array<double,3> &value) {
          auto checked=[](const std::array<double,3> &position) {
@@ -575,8 +581,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             throw std::runtime_error("Unrenderable camera coordinates");
          if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
             throw std::runtime_error("Camera eye and target coincide");
-         data.cameras.push_back(camera);
-         while (data.cameras.size()>static_cast<size_t>(data.maxPoints)) data.cameras.pop_front();
+         storeCamera(0,camera);
       } catch (BaseException &) { warn(name,"unresolved scripted camera (using available camera or manual view)"); }
       catch (const std::exception &) { warn(name,"invalid scripted camera (using available camera or manual view)"); }
       for (int index=0;index<settings.views.size();++index) {
@@ -615,13 +620,12 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
                throw std::runtime_error("Unrenderable camera coordinates");
             if (std::hypot(camera.eye[0]-camera.target[0],camera.eye[1]-camera.target[1],camera.eye[2]-camera.target[2])<1e-9)
                throw std::runtime_error("Camera eye and target coincide");
-            auto &history=data.cameraViews[index+1].cameras;
-            history.push_back(camera);
-            while (history.size()>static_cast<size_t>(data.maxPoints)) history.pop_front();
+            storeCamera(index+1,camera);
          } catch (...) { warn(name,("unresolved camera "+view.name+" (using its available history or manual view)").toStdString()); }
       }
    }
    };
+   if (entry->arcMetadataOnly) { updateCameras(true); return true; }
    updateCameras(false);
    Rvector6 sunState;
    const bool hasSun=data.kind==PlotModel::Kind::Orbit && entry->solarSystem && entry->internal && entry->view;
@@ -751,18 +755,86 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
    }
    // Segment references use positions and attitude captured with this sample.
    updateCameras(true);
+   entry->replayArcCamera=false; entry->replayArcCameras.clear();
    if (update) refresh(*entry,true); return true;
 }
 bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &action)
 {
    if (action=="ClearObjects" && qtResourcePreviewCleanupActive()) return true;
    auto *entry=find(name); if (!entry) return false;
+   if (action=="NeedsOrbitArcMetadata") {
+      const auto setting=cameraSettings.value(text(name));
+      if (!setting.segmentFrame.isEmpty()) return true;
+      for (const auto &view:setting.views) if (!view.segmentFrame.isEmpty()) return true;
+      return false;
+   }
+   if (action.compare(0,18,"NeedsOrbitArcPose:")==0) {
+      const auto object=text(action.substr(18));
+      const auto setting=cameraSettings.value(text(name));
+      if (setting.segmentFrame.section('.',0,0)==object) return true;
+      for (const auto &view:setting.views) if (view.segmentFrame.section('.',0,0)==object) return true;
+      return false;
+   }
+   if (action.compare(0,17,"SetOrbitProvider:")==0) {
+      std::istringstream stream(action.substr(17)); stream.imbue(std::locale::classic());
+      std::string identity; int trial; long long sequence;
+      if (!(stream>>identity>>trial>>sequence)) return false;
+      std::string provider; std::getline(stream,provider); if (!provider.empty()) provider.erase(0,1);
+      entry->arcProvider=text(identity); entry->arcTrial=trial!=0; entry->provider=text(provider); return true;
+   }
+   if (action=="BeginOrbitArcSample") {
+      entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); return true;
+   }
+   if (action.compare(0,13,"OrbitArcPose:")==0) {
+      if (entry->arcTrial) return true;
+      std::istringstream stream(action.substr(13)); stream.imbue(std::locale::classic());
+      std::string object; PlotPoint pose;
+      if (!(stream>>object>>pose.epoch>>pose.x>>pose.y>>pose.z)) return false;
+      for (auto &value:pose.bodyToView) if (!(stream>>value) || !std::isfinite(value)) return false;
+      for (auto &value:pose.inertialToView) if (!(stream>>value) || !std::isfinite(value)) return false;
+      if (!PlotModel::usableOrbitPosition(pose.x,pose.y,pose.z) || !PlotModel::usableValue(pose.epoch)) return false;
+      pose.frame=entry->data->frame; pose.provider=entry->provider;
+      entry->arcPublishedPoses[text(object)]=pose;
+      recordRegularArcPose(*entry->data,text(object),entry->arcProvider,entry->provider,pose); return true;
+   }
+   if (action=="PrepareOrbitArcCameras") {
+      if (entry->arcTrial || entry->arcPublishedPoses.isEmpty()) return true;
+      StringArray objects; RealArray x,y,z,empty;
+      double epoch=0;
+      for (auto it=entry->arcPublishedPoses.cbegin();it!=entry->arcPublishedPoses.cend();++it) {
+         objects.push_back(it.key().toStdString()); x.push_back(it->x); y.push_back(it->y); z.push_back(it->z); epoch=it->epoch;
+      }
+      entry->arcMetadataOnly=true; entry->preparedArcCameras.clear();
+      try { UpdateGlPlot(name,"",objects,epoch,x,y,z,empty,empty,empty,{}, {},false,0,false,true,false); }
+      catch (...) { entry->arcMetadataOnly=false; warn(name,"unavailable segment camera metadata (retaining its available history)"); return false; }
+      entry->arcMetadataOnly=false; return true;
+   }
+   if (action.compare(0,19,"SaveOrbitArcCamera:")==0) {
+      auto cameras=entry->preparedArcCameras;
+      for (auto &camera:cameras) camera.solver=entry->arcTrial;
+      entry->bufferedArcCameras[text(action.substr(19)).toInt()]=std::move(cameras); return true;
+   }
+   if (action.compare(0,21,"ReplayOrbitArcCamera:")==0) {
+      entry->replayArcCamera=true; entry->replayArcCameras=entry->bufferedArcCameras.take(text(action.substr(21)).toInt()); return true;
+   }
+   if (action=="FinalizeOrbitArc") {
+      if (entry->arcTrial) return true;
+      for (auto &arcs:entry->data->regularArcs) if (!arcs.isEmpty()) arcs.back().finalized=true;
+      for (auto it=entry->preparedArcCameras.cbegin();it!=entry->preparedArcCameras.cend();++it) {
+         auto camera=it.value(); camera.frame=entry->data->frame; camera.solver=false;
+         auto &history=it.key()==0 ? entry->data->cameras : entry->data->cameraViews[it.key()].cameras;
+         if (!history.empty() && history.back().frame==camera.frame && !history.back().solver) history.back()=camera;
+         else history.push_back(camera);
+         while (history.size()>static_cast<size_t>(entry->data->maxPoints)) history.pop_front();
+      }
+      refresh(*entry,true); return true;
+   }
    if (action.compare(0,16,"SetDataProvider:")==0) { entry->provider=text(action.substr(16)); return true; }
    if (action=="PenUp") { entry->data->penDown=false; entry->data->breakLines(); }
    else if (action=="PenDown") entry->data->penDown=true;
    else if (action=="ToggleOff") { entry->data->active=false; entry->data->breakLines(); }
    else if (action=="ToggleOn") entry->data->active=true;
-   else if (action=="ClearObjects") { entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &vector:entry->data->vectors) vector.samples.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
+   else if (action=="ClearObjects") { entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->data->regularArcs.clear(); entry->data->nextRegularArc=0; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &vector:entry->data->vectors) vector.samples.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
    else if (action=="ClearSolverData") {
       auto clearSolver=[](std::deque<PlotCamera> &cameras) {
          cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
@@ -776,7 +848,7 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
          curve.breakNext=true;
       }
    } else if (action=="IgnoreTimeSequence") entry->ignoreTimeSequence=true;
-   else if (action=="ClearData") { entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); }
+   else if (action=="ClearData") { entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); }
    else { warn(name,action); return false; }
    refresh(*entry,true); return true;
 }

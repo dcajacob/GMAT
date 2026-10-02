@@ -117,12 +117,29 @@
 #include <QTextEdit>
 #include <QToolBar>
 #include <QTreeWidget>
+#include <QKeyEvent>
 #include <QStyle>
 #include <sstream>
 #include <set>
 #include <stdexcept>
 
 namespace {
+class NavigationTree final : public QTreeWidget
+{
+public:
+   using QTreeWidget::QTreeWidget;
+protected:
+   void keyPressEvent(QKeyEvent *event) override
+   {
+      if ((event->key()==Qt::Key_Return || event->key()==Qt::Key_Enter) && (event->modifiers()==Qt::NoModifier || event->modifiers()==Qt::KeypadModifier)) {
+         // Use the same guarded route as mouse activation and existing callers.
+         // Consuming the key avoids a second platform itemActivated dispatch.
+         if (!event->isAutoRepeat() && currentItem()) emit itemDoubleClicked(currentItem(),currentColumn());
+         event->accept(); return;
+      }
+      QTreeWidget::keyPressEvent(event);
+   }
+};
 bool setGmatScriptDirectory(const QString &directory)
 {
    // FileManager stores this path verbatim and FindPath joins it directly to
@@ -366,7 +383,7 @@ MainWindow::MainWindow()
    navigation->setObjectName("navigation");
    auto *tabs = new QTabWidget(navigation);
    auto makeTree = [tabs](const QString &name) {
-      auto *tree = new QTreeWidget(tabs);
+      auto *tree = new NavigationTree(tabs);
       tree->setObjectName(name);
       tree->setHeaderHidden(true);
       tree->setMinimumWidth(230);

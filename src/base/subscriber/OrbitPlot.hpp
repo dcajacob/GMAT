@@ -201,6 +201,9 @@ protected:
    // arrays for holding solver current data
    std::vector<StringArray> mCurrScArray;
    StringArray mCurrProviderArray; // Publication identity retained with buffered solver samples.
+   StringArray mCurrArcContextArray;
+   BooleanArray mCurrSolvingArray;
+   std::string mArcContext;
    std::vector<Real> mCurrEpochArray;
    std::vector<RealArray> mCurrXArray;
    std::vector<RealArray> mCurrYArray;
@@ -221,6 +224,7 @@ protected:
    std::map<std::string, Real> mScInitialEpochMap;
    
    /// Calls PlotInterface for plotting non-solver data  
+   void                 PublishArcMetadata(const Real *dat, Integer len);
    virtual bool         UpdateData(const Real *dat, Integer len);
    
    /// Calls PlotInterface for plotting solver data
