@@ -56,6 +56,13 @@ class WindowAttributes(C.Structure):
         ("do_not_propagate_mask", C.c_long), ("override_redirect", C.c_int), ("screen", C.c_void_p)]
 
 
+class XErrorEvent(C.Structure):
+    _fields_ = [("type", C.c_int), ("display", C.c_void_p),
+                ("resourceid", C.c_ulong), ("serial", C.c_ulong),
+                ("error_code", C.c_ubyte), ("request_code", C.c_ubyte),
+                ("minor_code", C.c_ubyte)]
+
+
 class IsolatedX11Session:
     def __init__(self, app, startup, artifacts, *, seconds=180, width=1600, height=1200,
                  wm_command=None, wm_library_path=None, wm_data_dir=None, script=None):
@@ -211,6 +218,9 @@ class IsolatedX11Session:
         prototypes = {
             "XOpenDisplay": ([C.c_char_p], C.c_void_p), "XCloseDisplay": ([C.c_void_p], C.c_int),
             "XDefaultRootWindow": ([C.c_void_p], C.c_ulong), "XFlush": ([C.c_void_p], C.c_int),
+            "XSync": ([C.c_void_p, C.c_int], C.c_int),
+            "XNextRequest": ([C.c_void_p], C.c_ulong),
+            "XSetErrorHandler": ([C.c_void_p], C.c_void_p),
             "XQueryTree": ([C.c_void_p, C.c_ulong, C.POINTER(C.c_ulong), C.POINTER(C.c_ulong), C.POINTER(C.POINTER(C.c_ulong)), C.POINTER(C.c_uint)], C.c_int),
             "XGetWindowAttributes": ([C.c_void_p, C.c_ulong, C.POINTER(WindowAttributes)], C.c_int),
             "XFetchName": ([C.c_void_p, C.c_ulong, C.POINTER(C.c_void_p)], C.c_int),
@@ -246,9 +256,22 @@ class IsolatedX11Session:
     def windows(self):
         self._alive()
         root, parent, children, count = C.c_ulong(), C.c_ulong(), C.POINTER(C.c_ulong)(), C.c_uint()
-        result = []
-        if self.x.XQueryTree(self.connection, self.root, C.byref(root), C.byref(parent), C.byref(children), C.byref(count)):
-            try:
+        result, errors = [], []
+        # A window can disappear between QueryTree and an attribute/name query.
+        # The default Xlib error handler exits the process, bypassing Python's
+        # owned-process cleanup. Trap only this enumeration's BadWindow race;
+        # preserve other protocol errors as failures after restoring the handler.
+        callback_type = C.CFUNCTYPE(C.c_int, C.c_void_p, C.POINTER(XErrorEvent))
+        def on_error(display, event):
+            value = event.contents
+            errors.append(dict(code=int(value.error_code), request=int(value.request_code),
+                               resource=int(value.resourceid), serial=int(value.serial)))
+            return 0
+        callback = callback_type(on_error)
+        previous = self.x.XSetErrorHandler(C.cast(callback, C.c_void_p))
+        first_serial = self.x.XNextRequest(self.connection)
+        try:
+            if self.x.XQueryTree(self.connection, self.root, C.byref(root), C.byref(parent), C.byref(children), C.byref(count)):
                 for index in range(count.value):
                     window = children[index]; attributes = WindowAttributes(); title = C.c_void_p()
                     if not self.x.XGetWindowAttributes(self.connection, window, C.byref(attributes)):
@@ -259,8 +282,17 @@ class IsolatedX11Session:
                         finally: self.x.XFree(title)
                     result.append(dict(window=int(window), title=name, x=attributes.x, y=attributes.y,
                                        width=attributes.width, height=attributes.height, mapped=attributes.map_state == 2))
-            finally:
-                if children: self.x.XFree(children)
+        finally:
+            if children: self.x.XFree(children)
+            last_serial = self.x.XNextRequest(self.connection) - 1
+            self.x.XSync(self.connection, 0)
+            self.x.XSetErrorHandler(previous)
+        if errors:
+            with open(self.directory / "window-query-errors.jsonl", "a") as log:
+                for error in errors: log.write(json.dumps(error) + "\n")
+            if any(error["code"] != 3 or error["request"] not in (3, 15, 20) or
+                   not first_serial <= error["serial"] <= last_serial for error in errors):
+                raise RuntimeError(f"Private X11 window enumeration failed: {errors}")
         return result
 
     def move(self, x, y):

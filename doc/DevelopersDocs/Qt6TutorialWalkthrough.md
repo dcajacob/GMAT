@@ -9,15 +9,20 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Preparation only: every walkthrough below is pending.** The earlier shipped
-script build/run corpus and tutorial repairs are not GUI walkthrough evidence.
+**Tutorial 1 is Passed for bounded private actual-input construction.** See
+[its walkthrough record](Qt6ParityValidation/help-tutorial-01-20261002.md): independent
+Help-driven GUI construction, execution/required results, save/reopen and post-freeze
+reference comparison are complete. Tutorials 2–12 retain Pending status here until
+their separate records establish an outcome. The earlier shipped script build/run
+corpus and tutorial repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
 the user's desktop remains stopped following the GNOME Shell crash. A private,
 authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
 It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. No tutorial walkthrough has started.
+for interactive construction. Tutorial 1 used that route; Tutorial 2 is now being
+constructed under separate evidence.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -67,11 +72,12 @@ or links against the source. Reading an inventory is not a completed tutorial.
 
 ## Published tutorial sequence
 
-All entries are **pending**. Numbering follows the Tutorials part of the Help.
+Tutorial 1 is **Passed** with the bounded evidence linked below. Other entries
+remain **Pending** in this ledger. Numbering follows the Tutorials part of the Help.
 
 | # | Chapter source and title | Prerequisites and staged coverage |
 |---|---|---|
-| 1 | `Tut_SimulatingAnOrbit.xml` — Simulating an Orbit | None. Spacecraft, propagator, propagate to periapsis, inspect results. |
+| 1 | `Tut_SimulatingAnOrbit.xml` — Simulating an Orbit | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-01-20261002.md). None. Spacecraft, propagator, propagate to periapsis, command summary/frame, animation, save/reopen and post-freeze reference comparison. |
 | 2 | `Tut_SimpleOrbitTransfer.xml` — Simple Orbit Transfer | Tutorial 1. DifferentialCorrector and two impulsive maneuvers for a Hohmann transfer. |
 | 3 | `Tut_TargetFiniteBurn.xml` — Target Finite Burn to Raise Apogee | Tutorials 1–2. Hardware, FiniteBurn, target burn duration, inspect results. |
 | 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | Tutorials 1–2 and B-plane concepts. Trajectory correction followed by Mars orbit insertion. |
@@ -116,5 +122,5 @@ chapters do not satisfy the new interactive acceptance requirement.
 
 For each actual walkthrough, add a per-chapter record under
 `doc/DevelopersDocs/Qt6ParityValidation` and link it here. Preserve raw artifacts
-in the ignored qualification artifact tree. No such execution record exists for
-this phase yet.
+in the ignored qualification artifact tree. Tutorial 1's completed record is
+linked above; the remaining chapters require their own independent evidence.

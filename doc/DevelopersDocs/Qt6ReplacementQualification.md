@@ -7972,3 +7972,158 @@ intended index9/inner propagation text. VF13ad derives InternalOptimizer; these
 two runs qualify two internal optimizers. The three RunExternalSolver assignments
 are source-reviewed only. Boundary-verified preserves the final0.99/1.03 s checks;
 the prior0.99/0.97 s pass remains an intermediate with weaker boundary proof.
+
+
+## Bounded private Wayland input and lifecycle — 2026-10-02
+
+[private-wayland-20261002.md](Qt6ParityValidation/private-wayland-20261002.md)
+adds actual compositor-delivered keyboard/pointer evidence for the plotting/
+output-lifecycle and script/pending-edit gates in an owned private software
+Wayland configuration. The authored fixture completed once in 1.404 s; shared
+master/Orbit/Ground replay controls reached 48.6% while XY remained rendered.
+Three Super+h/Alt+Tab main-window minimize/restore cycles and the confirmed
+second Output activation retained the native Orbit scene at 48.6%. Failed
+Alt+F9 and earlier non-reopening Output/Enter attempts remain explicit.
+
+Actual pending XY Close→Cancel retains the form/value; subsequent Close without
+Saving removes it. Final Save As writes exactly the original 5371 bytes and
+SHA256 2d30468533a50b6495871e381803045d687fc0429b504b4d6739f2b8cd37e8a4.
+Screenshot024 still shows the chooser; later fixture hashing, main-window title
+and post-session byte comparison establish Save. A later saved-file reopen/run
+is untested. Open/Save use the native in-process GTK chooser; portal service
+activation and registration logs do not establish FileChooser/Response parity.
+
+This recorded runtime is app c15cb5c18930019978bb8c335ec374258c67a2e24857ca7d455975808fb432a3,
+core 68a79c56f22c22407ba93f462e73fad4c4050d0cc9f54b0203b79f0d471085c3,
+and helper ee8368a88d1b79be22bb127e6e04afe7f2a562443323374e896e6a6c0c2d944d,
+before subsequent arc/tree and optional portal changes. Full launch-file
+identities and all nine closed sessions are preserved under ignored
+build/example-qualification/20261002/wayland; earlier preparation failures
+and core-identity uncertainty remain distinct from qualification. Selected
+unchanged PNGs are linked in the record.
+
+No host runtime/socket, physical GPU/input or system bus was exposed; cleanup
+left the host GNOME PID/start identity unchanged. This does not fix or qualify
+the user's host crash, hardware/host GNOME, portals or wider viewer/solver
+regimes. No Help tutorial construction was performed. Full Linux qualification
+and all tutorial walkthroughs remain open; Windows/macOS and MATLAB remain
+deferred. This documentation/copy step launched no additional GUI or test.
+
+
+
+## Reconciled public TLE input checkpoint — 2026-10-02
+
+The two source-matched runtime retries after exact June 2020 input recovery are
+now in the corpus ledger: Falconsat7Jupe completed in 1.172 s; FalconSats resolved
+its catalogs but failed in 0.622 s with SPICE(BADMECCENTRICITY) while using
+historical elements at SystemTime(now). FalconSats remains an unexpected runtime
+failure, not a scientific pass or proprietary/expected-Stop exception. No
+other mission, build or passing test was repeated for this targeted TLE work.
+
+Current corpus totals are 147 passed builds / 17 failed builds, 137 completed
+executions, five unexpected runtime failures, two expected tutorial Stops and
+three timeouts (raw 137 passed / seven failed / three timed out). Prior attempts
+remain in history. The earlier five-absent-TLE-catalog statement is superseded:
+Jupe's exact input is recovered and its historical run completes; FalconSats has
+a current-time/stale-element domain failure; Contacts uses the now-decayed
+FalconSat-7; GSFCSats/Starlink still need public December 2019 data through the
+recorded human/account access route. Matching legacy MarsGRAM integration/data
+remains unestablished without a proprietary-only waiver. See
+[tle-dependency-inputs-20261002.md](Qt6ParityValidation/tle-dependency-inputs-20261002.md)
+and the source-matched shipped corpus summary/table/failure records. These are
+offscreen execution/input-disposition results; independent scientific accuracy,
+native viewer acceptance and human Help tutorial construction remain separate.
+
+
+## Named regular arcs and keyboard navigation — 2026-10-02
+
+[Focused arc/navigation record](Qt6ParityValidation/named-arc-navigation-20261002.md)
+adds actual publisher identity/effective trial state/flush metadata through the
+existing TakeGlAction path. SegmentArc passes 0.61 s: same-command state reset
+creates separate regular arcs; connected same-direction A→B→A retains the initial
+name/provider union; Current accepted endpoints/attitude survive decimation of 7,
+MaxPlotPoints=3, trial cleanup and Output deletion/reopen. All three full numerical
+reports match independent camera-free missions exactly. Requested spacecraft
+poses alone incur extra conversion. Compact arc records survive trajectory trim
+and grow per disconnected arc until model/data reset; no separate metadata cap
+or unbounded-run qualification. wx empty-context behavior remains unchanged.
+The newly introduced accepted-Current duplicate replay was found and fixed during
+pre-release review, with publication-level regression coverage.
+
+TreeActivation passes 0.59 s through focused Return/Enter on Resources, Mission,
+Report and retained Output plots, preserving pending/source/report state and
+mouse/category/held-key/running/unbuilt guards. The first timer fixture failed
+to observe its short running mission; a real synchronous publication now proves
+the guard. Actual private Wayland station Return opens its settings in unchanged
+screenshot013 on the final runtime. Native Output Enter remains unverified.
+
+SegmentCameras passes 0.54 s with all original camera tolerances and behavioral
+checks. The old 60-second stop landed on a 10-second step and skipped the engine's
+conditional final FlushBuffers, so OF correctly retained one FirstArc through
+both command names. The fixture is now 61+119 seconds (same total of 180 seconds), requires
+two actual finalized/provider-distinct arcs, and verifies endpoint/A1 epoch/DCM
+against a complete independent report. No production correction was warranted
+for that assumption. Original compile, timer and camera failures/diagnostic source
+remain preserved alongside final evidence.
+
+Application/core rebuilt: app 7b4a0ae720bb074c71ac05e73d351e987beae5c7fcda524e105d7fb1d55fdae3,
+core cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016.
+Only the new or failed affected checks ran; no previous successful matrix/corpus
+was repeated. Tutorial1 is in progress under separate evidence, with no Help
+walkthrough pass claimed here. Host GNOME/hardware, wider viewer/solver gates and
+full Linux replacement remain open; Windows/macOS/MATLAB remain deferred.
+
+
+## Private portal FileChooser checkpoint — 2026-10-02
+
+[Private portal evidence](Qt6ParityValidation/private-portal-20261002.md) adds
+actual owned-bus Qt FileChooser traces for Open Cancel, accepted Save, directory
+Cancel/path retention and directory Select. Exact Qt handle tokens correlate
+Response 1/0/1/0 and owned URIs; the accepted 5371-byte Save equals the authored
+fixture byte for byte. This narrows those four cases in the matching temporary
+Qt6.10.2 plugin/private software Wayland configuration. Open acceptance/reopen
+and Save cancellation remain unverified by this session: later chooser labels
+are misleading, later Open requests return Cancel, and no second SaveFile occurs.
+
+The recorded app/core are 7b4a0ae7…/cf147e23…; the record retains full launch
+identities, three unchanged chooser PNGs and official extraction/license details.
+All raw traces/actions/screenshots and first outer parsing failure are preserved
+in ignored build/example-qualification/20261002/wayland/portal-first-attempt.
+The helper transport repair has nine synthetic pipe-only passes and no repaired
+GUI rerun; the script/result remain ignored evidence rather than a new source
+test. Bounded cleanup leaves host GNOME PID/start identity unchanged, without
+host portal, physical-driver or crash-fix qualification. No Help tutorial or
+mission-execution claim is added here. Full replacement/wider gates remain open;
+Windows/macOS/MATLAB remain deferred. This promotion ran no GUI/test/build.
+
+
+## First independently constructed Help tutorial passed — 2026-10-02
+
+[Help tutorial 1 evidence](Qt6ParityValidation/help-tutorial-01-20261002.md) replaces
+the earlier all-walkthroughs-Pending disposition for Simulating an Orbit only.
+Actual private XTest GUI input starts from New, follows available Help, renames/
+configures Sat and LowEarthProp/forces/view, selects Earth Periapsis through the
+parameter picker, runs, inspects command summaries including EarthFixed, animates
+all master/Orbit/Ground labels at 17%, and saves/reopens its own mission. The first
+600-second harness bound resumes the independently authored milestone. Source
+was frozen before consulting the reference; prior corpus exposure is disclosed.
+
+Actual authored/reference GUI runs complete in 0.361/0.174 s. Both show UTC
+23 Jul 2014 20:48:34.393, radius 8600.5686739410 km and TA 360°. Differences remain
+5.569 mm maximum position component (6.366 mm norm) and 3.178 micrometres/s maximum
+velocity component. The first locally chosen 1 mm/1 micrometre-per-second assertion
+failed; Help prescribes no threshold, and neither mission was changed/rerun to
+force equality. Required physical/settings/logic match; force-order causation
+is plausible but unproved. This is bounded GUI tutorial acceptance, not bitwise
+numerical or independent scientific qualification.
+
+The record preserves supported deprecated Drag warning, separate Qt ForceModel
+placement, mistaken summary Save filename and first-reference BadWindow helper
+failure/owned cleanup/repair. Five unchanged PNGs and the 5672-byte authored script
+(SHA256 f0becc897f413aa8eb211813125e063ebd57e4e0d5fcf4136dd17142411dada4)
+are tracked. App 7b4a0ae7.../core cf147e23... and raw/frozen/reference artifacts are
+linked. Row 1 now Passed; other published/additional walkthroughs retain Pending,
+with Tutorial 2 construction in progress separately. No old full matrix/corpus
+repeated. Full Linux replacement, host/hardware/portal and broader viewer gates
+remain open; Windows/macOS/MATLAB remain deferred. No runtime/source change was
+made to prepare this evidence record.

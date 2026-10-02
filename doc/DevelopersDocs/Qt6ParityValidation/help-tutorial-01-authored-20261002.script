@@ -1,0 +1,157 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-10-02 11:06:41
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft Sat;
+Sat.CoordinateSystem = EarthMJ2000Eq;
+Sat.DryMass = 850;
+Sat.Cd = 2.2;
+Sat.Cr = 1.8;
+Sat.DragArea = 15;
+Sat.SRPArea = 1;
+Sat.SPADDragScaleFactor = 1;
+Sat.SPADSRPScaleFactor = 1;
+Sat.AtmosDensityScaleFactor = 1;
+Sat.ExtendedMassPropertiesModel = 'None';
+Sat.NAIFId = -10001001;
+Sat.NAIFIdReferenceFrame = -9001001;
+Sat.OrbitColor = Red;
+Sat.TargetColor = Teal;
+Sat.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+Sat.CdSigma = 1e+70;
+Sat.CrSigma = 1e+70;
+Sat.Id = 'SatId';
+Sat.Attitude = CoordinateSystemFixed;
+Sat.SPADSRPInterpolationMethod = Bilinear;
+Sat.SPADSRPScaleFactorSigma = 1e+70;
+Sat.SPADDragInterpolationMethod = Bilinear;
+Sat.SPADDragScaleFactorSigma = 1e+70;
+Sat.AtmosDensityScaleFactorSigma = 1e+70;
+Sat.ModelFile = 'aura.3ds';
+Sat.ModelOffsetX = 0;
+Sat.ModelOffsetY = 0;
+Sat.ModelOffsetZ = 0;
+Sat.ModelRotationX = 0;
+Sat.ModelRotationY = 0;
+Sat.ModelRotationZ = 0;
+Sat.ModelScale = 1;
+Sat.AttitudeDisplayStateType = 'Quaternion';
+Sat.AttitudeRateDisplayStateType = 'AngularVelocity';
+Sat.AttitudeCoordinateSystem = EarthMJ2000Eq;
+Sat.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel LowEarthProp_ForceModel;
+LowEarthProp_ForceModel.CentralBody = Earth;
+LowEarthProp_ForceModel.PrimaryBodies = {Earth};
+LowEarthProp_ForceModel.Drag = JacchiaRoberts;
+LowEarthProp_ForceModel.SRP = On;
+LowEarthProp_ForceModel.RelativisticCorrection = Off;
+LowEarthProp_ForceModel.ErrorControl = RSSStep;
+LowEarthProp_ForceModel.GravityField.Earth.StmLimit = 100;
+LowEarthProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+LowEarthProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator LowEarthProp;
+LowEarthProp.FM = LowEarthProp_ForceModel;
+LowEarthProp.Type = RungeKutta89;
+LowEarthProp.InitialStepSize = 60;
+LowEarthProp.Accuracy = 9.999999999999999e-12;
+LowEarthProp.MinStep = 0.001;
+LowEarthProp.MaxStep = 2700;
+LowEarthProp.MaxStepAttempts = 50;
+LowEarthProp.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+DefaultOrbitView.SolverIterations = Current;
+DefaultOrbitView.UpperLeft = [ 0 0 ];
+DefaultOrbitView.Size = [ 0 0 ];
+DefaultOrbitView.RelativeZOrder = 0;
+DefaultOrbitView.Maximized = false;
+DefaultOrbitView.Add = {Sat, Earth};
+DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.DrawObject = [ true true ];
+DefaultOrbitView.DataCollectFrequency = 1;
+DefaultOrbitView.UpdatePlotFrequency = 50;
+DefaultOrbitView.NumPointsToRedraw = 0;
+DefaultOrbitView.ShowPlot = true;
+DefaultOrbitView.MaxPlotPoints = 20000;
+DefaultOrbitView.ShowLabels = true;
+DefaultOrbitView.ViewPointReference = Earth;
+DefaultOrbitView.ViewDirection = Earth;
+DefaultOrbitView.ViewScaleFactor = 1;
+DefaultOrbitView.ViewUpAxis = Z;
+DefaultOrbitView.EclipticPlane = Off;
+DefaultOrbitView.WireFrame = Off;
+DefaultOrbitView.Axes = On;
+DefaultOrbitView.Grid = Off;
+DefaultOrbitView.SunLine = Off;
+DefaultOrbitView.UseInitialView = On;
+DefaultOrbitView.StarCount = 7000;
+DefaultOrbitView.EnableStars = On;
+DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrack DefaultGroundTrackPlot;
+DefaultGroundTrackPlot.SolverIterations = Current;
+DefaultGroundTrackPlot.UpperLeft = [ 0 0 ];
+DefaultGroundTrackPlot.Size = [ 0 0 ];
+DefaultGroundTrackPlot.RelativeZOrder = 0;
+DefaultGroundTrackPlot.Maximized = false;
+DefaultGroundTrackPlot.CentralBody = Earth;
+DefaultGroundTrackPlot.Add = {Sat};
+DefaultGroundTrackPlot.DataCollectFrequency = 1;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+DefaultGroundTrackPlot.MaxPlotPoints = 20000;
+DefaultGroundTrackPlot.ShowPlot = true;
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+Sat.DateFormat = UTCGregorian;
+Sat.Epoch = '22 Jul 2014 11:29:10.811';
+Sat.DisplayStateType = Keplerian;
+Sat.SMA = 83474.31800000001;
+Sat.ECC = 0.89652;
+Sat.INC = 12.4606;
+Sat.RAAN = 292.8362;
+Sat.AOP = 218.9805;
+Sat.TA = 180;
+GMAT LowEarthProp_ForceModel.PointMasses = {Sun, Luna};
+LowEarthProp_ForceModel.GravityField.Earth.Degree = 10;
+LowEarthProp_ForceModel.GravityField.Earth.Order = 10;
+LowEarthProp_ForceModel.Drag.HistoricWeatherSource = 'ConstantFluxAndGeoMag';
+LowEarthProp_ForceModel.Drag.PredictedWeatherSource = 'ConstantFluxAndGeoMag';
+LowEarthProp_ForceModel.Drag.CSSISpaceWeatherFile = 'SpaceWeather-All-v1.2.txt';
+LowEarthProp_ForceModel.Drag.SchattenFile = 'SchattenPredict.txt';
+LowEarthProp_ForceModel.Drag.F107 = 150;
+LowEarthProp_ForceModel.Drag.F107A = 150;
+LowEarthProp_ForceModel.Drag.MagneticIndex = 3;
+LowEarthProp_ForceModel.Drag.SchattenErrorModel = 'Nominal';
+LowEarthProp_ForceModel.Drag.SchattenTimingModel = 'NominalCycle';
+LowEarthProp_ForceModel.Drag.DragModel = 'Spherical';
+LowEarthProp_ForceModel.SRP.Flux = 1367;
+LowEarthProp_ForceModel.SRP.SRPModel = Spherical;
+LowEarthProp_ForceModel.SRP.Nominal_Sun = 149597870.691;
+DefaultOrbitView.ViewPointVector = [ -60000 30000 20000 ];
+DefaultOrbitView.ViewUpCoordinateSystem = EarthICRF;
+DefaultOrbitView.XYPlane = Off;
+BeginMissionSequence;
+Propagate LowEarthProp(Sat) {Sat.Earth.Periapsis};
