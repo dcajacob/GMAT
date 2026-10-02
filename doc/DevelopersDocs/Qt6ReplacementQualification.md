@@ -8207,3 +8207,17 @@ exercise (11.291 s/four nominal passes); its GUI-authored final source has been
 saved/reopened and frozen before reference comparison. Neither walkthrough is
 marked Passed by this resource-fix checkpoint. Full Linux/host/hardware and other
 tutorial gates remain open; Windows/macOS/MATLAB remain deferred.
+
+
+## Case-sensitive Mars gravity default repaired — 2026-10-02
+
+[mars-gravity-default-20261002.md](Qt6ParityValidation/mars-gravity-default-20261002.md)
+records the actual Tutorial 4 NearMars Apply failure and Qt's corrected startup
+resolution of MARS50C to official Mars50c.cof. Retained custom files and unrelated
+forces remain intact. New MarsGravity passes 0.21 s; directly affected GravityBodies
+passes 0.97 s. No extra Mars numerical mission or other passing suite/corpus was
+repeated. The rebuilt app is 3ba673f1b2060dc6957d34f94ca11e9f48db3273374afb7d58da7c6654f52ef1,
+with base cf147e23…/selected startup 5f80be1f… unchanged. Actual Help 4 resumes
+from its own saved resource/view milestone; Help 6 begins independently from its
+Help instructions. Full replacement/host/hardware and remaining tutorial gates
+stay open; Windows/macOS/MATLAB remain deferred.

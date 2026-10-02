@@ -984,9 +984,14 @@ QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QSt
       std::unique_ptr<PhysicalModel> force(FactoryManager::Instance()->CreatePhysicalModel(type,std::string(type)+"."+body.toStdString()));
       if (!force) throw std::runtime_error("The selected gravity force could not be created.");
       force->SetAllowODEDelete(true); force->SetStringParameter("BodyName",body.toStdString());
-      // Use the same named defaults as the script interpreter, without
-      // initializing/replacing the numerical engine or unrelated forces.
-      if (field=="PrimaryBodies" && defaults.contains(body)) force->SetStringParameter("Model",defaults.value(body).toStdString());
+      // Resolve named defaults through the startup mapping, as the interpreter
+      // does. Treating a model alias as a filename loses case-sensitive names
+      // such as MARS50C_FILE -> Mars50c.cof and configured custom locations.
+      if (field=="PrimaryBodies" && defaults.contains(body)) {
+         const auto potential=Moderator::Instance()->GetPotentialFileName(defaults.value(body).toStdString());
+         // HarmonicField recognizes the interpreter's default-file indicator.
+         force->SetStringParameter("PotentialFile","DFLT__"+potential);
+      }
       model->AddForce(force.get()); force.release();
    }
    return consumed;
