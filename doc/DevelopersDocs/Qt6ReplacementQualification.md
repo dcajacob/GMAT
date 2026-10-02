@@ -7563,3 +7563,52 @@ actual application/bin/GmatQt-R2026a relink/launcher recreation. Live desktop
 testing remains stopped following the GNOME Shell crash; native desktop and
 broader Linux replacement gates remain open. Windows/macOS remain deferred and
 MATLAB remains off.
+
+## Advanced property audit and separate Qt checkout — 2026-10-01
+
+The user's follow-up requested an audit of the remaining Advanced parameters.
+An offscreen inspection enumerated 81 available resource factory types using the
+selected Qt runtime, constructed unregistered drafts and inspected their actual
+ResourceEditor property ownership. No types were skipped. There were 132
+Advanced row instances representing 82 distinct parameter names. Every distinct
+name has an exact guilabel match in the bundled Resource*.xml documentation.
+resource-property-audit.tsv records the exposed primary/Advanced fields and
+engine visibility/read-only flags; resource-property-audit.txt records the run
+counts; resource-property-audit-documentation.tsv maps the Advanced names to the
+bundled documentation. Matching a label was supplemented by reviewing the
+hardware visibility overrides and documented uses of the suspicious fields.
+
+No additional internal bookkeeping fields were identified in this scope.
+Remaining Advanced controls include physical hardware origins, thruster
+coefficients/mixtures, covariance, SPICE identifiers/kernels, station atmosphere
+and tracking corrections, and ephemeris format settings. Hardware origin inputs
+HWOriginInBCSX/Y/Z account for nine Advanced rows whose legacy visibility flag is
+false. They specify the hardware frame origin in spacecraft body coordinates,
+with meters as the documented unit, rather than GUI window position. Other
+false-visibility fields in the primary forms include documented hardware
+orientation and FieldOfView settings. A global visibility filter would remove
+useful mission configuration, so the subscriber-only fix is retained. Engine
+read-only exceptions were also reviewed against the existing specialized controls.
+
+This audit covers factory-default forms for the available selected runtime;
+it does not establish every conditional/configured form or execution validity.
+It reused the existing compiled frontend archive whose Qt source matches the
+new checkout, linked an inspection driver, and ran with the relocated new
+checkout's runtime/startup. There was no resource registration, Apply, numerical
+mission, live desktop session or repeated qualification matrix. No further
+product code change or rebuild was necessary for this inspection.
+
+The branch was pushed to the user's dcajacob/GMAT fork and cloned into
+/home/dan/GIT/GMAT-Qt on codex/qt6-gui. The original checkout is retained. The
+just-rebuilt application and selected runtime were copied without user settings
+or mission outputs; runtime search paths in 22 ELF files were relocated. A fresh
+Qt-only Linux CMake preset configured successfully, and the relocated application
+completed isolated offscreen startup with its core libraries resolving inside
+the new checkout. The fresh build directory has no copied objects and no full
+engine rebuild was repeated. Qt6Project.md documents launch and future builds;
+the ignored machine-local qt-runtime-snapshot.json records the copied source
+commit and 20 selected native plugins. Creating this checkout does not itself
+register a Codex sidebar project.
+
+Native desktop qualification remains open after the GNOME Shell crash. All live
+desktop testing remains stopped. Windows/macOS remain deferred and MATLAB off.

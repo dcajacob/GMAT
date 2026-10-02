@@ -1,0 +1,83 @@
+AdvancedProperty	BundledResourceDocumentation
+AberrationCorrection	Resource_TrackingFileSet.xml
+AccelerationModel	Resource_EphemerisFile.xml
+AddHardware	Resource_GroundStation.xml, Resource_Receiver.xml, Resource_SpacecraftNavigation.xml, Resource_TrackingFileSet.xml, Resource_Transmitter.xml
+AttitudeSpiceKernelName	Resource_SpacecraftAttitude.xml, Resource_SpacecraftProperties.xml
+C1	Resource_Thruster.xml
+C10	Resource_Thruster.xml
+C11	Resource_Thruster.xml
+C12	Resource_Thruster.xml
+C13	Resource_Thruster.xml
+C14	Resource_Thruster.xml
+C15	Resource_Thruster.xml
+C16	Resource_Thruster.xml
+C2	Resource_Thruster.xml
+C3	Resource_Thruster.xml
+C4	Resource_Thruster.xml
+C5	Resource_Thruster.xml
+C6	Resource_Thruster.xml
+C7	Resource_Thruster.xml
+C8	Resource_Thruster.xml
+C9	Resource_Thruster.xml
+DataFilters	Resource_AcceptFilter.xml, Resource_BatchEstimator.xml, Resource_ExtendedKalmanFilter.xml, Resource_RejectFilter.xml, Resource_TrackingFileSet.xml
+DataSource	Resource_GroundStation.xml
+DecrementMass	Resource_ElectricThruster.xml, Resource_ImpulsiveBurn.xml, Resource_Thruster.xml
+ErrorModels	Resource_ErrorModel.xml, Resource_GroundStation.xml, Resource_Receiver.xml
+FileName	Resource_AcceptFilter.xml, Resource_CelestialBody.xml, Resource_RejectFilter.xml, Resource_ReportFile.xml, Resource_Simulator.xml, Resource_ThrustHistoryFile.xml, Resource_TrackingFileSet.xml
+FormatVersion	Resource_EphemerisFile.xml
+FrameSpiceKernelName	Resource_CelestialBody.xml, Resource_ContactLocator.xml, Resource_EclipseLocator.xml, Resource_IntrusionLocator.xml, Resource_SpacecraftAttitude.xml, Resource_SpacecraftProperties.xml
+HWOriginInBCSX	Resource_Antenna.xml, Resource_ElectricTank.xml, Resource_ElectricThruster.xml, Resource_FuelTank.xml, Resource_Imager.xml, Resource_Thruster.xml
+HWOriginInBCSY	Resource_Antenna.xml, Resource_ElectricTank.xml, Resource_ElectricThruster.xml, Resource_FuelTank.xml, Resource_Imager.xml, Resource_Thruster.xml
+HWOriginInBCSZ	Resource_Antenna.xml, Resource_ElectricTank.xml, Resource_ElectricThruster.xml, Resource_FuelTank.xml, Resource_Imager.xml, Resource_Thruster.xml
+Humidity	Resource_GroundStation.xml
+IncludeCovariance	Resource_EphemerisFile.xml
+IonosphereModel	Resource_GroundStation.xml
+K1	Resource_Thruster.xml
+K10	Resource_Thruster.xml
+K11	Resource_Thruster.xml
+K12	Resource_Thruster.xml
+K13	Resource_Thruster.xml
+K14	Resource_Thruster.xml
+K15	Resource_Thruster.xml
+K16	Resource_Thruster.xml
+K2	Resource_Thruster.xml
+K3	Resource_Thruster.xml
+K4	Resource_Thruster.xml
+K5	Resource_Thruster.xml
+K6	Resource_Thruster.xml
+K7	Resource_Thruster.xml
+K8	Resource_Thruster.xml
+K9	Resource_Thruster.xml
+MassFlowCoeff1	Resource_ElectricThruster.xml
+MassFlowCoeff2	Resource_ElectricThruster.xml
+MassFlowCoeff3	Resource_ElectricThruster.xml
+MassFlowCoeff4	Resource_ElectricThruster.xml
+MassFlowCoeff5	Resource_ElectricThruster.xml
+MaxCentralAngleOfRayPath	Resource_TrackingFileSet.xml
+MinHeightOfRayPath	Resource_TrackingFileSet.xml
+MixRatio	Resource_ElectricThruster.xml, Resource_Thruster.xml
+NAIFId	Resource_CelestialBody.xml, Resource_ContactLocator.xml, Resource_EclipseLocator.xml, Resource_EphemerisPropagator.xml, Resource_GroundStation.xml, Resource_IntrusionLocator.xml, Resource_Propagator.xml, Resource_SpacecraftAttitude.xml, Resource_SpacecraftOrbitState.xml
+NAIFIdReferenceFrame	Resource_SpacecraftAttitude.xml, Resource_SpacecraftProperties.xml
+OrbitErrorCovariance	Resource_ExtendedKalmanFilter.xml, Resource_SpacecraftNavigation.xml
+OrbitSpiceKernelName	Resource_CelestialBody.xml, Resource_ContactLocator.xml, Resource_EclipseLocator.xml, Resource_IntrusionLocator.xml, Resource_SolarSystem.xml, Resource_SpacecraftOrbitState.xml, Resource_SpacecraftProperties.xml
+Pressure	Resource_FuelTank.xml, Resource_GroundStation.xml, Resource_SpacecraftBallisticMass.xml
+RampTable	Resource_TrackingFileSet.xml
+SCClockSpiceKernelName	Resource_SpacecraftAttitude.xml, Resource_SpacecraftProperties.xml
+SimDopplerCountInterval	Resource_TrackingFileSet.xml
+SimRangeModuloConstant	Resource_TrackingFileSet.xml
+SimTDRSSmarId	Resource_TrackingFileSet.xml
+SimTDRSTrackerType	Resource_TrackingFileSet.xml
+SpiceFrameId	Resource_CelestialBody.xml, Resource_ContactLocator.xml, Resource_CoordinateSystem.xml, Resource_EclipseLocator.xml, Resource_GroundStation.xml, Resource_IntrusionLocator.xml
+Tank	Resource_ElectricThruster.xml, Resource_FiniteBurn.xml, Resource_ImpulsiveBurn.xml, Resource_Thruster.xml
+Temperature	Resource_FuelTank.xml, Resource_GroundStation.xml
+ThrustCoeff1	Resource_ElectricThruster.xml
+ThrustCoeff2	Resource_ElectricThruster.xml
+ThrustCoeff3	Resource_ElectricThruster.xml
+ThrustCoeff4	Resource_ElectricThruster.xml
+ThrustCoeff5	Resource_ElectricThruster.xml
+TimeGapForPassBreak	Resource_ErrorModel.xml, Resource_TrackingFileSet.xml
+TroposphereModel	Resource_GroundStation.xml
+UseETminusTAI	Resource_TrackingFileSet.xml
+UseInitialCovariance	Resource_BatchEstimator.xml, Resource_SpacecraftNavigation.xml, Resource_ThrustSegment.xml
+UseLightTime	Resource_TrackingFileSet.xml
+UseRelativityCorrection	Resource_TrackingFileSet.xml
