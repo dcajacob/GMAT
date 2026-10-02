@@ -808,3 +808,27 @@ cf147e23... and startup 5f80be1f... are unchanged across both private X11/softwa
 sessions. Bounded/acknowledged-helper cleanup is 0/0/-15, not graceful GUI Quit or
 host/Wayland/portal/hardware/crash/full replacement acceptance. Windows/macOS/MATLAB
 remain deferred; no old matrix, corpus or prerequisite-reference run was repeated.
+
+
+### DSN simulation Help walkthrough passed — 2026-10-02
+
+[Tutorial 9](Qt6ParityValidation/help-tutorial-09-20261002.md) passes bounded
+private actual-input construction through the Help-prescribed empty script
+editor. Staged resource Save/Build steps produce the short four-observation
+simulation in 0.081 s. A separate editor-authored ramp file and three stations
+produce the full noisy 21-day scenario in 22.963 s: 1348 paired range/TCP
+observations, 505 hourly epochs, CAN/GDS/MAD counts 210/233/231 per type.
+All 674 range frequencies match Help ramp metadata; IDs/modulo/interval and
+finite values are checked. Full observations are retained for Tutorial10.
+
+Own SaveAs/Ctrl+O reopen/Build and normal 0/0/0 cleanup precede the
+20:21:58.590173 UTC freeze. Source SHA492402ba.../ramp d91497ac.../observations
+a66ac094... remain unchanged. Post-freeze explicit numerical settings match
+both samples, with attachment-order and owned-path differences recorded.
+Earlier source-matched corpus successes support comparison; no needless noisy
+reference rerun occurred. Seven unchanged PNGs, both authored sources, ramp and
+full own observations accompany indexed raw actions/logs/failures. Short app
+3ba673f1... and realistic ef933221... retain controlled base cf147e23... and
+startup5f80be1f... . This covers the prescribed script-editor workflow; full
+scientific/host/Wayland/hardware/crash and remaining tutorial gates stay separate.
+Windows/macOS/MATLAB remain deferred; no old matrix or corpus was repeated.
