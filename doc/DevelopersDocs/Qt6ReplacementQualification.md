@@ -8127,3 +8127,63 @@ with Tutorial 2 construction in progress separately. No old full matrix/corpus
 repeated. Full Linux replacement, host/hardware/portal and broader viewer gates
 remain open; Windows/macOS/MATLAB remain deferred. No runtime/source change was
 made to prepare this evidence record.
+
+
+## Simple Orbit Transfer Help walkthrough passed — 2026-10-02
+
+[Help tutorial 2 evidence](Qt6ParityValidation/help-tutorial-02-20261002.md) records
+independent Welcome/Help/New construction, TOI/GOI/DC1 and ordered targeting through
+actual controls. Seven iterations/0.760 s satisfy the 0.1 km radius/0.0001 ECC
+limits; the actual Target editor Apply Corrections button changes only two Vary
+guesses, then one iteration/0.647 s repeats the achieved goals. Actual own Ctrl+O
+reopen retains corrected TOI/GOI fields and byte-exact 5978-byte source (SHA256
+652c63e2559d6cda7e489f458c870ae8908fd8aa780adf8b518afd5cc4c4d20c).
+Two initial Achieve entries put later input in Name and were corrected before F5;
+no unproved focus cause or numerical failure is claimed.
+
+After the 17:57:42.093446 UTC freeze, one actual reference GUI run (1.881 s) has the
+same complete 4991-byte solver report, SHA256
+3edcbc50a784dcf587a7fb68c1d5b9a031e9de09b97beaddaa081f58a8a20d21.
+Bounds/Target ExitMode and omitted resource/display defaults remain explicit;
+report equality does not establish every-state or independent scientific parity.
+Reference view translation was not saved to its original source. Five unchanged
+PNGs/final authored source accompany the record; detailed raw evidence and the
+post-freeze source comparison are indexed under ignored 02-simple-orbit-transfer.
+Tutorials 1–2 now Passed, 3 In progress after actual Help/resources/commands and
+13-iteration first authored convergence without reference access. Other tutorial
+and full Linux replacement/host/hardware gates remain open. No old matrix/corpus
+was repeated; Windows/macOS/MATLAB remain deferred.
+
+
+## Finite-burn Help walkthrough passed — 2026-10-02
+
+[Help tutorial 3 evidence](Qt6ParityValidation/help-tutorial-03-20261002.md) records
+independent Welcome/Help/New hardware/resource/mission construction, finite-burn
+target convergence (13 iterations/0.749 s), four exported summaries and actual
+save/reopen. Cutoff MA is 25.131809686270°; fuel decreases 756→343.76990738327 kg;
+perigee/apogee MA is 0/180° and radius 12000.000012291 km satisfies 0.1 km tolerance.
+An unintended pending coordinate wheel change was discarded before Apply.
+
+To inspect Help's trial view, explicit SolverIterations Current→All is the only
+semantic model adjustment; the necessary 0.736 s run has the same full report.
+Mouse face-on viewing and temporary stars/constellations/XY plane overrides leave
+saved drawing defaults retained. Final 6190-byte source SHA256
+8a4a6914110f27b306ad256c6c0e4dc7a7f943d2c0100d7810f1b2a3d34e84fa
+was frozen at 18:26:43.612951 UTC. A later actual reference Ctrl+O/Convert views/
+F5 run completes in 0.541 s without saving the original source. First authored,
+All-history authored and reference whole reports are byte-identical: 5583 bytes,
+SHA256 809ed5bba4fe90001b83612fc2e1790935e09f129a2a13f0689bcabb97853f14.
+
+Source comparison retains lower bound −10 versus 0, All versus Current and
+omitted hardware/solver/modern defaults. Complete-report equality does not prove
+every propagated sample, rendered pixel or independent scientific accuracy.
+Six unchanged PNGs/final authored source accompany the record; 114 raw files,
+69 PNGs/19,806,000 bytes remain in the ignored artifact index. Runtime app
+7b4a0ae7…/controlled core cf147e23… and owned 0/0/-15 cleanup are bounded private
+X11 evidence, not host/hardware/crash qualification. Ledger 1–3 Passed, 4–5
+In progress and 6–12 Pending. Tutorial 4 resource construction encountered a tank
+creation-order issue/failed milestone save; reconstruction is underway. Tutorial 5
+has initial Help blocks typed through the blank actual private GUI editor,
+resources still entering and no reference consulted. Neither is a completed
+walkthrough. Other tutorial/full replacement gates remain open. No old matrix/
+corpus was repeated; Windows/macOS/MATLAB remain deferred.

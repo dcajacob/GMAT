@@ -9,20 +9,27 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Tutorial 1 is Passed for bounded private actual-input construction.** See
-[its walkthrough record](Qt6ParityValidation/help-tutorial-01-20261002.md): independent
-Help-driven GUI construction, execution/required results, save/reopen and post-freeze
-reference comparison are complete. Tutorials 2–12 retain Pending status here until
-their separate records establish an outcome. The earlier shipped script build/run
-corpus and tutorial repairs are not GUI walkthrough evidence.
+**Tutorials 1–3 are Passed for bounded private actual-input construction.** See
+[Tutorial 1](Qt6ParityValidation/help-tutorial-01-20261002.md),
+[Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md) and
+[Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md): independent Help-driven
+GUI construction, required execution/results, save/reopen and post-freeze reference
+comparison are complete. Tutorials 4–5 are In progress: Tutorial 4's actual
+resource construction encountered a tank creation-order issue and failed milestone
+save, with short resource reconstruction underway; Tutorial 5 has initial Help
+blocks typed through the blank private GUI editor, with resources still being
+entered. These are construction observations, not completed execution/reopen or
+reference comparisons. Tutorials 6–12 remain Pending. The earlier shipped script
+corpus and repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
 the user's desktop remains stopped following the GNOME Shell crash. A private,
 authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
 It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. Tutorial 1 used that route; Tutorial 2 is now being
-constructed under separate evidence.
+for interactive construction. Tutorials 1–3 used that bounded route through
+actual Help/resource/mission controls with separate per-chapter evidence.
+Tutorials 4–5 now continue through actual resource/script-editor input separately.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -72,16 +79,17 @@ or links against the source. Reading an inventory is not a completed tutorial.
 
 ## Published tutorial sequence
 
-Tutorial 1 is **Passed** with the bounded evidence linked below. Other entries
-remain **Pending** in this ledger. Numbering follows the Tutorials part of the Help.
+Tutorials 1–3 are **Passed** with the bounded evidence linked below;
+tutorials 4–5 are **In progress**, and 6–12 remain **Pending**. Numbering follows
+the Tutorials part of the Help.
 
 | # | Chapter source and title | Prerequisites and staged coverage |
 |---|---|---|
 | 1 | `Tut_SimulatingAnOrbit.xml` — Simulating an Orbit | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-01-20261002.md). None. Spacecraft, propagator, propagate to periapsis, command summary/frame, animation, save/reopen and post-freeze reference comparison. |
-| 2 | `Tut_SimpleOrbitTransfer.xml` — Simple Orbit Transfer | Tutorial 1. DifferentialCorrector and two impulsive maneuvers for a Hohmann transfer. |
-| 3 | `Tut_TargetFiniteBurn.xml` — Target Finite Burn to Raise Apogee | Tutorials 1–2. Hardware, FiniteBurn, target burn duration, inspect results. |
-| 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | Tutorials 1–2 and B-plane concepts. Trajectory correction followed by Mars orbit insertion. |
-| 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Verify configuration, smooth trajectory, optimize, new initial guess, additional constraint. |
+| 2 | `Tut_SimpleOrbitTransfer.xml` — Simple Orbit Transfer | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-02-20261002.md). Tutorial 1. TOI/GOI/DC1, ordered Hohmann targeting, seven-iteration solve, Apply Corrections/one-iteration rerun, save/reopen and post-freeze complete solver-report equality. |
+| 3 | `Tut_TargetFiniteBurn.xml` — Target Finite Burn to Raise Apogee | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-03-20261002.md). Tutorials 1–2. Hardware/FiniteBurn/DC1/BurnDuration, ordered finite-burn targeting, 13-iteration solve, four exported summaries, explicit All-history view, save/reopen and post-freeze complete solver-report equality. |
+| 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | **In progress** — actual Help-driven resource construction encountered a tank creation-order issue and failed milestone save; short resource reconstruction underway. No completed execution/reopen/reference comparison claimed. Tutorials 1–2 and B-plane concepts. Trajectory correction followed by Mars orbit insertion. |
+| 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | **In progress** — initial Help blocks entered in a blank actual private GUI script editor; resource entry continues, with no reference consulted. No completed execution/reopen/reference comparison claimed. Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Verify configuration, smooth trajectory, optimize, new initial guess, additional constraint. |
 | 6 | `Tut_UsingGMATFunctions.xml` — Mars B-Plane Targeting Using GMAT Functions | Tutorials 1–2, 4 and B-plane concepts. Author a GmatFunction and Global objects; target inside the function, then outside it. |
 | 7 | `Tut_EventLocation.xml` — Finding Eclipses and Station Contacts | Extend the independently built tutorial 2 mission. EclipseLocator, then GroundStation/ContactLocator. |
 | 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | Tutorial 1; tutorial 3 referenced for targeting. Electric propulsion hardware and finite-burn modeling. |
@@ -122,5 +130,6 @@ chapters do not satisfy the new interactive acceptance requirement.
 
 For each actual walkthrough, add a per-chapter record under
 `doc/DevelopersDocs/Qt6ParityValidation` and link it here. Preserve raw artifacts
-in the ignored qualification artifact tree. Tutorial 1's completed record is
-linked above; the remaining chapters require their own independent evidence.
+in the ignored qualification artifact tree. Tutorials 1–3 have completed records
+linked above; Tutorials 4–5 are in progress and remaining chapters require their
+own independent evidence.

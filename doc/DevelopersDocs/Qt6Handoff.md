@@ -596,3 +596,68 @@ recorded against Help's integrated Propagator instructions. Qt6TutorialWalkthrou
 now links row 1 Passed; other rows retain Pending while Tutorial 2 proceeds under
 separate evidence. No broad matrix/corpus repeated. Full replacement and host/
 hardware/portal gates remain open; Windows/macOS/MATLAB remain deferred.
+
+
+### Second completed Help walkthrough — 2026-10-02
+
+[Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md) is Passed for bounded
+private actual-input construction from Welcome/Help/New: TOI/GOI/DC1 and the
+ordered transfer mission were authored through controls. The first solve completed
+in seven iterations/0.760 s; the Target editor's Apply Corrections button changed
+only two Vary guesses, followed by one iteration/0.647 s. Actual own Ctrl+O reopen
+retains both corrected fields and the unchanged 5978-byte source, SHA256
+652c63e2559d6cda7e489f458c870ae8908fd8aa780adf8b518afd5cc4c4d20c.
+Both achieved goals satisfy Help's 0.1 km radius and 0.0001 ECC tolerances. Initial
+Achieve entries placed later input in Name and were corrected before F5; no
+focus/layout cause or numerical failure is inferred.
+
+Construction/results/reopen were frozen at 17:57:42.093446 UTC before reference
+access. One later actual GUI reference run completed in 1.881 s; its full 4991-byte
+solver report equals the authored seven-iteration report, SHA256
+3edcbc50a784dcf587a7fb68c1d5b9a031e9de09b97beaddaa081f58a8a20d21.
+The source comparison retains different Vary bounds and Target ExitMode; equality
+is this report only, not every propagated sample or independent science. Five
+unchanged PNGs and final authored source are copied with the record; raw traces,
+reports and post-freeze source comparison remain in ignored Tutorial 2 evidence.
+The ledger now has 1–2 Passed and 3 In progress (actual Help/resources/commands,
+first 13-iteration authored convergence, no reference yet); remaining walkthroughs
+and full replacement/host/hardware gates stay open. Windows/macOS/MATLAB are deferred.
+
+
+### Third completed Help walkthrough — 2026-10-02
+
+[Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md) is Passed for bounded
+private actual-input construction from Welcome/Help/New: chemical hardware,
+FiniteBurn1/DC1/BurnDuration and the ordered targeting mission were authored
+through controls. The first F5 completed in 13 iterations/0.749 s. Four actual
+exported command summaries show perigee/cutoff/apogee MA 0/25.131809686270/180°,
+fuel 756→343.76990738327 kg and apogee radius 12000.000012291 km, within the Help's
+0.1 km tolerance. Actual own Ctrl+O/editor checks retain C1=1000, tank mixture 1,
+Vary initial 200/upper 10000/MaxStep 100 and final source. An unintended pending
+coordinate wheel change was discarded before Apply; EarthMJ2000Eq remains saved.
+
+Current default history did not supply Help's described trial view. The only
+semantic model adjustment was explicit SolverIterations All; its necessary
+0.736 s run retained the same complete report and enabled face-on trial viewing.
+Temporary stars/constellations/XY plane viewer overrides were not written into
+resource defaults. Final 6190-byte source SHA256
+8a4a6914110f27b306ad256c6c0e4dc7a7f943d2c0100d7810f1b2a3d34e84fa
+was frozen at 18:26:43.612951 UTC before reference access. One actual reference
+Ctrl+O/Convert views/F5 run completed in 0.541 s without saving its original
+source. All three whole 5583-byte solver reports are byte-identical, SHA256
+809ed5bba4fe90001b83612fc2e1790935e09f129a2a13f0689bcabb97853f14.
+
+Search lower bound −10 versus reference 0, All versus Current, and omitted
+hardware/DC/default fields remain explicit. Equality is this report only;
+every-state, pixel and independent science parity are unproved. Six unchanged
+PNGs/final authored source accompany the record; raw evidence remains indexed
+under ignored 03-finite-burn (114 files/69 PNGs/19,806,000 bytes). Runtime is app
+7b4a0ae7… with separate controlled core cf147e23… checkpoint; X11 launch metadata
+does not independently hash core per launch. Owned cleanup is 0/0/-15, with host
+GNOME identity unchanged. Ledger 1–3 Passed, 4–5 In progress and 6–12 Pending.
+Tutorial 4's actual resource construction encountered a tank creation-order issue
+and failed milestone save; reconstruction is underway. Tutorial 5 has initial Help
+blocks entered through a blank actual private GUI editor, with resource entry
+continuing and no reference consulted. Neither is completed walkthrough evidence.
+Full Linux replacement, host/hardware and other tutorial gates remain open.
+No old matrix/corpus was repeated; Windows/macOS/MATLAB remain deferred.
