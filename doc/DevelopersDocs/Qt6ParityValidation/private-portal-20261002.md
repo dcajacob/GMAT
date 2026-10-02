@@ -112,3 +112,13 @@ configuration. Open acceptance and Save cancellation are not established by
 this session. Wider lifecycle/driver and full Linux replacement gates remain
 open. This record makes no GUI-built Help tutorial claim; walkthrough state is
 maintained separately. Windows/macOS and MATLAB remain deferred.
+
+
+## Later bounded completion
+
+The [current-runtime followup](private-wayland-followup-20261002.md) establishes
+Open acceptance and Save As cancellation through exact portal responses and
+settled GUI/file evidence. It also supplies Output Return retention on the current
+application/core. This leaves the original failure and four successful cases
+above unchanged; the additional bounded cases do not qualify host portals or
+physical hardware.

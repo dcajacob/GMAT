@@ -695,3 +695,21 @@ with base cf147e23…/selected startup 5f80be1f… unchanged. Actual Help 4 resu
 from its own saved resource/view milestone; Help 6 begins independently from its
 Help instructions. Full replacement/host/hardware and remaining tutorial gates
 stay open; Windows/macOS/MATLAB remain deferred.
+
+
+### Private portal completion and Output Return — 2026-10-02
+
+[private-wayland-followup-20261002.md](Qt6ParityValidation/private-wayland-followup-20261002.md)
+records current app3ba673f1…/basecf147e23… actual private portal Open acceptance
+(Response0/owned fixture URI) and Save As cancellation (Response1/no new file,
+unchanged fixture), using the repaired request-ID helper. One GUI F5 completes
+0.595s; pending Orbit Earth close Cancel/Discard and readback retain the resource.
+A single Output leaf Return reopens the retained Earth/trajectory/camera at shared
+48.6%. Earlier successful portal cases, main minimize/restore and numerical
+matrices were not repeated. Seven unchanged PNGs and 209 indexed raw files retain
+unsuccessful intermediate actions. Helper quit was acknowledged; parent sandbox
+teardown was -15, with a transient owned compositor in its immediate inventory.
+Later owned-PID absence and unchanged user GNOME PID/start ticks are recorded;
+no graceful GUI Quit, host/physical-GPU/crash or full replacement acceptance is
+claimed. Remaining Help walkthroughs continue separately. Windows/macOS/MATLAB
+remain deferred.
