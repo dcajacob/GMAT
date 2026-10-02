@@ -26,7 +26,7 @@ Successfully set Planetary Source to use: DE405
 Moderator is deleting core engine...
 
 application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script [run: timeout]
-/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01
+/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
@@ -34,27 +34,27 @@ Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentK
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
 Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
 Last engine log lines:
+*** 7 variables; 6 equality constraints; 0 inequality constraints
+   Variables:  arrivalEpoch, satForward.VX, satForward.VY, satForward.VZ, satBackward.VX, satBackward.VY, satBackward.VZ
+   Equality Constraints:  satForward.SunMJ2000Ec.X, satForward.SunMJ2000Ec.Y, satForward.SunMJ2000Ec.Z, satForward.SunMJ2000Ec.VX, satForward.SunMJ2000Ec.VY, satForward.SunMJ2000Ec.VZ
+********************************************************
+Yukon1 Iteration 0; Function Evaluation 1; Nominal Pass
+   Variables:  arrivalEpoch = 27747.833179, satForward.VX = 1.55266690101, satForward.VY = 0.742231088421, satForward.VZ = -8.1664363116, satBackward.VX = -4.80572031573, satBackward.VY = -0.351135399476, satBackward.VZ = -1.65879143261
+   Cost Function Value: 7.91943328124
+   Yukon1 State converged to within target accuracy.
 
    Equality Constraint Variances:
-      Delta satForward.SunMJ2000Ec.X = -65754065.1517
-      Delta satForward.SunMJ2000Ec.Y = 34818023.5727
-      Delta satForward.SunMJ2000Ec.Z = 1466114.18836
-      Delta satForward.SunMJ2000Ec.VX = 2.20053103835
-      Delta satForward.SunMJ2000Ec.VY = -6.87639678822
-      Delta satForward.SunMJ2000Ec.VZ = -0.164879094585
+      Delta satForward.SunMJ2000Ec.X = 3091195.70252
+      Delta satForward.SunMJ2000Ec.Y = 1723483.70709
+      Delta satForward.SunMJ2000Ec.Z = 98652.9486726
+      Delta satForward.SunMJ2000Ec.VX = 0.183862822383
+      Delta satForward.SunMJ2000Ec.VY = 0.287609660432
+      Delta satForward.SunMJ2000Ec.VZ = -0.00440932174923
 
-Yukon1 Iteration 7; Function Evaluation 8; Nominal Pass
-   Variables:  arrivalEpoch = 27728.157365, satForward.VX = 0.124384634525, satForward.VY = 0.698052060333, satForward.VZ = -11.053961244, satBackward.VX = -7.85350038026, satBackward.VY = -0.183045172531, satBackward.VZ = -2.86439916667
-   Cost Function Value: 22.12882594
+Yukon1 Iteration 1; Function Evaluation 2; Nominal Pass
+   Variables:  arrivalEpoch = 27747.7312794, satForward.VX = 1.62645184073, satForward.VY = 0.738488151327, satForward.VZ = -7.90692519015, satBackward.VX = -4.80098929888, satBackward.VY = -0.369088208885, satBackward.VZ = -1.48871392102
+   Cost Function Value: 7.8448139625
    Yukon1 State: Optimization is proceeding as expected.
-
-   Equality Constraint Variances:
-      Delta satForward.SunMJ2000Ec.X = -47494884.8137
-      Delta satForward.SunMJ2000Ec.Y = 24764797.9475
-      Delta satForward.SunMJ2000Ec.Z = 1047194.78554
-      Delta satForward.SunMJ2000Ec.VX = 1.48541662181
-      Delta satForward.SunMJ2000Ec.VY = -5.03750766112
-      Delta satForward.SunMJ2000Ec.VZ = -0.1174780864
 
 
 application/samples/NeedMatlab/Ex_CallMatlabFunctions.script [build: failed]

@@ -14,7 +14,7 @@ parent references are traced. Plugin developer tests, the CInterface MATLAB
 configuration, Python/MATLAB API clients, notebooks and generators are outside
 this Qt mission-script corpus.
 
-| Standalone scope | Missions | Build passed | Build failed | Run completed | Unexpected run failures | Expected tutorial Stop | Initial timeout |
+| Standalone scope | Missions | Build passed | Build failed | Run completed | Unexpected run failures | Expected tutorial Stop | Timed out |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `application/samples` | 138 | 123 | 15 | 119 | 0 | 1 | 3 |
 | Help tutorial downloads | 19 | 17 | 2 | 15 | 1 | 1 | 0 |
@@ -30,12 +30,19 @@ retain raw exit 1/failed status plus an explicit tutorial-checkpoint assessment;
 raw counts are 136 passes, eight failures and three timeouts. They are not counted
 as completed missions or optimizer convergence.
 
-The Yukon launch-window mission's initial 180-second attempt timed out while
-its optimizer progressed. Its separate 7200-second attempt remains running in
-`/tmp/gmat-shipped-examples-yukon`; eight of its 20 windows have completed at this checkpoint, from
+The Yukon launch-window mission's existing 7200-second attempt reached its
+bound after **11 of 20 windows** completed. The terminal stage is timeout/exit
+-15, duration 7200.026 seconds, with unchanged source SHA256. Its complete raw
+results are retained in `/tmp/gmat-shipped-examples-yukon` and the durable ignored
+`build/example-qualification/20261002/yukon` copy. Completed windows range from
 launch epoch 27348.0637387/cost 9.597325279040319 through
-27362.0637387/cost 8.354403209032288. It is **not counted as passed**. Continue the
-same process; merge only its terminal result after confirming source identity.
+27368.0637387/cost 7.951719590661567. The next window was still optimizing.
+This is incomplete, not a passed full mission or proof of a hang. Its prior
+180-second attempt remains in history; no unchanged third attempt is scheduled.
+Only this terminal result/history was merged into the main ledger after matching
+source identity. The running process used the earlier recorded frontend/runner
+snapshot; later plugin-snapshot additions and GUI rebuilds do not retroactively
+qualify that provenance.
 
 The newly enabled VF13ad MarsLaunchWindowAnalysis and MarsPatchConic runs each
 reached their 300-second bound. The first completed one window (epoch 27348.0637387,

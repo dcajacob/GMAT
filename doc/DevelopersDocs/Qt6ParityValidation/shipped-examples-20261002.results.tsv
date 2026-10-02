@@ -76,7 +76,7 @@ application/samples/Ex_TargetStatusWindow.script	distribution_samples	mission	e3
 application/samples/Ex_ThrusterWithMultipleTanks.script	distribution_samples	mission	3f6651de8162698af47b00dd4292ff5c6bd73b91b0afa5b713216aa2f864596d	passed	passed	0.569	-	-	-
 application/samples/Ex_WriteCommand.script	distribution_samples	mission	18e9b43040fe1219f5e296662d559a24fcc981cb46fbc51879ba484ab61c71bc	passed	passed	0.469	-	-	-
 application/samples/Ex_Yukon_AlgebraicOptimization.script	distribution_samples	mission	76e694ef89bb9b889be11612efe7c5e96a57f30d28a95f8c22c7c06f8390e087	passed	passed	0.469	-	-	-
-application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script	distribution_samples	mission	3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1	passed	timeout	180.022	-	-	-
+application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script	distribution_samples	mission	3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1	passed	timeout	7200.026	-	-	-
 application/samples/Navigation/Ex_CompareEphemeris.script	distribution_samples	mission	ddbe40f71a34507b86bbc667992cc8142ba5480527d139bfd0926615b54b4c85	passed	passed	2.723	-	-	-
 application/samples/Navigation/Ex_Estimate_AngleData.script	distribution_samples	mission	4b2133f9d0f8b2d2aeacf81046292122521b9fb359e649a12a25016771b23e08	passed	passed	13.007	-	-	-
 application/samples/Navigation/Ex_Estimate_BRTSTracking.script	distribution_samples	mission	0629d032facb3223dc70f67ddda1ec34336c2f770ceb9fed292520fb4344699c	passed	passed	24.842	-	-	-

@@ -80,7 +80,7 @@ Recent commits worth inspecting:
 | `172dc55` | Match wx body selection; preserve implicit configuration |
 | `1034956` | Celestial-body pages and kernel/appearance edit qualification |
 
-## Most recent completed work
+## Work completed at the initial handoff
 
 Resource edits now patch changed source assignments while retaining unrelated
 configuration and mission text. Canonical regeneration had made implicit power
@@ -108,7 +108,8 @@ not qualify unrelated active workflows, About/license or batch-run reports.
 
 ## Evidence and its limits
 
-Evidence directory: `doc/DevelopersDocs/Qt6ParityValidation/`.
+The following is the historical handoff checkpoint; later appendices supersede
+its pending dispositions. Evidence directory: `doc/DevelopersDocs/Qt6ParityValidation/`.
 
 - `check-event-output.txt`: all 36 Qt suites passed, 155.72 seconds.
 - `check-event-output-report-disabled.txt`: final WriteReport-off event case and
@@ -143,30 +144,24 @@ required OF translation behavior while keeping the Qt viewer UX.
 
 ### 2. Finish source audits and active wx workflows
 
-The current inventory has 10 of 108 source entries marked `Pending audit`:
-
-- `src/gui/foundation/ParameterSelectDialog.hpp`
-- `src/gui/debugger/InspectorPanel.hpp`
-- `src/gui/mission/UndockedMissionPanel.hpp`
-- `src/gui/mission/TreeViewOptionDialog.hpp`
-- `src/gui/app/FileUpdateDialog.hpp`
-- `src/gui/app/TextEphemFileDialog.hpp`
-- `src/gui/app/RunScriptFolderDialog.hpp`
-- `src/gui/subscriber/OpenGlOptionDialog.hpp`
-- `src/gui/app/WelcomePanel.hpp`
-- `src/gui/app/AboutDialog.hpp`
-
-Inspect active callers and actual behavior, implement missing operations, and
-provide execution/interaction evidence. Some may already map to Qt or be inactive;
-the count is audit progress, not a completion percentage or ten known bugs.
-Known delivery gaps include folder-run workflow/reporting and About/license.
+The current qualification inventory has source/caller audits for all 108 wx
+entries. Its mapped rows and latest appendices distinguish implemented cases,
+inactive/deferred workflows and remaining limits. Continue missing active
+operations and their bounded qualification; do not repeat the completed audits.
+Folder runs, About/license, shared Help/Apply, debugger, welcome, parameter
+selection and mission navigation have subsequent implementation/evidence.
+Resource Clone and local Rename are also implemented; use their latest evidence
+for coverage and external-source boundaries.
 
 ### 3. Shared desktop/editor behavior
 
-Context Help and keeping panels open after successful Apply remain pending.
-Qualify dirty/pending Apply/Discard/Cancel, mixed-page transactions, keyboard and
-focus behavior, portal choosers, and remaining multi-script/document differences.
-Report paging/search/comparison exists; broader search/options still carry limits.
+Shared Help, retained resource/command Apply and independent active/inactive
+script documents have subsequent implementation and bounded evidence. Qualify
+remaining desktop input, keyboard/focus and portal chooser behavior without
+repeating the covered source/transaction checks. Dirty/pending Apply/Discard/
+Cancel, mixed-page edits, failed-edit recovery and document differences remain
+part of the full contract. Report search/options and broader combinations keep
+the explicit limits recorded in the current inventory and appendices.
 
 ### 4. Selected plugins and file recovery
 
@@ -176,7 +171,8 @@ GUI settings, creation/removal and representative runtime/report/round-trip case
 explicitly resolve fixture requirements and unsupported scope. Do not silently
 turn every possible numerical regime into a new algorithm qualification task.
 Check relative assets/includes, kernel paths, filesystem/write failures and
-recovery; resolve the known SPICE diagnostic-file issue.
+recovery. The SPICE diagnostic-file repair has subsequent independent-process
+evidence; preserve its remaining race/storage limits and historical failures.
 
 ### 5. Final acceptance audit
 
@@ -208,8 +204,8 @@ the first engine/frontend/plugin build. See `Qt6Project.md`; keep incremental
 builds and select checks affected by current changes.
 
 ```bash
-cmake --build build/linux-gui --target GmatQt --parallel 8
-cmake --build build/linux-gui --target check-qt --parallel 8
+cmake --build build/linux-gui --target GmatQt --parallel 2
+cmake --build build/linux-gui --target check-qt --parallel 2
 ```
 
 Launch exactly as the user does:
@@ -222,7 +218,7 @@ cd /home/dan/GIT/GMAT-Qt/application/bin
 A focused CTest example, after rebuilding its executable:
 
 ```bash
-cmake --build build/linux-gui --target GmatQtEventLocatorTests --parallel 8
+cmake --build build/linux-gui --target GmatQtEventLocatorTests --parallel 2
 ctest --test-dir build/linux-gui -R '^QtGui.EventLocators$' --output-on-failure
 ```
 
@@ -258,7 +254,7 @@ storage, mark the old goal complete, or narrow the original acceptance scope.
 Every one of 164 standalone shipped mission/tutorial candidates has a real build
 attempt, and every one of 147 successful builds has a run attempt. Current stages
 are 136 completed runs, six unexpected runtime failures, two expected Step 1 Stop
-checkpoints, three initial timeouts and 17 failed builds. Raw interrupted status
+checkpoints, three timed-out runs and 17 failed builds. Raw interrupted status
 is retained. See Qt6ParityValidation/shipped-examples-20261002.md, manifest and
 177-row table, plus the latest qualification appendix. Keep the full acceptance
 scope; these are build/execution checks, not complete native/scientific parity.
@@ -266,9 +262,10 @@ scope; these are build/execution checks, not complete native/scientific parity.
 All work and rebuilt runtime are in /home/dan/GIT/GMAT-Qt. Coordinate pending axes,
 branch/Toggle insertion, relative assets, OF lists/undrawn cameras/retained vectors,
 public Python API and SRP string-array fixes remain. New Clone covers unified
-optional naming, pending/atomic source and managed Array/Qt metadata; Rename
-remains a useful missing active workflow. Clone/OpenFramesSyntax/OpenFramesVectors
-focused checks pass after the actual frontend rebuild. No old full matrix was
+optional naming, pending/atomic source and managed Array/Qt metadata. Local Rename
+now updates typed references, arrays and Qt metadata with explicit external-file
+boundaries. Clone/OpenFramesSyntax/OpenFramesVectors passed after their frontend
+changes; the final rebuilt Rename workflow passes its new focused check. No old full matrix was
 repeated. Initial new-test harness errors are preserved/corrected.
 
 The free R2026a VF13ad binary is installed locally in the ignored
@@ -288,14 +285,23 @@ guard, cap-and-claim-success or keep retrying without substantive transfer analy
 Five TLE examples still require matching absent public catalogs. Their exact data
 requirements and all helper/fragment coverage limits remain recorded.
 
-The original longer Yukon launch-window process remains active under
-/tmp/gmat-shipped-examples-yukon with a 7200-second bound; eight windows completed at this checkpoint.
-Confirm its existing handle before continuing; do not restart. Merge only its
-terminal selected result into the main ledger after matching source identity.
+The existing Yukon 7200-second attempt is now terminal timeout, with 11 of
+20 windows completed. Its selected result/history was merged after matching
+source identity; all raw outputs are preserved in the ignored durable yukon
+tree. No unchanged restart is scheduled. This is incomplete, not a full pass.
 The VF13ad/MarsLaunch and MarsPatchConic 300-second attempts were progressing,
 not proved hung; preserve as incomplete. SPAD's earlier 209.91-second completed
 retry must not repeat. QualifyExamples.py is resumable; select failed examples
 only after concrete fixes. Completed raw trees are preserved in
 build/example-qualification/20261002 (raw, formation, vf13-tutorials, vf13-probe,
-l2-bracket). Live native desktop testing remains stopped until the GNOME Shell
+l2-bracket, yukon). Live native desktop testing remains stopped until the GNOME Shell
 crash/safety issue is resolved. Windows/macOS and MATLAB stay deferred.
+
+
+Latest active workflow: Rename is implemented and its focused check passes
+0.44 seconds after rebuilding GmatQt. See resource-rename-20261002.md and the
+latest qualification appendix. Includes/external GMFs and unsupported tracking
+paths stay explicit script-editor boundaries. Resource popups now use value
+selection and are destroyed before modal dispatch; the offscreen lifetime check
+is not proof of a compositor fix. Read-only Qt source/crash review found no
+established current GMAT lifetime defect. Keep the native acceptance gate open.

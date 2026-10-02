@@ -3798,7 +3798,7 @@
             }
           ],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -8685,7 +8685,7 @@
           }
         ],
         "diagnostics": [
-          "Build failed \u2014 see Message Window",
+          "Build failed — see Message Window",
           "1: : **** ERROR **** Interpreter Exception: Unable to create AtmosphereModel \"MarsGRAM2005\" for drag force in line:",
           "1: : **** ERROR **** Interpreter Exception: Unable to create AtmosphereModel \"MarsGRAM2005\" for drag force in line:"
         ],
@@ -13152,23 +13152,24 @@
         "phase": "run",
         "exit_code": -15,
         "timed_out": true,
-        "duration_seconds": 180.022,
-        "timeout_seconds": 180.0,
+        "duration_seconds": 7200.026,
+        "timeout_seconds": 7200.0,
         "command": [
           "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
           "--startup",
-          "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/startup.txt",
+          "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/startup.txt",
           "--settings-dir",
-          "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/settings",
+          "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/settings",
           "--convert-views",
           "--screenshot",
-          "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/result.png",
+          "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/result.png",
           "--run",
           "/home/dan/GIT/GMAT-Qt/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script"
         ],
-        "evidence": "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01",
+        "evidence": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01",
         "source_sha256": "3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1",
         "source_unchanged": true,
+        "referenced_sources_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
@@ -13178,39 +13179,196 @@
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
         ],
+        "diagnostic_log_files": [
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stdout.txt",
+            "resolved_path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stdout.txt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "size": 0,
+            "mtime_ns": 1790922691116585419,
+            "inode": 1319795,
+            "device": 51
+          },
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stderr.txt",
+            "resolved_path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stderr.txt",
+            "sha256": "31ef831540038ffe9ba794965c33031c7ef60591786e4ced6a2b8fb5f2a7e03c",
+            "size": 100,
+            "mtime_ns": 1790922691337582155,
+            "inode": 1319796,
+            "device": 51
+          },
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/output/GmatLog.txt",
+            "resolved_path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/output/GmatLog.txt",
+            "sha256": "4b51106d7d9bad888d6bca26e237a2bb51838c648f0eaa8bf3e664f05f2df131",
+            "size": 75653,
+            "mtime_ns": 1790929719017749366,
+            "inode": 1319798,
+            "device": 51
+          }
+        ],
+        "diagnostics_by_log": [
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stdout.txt",
+            "diagnostics": []
+          },
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/stderr.txt",
+            "diagnostics": []
+          },
+          {
+            "path": "/tmp/gmat-shipped-examples-yukon/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/output/GmatLog.txt",
+            "diagnostics": [
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+              "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
+            ]
+          }
+        ],
         "provenance": {
-          "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
-          "git_diff_sha256": "3295cc8b156158fe8a2321c0893f3d490030e3dedceebab42dece46eafb5a50b",
-          "git_diff_byte_count": 30519,
+          "repo_head": "79a748659ef0850e0bd4ac012c6efcbc940692ca",
+          "git_diff_sha256": "a43693058299b76f93c5d96998ace672de92930af3d825dd78c438508bb42c20",
+          "git_diff_byte_count": 115156,
           "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
           "launcher": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
-            "size": 5421456,
-            "mtime_ns": 1790919351687851807,
+            "sha256": "45f4245e214b9f15c746fdd7ef2c381df9231c659e601a4536b4adfe259fb4c9",
+            "size": 5532392,
+            "mtime_ns": 1790922660319040426,
             "inode": 134480178,
             "device": 66311
           },
           "actual_qt_binary": {
             "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
-            "size": 5421456,
-            "mtime_ns": 1790919351687851807,
+            "sha256": "45f4245e214b9f15c746fdd7ef2c381df9231c659e601a4536b4adfe259fb4c9",
+            "size": 5532392,
+            "mtime_ns": 1790922660319040426,
             "inode": 134480178,
             "device": 66311
           },
           "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
-          "utc": "2026-10-02T05:41:49.950097+00:00",
+          "utc": "2026-10-02T06:31:31.107912+00:00",
           "platform": "offscreen",
-          "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+          "runner_sha256": "cdc9f0ff44d2d032c6f304223895abbe8e3b61a61af556e2a485edf3b8f89ef1",
+          "referenced_sources": [
+            {
+              "path": "/home/dan/GIT/GMAT-Qt/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script",
+              "sha256": "3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1",
+              "size": 12347,
+              "mtime_ns": 1790904637419434424,
+              "inode": 134498629,
+              "device": 66311
+            }
+          ],
+          "python_runtime_inputs": {
+            "scope": "SimpleExternalForceModel.py and installed gmatpy Python initializers/wrappers and versioned shared objects; presence/hashes do not establish API compatibility",
+            "gmatpy_package_present": true,
+            "files": [
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.py",
+                "sha256": "ee33bc82fd77cfa0d0954799ff20afabbac8f8bcd1e3379f21c1e79679025ac0",
+                "size": 1822,
+                "mtime_ns": 1790904636208035214,
+                "inode": 134480879,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/__init__.specific.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790904636208284147,
+                "inode": 134480880,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/__init__.py",
+                "sha256": "2c132bf84a2aa1237b14d7560d3066aced8509be53f9fa67c354aade2746fa02",
+                "size": 363,
+                "mtime_ns": 1790920652028596474,
+                "inode": 153512578,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_gmat_py.so",
+                "sha256": "b3cd48cbcccd863a33a829f2cc51322b623c7ef106f04d536f3fd30125dfd8e8",
+                "size": 12648072,
+                "mtime_ns": 1790920269368210436,
+                "inode": 153512489,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_navigation_py.so",
+                "sha256": "84158cc9568f837c574e357a034d17a4396026f8572a03958af40c36e00462e6",
+                "size": 1765120,
+                "mtime_ns": 1790920729251472937,
+                "inode": 153512604,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/_station_py.so",
+                "sha256": "56ed21e6e024ec6696f23d480bf0bea8288a8342bfc507a9e234cfb0dd385986",
+                "size": 264480,
+                "mtime_ns": 1790920706341806532,
+                "inode": 153512600,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/gmat_py.py",
+                "sha256": "64b0e311224de41ee71390cf00baad19f4a057dafc27d53a9577059147b60470",
+                "size": 811867,
+                "mtime_ns": 1790920269391210094,
+                "inode": 153512516,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/navigation_py.py",
+                "sha256": "86f7a27d517c3304087281f74761295cb4c89c3ef2584c16067ddc0944b4bf82",
+                "size": 101531,
+                "mtime_ns": 1790920729265472733,
+                "inode": 153512607,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/gmatpy/_py314/station_py.py",
+                "sha256": "bd3f38b9f35a807abe5ba7cbba28a794eb0b9266c1a3ce22c5b6f4827f0dc0e6",
+                "size": 6680,
+                "mtime_ns": 1790920706366806168,
+                "inode": 153512603,
+                "device": 66311
+              },
+              {
+                "path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "resolved_path": "/home/dan/GIT/GMAT-Qt/application/userfunctions/python/SimpleExternalForceModel.py",
+                "sha256": "d8a032163edbc2df087abb34e6a0cf6c92b6a04c5130850d59b30cc396551154",
+                "size": 2614,
+                "mtime_ns": 1790919882149703626,
+                "inode": 134498767,
+                "device": 66311
+              }
+            ]
+          },
           "running_process_binary": {
-            "path": "/proc/3957088/exe",
+            "path": "/proc/921/exe",
             "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
-            "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
-            "size": 5421456,
-            "mtime_ns": 1790919351687851807,
+            "sha256": "45f4245e214b9f15c746fdd7ef2c381df9231c659e601a4536b4adfe259fb4c9",
+            "size": 5532392,
+            "mtime_ns": 1790922660319040426,
             "inode": 134480178,
             "device": 66311
           }
@@ -13221,7 +13379,78 @@
       "input_paths": [
         "application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script"
       ],
-      "history": []
+      "history": [
+        {
+          "status": "timeout",
+          "phase": "run",
+          "exit_code": -15,
+          "timed_out": true,
+          "duration_seconds": 180.022,
+          "timeout_seconds": 180.0,
+          "command": [
+            "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+            "--startup",
+            "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/startup.txt",
+            "--settings-dir",
+            "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/settings",
+            "--convert-views",
+            "--screenshot",
+            "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01/result.png",
+            "--run",
+            "/home/dan/GIT/GMAT-Qt/application/samples/Ex_Yukon_MarsLaunchWindowAnalysis.script"
+          ],
+          "evidence": "/tmp/gmat-shipped-examples/scripts/application__samples__Ex_Yukon_MarsLaunchWindowAnalysis.script/run/attempt-01",
+          "source_sha256": "3984cb7eb63453b4b08afd4f4d9cf46b94d72b77ba62553ae7d4a4f359797cb1",
+          "source_unchanged": true,
+          "confirmed_dependency_diagnostics": [],
+          "diagnostics": [
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.",
+            "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded."
+          ],
+          "provenance": {
+            "repo_head": "da757616d7af27975383dd55b720b3e1d2095731",
+            "git_diff_sha256": "3295cc8b156158fe8a2321c0893f3d490030e3dedceebab42dece46eafb5a50b",
+            "git_diff_byte_count": 30519,
+            "source_context_limit": "HEAD/diff describe current source context, not proof that the running binary was built from this worktree state",
+            "launcher": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
+              "size": 5421456,
+              "mtime_ns": 1790919351687851807,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "actual_qt_binary": {
+              "path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
+              "size": 5421456,
+              "mtime_ns": 1790919351687851807,
+              "inode": 134480178,
+              "device": 66311
+            },
+            "startup_sha256": "ae8ba59f0340ed460bc011288d82a5e319420f49ff75d6e33ad49618247f1d22",
+            "utc": "2026-10-02T05:41:49.950097+00:00",
+            "platform": "offscreen",
+            "runner_sha256": "af43a60ecae86fca8c6041b60c3b85d13569b529840ef3ab4061d5307ac1170a",
+            "running_process_binary": {
+              "path": "/proc/3957088/exe",
+              "resolved_path": "/home/dan/GIT/GMAT-Qt/application/bin/GmatQt-R2026a",
+              "sha256": "4522c73164a65890614f75fe720ecd23b2ca0a561029fa46295299b989b0a81c",
+              "size": 5421456,
+              "mtime_ns": 1790919351687851807,
+              "inode": 134480178,
+              "device": 66311
+            }
+          },
+          "limits": "Offscreen build/execution only; native viewer/lifecycle and numerical scientific qualification not established"
+        }
+      ]
     },
     {
       "path": "application/samples/Navigation/Ex_CompareEphemeris.script",
@@ -13405,7 +13634,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "*** WARNING *** Cannot find GmatFunction file \"/home/dan/GIT/GMAT-Qt/application/bin/./Ex_RICdelta.gmf\" but it was found in \"/home/dan/GIT/GMAT-Qt/application/samples/Navigation/Ex_RICdelta.gmf\".  So setting function path of 'Ex_RICdelta' to \"/home/dan/GIT/GMAT-Qt/application/samples/Navigation/Ex_RICdelta.gmf\"",
             "*** WARNING *** Cannot find GmatFunction file \"/home/dan/GIT/GMAT-Qt/application/bin/./Ex_RICdelta.gmf\" but it was found in \"/home/dan/GIT/GMAT-Qt/application/samples/Navigation/Ex_RICdelta.gmf\".  So setting function path of 'Ex_RICdelta' to \"/home/dan/GIT/GMAT-Qt/application/samples/Navigation/Ex_RICdelta.gmf\"",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
@@ -16104,7 +16333,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -17109,7 +17338,7 @@
           }
         ],
         "diagnostics": [
-          "Build failed \u2014 see Message Window",
+          "Build failed — see Message Window",
           "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"max\". The \"MatlabFunction\" is an unknown object type or invalid object name or dimension in line:",
           "2: : **** ERROR **** Interpreter Exception: Undefined function, object, or disallowed object field \"max(vec)\" found in line:",
           "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"max\". The \"MatlabFunction\" is an unknown object type or invalid object name or dimension in line:",
@@ -17215,7 +17444,7 @@
           }
         ],
         "diagnostics": [
-          "Build failed \u2014 see Message Window",
+          "Build failed — see Message Window",
           "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"matlabroot\". The \"MatlabFunction\" is an unknown object type or invalid object name or dimension in line:",
           "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"matlabroot\". The \"MatlabFunction\" is an unknown object type or invalid object name or dimension in line:"
         ],
@@ -17319,7 +17548,7 @@
           }
         ],
         "diagnostics": [
-          "Build failed \u2014 see Message Window",
+          "Build failed — see Message Window",
           "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLP\". The \"SNOPT\" is an unknown object type or invalid object name or dimension in line:",
           "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLP\" in line:",
           "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLP\" in line:",
@@ -18668,7 +18897,7 @@
             }
           ],
           "diagnostics": [
-            "Build failed \u2014 see Message Window",
+            "Build failed — see Message Window",
             "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"SQPfmincon\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
             "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"SQPfmincon\" in line:",
             "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"SQPfmincon\" in line:",
@@ -34806,7 +35035,7 @@
         "source_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed \u2014 see Message Window",
+          "Mission failed — see Message Window",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -34885,7 +35114,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35034,7 +35263,7 @@
         "source_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed \u2014 see Message Window",
+          "Mission failed — see Message Window",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35113,7 +35342,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35262,7 +35491,7 @@
         "source_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed \u2014 see Message Window",
+          "Mission failed — see Message Window",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35341,7 +35570,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35490,7 +35719,7 @@
         "source_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed \u2014 see Message Window",
+          "Mission failed — see Message Window",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35569,7 +35798,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35867,7 +36096,7 @@
         "source_unchanged": true,
         "confirmed_dependency_diagnostics": [],
         "diagnostics": [
-          "Mission failed \u2014 see Message Window",
+          "Mission failed — see Message Window",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
           "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -35946,7 +36175,7 @@
           "source_unchanged": true,
           "confirmed_dependency_diagnostics": [],
           "diagnostics": [
-            "Mission failed \u2014 see Message Window",
+            "Mission failed — see Message Window",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/time/SPICELeapSecondKernel.tls has been loaded.",
             "Kernel /home/dan/GIT/GMAT-Qt/application/data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.",
@@ -37004,7 +37233,7 @@
             }
           ],
           "diagnostics": [
-            "Build failed \u2014 see Message Window",
+            "Build failed — see Message Window",
             "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"SQPfmincon\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
             "2: : **** ERROR **** Interpreter Exception: Nonexistent Solver \"SQPfmincon\" referenced in the Optimize in line:",
             "3: : **** ERROR **** Interpreter Exception: Nonexistent Solver \"SQPfmincon\" referenced in the Vary in line:",
@@ -37055,7 +37284,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Ex_AlgebraicOptimization.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"SQPfmincon\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Nonexistent Solver \"SQPfmincon\" referenced in the Optimize in line:",
                 "3: : **** ERROR **** Interpreter Exception: Nonexistent Solver \"SQPfmincon\" referenced in the Vary in line:",
@@ -37377,7 +37606,7 @@
           {
             "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Ex_LowEarthMinFuelTransfer.script/build/attempt-01/stderr.txt",
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
               "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
               "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -37814,7 +38043,7 @@
           {
             "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Ex_MinFuelLunarCapture.script/build/attempt-01/stderr.txt",
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 3: \"Epoch\" on ObjectReferenced named \"\" in line:",
               "2: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: \"UpdateInterval\" on CoordinateSystem named \"EarthSunRot\" in line:",
               "3: : **** ERROR **** Interpreter Exception: Cannot create an object \"SQP1\". The \"FminconOptimizer\" is an unknown object type or invalid object name or dimension in line:",
@@ -39546,7 +39775,7 @@
             "referenced_sources_unchanged": true,
             "confirmed_dependency_diagnostics": [],
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
               "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
               "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -39635,7 +39864,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__FormationRendezvousTutorial.script/build/attempt-01/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
                   "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
                   "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -40951,7 +41180,7 @@
           {
             "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__LunarTransferToL2-tutorial.script/run/attempt-02/stderr.txt",
             "diagnostics": [
-              "Mission failed \u2014 see Message Window",
+              "Mission failed — see Message Window",
               "1: : *** WARNING *** Interpreter Exception: The field name \"OrbitColor\" on object \"SystemView\" is no longer in use in line:",
               "2: : *** WARNING *** Interpreter Exception: The field name \"TargetColor\" on object \"SystemView\" is no longer in use in line:",
               "3: : *** WARNING *** Interpreter Exception: The field name \"OrbitColor\" on object \"EarthView\" is no longer in use in line:",
@@ -41550,7 +41779,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__LunarTransferToL2-tutorial.script/build/attempt-01/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
                   "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
                   "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -43141,7 +43370,7 @@
             "referenced_sources_unchanged": true,
             "confirmed_dependency_diagnostics": [],
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
               "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
               "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -43230,7 +43459,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__LunarTransferTutorial.script/build/attempt-01/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
                   "2: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
                   "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -44091,7 +44320,7 @@
             "referenced_sources_unchanged": true,
             "confirmed_dependency_diagnostics": [],
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: \"UpdateInterval\" on CoordinateSystem named \"MarsMJ2000Eq\" in line:",
               "2: : **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named \"MarsMJ2000Eq\" in line:",
               "3: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: \"UpdateInterval\" on CoordinateSystem named \"SunMJ2kEc\" in line:",
@@ -44164,7 +44393,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__MarsBPlaneTutorial.script/build/attempt-01/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: \"UpdateInterval\" on CoordinateSystem named \"MarsMJ2000Eq\" in line:",
                   "2: : **** ERROR **** GmatBase Exception Thrown: Cannot set boolean parameter with ID 5 on CoordinateSystem named \"MarsMJ2000Eq\" in line:",
                   "3: : **** ERROR **** GmatBase Exception Thrown: Cannot set real parameter with ID 4: \"UpdateInterval\" on CoordinateSystem named \"SunMJ2kEc\" in line:",
@@ -45001,7 +45230,7 @@
             "referenced_sources_unchanged": true,
             "confirmed_dependency_diagnostics": [],
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : **** ERROR **** Interpreter Exception: Setting \"stringVar\" to \"stringVar\" is not allowed before BeginMissionSequence in line:",
               "2: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
               "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -45080,7 +45309,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__ReportTutorial.script/build/attempt-01/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : **** ERROR **** Interpreter Exception: Setting \"stringVar\" to \"stringVar\" is not allowed before BeginMissionSequence in line:",
                   "2: : *** WARNING *** Interpreter Exception: CoordinateSystem object named \"EarthMJ2000Eq\" already exists, so ignored in line:",
                   "3: : **** ERROR **** CoordinateSystem exception: Modifications to built-in coordinate system EarthMJ2000Eq are not allowed.",
@@ -45303,7 +45532,7 @@
             "setup_sources_unchanged": true,
             "confirmed_dependency_diagnostics": [],
             "diagnostics": [
-              "Build failed \u2014 see Message Window",
+              "Build failed — see Message Window",
               "1: : *** WARNING *** Interpreter Exception: The field name \"OrbitColor\" on object \"DefaultOpenGL\" is no longer in use in line:",
               "2: : **** ERROR **** Math Exception: Invalid number or math equation in line:",
               "1: : *** WARNING *** Interpreter Exception: The field name \"OrbitColor\" on object \"DefaultOpenGL\" is no longer in use in line:",
@@ -45346,7 +45575,7 @@
               {
                 "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__ReportTutorial.script/build/attempt-02/stderr.txt",
                 "diagnostics": [
-                  "Build failed \u2014 see Message Window",
+                  "Build failed — see Message Window",
                   "1: : *** WARNING *** Interpreter Exception: The field name \"OrbitColor\" on object \"DefaultOpenGL\" is no longer in use in line:",
                   "2: : **** ERROR **** Math Exception: Invalid number or math equation in line:"
                 ]
@@ -47672,7 +47901,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step1.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLPOpt\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
                 "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
@@ -49025,7 +49254,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step2.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLPOpt\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
                 "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
@@ -50370,7 +50599,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step3.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLPOpt\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
                 "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
@@ -51734,7 +51963,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step4.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLPOpt\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
                 "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
@@ -53098,7 +53327,7 @@
             {
               "path": "/tmp/gmat-shipped-examples/scripts/application__docs__help__files__scripts__Tut_MultipleShootingTutorial_Step5.script/build/attempt-01/stderr.txt",
               "diagnostics": [
-                "Build failed \u2014 see Message Window",
+                "Build failed — see Message Window",
                 "1: : **** ERROR **** Interpreter Exception: Cannot create an object \"NLPOpt\". The \"VF13ad\" is an unknown object type or invalid object name or dimension in line:",
                 "2: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",
                 "3: : **** ERROR **** Interpreter Exception: Cannot find LHS object named \"NLPOpt\" in line:",

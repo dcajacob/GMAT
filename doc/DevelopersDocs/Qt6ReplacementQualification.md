@@ -7727,7 +7727,7 @@ deferred. No numerical algorithm was rewritten.
 The latest shipped corpus remains 164 standalone missions/tutorials, plus four
 include fragments and nine GMF helpers. Actual current stages are 147 successful
 builds, 17 failed builds, 136 completed executions, six unexpected runtime failures,
-two expected tutorial Stop checkpoints and three initial timeouts. All 311 current
+two expected tutorial Stop checkpoints and three timed-out runs. All 311 current
 child records retain unchanged main-source hashes. Raw runtime statuses remain
 136 passed/eight failed/three timed out: the two Step 1 Stops are explicit assessed
 interruptions, not completed missions. See shipped-examples-20261002.md and its
@@ -7763,8 +7763,9 @@ SNOPT-dependent CSALT (9) and absent legacy MarsGRAM plugin/data (1). Five TLE
 runs still need exact matching absent public catalogs. Full dependency/OF
 execution and data gates are retained. Native desktop/OpenGL/portal testing is
 still stopped after the GNOME Shell crash; these offscreen results do not close
-that gate. The existing long Yukon process continues, with eight windows done at this checkpoint,
-and must not be restarted. SPAD's earlier 209.91-second pass was not repeated.
+that gate. The existing long Yukon process reached its 7200-second bound after 11
+of 20 windows. Its terminal timeout/history was merged by matching source hash;
+no unchanged restart is scheduled. SPAD's earlier 209.91-second pass was not repeated.
 
 Configured resources now offer Clone in Edit/Resources with optional naming and
 one shared editor. Source-based cloning preserves grouped settings/comments,
@@ -7783,3 +7784,32 @@ are preserved alongside the corrected test. No successful conversion check or
 old complete suite was repeated after fixture-only fixes. The full replacement
 acceptance checklist remains in progress; no native popup or scientific-wide
 qualification is claimed. Windows/macOS and MATLAB remain deferred.
+
+
+## Resource Rename and terminal Yukon checkpoint — 2026-10-02
+
+Rename now provides the active local resource workflow through Edit/Resources
+and F2. `resource-rename-20261002.md` records source/reference coverage, pending
+and rollback guards, exact Undo/Redo/Unicode reopening, wx PropSetup/FM behavior,
+managed Array/Qt metadata preservation and the independent 7/3.5 report check.
+The actual application was rebuilt; the focused offscreen check passes in 0.44
+seconds. Includes/external GMFs and unsupported tracking row syntax remain
+explicit script-editor boundaries. Tracking initialization is not measurement
+estimation qualification. Initial helper and fixture failures are preserved.
+No earlier passing example/UI matrices were repeated.
+
+The resource context menu is destroyed before modal dispatch using copied value
+selection. Its offscreen lifetime assertion passes; the read-only Qt source and
+crash review establishes no demonstrated prior surviving grab or GMAT root
+cause. This is not native compositor acceptance. Live desktop testing remains
+stopped, and native windows/OpenGL/portal and other explicit acceptance limits
+remain open. Windows/macOS and MATLAB remain deferred.
+
+Yukon's one existing extended attempt ended at 7200.026 seconds after 11 of 20
+launch windows; the next window was still optimizing. Only its terminal run and
+history were merged after matching source SHA256. Completed raw results are
+preserved under `build/example-qualification/20261002/yukon`. No unchanged restart
+is scheduled. Corpus totals remain 147 successful builds/17 failures and 136
+completed runs/six unexpected runtime failures/two intended Stops/three timeouts.
+No full mission or numerical scientific success is inferred from partial windows.
+The complete replacement goal remains active and unfinished.

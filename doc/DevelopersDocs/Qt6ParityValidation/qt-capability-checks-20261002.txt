@@ -90,3 +90,17 @@ qt-gui    =   0.47 sec*proc (1 test)
 Total Test time (real) =   0.47 sec
 
 Actual rebuilt application/bin/GmatQt-R2026a SHA256: bb12ba23a54f8ef10b6d203eb2143a68d4af3b633685f5670764c16042105708
+
+New Rename-only check after final fixture correction; old passing checks not repeated.
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 10: QtGui.ResourceRename
+1/1 Test #10: QtGui.ResourceRename .............   Passed    0.44 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.44 sec*proc (1 test)
+
+Total Test time (real) =   0.44 sec
+
+Actual application after Rename SHA256: 66b5d4a31e20c8ad55ef4d3714585f63b8d1440d4cb77853a653709b331c9123
