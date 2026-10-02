@@ -31,6 +31,9 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
 QString orbitCovarianceError(const QString &value);
 QSet<QString> applyAttitudeProperties(GmatBase &spacecraft, const QMap<QString,QString> &values);
 QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QString> &values);
+// Applies coupled configuration fields on a detached pending clone only.
+QSet<QString> applyChemicalTankProperties(GmatBase &object,const QMap<QString,QString> &values);
+QSet<QString> applyPropSetupProperties(GmatBase &object,const QMap<QString,QString> &values);
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);

@@ -8,7 +8,32 @@
 #include "SolarSystem.hpp"
 #include "Array.hpp"
 #include "CelestialBody.hpp"
+#include "PropSetup.hpp"
+#include "Propagator.hpp"
+#include "ODEModel.hpp"
+#include <algorithm>
 #include <stdexcept>
+
+QString defaultPropagatorForceModelName(const QString &name)
+{
+   const auto base=name+"_ForceModel";
+   auto candidate=base; int suffix=1;
+   while (Moderator::Instance()->GetConfiguredObject(candidate.toStdString()))
+      candidate=base+QString::number(suffix++);
+   return candidate;
+}
+
+bool propagatorUsesForceModel(const QString &type)
+{
+   const auto selected=type.trimmed().toStdString();
+   const auto &types=Moderator::Instance()->GetListOfFactoryItems(Gmat::PROPAGATOR);
+   if (std::find(types.begin(),types.end(),selected)==types.end())
+      throw std::runtime_error("Select a registered propagator type.");
+   QtResourcePreview draft(FactoryManager::Instance()->CreatePropagator(selected,selected));
+   auto *propagator=dynamic_cast<Propagator *>(draft.get());
+   if (!propagator) throw std::runtime_error("The selected propagator could not be prepared.");
+   return propagator->UsesODEModel();
+}
 
 QtResourcePreview resourceDraft(const QString &type,const QString &name)
 {
@@ -16,6 +41,16 @@ QtResourcePreview resourceDraft(const QString &type,const QString &name)
    QtResourcePreview draft(factory->CreateObject(factory->GetBaseTypeOf(type.toStdString()),type.toStdString(),name.toStdString()));
    if (!draft) throw std::runtime_error("The runtime cannot prepare this resource type.");
    auto *moderator=Moderator::Instance();
+   if (auto *setup=dynamic_cast<PropSetup *>(draft.get())) {
+      // Like wx CreateDefaultPropSetup, preview the ordinary Earth/JGM2
+      // force model. An empty Moderator name is unregistered; Cancel cannot
+      // add a configured object. SetODEModel owns a clone of this preview.
+      QtResourcePreview model(moderator->CreateODEModel("ForceModel",""));
+      auto *force=dynamic_cast<ODEModel *>(model.get());
+      if (!force) throw std::runtime_error("The runtime cannot prepare a default force model.");
+      force->SetName(defaultPropagatorForceModelName(name).toStdString());
+      setup->SetODEModel(force);
+   }
    if (auto *body=dynamic_cast<CelestialBody *>(draft.get())) {
       body->SetUserDefined(true); body->SetSolarSystem(moderator->GetSolarSystemInUse()); body->SetUpBody();
    }

@@ -270,10 +270,26 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
                field.references.removeDuplicates(); field.references.sort();
             } catch (BaseException &) {} // Keep editable text for plugin-defined reference types.
          }
+         if (object.IsOfType("PropSetup")) {
+            if (field.name=="Type") {
+               field.references.clear();
+               for (const auto &type:Moderator::Instance()->GetListOfFactoryItems(Gmat::PROPAGATOR)) field.choices.append(QString::fromStdString(type));
+            }
+            if (field.name=="FM") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::ODE_MODEL)) field.references.append(QString::fromStdString(name));
+               field.references.removeDuplicates(); field.references.sort();
+            }
+         }
          if (object.IsOfType("Thruster") || object.IsOfType("ImpulsiveBurn")) {
             if (field.name=="CoordinateSystem") {
                field.references.clear(); field.references.append("Local");
                for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::COORDINATE_SYSTEM)) field.references.append(QString::fromStdString(name));
+            }
+            if (field.name=="Origin") {
+               field.references.clear();
+               for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::CELESTIAL_BODY)) field.references.append(QString::fromStdString(name));
+               field.references.removeDuplicates(); field.references.sort();
             }
             if (field.name=="Tank") {
                field.references.clear();
@@ -868,6 +884,77 @@ QSet<QString> applyAttitudeProperties(GmatBase &spacecraft,const QMap<QString,QS
    return consumed;
 }
 
+QSet<QString> applyPropSetupProperties(GmatBase &object,const QMap<QString,QString> &values)
+{
+   QSet<QString> consumed;
+   auto *setup=dynamic_cast<PropSetup *>(&object); if (!setup) return consumed;
+   if (values.contains("Type")) {
+      const auto selected=values.value("Type").trimmed().toStdString();
+      const auto &types=Moderator::Instance()->GetListOfFactoryItems(Gmat::PROPAGATOR);
+      if (std::find(types.begin(),types.end(),selected)==types.end()) throw std::runtime_error("Select a registered propagator type.");
+      auto *previous=setup->GetPropagator();
+      if (!previous || previous->GetTypeName()!=selected) {
+         QtResourcePreview replacement(FactoryManager::Instance()->CreatePropagator(selected,selected));
+         auto *propagator=dynamic_cast<Propagator *>(replacement.get());
+         if (!propagator) throw std::runtime_error("The selected propagator could not be prepared.");
+         // Preserve compatible existing numeric/boolean controls. Install the
+         // selected owned object before applying dependent pending settings;
+         // PropSetup's string setter only stores a name and does not replace it.
+         if (previous) for (const auto &field:resourceProperties(*previous)) {
+            int oldId=-1,newId=-1;
+            try { oldId=previous->GetParameterID(field.name.toStdString()); newId=propagator->GetParameterID(field.name.toStdString()); }
+            catch (BaseException &) { continue; }
+            const auto type=previous->GetParameterType(oldId);
+            if (propagator->IsParameterReadOnly(newId) || type!=propagator->GetParameterType(newId) ||
+                (type!=Gmat::REAL_TYPE && type!=Gmat::INTEGER_TYPE && type!=Gmat::UNSIGNED_INT_TYPE && type!=Gmat::BOOLEAN_TYPE)) continue;
+            setResourceProperty(*propagator,field.name,field.value);
+         }
+         setup->SetPropagator(propagator,true); // Same owned-clone API used by wx.
+      }
+      consumed.insert("Type");
+   }
+   if (values.contains("FM")) {
+      if (!setup->GetPropagator() || !setup->GetPropagator()->UsesODEModel()) throw std::runtime_error("The selected propagator does not use a force model.");
+      auto *model=dynamic_cast<ODEModel *>(Moderator::Instance()->GetConfiguredObject(values.value("FM").trimmed().toStdString()));
+      if (!model) throw std::runtime_error("Select an existing force model.");
+      // SetODEModel clones the actual selected model. A string-only name would
+      // be lost when the pending setup is cloned again for serialization.
+      setup->SetODEModel(model); consumed.insert("FM");
+   }
+   return consumed;
+}
+
+QSet<QString> applyChemicalTankProperties(GmatBase &object,const QMap<QString,QString> &values)
+{
+   QSet<QString> consumed;
+   if (!object.IsOfType("ChemicalTank")) return consumed;
+   const QStringList coupled={"AllowNegativeFuelMass","FuelMass","Volume","FuelDensity","Pressure","PressureModel"};
+   for (const auto &name:coupled) if (values.contains(name)) consumed.insert(name);
+   if (consumed.isEmpty()) return consumed;
+   const auto finalMode=values.value("PressureModel",QString::fromStdString(object.GetStringParameter("PressureModel")));
+   // The engine's enum setter only throws on its first invalid value. Reject an
+   // invalid pending selection consistently before changing this preview.
+   if (finalMode!="PressureRegulated" && finalMode!="BlowDown") throw std::runtime_error("Select PressureRegulated or BlowDown.");
+   const auto finalNumber=[&](const QString &name) {
+      return values.value(name,QString::number(object.GetRealParameter(name.toStdString()),'g',17));
+   };
+   const auto mass=finalNumber("FuelMass"),volume=finalNumber("Volume"),density=finalNumber("FuelDensity"),pressure=finalNumber("Pressure");
+   const auto allowNegative=values.value("AllowNegativeFuelMass",object.GetBooleanParameter("AllowNegativeFuelMass") ? "true" : "false");
+   // FuelMass initializes an invalidated tank before assigning its new value.
+   // Set it while the clone's previous geometry is still valid. Temporarily
+   // regulated pressure prevents a BlowDown depletion update from replacing
+   // the pressure the user intended for this new configuration.
+   setResourceProperty(object,"PressureModel","PressureRegulated");
+   setResourceProperty(object,"AllowNegativeFuelMass",allowNegative);
+   setResourceProperty(object,"FuelMass",mass);
+   setResourceProperty(object,"Volume",volume);
+   setResourceProperty(object,"FuelDensity",density);
+   setResourceProperty(object,"Pressure",pressure);
+   setResourceProperty(object,"PressureModel",finalMode);
+   if (!object.Validate() || !object.Initialize()) throw std::runtime_error("The chemical tank rejected these settings.");
+   return consumed;
+}
+
 QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QString> &values)
 {
    QSet<QString> consumed; auto *model=dynamic_cast<ODEModel *>(&object); if (!model) return consumed;
@@ -974,6 +1061,9 @@ void setResourceProperty(GmatBase &object, const QString &name, const QString &v
          int id=-1; try { id=axes->GetParameterID(name.toStdString()); } catch (BaseException &) {}
          if (id>=0 && !axes->IsParameterReadOnly(id)) { setResourceProperty(*axes,name,value); return; }
       }
+   }
+   if (object.IsOfType("PropSetup") && (name=="Type" || name=="FM")) {
+      applyPropSetupProperties(object,{{name,value}}); return;
    }
    if (auto *setup=dynamic_cast<PropSetup *>(&object)) if (auto *propagator=setup->GetPropagator()) {
       int parameter=-1;

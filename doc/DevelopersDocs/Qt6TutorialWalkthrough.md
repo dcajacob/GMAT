@@ -15,11 +15,14 @@ requirements. Windows, macOS and MATLAB remain deferred.
 [Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md): independent Help-driven
 GUI construction, required execution/results, save/reopen and post-freeze reference
 comparison are complete. Tutorials 4–5 are In progress: Tutorial 4's actual
-resource construction encountered a tank creation-order issue and failed milestone
-save, with short resource reconstruction underway; Tutorial 5 has initial Help
-blocks typed through the blank private GUI editor, with resources still being
-entered. These are construction observations, not completed execution/reopen or
-reference comparisons. Tutorials 6–12 remain Pending. The earlier shipped script
+resource construction exposed tank ordering, Local burn Origin and propagator
+Type/FM persistence/default-model issues; the fixes are rebuilt and pass the four
+focused checks in [resource-fix evidence](Qt6ParityValidation/tutorial-resource-fixes-20261002.md).
+The saved own resource milestone now resumes through the GUI. Tutorial 5's five
+Help-driven stages execute successfully, including the 5000 km lunar-periapsis
+exercise after an own nominal-solution continuation. Actual save/reopen and the
+pre-reference freeze are complete; final comparison is in progress. Neither row
+is marked Passed until its full construction/comparison evidence is recorded. Tutorials 6–12 remain Pending. The earlier shipped script
 corpus and repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
 the user's desktop remains stopped following the GNOME Shell crash. A private,
@@ -88,8 +91,8 @@ the Tutorials part of the Help.
 | 1 | `Tut_SimulatingAnOrbit.xml` — Simulating an Orbit | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-01-20261002.md). None. Spacecraft, propagator, propagate to periapsis, command summary/frame, animation, save/reopen and post-freeze reference comparison. |
 | 2 | `Tut_SimpleOrbitTransfer.xml` — Simple Orbit Transfer | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-02-20261002.md). Tutorial 1. TOI/GOI/DC1, ordered Hohmann targeting, seven-iteration solve, Apply Corrections/one-iteration rerun, save/reopen and post-freeze complete solver-report equality. |
 | 3 | `Tut_TargetFiniteBurn.xml` — Target Finite Burn to Raise Apogee | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-03-20261002.md). Tutorials 1–2. Hardware/FiniteBurn/DC1/BurnDuration, ordered finite-burn targeting, 13-iteration solve, four exported summaries, explicit All-history view, save/reopen and post-freeze complete solver-report equality. |
-| 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | **In progress** — actual Help-driven resource construction encountered a tank creation-order issue and failed milestone save; short resource reconstruction underway. No completed execution/reopen/reference comparison claimed. Tutorials 1–2 and B-plane concepts. Trajectory correction followed by Mars orbit insertion. |
-| 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | **In progress** — initial Help blocks entered in a blank actual private GUI script editor; resource entry continues, with no reference consulted. No completed execution/reopen/reference comparison claimed. Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Verify configuration, smooth trajectory, optimize, new initial guess, additional constraint. |
+| 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | **In progress** — actual Help-driven construction found tank/Origin/propagator issues, now rebuilt with focused checks passed; own saved resource milestone resumes through the GUI. No completed execution/reopen/reference comparison claimed. Tutorials 1–2 and B-plane concepts. Trajectory correction followed by Mars orbit insertion. |
+| 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | **In progress** — all five stages independently authored through the actual Help-taught script editor and executed; the final >=5000 km lunar-periapsis exercise converges after own nominal-solution continuation. Actual save/reopen and pre-reference freeze complete; comparison in progress. Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Verify configuration, smooth trajectory, optimize, new initial guess, additional constraint. |
 | 6 | `Tut_UsingGMATFunctions.xml` — Mars B-Plane Targeting Using GMAT Functions | Tutorials 1–2, 4 and B-plane concepts. Author a GmatFunction and Global objects; target inside the function, then outside it. |
 | 7 | `Tut_EventLocation.xml` — Finding Eclipses and Station Contacts | Extend the independently built tutorial 2 mission. EclipseLocator, then GroundStation/ContactLocator. |
 | 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | Tutorial 1; tutorial 3 referenced for targeting. Electric propulsion hardware and finite-burn modeling. |

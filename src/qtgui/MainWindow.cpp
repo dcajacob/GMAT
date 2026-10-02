@@ -238,6 +238,45 @@ QString omitUnsetHardwareFovs(QString script,GmatBase *replacement=nullptr)
    }
    return script;
 }
+QString orderPropagatorType(const QString &source,const QString &name,const QString &firstMissionStatement)
+{
+   // A changed Type recreates the owned propagator. Place only that selector
+   // before existing numeric settings so interpretation cannot discard them.
+   const auto parsed=scriptStatements(source);
+   const QRegularExpression boundary("^\\s*BeginMissionSequence\\b");
+   const bool explicitMission=std::any_of(parsed.cbegin(),parsed.cend(),[&](const auto &statement) { return boundary.match(statement.code).hasMatch(); });
+   auto normalize=[](QString code) { code=code.trimmed(); code.remove(QRegularExpression("^GMAT\\s+")); code.remove(QRegularExpression("\\s+")); if (code.endsWith(';')) code.chop(1); return code; };
+   QString firstCommand;
+   if (!firstMissionStatement.isEmpty()) { const auto commands=scriptStatements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
+   const QRegularExpression property("^\\s*(?:GMAT\\s+)?"+QRegularExpression::escape(name)+"\\.([A-Za-z][A-Za-z0-9_.]*)\\s*=");
+   qsizetype firstSetting=-1,typeStart=-1,typeEnd=-1; int types=0;
+   for (const auto &statement:parsed) {
+      if (boundary.match(statement.code).hasMatch() || (!explicitMission && !firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) break;
+      const auto match=property.match(statement.code); if (!match.hasMatch()) continue;
+      qsizetype first=0,last=statement.code.size()-1;
+      while (first<=last && statement.code[first].isSpace()) ++first;
+      while (last>=first && statement.code[last].isSpace()) --last;
+      if (first>last) continue;
+      const auto start=statement.positions[first],end=statement.positions[last]+1;
+      if (firstSetting<0) firstSetting=start;
+      if (match.captured(1)=="Type") {
+         ++types; typeStart=start; typeEnd=end;
+         for (auto i=first+1;i<=last;++i) if (statement.positions[i]!=statement.positions[i-1]+1) throw std::runtime_error("Cannot safely order the changed propagator type.");
+      }
+   }
+   if (types!=1 || firstSetting<0) throw std::runtime_error("Cannot locate the changed propagator type safely.");
+   if (typeStart<=firstSetting) return source;
+   const auto lineStart=typeStart ? source.lastIndexOf('\n',typeStart-1)+1 : 0;
+   auto lineEnd=source.indexOf('\n',typeEnd); if (lineEnd<0) lineEnd=source.size();
+   if (!source.mid(lineStart,typeStart-lineStart).trimmed().isEmpty() || !source.mid(typeEnd,lineEnd-typeEnd).trimmed().isEmpty())
+      throw std::runtime_error("Cannot safely move the changed propagator type with adjacent source.");
+   const auto insertionLine=firstSetting ? source.lastIndexOf('\n',firstSetting-1)+1 : 0;
+   const auto insertion=source.mid(insertionLine,firstSetting-insertionLine).trimmed().isEmpty() ? insertionLine : firstSetting;
+   auto selector=source.mid(lineStart,lineEnd-lineStart); if (!selector.endsWith('\n')) selector+='\n';
+   if (insertion>0 && source[insertion-1]!='\n') selector.prepend('\n');
+   auto result=source; result.remove(lineStart,lineEnd-lineStart+(lineEnd<source.size() ? 1 : 0)); result.insert(insertion,selector); return result;
+}
+
 QStringList creatableResourceTypes()
 {
    QStringList result;
@@ -1655,9 +1694,11 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       if (changes.contains("@DynamicData")) applyDynamicDataSettings(*proposed,changes.value("@DynamicData"));
       const bool pairedMixture=object->IsOfType("Thruster") && changes.contains("Tank") && changes.contains("MixRatio");
       const QString mixture=changes.value("MixRatio");
+      const auto propChanges=applyPropSetupProperties(*proposed,changes);
       const auto orbitChanges=applySpacecraftOrbitProperties(*proposed,changes);
       const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
       const auto gravityChanges=applyGravityBodyProperties(*proposed,changes);
+      const auto tankChanges=applyChemicalTankProperties(*proposed,changes);
       const auto atmosphereChanges=applyAtmosphereProperties(*proposed,changes);
       const auto stationChanges=applyGroundStationLocation(*proposed,changes);
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
@@ -1669,7 +1710,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || objectDrawingKeys.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (propChanges.contains(it.key()) || orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || tankChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || objectDrawingKeys.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1746,6 +1787,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       QString firstCommand;
       for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
       candidate=patchResourceConfiguration(expectedScript,name,oldBlock,omitUnsetHardwareFovs(newBlock,proposed.get()),firstCommand,object->IsOfType("ODEModel"));
+      if (object->IsOfType("PropSetup") && changes.contains("Type") && object->GetStringParameter("Type")!=changes.value("Type").trimmed().toStdString()) candidate=orderPropagatorType(candidate,name,firstCommand);
       if (object->IsOfType("Array") && (changes.contains("@ArrayExpressions") || changes.contains("RmatValue")))
          candidate=setArrayExpressions(candidate,name,changes.value("@ArrayExpressions",arrayExpressions(expectedScript,name)),
             proposed->GetIntegerParameter("NumRows"),proposed->GetIntegerParameter("NumCols"));
@@ -1799,6 +1841,11 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
    } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
    catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    const auto gravityCheck=[name,changes] {
+      if (changes.contains("Type") || changes.contains("FM")) {
+         auto *resource=Moderator::Instance()->GetConfiguredObject(name.toStdString());
+         if (resource && resource->IsOfType("PropSetup")) for (const auto &field:QStringList{"Type","FM"}) if (changes.contains(field))
+            if (QString::fromStdString(resource->GetStringParameter(field.toStdString()))!=changes.value(field).trimmed()) return QString("The selected propagator type or force model was not retained. The previous configuration was restored.");
+      }
       if (!changes.contains("PrimaryBodies") && !changes.contains("PointMasses")) return QString();
       auto *model=Moderator::Instance()->GetConfiguredObject(name.toStdString()); if (!model) return QString("The force model was not retained.");
       for (const auto &field:QStringList{"PrimaryBodies","PointMasses"}) if (changes.contains(field)) {
@@ -1841,7 +1888,26 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
    if (type=="Array" && (rows<1 || columns<1 || rows>1000 || columns>1000))
       return "Choose array dimensions from 1 to 1000.";
    const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
-   QString initializer;
+   QString initializer,forceModelDeclaration;
+   auto changes=settings;
+   if (type=="PropSetup") {
+      try {
+         const auto selectedType=settings.value("Type","RungeKutta89");
+         const auto selectedModel=settings.value("FM").trimmed();
+         const bool unregisteredImplicit=(selectedModel=="InternalODEModel" || selectedModel=="InternalForceModel") &&
+            !Moderator::Instance()->GetConfiguredObject(selectedModel.toStdString());
+         if (propagatorUsesForceModel(selectedType) && (selectedModel.isEmpty() || unregisteredImplicit)) {
+            const auto forceModel=defaultPropagatorForceModelName(name);
+            // Only newly created GUI propagators get a local default model.
+            // Imported implicit models and explicit existing selections retain
+            // their original sharing and source semantics.
+            forceModelDeclaration="Create ForceModel "+forceModel+";\n";
+            initializer="GMAT "+name+".FM = "+forceModel+";\n";
+            changes.remove("FM"); // The source transaction creates this model.
+         }
+      } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+      catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+   }
    if (type=="EphemerisFile") {
       auto selected=settings.value("Spacecraft",spacecraft);
       if (selected.isEmpty()) {
@@ -1864,9 +1930,9 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       try { initializer="GMAT "+name+" = "+userParameterLiteral(type,*initialValue)+";\n"; }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }
-   const auto source="Create "+type+" "+name+dimensions+";\n"+initializer+builtScript;
-   if (!settings.isEmpty() && type!="Variable" && type!="String" && type!="GmatFunction") {
-      try { auto draft=resourceDraft(type,name); return applyResourceSettings(*draft,settings,source); }
+   const auto source=forceModelDeclaration+"Create "+type+" "+name+dimensions+";\n"+initializer+builtScript;
+   if (!changes.isEmpty() && type!="Variable" && type!="String" && type!="GmatFunction") {
+      try { auto draft=resourceDraft(type,name); return applyResourceSettings(*draft,changes,source); }
       catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }

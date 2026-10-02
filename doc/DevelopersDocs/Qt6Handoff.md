@@ -661,3 +661,23 @@ blocks entered through a blank actual private GUI editor, with resource entry
 continuing and no reference consulted. Neither is completed walkthrough evidence.
 Full Linux replacement, host/hardware and other tutorial gates remain open.
 No old matrix/corpus was repeated; Windows/macOS/MATLAB remain deferred.
+
+
+### Help-discovered resource fixes and rebuilt runtime — 2026-10-02
+
+[tutorial-resource-fixes-20261002.md](Qt6ParityValidation/tutorial-resource-fixes-20261002.md) records valid coupled ChemicalTank
+settings, Local celestial-body Origin choices, owned propagator Type/FM retention
+and scoped wx-style default force models for new numerical propagators. Explicit
+existing model sharing and imported implicit models remain preserved. Actual creator
+Cancel/name changes/Create, rollback, source/Undo/Redo/Unicode save-reopen pass four
+new focused checks. Creation's initial exception was a test SRP getter mismatch;
+both failure attempts remain retained, and only Creation was rerun after correction.
+The rebuilt app is SHA256 7fb5bd6cdf8c2630599a2f8c4d20c5f1ce680c41f297ab8fc1ac158b4664f6d4,
+with controlled core cf147e23… and selected startup 5f80be1f… unchanged. No old
+passing matrix/corpus was repeated and no numerical-engine algorithm changed.
+Tutorial 4's affected actual GUI steps resume separately. Tutorial 5's five own
+stages now execute successfully, including a 5000.202164764 km lunar periapsis
+exercise (11.291 s/four nominal passes); its GUI-authored final source has been
+saved/reopened and frozen before reference comparison. Neither walkthrough is
+marked Passed by this resource-fix checkpoint. Full Linux/host/hardware and other
+tutorial gates remain open; Windows/macOS/MATLAB remain deferred.
