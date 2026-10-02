@@ -299,6 +299,32 @@ BeginScript 'Initial Guess Values'
    MOI.Element1        = -0.0687322937282
 % 
          
+   % Warm start the 5000-km exercise from a converged Step 4 nominal solution.
+   % Earlier illustrative guesses remain above for tutorial comparison.
+   % These values use the nominal pass, not the final MOI perturbation.
+   toiEpoch               = 27698.5525217
+   flybyEpoch             = 27703.5424626
+   moiEpoch               = 27724.9087797
+   satTOI.X               = -6662.76928123
+   satTOI.Y               = 0.529259998179
+   satTOI.Z               = 55.445695172
+   satTOI.VX              = 0.0422871233672
+   satTOI.VY              = -9.52832392029
+   satTOI.VZ              = 5.1724900621
+   satFlyBy_Forward.X     = 335.658252296
+   satFlyBy_Forward.Y     = -6835.95740947
+   satFlyBy_Forward.Z     = -3697.50596172
+   satFlyBy_Forward.VX    = 1.10235600715
+   satFlyBy_Forward.VY    = -0.762907417999
+   satFlyBy_Forward.VZ    = -0.55207349527
+   satMOI_Backward.X      = -70968.1251141
+   satMOI_Backward.Y      = -64018.0819406
+   satMOI_Backward.Z      = -4289.59488745
+   satMOI_Backward.VX     = 1.77944265144
+   satMOI_Backward.VY     = -1.94858006561
+   satMOI_Backward.VZ     = -0.449239007699
+   MOI.Element1           = -0.0911640161905
+   
 EndScript
 
 %  Define constants and configuration settings

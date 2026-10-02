@@ -713,3 +713,35 @@ Later owned-PID absence and unchanged user GNOME PID/start ticks are recorded;
 no graceful GUI Quit, host/physical-GPU/crash or full replacement acceptance is
 claimed. Remaining Help walkthroughs continue separately. Windows/macOS/MATLAB
 remain deferred.
+
+
+### Optimal lunar flyby Help walkthrough passed — 2026-10-02
+
+[Tutorial 5](Qt6ParityValidation/help-tutorial-05-20261002.md) is Passed for bounded
+private actual-input construction through its expressly taught code editor. All
+five stages are covered: deliberate configuration Stop, patch-only/full/alternate
+solves, and the 5000-km exercise. Actual own reopen/build precedes the
+19:20:39.894341 UTC freeze of the 18701-byte source, SHA256
+db65522abd06f9f4be8a52fb7c1b835db9e937751ab06887871595f9aa28f86c.
+The own exercise converges in 11.291 s/four nominal passes; radius is
+5000.202164763518 km and all eighteen equalities are retained.
+
+Post-freeze original sample Step 5 fails in 162.538 s/44 passes/43 report iterations;
+radius 4860.44617331 violates 5000. Its whole failure report equals the own first
+failure only after 44 inequality-owner labels normalize. The reviewed repair
+appends 22 prior own nominal-stage4 controls in all three Step 5 copies, preserving
+physics/constraints/solver and archived originals. One actual updated-sample
+CtrlO/Convert views/F5/readback passes 10.977 s/four passes/three report iterations.
+Its whole 9854-byte report SHA256 72531ef34b947aa49bb04ceb826a626aa7143d8bb4eef36a6ccd969b5238a588
+equals the frozen own 9850-byte report only after four printed backward-to-forward
+Luna.RadPer labels normalize. No reference conversion Save or Steps 1–4 rerun.
+
+Help copies are synchronized but not separately executed; original sample Step 3
+Earth gravity differs, Help epoch-qualification equivalence is untested, and final
+MOI perturbations/pass counts remain explicit. This is complete-report equality,
+not every-state/visual/scientific parity. Ten unchanged PNGs and the frozen own
+source accompany the record; full raw/source/result histories remain indexed in
+ignored Tutorial 5 evidence. Runtime updated app 3ba673f1…/controlled base cf147e23…
+is bounded private X11/softwareGL evidence; host/hardware/full replacement gates
+remain open. Ledger 1–3 and 5 Passed, 4 and 6 In progress, 7–12 Pending.
+Windows/macOS/MATLAB remain deferred; no old matrix/corpus was repeated.
