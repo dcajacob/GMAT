@@ -215,6 +215,83 @@ QStringList creatableResourceTypes()
    result.removeAll("Star");
    result.removeDuplicates(); result.sort(); return result;
 }
+bool resourceCanBeCloned(GmatBase *object)
+{
+   if (!object || object->IsOfType("SolarSystem") || object->IsOfType("CelestialBody") || object->IsOfType("PropSetup")) return false;
+   if (auto *frame=dynamic_cast<CoordinateSystem *>(object);frame && frame->IsBuiltIn()) return false;
+   if (auto *point=dynamic_cast<CalculatedPoint *>(object);point && point->IsBuiltIn()) return false;
+   return true;
+}
+QString cloneResourceSource(const QString &source,const QString &original,const QString &name,const QString &firstMissionStatement)
+{
+   // Copy only explicit configuration. Canonical engine regeneration would
+   // materialize unrelated defaults and lose expressions, spelling and comments.
+   const QRegularExpression create("^\\s*Create\\s+([A-Za-z][A-Za-z0-9_]*)\\s+([^;]+?);?\\s*$",QRegularExpression::DotMatchesEverythingOption);
+   const QRegularExpression definition("\\b("+QRegularExpression::escape(original)+"(?:\\s*\\[\\s*[1-9][0-9]*\\s*,\\s*[1-9][0-9]*\\s*\\])?)(?![A-Za-z0-9_])");
+   const QRegularExpression assignment("^\\s*(?:GMAT\\s+)?("+QRegularExpression::escape(original)+")(?:\\.[A-Za-z0-9_.]+(?:\\([^;=]*\\))?|\\([^;=]*\\))?\\s*=");
+   const auto normalize=[](QString code) {
+      code=code.trimmed(); if (code.endsWith(';')) code.chop(1); code.remove(QRegularExpression("^GMAT\\s+"));
+      QString result; bool quoted=false; for (auto ch:code) { if (ch=='\'') quoted=!quoted; if (quoted || !ch.isSpace()) result+=ch; } return result;
+   };
+   QString firstCommand;
+   if (!firstMissionStatement.isEmpty()) { const auto commands=scriptStatements(firstMissionStatement); if (!commands.isEmpty()) firstCommand=normalize(commands.first().code); }
+   const auto statements=scriptStatements(source);
+   const QRegularExpression explicitBoundary("^\\s*BeginMissionSequence\\b");
+   const bool explicitMission=std::any_of(statements.cbegin(),statements.cend(),[&](const auto &statement) { return explicitBoundary.match(statement.code).hasMatch(); });
+   QString declaration,settings; qsizetype boundary=source.size(); bool located=firstCommand.isEmpty();
+   for (const auto &statement:statements) {
+      qsizetype first=0,last=statement.code.size()-1;
+      while (first<=last && statement.code[first].isSpace()) ++first;
+      while (last>=first && statement.code[last].isSpace()) --last;
+      if (first>last) continue;
+      if (explicitBoundary.match(statement.code).hasMatch() || (!explicitMission && !firstCommand.isEmpty() && normalize(statement.code)==firstCommand)) {
+         boundary=statement.positions[first]; located=true; break;
+      }
+      const auto declared=create.match(statement.code);
+      if (declared.hasMatch()) {
+         const auto member=definition.match(declared.captured(2)); if (!member.hasMatch()) continue;
+         if (!declaration.isEmpty()) throw std::runtime_error("Multiple declarations for the resource to clone.");
+         declaration="Create "+declared.captured(1)+' '+name+member.captured(1).mid(original.size())+";\n";
+         continue;
+      }
+      const auto configured=assignment.match(statement.code); if (!configured.hasMatch()) continue;
+      auto start=statement.positions[first],end=statement.positions[last]+1;
+      const auto lineStart=start ? source.lastIndexOf('\n',start-1)+1 : 0;
+      if (source.mid(lineStart,start-lineStart).trimmed().isEmpty()) start=lineStart;
+      auto lineEnd=source.indexOf('\n',end); if (lineEnd<0) lineEnd=source.size();
+      const auto tail=source.mid(end,lineEnd-end).trimmed();
+      if (tail.isEmpty() || tail.startsWith('%')) end=lineEnd+(lineEnd<source.size() ? 1 : 0);
+      auto copied=source.mid(start,end-start);
+      // Like wx Clone, keep references to other resources, including references
+      // in array expressions and quoted filenames. Change only assignment owner.
+      const auto position=statement.positions[configured.capturedStart(1)]-start;
+      copied.replace(position,original.size(),name);
+      if (!copied.endsWith('\n')) copied+='\n';
+      settings+=copied;
+   }
+   if (declaration.isEmpty()) throw std::runtime_error("Cannot locate this resource's declaration safely. Clone it in the script that defines it.");
+   if (!located) throw std::runtime_error("Cannot locate the mission boundary safely. Add BeginMissionSequence before cloning this resource.");
+   auto block=declaration+settings;
+   const auto cameras=qtCameraSettings(source);
+   if (cameras.contains(original)) block+=qtCameraDirective(name,cameras.value(original));
+   if (boundary>0 && source[boundary-1]!='\n') block.prepend('\n');
+   auto result=source; result.insert(boundary,block);
+   if (declaration.startsWith("Create Array ") && arrayExpressions(source,original)!="[]") {
+      // The GUI's bounded array initializer is kept after BeginMissionSequence.
+      // Copy it after the original block, retaining expression/dependency order;
+      // other mission assignments to the original array are never duplicated.
+      const auto marker="^[ \\t]*% GMAT-Qt-Array-Expressions "+QRegularExpression::escape(original);
+      const auto begin=QRegularExpression(marker+" begin[ \\t]*(?:\\n|$)",QRegularExpression::MultilineOption).match(result);
+      const auto end=QRegularExpression(marker+" end[ \\t]*(?:\\n|$)",QRegularExpression::MultilineOption).match(result);
+      auto copied=result.mid(begin.capturedStart(),end.capturedEnd()-begin.capturedStart());
+      copied.replace("% GMAT-Qt-Array-Expressions "+original+" begin","% GMAT-Qt-Array-Expressions "+name+" begin");
+      copied.replace("% GMAT-Qt-Array-Expressions "+original+" end","% GMAT-Qt-Array-Expressions "+name+" end");
+      copied.replace(QRegularExpression("^([ \\t]*(?:GMAT[ \\t]+)?)"+QRegularExpression::escape(original)+"(?=\\()",QRegularExpression::MultilineOption),"\\1"+name);
+      if (!copied.endsWith('\n')) copied+='\n';
+      result.insert(end.capturedEnd(),copied);
+   }
+   return result;
+}
 QString qtConfiguredScript()
 {
    auto *moderator=Moderator::Instance();
@@ -489,6 +566,13 @@ MainWindow::MainWindow()
    auto *create=edit->addAction("New &resource…");
    create->setObjectName("createResource"); editingActions.append(create);
    connect(create,&QAction::triggered,this,[this] { showCreateResource(); });
+   auto *clone=edit->addAction("Clone resource…"); clone->setObjectName("cloneResource");
+   clone->setShortcut(QKeySequence("Ctrl+Shift+C")); clone->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+   resources->addAction(clone); editingActions.append(clone);
+   connect(clone,&QAction::triggered,this,[this] {
+      const auto *item=resources->currentItem();
+      showCloneResource(item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString());
+   });
    auto *convert=edit->addAction("Convert OpenFrames views for Qt");
    convert->setObjectName("convertOpenFramesViews"); editingActions.append(convert);
    connect(convert,&QAction::triggered,this,[this] { convertOpenFramesScript(); });
@@ -519,14 +603,18 @@ MainWindow::MainWindow()
          auto *generic=menu.addAction(create->text()); generic->setObjectName("createResource"); generic->setEnabled(create->isEnabled());
       }
       menu.addSeparator();
-      auto *remove=menu.addAction("Delete resource…");
       auto *selected=name.isEmpty() ? nullptr : Moderator::Instance()->GetConfiguredObject(name.toStdString());
+      auto *clone=menu.addAction("Clone resource…"); clone->setObjectName("cloneResource");
+      clone->setEnabled(ready && !running && modelValid && editor->toPlainText()==builtScript && resourceCanBeCloned(selected));
+      auto *remove=menu.addAction("Delete resource…");
       remove->setEnabled(ready && !running && modelValid && selected && !selected->IsOfType("CelestialBody") && !selected->IsOfType("SolarSystem"));
       // Finish the popup event loop before opening a modal creator. In
       // particular, do not keep a grabbing Wayland popup active around it.
       const auto *chosen=menu.exec(resources->viewport()->mapToGlobal(position));
       if (chosen && (chosen->objectName().startsWith("addResource_") || chosen->objectName()=="createResource")) {
          showCreateResource(chosen->data().toString());
+      } else if (chosen==clone) {
+         showCloneResource(name);
       } else if (chosen==remove &&
           QMessageBox::question(this,"Delete resource","Delete "+name+" from this mission?",
              QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
@@ -1702,6 +1790,81 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }
    return applyModelScript(source,initialValue ? std::function<QString()>([name,type,value=*initialValue] { return userParameterValueError(name,type,value); }) : std::function<QString()>());
+}
+
+QString MainWindow::cloneResource(const QString &original,const QString &requestedName,const QString &expectedScript,const QMap<QString,QString> &settings)
+{
+   if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "Build the current script before cloning a resource.";
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges())
+         return "Apply or discard the open panel changes before cloning a resource.";
+   auto *moderator=Moderator::Instance(); auto *object=moderator->GetConfiguredObject(original.toStdString());
+   if (!object) return "Select a configured resource to clone.";
+   if (!resourceCanBeCloned(object)) return "Built-in resources, celestial bodies and propagators cannot be cloned from this panel.";
+   const auto name=requestedName.trimmed().isEmpty() ? QString::fromStdString(moderator->GetNewName(original.toStdString(),2)) : requestedName.trimmed();
+   if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch()) return "Use a name starting with a letter, followed by letters, digits or underscores.";
+   if (moderator->GetConfiguredObject(name.toStdString())) return "That resource name is already in use.";
+   const auto commands=moderator->GetListOfFactoryItems(Gmat::COMMAND);
+   if (name=="GMAT" || std::find(commands.begin(),commands.end(),name.toStdString())!=commands.end()) return "Choose a name that is not a mission command or reserved keyword.";
+   try {
+      QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+      const auto candidate=cloneResourceSource(expectedScript,original,name,firstCommand);
+      std::unique_ptr<GmatBase> draft(object->Clone()); draft->SetName(name.toStdString(),name.toStdString());
+      auto changes=settings;
+      // Scalar forms submit Value even unchanged. Keep the original initializer's
+      // source spelling when cloning without an edit, just like ordinary fields.
+      if (changes.contains("Value") && (object->GetTypeName()=="Variable" || object->GetTypeName()=="String")) {
+         const auto value=object->GetTypeName()=="Variable" ? QString::number(object->GetRealParameter("Value"),'g',17) : QString::fromStdString(object->GetStringParameter("Expression"));
+         if (changes.value("Value")==value) changes.remove("Value");
+      }
+      return changes.isEmpty() ? applyModelScript(candidate) : applyResourceSettings(*draft,changes,candidate);
+   } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+}
+
+void MainWindow::showCloneResource(const QString &original)
+{
+   if (!ready || running || !modelValid || editor->toPlainText()!=builtScript) { statusBar()->showMessage("Build the current script before cloning a resource"); return; }
+   auto *object=Moderator::Instance()->GetConfiguredObject(original.toStdString());
+   if (!resourceCanBeCloned(object)) { statusBar()->showMessage("Select a resource that can be cloned"); return; }
+   for (auto *child:workspace->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges()) {
+      statusBar()->showMessage("Apply or discard the open panel changes before cloning a resource"); return;
+   }
+   const auto snapshot=builtScript;
+   try {
+      const auto suggested=QString::fromStdString(Moderator::Instance()->GetNewName(original.toStdString(),2));
+      QString firstCommand; for (const auto &node:missionState.nodes) if (node.type!="BeginMissionSequence") { firstCommand=node.statement; break; }
+      const auto preview=cloneResourceSource(snapshot,original,suggested,firstCommand);
+      std::unique_ptr<GmatBase> draft(object->Clone()); draft->SetName(suggested.toStdString(),suggested.toStdString());
+      QDialog dialog(this); dialog.setObjectName("cloneResourceDialog"); dialog.setWindowTitle("Clone "+original);
+      auto *layout=new QVBoxLayout(&dialog); auto *form=new QFormLayout; layout->addLayout(form);
+      form->addRow("Source",new QLabel(original+" — "+QString::fromStdString(object->GetTypeName()),&dialog));
+      auto *name=new QLineEdit(&dialog); name->setObjectName("resourceName"); name->setPlaceholderText(suggested);
+      name->setToolTip("Leave blank to use the suggested available name."); form->addRow("Name (optional)",name);
+      auto *status=new QLabel("Configure the copy here. Clone commits its name and settings together.",&dialog); status->setObjectName("resourceCloneStatus"); status->setWordWrap(true);
+      auto *panel=new ResourceEditor(*draft,[&](const QMap<QString,QString> &changes) {
+         if (name->text().trimmed().isEmpty()) name->setText(QString::fromStdString(Moderator::Instance()->GetNewName(original.toStdString(),2)));
+         return cloneResource(original,name->text().trimmed(),snapshot,changes);
+      },&dialog,preview,true,true);
+      panel->onStatus=[status](const QString &message) { status->setText(message); };
+      panel->onApplied=[&] { dialog.accept(); };
+      panel->findChild<QDialogButtonBox *>("resourceButtons")->hide();
+      if (auto *message=panel->findChild<QLabel *>("resourceStatus")) message->hide();
+      contextHelp->attach(panel,QString::fromStdString(object->GetTypeName()));
+      layout->addWidget(panel,1); layout->addWidget(status);
+      auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); buttons->setObjectName("resourceCloneButtons"); buttons->button(QDialogButtonBox::Ok)->setText("Clone"); layout->addWidget(buttons);
+      connect(buttons,&QDialogButtonBox::accepted,panel,&ResourceEditor::requestApply);
+      connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+      dialog.resize(850,(object->GetTypeName()=="Variable" || object->GetTypeName()=="String") ? 330 : 740); name->setFocus();
+      if (dialog.exec()==QDialog::Accepted) {
+         refreshAppliedResourcePanels();
+         auto *navigation=findChild<QDockWidget *>("navigation"); navigation->show(); navigation->findChild<QTabWidget *>()->setCurrentWidget(resources);
+         const auto items=resources->findItems(name->text().trimmed(),Qt::MatchExactly|Qt::MatchRecursive);
+         if (items.size()==1) { resources->setCurrentItem(items.first()); resources->scrollToItem(items.first()); resources->itemDoubleClicked(items.first(),0); }
+      }
+   } catch (BaseException &error) { statusBar()->showMessage(QString::fromStdString(error.GetFullMessage())); }
+   catch (const std::exception &error) { statusBar()->showMessage(QString::fromUtf8(error.what())); }
 }
 
 void MainWindow::showPathSettings()

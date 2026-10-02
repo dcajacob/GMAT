@@ -1,0 +1,10 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 9: QtGui.ResourceClone
+1/1 Test #9: QtGui.ResourceClone ..............   Passed    0.47 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.47 sec*proc (1 test)
+
+Total Test time (real) =   0.47 sec

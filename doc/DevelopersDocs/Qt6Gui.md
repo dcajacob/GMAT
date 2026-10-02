@@ -2204,3 +2204,19 @@ attitude, including during replay. Off hides them; Default leaves them hidden.
 These choices are independent of the model/body and trajectory controls and stay
 pending until the parent resource Apply. Show labels controls the axis captions.
 Converted OpenFrames DrawAxes arrays retain the corresponding named choices.
+
+
+### Cloning configured resources
+
+Select a resource in Resources and use **Clone resource…** from its context menu
+or Edit menu (`Ctrl+Shift+C` while the tree has focus). Its current configuration
+opens in one form with an optional name. Leave the name empty to use the suggested
+available name, adjust settings, then choose Clone. Cancel leaves the mission
+unchanged; invalid settings stay open for correction. Clone is one undoable edit
+and opens the new resource afterward.
+
+The copy retains explicit settings, array formulas, references and Qt viewer
+camera/drawing settings. References continue pointing to the existing objects.
+Built-in coordinate systems/points, celestial bodies, SolarSystem and PropSetup
+are protected as in wx. Build unsaved script changes and apply/discard pending
+panels before cloning. Resource renaming remains an outstanding workflow.
