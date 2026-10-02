@@ -1,0 +1,171 @@
+Create ContactLocator ContactLocator1;
+Create GroundStation Hyderabad;
+Create EclipseLocator EclipseLocator1;
+Create ImpulsiveBurn GOI;
+Create ImpulsiveBurn TOI;
+Create DifferentialCorrector DC1;
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-10-02 11:33:58
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft DefaultSC;
+DefaultSC.DateFormat = TAIModJulian;
+DefaultSC.Epoch = '21545';
+DefaultSC.CoordinateSystem = EarthMJ2000Eq;
+DefaultSC.DisplayStateType = Cartesian;
+DefaultSC.X = 7100;
+DefaultSC.Y = 0;
+DefaultSC.Z = 1300;
+DefaultSC.VX = 0;
+DefaultSC.VY = 7.35;
+DefaultSC.VZ = 1;
+DefaultSC.DryMass = 850;
+DefaultSC.Cd = 2.2;
+DefaultSC.Cr = 1.8;
+DefaultSC.DragArea = 15;
+DefaultSC.SRPArea = 1;
+DefaultSC.SPADDragScaleFactor = 1;
+DefaultSC.SPADSRPScaleFactor = 1;
+DefaultSC.AtmosDensityScaleFactor = 1;
+DefaultSC.ExtendedMassPropertiesModel = 'None';
+DefaultSC.NAIFId = -10001001;
+DefaultSC.NAIFIdReferenceFrame = -9001001;
+DefaultSC.OrbitColor = Red;
+DefaultSC.TargetColor = Teal;
+DefaultSC.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+DefaultSC.CdSigma = 1e+70;
+DefaultSC.CrSigma = 1e+70;
+DefaultSC.Id = 'SatId';
+DefaultSC.Attitude = CoordinateSystemFixed;
+DefaultSC.SPADSRPInterpolationMethod = Bilinear;
+DefaultSC.SPADSRPScaleFactorSigma = 1e+70;
+DefaultSC.SPADDragInterpolationMethod = Bilinear;
+DefaultSC.SPADDragScaleFactorSigma = 1e+70;
+DefaultSC.AtmosDensityScaleFactorSigma = 1e+70;
+DefaultSC.ModelFile = 'aura.3ds';
+DefaultSC.ModelOffsetX = 0;
+DefaultSC.ModelOffsetY = 0;
+DefaultSC.ModelOffsetZ = 0;
+DefaultSC.ModelRotationX = 0;
+DefaultSC.ModelRotationY = 0;
+DefaultSC.ModelRotationZ = 0;
+DefaultSC.ModelScale = 1;
+DefaultSC.AttitudeDisplayStateType = 'Quaternion';
+DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
+DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
+DefaultSC.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+DefaultProp_ForceModel.CentralBody = Earth;
+DefaultProp_ForceModel.PrimaryBodies = {Earth};
+DefaultProp_ForceModel.Drag = None;
+DefaultProp_ForceModel.SRP = Off;
+DefaultProp_ForceModel.RelativisticCorrection = Off;
+DefaultProp_ForceModel.ErrorControl = RSSStep;
+DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
+DefaultProp_ForceModel.GravityField.Earth.Order = 4;
+DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
+DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator DefaultProp;
+DefaultProp.FM = DefaultProp_ForceModel;
+DefaultProp.Type = RungeKutta89;
+DefaultProp.InitialStepSize = 60;
+DefaultProp.Accuracy = 9.999999999999999e-12;
+DefaultProp.MinStep = 0.001;
+DefaultProp.MaxStep = 2700;
+DefaultProp.MaxStepAttempts = 50;
+DefaultProp.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView DefaultOrbitView;
+DefaultOrbitView.SolverIterations = Current;
+DefaultOrbitView.UpperLeft = [ 0 0 ];
+DefaultOrbitView.Size = [ 0 0 ];
+DefaultOrbitView.RelativeZOrder = 0;
+DefaultOrbitView.Maximized = false;
+DefaultOrbitView.Add = {DefaultSC, Earth};
+DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.DrawObject = [ true true ];
+DefaultOrbitView.DataCollectFrequency = 1;
+DefaultOrbitView.UpdatePlotFrequency = 50;
+DefaultOrbitView.NumPointsToRedraw = 0;
+DefaultOrbitView.ShowPlot = true;
+DefaultOrbitView.MaxPlotPoints = 20000;
+DefaultOrbitView.ShowLabels = true;
+DefaultOrbitView.ViewPointReference = Earth;
+DefaultOrbitView.ViewDirection = Earth;
+DefaultOrbitView.ViewScaleFactor = 1;
+DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+DefaultOrbitView.EclipticPlane = Off;
+DefaultOrbitView.XYPlane = On;
+DefaultOrbitView.WireFrame = Off;
+DefaultOrbitView.Axes = On;
+DefaultOrbitView.Grid = Off;
+DefaultOrbitView.SunLine = Off;
+DefaultOrbitView.UseInitialView = On;
+DefaultOrbitView.StarCount = 7000;
+DefaultOrbitView.EnableStars = On;
+DefaultOrbitView.EnableConstellations = On;
+
+Create GroundTrack DefaultGroundTrackPlot;
+DefaultGroundTrackPlot.SolverIterations = Current;
+DefaultGroundTrackPlot.UpperLeft = [ 0 0 ];
+DefaultGroundTrackPlot.Size = [ 0 0 ];
+DefaultGroundTrackPlot.RelativeZOrder = 0;
+DefaultGroundTrackPlot.Maximized = false;
+DefaultGroundTrackPlot.CentralBody = Earth;
+DefaultGroundTrackPlot.Add = {DefaultSC};
+DefaultGroundTrackPlot.DataCollectFrequency = 1;
+DefaultGroundTrackPlot.UpdatePlotFrequency = 50;
+DefaultGroundTrackPlot.NumPointsToRedraw = 0;
+DefaultGroundTrackPlot.MaxPlotPoints = 20000;
+DefaultGroundTrackPlot.ShowPlot = true;
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+DefaultOrbitView.ViewPointVector = [ 0 0 120000 ];
+DefaultOrbitView.ViewUpAxis = X;
+GMAT Earth.EquatorialRadius = 6378.1365999999998;
+GMAT Earth.Flattening = 0.0033528131084554699;
+EclipseLocator1.Spacecraft = DefaultSC;
+Hyderabad.StateType = Spherical;
+Hyderabad.HorizonReference = Ellipsoid;
+Hyderabad.Location1 = 17.0286;
+Hyderabad.Location2 = 78.1883;
+Hyderabad.Location3 = 0.541;
+ContactLocator1.Target = DefaultSC;
+ContactLocator1.StepSize = 600;
+ContactLocator1.Observers = {Hyderabad};
+BeginMissionSequence;
+Propagate 'Prop To Periapsis' DefaultProp(DefaultSC) {DefaultSC.Earth.Periapsis};
+Target 'Hohmann Transfer' DC1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};
+Vary 'Vary TOI' DC1(TOI.Element1 = 2.24026921075037, {Perturbation = 0.0001, Lower = -10, Upper = 10, MaxStep = 0.5});
+Maneuver 'Perform TOI' TOI(DefaultSC);
+Propagate 'Prop To Apoapsis' DefaultProp(DefaultSC) {DefaultSC.Earth.Apoapsis};
+Achieve 'Achieve RMAG = 42165' DC1(DefaultSC.Earth.RMAG = 42164.169, {Tolerance = 0.1});
+Vary 'Vary GOI' DC1(GOI.Element1 = 1.440642858252199, {Perturbation = 0.0001, Lower = -10, Upper = 10, MaxStep = 0.2});
+Maneuver 'Perform GOI' GOI(DefaultSC);
+Achieve 'Achieve ECC = 0.005' DC1(DefaultSC.Earth.ECC = 0.005, {Tolerance = 0.0001});
+   % Add Vary, mission commands, and Achieve here.
+EndTarget;
+Propagate 'Prop One Day' DefaultProp(DefaultSC) {DefaultSC.ElapsedSecs = 86400};

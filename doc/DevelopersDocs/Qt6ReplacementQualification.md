@@ -8310,3 +8310,27 @@ retained; nine unchanged PNGs and the authored source accompany the record.
 Execution uses app 3ba673f1…; a later function-output fix rebuilds ef933221… without
 repeating this unchanged chapter. Full Linux, host, hardware and crash gates and
 other tutorials remain open; Windows/macOS/MATLAB remain deferred.
+
+## Eclipse and station contact Help walkthrough passed — 2026-10-02
+
+[Tutorial 7](Qt6ParityValidation/help-tutorial-07-20261002.md) passed bounded
+private actual-input construction of the Help chapter's core scenario from the
+independently authored Tutorial 2 prerequisite. Earth shape, EclipseLocator,
+Hyderabad station and ContactLocator were entered through resource forms; actual
+Output reports show one 2105.5299296-s eclipse with three portions and two station
+contacts. The combined run completes in 1.645 s. Own save/CtrlO reopen/Build and
+resource readback precede the 20:12:02.032395 UTC freeze of the 6498-byte source,
+SHA256 c7964540d1e47ff970989e9b8bfbe880ab308fb5c01554a4d69c27a8b1d709d5.
+
+The blank-target initial attempt is retained as an operator correction. Help
+names only the Simple Orbit Transfer prerequisite; no final shipped Tutorial7
+script exists. Post-freeze additions match Help settings and qualitative report
+expectations; prior compatible Tutorial2 reference evidence is reused without a
+passing rerun. Default/Target/view differences remain explicit, as do optional
+station-network/burn-coverage exercises and the missing GUI LSK field. Nine
+unchanged PNGs and frozen own source accompany all raw actions/reports/identities
+in the ignored indexed Tutorial7 evidence. App 3ba673f1..., controlled base
+cf147e23... and startup 5f80be1f... are unchanged across both private X11/softwareGL
+sessions. Bounded/acknowledged-helper cleanup is 0/0/-15, not graceful GUI Quit or
+host/Wayland/portal/hardware/crash/full replacement acceptance. Windows/macOS/MATLAB
+remain deferred; no old matrix, corpus or prerequisite-reference run was repeated.
