@@ -822,7 +822,7 @@ bool GuiPlotReceiver::UpdateGlPlot(const std::string &plotName,
 bool GuiPlotReceiver::TakeGlAction(const std::string &plotName,
                                  const std::string &action)
 {
-   if (action=="NeedsOrbitArcMetadata" || action.compare(0,18,"NeedsOrbitArcPose:")==0) return false;
+   if (action=="NeedsOrbitDataAvailability" || action=="NeedsOrbitArcMetadata" || action.compare(0,18,"NeedsOrbitArcPose:")==0) return false;
    #if DEBUG_PLOTIF_GL_CLEAR
    MessageInterface::ShowMessage
       ("GuiPlotReceiver::ClearGlSolverData() entered\n");

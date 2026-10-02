@@ -266,6 +266,7 @@ OrbitPlot& OrbitPlot::operator=(const OrbitPlot& plot)
       return *this;
    
    Subscriber::operator=(plot);
+   mDataAvailabilityContext.clear(); mCurrDataAvailabilityArray.clear();
    
    // Just copy configured object pointer
    mViewCoordSystem = plot.mViewCoordSystem;
@@ -460,6 +461,7 @@ bool OrbitPlot::Initialize()
    
    Subscriber::Initialize();
    mArcContext.clear(); mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
+   mDataAvailabilityContext.clear(); mCurrDataAvailabilityArray.clear();
    mCurrScArray.clear(); mCurrProviderArray.clear(); mCurrEpochArray.clear();
    mCurrXArray.clear(); mCurrYArray.clear(); mCurrZArray.clear();
    mCurrVxArray.clear(); mCurrVyArray.clear(); mCurrVzArray.clear();
@@ -2082,6 +2084,7 @@ void OrbitPlot::BuildDynamicArrays()
 //------------------------------------------------------------------------------
 void OrbitPlot::ClearDynamicArrays()
 {
+   mDataAvailabilityContext.clear(); mCurrDataAvailabilityArray.clear();
    mObjectNameArray.clear();
    mObjectArray.clear();
    mDrawOrbitArray.clear();
@@ -2169,6 +2172,25 @@ void OrbitPlot::UpdateObjectList(SpacePoint *sp, bool show)
 // Metadata observes the publisher before plot decimation, without modifying
 // collected arrays, counters, or numerical execution. Only requested segment
 // spacecraft incur the extra position/attitude conversion.
+std::string OrbitPlot::DataAvailabilityAction(const Real *dat,Integer len)
+{
+   if (len<=0 || theDataLabels.empty() ||
+       !PlotInterface::TakeGlAction(instanceName,"NeedsOrbitDataAvailability")) return "";
+   auto &labels=theDataLabels[0];
+   std::ostringstream available; available.imbue(std::locale::classic());
+   available << "OrbitDataAvailability:" << std::setprecision(17) << dat[0] << ' ' << mScCount;
+   const char *fields[]={".X",".Y",".Z",".Vx",".Vy",".Vz"};
+   for (Integer sc=0;sc<mScCount;++sc) {
+      bool present=true;
+      for (const auto *field:fields) {
+         const auto index=FindIndexOfElement(labels,mScNameArray[sc]+field);
+         present=present && index>=0 && index<len;
+      }
+      available << ' ' << std::quoted(mScNameArray[sc]) << ' ' << (present ? 1 : 0);
+   }
+   return available.str();
+}
+
 void OrbitPlot::PublishArcMetadata(const Real *dat,Integer len)
 {
    mArcContext.clear();
@@ -2208,6 +2230,10 @@ void OrbitPlot::PublishArcMetadata(const Real *dat,Integer len)
          PlotInterface::TakeGlAction(instanceName,sample.str());
       } catch (BaseException &) { /* Unavailable visualization pose must not interrupt the mission. */ }
    }
+   // The captured pose list can be a subset of the plotted spacecraft.
+   // Camera fallback must know which other spacecraft this publisher omitted.
+   const auto available=DataAvailabilityAction(dat,len);
+   if (!available.empty()) PlotInterface::TakeGlAction(instanceName,available);
    PlotInterface::TakeGlAction(instanceName,"PrepareOrbitArcCameras");
 }
 
@@ -2323,6 +2349,8 @@ bool OrbitPlot::UpdateData(const Real *dat, Integer len)
       
       bool update = (mNumCollected % mUpdatePlotFrequency) == 0;
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + PlotProviderName(currentProvider));
+      if (!mDataAvailabilityContext.empty())
+         PlotInterface::TakeGlAction(instanceName,mDataAvailabilityContext);
       
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mScNameArray, dat[0], mScXArray,
@@ -2374,6 +2402,8 @@ bool OrbitPlot::UpdateSolverData()
          PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(i));
       }
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
+      if (i<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[i].empty())
+         PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
@@ -2388,6 +2418,8 @@ bool OrbitPlot::UpdateSolverData()
       PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(last));
    }
    PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
+   if (last<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[last].empty())
+      PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
@@ -2399,6 +2431,7 @@ bool OrbitPlot::UpdateSolverData()
    mCurrScArray.clear();
    mCurrProviderArray.clear();
    mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
+   mCurrDataAvailabilityArray.clear(); mDataAvailabilityContext.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
    mCurrYArray.clear();
@@ -2464,6 +2497,7 @@ void OrbitPlot::BufferPreviousData(Integer scIndex)
 //------------------------------------------------------------------------------
 Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
 {
+   mDataAvailabilityContext.clear();
    #if DBGLVL_DATA
    MessageInterface::ShowMessage
       ("OrbitPlot::BufferOrbitData() <%p>'%s' entered, len=%d, epoch=%.12f, mNumData=%d\n",
@@ -2528,8 +2562,8 @@ Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
       scIndex++;
       
       // If any of index not found, handle absent data and continue with the next spacecraft
-      if (idX  == -1 || idY  == -1 || idZ  == -1 ||
-          idVx == -1 || idVy == -1 || idVz == -1)
+      if (idX < 0 || idY < 0 || idZ < 0 || idVx < 0 || idVy < 0 || idVz < 0 ||
+          idX >= len || idY >= len || idZ >= len || idVx >= len || idVy >= len || idVz >= len)
       {
          HandleAbsentData(mScNameArray[i], scIndex, dat[0]);
          mScPrevDataPresent[scIndex] = false;
@@ -2609,6 +2643,10 @@ Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
       #endif
    }
    
+   // Explicit availability is presentation metadata only. Legacy receivers
+   // retain their existing zero/previous-data arrays and plotting behavior.
+   mDataAvailabilityContext=DataAvailabilityAction(dat,len);
+
    // if only showing current iteration, buffer data and return
    if (mSolverIterOption == SI_CURRENT)
    {
@@ -2619,6 +2657,7 @@ Integer OrbitPlot::BufferOrbitData(const Real *dat, Integer len)
       {
          mCurrScArray.push_back(mScNameArray);
          mCurrProviderArray.push_back(PlotProviderName(currentProvider));
+         mCurrDataAvailabilityArray.push_back(mDataAvailabilityContext);
          mCurrArcContextArray.push_back(mArcContext); mCurrSolvingArray.push_back(runstate==Gmat::SOLVING);
          if (!mArcContext.empty()) PlotInterface::TakeGlAction(instanceName,"SaveOrbitArcCamera:"+std::to_string(mCurrArcContextArray.size()-1));
          mCurrEpochArray.push_back(dat[0]);

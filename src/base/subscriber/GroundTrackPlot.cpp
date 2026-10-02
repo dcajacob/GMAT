@@ -1018,6 +1018,8 @@ bool GroundTrackPlot::UpdateSolverData()
       
       // Just buffer data up to last point - 1
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
+      if (i<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[i].empty())
+         PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
@@ -1028,6 +1030,8 @@ bool GroundTrackPlot::UpdateSolverData()
    
    // Buffer last point and Update the plot
    PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
+   if (last<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[last].empty())
+      PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
@@ -1038,6 +1042,7 @@ bool GroundTrackPlot::UpdateSolverData()
    // clear arrays
    mCurrScArray.clear();
    mCurrProviderArray.clear();
+   mCurrDataAvailabilityArray.clear(); mDataAvailabilityContext.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
    mCurrYArray.clear();

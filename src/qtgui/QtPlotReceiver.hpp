@@ -187,6 +187,7 @@ virtual bool SetDynamicDataTextColor(const std::string &plotName,
                         std::vector<std::vector<DDD>>) override;
 private:
    struct Cell { QString text; QColor foreground = Qt::black, background = Qt::white; };
+   struct OrbitDataAvailability { double epoch=0; QMap<QString,bool> objects; };
    struct Entry {
       std::shared_ptr<PlotModel> data;
       QPointer<QMdiSubWindow> window;
@@ -213,6 +214,9 @@ private:
       QRect automaticRect;
       bool useInitialView = true;
       QString provider;
+      // Consumed by one real UpdateGlPlot. Arc-camera preparation can read
+      // this publication's matching mask without consuming the real sample.
+      std::optional<OrbitDataAvailability> dataAvailability;
       QString arcProvider;
       bool arcTrial=false, arcMetadataOnly=false, replayArcCamera=false;
       QMap<QString,PlotPoint> arcPublishedPoses;

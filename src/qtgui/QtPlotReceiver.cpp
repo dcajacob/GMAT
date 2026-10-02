@@ -3,6 +3,7 @@
 #include "CameraAlignment.hpp"
 #include "SegmentArc.hpp"
 #include <sstream>
+#include <iomanip>
 #include <locale>
 #include "TableColumns.hpp"
 #include "PlotWidget.hpp"
@@ -487,6 +488,19 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
       const ColorMap &colors,const ColorMap &targetColors,bool solving,Integer,bool update,bool drawing,bool)
 {
    auto *entry=find(name); if (!entry) return false;
+   auto availability=entry->dataAvailability;
+   if (!entry->arcMetadataOnly) entry->dataAvailability.reset();
+   if (availability) {
+      // Arc poses contain only requested/present spacecraft; the real callback
+      // contains the complete spacecraft list associated with this mask.
+      bool matches=availability->epoch==epoch &&
+         (entry->arcMetadataOnly || availability->objects.size()==static_cast<int>(names.size()));
+      for (const auto &object:names) matches=matches && availability->objects.contains(text(object));
+      if (!matches) { availability.reset(); warn(name,"stale or mismatched orbit data availability (ignored)"); }
+   }
+   const auto absent=[&](const QString &object) {
+      return availability && availability->objects.contains(object) && !availability->objects.value(object);
+   };
    auto &data=*entry->data; if (!entry->arcMetadataOnly) ++data.frame;
    auto storeCamera=[&](int index,PlotCamera camera) {
       if (entry->arcMetadataOnly) { entry->preparedArcCameras[index]=camera; return; }
@@ -514,6 +528,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
          };
          if (vector) return checked(value);
          if (!object) throw std::runtime_error("Missing camera reference object");
+         if (absent(text(object->GetName()))) throw std::runtime_error("Camera reference was absent from this publication");
          const auto found=std::find(names.begin(),names.end(),object->GetName());
          if (found!=names.end()) {
             const auto index=static_cast<size_t>(found-names.begin());
@@ -643,6 +658,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
       auto &curve=data.curves[static_cast<int>(i)];
       const auto &palette=solving ? targetColors : colors;
       const auto color=palette.find(object); if (color!=palette.end()) curve.color=rgb(color->second);
+      if (absent(text(object))) { curve.breakNext=true; continue; }
       auto found=std::find(names.begin(),names.end(),object);
       double px=0,py=0,pz=0; std::array<double,3> velocity{}; bool hasVelocity=false;
       if (found!=names.end()) {
@@ -708,6 +724,7 @@ bool QtPlotReceiver::UpdateGlPlot(const std::string &name,const std::string &,co
             return dynamic_cast<SpacePoint *>(Moderator::Instance()->GetInternalObject(objectName.toStdString()));
          };
          auto position=[&](SpacePoint *object,const QString &objectName) {
+            if (absent(objectName)) throw std::runtime_error("Vector space point was absent from this publication");
             const auto found=std::find(names.begin(),names.end(),objectName.toStdString());
             std::array<double,3> value{};
             if (found!=names.end()) {
@@ -763,6 +780,21 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
 {
    if (action=="ClearObjects" && qtResourcePreviewCleanupActive()) return true;
    auto *entry=find(name); if (!entry) return false;
+   if (action=="NeedsOrbitDataAvailability") return true;
+   if (action.compare(0,22,"OrbitDataAvailability:")==0) {
+      // A malformed replacement must not leave an older valid mask armed.
+      entry->dataAvailability.reset();
+      std::istringstream stream(action.substr(22)); stream.imbue(std::locale::classic());
+      OrbitDataAvailability sample; size_t count;
+      if (!(stream>>sample.epoch>>count) || !PlotModel::usableValue(sample.epoch) || count>entry->objects.size()) return false;
+      for (size_t i=0;i<count;++i) {
+         std::string object; int present;
+         if (!(stream>>std::quoted(object)>>present) || object.empty() || (present!=0 && present!=1) || sample.objects.contains(text(object))) return false;
+         sample.objects.insert(text(object),present!=0);
+      }
+      stream>>std::ws; if (!stream.eof()) return false;
+      entry->dataAvailability=std::move(sample); return true;
+   }
    if (action=="NeedsOrbitArcMetadata") {
       const auto setting=cameraSettings.value(text(name));
       if (!setting.segmentFrame.isEmpty()) return true;
@@ -835,8 +867,9 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
    else if (action=="PenDown") entry->data->penDown=true;
    else if (action=="ToggleOff") { entry->data->active=false; entry->data->breakLines(); }
    else if (action=="ToggleOn") entry->data->active=true;
-   else if (action=="ClearObjects") { entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->data->regularArcs.clear(); entry->data->nextRegularArc=0; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &vector:entry->data->vectors) vector.samples.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
+   else if (action=="ClearObjects") { entry->dataAvailability.reset(); entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->data->regularArcs.clear(); entry->data->nextRegularArc=0; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->objects.clear(); entry->points.clear(); entry->data->curves.clear(); entry->data->cameras.clear(); for (auto &vector:entry->data->vectors) vector.samples.clear(); for (auto &view:entry->data->cameraViews) view.cameras.clear(); }
    else if (action=="ClearSolverData") {
+      entry->dataAvailability.reset();
       auto clearSolver=[](std::deque<PlotCamera> &cameras) {
          cameras.erase(std::remove_if(cameras.begin(),cameras.end(),[](const PlotCamera &camera) { return camera.solver; }),cameras.end());
       };
@@ -849,7 +882,7 @@ bool QtPlotReceiver::TakeGlAction(const std::string &name,const std::string &act
          curve.breakNext=true;
       }
    } else if (action=="IgnoreTimeSequence") entry->ignoreTimeSequence=true;
-   else if (action=="ClearData") { entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); }
+   else if (action=="ClearData") { entry->dataAvailability.reset(); entry->arcProvider.clear(); entry->provider.clear(); entry->arcTrial=false; entry->arcMetadataOnly=false; entry->arcPublishedPoses.clear(); entry->preparedArcCameras.clear(); entry->bufferedArcCameras.clear(); entry->replayArcCameras.clear(); entry->replayArcCamera=false; entry->data->clear(); entry->solverBreaks.clear(); entry->solverScope.clear(); }
    else { warn(name,action); return false; }
    refresh(*entry,true); return true;
 }
@@ -1084,6 +1117,7 @@ bool QtPlotReceiver::TakeGroundTrackAction(const std::string &name,const std::st
       bool ok=false; int value=argument.toInt(&ok); if (!ok || value<1 || value>1000) return false;
       if (command=="LatitudeLineCount") entry->data->latitudeLines=value; else entry->data->longitudeLines=value;
    } else if (command=="Reinitialize" || command=="ClearData" || command=="Reset") {
+      entry->dataAvailability.reset();
       entry->data->clear(); entry->data->stations.clear(); entry->solverBreaks.clear(); entry->solverScope.clear();
       if (command=="Reinitialize") { entry->data->curves.clear(); entry->segmentColors.clear(); entry->orbitColors.clear(); entry->targetColors.clear(); }
    } else if (command=="Refresh" || command=="RunComplete") {

@@ -2024,6 +2024,8 @@ bool OrbitView::UpdateSolverData()
          PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(i));
       }
       PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[i]);
+      if (i<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[i].empty())
+         PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[i]);
       PlotInterface::
          UpdateGlPlot(instanceName, mOldName, mCurrScArray[i],
                       mCurrEpochArray[i], mCurrXArray[i], mCurrYArray[i],
@@ -2038,6 +2040,8 @@ bool OrbitView::UpdateSolverData()
       PlotInterface::TakeGlAction(instanceName,"ReplayOrbitArcCamera:"+std::to_string(last));
    }
    PlotInterface::TakeGlAction(instanceName, "SetDataProvider:" + mCurrProviderArray[last]);
+   if (last<static_cast<int>(mCurrDataAvailabilityArray.size()) && !mCurrDataAvailabilityArray[last].empty())
+      PlotInterface::TakeGlAction(instanceName,mCurrDataAvailabilityArray[last]);
    PlotInterface::
       UpdateGlPlot(instanceName, mOldName, mCurrScArray[last],
                    mCurrEpochArray[last], mCurrXArray[last], mCurrYArray[last],
@@ -2048,6 +2052,7 @@ bool OrbitView::UpdateSolverData()
    // clear arrays
    mCurrScArray.clear();
    mCurrProviderArray.clear();
+   mCurrDataAvailabilityArray.clear(); mDataAvailabilityContext.clear();
    mCurrArcContextArray.clear(); mCurrSolvingArray.clear();
    mCurrEpochArray.clear();
    mCurrXArray.clear();
