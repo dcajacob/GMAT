@@ -1,0 +1,169 @@
+Create Spacecraft EstSat;
+
+EstSat.DateFormat        = UTCGregorian;
+EstSat.Epoch             = '10 Jun 2014 00:00:00.000';
+EstSat.CoordinateSystem  = EarthMJ2000Eq;
+EstSat.DisplayStateType  = Cartesian;
+EstSat.X                 =  576.8
+EstSat.Y                 = -5701.1
+EstSat.Z                 = -4170.5
+EstSat.VX                = -1.7645
+EstSat.VY                =  4.1813
+EstSat.VZ                = -5.9658
+EstSat.DryMass           = 10;
+EstSat.Cd                = 2.0;
+EstSat.CdSigma           = 0.1;
+EstSat.Cr                = 1.8;
+EstSat.DragArea          = 10;
+EstSat.SRPArea           = 10;
+EstSat.Id                = 'LEOSat';
+EstSat.SolveFors         = {CartesianState};
+
+%
+%   Mission sequence
+%
+
+%
+%   Spacecraft hardware
+%
+
+Create Antenna GpsAntenna;
+Create Receiver GpsReceiver;
+
+GpsReceiver.PrimaryAntenna = GpsAntenna;
+GpsReceiver.Id             = 800;
+GpsReceiver.ErrorModels    = {PosVecModel}
+
+Create ErrorModel PosVecModel;
+ 
+PosVecModel.Type       = 'GPS_PosVec'
+PosVecModel.NoiseSigma = 0.010;
+
+EstSat.AddHardware       = {GpsReceiver, GpsAntenna};
+
+%
+%   Tracking file sets
+%
+
+Create TrackingFileSet EstData;
+
+EstData.FileName = {'/tmp/gmat-help-tutorials/11-gps-filter/isolated-x11-hbp3cwaq/own-original-gps-input.gmd'};
+
+%
+%   Force model
+%
+
+Create ForceModel FM;
+
+FM.CentralBody                       = Earth;
+FM.PrimaryBodies                     = {Earth};
+FM.GravityField.Earth.Degree         = 8;
+FM.GravityField.Earth.Order          = 8;
+FM.GravityField.Earth.PotentialFile  = 'JGM2.cof';
+FM.SRP                               = On;
+FM.Drag.AtmosphereModel              = 'JacchiaRoberts';
+FM.Drag.CSSISpaceWeatherFile         = 'SpaceWeather-All-v1.2.txt'
+FM.Drag.HistoricWeatherSource        = 'CSSISpaceWeatherFile';
+FM.ErrorControl                      = None;
+
+%
+%   Propagator
+%
+
+Create Propagator Prop;
+
+Prop.FM              = FM;
+Prop.Type            = 'RungeKutta89';
+Prop.InitialStepSize = 60;
+Prop.MinStep         = 0;
+Prop.MaxStep         = 60;
+
+%
+%   Estimator
+%
+
+Create ExtendedKalmanFilter EKF;
+
+EKF.ShowProgress         = True;
+EKF.Measurements         = {EstData};
+EKF.Propagator           = Prop;
+EKF.ShowAllResiduals     = On;
+EKF.InputWarmStartFile  = '/tmp/gmat-help-tutorials/11-gps-smoother/isolated-x11-_m6_qw9c/cold-smoother-results/filter.csv';
+EKF.ReportFile           = 'filter.txt';
+EKF.MatlabFile           = 'filter.mat';
+
+%
+%   Process noise model
+%
+
+Create ProcessNoiseModel SNC;
+
+SNC.Type             = 'StateNoiseCompensation';
+SNC.CoordinateSystem = EarthMJ2000Eq;
+SNC.AccelNoiseSigma  = [1.0e-9 1.0e-9 1.0e-9];
+SNC.UpdateTimeStep   = 120.
+
+EstSat.ProcessNoiseModel = SNC;
+
+%
+%   Create the drag solve-for
+%
+
+Create EstimatedParameter FogmCd
+
+FogmCd.Model            = 'FirstOrderGaussMarkov';
+FogmCd.SolveFor         = 'Cd';
+FogmCd.SteadyStateValue = 2.0;
+FogmCd.SteadyStateSigma = 0.05;
+FogmCd.HalfLife         = 864000;
+
+EstSat.SolveFors         = {CartesianState, FogmCd};
+
+%
+%   Smoother
+%
+
+Create Smoother FPS;
+
+FPS.Filter               = EKF;
+FPS.ShowProgress         = True;
+FPS.ShowAllResiduals     = On;
+FPS.ReportFile           = 'smoother.txt';
+FPS.MatlabFile           = 'smoother.mat';
+
+EKF.WarmStartEpochFormat = 'UTCGregorian';
+EKF.WarmStartEpoch = '10 Jun 2014 18:00:00.000';
+%
+%   Create ephemeris files
+%
+
+Create EphemerisFile FilterEphem;
+
+FilterEphem.Spacecraft          = EstSat;
+FilterEphem.Filename            = 'filter.e';
+FilterEphem.FileFormat          = 'STK-TimePosVel';
+FilterEphem.IncludeCovariance   = 'Position';
+FilterEphem.CoordinateSystem    = EarthMJ2000Eq;
+FilterEphem.WriteEphemeris      = False;
+
+Create EphemerisFile SmootherEphem;
+
+SmootherEphem.Spacecraft        = EstSat;
+SmootherEphem.Filename          = 'smoother.e';
+SmootherEphem.FileFormat        = 'STK-TimePosVel';
+SmootherEphem.IncludeCovariance = 'Position';
+SmootherEphem.CoordinateSystem  = EarthMJ2000Eq;
+SmootherEphem.WriteEphemeris    = False;
+
+BeginMissionSequence
+
+EstSat.OrbitErrorCovariance = diag([1e-2 1e-2 1e-2 4e-10 4e-10 4e-10]);
+
+Toggle FilterEphem On;
+RunEstimator EKF;
+Toggle FilterEphem Off;
+
+Toggle SmootherEphem On;
+RunSmoother FPS;
+Toggle SmootherEphem Off;
+

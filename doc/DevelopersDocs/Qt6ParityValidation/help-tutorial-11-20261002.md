@@ -1,0 +1,59 @@
+# Help Tutorial 11 — GPS position-vector filter and smoother
+
+**Passed for bounded private actual-input Help construction**, simulation, cold filter, cold smoother, warm start, covariance/plot inspection, ephemeris and one-day prediction output, Linux console Appendix B, own save/reopen and post-freeze comparison. The Help expressly teaches the script editor for this chapter. MATLAB-dependent analysis and Appendix C `.mat` conditioning remain deferred; no form-based navigation construction, host/physical-GPU or scientific qualification is claimed.
+
+The complete `Tut_FilterSmoother_GpsPosVec.xml` was read first (SHA256 `8a8ac0ff96a1038d527b9bb2129760aea2b745653a65a4fbcb8931dba12aa39b`). Welcome → Tutorials → GPS chapter was opened through the actual GUI. Every construction block was typed line by line into a new blank Qt script editor, or inserted into the independently authored previous stage using visible Find/editor controls. No shipped GPS source was consulted until the final own freeze at **2026-10-02T21:20:41.811444 UTC**. The earlier corpus had exposed related examples; that is disclosed and was not used to seed this construction.
+
+## Independent stages and results
+
+| Help stage | Actual GUI result and independent check |
+| --- | --- |
+| Simulation | 0.602 s; 145 finite GPS_PosVec/type9014/receiver800 observations, three coordinates, 600-second spacing and 86400-second span. Actual own CtrlO/Build and Simulator form readback retain 10–11 Jun 2014/noise On. |
+| Cold EKF | Original 1.269 s; 145/145 accepted, no sigma edits. Final Cd2.19461768, residual standard deviation0.011912 km. The original residual legend had no data; Fit did not restore it. |
+| Affected cold retry after Qt redraw repair | 1.038 s; actual three curves and Export contain 145 points each. The entire warm-start CSV is byte identical to the original, and report differences are only Run Date. No simulation rerun. |
+| Cold Fraser–Potter smoother | 2.033 s; 145/145 accepted, no edits, residual standard deviation0.009509 km. Actual export contains 145 points per component in backward epoch order. Actual Output opens its report. |
+| Warm filter/smoother from 18:00 UTC | 0.775 s; InputWarmStartFile is the own cold-filter CSV, unchanged. 36/36 accepted with no edits; actual smoother export has 36 points per coordinate, covering 18:10–24:00 UTC. Seven final state/sigma fields equal cold-report printed tokens. |
+| Warm ephemerides | Affected retry0.796 s writes two STK-TimePosVel/Position-covariance files, each217 states plus217 covariance rows. Earth/J2000/km; scenario10Jun2014 18:00, final11Jun00:00. Every row finite, matching nondecreasing state/covariance epochs and nonnegative covariance diagonal. Duplicate measurement epochs are declared segment boundaries. |
+| One-day smoother prediction | 1.545 s; filter remains217 rows/21600 s and byte identical to the preceding filter ephemeris; smoother has937 states and covariance rows through108000 s/12Jun00:00. Actual saved source reopen/Build, Mission tree and SmootherEphem form readback succeed. |
+| Appendix B Linux console | Own unchanged final prediction script runs once with `GmatConsole --startup_file <owned clone> --run <absolute own source> --exit`, exits0 in1.343 s. Both complete ephemeris files equal their GUI counterparts byte for byte. Reports equal after normalizing only Run Date and three equivalent absolute/relative data-path prefixes; raw diffs retained. |
+
+The unique18:00 warm CSV row contains seven states and28 lower-triangular square-root covariance elements. Independent `P=L*Ltranspose` reconstruction checks all49 a priori covariance values, all seven states and all seven sigmas against report rounding (maximum0.993943 half printed unit). This verifies reading the supplied warm state/covariance; it does not assert full scientific covariance equivalence. The original CSV has722 finite records/36 columns. Actual filter, smoother and warm plot exports are retained with their direction and counts.
+
+`SpaceWeather-All-v1.2.txt` is the supplied Help dependency; no new weather download or mission input is invented. The Help warm-start prose mentions2020 but its explicit code and all preceding epochs use2014; the code's2014 epoch is followed and disclosed. The tuning section is advisory guidance rather than a further configured mission. The selected runtime has MATLAB disabled, produces no `.mat` files from deprecated MatlabFile settings, and the Help expressly permits skipping its MATLAB analyses. A writer log alone is not counted as a generated file. Appendix C consequently has an explicit deferred dependency, rather than a fabricated result.
+
+## Failures and corrections retained
+
+The original blank residual plots were a Qt redraw-suspension defect, repaired in [focused residual evidence](owned-residual-plot-20261002.md); numerical engine inputs and outputs remain unchanged. Only that affected cold run was repeated. Later stages were new Help-required missions.
+
+The cold-stage harness initially activated the inactive observation document instead of the new script and appended hardware text to it. That malformed20346-byte file is retained. Its original19982-byte prefix matched the frozen simulation observation SHA exactly; restoration and the restored own input copy are recorded before the successful cold run. No reference data or repeated simulation was substituted.
+
+Transient `/tmp` exhaustion was confirmed at31G/100% during the first0.930-s ephemeris attempt, which silently left zero-byte report and ephemeris files despite a completion message. Those files, screenshot failures and environment checkpoint are retained. Space later recovered to23G free from an unidentified external change. Only a byte-verified duplicate Tutorial6 promotion staging tree was removed; no claim is made that its43.5MB accounted for the23G recovery. One justified affected ephemeris retry produced the complete files. No other successful tutorial run was repeated for this environment failure.
+
+Rejected multiline text, wrong helper action key, an out-of-range session duration, early chooser typing and shifted Find/Replace dialog coordinates are retained as harness/operator corrections. No model-setter API, prebuilt reference mission or programmatic widget injection was used to construct the tutorial. Two analysis-only Python syntax corrections and the initial strict-epoch assumption were fixed without repeating missions. The prediction session reached its600-second bound during context compaction and closed by controlled SIGTERM; successful saved/reopened source and form readback precede that cleanup. No normal GUI Quit is claimed for that session.
+
+## Freeze and durable evidence
+
+Complete raw evidence is retained under ignored `build/example-qualification/20261002/help-tutorials/11-gps-filter-smoother`: all four private GUI sessions, console run, intermediate sources, original failures, complete observations/CSV/reports/ephemerides/exports, Help and post-freeze references/comparison. The pre-reference freeze indexes201 files/26,918,997 bytes. The durable artifact index hashes every copied raw file. Selected PNGs are unchanged originals.
+
+| Frozen authored asset | Bytes | SHA256 |
+| --- | ---: | --- |
+| [simulate-authored.script](help-tutorial-11-simulate-authored-20261002.script) | 2396 | `90c1b36fb266c9f01d8d3b4b8d4a7f72dc963e0d8186ccc752157cc3382ad42a` |
+| [cold-filter-authored.script](help-tutorial-11-cold-filter-authored-20261002.script) | 2974 | `e8f67271d19b8203c5dd7d1e3b7d8b16c84602bffd1e32647d6d7370cb578a75` |
+| [cold-smoother-authored.script](help-tutorial-11-cold-smoother-authored-20261002.script) | 3215 | `8ed6595d1a360801aaceb07e314556a267a6ae828194f629cf72dbf3017e867f` |
+| [warm-smoother-authored.script](help-tutorial-11-warm-smoother-authored-20261002.script) | 3391 | `9a32140c758d1596c0a9ce001366bdb70711e9841357bcae4c1a2995729526d7` |
+| [warm-ephemeris-authored.script](help-tutorial-11-warm-ephemeris-authored-20261002.script) | 4150 | `7b35bb6edb6d6c6c0485510843ed8652c9d4f570d9704ff72fc618887cd48abc` |
+| [prediction-authored.script](help-tutorial-11-prediction-authored-20261002.script) | 4179 | `20c0199b985c182d9992a0cbc2fe56f02a7396739df1fc2ca8e27141dae8c8e1` |
+| [authored-observations.gmd](help-tutorial-11-authored-observations-20261002.gmd) | 19982 | `fb5c470de460a48071beaeb47f325be6d19052e6c65752f3509dd5b968d82404` |
+| [authored-warm-start.csv](help-tutorial-11-authored-warm-start-20261002.csv) | 609538 | `8f78725bcdc432fb3706ad23e396729d5e93bb1459a138b06700ea0f740de112` |
+
+Frozen source paths still point to their original owned `/tmp` observation and warm-input locations. Replaying after those paths disappear requires retargeting inputs to retained copies; that adjustment is not part of the frozen artifacts or another execution claim. The simulation original GMD and restored cold input both hash `fb5c470d...`; the cold CSV hashes `8f78725b...` and remains identical through all warm runs.
+
+Selected actual views: [Help](help-tutorial-11-help-20261002.png), [Simulator settings](help-tutorial-11-simulation-settings-20261002.png), [original blank plot](help-tutorial-11-original-blank-residuals-20261002.png), [repaired cold filter](help-tutorial-11-repaired-filter-residuals-20261002.png), [cold smoother](help-tutorial-11-smoother-residuals-20261002.png), [warm smoother](help-tutorial-11-warm-start-residuals-20261002.png), [ephemeris viewer](help-tutorial-11-ephemeris-output-20261002.png), [prediction](help-tutorial-11-prediction-result-20261002.png), [own reopened Mission](help-tutorial-11-prediction-reopened-20261002.png), [ephemeris form readback](help-tutorial-11-ephemeris-form-readback-20261002.png).
+
+## Post-freeze comparison and bounded runtime
+
+No exact shipped Tutorial11 mission exists. The related `Navigation/Ex_FilterSmoother_GpsPosVec.script` is6371 bytes/SHA5092eba2...:68 shared explicit properties match and18 differ, including2010 vs2014 epoch,50 vs10kg, initial Cd/sigma/covariance, VNB vsEarthMJ2000Eq process noise, FOGM settings, residual visibility and owned filenames. It also seeds and runs its simulation in the same mission, has an extra Cd report and lacks the Help warm/prediction stages. These are distinct published demonstrations; no unsupported assumption about omitted defaults or numerical equality is made. The5216-byte/SHA6a2fe690... `Ex_Simulate_and_Process_GpsPosVec_data.script` is a different2010 spacecraft batch-estimator example, rather than an EKF/smoother reference (21 matching/31 differing shared explicit properties).
+
+Both current reference source hashes match the earlier corpus manifest, which records successful0.419-s builds and3.328/1.373-s runs on earlier offscreen app4522c731... . That evidence is reused with its limits; no noisy reference mission or old corpus/suite was unnecessarily repeated. The independent chapter follows the Help's explicit configuration and required stages rather than being changed to match either related sample. No source repair is warranted from those differences.
+
+Simulation uses appef933221..., original cold filter e5337acd..., repaired filter and subsequent GUI stages b8074b02.... Controlled base `cf147e23...`, util `1e4e7fe6...`, selected startup `5f80be1f...` and private input helper `4232bdb0...` are unchanged. Appendix B uses newly built console `f80e6629...`; the unrelated Bulirsch value-copy correction plugin `04726589...` is present only after all GUI sessions close and is unused by this RK89 mission. Each startup clone changes OUTPUT_PATH only. Three GUI sessions have actual AltF4/0/0/0 app/WM/Xvfb exits; the final prediction session has app−15/WM0/Xvfb0 bounded cleanup. Console exits0. These are private authenticated X11/softwareGL and headless-console results; host GNOME/Wayland/physical-GPU/crash, broader scientific and full replacement acceptance remain open. Windows/macOS/MATLAB remain deferred.

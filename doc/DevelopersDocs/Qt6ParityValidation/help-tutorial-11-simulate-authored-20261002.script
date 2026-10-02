@@ -1,0 +1,100 @@
+%
+%   Spacecraft
+%
+
+Create Spacecraft SimSat;
+
+SimSat.DateFormat        = UTCGregorian;
+SimSat.Epoch             = '10 Jun 2014 00:00:00.000';
+SimSat.CoordinateSystem  = EarthMJ2000Eq;
+SimSat.DisplayStateType  = Cartesian;
+SimSat.X                 = 576.869556
+SimSat.Y                 = -5701.142761
+SimSat.Z                 = -4170.593691
+SimSat.VX                = -1.76450794
+SimSat.VY                = 4.18128798
+SimSat.VZ                = -5.96578986
+SimSat.DryMass           = 10;
+SimSat.Cd                = 2.2;
+SimSat.Cr                = 1.8;
+SimSat.DragArea          = 10;
+SimSat.SRPArea           = 10;
+SimSat.Id                = 'LEOSat';
+
+%
+%   Mission sequence
+%
+
+%
+%   Spacecraft hardware
+%
+
+Create Antenna GpsAntenna;
+Create Receiver GpsReceiver;
+
+GpsReceiver.PrimaryAntenna = GpsAntenna;
+GpsReceiver.Id             = 800;
+GpsReceiver.ErrorModels    = {PosVecModel}
+
+Create ErrorModel PosVecModel;
+ 
+PosVecModel.Type       = 'GPS_PosVec'
+PosVecModel.NoiseSigma = 0.010;
+
+SimSat.AddHardware       = {GpsReceiver, GpsAntenna};
+
+%
+%   Tracking file sets
+%
+
+Create TrackingFileSet SimData;
+
+SimData.AddTrackingConfig = {{SimSat.GpsReceiver}, 'GPS_PosVec'};
+SimData.FileName          = {'/tmp/gmat-help-tutorials/11-gps-simulation/isolated-x11-alhfctnj/gps_posvec.gmd'};
+
+%
+%   Force model
+%
+
+Create ForceModel FM;
+
+FM.CentralBody                       = Earth;
+FM.PrimaryBodies                     = {Earth};
+FM.GravityField.Earth.Degree         = 8;
+FM.GravityField.Earth.Order          = 8;
+FM.GravityField.Earth.PotentialFile  = 'JGM2.cof';
+FM.SRP                               = On;
+FM.Drag.AtmosphereModel              = 'JacchiaRoberts';
+FM.Drag.CSSISpaceWeatherFile         = 'SpaceWeather-All-v1.2.txt'
+FM.Drag.HistoricWeatherSource        = 'CSSISpaceWeatherFile';
+FM.ErrorControl                      = None;
+
+%
+%   Propagator
+%
+
+Create Propagator Prop;
+
+Prop.FM              = FM;
+Prop.Type            = 'RungeKutta89';
+Prop.InitialStepSize = 60;
+Prop.MinStep         = 0;
+Prop.MaxStep         = 60;
+
+%
+%    Simulator
+%
+
+Create Simulator Sim;
+
+Sim.AddData              = {SimData};
+Sim.EpochFormat          = 'UTCGregorian';
+Sim.InitialEpoch         = '10 Jun 2014 00:00:00.000';
+Sim.FinalEpoch           = '11 Jun 2014 00:00:00.000'; 
+Sim.MeasurementTimeStep  = 600;
+Sim.Propagator           = Prop;
+Sim.AddNoise             = On;
+
+BeginMissionSequence
+
+RunSimulator Sim;

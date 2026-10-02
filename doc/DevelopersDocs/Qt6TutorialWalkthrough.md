@@ -9,7 +9,7 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Tutorials 1–9 are Passed for bounded private actual-input construction.** See
+**Tutorials 1–11 are Passed for bounded private actual-input construction.** See
 [Tutorial 1](Qt6ParityValidation/help-tutorial-01-20261002.md),
 [Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md),
 [Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md),
@@ -18,7 +18,9 @@ requirements. Windows, macOS and MATLAB remain deferred.
 [Tutorial 6](Qt6ParityValidation/help-tutorial-06-20261002.md),
 [Tutorial 7](Qt6ParityValidation/help-tutorial-07-20261002.md) and
 [Tutorial 8](Qt6ParityValidation/help-tutorial-08-20261002.md) and
-[Tutorial 9](Qt6ParityValidation/help-tutorial-09-20261002.md). Each includes
+[Tutorial 9](Qt6ParityValidation/help-tutorial-09-20261002.md),
+[Tutorial 10](Qt6ParityValidation/help-tutorial-10-20261002.md) and
+[Tutorial 11](Qt6ParityValidation/help-tutorial-11-20261002.md). Each includes
 independent Help-driven construction, execution and result checks, save/reopen,
 and comparison after freezing the authored mission. Tutorial 4 covers resource
 and command forms, B-plane targeting and Mars capture. Its resource fixes have
@@ -27,10 +29,11 @@ Tutorial 5 covers all five Help-taught code-editor stages. Its original Step 5
 sample reproduced a line-search failure; appending a nominal Stage 4 starting
 guess preserves its physics and constraints and passes one changed-reference GUI
 verification. The frozen own construction preceded all new reference access.
-Tutorials 10–12 are In progress: DSN estimation, GPS filter/smoother and
-inter-spacecraft tracking. All three exposed a shared residual-plot data-loss
-defect; independent construction and reports are retained while its Qt repair
-is verified. Tutorial 6 completes functions, Global sharing and Mars capture. Tutorial 8 independently passed electric hardware/finite-burn forms
+Tutorials 10–11 complete DSN/GN estimation and GPS simulation/filter/smoother,
+warm start, covariance/plots, ephemeris/prediction and Linux console workflows.
+The shared residual-plot data-loss repair is verified through the affected
+actual GUI stages. Tutorial 12 remains In progress while its frozen original
+walkthrough and corrected reference frame evidence are finalized. Tutorial 6 completes functions, Global sharing and Mars capture. Tutorial 8 independently passed electric hardware/finite-burn forms
 and matched the corrected reference summary. Tutorial 7 completes its core
 eclipse/contact workflow, with optional exercises and GUI LSK management
 unclaimed. The earlier shipped-script corpus
@@ -41,9 +44,9 @@ authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
 It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. Tutorials 1–9 used that bounded route through
+for interactive construction. Tutorials 1–11 used that bounded route through
 actual Help/resource/mission controls or the expressly Help-taught code editor,
-with separate per-chapter evidence. Tutorials 10–12 continue independently.
+with separate per-chapter evidence. Tutorial 12 evidence continues independently.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -93,8 +96,8 @@ or links against the source. Reading an inventory is not a completed tutorial.
 
 ## Published tutorial sequence
 
-Tutorials 1–5 and 7–9 are **Passed** with the bounded evidence linked below;
-tutorials 6, 10 and 11 are **In progress**, and 12 remains **Pending**. Numbering follows
+Tutorials 1–11 are **Passed** with the bounded evidence linked below;
+tutorial 12 is **In progress**. Numbering follows
 the Tutorials part of the Help.
 
 | # | Chapter source and title | Prerequisites and staged coverage |
@@ -109,7 +112,7 @@ the Tutorials part of the Help.
 | 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-08-20261002.md). Independent electric hardware/attachment and named finite-burn forms, two-day run, spiral/fuel inspection, exported summary and own save/reopen/freeze. Two stale reference settings repaired; one changed-reference run yields complete propagation-summary equality. Tutorial 1; tutorial 3 referenced for targeting. |
 | 9 | `Tut_Simulate_DSN_Range_and_Doppler_Data.xml` — Simulate DSN Range and Doppler Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-09-20261002.md). Independent empty script-editor Help stages, four-observation short run, three-station/ramp/noisy 21-day run with 1348 paired observations, own save/reopen/freeze and post-freeze source/settings comparison using earlier source-matched corpus evidence. Full own observations retained for Tutorial10; stochastic/scientific equality unclaimed. Basic Mission Design Tutorials. |
 | 10 | `Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml` — Orbit Estimation using DSN Range and Doppler Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-10-20261002.md). Independent Help script-editor DSN estimate with own Tutorial9 observations, repaired six residual plots and report-filtered209-point export; mandatory own GN simulation/three-iteration estimate, six plots/209-point export, preserved storage failure and one justified retry. All own save/reopen/freeze and post-freeze source-matched comparison; GN truth accuracy/scientific equality/MATLAB analysis limits explicit. |
-| 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | **In progress** — independent actual-editor simulation and cold Extended Kalman Filter complete, with 145/145 GPS_PosVec measurements accepted and own save/reopen/input hashes retained. Required residual plots exposed shared Qt data loss; repaired-plot retry, smoother, warm start and ephemeris/prediction/console appendices remain. MATLAB-dependent analysis is explicitly skippable when MATLAB is unavailable. |
+| 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-11-20261002.md). Independent Help editor simulation, cold filter/smoother, repaired residual plots, 18:00 warm state/covariance readback, ephemeris and one-day prediction, Linux GmatConsole Appendix B with complete GUI/console ephemeris equality, own save/reopen/freeze and post-freeze comparison to distinct related examples. Storage/harness failures and bounded cleanup retained; MATLAB-dependent analysis/conditioning explicitly deferred. |
 | 12 | `Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml` — Simulate and Estimate Inter-Spacecraft Tracking | **In progress** — literal Help construction, simulator/estimator execution and actual save/reopen complete; 1613 records used over three iterations. Required residual plots exposed shared Qt data loss. Exact authored inputs remain unchanged pending repaired-plot verification and final freeze before comparison. |
 
 Chapters 9, 10 and 12 describe legacy script-only navigation workflows. Chapter 5
@@ -144,6 +147,6 @@ chapters do not satisfy the new interactive acceptance requirement.
 
 For each actual walkthrough, add a per-chapter record under
 `doc/DevelopersDocs/Qt6ParityValidation` and link it here. Preserve raw artifacts
-in the ignored qualification artifact tree. Tutorials 1–5 and 7–9 have completed
-records linked above; Tutorials 6, 9 and 11 are in progress and remaining chapters
-require their own independent evidence.
+in the ignored qualification artifact tree. Tutorials 1–11 have completed
+records linked above; Tutorial 12 and additional source chapters require their
+own independent evidence or applicable dependency/availability disposition.

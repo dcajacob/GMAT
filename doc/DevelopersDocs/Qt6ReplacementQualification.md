@@ -8433,3 +8433,25 @@ observations,text/PNG exports and11 unchangedPNGs accompany the record.
 Appb8074b02... retains basecf147e23.../startup5f80be1f... . MATLAB-dependent
 analysis,full scientific/host/Wayland/hardware/crash and remainingtutorial
 gates stay separate; Windows/macOS deferred; no old matrix/corpus repeated.
+
+
+## GPS filter/smoother Help walkthrough passed — 2026-10-02
+
+[Tutorial 11](Qt6ParityValidation/help-tutorial-11-20261002.md) completes bounded
+private actual-input construction of simulation, cold filter/smoother, warm
+start, residual/covariance inspection, two ephemerides, one-day prediction and
+Linux console Appendix B. Own source/readback and 201-file freeze at
+21:20:41.811444 UTC precede any related sample access. The affected plot retry
+retains the original CSV byte for byte. All 49 warm a priori covariance values
+match report rounding; 145 cold and 36 warm observations are accepted.
+
+The prediction writes 217 filter and 937 smoother state/covariance rows; the
+one Linux GmatConsole run exits0 in1.343 s and reproduces both ephemerides byte
+for byte. Reports match after Run Date and three equivalent path prefixes
+normalize. Original storage-exhaustion zero-byte files, harness mistakes,
+all stages/actions and controlled final app−15 cleanup are retained. Related
+2010 GPS examples differ deliberately; source-matched earlier corpus results
+are reused without noisy reference reruns. Appb807/corecf147/startup5f80 remain
+bounded private evidence; new consolef80e and unused corrected Bulirsch0472
+identities are recorded. MATLAB analysis/conditioning, host/hardware/crash and
+full replacement gates remain open. No old suite/corpus was repeated.
