@@ -32,6 +32,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    ExternalForceDialog.cpp ExternalForceDialog.hpp
    PolyhedronDialog.cpp PolyhedronDialog.hpp
    GroundStationDialog.cpp GroundStationDialog.hpp
+   RegionDialog.cpp RegionDialog.hpp
    EventLocatorDialog.cpp EventLocatorDialog.hpp
    XYPlotDialog.cpp XYPlotDialog.hpp
    GroundTrackDialog.cpp GroundTrackDialog.hpp
@@ -247,6 +248,9 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(GmatQtMarsGravityTests GmatQt)
    add_executable(GmatQtStationTests tests/StationTests.cpp)
    target_link_libraries(GmatQtStationTests PRIVATE GmatQtFrontend)
+   add_executable(GmatQtRegionTests tests/RegionWorkflowTests.cpp)
+   target_link_libraries(GmatQtRegionTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtRegionTests GmatQt)
    add_executable(GmatQtEventLocatorTests tests/EventLocatorTests.cpp)
    target_link_libraries(GmatQtEventLocatorTests PRIVATE GmatQtFrontend)
    add_executable(GmatQtEventLocatorCreationTests tests/EventLocatorCreationTests.cpp)
@@ -469,6 +473,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.GravityBodies GmatQtGravityBodyTests "${qt_test_startup}")
    add_qt_test(QtGui.MarsGravity GmatQtMarsGravityTests "${qt_test_startup}")
    add_qt_test(QtGui.Stations GmatQtStationTests "${qt_test_startup}")
+   add_qt_test(QtGui.Region GmatQtRegionTests "${qt_test_startup}")
    add_qt_test(QtGui.EventLocators GmatQtEventLocatorTests "${qt_test_startup}")
    add_qt_test(QtGui.EventLocatorCreation GmatQtEventLocatorCreationTests "${qt_test_startup}")
    add_qt_test(QtGui.OwnedPlotBatch GmatQtOwnedPlotBatchTests "${qt_test_startup}")
@@ -562,7 +567,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtKalmanTests GmatQtInspectionTests GmatQtParameterTests GmatQtPathTests GmatQtSolarSystemTests GmatQtCelestialBodyTests)
    add_dependencies(check-qt GmatQtCovarianceTests GmatQtForceSourceTests GmatQtForceSelectorTests GmatQtGravityBodyTests)
    add_dependencies(check-qt GmatQtMarsGravityTests)
-   add_dependencies(check-qt GmatQtEventLocatorCreationTests)
+   add_dependencies(check-qt GmatQtEventLocatorCreationTests GmatQtRegionTests)
    add_dependencies(check-qt GmatQtOwnedPlotBatchTests)
    add_dependencies(check-qt GmatQtBulirschControlsTests)
    add_dependencies(check-qt GmatQtPropagationColorTests)

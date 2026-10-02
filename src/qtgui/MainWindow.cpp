@@ -280,7 +280,7 @@ QString orderPropagatorType(const QString &source,const QString &name,const QStr
 QStringList creatableResourceTypes()
 {
    QStringList result;
-   for (const auto category : {Gmat::SPACECRAFT,Gmat::FORMATION,Gmat::SPACE_POINT,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
+   for (const auto category : {Gmat::SPACECRAFT,Gmat::FORMATION,Gmat::SPACE_POINT,Gmat::REGION,Gmat::HARDWARE,Gmat::BURN,Gmat::PROP_SETUP,
          Gmat::ODE_MODEL,Gmat::COORDINATE_SYSTEM,Gmat::SOLVER,Gmat::SUBSCRIBER,Gmat::FUNCTION,Gmat::EVENT_LOCATOR,
          Gmat::CALCULATED_POINT,Gmat::CELESTIAL_BODY,Gmat::MEASUREMENT_MODEL,Gmat::ERROR_MODEL,Gmat::INTERFACE,Gmat::DATA_FILTER,Gmat::FIELD_OF_VIEW})
       for (const auto &type : Moderator::Instance()->GetListOfViewableItems(category))
@@ -1190,6 +1190,7 @@ void MainWindow::refreshTrees()
    std::vector<std::pair<const char *, UnsignedInt>> groups = {
       {"Spacecraft", Gmat::SPACECRAFT}, {"Hardware", Gmat::HARDWARE},
       {"Formations", Gmat::FORMATION}, {"Ground Stations", Gmat::GROUND_STATION},
+      {"Regions", Gmat::REGION},
       {"Propagators", Gmat::PROP_SETUP}, {"Burns", Gmat::BURN},
       {"Force Models", Gmat::ODE_MODEL},
       {"Coordinate Systems", Gmat::COORDINATE_SYSTEM}, {"Solvers", Gmat::SOLVER},
@@ -1699,6 +1700,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       const auto attitudeChanges=applyAttitudeProperties(*proposed,changes);
       const auto gravityChanges=applyGravityBodyProperties(*proposed,changes);
       const auto tankChanges=applyChemicalTankProperties(*proposed,changes);
+      const auto regionChanges=applyRegionProperties(*proposed,changes);
       const auto atmosphereChanges=applyAtmosphereProperties(*proposed,changes);
       const auto stationChanges=applyGroundStationLocation(*proposed,changes);
       const auto eventChanges=applyEventLocatorProperties(*proposed,changes);
@@ -1710,7 +1712,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       const QString modelField=proposed->IsOfType("ProcessNoiseModel") ? "Type" : proposed->IsOfType("EstimatedParameter") ? "Model" : QString();
       if (!modelField.isEmpty() && changes.contains(modelField)) setResourceProperty(*proposed,modelField,changes.value(modelField));
       for (auto it = changes.cbegin(); it != changes.cend(); ++it) {
-         if (propChanges.contains(it.key()) || orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || tankChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || objectDrawingKeys.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
+         if (propChanges.contains(it.key()) || orbitChanges.contains(it.key()) || attitudeChanges.contains(it.key()) || gravityChanges.contains(it.key()) || tankChanges.contains(it.key()) || regionChanges.contains(it.key()) || atmosphereChanges.contains(it.key()) || stationChanges.contains(it.key()) || eventChanges.contains(it.key()) || viewChanges.contains(it.key()) || burnChanges.contains(it.key()) || ephemerisChanges.contains(it.key()) || objectDrawingKeys.contains(it.key()) || it.key()=="@ArrayExpressions" || it.key()=="@DynamicData" || it.key()=="@TrackingConfigs" || it.key().startsWith("@ExternalForce.") || it.key()=="@PolyhedronForces" || (pairedMixture && it.key()=="MixRatio")) continue;
          if (intervalChanges.contains(it.key()) || warmChanges.contains(it.key()) || it.key()==modelField || isResourceList(*proposed,it.key())) continue;
          try { setResourceProperty(*proposed, it.key(), it.value()); }
          catch (BaseException &error) { return it.key() + ": " + QString::fromStdString(error.GetFullMessage()); }
@@ -1749,6 +1751,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
          return applyModelScript(setConfigurationBlock(expectedScript,name,changes.keys(),block,firstCommand));
       }
       auto serialize=[](GmatBase &resource) {
+         if (resource.IsOfType("PlanetographicRegion")) return regionResourceScript(resource);
          if (!resource.IsOfType(Gmat::PROP_SETUP)) return QString::fromStdString(resource.GetGeneratingString(Gmat::SCRIPTING));
          // The full script writes force models in their own section. Match that
          // convention without changing the configured object's output flags.
@@ -1760,7 +1763,7 @@ QString MainWindow::applyResourceSettings(GmatBase &resource,const QMap<QString,
       const auto oldBlock = omitUnsetHardwareFovs(snapshot(*object),object);
       auto newBlock = snapshot(*proposed);
       for (auto it=changes.cbegin();it!=changes.cend();++it)
-         if (!objectDrawingKeys.contains(it.key()) && it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
+         if (!objectDrawingKeys.contains(it.key()) && it.key()!="@ArrayExpressions" && it.key()!="@DynamicData" && it.key()!="@TrackingConfigs" && !it.key().startsWith("@ExternalForce.") && it.key()!="@PolyhedronForces" && !orbitChanges.contains(it.key()) && !regionChanges.contains(it.key()) && !atmosphereChanges.contains(it.key()) && !eventChanges.contains(it.key()) && !viewChanges.contains(it.key()) && !burnChanges.contains(it.key()) && isResourceList(*proposed,it.key())) newBlock=replaceResourceList(*proposed,newBlock,it.key(),it.value(),pairedMixture && it.key()=="Tank" ? &mixture : nullptr);
       if (changes.contains("@TrackingConfigs")) newBlock=replaceTrackingConfigurations(*proposed,newBlock,changes.value("@TrackingConfigs"));
       if (changes.contains("FieldOfView") && object->IsOfType("Imager")) {
          // Imager's getter can still read the clone's old FOV pointer after
@@ -1890,6 +1893,10 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
    const auto dimensions=type=="Array" ? QString("[%1,%2]").arg(rows).arg(columns) : QString();
    QString initializer,forceModelDeclaration;
    auto changes=settings;
+   // Untouched creation forms omit original values. Region has no valid empty
+   // geometry; retain its input mode so the pending helper validates it before
+   // the generic empty-change fast paths can register a blank resource.
+   if (type=="PlanetographicRegion" && changes.isEmpty()) changes.insert("@RegionSource","Vertices");
    if (type=="PropSetup") {
       try {
          const auto selectedType=settings.value("Type","RungeKutta89");
@@ -1948,7 +1955,7 @@ QString MainWindow::createResource(const QString &type,const QString &name,const
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
    }
    const auto source=forceModelDeclaration+"Create "+type+" "+name+dimensions+";\n"+initializer+builtScript;
-   if (!changes.isEmpty() && type!="Variable" && type!="String" && type!="GmatFunction") {
+   if ((!changes.isEmpty() || type=="PlanetographicRegion") && type!="Variable" && type!="String" && type!="GmatFunction") {
       try { auto draft=resourceDraft(type,name); return applyResourceSettings(*draft,changes,source); }
       catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
       catch (const std::exception &error) { return QString::fromUtf8(error.what()); }

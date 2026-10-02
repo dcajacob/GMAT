@@ -34,6 +34,8 @@ QSet<QString> applyGravityBodyProperties(GmatBase &object,const QMap<QString,QSt
 // Applies coupled configuration fields on a detached pending clone only.
 QSet<QString> applyChemicalTankProperties(GmatBase &object,const QMap<QString,QString> &values);
 QSet<QString> applyPropSetupProperties(GmatBase &object,const QMap<QString,QString> &values);
+QSet<QString> applyRegionProperties(GmatBase &object,const QMap<QString,QString> &values);
+QString regionResourceScript(GmatBase &object);
 QStringList splitResourceReferences(const QString &value);
 bool isResourceFileList(GmatBase &object, const QString &name);
 bool isResourceList(GmatBase &object, const QString &name);

@@ -4,6 +4,7 @@
 #include "ThrusterDialog.hpp"
 #include "BurnDialog.hpp"
 #include "GroundStationDialog.hpp"
+#include "RegionDialog.hpp"
 #include "OrbitViewDialog.hpp"
 #include "GroundTrackDialog.hpp"
 #include "XYPlotDialog.hpp"
@@ -35,6 +36,8 @@ ResourceForm::ResourceForm(GmatBase &object,QWidget *parent) : QWidget(parent)
       auto *form=new ThrusterDialog(object,{},this); add("Direction and performance",form,[form] { return form->settings(); });
    } else if (object.IsOfType("ImpulsiveBurn")) {
       auto *form=new BurnDialog(object,{},this); add("Burn",form,[form] { return form->settings(); });
+   } else if (object.IsOfType("PlanetographicRegion")) {
+      auto *form=new RegionDialog(object,this); add("Region",form,[form] { return form->settings(); });
    } else if (object.IsOfType("GroundStation")) {
       auto *form=new GroundStationDialog(object,{},this); add("Station",form,[form] { return form->settings(); });
    } else if (type=="OrbitView") {

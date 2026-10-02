@@ -71,6 +71,17 @@ QSet<QString> applyEventLocatorProperties(GmatBase &object,const QMap<QString,QS
       }
       consumed.insert(name);
    }
+   if (object.IsOfType("ContactLocator") && !values.isEmpty()) {
+      auto *target=Moderator::Instance()->GetConfiguredObject(object.GetStringParameter("Target"));
+      const bool regionTarget=target && target->IsOfType(Gmat::REGION);
+      const auto observers=object.GetStringArrayParameter("Observers");
+      if (regionTarget && observers.size()!=1) throw std::runtime_error("Select exactly one spacecraft observer for a planetographic region.");
+      for (const auto &name:observers) {
+         auto *observer=Moderator::Instance()->GetConfiguredObject(name);
+         if (!observer || (regionTarget ? !observer->IsOfType("Spacecraft") : (!observer->IsOfType("GroundStation") && !observer->IsOfType("Spacecraft"))))
+            throw std::runtime_error(regionTarget ? "A planetographic region requires one spacecraft observer." : "Select an available ground station or spacecraft observer.");
+      }
+   }
    if (!object.GetBooleanParameter("UseEntireInterval")) {
       const auto format=QString::fromStdString(object.GetStringParameter("InputEpochFormat"));
       const auto start=epochMjd(format,QString::fromStdString(object.GetStringParameter("InitialEpoch")));
@@ -166,9 +177,11 @@ EventLocatorDialog::EventLocatorDialog(GmatBase &object,const QMap<QString,QStri
       auto *list=lists.value("Observers"); QStringList selected;
       for (int i=0;i<list->count();++i) if (list->item(i)->checkState()==Qt::Checked) selected.append(list->item(i)->text());
       list->clear();
+      auto *configuredTarget=Moderator::Instance()->GetConfiguredObject(target.toStdString());
+      const bool regionTarget=configuredTarget && configuredTarget->IsOfType(Gmat::REGION);
       for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACE_POINT)) {
          const auto entry=QString::fromStdString(name); auto *observer=Moderator::Instance()->GetConfiguredObject(name);
-         if (entry==target || !observer || (!observer->IsOfType("GroundStation") && !observer->IsOfType("Spacecraft"))) continue;
+         if (entry==target || !observer || (regionTarget ? !observer->IsOfType("Spacecraft") : (!observer->IsOfType("GroundStation") && !observer->IsOfType("Spacecraft")))) continue;
          auto *item=new QListWidgetItem(entry,list); item->setFlags(item->flags()|Qt::ItemIsUserCheckable); item->setCheckState(selected.contains(entry) ? Qt::Checked : Qt::Unchecked);
       }
    });

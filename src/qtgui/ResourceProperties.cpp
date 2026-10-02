@@ -21,6 +21,8 @@
 #include "PropSetup.hpp"
 #include "Propagator.hpp"
 #include "ODEModel.hpp"
+#include "PlanetographicRegion.hpp"
+#include "BodyFixedPoint.hpp"
 #include "AxisSystem.hpp"
 #include "CoordinateSystem.hpp"
 #include "CalculatedPoint.hpp"
@@ -76,6 +78,89 @@ GmatBase *forcePropertyOwner(GmatBase &object,const QString &name,QString &leaf)
    }
    return nullptr;
 }
+}
+
+QSet<QString> applyRegionProperties(GmatBase &object,const QMap<QString,QString> &values)
+{
+   auto *region=dynamic_cast<PlanetographicRegion *>(&object);
+   if (!region) return {};
+   const QSet<QString> consumed{"@RegionSource","CentralBody","Latitude","Longitude","AreaFileName"};
+   const auto body=values.value("CentralBody",QString::fromStdString(region->GetStringParameter("CentralBody")));
+   if (body!="Earth") throw std::runtime_error("Planetographic region contact location currently supports Earth only.");
+   const auto filename=values.value("AreaFileName",QString::fromStdString(region->GetStringParameter("AreaFileName"))).trimmed();
+   const auto mode=values.value("@RegionSource",filename.isEmpty() ? "Vertices" : "File");
+   if (mode!="Vertices" && mode!="File") throw std::runtime_error("Choose vertices or an area file for the region.");
+   PlanetographicRegion replacement(region->GetName());
+   // Copy only base settings/context: Region's existing indexed setters append
+   // and its assignment does not clear the derived vertex cache. Reconstruct on
+   // a fresh object rather than appending to an initialized polygon.
+   static_cast<BodyFixedPoint &>(replacement)=static_cast<const BodyFixedPoint &>(*region);
+   replacement.SetStringParameter("CentralBody",body.toStdString());
+   replacement.SetSolarSystem(Moderator::Instance()->GetSolarSystemInUse());
+   if (mode=="File") {
+      if (filename.isEmpty()) throw std::runtime_error("Choose a readable region area file.");
+      for (const auto &field:QStringList{"Latitude","Longitude"})
+         if (values.contains(field) && !values.value(field).trimmed().isEmpty())
+            throw std::runtime_error("Choose an area file or vertices; do not define both.");
+      const auto resolved=QString::fromStdString(GmatFileUtil::FindFile(filename.toStdString()));
+      if (!QFileInfo(resolved).isFile() || !QFileInfo(resolved).isReadable()) throw std::runtime_error("Choose a readable region area file.");
+      replacement.SetStringParameter("AreaFileName",filename.toStdString());
+   } else {
+      if (!filename.isEmpty() && (values.contains("AreaFileName") || !values.contains("@RegionSource"))) throw std::runtime_error("Clear the area file before defining vertices.");
+      const auto numbers=[&](const QString &field) {
+         QString input;
+         if (values.contains(field)) input=values.value(field).trimmed();
+         else {
+            const Rvector existing=region->GetRvectorParameter(field.toStdString()); QStringList cells;
+            for (int i=0;i<existing.GetSize();++i) cells.append(QString::number(existing[i],'g',17));
+            input=cells.join(' ');
+         }
+         if (input.startsWith('[') && input.endsWith(']')) input=input.mid(1,input.size()-2).trimmed();
+         const auto cells=input.split(QRegularExpression("[\\s,]+"),Qt::SkipEmptyParts);
+         if (cells.size()<3 || cells.size()>100000) throw std::runtime_error("Enter between 3 and 100000 paired region vertices.");
+         QVector<double> result;
+         for (const auto &cell:cells) {
+            bool valid=false; const auto number=cell.toDouble(&valid);
+            if (!valid || !std::isfinite(number)) throw std::runtime_error("Every vertex needs a finite latitude and longitude.");
+            result.append(number);
+         }
+         return result;
+      };
+      const auto latitude=numbers("Latitude"),longitude=numbers("Longitude");
+      if (latitude.size()!=longitude.size()) throw std::runtime_error("Each region latitude needs a paired longitude.");
+      for (int i=0;i<latitude.size();++i) {
+         replacement.SetRealParameter(replacement.GetParameterID("Latitude"),latitude[i],i);
+         replacement.SetRealParameter(replacement.GetParameterID("Longitude"),longitude[i],i);
+      }
+   }
+   // Invoke the existing polygon/file and body validation before any pending
+   // owner is changed. No event search or numerical propagation occurs here.
+   replacement.Initialize();
+   // Frontend callers pass a detached Clone; its Region vertex cache is empty.
+   *region=replacement;
+   return consumed;
+}
+
+QString regionResourceScript(GmatBase &object)
+{
+   auto result=QString::fromStdString(object.GetGeneratingString(Gmat::SCRIPTING));
+   if (!object.IsOfType("PlanetographicRegion")) return result;
+   const auto name=QString::fromStdString(object.GetName());
+   // File-backed initialization fills the coordinate lists for computation.
+   // Persist the chosen input mode, not those derived lists alongside the file.
+   const QRegularExpression fields("^[ \\t]*(?:GMAT[ \\t]+)?"+QRegularExpression::escape(name)+
+      "\\.(?:Latitude|Longitude|AreaFileName)[ \\t]*=[^\\r\\n]*;[^\\r\\n]*(?:\\r?\\n|$)",QRegularExpression::MultilineOption);
+   result.remove(fields);
+   if (!result.endsWith('\n')) result+='\n';
+   auto file=QString::fromStdString(object.GetStringParameter("AreaFileName"));
+   if (!file.isEmpty()) {
+      file.replace("'","''"); result+="GMAT "+name+".AreaFileName = '"+file+"';\n";
+   } else for (const auto &field:QStringList{"Latitude","Longitude"}) {
+      const Rvector vector=object.GetRvectorParameter(field.toStdString()); QStringList cells;
+      for (int i=0;i<vector.GetSize();++i) cells.append(QString::number(vector[i],'g',17));
+      if (!cells.isEmpty()) result+="GMAT "+name+"."+field+" = ["+cells.join(' ')+"];\n";
+   }
+   return result;
 }
 
 QString orbitCovarianceError(const QString &value)
@@ -409,9 +494,11 @@ QVector<ResourceProperty> resourceProperties(GmatBase &object)
             }
             if (field.name=="Observers") {
                field.references.clear();
+               auto *target=Moderator::Instance()->GetConfiguredObject(object.GetStringParameter("Target"));
+               const bool regionTarget=target && target->IsOfType(Gmat::REGION);
                for (const auto &name:Moderator::Instance()->GetListOfObjects(Gmat::SPACE_POINT)) {
                   auto *observer=Moderator::Instance()->GetConfiguredObject(name);
-                  if (observer && (observer->IsOfType("GroundStation") || observer->IsOfType("Spacecraft"))) field.references.append(QString::fromStdString(name));
+                  if (observer && (regionTarget ? observer->IsOfType("Spacecraft") : (observer->IsOfType("GroundStation") || observer->IsOfType("Spacecraft")))) field.references.append(QString::fromStdString(name));
                }
                field.references.removeAll(QString::fromStdString(object.GetStringParameter("Target")));
             }
