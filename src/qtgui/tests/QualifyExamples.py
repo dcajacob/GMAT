@@ -60,6 +60,23 @@ def linked_core_libraries(repo):
             'elf_needed_names': names,
             'files': [file_provenance(binary.parent / name) for name in names]}
 
+def configured_plugins(repo):
+    """Snapshot Linux plugin files named by startup, without importing them."""
+    startup = repo / 'application/bin/gmat_startup_qt.txt'
+    files, missing = [], []
+    for name in re.findall(r'^\s*PLUGIN\s*=\s*(.*?)\s*$', startup.read_text(), re.M):
+        candidate = Path(name)
+        if not candidate.is_absolute():
+            candidate = startup.parent / candidate
+        if not candidate.is_file():
+            candidate = Path(str(candidate) + '.so')
+        if candidate.is_file():
+            files.append(file_provenance(candidate))
+        else:
+            missing.append(name)
+    return {'scope': 'Linux plugin files explicitly named by selected startup; named snapshots do not prove successful loading or ABI compatibility',
+            'files': files, 'missing': missing}
+
 def script_statements(source):
     """Read line statements, ignoring comments/terminators inside string literals."""
     for number, line in enumerate(source.splitlines(), 1):
@@ -176,6 +193,7 @@ def stage_provenance(repo, entry):
     return {'repo_head': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=repo, text=True).strip(), 'git_diff_sha256': hashlib.sha256(difference).hexdigest(), 'git_diff_byte_count': len(difference), 'source_context_limit': 'HEAD/diff describe current source context, not proof that the running binary was built from this worktree state', 'launcher': file_provenance(repo / 'application/bin/GmatQt'), 'actual_qt_binary': file_provenance(repo / 'application/bin/GmatQt-R2026a'), 'startup_sha256': sha(repo / 'application/bin/gmat_startup_qt.txt'), 'utc': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'platform': 'offscreen', 'runner_sha256': sha(Path(__file__)),
             'referenced_sources': [file_provenance(repo / path) for path in entry['input_paths']],
             'python_runtime_inputs': runtime_inputs(repo),
+            'configured_plugin_files': configured_plugins(repo),
             'linked_core_libraries': linked_core_libraries(repo)}
 
 def save(path, value):
@@ -246,8 +264,15 @@ def inventory(repo):
             dependencies.append('GMATPythonAPI')
         referenced, functions = references(path, text)
         role = 'include_fragment' if path.parent.name == 'SupportFiles' or path.is_relative_to(userincludes) else 'mission'
+        dependency_records = [{'name': token, **DEPENDENCIES[token]} for token in dependencies]
+        if 'VF13ad' in dependencies:
+            configured = configured_plugins(repo)
+            if any('VF13adOptimizer' in item['path'] for item in configured['files']):
+                for dependency in dependency_records:
+                    if dependency['name'] == 'VF13ad':
+                        dependency.update(status='configured_external_binary', reason='Separately distributed VF13ad binary is present in selected Qt startup; individual build/run stages still determine compatibility', provenance=dependency['provenance'] + ['https://www.thinksysinc.com/downloads.html'])
         scope = 'distribution_samples' if path.is_relative_to(primary) else 'documentation_tutorials' if path.is_relative_to(tutorials) else 'user_include_fragments' if path.is_relative_to(userincludes) else 'supplemental_api_or_plugin_examples'
-        entries.append({'path': relative(path), 'scope': scope, 'role': role, 'sha256': sha(path), 'byte_count': path.stat().st_size, 'requires_view_conversion': bool(re.search(r'Create\s+(?:OpenFrames|OF[A-Z])', text)), 'dependencies': [{'name': token, **DEPENDENCIES[token]} for token in dependencies], 'includes': referenced, 'functions': functions, 'coverage_parents': [], 'build': None, 'run': None})
+        entries.append({'path': relative(path), 'scope': scope, 'role': role, 'sha256': sha(path), 'byte_count': path.stat().st_size, 'requires_view_conversion': bool(re.search(r'Create\s+(?:OpenFrames|OF[A-Z])', text)), 'dependencies': dependency_records, 'includes': referenced, 'functions': functions, 'coverage_parents': [], 'build': None, 'run': None})
     for path in helpers:
         referenced, functions = references(path, source_without_comments(path.read_text(encoding='utf-8-sig')))
         support.append({'path': relative(path), 'role': 'function_helper', 'sha256': sha(path), 'byte_count': path.stat().st_size, 'includes': referenced, 'functions': functions, 'coverage_parents': []})
@@ -311,6 +336,8 @@ def merge_previous(fresh, previous):
             for phase in ['build', 'run']:
                 entry[phase] = old.get(phase)
             entry['history'] = old.get('history', [])
+            if old.get('qualification_assessment'):
+                entry['qualification_assessment'] = old['qualification_assessment']
         elif old:
             entry['history'] = old.get('history', []) + [{phase: old.get(phase) for phase in ['build', 'run']}]
     return fresh

@@ -52,6 +52,14 @@ static void syntaxTests(const QString &startup)
    require(cleared.error.isEmpty() && qtCameraSettings(cleared.script).value("Display").primaryName.isEmpty(),"Empty braced View did not clear the old camera selection");
    const auto noSemicolons=convertOpenFramesViews(QString(input).replace("Create OpenFramesView First Close Far;","Create OpenFramesView First Close Far").replace("Create OpenFramesInterface Display Other;","Create OpenFramesInterface Display Other"));
    require(noSemicolons.error.isEmpty() && noSemicolons.plots==2,"Optional declaration semicolon changed accepted grouped syntax");
+   const auto repeatedInput=prefix+QString(declarations).replace(";","; ;")+"Display.View = {First, , Close, Far};; % duplicate terminators\n"+mission;
+   const auto repeated=convertOpenFramesViews(repeatedInput); require(repeated.error.isEmpty(),qPrintable(repeated.error));
+   const auto repeatedSettings=qtCameraSettings(repeated.script);
+   require(repeated.plots==2 && repeatedSettings.value("Display").primaryName=="First" && repeatedSettings.value("Display").views.size()==2 && repeatedSettings.value("Other").primaryName=="First","Trailing empty statements changed grouped/view metadata");
+   require(repeated.script.contains("Display.Add = {Earth}; ;\n") && repeated.script.contains("% Qt conversion: First.SetDefaultLocation = On; ;\n") && repeated.script.contains("% duplicate terminators") && repeated.script.contains(prefix) && repeated.script.endsWith(mission),"Empty terminator parsing changed original statements/comments or mission source");
+   for (const auto &bad:QStringList{QString(input).replace("Display.Add = {Earth};","Display.Add = {Earth};; Value = 4;"),QString(input).replace("Display.View = {First, , Close, Far};","Display.View = 'First;';;"),QString(input).replace(mission,"BeginMissionSequence;\nDisplay.View = First;;\nValue = Value + 2;\n")}) {
+      const auto rejected=convertOpenFramesViews(bad); require(!rejected.error.isEmpty() && rejected.script==bad,"Empty terminator support stripped a quoted/compound or dynamic viewer statement");
+   }
    for (const auto &bad:QStringList{QString(input).replace("First Close Far;","First First;"),QString(input).replace("First Close Far;","First, Close;"),QString(input).replace("{First, , Close, Far}","{First Close}"),QString(input).replace("{First, , Close, Far}","{First, Missing}"),QString(input).replace("{First, , Close, Far}","[First]")}) {
       const auto rejected=convertOpenFramesViews(bad); require(!rejected.error.isEmpty() && rejected.script==bad,"Invalid grouped/view syntax silently changed original source");
    }
@@ -60,7 +68,12 @@ static void syntaxTests(const QString &startup)
    const auto geoConverted=convertOpenFramesViews(geo); require(geoConverted.error.isEmpty(),qPrintable(geoConverted.error));
    const auto geoCameras=qtCameraSettings(geoConverted.script);
    require(geoConverted.plots==2 && geoCameras.value("OFI_inertialView").primaryName=="inertial_View" && geoCameras.value("OFI_inertialView").views.size()==2 && geoCameras.value("OFI_fixedView").views.size()==2 && geoConverted.script.endsWith(geo.mid(geo.indexOf("BeginMissionSequence;"))),"Actual GEOTransfer conversion changed ordered views or mission source");
-   std::cout<<"PASS grouped OF display/view identities, scalar append/list reset/blank and duplicate entries, original physics/comments, invalid syntax rollback and actual GEOTransfer ordered cameras. Required vector sample conversion is covered by OpenFramesVectors. No engine initialization, mission, pixels or native desktop test.\n";
+   const auto flyby=QString::fromUtf8(read(QDir(samples).filePath("OptimalControl/Ex_IntegratedFlyby_MarsFlyby.script")));
+   const auto flybyConverted=convertOpenFramesViews(flyby); require(flybyConverted.error.isEmpty(),qPrintable(flybyConverted.error));
+   const auto flybyCameras=qtCameraSettings(flybyConverted.script);
+   const QString flybyAdd="OFI_OrbitView1.Add              = {emsat, Earth, Mars};;";
+   require(flyby.contains(flybyAdd) && flybyConverted.script.contains(flybyAdd) && flybyConverted.plots==2 && flybyCameras.value("OFI_OrbitView1").primaryName=="Orbit_View" && flybyCameras.value("OFI_OrbitView2").primaryName=="Orbit_View" && flybyConverted.script.endsWith(flyby.mid(flyby.indexOf("BeginMissionSequence;"))),"Actual IntegratedFlyby conversion rejected empty terminator or changed Add/cameras/mission source");
+   std::cout<<"PASS grouped OF display/view identities, scalar append/list reset/blank and duplicate entries, trailing empty statements with original lines/comments and compound/dynamic rejection, actual GEOTransfer and IntegratedFlyby static conversion. Required vector sample conversion is covered by OpenFramesVectors. No engine initialization, mission, pixels or native desktop test.\n";
 
 }
 int main(int argc,char **argv)

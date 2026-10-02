@@ -78,3 +78,6 @@ __pycache__
 # Generated version-specific Python API packages (common initializers are sources).
 /application/bin/gmatpy/_py*/
 /application/debug/gmatpy/_py*/
+
+# Optional separately distributed binary optimizer; license and source stay external.
+/application/plugins/thinksys/vf13ad/

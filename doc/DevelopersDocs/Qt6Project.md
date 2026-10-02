@@ -61,6 +61,24 @@ so installing GMAT is not required to import the built API. The shipped external
 force callback resolves its API paths relative to its own file. The unchanged
 mission script completed successfully through Qt after these setup repairs.
 
+The optional VF13ad optimizer is available from [Thinking Systems](https://www.thinksysinc.com/downloads.html)
+as a free binary for R2026a/Linux under its HSL incorporation distribution license.
+Its archive is not part of this repository. The local copy is in the ignored
+`application/plugins/thinksys/vf13ad/` directory, including its distributor README.
+The R2026a Ubuntu archive SHA256 is
+`60b6d4fc78883f0ec1d826d831d8557f12a5a4964286f45aaff408df1e8a1bf3`;
+its README still labels the release R2025a, while its ELF soname/dependencies name
+R2026a. A real algebraic mission confirmed loading and convergence against the
+current engine before it was enabled. This does not prove every solver regime.
+
+To retain separately installed engine plugins across startup generation, set
+`GMAT_QT_EXTERNAL_PLUGINS` in the configure cache/preset to the same extensionless
+paths used in GMAT startup `PLUGIN` lines. The local value is
+`../plugins/thinksys/vf13ad/libVF13adOptimizer`. Multiple paths use a CMake list.
+The Qt build writes the startup entries but does not install these external
+libraries; packaging/deployment must supply them separately under their licenses.
+wx OpenFrames window providers remain incompatible with the Qt application.
+
 Open `/home/dan/GIT/GMAT-Qt` as a separate Codex project for future work. Creating
 the directory does not automatically register a project in the desktop sidebar.
 Do not resume live desktop tests until the GNOME Shell crash/safety issue is

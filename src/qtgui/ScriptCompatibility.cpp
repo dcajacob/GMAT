@@ -15,14 +15,19 @@
 namespace {
 QString codePart(const QString &line)
 {
-   bool quoted=false;
+   bool quoted=false; int end=line.size();
    for (int i=0;i<line.size();++i) {
       if (line[i]=='\'') {
          if (quoted && i+1<line.size() && line[i+1]=='\'') { ++i; continue; }
          quoted=!quoted;
-      } else if (line[i]=='%' && !quoted) return line.left(i).trimmed();
+      } else if (line[i]=='%' && !quoted) { end=i; break; }
    }
-   return line.trimmed();
+   auto code=line.left(end).trimmed();
+   // Empty trailing statements (for example the shipped IntegratedFlyby Add
+   // list ending in ;;) are harmless. Normalize only this temporary parse view;
+   // original output lines, quoted text and interior compound statements stay.
+   if (!quoted) while (code.endsWith(';')) { code.chop(1); code=code.trimmed(); }
+   return code;
 }
 bool vectorValue(QString value,std::array<double,3> &result)
 {
