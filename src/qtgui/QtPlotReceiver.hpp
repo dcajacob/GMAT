@@ -201,6 +201,8 @@ private:
       double cameraScale=1;
       SolarSystem *solarSystem = nullptr;
       QVector<QVector<Cell>> cells;
+      // OwnedPlot Deactivate batches data while postponing display refresh.
+      bool xyRedrawSuspended = false;
       bool ignoreTimeSequence = false;
       bool solverData = false;
       QString solverScope;

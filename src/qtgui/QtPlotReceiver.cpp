@@ -311,6 +311,7 @@ QtPlotReceiver::Entry &QtPlotReceiver::create(const std::string &name, PlotModel
 }
 void QtPlotReceiver::refresh(Entry &entry, bool force)
 {
+   if (entry.xyRedrawSuspended) return;
    if (++entry.data->pendingUpdates >= entry.data->updateFrequency || force) {
       entry.data->pendingUpdates=0;
       if (entry.widget) {
@@ -973,8 +974,16 @@ bool QtPlotReceiver::UpdateXyPlotCurve(const std::string &name,const Integer cur
    auto *entry=find(name); if (!entry || curve<0) return false;
    ++entry->data->frame; entry->data->append(curve,x,y,0,0,true,false,high,low); refresh(*entry); return true;
 }
-bool QtPlotReceiver::DeactivateXyPlot(const std::string &name) { if (auto *entry=find(name)) { entry->data->active=false; entry->data->breakLines(); return true; } return false; }
-bool QtPlotReceiver::ActivateXyPlot(const std::string &name) { if (auto *entry=find(name)) { entry->data->active=true; return true; } return false; }
+bool QtPlotReceiver::DeactivateXyPlot(const std::string &name)
+{
+   if (auto *entry=find(name)) { entry->xyRedrawSuspended=true; return true; }
+   return false;
+}
+bool QtPlotReceiver::ActivateXyPlot(const std::string &name)
+{
+   if (auto *entry=find(name)) { entry->xyRedrawSuspended=false; refresh(*entry,true); return true; }
+   return false;
+}
 bool QtPlotReceiver::TakeXYAction(const std::string &name,const std::string &action)
 {
    if (action.compare(0,12,"SolverScope=")==0) { if (auto *entry=find(name)) { entry->solverScope=text(action.substr(12)); return true; } return false; }

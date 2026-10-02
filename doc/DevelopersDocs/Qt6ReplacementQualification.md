@@ -8395,3 +8395,16 @@ Offered SolverIterations Current leaves full trial history unqualified.
 No scientific/bitwise/source-default equality is inferred. Host/Wayland/portal/
 hardware and remaining tutorial gates stay separate; Windows/macOS/MATLAB
 remain deferred. No old matrix/corpus repeated.
+
+
+## Estimator-owned residual plot data loss repaired — 2026-10-02
+
+[Focused residual-plot evidence](Qt6ParityValidation/owned-residual-plot-20261002.md)
+records the independent Help10–12 failure: bulk Deactivate discarded samples.
+Separate Qt redraw suspension now retains data and forces Activate refresh;
+ordinary Toggle admission remains independent. New actual OwnedPlot callback
+regression passes 0.08 s after a disclosed test-only temporary-reference fix.
+Rebuilt app b8074b02 retains unchanged base cf147/startup 5f80. One affected
+actual GPS filter retry shows populated curves/export and identical CSV, with
+report differences limited to Run Date. Chapter completion and host/physical
+GPU gates remain separate; no old corpus or successful matrix repeated.
