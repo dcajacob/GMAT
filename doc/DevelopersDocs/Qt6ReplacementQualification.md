@@ -8373,3 +8373,25 @@ residual-plot issue: legends appear but samples are dropped, although numerical
 reports complete. That plotting fix and the remaining tutorial/host/hardware
 acceptance continue; no full replacement pass is claimed. Windows/macOS/MATLAB
 remain deferred.
+
+
+## GMAT functions Help walkthrough passed — 2026-10-02
+
+[Help tutorial 6 evidence](Qt6ParityValidation/help-tutorial-06-20261002.md)
+records independent resource/command controls, the own literal Help function,
+Global sharing and repaired named no-output call. Inside/outside targets converge
+in 6+11 iterations; explicit B-plane 1e-5 km goals and actual Achieve summary
+RMAG 12000.017391244 km within 12000±0.1 km pass. MOI mass depletion, Call state,
+shared three-view 0→47.6→88.6% animation and actual MarsView close/Output Enter
+reopen are retained. Own source/function readback precedes 20:43:38.795064 UTC
+freeze and compatible post-freeze comparison.
+
+Full mission 4.748 s and justified required-observation run 4.915 s retain
+private-X11 limits; earlier 5.588 s sample on 4522 app is reused without rerun.
+Nine unchanged PNGs, exact sources/summaries/report/solver and 269 indexed raw
+files preserve all failures and provenance. All nine sessions close through
+controlled app SIGTERM (-15), Xvfb/WM exit0; graceful application exit is unclaimed.
+Offered SolverIterations Current leaves full trial history unqualified.
+No scientific/bitwise/source-default equality is inferred. Host/Wayland/portal/
+hardware and remaining tutorial gates stay separate; Windows/macOS/MATLAB
+remain deferred. No old matrix/corpus repeated.

@@ -1,0 +1,80 @@
+******  Changes made to the mission will not be reflected ******
+******  in the data displayed until the mission is rerun  ******
+
+        Maneuver Command: Apply MOI
+        Spacecraft       : MAVEN
+        Coordinate System: MarsInertial
+
+        Time System   Gregorian                     Modified Julian  
+        ----------------------------------------------------------------------    
+        UTC Epoch:    21 Sep 2014 22:35:28.416      26922.4413011098
+        TAI Epoch:    21 Sep 2014 22:36:03.416      26922.4417062024
+        TT  Epoch:    21 Sep 2014 22:36:35.600      26922.4420787024
+        TDB Epoch:    21 Sep 2014 22:36:35.598      26922.4420786838
+
+        Cartesian State                       Keplerian State
+        ---------------------------           -------------------------------- 
+        X  =  -2960.9569978009 km             SMA  =   7973.2522746903 km
+        Y  =   1479.8319120143 km             ECC  =   0.5042542777473
+        Z  =   2160.2577578619 km             INC  =   90.000000013605 deg
+        VX =  -1.9736625177506 km/sec         RAAN =   333.44495907372 deg
+        VY =   0.9864002696670 km/sec         AOP  =   146.87097025085 deg
+        VZ =  -3.3809097152573 km/sec         TA   =   359.99999914623 deg
+                                              MA   =   359.99999975702 deg
+                                              EA   =   359.99999950987 deg
+
+        Spherical State                       Other Orbit Data
+        ---------------------------           --------------------------------
+        RMAG =   3952.7057076191 km           Mean Motion        =   2.906780461e-04 deg/sec
+        RA   =   153.44495908260 deg          Orbit Energy       =  -2.6857493518685 km^2/s^2
+        DEC  =   33.129029756769 deg          C3                 =  -5.3714987037370 km^2/s^2
+        VMAG =   4.0371871059803 km/s         Semilatus Rectum   =   1.218975917e+15 km   
+        AZI  =  -179.99999998375 deg          Angular Momentum   =   15957.812516535 km^2/s
+        VFPA =   90.000000002554 deg          Beta Angle         =  -41.446132180683 deg  
+        RAV  =   153.44495905287 deg          Periapsis Altitude =   555.70570761909 km   
+        DECV =  -56.870970245785 deg          VelPeriapsis       =   4.0371871059803 km/s
+                                              VelApoapsis        =   1.3305052658521 km/s 
+                                              Orbit Period       =   21615.616977284 s    
+
+        Planetodetic Properties 
+        ---------------------------
+        LST       =   153.44943007134 deg
+        MHA       =   317.94047776051 deg
+        Latitude  =   33.426304758168 deg
+        Longitude =  -164.49104768917 deg
+        Altitude  =   562.31491078640 km
+
+
+        Spacecraft Properties 
+        ------------------------------
+        Cd                    =   2.200000
+        Drag area             =   15.00000 m^2
+        Cr                    =   1.800000
+        Reflective (SRP) area =   1.000000 m^2
+        Dry mass              =   850.00000000000 kg
+        Total mass            =   1485.6870992768 kg
+        SPADDragScaleFactor   =   1.000000
+        SPADSRPScaleFactor    =   1.000000
+
+        Tank masses:
+           MainTank:              635.68709927678 kg
+
+
+
+        Maneuver Summary
+        -----------------
+        Impulsive Burn:     MOI
+        Spacecraft:         MAVEN
+        Origin:             Mars
+        Axes:               VNB
+        Delta V Vector:
+           Element 1:   -1.6032580312354 km/s
+           Element 2:    0.0000000000000 km/s
+           Element 3:    0.0000000000000 km/s
+
+        Mass depletion from MainTank:  
+           Delta V:        1.6032580312354 km/s
+           Isp:            300.00000000000 s
+           Mass change:   -1075.9520123944 kg
+
+

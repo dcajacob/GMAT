@@ -1,0 +1,60 @@
+******  Changes made to the mission will not be reflected ******
+******  in the data displayed until the mission is rerun  ******
+
+        CallGmatFunction Command: Target Desired B-Plane Coord. From Inside Function
+        Spacecraft       : MAVEN
+        Coordinate System: MarsInertial
+
+        Time System   Gregorian                     Modified Julian  
+        ----------------------------------------------------------------------    
+        UTC Epoch:    21 Sep 2014 22:35:28.416      26922.4413011098
+        TAI Epoch:    21 Sep 2014 22:36:03.416      26922.4417062024
+        TT  Epoch:    21 Sep 2014 22:36:35.600      26922.4420787024
+        TDB Epoch:    21 Sep 2014 22:36:35.598      26922.4420786838
+
+        Cartesian State                       Keplerian State
+        ---------------------------           -------------------------------- 
+        X  =  -2960.9569978009 km             SMA  =  -4221.9330336650 km
+        Y  =   1479.8319120143 km             ECC  =   1.9362312656551
+        Z  =   2160.2577578619 km             INC  =   90.000000013605 deg
+        VX =  -2.7574484061590 km/sec         RAAN =   333.44495907372 deg
+        VY =   1.3781220583385 km/sec         AOP  =   146.87097024710 deg
+        VZ =  -4.7235451967385 km/sec         TA   =   359.99999914623 deg
+                                              MA   =  -0.0000004513592 deg
+                                              HA   =  -0.0000004821023 deg
+
+        Spherical State                       Other Orbit Data
+        ---------------------------           --------------------------------
+        RMAG =   3952.7057076191 km           Mean Motion        =   7.543944413e-04 deg/sec
+        RA   =   153.44495908260 deg          Orbit Energy       =   5.0721214567547 km^2/s^2
+        DEC  =   33.129029756769 deg          C3                 =   10.144242913509 km^2/s^2
+        VMAG =   5.6404451372157 km/s         Semilatus Rectum   =   1.279748890e+15 km   
+        AZI  =  -179.99999998375 deg          Angular Momentum   =   22295.019687385 km^2/s
+        VFPA =   90.000000002554 deg          Beta Angle         =  -41.446132180683 deg  
+        RAV  =   153.44495905287 deg          Periapsis Altitude =   555.70570761909 km   
+        DECV =  -56.870970245785 deg          VelPeriapsis       =   5.6404451372157 km/s
+
+        Planetodetic Properties               Hyperbolic Parameters
+        ---------------------------           --------------------------------
+        LST       =   153.44943007134 deg     BdotT          =  -0.0000018458609 km   
+        MHA       =   317.94047776051 deg     BdotR          =  -7000.0000006965 km   
+        Latitude  =   33.426304758168 deg     B Vector Angle =  -90.000000015109 deg  
+        Longitude =  -164.49104768917 deg     B Vector Mag   =   7000.0000006965 km   
+        Altitude  =   562.31491078640 km      DLA            =  -87.966547502138 deg  
+                                              RLA            =   153.44495869053 deg  
+
+
+        Spacecraft Properties 
+        ------------------------------
+        Cd                    =   2.200000
+        Drag area             =   15.00000 m^2
+        Cr                    =   1.800000
+        Reflective (SRP) area =   1.000000 m^2
+        Dry mass              =   850.00000000000 kg
+        Total mass            =   2561.6391116711 kg
+        SPADDragScaleFactor   =   1.000000
+        SPADSRPScaleFactor    =   1.000000
+
+        Tank masses:
+           MainTank:              1711.6391116711 kg
+

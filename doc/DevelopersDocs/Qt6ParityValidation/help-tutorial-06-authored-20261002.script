@@ -1,0 +1,218 @@
+Create GmatFunction TargeterInsideFunction;
+GMAT TargeterInsideFunction.FunctionPath = '/tmp/gmat-help-tutorials/06-functions-views-recovery/isolated-x11-o3cbd4f2/TargeterInsideFunction.gmf';
+Create ReportFile rf;
+Create OrbitView MarsView;
+Create OrbitView SolarSystemView;
+Create DifferentialCorrector DefaultDC;
+Create CoordinateSystem MarsInertial;
+Create CoordinateSystem SunEcliptic;
+Create ForceModel NearMars_ForceModel;
+Create PropSetup NearMars;
+NearMars.Type = PrinceDormand78;
+GMAT NearMars.FM = NearMars_ForceModel;
+Create ForceModel DeepSpace_ForceModel;
+Create PropSetup DeepSpace;
+DeepSpace.Type = PrinceDormand78;
+GMAT DeepSpace.FM = DeepSpace_ForceModel;
+Create ImpulsiveBurn MOI;
+Create ImpulsiveBurn TCM;
+Create ChemicalTank MainTank;
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2026-10-02 13:34:40
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft MAVEN;
+MAVEN.CoordinateSystem = EarthMJ2000Eq;
+MAVEN.DryMass = 850;
+MAVEN.Cd = 2.2;
+MAVEN.Cr = 1.8;
+MAVEN.DragArea = 15;
+MAVEN.SRPArea = 1;
+MAVEN.SPADDragScaleFactor = 1;
+MAVEN.SPADSRPScaleFactor = 1;
+MAVEN.AtmosDensityScaleFactor = 1;
+MAVEN.ExtendedMassPropertiesModel = 'None';
+MAVEN.NAIFId = -10001001;
+MAVEN.NAIFIdReferenceFrame = -9001001;
+MAVEN.OrbitColor = Red;
+MAVEN.TargetColor = Teal;
+MAVEN.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+MAVEN.CdSigma = 1e+70;
+MAVEN.CrSigma = 1e+70;
+MAVEN.Id = 'SatId';
+MAVEN.Attitude = CoordinateSystemFixed;
+MAVEN.SPADSRPInterpolationMethod = Bilinear;
+MAVEN.SPADSRPScaleFactorSigma = 1e+70;
+MAVEN.SPADDragInterpolationMethod = Bilinear;
+MAVEN.SPADDragScaleFactorSigma = 1e+70;
+MAVEN.AtmosDensityScaleFactorSigma = 1e+70;
+MAVEN.ModelFile = 'aura.3ds';
+MAVEN.ModelOffsetX = 0;
+MAVEN.ModelOffsetY = 0;
+MAVEN.ModelOffsetZ = 0;
+MAVEN.ModelRotationX = 0;
+MAVEN.ModelRotationY = 0;
+MAVEN.ModelRotationZ = 0;
+MAVEN.ModelScale = 1;
+MAVEN.AttitudeDisplayStateType = 'Quaternion';
+MAVEN.AttitudeRateDisplayStateType = 'AngularVelocity';
+MAVEN.AttitudeCoordinateSystem = EarthMJ2000Eq;
+MAVEN.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel NearEarth_ForceModel;
+NearEarth_ForceModel.CentralBody = Earth;
+NearEarth_ForceModel.PrimaryBodies = {Earth};
+NearEarth_ForceModel.Drag = None;
+NearEarth_ForceModel.SRP = On;
+NearEarth_ForceModel.RelativisticCorrection = Off;
+NearEarth_ForceModel.ErrorControl = RSSStep;
+NearEarth_ForceModel.GravityField.Earth.StmLimit = 100;
+NearEarth_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+NearEarth_ForceModel.GravityField.Earth.TideModel = 'None';
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator NearEarth;
+NearEarth.FM = NearEarth_ForceModel;
+NearEarth.Type = RungeKutta89;
+NearEarth.MaxStepAttempts = 50;
+NearEarth.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView EarthView;
+EarthView.SolverIterations = Current;
+EarthView.UpperLeft = [ 0 0 ];
+EarthView.Size = [ 0 0 ];
+EarthView.RelativeZOrder = 0;
+EarthView.Maximized = false;
+EarthView.Add = {MAVEN, Earth};
+EarthView.CoordinateSystem = EarthMJ2000Eq;
+EarthView.DrawObject = [ true true ];
+EarthView.DataCollectFrequency = 1;
+EarthView.UpdatePlotFrequency = 50;
+EarthView.NumPointsToRedraw = 0;
+EarthView.ShowPlot = true;
+EarthView.MaxPlotPoints = 20000;
+EarthView.ShowLabels = true;
+EarthView.ViewPointReference = Earth;
+EarthView.ViewDirection = Earth;
+EarthView.ViewUpCoordinateSystem = EarthMJ2000Eq;
+EarthView.ViewUpAxis = Z;
+EarthView.EclipticPlane = Off;
+EarthView.XYPlane = On;
+EarthView.WireFrame = Off;
+EarthView.Axes = On;
+EarthView.Grid = Off;
+EarthView.SunLine = Off;
+EarthView.UseInitialView = On;
+EarthView.StarCount = 7000;
+EarthView.EnableStars = On;
+EarthView.EnableConstellations = On;
+
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+MainTank.FuelMass = 1718;
+MainTank.Pressure = 5000;
+MainTank.Volume = 2;
+MainTank.FuelDensity = 1000;
+MAVEN.DateFormat = UTCGregorian;
+MAVEN.Epoch = '18 Nov 2013 20:26:24.315';
+MAVEN.DisplayStateType = Keplerian;
+MAVEN.SMA = -32593.21599272804;
+MAVEN.ECC = 1.202872548116185;
+MAVEN.INC = 28.80241266404142;
+MAVEN.RAAN = 173.9693759331483;
+MAVEN.AOP = 240.9696529532764;
+MAVEN.TA = 359.9465533778069;
+MAVEN.Tanks = {MainTank};
+TCM.DecrementMass = true;
+TCM.Tank = {MainTank};
+MOI.Origin = Mars;
+MOI.DecrementMass = true;
+MOI.Tank = {MainTank};
+NearEarth.InitialStepSize = 600;
+NearEarth.Accuracy = 1e-13;
+NearEarth.MinStep = 0;
+NearEarth.MaxStep = 600;
+GMAT NearEarth_ForceModel.PointMasses = {Luna, Sun};
+NearEarth_ForceModel.GravityField.Earth.Degree = 8;
+NearEarth_ForceModel.GravityField.Earth.Order = 8;
+NearEarth_ForceModel.SRP.Flux = 1367;
+NearEarth_ForceModel.SRP.SRPModel = Spherical;
+NearEarth_ForceModel.SRP.Nominal_Sun = 149597870.691;
+DeepSpace.InitialStepSize = 600;
+DeepSpace.Accuracy = 1e-12;
+DeepSpace.MinStep = 0;
+DeepSpace.MaxStep = 864000;
+GMAT DeepSpace_ForceModel.SRP = On;
+GMAT DeepSpace_ForceModel.PrimaryBodies = {};
+GMAT DeepSpace_ForceModel.PointMasses = {Earth, Luna, Sun, Mars, Jupiter, Neptune, Saturn, Uranus, Venus};
+DeepSpace_ForceModel.CentralBody = Sun;
+DeepSpace_ForceModel.SRP.Flux = 1367;
+DeepSpace_ForceModel.SRP.SRPModel = Spherical;
+DeepSpace_ForceModel.SRP.Nominal_Sun = 149597870.691;
+NearMars.InitialStepSize = 600;
+NearMars.Accuracy = 1e-12;
+NearMars.MinStep = 0;
+NearMars.MaxStep = 86400;
+GMAT NearMars_ForceModel.SRP = On;
+GMAT NearMars_ForceModel.PrimaryBodies = {Mars};
+GMAT NearMars_ForceModel.PointMasses = {Sun};
+NearMars_ForceModel.CentralBody = Mars;
+NearMars_ForceModel.GravityField.Mars.StmLimit = 100;
+NearMars_ForceModel.GravityField.Mars.PotentialFile = '/home/dan/GIT/GMAT-Qt/application/bin/../data/gravity/mars/Mars50c.cof';
+NearMars_ForceModel.GravityField.Mars.TideModel = 'None';
+NearMars_ForceModel.SRP.Flux = 1367;
+NearMars_ForceModel.SRP.SRPModel = Spherical;
+NearMars_ForceModel.SRP.Nominal_Sun = 149597870.691;
+NearMars_ForceModel.GravityField.Mars.Degree = 8;
+NearMars_ForceModel.GravityField.Mars.Order = 8;
+SunEcliptic.Origin = Sun;
+SunEcliptic.Axes = MJ2000Ec;
+MarsInertial.Origin = Mars;
+MarsInertial.Axes = BodyInertial;
+EarthView.ViewPointVector = [ 0 0 30000 ];
+EarthView.ViewScaleFactor = 4;
+SolarSystemView.Add = {MAVEN, Earth, Mars, Sun};
+SolarSystemView.CoordinateSystem = SunEcliptic;
+SolarSystemView.DrawObject = [ true true true true ];
+SolarSystemView.ViewPointReference = Sun;
+SolarSystemView.ViewPointVector = [ 0 0 500000000 ];
+SolarSystemView.ViewDirection = Sun;
+SolarSystemView.ViewUpCoordinateSystem = SunEcliptic;
+MarsView.Add = {MAVEN, Earth, Mars};
+MarsView.CoordinateSystem = MarsInertial;
+MarsView.DrawObject = [ true true true ];
+MarsView.ViewPointReference = Mars;
+MarsView.ViewPointVector = [ 22000 22000 0 ];
+MarsView.ViewDirection = Mars;
+MarsView.ViewUpCoordinateSystem = MarsInertial;
+BeginMissionSequence;
+Global 'Make Objects Global' MAVEN DeepSpace_ForceModel DefaultDC EarthView MOI MainTank MarsView NearEarth_ForceModel NearMars_ForceModel SolarSystemView TCM rf;
+'Target Desired B-Plane Coord. From Inside Function' TargeterInsideFunction();
+Report 'Report Parameters' rf MAVEN.UTCGregorian TCM.Element1 TCM.Element2 TCM.Element3 MAVEN.MarsInertial.BdotT MAVEN.MarsInertial.BdotR MAVEN.MarsInertial.INC;
+Target 'Mars Capture' DefaultDC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};
+Vary 'Vary MOI.V' DefaultDC(MOI.Element1 = -1, {Perturbation = 0.00001, Lower = -10e300, Upper = 10e300, MaxStep = 0.1});
+Maneuver 'Apply MOI' MOI(MAVEN);
+Propagate 'Prop to Mars Apoapsis' NearMars(MAVEN) {MAVEN.Mars.Apoapsis};
+Achieve 'Achieve RMAG' DefaultDC(MAVEN.Mars.RMAG = 12000, {Tolerance = 0.1});
+   % Add Vary, mission commands, and Achieve here.
+EndTarget;
+Propagate 'Prop for 1 day' NearMars(MAVEN) {MAVEN.ElapsedDays = 1};

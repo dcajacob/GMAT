@@ -9,12 +9,13 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Tutorials 1–5 and 7–9 are Passed for bounded private actual-input construction.** See
+**Tutorials 1–9 are Passed for bounded private actual-input construction.** See
 [Tutorial 1](Qt6ParityValidation/help-tutorial-01-20261002.md),
 [Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md),
 [Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md),
 [Tutorial 4](Qt6ParityValidation/help-tutorial-04-20261002.md) and
 [Tutorial 5](Qt6ParityValidation/help-tutorial-05-20261002.md),
+[Tutorial 6](Qt6ParityValidation/help-tutorial-06-20261002.md),
 [Tutorial 7](Qt6ParityValidation/help-tutorial-07-20261002.md) and
 [Tutorial 8](Qt6ParityValidation/help-tutorial-08-20261002.md) and
 [Tutorial 9](Qt6ParityValidation/help-tutorial-09-20261002.md). Each includes
@@ -26,11 +27,13 @@ Tutorial 5 covers all five Help-taught code-editor stages. Its original Step 5
 sample reproduced a line-search failure; appending a nominal Stage 4 starting
 guess preserves its physics and constraints and passes one changed-reference GUI
 verification. The frozen own construction preceded all new reference access.
-Tutorials 6, 10 and 11 are In progress: functions, DSN estimation and GPS
-filter/smoother construction. Tutorial 8 independently passed electric hardware/finite-burn forms
+Tutorials 10–12 are In progress: DSN estimation, GPS filter/smoother and
+inter-spacecraft tracking. All three exposed a shared residual-plot data-loss
+defect; independent construction and reports are retained while its Qt repair
+is verified. Tutorial 6 completes functions, Global sharing and Mars capture. Tutorial 8 independently passed electric hardware/finite-burn forms
 and matched the corrected reference summary. Tutorial 7 completes its core
 eclipse/contact workflow, with optional exercises and GUI LSK management
-unclaimed. Tutorial 12 remains Pending. The earlier shipped-script corpus
+unclaimed. The earlier shipped-script corpus
 and repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
 the user's desktop remains stopped following the GNOME Shell crash. A private,
@@ -38,9 +41,9 @@ authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
 It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. Tutorials 1–5 and 7–9 used that bounded route through
+for interactive construction. Tutorials 1–9 used that bounded route through
 actual Help/resource/mission controls or the expressly Help-taught code editor,
-with separate per-chapter evidence. Tutorials 6, 10 and 11 continue independently.
+with separate per-chapter evidence. Tutorials 10–12 continue independently.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -101,13 +104,13 @@ the Tutorials part of the Help.
 | 3 | `Tut_TargetFiniteBurn.xml` — Target Finite Burn to Raise Apogee | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-03-20261002.md). Tutorials 1–2. Hardware/FiniteBurn/DC1/BurnDuration, ordered finite-burn targeting, 13-iteration solve, four exported summaries, explicit All-history view, save/reopen and post-freeze complete solver-report equality. |
 | 4 | `Tut_Mars_B_Plane_Targeting.xml` — Mars B-Plane Targeting | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-04-20261002.md). Independent resource/command forms, B-plane 6→1 and capture 11→1 solves, all four corrections, four exported summaries/three views, own save/reopen/freeze and single post-freeze reference GUI comparison. Default omissions and OpenFrames/native differences remain explicit. Tutorials 1–2 and B-plane concepts. |
 | 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-05-20261002.md). All five independently authored Help code-editor stages, expected configuration Stop, patch/full/alternate solves and >=5000 km exercise, actual own save/reopen/freeze, original failed-reference comparison, starting-guess-only repair and one verified updated-sample GUI run. Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Source Help copies synced but not separately run; original sample Step3 physics/epoch/report limitations retained. |
-| 6 | `Tut_UsingGMATFunctions.xml` — Mars B-Plane Targeting Using GMAT Functions | **In progress** — independent actual Help-driven GUI construction has begun; no completed execution/reopen/reference comparison claimed. Tutorials 1–2, 4 and B-plane concepts. Author a GmatFunction and Global objects; target inside the function, then outside it. |
+| 6 | `Tut_UsingGMATFunctions.xml` — Mars B-Plane Targeting Using GMAT Functions | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-06-20261002.md). Independent New/resources/mission controls, literal Help function editor, Global and repaired named no-output call, function/capture targets converge in 6+11 iterations, actual Mars summaries/mass/RMAG, shared three-view animation and close/reopen, own source/function readback/freeze and compatible post-freeze comparison. Current-only trial history and controlled SIGTERM cleanup limits retained. Tutorials 1–2, 4 and B-plane concepts. |
 | 7 | `Tut_EventLocation.xml` — Finding Eclipses and Station Contacts | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-07-20261002.md). Own Tutorial 2 prerequisite, Earth geometry, EclipseLocator and Hyderabad/ContactLocator forms, actual Output reports, save/reopen/freeze and post-freeze Help/prerequisite comparison. Three portions of one 2105.5299296-s eclipse and two contacts; blank-target correction retained. No final shipped Tutorial7 script; prior Tutorial2 reference run reused. Optional station-network/burn-coverage exercise and full GUI LSK management unclaimed. |
 | 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-08-20261002.md). Independent electric hardware/attachment and named finite-burn forms, two-day run, spiral/fuel inspection, exported summary and own save/reopen/freeze. Two stale reference settings repaired; one changed-reference run yields complete propagation-summary equality. Tutorial 1; tutorial 3 referenced for targeting. |
 | 9 | `Tut_Simulate_DSN_Range_and_Doppler_Data.xml` — Simulate DSN Range and Doppler Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-09-20261002.md). Independent empty script-editor Help stages, four-observation short run, three-station/ramp/noisy 21-day run with 1348 paired observations, own save/reopen/freeze and post-freeze source/settings comparison using earlier source-matched corpus evidence. Full own observations retained for Tutorial10; stochastic/scientific equality unclaimed. Basic Mission Design Tutorials. |
-| 10 | `Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml` — Orbit Estimation using DSN Range and Doppler Data | Tutorial 9 and its independently generated observations. BatchEstimator and result analysis. |
-| 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | **In progress** — full Help scope read; independent simulation construction begins in a fresh actual-input Qt session. Simulation, Extended Kalman Filter, review, Fraser-Potter smoother, review, warm start, tuning and appendices. The Help explicitly allows skipping MATLAB-dependent analysis when MATLAB is unavailable. |
-| 12 | `Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml` — Simulate and Estimate Inter-Spacecraft Tracking | Basic Mission Design Tutorials. Two-spacecraft hardware/error models, range/range-rate simulation, estimate observed spacecraft state. |
+| 10 | `Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml` — Orbit Estimation using DSN Range and Doppler Data | **In progress** — independently authored DSN estimate converges in two iterations with 1344/1348 measurements used; actual report and save/reopen retained. Required residual plots exposed shared Qt data loss; repaired-plot retry and GN appendix remain. Tutorial 9 observations/ramp are the own inputs. |
+| 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | **In progress** — independent actual-editor simulation and cold Extended Kalman Filter complete, with 145/145 GPS_PosVec measurements accepted and own save/reopen/input hashes retained. Required residual plots exposed shared Qt data loss; repaired-plot retry, smoother, warm start and ephemeris/prediction/console appendices remain. MATLAB-dependent analysis is explicitly skippable when MATLAB is unavailable. |
+| 12 | `Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml` — Simulate and Estimate Inter-Spacecraft Tracking | **In progress** — literal Help construction, simulator/estimator execution and actual save/reopen complete; 1613 records used over three iterations. Required residual plots exposed shared Qt data loss. Exact authored inputs remain unchanged pending repaired-plot verification and final freeze before comparison. |
 
 Chapters 9, 10 and 12 describe legacy script-only navigation workflows. Chapter 5
 also requires authoring an optimization sequence. Record what the Qt resource and

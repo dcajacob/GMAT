@@ -1,0 +1,61 @@
+******  Changes made to the mission will not be reflected ******
+******  in the data displayed until the mission is rerun  ******
+
+        Achieve Command: Achieve RMAG
+        Spacecraft       : MAVEN
+        Coordinate System: MarsInertial
+
+        Time System   Gregorian                     Modified Julian  
+        ----------------------------------------------------------------------    
+        UTC Epoch:    22 Sep 2014 01:35:41.847      26922.5664565573
+        TAI Epoch:    22 Sep 2014 01:36:16.847      26922.5668616499
+        TT  Epoch:    22 Sep 2014 01:36:49.031      26922.5672341499
+        TDB Epoch:    22 Sep 2014 01:36:49.029      26922.5672341312
+
+        Cartesian State                       Keplerian State
+        ---------------------------           -------------------------------- 
+        X  =   8987.5591394218 km             SMA  =   7974.8763787268 km
+        Y  =  -4492.6685788444 km             ECC  =   0.5047277000122
+        Z  =  -6560.4974770369 km             INC  =   89.991514267371 deg
+        VX =   0.6502616771998 km/sec         RAAN =   333.44615568920 deg
+        VY =  -0.3247875492006 km/sec         AOP  =   146.85858556121 deg
+        VZ =   1.1132430310575 km/sec         TA   =   179.99999914623 deg
+                                              MA   =   179.99999776072 deg
+                                              EA   =   179.99999851184 deg
+
+        Spherical State                       Other Orbit Data
+        ---------------------------           --------------------------------
+        RMAG =   12000.017391244 km           Mean Motion        =   2.905892546e-04 deg/sec
+        RA   =  -26.559384834601 deg          Orbit Energy       =  -2.6852023921219 km^2/s^2
+        DEC  =  -33.141414030071 deg          C3                 =  -5.3704047842437 km^2/s^2
+        VMAG =   1.3295251961315 km/s         Semilatus Rectum   =   1.056812883e+15 km   
+        AZI  =   0.0101343505988 deg          Angular Momentum   =   15954.325475674 km^2/s
+        VFPA =   89.999999998403 deg          Beta Angle         =  -41.377195199639 deg  
+        RAV  =  -26.540847767727 deg          Periapsis Altitude =   552.73536621006 km   
+        DECV =   56.858584595625 deg          VelPeriapsis       =   4.0393403599044 km/s
+                                              VelApoapsis        =   1.3295251961315 km/s 
+                                              Orbit Period       =   21622.221772398 s    
+
+        Planetodetic Properties 
+        ---------------------------
+        LST       =   333.44508226764 deg
+        MHA       =   1.8565206667408 deg
+        Latitude  =  -33.242030497638 deg
+        Longitude =  -28.411438399099 deg
+        Altitude  =   8609.5964269096 km
+
+
+        Spacecraft Properties 
+        ------------------------------
+        Cd                    =   2.200000
+        Drag area             =   15.00000 m^2
+        Cr                    =   1.800000
+        Reflective (SRP) area =   1.000000 m^2
+        Dry mass              =   850.00000000000 kg
+        Total mass            =   1485.6870992768 kg
+        SPADDragScaleFactor   =   1.000000
+        SPADSRPScaleFactor    =   1.000000
+
+        Tank masses:
+           MainTank:              635.68709927678 kg
+

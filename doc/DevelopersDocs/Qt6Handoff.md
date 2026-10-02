@@ -851,3 +851,29 @@ residual-plot issue: legends appear but samples are dropped, although numerical
 reports complete. That plotting fix and the remaining tutorial/host/hardware
 acceptance continue; no full replacement pass is claimed. Windows/macOS/MATLAB
 remain deferred.
+
+
+### GMAT functions Help walkthrough passed — 2026-10-02
+
+[Tutorial 6](Qt6ParityValidation/help-tutorial-06-20261002.md) passes bounded
+independent private-X11 resource/mission controls and literal Help function
+editor construction. The repaired named no-output function call and Global
+sharing support targets inside/outside the function: 6+11 iterations. Full
+mission 4.748 s and one justified required-observation run 4.915 s satisfy
+B-plane goals 1e-5 km and RMAG 12000.017391244 km within 0.1 km. Actual Mars
+MOI/Call/Achieve summaries, mass change -1075.9520123944 kg, shared three-view
+0→47.6→88.6% animation and MarsView Output-tree/Enter reopen are recorded.
+
+Own mission/function SHA75b78de1.../79745474... survive actual Ctrl+O/Build and
+function editor readback, then final 20:43:38.795064 UTC freeze before source
+comparison. Nine unchanged PNGs and exact sources/summaries/report/solver
+accompany 269 indexed raw files, including all failures and both freezes.
+The named-call Outputs-clearing defect/fix and harness mistakes are preserved.
+Compatible earlier 4522 sample evidence (5.588 s) is reused without a new run;
+scientific equality and Current-only full trial history are unclaimed.
+
+All nine owned sessions closed with Xvfb/WM exit0 and application exit-15 from
+controlled SIGTERM; graceful application exit/crash-proof behavior is unclaimed.
+Construction app 3ba/repaired ef933/final e533 retain base cf147/startup 5f80.
+Host/Wayland/portal/hardware/scientific and remaining tutorial gates stay
+separate; Windows/macOS/MATLAB are deferred. No old matrix/corpus repeated.

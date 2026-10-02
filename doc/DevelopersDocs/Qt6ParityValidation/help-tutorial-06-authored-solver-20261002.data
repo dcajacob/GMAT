@@ -1,0 +1,264 @@
+********************************************************
+*** Targeter Text File
+*** 
+*** Using Differential Correction
+***
+*** 1 variables
+*** 1 goals
+***
+*** Variables:
+***    MOI.Element1
+***    
+*** Goals:
+***    MAVEN.Mars.RMAG
+***    
+*** SolverMode:  Solve
+***    
+********************************************************
+
+Iteration 1
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 605112.8541507641
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   37450327.09199004
+
+
+Inverse Jacobian:
+   2.670203647470631e-08
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.015837321065151
+   
+Iteration 2
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.015837321065151
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 298174.2601312814
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   9774917.249579448
+
+
+Inverse Jacobian:
+   1.023026563261212e-07
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.045113708048743
+   
+Iteration 3
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.045113708048743
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 151070.63873239
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   2576006.28734217
+
+
+Inverse Jacobian:
+   3.88197810274665e-07
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.099100625478156
+   
+Iteration 4
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.099100625478156
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 77971.90409531987
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   711577.3938028723
+
+
+Inverse Jacobian:
+   1.405328511991809e-06
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.191812823293698
+   
+Iteration 5
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.191812823293698
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 41635.96737641729
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   215857.7420043002
+
+
+Inverse Jacobian:
+   4.632680721639711e-06
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.291812823293699
+   
+Iteration 6
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.291812823293699
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 27099.38642639728
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   97888.88331422639
+
+
+Inverse Jacobian:
+   1.021566459993183e-05
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.391812823293699
+   
+Iteration 7
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.391812823293699
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 19722.34052736976
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   55590.02548143325
+
+
+Inverse Jacobian:
+   1.798883866916007e-05
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.491812823293699
+   
+Iteration 8
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.491812823293699
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 15263.63948133059
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   35758.28465927771
+
+
+Inverse Jacobian:
+   2.796554727186959e-05
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.583082287487189
+   
+Iteration 9
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.583082287487189
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 12500.22835603648
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   25634.49135650444
+
+
+Inverse Jacobian:
+   3.900994118013823e-05
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.60259616623281
+   
+Iteration 10
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.60259616623281
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 12015.90522292008
+   Tolerance: 0.1
+   
+********************************************************
+
+
+Jacobian (Sensitivity matrix):
+   24030.91696724004
+
+
+Inverse Jacobian:
+   4.16130604322441e-05
+
+
+New scaled variable estimates:
+   MOI.Element1 = -1.603258031235371
+   
+Iteration 11
+Running Nominal Pass
+Variables:
+   MOI.Element1 = -1.603258031235371
+   
+Goals and achieved values:
+   MAVEN.Mars.RMAG  Desired: 12000 Achieved: 12000.0173912436
+   Tolerance: 0.1
+   
+********************************************************
+
+
+********************************************************
+*** Targeting Completed in 11 iterations
+********************************************************
+
