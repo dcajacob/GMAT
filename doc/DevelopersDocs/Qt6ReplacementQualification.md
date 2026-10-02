@@ -8291,3 +8291,22 @@ explicit; complete-report, every-state, pixel and scientific equality are not
 claimed. App 3ba673f1…, controlled core cf147e23… and startup 5f80be1f… are unchanged.
 Other chapters and full Linux, host, hardware and crash gates remain open;
 no old matrix/corpus was repeated. Windows/macOS/MATLAB remain deferred.
+
+
+## Electric propulsion Help walkthrough passed — 2026-10-02
+
+[Tutorial 8](Qt6ParityValidation/help-tutorial-08-20261002.md) passed independent
+Help-driven electric hardware and finite-burn form construction, one two-day run,
+spiral/fuel inspection and actual own save/reopen before freezing the authored
+5750-byte source at 20:08:14.975711 UTC (SHA 9e80e251…). The own run completes in
+0.850 s, reaches SMA 8362.8537296235 km and consumes 20.96985583229 kg of fuel.
+
+Post-freeze comparison found the original sample used a polynomial thruster and
+Earth shadowing instead of the Help's constant 5 N model and empty shadow list.
+Only those two settings are repaired. One changed-reference GUI run completes in
+0.900 s and its full 3283-byte propagation summary matches the frozen own summary
+byte for byte. Original results, all three private sessions and hashes are
+retained; nine unchanged PNGs and the authored source accompany the record.
+Execution uses app 3ba673f1…; a later function-output fix rebuilds ef933221… without
+repeating this unchanged chapter. Full Linux, host, hardware and crash gates and
+other tutorials remain open; Windows/macOS/MATLAB remain deferred.

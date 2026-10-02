@@ -9,7 +9,7 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Tutorials 1–5 are Passed for bounded private actual-input construction.** See
+**Tutorials 1–5 and 8 are Passed for bounded private actual-input construction.** See
 [Tutorial 1](Qt6ParityValidation/help-tutorial-01-20261002.md),
 [Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md),
 [Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md),
@@ -23,8 +23,9 @@ Tutorial 5 covers all five Help-taught code-editor stages. Its original Step 5
 sample reproduced a line-search failure; appending a nominal Stage 4 starting
 guess preserves its physics and constraints and passes one changed-reference GUI
 verification. The frozen own construction preceded all new reference access.
-Tutorials 6–9 are In progress: functions, event location, electric propulsion and
-DSN simulation. Tutorials 10–12 remain Pending. The earlier shipped-script corpus
+Tutorials 6, 7 and 9 are In progress: functions, event location and DSN
+simulation. Tutorial 8 independently passed electric hardware/finite-burn forms
+and matched the corrected reference summary. Tutorials 10–12 remain Pending. The earlier shipped-script corpus
 and repairs are not GUI walkthrough evidence.
 The current runtime is in `/home/dan/GIT/GMAT-Qt/application/bin`. Live testing on
 the user's desktop remains stopped following the GNOME Shell crash. A private,
@@ -34,7 +35,7 @@ It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
 for interactive construction. Tutorials 1–5 used that bounded route through
 actual Help/resource/mission controls or the expressly Help-taught code editor,
-with separate per-chapter evidence. Tutorials 6–9 continue independently.
+with separate per-chapter evidence. Tutorials 6, 7 and 9 continue independently.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -84,8 +85,8 @@ or links against the source. Reading an inventory is not a completed tutorial.
 
 ## Published tutorial sequence
 
-Tutorials 1–5 are **Passed** with the bounded evidence linked below;
-tutorials 6–9 are **In progress**, and 10–12 remain **Pending**. Numbering follows
+Tutorials 1–5 and 8 are **Passed** with the bounded evidence linked below;
+tutorials 6, 7 and 9 are **In progress**, and 10–12 remain **Pending**. Numbering follows
 the Tutorials part of the Help.
 
 | # | Chapter source and title | Prerequisites and staged coverage |
@@ -97,7 +98,7 @@ the Tutorials part of the Help.
 | 5 | `Tut_OptimalLunarFlyby.xml` — Optimal Lunar Flyby using Multiple Shooting | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-05-20261002.md). All five independently authored Help code-editor stages, expected configuration Stop, patch/full/alternate solves and >=5000 km exercise, actual own save/reopen/freeze, original failed-reference comparison, starting-guess-only repair and one verified updated-sample GUI run. Tutorials 1–2, 4 and GMAT Fundamentals training/videos; VF13ad. Source Help copies synced but not separately run; original sample Step3 physics/epoch/report limitations retained. |
 | 6 | `Tut_UsingGMATFunctions.xml` — Mars B-Plane Targeting Using GMAT Functions | **In progress** — independent actual Help-driven GUI construction has begun; no completed execution/reopen/reference comparison claimed. Tutorials 1–2, 4 and B-plane concepts. Author a GmatFunction and Global objects; target inside the function, then outside it. |
 | 7 | `Tut_EventLocation.xml` — Finding Eclipses and Station Contacts | **In progress** — extends the independently built tutorial 2 mission. Earth geometry and EclipseLocator execution/report complete; GroundStation/ContactLocator continuation remains. |
-| 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | **In progress** — actual hardware attachment and two-day finite-burn command construction are saved; execution/result inspection and final comparison continue. Tutorial 1; tutorial 3 referenced for targeting. |
+| 8 | `Tut_ElectricPropulsion.xml` — Electric Propulsion | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-08-20261002.md). Independent electric hardware/attachment and named finite-burn forms, two-day run, spiral/fuel inspection, exported summary and own save/reopen/freeze. Two stale reference settings repaired; one changed-reference run yields complete propagation-summary equality. Tutorial 1; tutorial 3 referenced for targeting. |
 | 9 | `Tut_Simulate_DSN_Range_and_Doppler_Data.xml` — Simulate DSN Range and Doppler Data | **In progress** — independent Help-taught script-editor construction has begun. Basic Mission Design Tutorials. Spacecraft/station hardware, measurements, Simulator; initial simulation then realistic measurement data. |
 | 10 | `Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml` — Orbit Estimation using DSN Range and Doppler Data | Tutorial 9 and its independently generated observations. BatchEstimator and result analysis. |
 | 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | No introductory prerequisite stated. Simulation, Extended Kalman Filter, review, Fraser-Potter smoother, review, warm start, tuning. |
@@ -135,6 +136,6 @@ chapters do not satisfy the new interactive acceptance requirement.
 
 For each actual walkthrough, add a per-chapter record under
 `doc/DevelopersDocs/Qt6ParityValidation` and link it here. Preserve raw artifacts
-in the ignored qualification artifact tree. Tutorials 1–5 have completed
-records linked above; Tutorials 6–9 are in progress and remaining chapters
+in the ignored qualification artifact tree. Tutorials 1–5 and 8 have completed
+records linked above; Tutorials 6, 7 and 9 are in progress and remaining chapters
 require their own independent evidence.
