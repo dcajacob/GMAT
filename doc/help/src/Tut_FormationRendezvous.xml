@@ -22,7 +22,23 @@
     rendezvous.</para>
 
     <para>Download the script file: <link
-    xlink:href="scripts/FormationRendezvousTutorial.script">FormationRendezvousTutorial.script</link></para>
+    xlink:href="files/scripts/FormationRendezvousTutorial.script">FormationRendezvousTutorial.script</link></para>
+
+    <note>
+      <title>Reconstructed demonstration</title>
+      <para>The legacy script attachment contained an unrelated lunar-transfer
+      mission. This replacement follows the four-spacecraft resources, force
+      model, transfer times, burn constraints and targeting sequence described
+      here. Sat1's initial orbit is recovered from the spacecraft screenshot;
+      the source chapter omitted Sat2, Sat3 and Sat4's orbital elements. Their
+      small offsets in the table below are explicit reconstruction choices,
+      not recovered historical values. Historical screenshots therefore show
+      different trajectories and numerical results.</para>
+      <para>The first target brings Sat2 to Sat1's position. The second target
+      matches their inertial velocities at a later epoch without also
+      constraining position. It demonstrates two targeting goals separately;
+      it does not establish a simultaneous six-state docking solution.</para>
+    </note>
 
     <section>
       <title>Prerequisites</title>
@@ -121,7 +137,7 @@
         </listitem>
 
         <listitem>
-          <para>OpenGL Plots: EarthView, DataReport</para>
+          <para>Orbit views: EarthView, Sat2InSat1LVLH; report file: DataReport</para>
         </listitem>
 
         <listitem>
@@ -133,6 +149,34 @@
     <section>
       <title>Creating and Modifying Objects</title>
 
+      <para>Use these initial Keplerian states in EarthMJ2000Eq, all at
+      UTCGregorian epoch 01 Jan 2000 11:59:27.966. SMA is in km and angles are
+      in degrees. Sat1's screenshot has a numerical eccentricity near
+      1.36e-16; the replacement uses the equivalent circular value zero.
+      Sat2 and Sat3 use eccentricity 0.0005 and opposite small inclination,
+      node and phase offsets. Sat4 uses a small inclination and phase offset.
+      These choices keep a nearby formation on the same nominal semimajor
+      axis while providing a nontrivial transfer for Sat2.</para>
+
+      <informaltable>
+        <tgroup cols="7">
+          <thead>
+            <row><entry>Spacecraft</entry><entry>SMA</entry><entry>ECC</entry>
+            <entry>INC</entry><entry>RAAN</entry><entry>AOP</entry><entry>TA</entry></row>
+          </thead>
+          <tbody>
+            <row><entry>Sat1 (recovered)</entry><entry>7600</entry><entry>0</entry>
+            <entry>100.51</entry><entry>278.85</entry><entry>0</entry><entry>90</entry></row>
+            <row><entry>Sat2 (chosen)</entry><entry>7600</entry><entry>0.0005</entry>
+            <entry>100.515</entry><entry>278.855</entry><entry>0</entry><entry>90.05</entry></row>
+            <row><entry>Sat3 (chosen)</entry><entry>7600</entry><entry>0.0005</entry>
+            <entry>100.505</entry><entry>278.845</entry><entry>0</entry><entry>89.95</entry></row>
+            <row><entry>Sat4 (chosen)</entry><entry>7600</entry><entry>0</entry>
+            <entry>100.52</entry><entry>278.85</entry><entry>0</entry><entry>90.1</entry></row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+
       <itemizedlist>
         <listitem>
           <para>Spacecraft</para>
@@ -143,9 +187,8 @@
 
               <itemizedlist>
                 <listitem>
-                  <para>Add spacecraft Sat1 (where, in this tutorial each
-                  initial orbital parameter assumes to be given as shown in
-                  the following Script Syntax)</para>
+                  <para>Add spacecraft Sat1 using the initial orbital
+                  parameters in the reconstructed state table above</para>
                 </listitem>
 
                 <listitem>
@@ -188,9 +231,8 @@
 
               <itemizedlist>
                 <listitem>
-                  <para>Add spacecraft Sat2 (where, in this tutorial each
-                  initial orbital parameter assumes to be given as shown in
-                  the following Script Syntax)</para>
+                  <para>Add spacecraft Sat2 using the initial orbital
+                  parameters in the reconstructed state table above</para>
                 </listitem>
 
                 <listitem>
@@ -216,9 +258,8 @@
 
               <itemizedlist>
                 <listitem>
-                  <para>Add spacecraft Sat3 (where, in this tutorial each
-                  initial orbital parameter assumes to be given as shown in
-                  the following Script Syntax)</para>
+                  <para>Add spacecraft Sat3 using the initial orbital
+                  parameters in the reconstructed state table above</para>
                 </listitem>
 
                 <listitem>
@@ -244,9 +285,8 @@
 
               <itemizedlist>
                 <listitem>
-                  <para>Add spacecraft Sat4 (where, in this tutorial each
-                  initial orbital parameter assumes to be given as shown in
-                  the following Script Syntax)</para>
+                  <para>Add spacecraft Sat4 using the initial orbital
+                  parameters in the reconstructed state table above</para>
                 </listitem>
 
                 <listitem>
@@ -407,6 +447,11 @@
                 <listitem>
                   <para>Primary is Earth</para>
                 </listitem>
+
+                <listitem>
+                  <para>Secondary is Sat1; set Y = -N and Z = -R, as shown in the screenshot.
+                  The remaining axis is computed.</para>
+                </listitem>
               </itemizedlist>
 
               <screenshot>
@@ -441,6 +486,11 @@
 
                 <listitem>
                   <para>Primary is Earth</para>
+                </listitem>
+
+                <listitem>
+                  <para>Secondary is Sat2; set X = V and Y = N, the conventional VNB definition.
+                  The remaining axis is computed.</para>
                 </listitem>
               </itemizedlist>
             </listitem>
@@ -478,12 +528,12 @@
               <itemizedlist>
                 <listitem>
                   <para>Add plots Sat2wrtSat1LVLH, Sat1wrtSat2VNB and
-                  Sat2wrtSat1VNB2</para>
+                  Sat1wrtSat2VNB2</para>
 
                   <itemizedlist>
                     <listitem>
                       <para>Sat2wrtSat1LVLH: XZ plots of Sat2 in
-                      Sat1VNB</para>
+                      Sat1LVLH</para>
 
 
                       <screenshot>
@@ -510,7 +560,7 @@
                     </listitem>
 
                     <listitem>
-                      <para>Sat2wrtSat1VNB2: YZ plots of Sat1 in
+                      <para>Sat1wrtSat2VNB2: YZ plots of Sat1 in
                       Sat2VNB</para>
                     </listitem>
                   </itemizedlist>
@@ -648,7 +698,7 @@
 
             <itemizedlist>
               <listitem>
-                <para>Select Sat2wrtSat1LVLHOn</para>
+                <para>Select Sat2wrtSat1LVLH On</para>
               </listitem>
             </itemizedlist>
           </listitem>
@@ -1430,10 +1480,18 @@
   <section>
     <title>Running the Mission</title>
 
-    <para>According to this tutorial, you complete this mission program.
-    Firstly please save all, then click green arrow which indicates running
-    simulation. So, by these steps you can create the following figures as
-    outputs.</para>
+    <para>Save the mission, then run it. The reconstructed script writes
+    FormationRendezvousTutorial.data with the twenty Cartesian-state reports
+    and FormationRendezvousResiduals.data with the separate target endpoint
+    residuals and VNB burn components. Each position component after Target1
+    should be within 0.0001 km of zero; each inertial velocity difference after
+    Target2 should be within 0.0001 km/s of zero. The latter report also records
+    the unconstrained position at the velocity-match endpoint. The final
+    0.2-day coast follows Target2 and adds no constraints.</para>
+
+    <para>The figure below is retained as a historical illustration. Its
+    numerical trajectories are not acceptance values for the reconstructed
+    initial formation.</para>
 
     <screenshot>
       <info>

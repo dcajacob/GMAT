@@ -14,26 +14,33 @@ parent references are traced. Plugin developer tests, the CInterface MATLAB
 configuration, Python/MATLAB API clients, notebooks and generators are outside
 this Qt mission-script corpus.
 
-| Standalone scope | Missions | Build passed | Build failed | Run completed | Run failed | Initial timeout |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `application/samples` | 138 | 110 | 28 | 109 | 0 | 1 |
-| Help tutorial downloads | 19 | 10 | 9 | 9 | 1 | 0 |
-| API and TLE sample missions | 7 | 7 | 0 | 2 | 5 | 0 |
-| Total | 164 | 127 | 37 | 120 | 6 | 1 |
+| Standalone scope | Missions | Build passed | Build failed | Run completed | Unexpected run failures | Expected tutorial Stop | Initial timeout |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `application/samples` | 138 | 123 | 15 | 119 | 0 | 1 | 3 |
+| Help tutorial downloads | 19 | 17 | 2 | 15 | 1 | 1 | 0 |
+| API and TLE sample missions | 7 | 7 | 0 | 2 | 5 | 0 | 0 |
+| Total | 164 | 147 | 17 | 136 | 6 | 2 | 3 |
 
 Every standalone candidate has an actual build attempt; every successful build
 has an execution attempt. Failed builds prevent execution. There are no recorded
-crashes in these stages. All 291 current child-stage records say their main
+crashes in these stages. All 311 current child-stage records say their main
 source remained unchanged during that attempt. Repaired tutorial sources have
-new hashes and retain earlier failures in history.
+new hashes and retain earlier failures in history. The two expected Stop rows
+retain raw exit 1/failed status plus an explicit tutorial-checkpoint assessment;
+raw counts are 136 passes, eight failures and three timeouts. They are not counted
+as completed missions or optimizer convergence.
 
 The Yukon launch-window mission's initial 180-second attempt timed out while
-its optimizer was progressing. A separate 7200-second attempt is running in
-`/tmp/gmat-shipped-examples-yukon`; it has already completed its first window,
-reporting launch epoch `27348.0637387` and cost `9.597325279040319`, and advanced
-to the next optimization. It is **not counted as passed**. Resume the existing
-process before starting another attempt. Merge only its terminal result into
-the main ledger after confirming source identity.
+its optimizer progressed. Its separate 7200-second attempt remains running in
+`/tmp/gmat-shipped-examples-yukon`; eight of its 20 windows have completed at this checkpoint, from
+launch epoch 27348.0637387/cost 9.597325279040319 through
+27362.0637387/cost 8.354403209032288. It is **not counted as passed**. Continue the
+same process; merge only its terminal result after confirming source identity.
+
+The newly enabled VF13ad MarsLaunchWindowAnalysis and MarsPatchConic runs each
+reached their 300-second bound. The first completed one window (epoch 27348.0637387,
+cost 9.597324034564597); the latter was still iterating. These are incomplete,
+not evidence of a hang or an algorithm defect. No unchanged rerun is scheduled.
 
 ## Fixes established by the failing examples and focused checks
 
@@ -75,8 +82,28 @@ the main ledger after confirming source identity.
   explicit mission boundaries added. Their numeric initial conditions,
   propagation/targeting equations and command order are retained. The report
   heading is quoted without changing its text. Lunar Transfer, Mars B-plane and
-  Report tutorials complete. Lunar L2 builds and reaches its guard described below.
-  The lunar download link and matching report-heading XML instruction are fixed.
+  Report tutorials complete. The first L2 run reached its bracket guard; the
+  measured replacement interval now exposes the separate event-domain failure
+  described below. The lunar download and report-heading XML links are fixed.
+
+- The available R2026a Ubuntu VF13ad binary is installed locally, with its
+  distributor README/license retained. Its optional startup entry now survives
+  CMake rebuilds. All 19 formerly blocked VF13ad example/tutorial variants build;
+  15 finish, two reach the chapter-required Step 1 Stop, and two long missions
+  reach their time bounds. No optimizer substitution was used. See
+  `vf13ad-external-component-20261002.md` and `MultipleShootingStep1IntentionalStop.md`.
+- FormationRendezvous now contains the documented four-spacecraft demonstration,
+  with missing Sat2–4 states explicitly reconstructed and disclosed. Both targets
+  converge and each constrained residual meets its documented tolerance. Separate
+  position/velocity endpoints are not simultaneous docking. Original historical
+  states/plot shapes remain unrecovered; see `FormationRendezvousRecovery.md`.
+- Trailing empty OF terminators are parsed without changing original lines,
+  comments or mission text. IntegratedFlyby static conversion now succeeds; its
+  absent CSALT/SNOPT dependency still prevents numerical execution.
+- Resources now offer Clone through one optional-name editor. Pending Cancel,
+  correction, atomic commit/Undo/Redo and source retention cover station, scalar,
+  string, array, frame and viewer copies, including managed array formulas and
+  Qt camera metadata. Protected built-ins/bodies/PropSetup remain excluded as in wx.
 
 Separate checks are in `qt-capability-checks-20261002.txt`: MissionInsertion,
 ScriptAssets, UnplottedBodyCameras, OpenFramesSyntax, CoordinateCreation,
@@ -88,29 +115,27 @@ not a claim that the full regression suite passed.
 
 ## Remaining failures and required work
 
-The 28 primary build failures require MarsGRAM (1), MATLAB/Fmincon (2), SNOPT (3),
-VF13ad (13) or CSALT/OptimalControl (9). Eight tutorial failures additionally
-require VF13ad (6) or MATLAB/Fmincon (2). MATLAB and SNOPT need proprietary
-dependencies; MATLAB remains explicitly deferred. VF13ad and MarsGRAM are
-missing optional installations/data, **not automatically accepted proprietary
-exceptions**. CSALT is disabled and its selected build configuration requires
-SNOPT. Original converter diagnostics also identified vector/compound-statement
-limits in dependency-bearing examples; those full conversions/executions are
-not established by the regular-example fixes. The manifest preserves exact
-diagnostics, dependency provenance and initial failures.
+The 17 current build failures require MarsGRAM (1), deferred MATLAB/Fmincon (4),
+SNOPT (3) or CSALT/OptimalControl (9). SNOPT and MATLAB are proprietary; CSALT's
+selected configuration also requires SNOPT. Missing legacy MarsGRAM plugin/data
+remains an external input/component requirement, not a proprietary waiver. The
+available free VF13ad binary removed all 19 of its build blockers; its actual
+per-example execution and provenance remain recorded separately. New runner
+stages also snapshot every configured Linux plugin file without claiming loader
+or ABI correctness merely from its presence.
 
-`FormationRendezvousTutorial.script` is the wrong bundled content: it is a copy
-of the old lunar transfer script, whereas the formation tutorial requires
-Sat1–4 and its relative frames. Modernizing that duplicate cannot qualify a
-formation rendezvous example. Restore the correct mission from the tutorial's
-specified spacecraft, initial states, frames and sequence, then execute it.
-
-Lunar L2's four target executions converge, then its explicit guard stops because
-the unchanged BdotT guesses 10000 and 11000 produce energy errors
-`+0.356311052242573` and `+0.2860377299423941`. The documented bisection therefore
-has no initial sign-changing bracket. Completion requires revised numerical
-bracketing inputs and verification against the tutorial's intended transfer;
-do not remove the Stop or count an interrupted run as completed.
+Lunar L2's original 10000/11000 B·T guesses had same-sign energy errors. A measured
+16000 km endpoint has negative error, establishing a valid 10000/16000 bracket
+without changing DesiredEnergy or removing the guard. The actual repaired run
+then failed after 79.261 seconds at an intermediate 15109.375 km trial: its first
+L2-entry propagation has only a geometric event; that trial misses the entry
+box, continues for decades and exhausts DE405 coverage at epoch 95008.539427940.
+One bounded diagnostic identifies a bound Earth-return trajectory rather than
+an L2 entry. Changing the stop would change evaluated energy/branch semantics
+and would not establish transfer success. Final targeting never starts. This
+remains a numerical transfer/event-domain failure, not missing proprietary data,
+and no further unchanged retry or exhaustive search was performed. See
+`l2-tutorial-bracket-2026-10-02.md` for exact phase reports and limits.
 
 Five TLE examples require absent public catalogs, not another plugin:
 
@@ -137,14 +162,16 @@ misclassified or run as standalone missions.
 
 - `shipped-examples-20261002.manifest.json`: every source hash, dependency,
   current stage, history, exact child command, timing and provenance.
-- `shipped-examples-20261002.results.tsv`: all 177 script/helper source rows.
+- `shipped-examples-20261002.results.tsv`: all 177 script/helper source rows,
+  with raw statuses and separate expected-stop dispositions.
 - `shipped-examples-20261002.failures.txt`: current diagnostic excerpts.
 - `shipped-tutorial-triage-20261002.md`: all 19 tutorial outcomes and repair map.
 - The full completed raw evidence is retained locally under
   `build/example-qualification/20261002/raw`, including reports/screenshots/logs.
   Original commands/ledger paths point to `/tmp/gmat-shipped-examples`; the
-  preserved copy has the same relative layout. This generated directory is
-  ignored, rather than adding all raw screenshots/reports to Git.
+  preserved copy has the same relative layout. Formation, VF13 Help variants,
+  the initial plugin probe and bounded L2 diagnostics are preserved in separate
+  neighboring trees. These generated directories are ignored.
 
 The runner `src/qtgui/tests/QualifyExamples.py` skips completed stages by default.
 Use explicit `--only` and `--retry-failed` after a concrete repair. It provisions
@@ -156,3 +183,16 @@ Early records predate some provenance additions; their named binary snapshots
 and HEAD/diff context are not proof of an exact build source or loader state.
 Neither the runner nor green execution statuses establish scientific results,
 native rendering, portals or the full replacement acceptance gates.
+
+## Latest affected UI checks
+
+The actual GmatQt frontend was rebuilt after Clone and parser changes. The new
+Clone test passes 0.47 seconds; OpenFramesSyntax passes 0.14 and
+OpenFramesVectors passes 0.46. Two initial Clone harness issues were corrected
+(the TestSettings constructor and an invalid pair of same-line assignments),
+with engine diagnostics now printed on a failed baseline build. The initial
+compile/check logs and final focused logs are retained; no passing conversion
+checks or old full suite were repeated after fixture-only edits. Independent
+review also caught/fixed mission-boundary preference and managed Array-block
+copying before the final Clone check. This is offscreen workflow/report evidence,
+not native popup safety or a full replacement acceptance pass.

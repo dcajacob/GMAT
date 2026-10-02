@@ -255,31 +255,47 @@ storage, mark the old goal complete, or narrow the original acceptance scope.
 
 ## Shipped examples and latest continuation — 2026-10-02
 
-The user requested every shipped example be checked, preserving successful
-results and identifying genuine fixes or unreasonable external dependencies.
-Qt6ParityValidation/shipped-examples-20261002.md records the complete 164-mission
-inventory and current stage evidence: 127 build successes, 120 completed runs,
-37 build failures, six runtime failures and one initial timeout. Do not interpret
-these numbers as full replacement or scientific qualification. All work and the
-rebuilt application/core/plugin runtime are in /home/dan/GIT/GMAT-Qt.
+Every one of 164 standalone shipped mission/tutorial candidates has a real build
+attempt, and every one of 147 successful builds has a run attempt. Current stages
+are 136 completed runs, six unexpected runtime failures, two expected Step 1 Stop
+checkpoints, three initial timeouts and 17 failed builds. Raw interrupted status
+is retained. See Qt6ParityValidation/shipped-examples-20261002.md, manifest and
+177-row table, plus the latest qualification appendix. Keep the full acceptance
+scope; these are build/execution checks, not complete native/scientific parity.
 
-The record covers the now-fixed coordinate pending transaction, branch insertion,
-relative assets, camera/list conversion, undrawn body cameras, retained OF
-vectors, public Python API and SRP string-array regression, with focused checks
-and exact mission/source preservation limits. Three repaired legacy tutorial
-missions complete. L2 needs a valid numerical bracket; FormationRendezvous's
-attachment is the wrong lunar content. Five TLE examples require matching absent
-public catalogs. Missing VF13ad/MarsGRAM installations are not automatically
-waived as proprietary. MATLAB remains deferred; CSALT/SNOPT requirements remain.
+All work and rebuilt runtime are in /home/dan/GIT/GMAT-Qt. Coordinate pending axes,
+branch/Toggle insertion, relative assets, OF lists/undrawn cameras/retained vectors,
+public Python API and SRP string-array fixes remain. New Clone covers unified
+optional naming, pending/atomic source and managed Array/Qt metadata; Rename
+remains a useful missing active workflow. Clone/OpenFramesSyntax/OpenFramesVectors
+focused checks pass after the actual frontend rebuild. No old full matrix was
+repeated. Initial new-test harness errors are preserved/corrected.
 
-A longer original Yukon launch-window run is active in a separate ledger under
-/tmp/gmat-shipped-examples-yukon with a 7200-second bound. Its first window
-completed and the next optimization started. Confirm its process handle before
-continuing or restarting; merge only its terminal selected record into the main
-ledger. The 900-second SPAD drag retry already completed in 209.91 seconds and
-must not be repeated. The resumable runner is src/qtgui/tests/QualifyExamples.py;
-use explicit failed selections after concrete changes. Current completed raw
-logs/reports/screenshots survive /tmp cleanup in
-build/example-qualification/20261002/raw. Keep the complete acceptance scope and
-continue meaningful broad GUI capability work; native desktop testing remains
-stopped until the GNOME Shell crash issue is resolved.
+The free R2026a VF13ad binary is installed locally in the ignored
+application/plugins/thinksys/vf13ad directory. GMAT_QT_EXTERNAL_PLUGINS in the local
+preset keeps its entry through startup regeneration. All 19 formerly blocked
+variants build; 15 complete, two requested Step 1 Stop, two Mars time bounds. The
+external binary/README is not committed or a built plugin target. Preserve its
+license. Remaining failed builds: deferred MATLAB 4, SNOPT 3, CSALT 9 (SNOPT needed)
+and legacy MarsGRAM 1. Do not automatically waive absent public plugins/data.
+
+Formation now contains a clearly labeled reconstruction of the intended chapter,
+with missing historic states disclosed; actual target residuals meet tolerance.
+L2's measured wider bracket fixes its initial guard but the next full run exposes
+an intermediate trial missing the geometric entry box and exhausting DE405.
+One bounded diagnostic establishes the event-domain problem; do not remove the
+guard, cap-and-claim-success or keep retrying without substantive transfer analysis.
+Five TLE examples still require matching absent public catalogs. Their exact data
+requirements and all helper/fragment coverage limits remain recorded.
+
+The original longer Yukon launch-window process remains active under
+/tmp/gmat-shipped-examples-yukon with a 7200-second bound; eight windows completed at this checkpoint.
+Confirm its existing handle before continuing; do not restart. Merge only its
+terminal selected result into the main ledger after matching source identity.
+The VF13ad/MarsLaunch and MarsPatchConic 300-second attempts were progressing,
+not proved hung; preserve as incomplete. SPAD's earlier 209.91-second completed
+retry must not repeat. QualifyExamples.py is resumable; select failed examples
+only after concrete fixes. Completed raw trees are preserved in
+build/example-qualification/20261002 (raw, formation, vf13-tutorials, vf13-probe,
+l2-bracket). Live native desktop testing remains stopped until the GNOME Shell
+crash/safety issue is resolved. Windows/macOS and MATLAB stay deferred.

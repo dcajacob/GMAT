@@ -1186,7 +1186,11 @@
           </listitem>
 
           <listitem>
-            <para>Equation19 similarly is the upper bound guess.</para>
+            <para>Equation19 similarly is the upper bound guess. For the supplied
+            initial state, force models, and R2026a data, use 16000 km. Its
+            energy error is negative, while the 10000 km lower bound gives a
+            positive error. Recheck these signs when changing mission inputs
+            and retain the bracket check and Stop command.</para>
           </listitem>
 
           <listitem>
@@ -1221,7 +1225,7 @@
           </listitem>
 
           <listitem>
-            <para>Equation19: UB = 11000</para>
+            <para>Equation19: UB = 16000</para>
           </listitem>
 
           <listitem>

@@ -403,7 +403,8 @@ GMAT DesiredEnergy = -0.2076893509448376;
 GMAT BdotT = 10000;
 GMAT c = 0;
 GMAT LB = 10000;
-GMAT UB = 11000;
+%  Widen the upper bound so the endpoint energy errors bracket DesiredEnergy.
+GMAT UB = 16000;
 GMAT Error = 1e10;
 While Error >= 0.000001 & c < 20
    

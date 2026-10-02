@@ -53,3 +53,40 @@ Label Time Summary:
 qt-gui    =   0.34 sec*proc (1 test)
 
 Total Test time (real) =   0.34 sec
+
+Latest affected syntax/vector checks after frontend changes; Clone fixture then corrected separately.
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start  9: QtGui.ResourceClone
+1/3 Test  #9: QtGui.ResourceClone ..............***Failed    0.17 sec
+This plugin does not support propagateSizeHints()
+Clone baseline failed
+
+    Start 31: QtGui.OpenFramesSyntax
+2/3 Test #31: QtGui.OpenFramesSyntax ...........   Passed    0.14 sec
+    Start 33: QtGui.OpenFramesVectors
+3/3 Test #33: QtGui.OpenFramesVectors ..........   Passed    0.46 sec
+
+67% tests passed, 1 tests failed out of 3
+
+Label Time Summary:
+qt-gui    =   0.78 sec*proc (3 tests)
+
+Total Test time (real) =   0.78 sec
+
+The following tests FAILED:
+	  9 - QtGui.ResourceClone (Failed)                      qt-gui
+Errors while running CTest
+
+Final Clone-only check after fixture correction; passing syntax/vector checks not repeated.
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 9: QtGui.ResourceClone
+1/1 Test #9: QtGui.ResourceClone ..............   Passed    0.47 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.47 sec*proc (1 test)
+
+Total Test time (real) =   0.47 sec
+
+Actual rebuilt application/bin/GmatQt-R2026a SHA256: bb12ba23a54f8ef10b6d203eb2143a68d4af3b633685f5670764c16042105708

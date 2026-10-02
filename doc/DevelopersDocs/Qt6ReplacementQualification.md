@@ -7720,3 +7720,66 @@ The complete Linux replacement goal remains active. Native window/OpenGL/portal
 and outstanding wx workflow/display acceptance gates remain open after the GNOME
 Shell crash; live desktop testing stays stopped. Windows/macOS and MATLAB remain
 deferred. No numerical algorithm was rewritten.
+
+
+## External optimizer, tutorial repairs and resource Clone — 2026-10-02
+
+The latest shipped corpus remains 164 standalone missions/tutorials, plus four
+include fragments and nine GMF helpers. Actual current stages are 147 successful
+builds, 17 failed builds, 136 completed executions, six unexpected runtime failures,
+two expected tutorial Stop checkpoints and three initial timeouts. All 311 current
+child records retain unchanged main-source hashes. Raw runtime statuses remain
+136 passed/eight failed/three timed out: the two Step 1 Stops are explicit assessed
+interruptions, not completed missions. See shipped-examples-20261002.md and its
+manifest/177-row table for every file, history and exact artifact.
+
+The free external R2026a VF13ad binary now loads against this engine and all 19
+previously blocked sample/tutorial variants build. Fifteen complete, two reach
+the documented initial-guess Stop, and two long Mars analyses hit 300-second
+bounds. Original primary/Help variants differ in source hashes and each was
+executed. The locally installed binary/README is ignored and not committed;
+GMAT_QT_EXTERNAL_PLUGINS retains optional extensionless startup paths across
+rebuilds, with no external plugin target added to the build. New runner records
+snapshot all configured Linux plugin files; presence alone is not ABI proof.
+
+FormationRendezvous's wrong lunar attachment is replaced by a clearly marked
+four-spacecraft reconstruction preserving documented forces, burn bounds,
+timings and separate position/velocity target goals. Missing historic Sat2–4
+states are disclosed. Actual targets converge in three/two iterations; every
+constrained residual meets 1e-4 km or km/s per component. The final residual file
+is independent of trial Cartesian report rows. This is an executable teaching
+demonstration, not restored historic trajectories or simultaneous docking.
+
+L2 now has a measured sign-changing 10000/16000 km bracket with unchanged energy,
+guard and calculations. Its full repaired run still fails 79.261 seconds later:
+a 15109.375 km intermediate trial misses the geometric L2-entry box, propagates
+for decades and exceeds DE405 coverage. One bounded diagnostic identifies an
+Earth-return trial; simply adding a cap would alter the transfer objective.
+Final targeting never starts. This remains a numerical example failure, not a
+proprietary-dependency waiver. No exhaustive branch search or new retry follows.
+
+The seventeen failed builds now comprise deferred MATLAB (4), SNOPT (3),
+SNOPT-dependent CSALT (9) and absent legacy MarsGRAM plugin/data (1). Five TLE
+runs still need exact matching absent public catalogs. Full dependency/OF
+execution and data gates are retained. Native desktop/OpenGL/portal testing is
+still stopped after the GNOME Shell crash; these offscreen results do not close
+that gate. The existing long Yukon process continues, with eight windows done at this checkpoint,
+and must not be restarted. SPAD's earlier 209.91-second pass was not repeated.
+
+Configured resources now offer Clone in Edit/Resources with optional naming and
+one shared editor. Source-based cloning preserves grouped settings/comments,
+references, implicit defaults, managed Array formulas and Qt viewer metadata;
+Cancel/correction and commit/Undo/Redo/save/reopen remain atomic. Independent
+review caught/fixed ambiguous first-command boundaries and omitted managed Array
+blocks. Protected built-ins/bodies/PropSetup match wx exclusions. Resource Rename
+is still a missing active workflow, not closed by Clone.
+
+GmatQt and affected check executables were incrementally rebuilt. Final Clone
+passes 0.47 seconds, OpenFramesSyntax 0.14 and OpenFramesVectors 0.46; duplicate
+trailing OF terminators now convert without changing original lines or mission
+text, including static IntegratedFlyby. Its CSALT execution remains unavailable.
+Initial Clone compile/fixture failures were harness defects and their raw logs
+are preserved alongside the corrected test. No successful conversion check or
+old complete suite was repeated after fixture-only fixes. The full replacement
+acceptance checklist remains in progress; no native popup or scientific-wide
+qualification is claimed. Windows/macOS and MATLAB remain deferred.
