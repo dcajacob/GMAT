@@ -305,3 +305,16 @@ paths stay explicit script-editor boundaries. Resource popups now use value
 selection and are destroyed before modal dispatch; the offscreen lifetime check
 is not proof of a compositor fix. Read-only Qt source/crash review found no
 established current GMAT lifetime defect. Keep the native acceptance gate open.
+
+## Next phase: interactive Help tutorials — 2026-10-02
+
+After the current qualification work, follow the Help tutorials by constructing
+each scenario through the Qt application, starting from a new mission or an
+independently built prerequisite tutorial. Do not use shipped tutorial mission
+scripts to construct it; compare those only after preserving the authored
+mission and its results. See [Qt6TutorialWalkthrough.md](Qt6TutorialWalkthrough.md)
+for the twelve published chapters, twelve additional source chapters, dependency
+notes and evidence requirements. All walkthroughs are pending. Earlier example
+runs and tutorial repairs do not satisfy this new GUI acceptance phase. Resolve
+a safe interactive display route before testing; the native acceptance gate and
+the existing Linux replacement goal remain open. Avoid repeating passing tests.

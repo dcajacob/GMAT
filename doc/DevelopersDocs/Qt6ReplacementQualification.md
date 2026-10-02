@@ -7813,3 +7813,25 @@ is scheduled. Corpus totals remain 147 successful builds/17 failures and 136
 completed runs/six unexpected runtime failures/two intended Stops/three timeouts.
 No full mission or numerical scientific success is inferred from partial windows.
 The complete replacement goal remains active and unfinished.
+
+## Added acceptance phase: build the Help tutorials through the GUI — 2026-10-02
+
+The user requested a subsequent phase after the current qualification work:
+follow the Help instructions as a person using the Qt application would and
+independently construct, run, inspect and save/reopen each scenario. Shipped
+tutorial mission scripts are reserved for a final comparison after preserving
+the authored mission and evidence. They must not seed its construction.
+
+[Qt6TutorialWalkthrough.md](Qt6TutorialWalkthrough.md) records the ordered twelve
+published chapters and twelve additional/legacy source chapters, prerequisite
+chains, stage handling, dependencies and the per-chapter acceptance procedure.
+All walkthroughs are pending; reading the introductions and the earlier shipped
+script corpus runs establish no interactive tutorial pass. Record missing or
+confusing controls and fix reasonable GUI gaps, distinguishing prescribed
+script/function-editor work from resource/mission editor coverage. Preserve
+existing successful execution evidence instead of repeating unchanged tests.
+
+Live desktop testing remains stopped after the compositor crash. Establish a
+safe interactive display route for the walkthroughs; synthetic model fixtures
+cannot replace human-style GUI construction or native window qualification.
+Windows/macOS and MATLAB remain deferred. The full goal remains unfinished.
