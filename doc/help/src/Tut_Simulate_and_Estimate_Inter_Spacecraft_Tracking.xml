@@ -63,7 +63,7 @@
     range-rate measurement data between two spacecraft. One spacecraft,
     referred to as the tracking Spacecraft, is performing observations on the
     other, referred to as the observed Spacecraft. The tracking spacecraft is
-    in geosynchronous orbit and the observed spacecraft is in low-earth orbit.
+    in near-geosynchronous orbit and the observed spacecraft is in low-earth orbit.
     These simulated measurements will then be used to perform state estimation
     on the observed Spacecraft.</para>
 
@@ -148,6 +148,13 @@
       <guilabel>SimSat</guilabel> and <guilabel>SimTrackSat</guilabel>, and
       set their epochs and Cartesian coordinates.</para>
 
+      <para>The tracking spacecraft Cartesian components are expressed in
+      <guilabel>EarthFixed</guilabel>, including velocity relative to the
+      rotating Earth. This defines an approximately 5-degree inclined,
+      near-circular orbit close to geosynchronous motion; it is not
+      geostationary. The observed spacecraft state remains in
+      <guilabel>EarthMJ2000Eq</guilabel>.</para>
+
       <programlisting>%
 %   Simulated Spacecraft
 %
@@ -170,7 +177,7 @@ Create Spacecraft SimTrackSat
 
 SimTrackSat.DateFormat       = UTCGregorian
 SimTrackSat.Epoch            = '10 Jun 2010 00:00:00.000'
-SimTrackSat.CoordinateSystem = EarthMJ2000Eq
+SimTrackSat.CoordinateSystem = EarthFixed
 SimTrackSat.DisplayStateType = Cartesian
 SimTrackSat.X                = -36517.051189    
 SimTrackSat.Y                = -21083.129334       
@@ -219,7 +226,7 @@ Create Spacecraft EstTrackSat
 
 EstTrackSat.DateFormat       = UTCGregorian
 EstTrackSat.Epoch            = '10 Jun 2010 00:00:00.000'
-EstTrackSat.CoordinateSystem = EarthMJ2000Eq
+EstTrackSat.CoordinateSystem = EarthFixed
 EstTrackSat.DisplayStateType = Cartesian
 EstTrackSat.X                = -36517.051189    
 EstTrackSat.Y                = -21083.129334       
@@ -647,19 +654,19 @@ RunEstimator bat</programlisting>
 
       <programlisting width="100"><?db-font-size 65% ?>% GMAT Internal Measurement Data File
 
-25357.5003935185185185185190    Range    9029    TrackSat    ObservedSat    8.0745608409918510e+04
-25357.5003935185185185185190    RangeRate    9030    { TrackSat    ObservedSat    TrackSat }    2    10    1.2080451949525264e+00
-25357.5010879629629629629630    Range    9029    TrackSat    ObservedSat    8.0828956472718346e+04
-25357.5010879629629629629630    RangeRate    9030    { TrackSat    ObservedSat    TrackSat }    2    10    1.5166696445321948e+00
+25357.5101157407407407407404    Range    9029    TrackSat    ObservedSat    8.5884657493502367e+04
+25357.5101157407407407407404    RangeRate    9030    { TrackSat    ObservedSat    TrackSat }    2    10    -1.4556955201097006e+01
+25357.5108101851851851851856    Range    9029    TrackSat    ObservedSat    8.5006444981494671e+04
+25357.5108101851851851851856    RangeRate    9030    { TrackSat    ObservedSat    TrackSat }    2    10    -1.4685441854154220e+01
 </programlisting>
 
       <para>The first line of the file is a comment line indicating that this
       is a file containing measurement data stored in GMAT’s internal format.
       There are four lines of data representing range data at two successive
       times and range-rate data at two successive times. The first line of
-      data which represents a two-way range measurement at the start of the
-      simulation at '10 Jun 2010 00:00:00.000 UTCG’ which corresponds to the
-      output TAI modified Julian day of 25357.5003935185... TAIMJD. The second
+      data represents a two-way range measurement at the first available
+      measurement epoch at '10 Jun 2010 00:14:00.000 UTCG’ which corresponds to the
+      output TAI modified Julian day of 25357.5101157407... TAIMJD. The second
       and third fields, Range and 9029, are just internal GMAT codes
       indicating the use of two-way range data. The fourth field, TrackSat, is
       the tracking spacecraft ID. This is the ID we gave the
@@ -667,14 +674,16 @@ RunEstimator bat</programlisting>
       The fifth field, ObservedSat, is the tracked spacecraft ID,which is the
       ID we gave the <guilabel>SimSat</guilabel>
       <guilabel>Spacecraft</guilabel> object that we created. The 6th field,
-      8.0745614120287588e+04, is the actual inter-spacecraft range observation
+      8.5884657493502367e+04, is the actual inter-spacecraft range observation
       value in km. Note that your value will be different, since we've added
-      random noise to the data.</para>
+      random noise to the data. The first available observation is at
+      00:14; earlier simulation epochs have no recorded measurement in this
+      example.</para>
 
       <para>The second line of data represents a two-way range-rate
-      measurement at the start of the simulation at '10 Jun 2010 00:00:00.000
+      measurement at the first available measurement epoch at '10 Jun 2010 00:14:00.000
       UTCG’ which corresponds to the output TAI modified Julian Day of
-      25357.5003935185... TAIMJD. This range-rate measurement is simultaneous
+      25357.5101157407... TAIMJD. This range-rate measurement is simultaneous
       with the simulated range measurement. The second and third fields,
       RangeRate and 9030, are just internal GMAT codes indicating the use of
       the RangeRate observation type. The fields enclosed in curly braces
@@ -693,19 +702,19 @@ RunEstimator bat</programlisting>
 
       <literallayout>                DSNsimData.SimDopplerCountInterval = 10.0</literallayout>
 
-      <para>The seventh field, 1.2080451949525264e+00, is the actual
+      <para>The seventh field, -1.4556955201097006e+01, is the actual
       range-rate observation value in km/sec. Again, your value will differ
       from that appearing here.</para>
 
       <para>The third line of data represents the second two-way range
-      measurement at '10 Jun 2010 00:01:00.000 UTCG’ which corresponds to the
-      output TAI modified Julian Day time of 25357.5010879629... TAIMJD. The
+      measurement at '10 Jun 2010 00:15:00.000 UTCG’ which corresponds to the
+      output TAI modified Julian Day time of 25357.5108101852... TAIMJD. The
       fourth line of data represents the second two-way range-rate measurement
-      at '10 Jun 2010 00:01:00.000 UTCG.’ All the following lines show the
+      at '10 Jun 2010 00:15:00.000 UTCG.’ All the following lines show the
       simulated measurements at each minute during until the end of the
       simulation, which was defined as '11 Jun 2010 00:00:00.000'. There will
       be gaps in the simulated data corresponding to when the Earth blocks the
-      signal from the tracking spacecraft in geosynchronous orbit to the
+      signal from the tracking spacecraft in near-geosynchronous orbit to the
       target spacecraft in low-earth orbit.</para>
     </section>
 
@@ -736,7 +745,7 @@ RunEstimator bat</programlisting>
  ID                                            TrackSat               ObservedSat 
                                                                                   
  Epoch (UTC)                   10 Jun 2010 00:00:00.000  10 Jun 2010 00:00:00.000 
- Coordinate System                        EarthMJ2000Eq             EarthMJ2000Eq 
+ Coordinate System                           EarthFixed             EarthMJ2000Eq
  X  (km)                                -36517.05118900              576.87000000 
  Y  (km)                                -21083.12933400            -5701.14000000 
  Z  (km)                                     0.00000000            -4170.59000000 

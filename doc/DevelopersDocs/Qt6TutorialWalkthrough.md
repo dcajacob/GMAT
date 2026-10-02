@@ -9,7 +9,7 @@ them. Shipped tutorial mission scripts are reserved for comparison afterward.
 This extends the existing goal; it does not replace its unfinished acceptance
 requirements. Windows, macOS and MATLAB remain deferred.
 
-**Tutorials 1–11 are Passed for bounded private actual-input construction.** See
+**All twelve published tutorials are Passed for bounded private actual-input construction.** See
 [Tutorial 1](Qt6ParityValidation/help-tutorial-01-20261002.md),
 [Tutorial 2](Qt6ParityValidation/help-tutorial-02-20261002.md),
 [Tutorial 3](Qt6ParityValidation/help-tutorial-03-20261002.md),
@@ -20,7 +20,8 @@ requirements. Windows, macOS and MATLAB remain deferred.
 [Tutorial 8](Qt6ParityValidation/help-tutorial-08-20261002.md) and
 [Tutorial 9](Qt6ParityValidation/help-tutorial-09-20261002.md),
 [Tutorial 10](Qt6ParityValidation/help-tutorial-10-20261002.md) and
-[Tutorial 11](Qt6ParityValidation/help-tutorial-11-20261002.md). Each includes
+[Tutorial 11](Qt6ParityValidation/help-tutorial-11-20261002.md) and
+[Tutorial 12](Qt6ParityValidation/help-tutorial-12-20261002.md). Each includes
 independent Help-driven construction, execution and result checks, save/reopen,
 and comparison after freezing the authored mission. Tutorial 4 covers resource
 and command forms, B-plane targeting and Mars capture. Its resource fixes have
@@ -32,8 +33,9 @@ verification. The frozen own construction preceded all new reference access.
 Tutorials 10–11 complete DSN/GN estimation and GPS simulation/filter/smoother,
 warm start, covariance/plots, ephemeris/prediction and Linux console workflows.
 The shared residual-plot data-loss repair is verified through the affected
-actual GUI stages. Tutorial 12 remains In progress while its frozen original
-walkthrough and corrected reference frame evidence are finalized. Tutorial 6 completes functions, Global sharing and Mars capture. Tutorial 8 independently passed electric hardware/finite-burn forms
+actual GUI stages. Tutorial 12 retains its frozen literal original walkthrough
+and separately verifies the reviewed tracking-frame repair. The installed
+offline Help is rebuilt with that correction. Tutorial 6 completes functions, Global sharing and Mars capture. Tutorial 8 independently passed electric hardware/finite-burn forms
 and matched the corrected reference summary. Tutorial 7 completes its core
 eclipse/contact workflow, with optional exercises and GUI LSK management
 unclaimed. The earlier shipped-script corpus
@@ -44,9 +46,10 @@ authenticated X11/software-GL route with actual mouse/keyboard input is now
 established; see [isolated input evidence](Qt6ParityValidation/isolated-x11-input-20261002.md).
 It can support independent GUI construction while host GNOME/Wayland, portals
 and hardware-driver acceptance remain open. Offscreen fixtures do not substitute
-for interactive construction. Tutorials 1–11 used that bounded route through
+for interactive construction. All twelve tutorials used that bounded route through
 actual Help/resource/mission controls or the expressly Help-taught code editor,
-with separate per-chapter evidence. Tutorial 12 evidence continues independently.
+with separate per-chapter evidence. These passes do not close the host desktop
+or full Linux replacement gates.
 
 The published order comes from `doc/help/src/Part_Tutorials.xml`; prerequisite
 notes below come from the chapter introductions. Use the Help actually available
@@ -96,8 +99,8 @@ or links against the source. Reading an inventory is not a completed tutorial.
 
 ## Published tutorial sequence
 
-Tutorials 1–11 are **Passed** with the bounded evidence linked below;
-tutorial 12 is **In progress**. Numbering follows
+All twelve published tutorials are **Passed** with the bounded evidence linked
+below. Numbering follows
 the Tutorials part of the Help.
 
 | # | Chapter source and title | Prerequisites and staged coverage |
@@ -113,7 +116,7 @@ the Tutorials part of the Help.
 | 9 | `Tut_Simulate_DSN_Range_and_Doppler_Data.xml` — Simulate DSN Range and Doppler Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-09-20261002.md). Independent empty script-editor Help stages, four-observation short run, three-station/ramp/noisy 21-day run with 1348 paired observations, own save/reopen/freeze and post-freeze source/settings comparison using earlier source-matched corpus evidence. Full own observations retained for Tutorial10; stochastic/scientific equality unclaimed. Basic Mission Design Tutorials. |
 | 10 | `Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml` — Orbit Estimation using DSN Range and Doppler Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-10-20261002.md). Independent Help script-editor DSN estimate with own Tutorial9 observations, repaired six residual plots and report-filtered209-point export; mandatory own GN simulation/three-iteration estimate, six plots/209-point export, preserved storage failure and one justified retry. All own save/reopen/freeze and post-freeze source-matched comparison; GN truth accuracy/scientific equality/MATLAB analysis limits explicit. |
 | 11 | `Tut_FilterSmoother_GpsPosVec.xml` — Filter and Smoother Orbit Determination using GPS_PosVec Data | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-11-20261002.md). Independent Help editor simulation, cold filter/smoother, repaired residual plots, 18:00 warm state/covariance readback, ephemeris and one-day prediction, Linux GmatConsole Appendix B with complete GUI/console ephemeris equality, own save/reopen/freeze and post-freeze comparison to distinct related examples. Storage/harness failures and bounded cleanup retained; MATLAB-dependent analysis/conditioning explicitly deferred. |
-| 12 | `Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml` — Simulate and Estimate Inter-Spacecraft Tracking | **In progress** — literal Help construction, simulator/estimator execution and actual save/reopen complete; 1613 records used over three iterations. Required residual plots exposed shared Qt data loss. Exact authored inputs remain unchanged pending repaired-plot verification and final freeze before comparison. |
+| 12 | `Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml` — Simulate and Estimate Inter-Spacecraft Tracking | **Passed** — [actual-input walkthrough](Qt6ParityValidation/help-tutorial-12-20261002.md). Independent literal Help keyboard/editor construction, simulation/estimation, actual save/reopen/readback; shared residual failure preserved and one unchanged-own retry exports 806/804 points. Freeze precedes 126-statement reference comparison. Original tracking frame is physically unsuitable; reviewed two-frame EarthFixed repair completes one separate 3.406-s GUI verification, two iterations, 824/822 exported points, plausible near-geosynchronous initial orbit. Original authored source preserved; scientific/host/full replacement limits explicit. |
 
 Chapters 9, 10 and 12 describe legacy script-only navigation workflows. Chapter 5
 also requires authoring an optimization sequence. Record what the Qt resource and
@@ -150,6 +153,6 @@ not satisfy independent interactive construction.
 
 For each actual walkthrough, add a per-chapter record under
 `doc/DevelopersDocs/Qt6ParityValidation` and link it here. Preserve raw artifacts
-in the ignored qualification artifact tree. Tutorials 1–11 have completed
-records linked above; Tutorial 12 and additional source chapters require their
-own independent evidence or applicable dependency/availability disposition.
+in the ignored qualification artifact tree. All twelve published tutorials have completed
+records linked above. Additional source chapters retain the separate
+availability/dependency disposition and have no completed walkthrough claim.

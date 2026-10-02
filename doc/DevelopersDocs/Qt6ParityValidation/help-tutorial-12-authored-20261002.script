@@ -1,19 +1,6 @@
 %
-%  Script: Tut_Inter_Spacecraft_Tracking
+%   Simulated Spacecraft
 %
-%  Script for the "Simulate and Estimate Inter-Spacecraft Tracking" Users Guide 
-%  tutorial.
-%
-%  Tracking spacecraft Cartesian components are expressed in EarthFixed,
-%  including velocity relative to the rotating Earth. They define an
-%  approximately 5-degree inclined, near-circular, near-geosynchronous orbit.
-%  The observed spacecraft remains in EarthMJ2000Eq.
-%
-
-
-%----------------------------------------
-%---------- Spacecraft
-%----------------------------------------
 
 Create Spacecraft SimSat
 
@@ -33,7 +20,7 @@ Create Spacecraft SimTrackSat
 
 SimTrackSat.DateFormat       = UTCGregorian
 SimTrackSat.Epoch            = '10 Jun 2010 00:00:00.000'
-SimTrackSat.CoordinateSystem = EarthFixed
+SimTrackSat.CoordinateSystem = EarthMJ2000Eq
 SimTrackSat.DisplayStateType = Cartesian
 SimTrackSat.X                = -36517.051189    
 SimTrackSat.Y                = -21083.129334       
@@ -43,9 +30,9 @@ SimTrackSat.VY               = 0.010330
 SimTrackSat.VZ               = 0.267968
 SimTrackSat.Id               = 'TrackSat'
 
-%----------------------------------------
-%---------- Estimator Spacecraft
-%----------------------------------------
+%
+%   Estimator Spacecraft
+%
 
 Create Spacecraft EstSat
 
@@ -67,7 +54,7 @@ Create Spacecraft EstTrackSat
 
 EstTrackSat.DateFormat       = UTCGregorian
 EstTrackSat.Epoch            = '10 Jun 2010 00:00:00.000'
-EstTrackSat.CoordinateSystem = EarthFixed
+EstTrackSat.CoordinateSystem = EarthMJ2000Eq
 EstTrackSat.DisplayStateType = Cartesian
 EstTrackSat.X                = -36517.051189    
 EstTrackSat.Y                = -21083.129334       
@@ -77,10 +64,9 @@ EstTrackSat.VY               = 0.010330
 EstTrackSat.VZ               = 0.267968
 EstTrackSat.Id               = 'TrackSat'
 
-
-%----------------------------------------
-%---------- Spacecraft hardware
-%----------------------------------------
+%
+%   Spacecraft hardware
+%
 
 Create Antenna SpacecraftAntenna
 Create Transponder HGA
@@ -89,13 +75,12 @@ HGA.PrimaryAntenna  = SpacecraftAntenna
 HGA.HardwareDelay   = 1e-06
 HGA.TurnAroundRatio = '880/749'
 
-SimSat.AddHardware  = {HGA, SpacecraftAntenna}
-EstSat.AddHardware  = {HGA, SpacecraftAntenna}
+SimSat.AddHardware = {HGA, SpacecraftAntenna}
+EstSat.AddHardware = {HGA, SpacecraftAntenna}
 
- 
-%----------------------------------------
-%--- Measurement Spacecraft hardware
-%----------------------------------------
+%
+%   Measurement Spacecraft hardware
+%
 
 Create Transmitter MeasurementTransmitter
 Create Receiver MeasurementReceiver
@@ -107,10 +92,9 @@ MeasurementReceiver.PrimaryAntenna    = SpacecraftAntenna
 SimTrackSat.AddHardware = {HGA, SpacecraftAntenna, MeasurementTransmitter, MeasurementReceiver}
 EstTrackSat.AddHardware = {HGA, SpacecraftAntenna, MeasurementTransmitter, MeasurementReceiver}
 
-  
-%----------------------------------------
-%---------- Tracking file sets
-%----------------------------------------
+%
+%   Tracking file sets
+%
 
 Create TrackingFileSet simData
 
@@ -130,9 +114,9 @@ estData.UseRelativityCorrection = True
 estData.UseETminusTAI           = True
 
 
-%----------------------------------------
-%----- Spacecraft error models
-%----------------------------------------
+%
+%   Spacecraft error models
+%
 
 Create ErrorModel Range
 
@@ -150,10 +134,9 @@ RangeRate.SolveFors  = {}
 
 MeasurementReceiver.ErrorModels = {Range, RangeRate}
 
-
-%----------------------------------------
-%------ Propagator and force model
-%----------------------------------------
+%
+%   Propagator and force model
+%
 
 Create ForceModel FM
 
@@ -173,10 +156,9 @@ Prop.MinStep         = 0
 Prop.MaxStep         = 60
 Prop.MaxStepAttempts = 50
 
- 
-%----------------------------------------
-%---------- Simulator
-%----------------------------------------
+%
+%   Simulator
+%
 
 Create Simulator sim
 
@@ -188,10 +170,9 @@ sim.MeasurementTimeStep        = 60
 sim.Propagator                 = Prop
 sim.AddNoise                   = On
 
-
-%----------------------------------------
-%---------- Estimator
-%----------------------------------------
+%
+%   Estimator
+%
 
 Create BatchEstimator bat
 
@@ -208,10 +189,8 @@ bat.OLSEMultiplicativeConstant = 3
 bat.OLSEAdditiveConstant       = 0
 bat.ReportFile                 = 'InterSpacecraft_Range_and_RangeRate.txt'
 
-%----------------------------------------
-%---------- Mission Sequence
-%----------------------------------------
 BeginMissionSequence
  
 RunSimulator sim
 RunEstimator bat
+

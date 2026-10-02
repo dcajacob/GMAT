@@ -958,3 +958,44 @@ Original numerical algorithms/core/startup are unchanged. Rebuilt plugin
 SHA04726589... is required; appb8074b02... stays unchanged. Actual File Exit0 is
 recorded separately from first helper termination and final helper's expected
 already-exited-app diagnostic. Broad native/plugin/scientific gates remain open.
+
+### Inter-spacecraft tracking Help walkthrough passed — 2026-10-02
+
+[Tutorial 12](Qt6ParityValidation/help-tutorial-12-20261002.md) passed bounded
+private actual-input construction through the Help-taught script editor. Ten
+literal original Help blocks were entered into an empty new mission, saved,
+run and reopened with simulator/estimator/command readback. Initial 12.392-s
+execution converged in three iterations but both residual plots were blank;
+that first failure and zero-sample export remain preserved. After the shared
+OwnedPlot redraw/data-admission repair, one affected unchanged own 4.425-s retry
+renders both plots and exports 806 Range/804 RangeRate points, reconciled to
+final accepted report rows. Actual CtrlO/Build and final freeze 21:01:07.402213 UTC
+precede reference access. All 126 operational statements match the original
+sample; no original-reference GUI run or seeded authoring was needed.
+
+The literal original tracking state is scientifically unsuitable: inertial
+perigee 161.081 km lies inside Earth. A reviewed source-backed frame inference
+changes only SimTrackSat/EstTrackSat CoordinateSystem to EarthFixed, retaining
+state numbers and physics/solver settings. One changed-sample actual GUI run
+completes in 3.406 s / two iterations, 1646/1652 observations, WRMS 0.990936275466, and
+824/822 exported points reconciled to final report rows. GUI frame/Keplerian
+readback agrees with independent polar-motion/LOD invariants, SMA 42166.24166491408 km,
+ECC 4.033172844e-7. Preview changes were Discarded; no reference Save. The orbit
+is near-geosynchronous, not an asserted historical recovery or general
+scientific validation. Help illustrative GMD/report-frame excerpts were
+refreshed only from that verified run. Original own 5478-byte source SHA 43e4aa2e...
+stays unchanged; corrected sample SHA dcb5b405... and final Help 07777b2d... are
+retained with indexed raw evidence and ten unchanged PNGs.
+
+Construction app e5337acd...; affected/corrected sessions app b8074b02...;
+base cf147e23... and startup 5f80be1f... are unchanged. Actual AltF4 closes all
+three with 0/0/0; helper CLI exit 1 is its owned-exit handling, not a mission timeout.
+Initialization-only EOF and transient /tmp exhaustion/recovery remain explicit.
+No host GNOME/Wayland/portal/hardware/crash or full replacement acceptance is
+claimed. Windows/macOS/MATLAB remain deferred. No old passing matrix or resource
+construction was repeated.
+
+The single build-qt-help build exits 0 at 21:31:25.812008 UTC; installed-content
+checks at 21:32:17.193642 UTC confirm EarthFixed inputs and refreshed verified
+GMD/report-frame excerpts. Supplemental build/check metadata retains the initial
+checker path correction; no repeated build or mission.
