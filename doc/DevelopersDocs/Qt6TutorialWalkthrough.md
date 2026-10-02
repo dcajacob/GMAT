@@ -125,10 +125,13 @@ not establish tutorial 5's interactive workflow.
 ## Additional source tutorials
 
 These twelve source chapters are absent from the current Tutorials table of
-contents. Keep them separate from the twelve published chapters. Assess their
-Help availability and applicability after the published sequence; all walkthroughs
-remain pending, with MATLAB deferred. Earlier repairs/execution of some of these
-chapters do not satisfy the new interactive acceptance requirement.
+contents and have no installed chapter pages. The [availability audit](Qt6ParityValidation/help-extra-chapters-20261002.md)
+records the exact book/files and all 195 image references. Keep them separate
+from the twelve published chapters: no additional walkthrough is passed.
+MATLAB/fmincon chapters are deferred; contradictory/legacy optimizer identities
+remain unresolved. Creating a Report, Force Models and LEO Station Keeping are
+potential additional coverage. Earlier repairs/execution of these chapters do
+not satisfy independent interactive construction.
 
 | Chapter source | Additional or legacy chapter |
 |---|---|

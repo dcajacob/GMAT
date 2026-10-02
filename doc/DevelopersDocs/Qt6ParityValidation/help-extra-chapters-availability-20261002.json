@@ -1,0 +1,333 @@
+{
+  "observed_utc": "2026-10-02T21:26:53.518719+00:00",
+  "repo": "/home/dan/GIT/GMAT-Qt",
+  "scope": "Read-only source/book/installed Help availability and applicability audit of12 additional XML chapters. This is an availability disposition, not publication, GUI walkthrough, execution or test qualification.",
+  "settings": {
+    "startup": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt",
+      "bytes": 10260,
+      "sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+      "lines": 210
+    },
+    "ROOT_PATH_literal": "../",
+    "application_launch_cwd": "/home/dan/GIT/GMAT-Qt/application/bin",
+    "launch_cwd_primary_source": "src/qtgui/tests/IsolatedX11Session.py:141 subprocess.Popen cwd=self.app.parent",
+    "HELP_PATH_literal": "ROOT_PATH/docs/help",
+    "resolved_HELP_PATH": "/home/dan/GIT/GMAT-Qt/application/docs/help",
+    "HELP_HTML_TUTORIALS_FILE_literal": "HELP_PATH/html/Tutorials.html",
+    "current_published_tutorials_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/Tutorials.html",
+    "current_published_tutorials_page_exists": true
+  },
+  "sources": {
+    "book": {
+      "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Part_Tutorials.xml",
+      "bytes": 2906,
+      "sha256": "60965a761ce66a11658c55b12b6ad6781aca42b2984ae0438680da05e3ab4793",
+      "lines": 69
+    },
+    "top_level_help": {
+      "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/help.xml",
+      "bytes": 1688,
+      "sha256": "362adc0877d2bdff2e0291078ed3a701b2af74b5ca055cae81ea237dbb3af90d",
+      "lines": 52
+    },
+    "build_help": {
+      "path": "/home/dan/GIT/GMAT-Qt/src/qtgui/BuildHelp.py",
+      "bytes": 904,
+      "sha256": "ad5bbdd59b9cd6a2e39476a52a71f8b9fe74df74652163acd3672ad08045ffc0",
+      "lines": 21
+    },
+    "published_tutorials_html": {
+      "path": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/Tutorials.html",
+      "bytes": 31595,
+      "sha256": "6590dcddd115bf6f5ee7d5a9d2102ad21e129b9ba679444ce5ddc09e1abf602b",
+      "lines": 43
+    }
+  },
+  "book_observation": {
+    "included_chapter_count": 12,
+    "included_chapters": [
+      "Tut_SimulatingAnOrbit.xml",
+      "Tut_SimpleOrbitTransfer.xml",
+      "Tut_TargetFiniteBurn.xml",
+      "Tut_Mars_B_Plane_Targeting.xml",
+      "Tut_OptimalLunarFlyby.xml",
+      "Tut_UsingGMATFunctions.xml",
+      "Tut_EventLocation.xml",
+      "Tut_ElectricPropulsion.xml",
+      "Tut_Simulate_DSN_Range_and_Doppler_Data.xml",
+      "Tut_Orbit_Estimation_using_DSN_Range_and_Doppler_Data.xml",
+      "Tut_FilterSmoother_GpsPosVec.xml",
+      "Tut_Simulate_and_Estimate_Inter_Spacecraft_Tracking.xml"
+    ],
+    "extra_chapters_included": 0,
+    "build_flow": "BuildHelp.py invokes make -C doc/help html, verifies published pages including Tutorials, then copies html/files/help.html to application/docs/help. Top-level help.xml includes Part_Tutorials.xml."
+  },
+  "counts": {
+    "extra_chapters": 12,
+    "valid_xml": 12,
+    "missing_configured_html_pages": 12,
+    "help_image_references": 195,
+    "unique_referenced_images": 194,
+    "missing_referenced_images": 0
+  },
+  "chapters": [
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_ACEStationKeeping.xml",
+        "bytes": 31164,
+        "sha256": "162fe65c816e966696c4c09433cdfc75054428e5fc08d5f8da0bd18b0c8fae39",
+        "lines": 980
+      },
+      "xml_id": "ACEStationKeeping",
+      "title": "ACE Station Keeping",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/ACEStationKeeping.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 18,
+      "missing_help_images": [],
+      "potential_gui_coverage": "core DC, For-loop and L1/frame scenario",
+      "availability_disposition": "Potential additional coverage",
+      "dependency_and_interpretation": "No proprietary dependency identified in inspected Help; construction/run not attempted.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_AlgebraicOptimization.xml",
+        "bytes": 15728,
+        "sha256": "dd2103e569276381f9678fc34e3bc294dafbe8ca1483b4d75db7d2d01c9885be",
+        "lines": 469
+      },
+      "xml_id": "AlgebraicOptimization",
+      "title": "Algebraic Optimization",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/AlgebraicOptimization.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 15,
+      "missing_help_images": [],
+      "potential_gui_coverage": "constrained/unconstrained scalar optimizer and reports",
+      "availability_disposition": "Solver wording unresolved",
+      "dependency_and_interpretation": "Help resource instructions/picture name VF13ad1; mission prose names MATLAB SQPfmincon. A future walkthrough must resolve that contradiction explicitly, not silently change solver or claim either pathway.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_CreatingReport.xml",
+        "bytes": 21213,
+        "sha256": "9013f726d991c143b73b3ebd5a8515bfd6ea78bb66153c6c47a34fff5f446033",
+        "lines": 659
+      },
+      "xml_id": "CreatingaReport",
+      "title": "Creating a Report",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/CreatingaReport.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 13,
+      "missing_help_images": [],
+      "potential_gui_coverage": "automatic/manual/decorated reports and strings/ScriptEvent",
+      "availability_disposition": "High priority potential coverage",
+      "dependency_and_interpretation": "Ordinary resource/mission/report workflow; no new dependency identified in inspected Help.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_ForceModels.xml",
+        "bytes": 25585,
+        "sha256": "cbed44b80f2a80ba867ddf1849042f958d562a05e3042b9a4996d00aa6d3ba8a",
+        "lines": 820
+      },
+      "xml_id": "ForceModels",
+      "title": "Force Models",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/ForceModels.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 11,
+      "missing_help_images": [],
+      "potential_gui_coverage": "six separate propagator force models, drag/third bodies/SRP and reports",
+      "availability_disposition": "High priority potential coverage",
+      "dependency_and_interpretation": "Help uses MSISE90 and Jacchia-Roberts atmosphere settings; no external proprietary model named. Actual current configuration/run remains untested.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_FormationRendezvous.xml",
+        "bytes": 46942,
+        "sha256": "80a4fd327191ea5da411a4d8fb51885ef86236f6d6cb166c96e96e006cdc644e",
+        "lines": 1513
+      },
+      "xml_id": "FormationRendezvous",
+      "title": "Formation Rendezvous",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/FormationRendezvous.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 18,
+      "missing_help_images": [],
+      "potential_gui_coverage": "four spacecraft, object-referenced views, separate position/velocity targeting",
+      "availability_disposition": "Reconstructed source instructions",
+      "dependency_and_interpretation": "Current Help explicitly supplies reconstructed Sat2/Sat3/Sat4 initial states and separates two target goals. Historical trajectories are not numerical acceptance values or simultaneous six-state docking proof.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_L2Transfer.xml",
+        "bytes": 71570,
+        "sha256": "b449fb61564cb33204fa158bd907d7b5aae4c1b4f84c5e8e656e5f21b5f792b2",
+        "lines": 2141
+      },
+      "xml_id": "L2TransferwithSwingby",
+      "title": "L2 Transfer with Swingby",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/L2TransferwithSwingby.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 29,
+      "missing_help_images": [],
+      "potential_gui_coverage": "bisection, If/While/Stop, lunar swingby and L2 frames",
+      "availability_disposition": "Potential additional bounded coverage",
+      "dependency_and_interpretation": "Current Help supplies 10000/16000 km bracket and preserves sign-check Stop. Long coasts and loops need their own explicit execution bounds; no GUI walkthrough attempted.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_LEOStationKeeping.xml",
+        "bytes": 19398,
+        "sha256": "247f201d23e1ceb5b8f2e8323b6d2c84a2998ea53e84b6f4b30e18b302dbef98",
+        "lines": 600
+      },
+      "xml_id": "LEOStationKeeping",
+      "title": "LEO Station Keeping",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/LEOStationKeeping.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 15,
+      "missing_help_images": [],
+      "potential_gui_coverage": "DC targeting and repeated LEO station keeping",
+      "availability_disposition": "High priority potential coverage",
+      "dependency_and_interpretation": "Core GUI/control scenario; no proprietary dependency identified in inspected Help.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_LunarTransfer.xml",
+        "bytes": 33943,
+        "sha256": "f21fe511c223409a691200f126a0c3687d8e9cea20a01a39e089fb0464e269a4",
+        "lines": 1068
+      },
+      "xml_id": "LunarTransfer",
+      "title": "Lunar Transfer",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/LunarTransfer.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 16,
+      "missing_help_images": [],
+      "potential_gui_coverage": "multiple DC targets, lunar trajectory and coordinate views",
+      "availability_disposition": "Potential additional coverage",
+      "dependency_and_interpretation": "Distinct legacy transfer instructions; no proprietary dependency identified in inspected Help.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_MATLAB.xml",
+        "bytes": 5530,
+        "sha256": "fec57564dcfd692094e8928b71f7e48548b3ee7fb3b72385ae9ea30c8197370e",
+        "lines": 144
+      },
+      "xml_id": "RunningGMATScriptsfromMATLAB",
+      "title": "Running GMAT Scripts from MATLAB",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/RunningGMATScriptsfromMATLAB.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 1,
+      "missing_help_images": [],
+      "potential_gui_coverage": "running GMAT scripts from MATLAB",
+      "availability_disposition": "Deferred \u2014 MATLAB",
+      "dependency_and_interpretation": "Entire chapter requires MATLAB/interface; remains deferred by user scope. No MATLAB installation/server started.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_MarsB-PlaneTargeting.xml",
+        "bytes": 37533,
+        "sha256": "79444856d03521540bc39af64464c9dd921e587a0880f72e1211751d49dabd49",
+        "lines": 1192
+      },
+      "xml_id": "MarsB-PlaneTargeting",
+      "title": "Mars B-Plane Targeting",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/MarsB-PlaneTargeting.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 18,
+      "missing_help_images": [],
+      "potential_gui_coverage": "older Earth-parking-to-Mars transfer and multiple burns/propagators",
+      "availability_disposition": "Potential additional coverage",
+      "dependency_and_interpretation": "Different legacy scenario from published Tutorial4; prior published Mars walkthrough does not qualify these instructions.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_MinFuelLunarTransfer.xml",
+        "bytes": 35634,
+        "sha256": "168722ffcb8d7cb48103a23c204315f42086e276884c33ddffc2300012238588",
+        "lines": 1226
+      },
+      "xml_id": "MinimumFuelforLunarTransfer",
+      "title": "Minimum Fuel for Lunar Transfer",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/MinimumFuelforLunarTransfer.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 20,
+      "missing_help_images": [],
+      "potential_gui_coverage": "legacy SQP lunar fuel minimization and plots",
+      "availability_disposition": "Legacy SQP identity unresolved",
+      "dependency_and_interpretation": "Help names SQP1 with Tol Fun/Tol Con/Tol X/Max Iter/Diff Min Change and an old optimizer picture. This does not establish a current supported solver identity. No solver substitution, available-backend claim or automatic waiver is made.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    },
+    {
+      "source": {
+        "path": "/home/dan/GIT/GMAT-Qt/doc/help/src/Tut_MinFuelOrbitTransfer.xml",
+        "bytes": 38872,
+        "sha256": "a27e8f2f525b8bccd88cf20e47adaa0a7f6a6106c069dd72db79c55541c07ae5",
+        "lines": 1303
+      },
+      "xml_id": "MinimumFuelforOrbitTransfer",
+      "title": "Minimum Fuel for Orbit Transfer",
+      "xml_parse_valid": true,
+      "included_in_published_tutorial_book": false,
+      "expected_configured_html_page": "/home/dan/GIT/GMAT-Qt/application/docs/help/html/MinimumFuelforOrbitTransfer.html",
+      "current_html_exists": false,
+      "help_image_reference_count": 21,
+      "missing_help_images": [],
+      "potential_gui_coverage": "fmincon fuel-minimizing Earth orbit transfer and plots",
+      "availability_disposition": "Deferred \u2014 MATLAB/fmincon",
+      "dependency_and_interpretation": "Help explicitly names Optimizer fmincon/SPQfmincon and its MATLAB-style settings. Remains deferred with MATLAB; no numerical objective/algorithm substituted.",
+      "walkthrough_status": "Not attempted \u2014 unavailable in current published Help; no GUI qualification claimed"
+    }
+  ],
+  "boundaries": {
+    "sample_script_contents_consulted": false,
+    "public_help_publishing": false,
+    "gui_sessions": 0,
+    "application_runs": 0,
+    "tests_or_builds": 0,
+    "source_repo_mutations": false,
+    "matlab_fmincon": "Deferred by user scope; no proprietary components installed.",
+    "legacy_sqp": "Unresolved identity; no automatic proprietary waiver or substitute solver."
+  },
+  "finite_priority": [
+    "CreatingReport",
+    "ForceModels",
+    "LEOStationKeeping",
+    "AlgebraicOptimization only after resolving solver wording"
+  ],
+  "conclusion": "All12 sources and their195 image references are locally present, but none is in the current published Help book or has its expected configured HTML chapter page. They are outside the currently accessible Help walkthrough sequence. Preserve potential coverage/dependency distinctions; do not count them as passed or automatically publish/construct them."
+}
