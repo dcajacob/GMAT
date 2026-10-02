@@ -29,6 +29,7 @@
 #include "QtInterpreter.hpp"
 #include "ResourceEditor.hpp"
 #include "ResourceDraft.hpp"
+#include "ResourceRename.hpp"
 #include "ResourceProperties.hpp"
 #include "SpacecraftOrbit.hpp"
 #include "AtmosphereDialog.hpp"
@@ -573,6 +574,13 @@ MainWindow::MainWindow()
       const auto *item=resources->currentItem();
       showCloneResource(item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString());
    });
+   auto *rename=edit->addAction("Rename resource…"); rename->setObjectName("renameResource");
+   rename->setShortcut(QKeySequence("F2")); rename->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+   resources->addAction(rename); editingActions.append(rename);
+   connect(rename,&QAction::triggered,this,[this] {
+      const auto *item=resources->currentItem();
+      showRenameResource(item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString());
+   });
    auto *convert=edit->addAction("Convert OpenFrames views for Qt");
    convert->setObjectName("convertOpenFramesViews"); editingActions.append(convert);
    connect(convert,&QAction::triggered,this,[this] { convertOpenFramesScript(); });
@@ -581,41 +589,47 @@ MainWindow::MainWindow()
       auto *item=resources->itemAt(position);
       const QString name=item && !item->data(0,Qt::UserRole).toString().isEmpty() ? item->text(0) : QString();
       const QString snapshot=builtScript;
-      QMenu menu(this); menu.setObjectName("resourceContextMenu");
-      auto *category=item;
-      while (category && !category->data(0,Qt::UserRole+1).isValid()) category=category->parent();
-      if (category) {
-         const auto group=category->data(0,Qt::UserRole+1).toUInt();
-         QStringList types;
-         if (group==Gmat::PARAMETER) types={"Variable","Array","String"};
-         else if (group==Gmat::GROUND_STATION) types={"GroundStation"};
-         else for (const auto &type:Moderator::Instance()->GetListOfViewableItems(group)) types.append(QString::fromStdString(type));
-         // Smoother is registered in its own factory but displayed with solvers.
-         if (group==Gmat::SOLVER) types.append("Smoother");
-         const auto available=creatableResourceTypes();
-         types.removeDuplicates(); types.sort();
-         for (const auto &type:types) if (available.contains(type)) {
-            auto *add=menu.addAction("Add "+type+"…"); add->setObjectName("addResource_"+type); add->setData(type);
-            add->setEnabled(create->isEnabled());
+      enum class Operation { None,Create,Clone,Rename,Delete }; Operation operation=Operation::None; QString type;
+      {
+         QMenu menu(this); menu.setObjectName("resourceContextMenu");
+         auto *category=item;
+         while (category && !category->data(0,Qt::UserRole+1).isValid()) category=category->parent();
+         if (category) {
+            const auto group=category->data(0,Qt::UserRole+1).toUInt();
+            QStringList types;
+            if (group==Gmat::PARAMETER) types={"Variable","Array","String"};
+            else if (group==Gmat::GROUND_STATION) types={"GroundStation"};
+            else for (const auto &type:Moderator::Instance()->GetListOfViewableItems(group)) types.append(QString::fromStdString(type));
+            // Smoother is registered in its own factory but displayed with solvers.
+            if (group==Gmat::SOLVER) types.append("Smoother");
+            const auto available=creatableResourceTypes();
+            types.removeDuplicates(); types.sort();
+            for (const auto &type:types) if (available.contains(type)) {
+               auto *add=menu.addAction("Add "+type+"…"); add->setObjectName("addResource_"+type); add->setData(type);
+               add->setEnabled(create->isEnabled());
+            }
+            if (menu.actions().isEmpty()) { auto *unavailable=menu.addAction("No resource types available"); unavailable->setEnabled(false); }
+         } else {
+            auto *generic=menu.addAction(create->text()); generic->setObjectName("createResource"); generic->setEnabled(create->isEnabled());
          }
-         if (menu.actions().isEmpty()) { auto *unavailable=menu.addAction("No resource types available"); unavailable->setEnabled(false); }
-      } else {
-         auto *generic=menu.addAction(create->text()); generic->setObjectName("createResource"); generic->setEnabled(create->isEnabled());
-      }
-      menu.addSeparator();
-      auto *selected=name.isEmpty() ? nullptr : Moderator::Instance()->GetConfiguredObject(name.toStdString());
-      auto *clone=menu.addAction("Clone resource…"); clone->setObjectName("cloneResource");
-      clone->setEnabled(ready && !running && modelValid && editor->toPlainText()==builtScript && resourceCanBeCloned(selected));
-      auto *remove=menu.addAction("Delete resource…");
-      remove->setEnabled(ready && !running && modelValid && selected && !selected->IsOfType("CelestialBody") && !selected->IsOfType("SolarSystem"));
-      // Finish the popup event loop before opening a modal creator. In
-      // particular, do not keep a grabbing Wayland popup active around it.
-      const auto *chosen=menu.exec(resources->viewport()->mapToGlobal(position));
-      if (chosen && (chosen->objectName().startsWith("addResource_") || chosen->objectName()=="createResource")) {
-         showCreateResource(chosen->data().toString());
-      } else if (chosen==clone) {
-         showCloneResource(name);
-      } else if (chosen==remove &&
+         menu.addSeparator();
+         auto *selected=name.isEmpty() ? nullptr : Moderator::Instance()->GetConfiguredObject(name.toStdString());
+         auto *clone=menu.addAction("Clone resource…"); clone->setObjectName("cloneResource");
+         clone->setEnabled(ready && !running && modelValid && editor->toPlainText()==builtScript && resourceCanBeCloned(selected));
+         auto *rename=menu.addAction("Rename resource…"); rename->setObjectName("renameResource");
+         rename->setEnabled(ready && !running && modelValid && editor->toPlainText()==builtScript && resourceCanBeRenamed(selected));
+         auto *remove=menu.addAction("Delete resource…");
+         remove->setEnabled(ready && !running && modelValid && selected && !selected->IsOfType("CelestialBody") && !selected->IsOfType("SolarSystem"));
+         const auto *chosen=menu.exec(resources->viewport()->mapToGlobal(position));
+         if (chosen && (chosen->objectName().startsWith("addResource_") || chosen->objectName()=="createResource")) { operation=Operation::Create; type=chosen->data().toString(); }
+         else if (chosen==clone) operation=Operation::Clone;
+         else if (chosen==rename) operation=Operation::Rename;
+         else if (chosen==remove) operation=Operation::Delete;
+      } // Destroy the popup before opening another modal surface; retain values only.
+      if (operation==Operation::Create) showCreateResource(type);
+      else if (operation==Operation::Clone) showCloneResource(name);
+      else if (operation==Operation::Rename) showRenameResource(name);
+      else if (operation==Operation::Delete &&
           QMessageBox::question(this,"Delete resource","Delete "+name+" from this mission?",
              QMessageBox::Yes|QMessageBox::Cancel,QMessageBox::Cancel)==QMessageBox::Yes) {
          const auto error=deleteResource(name,snapshot);
@@ -1865,6 +1879,65 @@ void MainWindow::showCloneResource(const QString &original)
       }
    } catch (BaseException &error) { statusBar()->showMessage(QString::fromStdString(error.GetFullMessage())); }
    catch (const std::exception &error) { statusBar()->showMessage(QString::fromUtf8(error.what())); }
+}
+
+QString MainWindow::renameResource(const QString &original,const QString &requestedName,const QString &expectedScript)
+{
+   if (!ready || running || !modelValid || expectedScript!=builtScript || editor->toPlainText()!=builtScript)
+      return "Build the current script before renaming a resource.";
+   for (auto *child:workspace->subWindowList())
+      if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges())
+         return "Apply or discard the open panel changes before renaming a resource.";
+   auto *moderator=Moderator::Instance(); auto *object=moderator->GetConfiguredObject(original.toStdString());
+   if (!resourceCanBeRenamed(object)) return "Select a configured resource; built-in resources and celestial bodies cannot be renamed.";
+   const auto name=requestedName.trimmed();
+   if (!QRegularExpression("^[A-Za-z][A-Za-z0-9_]*$").match(name).hasMatch()) return "Use a name starting with a letter, followed by letters, digits or underscores.";
+   if (name==original) return {};
+   if (moderator->GetConfiguredObject(name.toStdString())) return "That resource name is already in use.";
+   const auto commands=moderator->GetListOfFactoryItems(Gmat::COMMAND);
+   if (name=="GMAT" || std::find(commands.begin(),commands.end(),name.toStdString())!=commands.end()) return "Choose a name that is not a mission command or reserved keyword.";
+   try {
+      QString relatedOld,relatedNew;
+      if (object->IsOfType("PropSetup") && object->GetStringParameter("FM")==original.toStdString()+"_ForceModel" &&
+          moderator->GetConfiguredObject((original+"_ForceModel").toStdString()) && !moderator->GetConfiguredObject((name+"_ForceModel").toStdString())) {
+         relatedOld=original+"_ForceModel"; relatedNew=name+"_ForceModel";
+      }
+      const auto candidate=renameResourceSource(expectedScript,*object,name);
+      const auto error=applyModelScript(candidate,[original,name] {
+         auto *engine=Moderator::Instance();
+         return engine->GetConfiguredObject(original.toStdString()) || !engine->GetConfiguredObject(name.toStdString()) ? QString("Rename did not replace the configured resource; the original mission was restored.") : QString();
+      },original);
+      if (!error.isEmpty()) return error;
+      for (auto *child:workspace->subWindowList()) {
+         const auto previous=child->property("resourceName").toString();
+         const auto current=previous==original ? name : (!relatedOld.isEmpty() && previous==relatedOld ? relatedNew : previous);
+         if (current!=previous) { child->setProperty("resourceName",current); child->setWindowTitle(current); }
+      }
+      refreshAppliedResourcePanels();
+      statusBar()->showMessage("Resource renamed — Undo restores the original name; save to keep changes"); return {};
+   } catch (BaseException &error) { return QString::fromStdString(error.GetFullMessage()); }
+   catch (const std::exception &error) { return QString::fromUtf8(error.what()); }
+}
+void MainWindow::showRenameResource(const QString &original)
+{
+   if (!ready || running || !modelValid || editor->toPlainText()!=builtScript) { statusBar()->showMessage("Build the current script before renaming a resource"); return; }
+   if (!resourceCanBeRenamed(Moderator::Instance()->GetConfiguredObject(original.toStdString()))) { statusBar()->showMessage("Select a resource that can be renamed"); return; }
+   for (auto *child:workspace->subWindowList()) if (auto *panel=dynamic_cast<EditablePanel *>(child->widget());panel && panel->hasChanges()) {
+      statusBar()->showMessage("Apply or discard the open panel changes before renaming a resource"); return;
+   }
+   const auto snapshot=builtScript;
+   QDialog dialog(this); dialog.setObjectName("renameResourceDialog"); dialog.setWindowTitle("Rename "+original);
+   auto *layout=new QVBoxLayout(&dialog); auto *form=new QFormLayout; layout->addLayout(form);
+   auto *name=new QLineEdit(original,&dialog); name->setObjectName("resourceName"); form->addRow("New name",name);
+   auto *status=new QLabel("Rename updates this mission’s resource and command references together.",&dialog); status->setObjectName("resourceRenameStatus"); status->setWordWrap(true); layout->addWidget(status);
+   auto *buttons=new QDialogButtonBox(QDialogButtonBox::Ok|QDialogButtonBox::Cancel,&dialog); buttons->setObjectName("resourceRenameButtons"); buttons->button(QDialogButtonBox::Ok)->setText("Rename"); layout->addWidget(buttons);
+   connect(buttons,&QDialogButtonBox::rejected,&dialog,&QDialog::reject);
+   connect(buttons,&QDialogButtonBox::accepted,&dialog,[&] { const auto error=renameResource(original,name->text(),snapshot); if (error.isEmpty()) dialog.accept(); else status->setText(error); });
+   name->selectAll(); name->setFocus(); dialog.resize(520,180);
+   if (dialog.exec()==QDialog::Accepted) {
+      const auto items=resources->findItems(name->text().trimmed(),Qt::MatchExactly|Qt::MatchRecursive);
+      if (items.size()==1) { resources->setCurrentItem(items.first()); resources->scrollToItem(items.first()); }
+   }
 }
 
 void MainWindow::showPathSettings()

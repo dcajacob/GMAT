@@ -2219,4 +2219,19 @@ The copy retains explicit settings, array formulas, references and Qt viewer
 camera/drawing settings. References continue pointing to the existing objects.
 Built-in coordinate systems/points, celestial bodies, SolarSystem and PropSetup
 are protected as in wx. Build unsaved script changes and apply/discard pending
-panels before cloning. Resource renaming remains an outstanding workflow.
+panels before cloning. Resource Rename is described below.
+
+### Renaming configured resources
+
+Select a resource and use **Rename resource…** in Resources/Edit or press F2
+while the tree has focus. Enter its new name and choose Rename. References in
+the open mission update together; Cancel leaves the mission unchanged, and
+invalid names/settings stay open for correction. The edit supports Undo/Redo.
+Build script changes and apply/discard pending panels first.
+
+Built-in coordinates/points, celestial bodies and SolarSystem are protected.
+Propagators can be renamed; their associated automatically named force model
+follows the wx naming rule. Filenames, literal strings/comments and camera
+labels retain their text. Documents with includes or external GMAT functions,
+and unsupported tracking signal-path syntax, require coordinated edits in the
+script editor; the GUI explains that boundary before changing the mission.

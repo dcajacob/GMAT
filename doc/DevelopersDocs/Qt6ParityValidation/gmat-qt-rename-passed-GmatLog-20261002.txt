@@ -1,0 +1,99 @@
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT-Qt/application/bin/../data/time/tai-utc.dat
+2026-10-02 02:43:17 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+*** ERROR *** The object type:TrackingFileSet needs RenameRefObject() implementation.
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Running mission...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_ephem/spk/DE405AllPlanets.bsp has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/SPICEPlanetaryConstantsKernel.tpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/time/SPICELeapSecondKernel.tls has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/SPICEEarthPredictedKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/SPICEEarthCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/earth_latest_high_prec.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/SPICELunaCurrentKernel.bpc has been loaded.
+Kernel /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/SPICELunaFrameKernel.tf has been loaded.
+
+Mission run completed.
+===> Total Run Time: 0.036 seconds
+
+========================================
+Moderator is deleting core engine...

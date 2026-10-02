@@ -1,0 +1,22 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 10: QtGui.ResourceRename
+1/1 Test #10: QtGui.ResourceRename .............***Failed    0.20 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Corrected Rename did not commit
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.20 sec*proc (1 test)
+
+Total Test time (real) =   0.20 sec
+
+The following tests FAILED:
+	 10 - QtGui.ResourceRename (Failed)                     qt-gui
+Errors while running CTest

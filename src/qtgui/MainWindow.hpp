@@ -67,6 +67,7 @@ public:
                                 const QString &expectedScript);
    QString createResource(const QString &type, const QString &name, const QString &expectedScript, int rows=1, int columns=1, const std::optional<QString> &initialValue=std::nullopt, const QString &functionPath={}, const QString &spacecraft={}, const QMap<QString,QString> &settings={});
    QString cloneResource(const QString &original, const QString &name, const QString &expectedScript, const QMap<QString,QString> &settings={});
+   QString renameResource(const QString &original,const QString &name,const QString &expectedScript);
    QString deleteResource(const QString &name, const QString &expectedScript);
 protected:
    void closeEvent(QCloseEvent *event) override;
@@ -81,6 +82,7 @@ private:
    CommandEditor *makeCommandPanel(int index,MissionEdit operation);
    void showCreateResource(const QString &initialType={});
    void showCloneResource(const QString &original);
+   void showRenameResource(const QString &original);
    void showPathSettings();
    void showFileComparison(const QString &baseline={});
    QString applyModelScript(const QString &candidate,const std::function<QString()> &validate={},const QString &removedCamera={});

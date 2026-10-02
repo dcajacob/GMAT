@@ -1,0 +1,37 @@
+Test project /home/dan/GIT/GMAT-Qt/build/linux-gui
+    Start 10: QtGui.ResourceRename
+1/1 Test #10: QtGui.ResourceRename .............***Failed    0.19 sec
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+Corrected Rename did not commit: GmatBase Exception Thrown: Parameter id = 8 not defined on object e
+Moderator is updating data files...
+Moderator is creating core engine...
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+Setting nutation file to /home/dan/GIT/GMAT-Qt/application/bin/../data/planetary_coeff/NUTATION.DAT
+Setting leap seconds file to /home/dan/GIT/GMAT-Qt/application/bin/../data/time/tai-utc.dat
+2026-10-02 02:38:31 GMAT Moderator successfully created core engine
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+Interpreting scripts from the input stream
+Successfully set Planetary Source to use: DE405
+Successfully set Planetary Source to use: DE405
+
+
+
+0% tests passed, 1 tests failed out of 1
+
+Label Time Summary:
+qt-gui    =   0.19 sec*proc (1 test)
+
+Total Test time (real) =   0.19 sec
+
+The following tests FAILED:
+	 10 - QtGui.ResourceRename (Failed)                     qt-gui
+Errors while running CTest

@@ -1,0 +1,28 @@
+Start testing: Oct 02 02:43 MDT
+----------------------------------------------------------
+10/118 Testing: QtGui.ResourceRename
+10/118 Test: QtGui.ResourceRename
+Command: "/usr/bin/python3" "/home/dan/GIT/GMAT-Qt/src/qtgui/tests/RunTest.py" "/home/dan/GIT/GMAT-Qt/application/bin" "/usr/lib/x86_64-linux-gnu" "/home/dan/GIT/GMAT-Qt/build/linux-gui/src/qtgui/GmatQtResourceRenameTests" "/home/dan/GIT/GMAT-Qt/application/bin/gmat_startup_qt.txt"
+Directory: /home/dan/GIT/GMAT-Qt/application/bin
+"QtGui.ResourceRename" start time: Oct 02 02:43 MDT
+Output:
+----------------------------------------------------------
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+This plugin does not support raise()
+This plugin does not support grabbing the keyboard
+This plugin does not support propagateSizeHints()
+This plugin does not support propagateSizeHints()
+PASS actual Rename/F2/context popup destruction, Cancel/correction/protection/source literals, typed resource and dependent frame references, nested commands/array indices/formulas/markers, PropSetup owned FM, Qt metadata, exact Undo/Redo/Unicode reopen and independent calculation; external documents explicitly deferred.
+<end of output>
+Test time =   0.44 sec
+----------------------------------------------------------
+Test Passed.
+"QtGui.ResourceRename" end time: Oct 02 02:43 MDT
+"QtGui.ResourceRename" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Oct 02 02:43 MDT
+
+qt-gui =   0.44 sec*proc
+

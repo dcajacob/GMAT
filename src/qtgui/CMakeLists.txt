@@ -14,6 +14,7 @@ add_library(GmatQtFrontend STATIC MainWindow.cpp MainWindow.hpp MainWindowDocume
    PathSettings.cpp PathSettings.hpp PathSettingsDialog.cpp PathSettingsDialog.hpp
    ResourceEditor.cpp ResourceEditor.hpp ResourceProperties.cpp ResourceProperties.hpp
    ResourceForm.cpp ResourceForm.hpp ResourceDraft.cpp ResourceDraft.hpp
+   ResourceRename.cpp ResourceRename.hpp
    EditablePanel.cpp EditablePanel.hpp CommandEditor.cpp CommandEditor.hpp MissionModel.cpp MissionModel.hpp
    PropagationForm.cpp PropagationForm.hpp
    CommandForm.cpp CommandForm.hpp
@@ -178,6 +179,9 @@ if(GMAT_QT_BUILD_TESTS)
    add_executable(GmatQtCoordinateCreationTests tests/CoordinateCreationTests.cpp)
    target_link_libraries(GmatQtCoordinateCreationTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtCoordinateCreationTests GmatQt)
+   add_executable(GmatQtResourceRenameTests tests/ResourceRenameTests.cpp)
+   target_link_libraries(GmatQtResourceRenameTests PRIVATE GmatQtFrontend)
+   add_dependencies(GmatQtResourceRenameTests GmatQt)
    add_executable(GmatQtResourceCloneTests tests/ResourceCloneTests.cpp)
    target_link_libraries(GmatQtResourceCloneTests PRIVATE GmatQtFrontend)
    add_dependencies(GmatQtResourceCloneTests GmatQt)
@@ -333,6 +337,7 @@ if(GMAT_QT_BUILD_TESTS)
    add_qt_test(QtGui.UnifiedResources GmatQtUnifiedResourceTests "${qt_test_startup}")
    add_qt_test(QtGui.CoordinateCreation GmatQtCoordinateCreationTests "${qt_test_startup}")
    add_qt_test(QtGui.ResourceClone GmatQtResourceCloneTests "${qt_test_startup}")
+   add_qt_test(QtGui.ResourceRename GmatQtResourceRenameTests "${qt_test_startup}")
    add_qt_test(QtGui.ResourceVisibility GmatQtResourceVisibilityTests "${qt_test_startup}")
    if(UNIX AND NOT APPLE AND QT_XVFB_RUN)
       add_test(NAME QtGui.NativeWindows COMMAND ${QT_XVFB_RUN} -a
@@ -495,6 +500,6 @@ if(GMAT_QT_BUILD_TESTS)
    add_dependencies(check-qt GmatQtResourceCreationDefaultsTests)
    add_dependencies(check-qt GmatQtUnifiedResourceTests GmatQtResourceVisibilityTests)
    add_dependencies(check-qt GmatQtCoordinateCreationTests)
-   add_dependencies(check-qt GmatQtResourceCloneTests)
+   add_dependencies(check-qt GmatQtResourceCloneTests GmatQtResourceRenameTests)
    add_dependencies(check-qt GmatQtSpiceDiagnosticTests)
 endif()
