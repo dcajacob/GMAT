@@ -1038,3 +1038,20 @@ stdout/source identities remain in the owned controls tree. Custom-path
 ExternalForce execution, package/environment/cache behavior, host/Wayland/
 portal/GPU/crash and full replacement gates remain separate. No old successful
 matrix or corpus stage was repeated; Windows/macOS/MATLAB stay deferred.
+
+
+### Earth Region overflight passed through the GUI — 2026-10-02
+
+[The bounded Region record](Qt6ParityValidation/region-contact-20261002.md)
+qualifies Regions category Add with paired four-row vertices, Contact one-SC
+pending target/observer/output, Apply/Save As/CtrlO/readback and Output Enter.
+One 300 s actual-input run Completed 0.052 s gives one 81.477054418 s contact on
+UTC 2015 Jan 1 noon; 31 finite 10 s state rows bracket the +5° exit at 80–90 s.
+Interpolation differs 0.000173537 s and is approximate, not exact SPICE/frame
+identity. Own 1186 B source SHA 2825e9fd... remains unchanged; normal File Exit
+app/WM/Xvfb 0/0/0 differs from helper's already-exited diagnostic 1. Unsatisfied
+initial Save/Enter timing caused no commit/run. Source 2f9810c0/new Region 0.36 s and
+EventLocators 4.65 s once retain production route/metadata failures and detached
+context fixture correction. App 244dc41a... / 5,926,536 B/core/util/startup controlled;
+no old matrix repeated. Broader locator/host/portal/GPU/scientific replacement
+gates stay open, Windows/macOS/MATLAB deferred.

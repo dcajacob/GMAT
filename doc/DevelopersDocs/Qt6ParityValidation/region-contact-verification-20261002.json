@@ -1,0 +1,59 @@
+{
+  "raw": "/home/dan/GIT/GMAT-Qt/build/example-qualification/20261002/region-contact-live/isolated-x11-5f2p9ghn",
+  "source_commit": "2f9810c0",
+  "application_sha256": "244dc41a2402dbf7b7235027c02b840f0319b77bafd4798bf23617a9645c11f0",
+  "application_bytes": 5926536,
+  "base_sha256": "cf147e234b57818fecf475e0516da86d9187e10066d981e6c893ae7fd761e016",
+  "util_sha256": "1e4e7fe6ba83701266ef780588003c3ae607b6ebc56ecc040f9cfac399777fcc",
+  "production_startup_sha256": "5f80be1f2dbe46faeb6d226328cace194d7770d086d5447c8b44928fb858559a",
+  "startup_change": "OUTPUT_PATH value only",
+  "source_sha256": "2825e9fdcafebf712983d9720fc3b0b4414a8ccfd340cae1d33f346f81710830",
+  "source_bytes": 1186,
+  "report_sha256": "f43adae997571e7e09fa4e89b42c18c4dea939f3b52572f022344108e60f988b",
+  "states_sha256": "9934792328aebc2e4855eae6d073e6ababea82a4a01211e9c2cd49419b2218dd",
+  "run_seconds": 0.052,
+  "mission_runs": 1,
+  "contact_events": 1,
+  "contact_duration_seconds": 81.477054418,
+  "reported_start_utc": "2015-01-01T12:00:00.000",
+  "reported_end_utc": "2015-01-01T12:01:21.477",
+  "state_rows": 31,
+  "all_finite": true,
+  "crossing_bracket": [
+    {
+      "elapsed_seconds": 80.00000015599653,
+      "longitude_degrees": 4.909418552898845
+    },
+    {
+      "elapsed_seconds": 89.99999997904524,
+      "longitude_degrees": 5.522603909747899
+    }
+  ],
+  "linear_interpolated_five_degree_seconds": 81.47722795484304,
+  "interpolation_minus_event_seconds": 0.00017353684305021488,
+  "comparison_limit": "10-second GMAT EarthFixed sample interpolation is approximate. Locator uses selected SPICE body-fixed frame; no exact frame/numerical identity or accuracy threshold claimed.",
+  "declared_input": "UTC 2015 Jan 1 noon, EarthFixed Cartesian(7000,0,0)km/(0,7.5,0)km/s, Earth pointmass, RK89 InitialStep10/MaxStep10, 300seconds",
+  "actual_gui": "New own Script keyboard scaffold; Regions context AddPlanetographicRegion four-pair table Create; Contact target/observer/output Create; Save As; F5; Output Enter; CtrlO/Build; both resource forms readback",
+  "exit_codes": {
+    "xvfb": 0,
+    "wm": 0,
+    "application": 0
+  },
+  "helper_exit_code": 1,
+  "helper_exit_disposition": "Actual File Exit app0; next wait recognizes already exited app, then owned WM/Xvfb cleanup0",
+  "harness_timing": "Initial immediate Save filename Enter had not accepted the dialog. Screenshot019 remains open; F5 did not run. Actual Save button completes, followed by the only mission run.",
+  "focused_tests": {
+    "QtGui.Region": 0.36,
+    "QtGui.EventLocators": {
+      "seconds": 4.65,
+      "runs": 1
+    }
+  },
+  "prior_controls_evidence": "build/example-qualification/20261002/region-controls/outcomes.json",
+  "limits": [
+    "One ordinary Earth rectangle/no-imager spacecraft observer only",
+    "No host GNOME/Wayland/portal/hardware/crash qualification",
+    "No full selected-plugin/scientific/rare polygon/FOV coverage",
+    "No old passing tests or corpus repeated"
+  ]
+}
