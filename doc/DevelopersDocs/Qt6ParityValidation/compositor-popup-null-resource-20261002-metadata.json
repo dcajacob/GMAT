@@ -1,0 +1,173 @@
+{
+  "recorded_at": "2026-10-02",
+  "qualification": "saved-core read-only diagnostic; not client attribution, repaired-host or physical-GPU acceptance",
+  "baseline_git_head": "3a4d418a0c12ddbe82cb0dd3c245e9dc0b482b08",
+  "saved_event": {
+    "pid": 15518,
+    "executable": "/usr/bin/gnome-shell",
+    "signal": "SIGSEGV",
+    "core_timestamp_utc": "2026-10-01T17:34:41Z",
+    "core_timestamp_mdt": "2026-10-01 11:34:41 -0600",
+    "historical_service_completion_mdt": "2026-10-01 11:34:45 -0600",
+    "original_record": "resource-category-menu-compositor-crash.txt"
+  },
+  "matched_modules": {
+    "libmutter-18.so.0": {
+      "package": "mutter",
+      "version": "50.1-0ubuntu2.4",
+      "build_id": "23093aa9e294df23a746c513b1597f376b0b8f1e"
+    },
+    "libwayland-server.so.0": {
+      "package": "wayland",
+      "version": "1.24.0-2",
+      "build_id": "32db75572b771f641b3503dda2af1e6206799cb8"
+    }
+  },
+  "observed": {
+    "callee": "wl_resource_post_event",
+    "event_opcode": 1,
+    "rdi": 0,
+    "r11": 0,
+    "fault_instruction": "mov (%r11),%rcx",
+    "fault_offset": 108,
+    "caller": "xdg_popup_send_popup_done -> finish_popup_setup",
+    "exact_ubuntu_source_line": 1332,
+    "seat_serial": 94558,
+    "popup_object": "optimized out; no recovered owner/client PID"
+  },
+  "symbol_downloads": [
+    {
+      "local_path": "/tmp/gmat-mutter-23093aa9e294df23a746c513b1597f376b0b8f1e.debug",
+      "bytes": 6085728,
+      "sha256": "d1ade19e7de9d9c123616020939b4bbebb18b3c9501a017cdcff7463b1c4519c",
+      "build_id": "23093aa9e294df23a746c513b1597f376b0b8f1e",
+      "url": "https://debuginfod.ubuntu.com/buildid/23093aa9e294df23a746c513b1597f376b0b8f1e/debuginfo"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter-f6edf371de43ff4831968af5ffb4b28f1ab756b9.debug",
+      "bytes": 64680,
+      "sha256": "a677679d5661aa68244cc2afa938a53132e3d13d29df3e5d1d08d53d3896fcfe",
+      "build_id": "f6edf371de43ff4831968af5ffb4b28f1ab756b9",
+      "url": "https://debuginfod.ubuntu.com/buildid/f6edf371de43ff4831968af5ffb4b28f1ab756b9/debuginfo"
+    }
+  ],
+  "source_archives": [
+    {
+      "local_path": "/tmp/gmat-mutter-source.dsc",
+      "bytes": 4961,
+      "sha256": "1b1374e66bfc942b6d1798a5a2e7bd9fd30df27f6abf49da54a6eacd411fb117",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/m/mutter/mutter_50.1-0ubuntu2.4.dsc"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter_50.1.orig.tar.xz",
+      "bytes": 8430744,
+      "sha256": "9344502ce473f788795f26b45f8b8ff53c0a36b867470d705a11a3ee0911021e",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/m/mutter/mutter_50.1.orig.tar.xz"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter_50.1-0ubuntu2.4.debian.tar.xz",
+      "bytes": 118156,
+      "sha256": "92b0027e8cf30c7ca0577c02b88b8cbd014cfddd0d513f3df3d698dc32f80e20",
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/m/mutter/mutter_50.1-0ubuntu2.4.debian.tar.xz"
+    }
+  ],
+  "source_verification": "Archive SHA256 values match official DSC; all 30 Ubuntu patches applied only to /tmp source; no PGP verification claimed",
+  "patched_source_files": [
+    {
+      "local_path": "/tmp/gmat-mutter-crash-source/mutter-50.1/src/wayland/meta-wayland-xdg-shell.c",
+      "bytes": 98561,
+      "sha256": "4e87fca0d0645c0091ea1592f88fe5024c5996aa4e5455d5d1eb101669d00430"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter-crash-source/mutter-50.1/src/wayland/meta-wayland-transaction.c",
+      "bytes": 22961,
+      "sha256": "a1eca7f149f0c6c8542dc2d251f440ce40941a9d59f03792e2a6bf431a600d6a"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter-crash-source/mutter-50.1/src/wayland/meta-wayland-surface.c",
+      "bytes": 91669,
+      "sha256": "0f9a27b6430fecb1e856645aa24a3fff90c5c3b6685b75abb5112ce82d001178"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter-crash-source/mutter-50.1/src/wayland/meta-wayland-dma-buf.c",
+      "bytes": 67289,
+      "sha256": "65be7ec7e781501516ca250d4eb6a3c47bbbe0985b44d8f2a54133f65198b862"
+    },
+    {
+      "local_path": "/tmp/gmat-mutter-crash-source/mutter-50.1/debian/patches/series",
+      "bytes": 1918,
+      "sha256": "66050ddef22592285b73ac706c5d679755bab68403f65ebf942a7f489f6d8adc"
+    }
+  ],
+  "official_upstream_check": {
+    "latest_path_commit": "290a4466c91a6d51451382de720a1007306b8e36",
+    "latest_path_commit_date": "2026-09-28",
+    "result": "No matching public fix located; inspected invalid-seat branch still unguarded",
+    "responses": [
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-main-xdg-shell.c",
+        "bytes": 99899,
+        "sha256": "129edbbfc8dd5ff141a66d0ffde10f519154b31263c39b0fb6373c7d5effbf82"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-xdg-shell-commits.json",
+        "bytes": 115942,
+        "sha256": "99903a68ec8d00510497a175db81f77cef41a2efe149d80f29c84e9a6250fa0c"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-a19f557f-diff.json",
+        "bytes": 1811,
+        "sha256": "0f849e17e48ff2448a63ceaa7ecb56fcaf2372cf8e407f6abe5a19e56ef70088"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-mr4740.json",
+        "bytes": 6009,
+        "sha256": "5c1959c5c36eaa4810d3b34bf53262b87024bf0f91d297a55cc9dd6c670fbb8b"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-mr4740-commits.json",
+        "bytes": 2682,
+        "sha256": "1bc5782822a701de80c03b671f3fe0b034473d9a6feda6ee52fecd8159f043f1"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-8c67ba10-diff.json",
+        "bytes": 1144,
+        "sha256": "57b69d9a946d5acd90de594af7fc20d978fdd7d7a04f398fb7fe18ece352ca20"
+      },
+      {
+        "local_path": "/tmp/gmat-mutter-crash-source/upstream-631ee8f7-diff.json",
+        "bytes": 2446,
+        "sha256": "8d14513d6f79a4a6b1e6401e9b80408c5b85b877faf80d9ca781105551cf6472"
+      }
+    ]
+  },
+  "filtered_trace": {
+    "file": "compositor-popup-null-resource-20261002-trace.txt",
+    "bytes": 3319,
+    "sha256": "869fd17ec382aeaf67b5c5362fc57c524dfb548fbce8e59bdbb71d254b746f5b"
+  },
+  "saved_debugger_attempts": [
+    {
+      "attempt": 1,
+      "exit": 1,
+      "result": "Debugger setup failure: supplementary symbols/source setup and fixed frame selection; no application execution"
+    },
+    {
+      "attempt": 2,
+      "exit": 0,
+      "result": "Matching symbols loaded before core; named frame selection recovered null event-resource register"
+    },
+    {
+      "attempt": 3,
+      "exit": 0,
+      "result": "Source substitution and inline stack/register confirmation; retained filtered trace"
+    }
+  ],
+  "limits": [
+    "GNOME main executable and some other libraries changed since saved event; do not symbolize their frames using current binaries",
+    "Wayland supplementary debug retrieval returned HTTP404; no Wayland type-based client recovery claimed",
+    "Popup resource/object fields optimized out; exact destruction/transaction interleaving and client identity not established",
+    "Raw core/full debugger outputs are not committed; retained original diagnostic inputs are transient/local, not public evidence",
+    "No live reproduction, application test, system package/configuration change, install or desktop restart"
+  ]
+}

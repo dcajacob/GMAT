@@ -716,8 +716,8 @@ views during playback. Body-relative cameras follow object orientation;
 two-frame look-at orientation is retained in both rotation modes. Named
 trajectory-relative views use recorded regular arcs and copied endpoint poses;
 see [bounded camera evidence](Qt6ParityValidation/named-arc-navigation-20261002.md).
-Unsupported OpenFrames object kinds, unresolved velocity/thrust camera modes
-or dynamic viewer assignments require manual editing.
+Unsupported OpenFrames object kinds, Relative Velocity and Thrust Vector
+modes, and dynamic viewer assignments require manual editing.
 Keep the original file if it will also be used with the OFI application.
 
 The Linux compatibility tests execute a GMAT function after editing its

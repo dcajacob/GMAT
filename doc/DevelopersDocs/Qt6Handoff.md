@@ -140,7 +140,9 @@ Green suites establish their covered cases, not full GUI or scientific parity.
 Reconcile the existing private X11/software Wayland viewer, minimize/restore,
 close/reopen, run/stop/rerun, replay and pending-edit evidence before selecting
 any new verification. Complementary private portal cases also have bounded
-evidence. The host GNOME/physical GPU and later compositor-crash cause remain
+evidence. Read-only saved-core analysis now identifies a null Wayland event
+resource in Mutter popup setup; see the [saved fault record](Qt6ParityValidation/compositor-popup-null-resource-20261002.md).
+GMAT client attribution, a repaired host and physical-GPU acceptance remain
 unqualified; private software rendering does not close that gate. Continue only
 actual remaining viewer/OF requirements identified by the current gate map,
 keeping the Qt viewer UX.
@@ -1148,3 +1150,20 @@ application/WM/Xvfb exits are 0/0/0. No passing tutorial, corpus or old matrix w
 repeated. This private X11/software GL evidence does not qualify the host desktop,
 physical GPU or compositor-crash cause; synchronized thrust and other explicitly
 recorded external/domain limits remain separate.
+
+
+## Saved compositor fault mechanism identified — 2026-10-02
+
+[Read-only saved-core evidence](Qt6ParityValidation/compositor-popup-null-resource-20261002.md)
+resolves the prior PID 15518 fault to Mutter popup setup sending an event through
+a null Wayland resource. Exact Ubuntu 50.1-0ubuntu2.4 symbols/source match the
+recorded module build ID. Register/instruction evidence establishes the immediate
+fault; optimized-out popup fields leave its owner and precise interleaving
+unproven. The inspected current upstream branch retains the unguarded send;
+earlier related repairs already exist in 50.1 and do not cover this branch.
+
+No live reproduction, application test, host change or speculative GMAT patch
+was made. The original crash record remains unchanged, and runtime SHA 989d3499…
+/base SHA 2082a341… remains the previously rebuilt binary. Host/GPU acceptance stays
+open pending an established safe host condition and its outstanding operations.
+Completed tutorial/corpus/regression work was not repeated.

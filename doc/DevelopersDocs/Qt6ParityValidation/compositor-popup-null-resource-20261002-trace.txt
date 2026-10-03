@@ -1,0 +1,52 @@
+GMAT_TARGETED_SAVED_CRASH_BEGIN
+[Switching to thread 1 (Thread 0x723be6166040 (LWP 15518))]
+#0  0x0000723beb0a61ac in pthread_kill () from /usr/lib/x86_64-linux-gnu/libc.so.6
+#0  0x0000723beb0a61ac in pthread_kill () from /usr/lib/x86_64-linux-gnu/libc.so.6
+#1  0x0000723beb045b7e in raise () from /usr/lib/x86_64-linux-gnu/libc.so.6
+#2  0x000058c2b5e1fca7 in ?? ()
+#3  <signal handler called>
+#4  0x0000723bea5037dc in wl_resource_post_event () from /usr/lib/x86_64-linux-gnu/libwayland-server.so.0
+#5  0x0000723beb5a35c7 in xdg_popup_send_popup_done (resource_=...) at src/xdg-shell-server-protocol.h:2355
+#6  finish_popup_setup (xdg_popup=...) at ../src/wayland/meta-wayland-xdg-shell.c:1332
+#7  meta_wayland_xdg_popup_apply_state (surface_role=..., pending=...) at ../src/wayland/meta-wayland-xdg-shell.c:1474
+#8  0x0000723beb59ad84 in meta_wayland_surface_role_apply_state (surface_role=..., pending=...) at ../src/wayland/meta-wayland-surface.c:2315
+#9  meta_wayland_surface_apply_state (surface=..., state=...) at ../src/wayland/meta-wayland-surface.c:1051
+#10 meta_wayland_transaction_apply (transaction=..., first_candidate=...) at ../src/wayland/meta-wayland-transaction.c:216
+#11 meta_wayland_transaction_maybe_apply_one (transaction=..., first_candidate=...) at ../src/wayland/meta-wayland-transaction.c:291
+#12 meta_wayland_transaction_maybe_apply (transaction=...) at ../src/wayland/meta-wayland-transaction.c:301
+#13 0x0000723beb57a4ea in meta_wayland_dma_buf_source_dispatch (base=..., callback=..., user_data=...) at ../src/wayland/meta-wayland-dma-buf.c:1012
+#14 0x0000723beba9ec1b in ?? () from /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+#15 0x0000723bebaa0257 in ?? () from /usr/lib/x86_64-linux-gnu/libglib-2.0.so.0
+TARGET_FRAME wl_resource_post_event
+rip            0x723bea5037dc      0x723bea5037dc <wl_resource_post_event+108>
+rdi            0x0                 0
+rsi            0x1                 1
+rax            0x0                 0
+r11            0x0                 0
+=> 0x723bea5037dc <wl_resource_post_event+108>:	mov    (%r11),%rcx
+TARGET_FRAME xdg_popup_send_popup_done
+resource_ = <optimized out>
+resource_=<optimized out>
+xdg_popup: unavailable (No symbol "xdg_popup" in current context.)
+xdg_popup->resource: unavailable (No symbol "xdg_popup" in current context.)
+xdg_popup->dismissed_by_client: unavailable (No symbol "xdg_popup" in current context.)
+seat: unavailable (No symbol "seat" in current context.)
+serial: unavailable (No symbol "serial" in current context.)
+TARGET_FRAME finish_popup_setup
+xdg_popup = <optimized out>
+resource_: unavailable (No symbol "resource_" in current context.)
+xdg_popup=<optimized out>
+xdg_popup->resource: unavailable (value has been optimized out)
+xdg_popup->dismissed_by_client: unavailable (value has been optimized out)
+seat=0x58c2c4fb5ba0
+serial=94558
+TARGET_FRAME meta_wayland_xdg_popup_apply_state
+surface_role = <optimized out>
+pending = 0x58c2cbc88ab0
+resource_: unavailable (No symbol "resource_" in current context.)
+xdg_popup=<optimized out>
+xdg_popup->resource: unavailable (value has been optimized out)
+xdg_popup->dismissed_by_client: unavailable (value has been optimized out)
+seat: unavailable (No symbol "seat" in current context.)
+serial: unavailable (No symbol "serial" in current context.)
+GMAT_TARGETED_SAVED_CRASH_END
