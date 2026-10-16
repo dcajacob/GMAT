@@ -1,0 +1,272 @@
+// Native-code extraction harness. No weather-source predicate is reimplemented.
+// Tokens below are replaced with exact immutable Git regions by run.py.
+#include <algorithm>
+#include <cctype>
+#include <filesystem>
+#include <fstream>
+#include <functional>
+#include <iostream>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
+using Integer = int;
+using Real = double;
+class ODEModelException : public std::runtime_error {
+public: using std::runtime_error::runtime_error;
+};
+class SolarSystemException : public std::runtime_error {
+public: using std::runtime_error::runtime_error;
+};
+
+// Explicit environment stubs: no selection or weather validation lives here.
+class FileManager {
+public:
+    std::string atmospherePath;
+    std::vector<std::string> probes;
+    static FileManager* Instance() { static FileManager instance; return &instance; }
+    bool DoesFileExist(const std::string& path) {
+        probes.push_back(path);
+        std::error_code ec;
+        return std::filesystem::is_regular_file(path, ec);
+    }
+    std::string GetAbsPathname(const std::string& key) {
+        if (key != "ATMOSPHERE_PATH") throw std::runtime_error("Unexpected path key: " + key);
+        return atmospherePath;
+    }
+};
+namespace GmatFileUtil {
+void GetLine(std::ifstream* input, std::string& line) { std::getline(*input, line); }
+}
+namespace GmatStringUtil {
+bool IsBlank(const std::string& value, bool) {
+    return std::all_of(value.begin(), value.end(), [](unsigned char c) { return std::isspace(c); });
+}
+std::string ToUpper(std::string value) {
+    std::transform(value.begin(), value.end(), value.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
+    return value;
+}
+}
+class GmatBase {
+public:
+    bool SetStringParameter(Integer, const std::string&) {
+        throw std::runtime_error("Unexpected base string-parameter fallback");
+    }
+};
+class AtmosphereModel : public GmatBase {
+public:
+    enum { F107 = 1, F107A = 2, MAGNETIC_INDEX = 3, CSSI_WEATHER_FILE = 4, SCHATTEN_WEATHER_FILE = 5 };
+    std::string CSSIFileName, schattenFileName;
+    std::map<Integer, Real> realParameters;
+    void* fixed = nullptr;
+    void* internal = nullptr;
+    Integer GetParameterID(const std::string& name) {
+        static const std::map<std::string, Integer> ids = {
+            {"F107", F107}, {"F107A", F107A}, {"MagneticIndex", MAGNETIC_INDEX},
+            {"CSSISpaceWeatherFile", CSSI_WEATHER_FILE}, {"SchattenFile", SCHATTEN_WEATHER_FILE}};
+        return ids.at(name);
+    }
+    void SetRealParameter(Integer id, Real value) { realParameters[id] = value; }
+    void SetFixedCoordinateSystem(void* value) { fixed = value; }
+    void SetInternalCoordSystem(void* value) { internal = value; }
+    bool SetStringParameter(const Integer id, const std::string& value);
+};
+
+@@ATMOSPHERE_FILENAME_SETTER@@
+
+class DragForce {
+public:
+    AtmosphereModel* atmos = nullptr;
+    AtmosphereModel* internalAtmos = nullptr;
+    void* cbFixed = nullptr;
+    void* internalCoordSystem = nullptr;
+    Integer F107ID = -1, F107AID = -1, KPID = -1, cssiWFileID = -1, schattenWFileID = -1;
+    Real fluxF107 = 150.0, fluxF107A = 140.0, kp = 3.0;
+    std::string historicWSource = "ConstantFluxAndGeoMag";
+    std::string predictedWSource = "ConstantFluxAndGeoMag";
+    std::string cssiWFile = "unused-cssi-missing.txt";
+    std::string schattenWFile = "unused-schatten-missing.txt";
+    std::string fluxPath;
+    ~DragForce() { delete internalAtmos; }
+    bool SetInternalAtmosphereModel(AtmosphereModel* atm);
+    void InitializeSelectedWeather() {
+@@INITIALIZE_REGION@@
+    }
+};
+
+@@ATTACHMENT_FUNCTION@@
+
+struct CaseResult { std::string name; bool passed; std::string detail; };
+std::vector<CaseResult> cases;
+void require(bool condition, const std::string& message) {
+    if (!condition) throw std::runtime_error(message);
+}
+void test(const std::string& name, const std::function<void()>& body) {
+    FileManager::Instance()->probes.clear();
+    try { body(); cases.push_back({name, true, ""}); }
+    catch (const std::exception& error) { cases.push_back({name, false, error.what()}); }
+}
+void constants_unchanged(const AtmosphereModel& model) {
+    require(model.realParameters.at(AtmosphereModel::F107) == 150.0, "F107 changed");
+    require(model.realParameters.at(AtmosphereModel::F107A) == 140.0, "F107A changed");
+    require(model.realParameters.at(AtmosphereModel::MAGNETIC_INDEX) == 3.0, "Kp changed");
+}
+void no_probe_contains(const std::string& name) {
+    for (const auto& path : FileManager::Instance()->probes)
+        require(path.find(name) == std::string::npos, "Unselected weather path was probed: " + path);
+}
+void initialize_accepts(const std::string& historic, const std::string& predicted,
+                        const std::string& cssi, const std::string& schatten,
+                        const std::string& expectedCssi, const std::string& expectedSchatten,
+                        const std::string& prefix) {
+    AtmosphereModel model;
+    DragForce force;
+    force.atmos = &model;
+    force.historicWSource = historic; force.predictedWSource = predicted;
+    force.cssiWFile = cssi; force.schattenWFile = schatten; force.fluxPath = prefix;
+    force.InitializeSelectedWeather();
+    constants_unchanged(model);
+    require(model.CSSIFileName == expectedCssi, "Wrong effective CSSI filename");
+    require(model.schattenFileName == expectedSchatten, "Wrong effective Schatten filename");
+    if (expectedCssi.empty()) no_probe_contains(std::filesystem::path(cssi).filename().string());
+    if (expectedSchatten.empty()) no_probe_contains(std::filesystem::path(schatten).filename().string());
+}
+void initialize_rejects(const std::string& historic, const std::string& predicted,
+                       const std::string& cssi, const std::string& schatten,
+                       const std::string& message, const std::string& prefix) {
+    AtmosphereModel model;
+    DragForce force;
+    force.atmos = &model;
+    force.historicWSource = historic; force.predictedWSource = predicted;
+    force.cssiWFile = cssi; force.schattenWFile = schatten; force.fluxPath = prefix;
+    bool rejected = false;
+    try { force.InitializeSelectedWeather(); }
+    catch (const std::exception& error) {
+        require(std::string(error.what()).find(message) != std::string::npos,
+                "Wrong rejection: " + std::string(error.what()));
+        rejected = true;
+    }
+    require(rejected, "Selected missing/malformed weather was accepted");
+}
+std::string quote(const std::string& value) {
+    std::string result = "\"";
+    for (char c : value) {
+        if (c == '\\' || c == '"') { result += '\\'; result += c; }
+        else if (c == '\n') result += "\\n";
+        else if (c == '\r') result += "\\r";
+        else if (c == '\t') result += "\\t";
+        else result += c;
+    }
+    return result + "\"";
+}
+
+int main(int argc, char** argv) {
+    if (argc != 2) return 2;
+    const std::string prefix = std::string(argv[1]) + "/";
+    FileManager::Instance()->atmospherePath = prefix;
+    const std::string cssi = prefix + "cssi-valid.txt";
+    const std::string schatten = prefix + "schatten-valid.txt";
+    const std::string malformed = prefix + "malformed.txt";
+    const std::string missingCssi = "unused-cssi-missing.txt";
+    const std::string missingSchatten = "unused-schatten-missing.txt";
+    const std::string constant = "ConstantFluxAndGeoMag";
+    const std::string cssiMode = "CSSISpaceWeatherFile";
+    const std::string schattenMode = "SchattenFile";
+
+    test("constant_flux_missing_optional_files_no_probe", [&] {
+        initialize_accepts(constant, constant, missingCssi, missingSchatten, "", "", prefix);
+        require(FileManager::Instance()->probes.empty(), "Constant model performed file-existence checks");
+    });
+    test("constant_flux_existing_optional_files_no_probe", [&] {
+        initialize_accepts(constant, constant, cssi, schatten, "", "", prefix);
+        require(FileManager::Instance()->probes.empty(), "Constant model touched existing optional files");
+    });
+    test("historic_cssi_only_valid_unselected_schatten_absent", [&] {
+        initialize_accepts(cssiMode, constant, cssi, missingSchatten, cssi, "", prefix);
+    });
+    test("predicted_cssi_only_valid_unselected_schatten_absent", [&] {
+        initialize_accepts(constant, cssiMode, cssi, missingSchatten, cssi, "", prefix);
+    });
+    test("historic_and_predicted_cssi_only_valid", [&] {
+        initialize_accepts(cssiMode, cssiMode, cssi, missingSchatten, cssi, "", prefix);
+    });
+    test("predicted_schatten_only_valid_unselected_cssi_absent", [&] {
+        initialize_accepts(constant, schattenMode, missingCssi, schatten, "", schatten, prefix);
+    });
+    test("historic_cssi_relative_path_uses_flux_prefix", [&] {
+        initialize_accepts(cssiMode, constant, "cssi-valid.txt", missingSchatten, cssi, "", prefix);
+    });
+    test("predicted_schatten_relative_path_uses_flux_prefix", [&] {
+        initialize_accepts(constant, schattenMode, missingCssi, "schatten-valid.txt", "", schatten, prefix);
+    });
+    test("selected_historic_cssi_missing_rejected", [&] {
+        initialize_rejects(cssiMode, constant, missingCssi, schatten, "Cannot open the CSSI", prefix);
+    });
+    test("selected_predicted_cssi_missing_rejected", [&] {
+        initialize_rejects(constant, cssiMode, missingCssi, schatten, "Cannot open the CSSI", prefix);
+    });
+    test("selected_schatten_missing_rejected", [&] {
+        initialize_rejects(constant, schattenMode, cssi, missingSchatten, "Cannot open the predicted", prefix);
+    });
+    test("mixed_sources_missing_cssi_rejected", [&] {
+        initialize_rejects(cssiMode, schattenMode, missingCssi, schatten, "Cannot open the CSSI", prefix);
+    });
+    test("mixed_sources_missing_schatten_rejected", [&] {
+        initialize_rejects(cssiMode, schattenMode, cssi, missingSchatten, "Cannot open the predicted", prefix);
+    });
+    test("selected_cssi_malformed_native_setter_rejects", [&] {
+        initialize_rejects(cssiMode, constant, malformed, schatten, "unknown format", prefix);
+    });
+    test("selected_schatten_malformed_native_setter_rejects", [&] {
+        initialize_rejects(constant, schattenMode, cssi, malformed, "unknown format", prefix);
+    });
+    test("null_atmosphere_attachment_returns_false", [&] {
+        DragForce force;
+        require(!force.SetInternalAtmosphereModel(nullptr), "Null attachment accepted");
+        require(FileManager::Instance()->probes.empty(), "Null attachment touched a file");
+    });
+    test("attach_constant_before_source_and_path_configuration", [&] {
+        DragForce force;
+        force.fluxPath = prefix;
+        require(force.SetInternalAtmosphereModel(new AtmosphereModel), "Attachment rejected");
+        require(FileManager::Instance()->probes.empty(), "Attachment touched unselected files");
+        constants_unchanged(*force.internalAtmos);
+        force.historicWSource = cssiMode;
+        force.cssiWFile = cssi;
+        force.InitializeSelectedWeather();
+        require(force.atmos->CSSIFileName == cssi, "Post-attachment selected CSSI was not configured");
+        require(force.atmos->schattenFileName.empty(), "Post-attachment unselected Schatten was configured");
+        no_probe_contains(missingSchatten);
+    });
+
+    bool legacyDefinedSuccess = false;
+    test("same_inputs_legacy_defined_success_both_valid_files", [&] {
+        DragForce force;
+        force.fluxPath = prefix;
+        force.cssiWFile = cssi;
+        force.schattenWFile = schatten;
+        force.historicWSource = cssiMode;
+        force.predictedWSource = schattenMode;
+        require(force.SetInternalAtmosphereModel(new AtmosphereModel), "Attachment rejected");
+        force.InitializeSelectedWeather();
+        constants_unchanged(*force.atmos);
+        require(force.atmos->CSSIFileName == cssi, "Valid CSSI configuration changed");
+        require(force.atmos->schattenFileName == schatten, "Valid Schatten configuration changed");
+        legacyDefinedSuccess = true;
+    });
+
+    bool all = true;
+    std::cout << "{\"same_inputs_legacy_defined_success\":" << (legacyDefinedSuccess ? "true" : "false")
+              << ",\"cases\":[";
+    for (std::size_t i = 0; i < cases.size(); ++i) {
+        if (i) std::cout << ",";
+        const auto& item = cases[i];
+        all = all && item.passed;
+        std::cout << "{\"name\":" << quote(item.name) << ",\"passed\":"
+                  << (item.passed ? "true" : "false") << ",\"detail\":" << quote(item.detail) << "}";
+    }
+    std::cout << "]}\n";
+    return all ? 0 : 1;
+}
