@@ -1016,7 +1016,6 @@ std::string FileManager::GetFullStartupFilePath()
       return mStartupFileName;
    else
    {
-      mStartupFileDir = GmatFileUtil::GetCurrentWorkingDirectory() + mPathSeparator;
       return mStartupFileDir + mStartupFileName;
    }
 }
