@@ -703,6 +703,11 @@ bool EphemerisFile::Initialize()
    
    // Delete old file to avoid showing old file contents in the GUI output tree
    // when it is toggled off or not writing ephemeris file in the current run.
+   // On Linux an input stream can open a directory, and remove() can remove an
+   // empty directory. Never replace a directory with an ephemeris output file.
+   if (!fullPathFileName.empty() &&
+       GmatFileUtil::DoesDirectoryExist(fullPathFileName + "/", false))
+      throw SubscriberException("Ephemeris output path is a directory: " + fullPathFileName);
    if (GmatFileUtil::DoesFileExist(fullPathFileName))
    {
       #ifdef DEBUG_EPHEMFILE_INIT
@@ -1304,6 +1309,10 @@ bool EphemerisFile::SetStringParameter(const Integer id, const std::string &valu
       fullPathFileName =
          GmatBase::GetFullPathFileName(fileName, GetName(), fileName, "EPHEM_OUTPUT_FILE",
                                        false, ".eph", false, true);
+
+      if (fullPathFileName.empty())
+         throw SubscriberException("Cannot resolve ephemeris output path '" + value +
+            "'. Select a filename in an existing directory.");
       
       // Check for directory name - MUST check for full path directory
       std::string dirName = GmatFileUtil::ParsePathName(fullPathFileName);
