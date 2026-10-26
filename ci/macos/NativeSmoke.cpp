@@ -37,6 +37,9 @@ int main(int argc,char **argv)
    QTimer deadline;deadline.setSingleShot(true);
    QObject::connect(&deadline,&QTimer::timeout,[&] {receipt["failure"]="120-second native harness deadline";save();std::_Exit(124);});deadline.start(115000);
    int code=1;
+   // Qt emits lastWindowClosed only while QGuiApplication::exec is active.
+   // Nested QEventLoop instances used for rendering do not satisfy that contract.
+   QTimer::singleShot(0,&app,[&] {
    try {
       require(QGuiApplication::platformName()=="cocoa","Native Cocoa platform required; offscreen does not qualify");
       MainWindow window;window.resize(1180,800);window.show();settle(300);
@@ -90,5 +93,9 @@ int main(int argc,char **argv)
       bool closed=false;QObject::connect(&app,&QGuiApplication::lastWindowClosed,[&]{closed=true;});
       require(window.close(),"Normal main-window close was rejected");app.processEvents();require(closed,"Normal close did not emit lastWindowClosed");receipt["normal_exit"]="PASS";save();code=0;
    }catch(const std::exception &e){receipt["failure"]=e.what();save();std::cerr<<e.what()<<std::endl;}
-   receipt["exit"]=code;save();return code;
+   receipt["exit"]=code;save();
+   if(code) app.exit(code); // Success must exit through the normal last-window path.
+   });
+   const int eventLoopExit=app.exec();
+   receipt["application_event_loop_exit"]=eventLoopExit;save();return eventLoopExit;
 }
