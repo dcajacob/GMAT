@@ -13,6 +13,7 @@
 #include <QOpenGLContext>
 #include <QOpenGLFunctions>
 #include <QPlainTextEdit>
+#include <QProcess>
 #include <QScreen>
 #include <QSettings>
 #include <QTimer>
@@ -26,7 +27,7 @@ int main(int argc,char **argv)
    QApplication app(argc,argv);
    if(argc!=4) return 2;
    const QString out=QString::fromLocal8Bit(argv[3]);QDir().mkpath(out);
-   QApplication::setOrganizationName("GMAT-CI");QApplication::setApplicationName("macOS-native-smoke");
+   QApplication::setOrganizationName("GMAT-CI");QApplication::setApplicationName("GMAT Qt macOS native smoke");
    QSettings::setDefaultFormat(QSettings::IniFormat);
    QSettings::setPath(QSettings::IniFormat,QSettings::UserScope,out+"/harness-settings");
    QJsonObject receipt{{"qt",qVersion()},{"qpa",QGuiApplication::platformName()},
@@ -90,6 +91,22 @@ int main(int argc,char **argv)
       for(auto *child:receiver->workspaceArea()->subWindowList())if(child->property("plotName").toString()=="CiOrbit"){child->close();break;}
       settle(200);require(receiver->show("CiOrbit"),"Closed orbit did not reopen");settle(400);require(findPlot() && findPlot()->isVisible(),"Reopened orbit is not visible");receipt["close_reopen"]="PASS";
       window.grab().save(out+"/native-final.png");
+      // Capture WindowServer's actual main display, including the system menu
+      // bar/desktop. This is not a QWidget grab or a composited decoration.
+      window.setGeometry(window.screen()->availableGeometry().adjusted(30,30,-30,-40));
+      window.raise();window.activateWindow();settle(800);
+      receipt["desktop_application_active"]=QGuiApplication::applicationState()==Qt::ApplicationActive;
+      QProcess screenCapture;
+      screenCapture.start("/usr/sbin/screencapture",{"-x","-m",out+"/macos-desktop.png"});
+      require(screenCapture.waitForFinished(10000),"Native desktop capture did not finish within ten seconds");
+      receipt["desktop_capture_exit"]=screenCapture.exitCode();
+      QFile captureLog(out+"/desktop-capture.log");
+      if(captureLog.open(QIODevice::WriteOnly))captureLog.write(screenCapture.readAllStandardError());
+      if(screenCapture.exitStatus()!=QProcess::NormalExit || screenCapture.exitCode()!=0) {
+         receipt["desktop_capture"]="UNAVAILABLE";save();
+         throw std::runtime_error("Runner desktop capture unavailable; retained error without changing screen-recording permissions");
+      }
+      receipt["desktop_capture"]="CAPTURED_REQUIRES_VISUAL_INSPECTION";save();
       bool closed=false;QObject::connect(&app,&QGuiApplication::lastWindowClosed,[&]{closed=true;});
       require(window.close(),"Normal main-window close was rejected");app.processEvents();require(closed,"Normal close did not emit lastWindowClosed");receipt["normal_exit"]="PASS";save();code=0;
    }catch(const std::exception &e){receipt["failure"]=e.what();save();std::cerr<<e.what()<<std::endl;}
