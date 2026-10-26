@@ -1,0 +1,13 @@
+% Bounded core-only native Cocoa smoke mission; no optional plugins.
+Create Spacecraft CiSat;
+Create ForceModel CiForces;
+CiForces.CentralBody = Earth;
+CiForces.PrimaryBodies = {Earth};
+Create Propagator CiProp;
+CiProp.FM = CiForces;
+CiProp.MaxStep = 30;
+Create OrbitView CiOrbit;
+CiOrbit.Add = {CiSat, Earth};
+CiOrbit.ShowPlot = true;
+BeginMissionSequence;
+Propagate CiProp(CiSat) {CiSat.ElapsedSecs = 600};

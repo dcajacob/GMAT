@@ -1,0 +1,40 @@
+name: macOS Qt native smoke
+on:
+  push:
+    branches: [ci/macos-qt-smoke-20261026]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: macos-qt-smoke-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  cocoa-smoke:
+    runs-on: macos-15-intel
+    timeout-minutes: 55
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      QT_QPA_PLATFORM: cocoa
+      SMOKE_ARTIFACT_DIR: ${{ github.workspace }}/artifacts
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Record runner and dependency setup
+        run: |
+          mkdir -p artifacts
+          { sw_vers; uname -a; git rev-parse HEAD; xcodebuild -version; } | tee artifacts/runner.txt
+          bash ci/macos/prepare.sh 2>&1 | tee artifacts/prepare.log
+      - name: Configure smoke build
+        run: bash ci/macos/configure.sh 2>&1 | tee artifacts/configure.log
+      - name: Build actual Qt application and native harness
+        run: cmake --build build/macos-smoke --target GmatQt GmatQtMacOSSmoke --parallel 3 2>&1 | tee artifacts/build.log
+      - name: Run native Cocoa mission and 3D smoke
+        run: python3 ci/macos/run.py
+      - name: Upload logs, receipts and images
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: macos-qt-native-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 7
